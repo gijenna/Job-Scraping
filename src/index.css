@@ -6,51 +6,51 @@
 
 @layer base {
   :root {
-    --background: 180 25% 15%;
-    --foreground: 35 40% 92%;
+    --background: 180 30% 12%;
+    --foreground: 35 40% 93%;
 
-    --card: 180 22% 18%;
-    --card-foreground: 35 40% 92%;
+    --card: 180 28% 15%;
+    --card-foreground: 35 40% 93%;
 
-    --popover: 180 22% 18%;
-    --popover-foreground: 35 40% 92%;
+    --popover: 180 28% 15%;
+    --popover-foreground: 35 40% 93%;
 
     --primary: 5 65% 65%;
-    --primary-foreground: 180 25% 10%;
+    --primary-foreground: 180 30% 10%;
 
-    --secondary: 180 18% 25%;
-    --secondary-foreground: 35 40% 92%;
+    --secondary: 180 20% 22%;
+    --secondary-foreground: 35 40% 93%;
 
-    --muted: 180 20% 22%;
-    --muted-foreground: 180 12% 60%;
+    --muted: 180 25% 18%;
+    --muted-foreground: 180 10% 65%;
 
     --accent: 5 50% 55%;
-    --accent-foreground: 35 40% 92%;
+    --accent-foreground: 35 40% 93%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 180 18% 24%;
-    --input: 180 18% 24%;
+    --border: 180 20% 22%;
+    --input: 180 20% 22%;
     --ring: 5 65% 65%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 180 22% 18%;
-    --sidebar-foreground: 35 40% 92%;
+    --sidebar-background: 180 28% 15%;
+    --sidebar-foreground: 35 40% 93%;
     --sidebar-primary: 5 65% 65%;
-    --sidebar-primary-foreground: 180 25% 10%;
-    --sidebar-accent: 180 20% 22%;
-    --sidebar-accent-foreground: 35 40% 92%;
-    --sidebar-border: 180 18% 24%;
+    --sidebar-primary-foreground: 180 30% 10%;
+    --sidebar-accent: 180 25% 18%;
+    --sidebar-accent-foreground: 35 40% 93%;
+    --sidebar-border: 180 20% 22%;
     --sidebar-ring: 5 65% 65%;
 
     /* Custom tokens */
     --gradient-gold: linear-gradient(135deg, hsl(5 65% 65%), hsl(15 70% 55%));
-    --gradient-dark: linear-gradient(180deg, hsl(180 25% 15%), hsl(180 22% 18%));
-    --gradient-card: linear-gradient(145deg, hsl(180 22% 20%), hsl(180 22% 16%));
-    --shadow-gold: 0 0 40px -10px hsl(5 65% 65% / 0.3);
-    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.35);
+    --gradient-dark: linear-gradient(180deg, hsl(180 30% 12%), hsl(180 28% 15%));
+    --gradient-card: linear-gradient(145deg, hsl(180 28% 17%), hsl(180 28% 13%));
+    --shadow-gold: 0 0 40px -10px hsl(5 65% 65% / 0.35);
+    --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
 
     --font-display: 'Outfit', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;
@@ -85,7 +85,7 @@
   }
 
   .bg-gradient-card {
-    background: linear-gradient(145deg, hsl(180 22% 20%), hsl(180 22% 16%));
+    background: linear-gradient(145deg, hsl(180 28% 17%), hsl(180 28% 13%));
   }
 
   .shadow-gold {
