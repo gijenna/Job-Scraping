@@ -25,21 +25,24 @@ const qualityPoints = [
 const showUpOptions = [
   {
     icon: Briefcase,
-    title: "Employer Table",
-    desc: "Set up a product demo for the storytellers. Recruiters and hiring managers have 5–10 minute quality conversations — with banners, swag, QR codes to job pages.",
+    title: "Employer Table / Booth",
+    desc: "Recruiters or hiring managers take 5–10 minute quality conversations. Space for banners, pull-ups, printed materials, QR codes to your careers page, and swag.",
     tag: "Most Popular",
+    example: "Columbia brings product samples and a banner; VF brands set up QR-code stands linking directly to open roles. Keen brings swag bags with branded materials.",
   },
   {
     icon: MessageCircle,
-    title: "Industry Mentor",
-    desc: "Your leaders are featured by name as mentors in our Expert Zone. Show up as approachable mentors, not just a logo at a massive fair. High candidate-experience impact.",
+    title: "Industry Expert / Mentor",
+    desc: "Your leaders are featured by name — called out just as prominently as the brand itself. Show up as approachable mentors, not just a logo. 1:1 mini-mentorship conversations.",
     tag: "Low Lift",
+    example: "Individual leaders from Nike, Adidas, and Columbia have participated as named mentors — even when their company wasn't formally tabling.",
   },
   {
     icon: Mic,
     title: "Panel Speaker",
-    desc: "Join the 'How I Broke In' panel — 45 minutes of real career stories and tactics. Your people become the face of what it means to work at your brand.",
+    desc: "Join the 'How I Broke In' panel — 45 minutes of concrete career steps, networking tactics, and Q&A. Your people become the face of what it means to work at your brand.",
     tag: "High Visibility",
+    example: "Panelists share their exact career trajectory — who they talked to, what they said, how they found the role. It's the most-requested segment at every event.",
   },
 ];
 
@@ -165,9 +168,15 @@ const RecruiterValue = () => {
               <h4 className="font-display font-bold text-lg text-foreground mb-3">
                 {opt.title}
               </h4>
-              <p className="text-muted-foreground font-body text-sm leading-relaxed">
+              <p className="text-muted-foreground font-body text-sm leading-relaxed mb-4">
                 {opt.desc}
               </p>
+              <div className="bg-primary/5 border border-primary/10 rounded-lg p-3">
+                <p className="text-xs text-muted-foreground font-body leading-relaxed">
+                  <span className="text-primary font-semibold">What brands have done: </span>
+                  {opt.example}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
