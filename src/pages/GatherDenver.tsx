@@ -32,14 +32,14 @@ const denverBrands = [
 ];
 
 const denverDonutData = [
-  { name: "Marketing", value: 26, color: "hsl(5, 65%, 65%)" },
-  { name: "Operations", value: 22, color: "hsl(180, 30%, 45%)" },
-  { name: "Creative", value: 16, color: "hsl(35, 50%, 55%)" },
-  { name: "Communications & PR", value: 11, color: "hsl(15, 70%, 55%)" },
-  { name: "Product Design/Dev", value: 9, color: "hsl(160, 25%, 50%)" },
-  { name: "Sales", value: 7, color: "hsl(200, 25%, 50%)" },
-  { name: "Tech/Engineering", value: 5, color: "hsl(280, 20%, 50%)" },
-  { name: "Science/Conservation", value: 4, color: "hsl(120, 25%, 45%)" },
+  { name: "Marketing", value: 26, color: "#ED7660" },
+  { name: "Operations", value: 22, color: "#19363B" },
+  { name: "Creative", value: 16, color: "#809482" },
+  { name: "Communications & PR", value: 11, color: "#E1B624" },
+  { name: "Product Design/Dev", value: 9, color: "#BD665A" },
+  { name: "Sales", value: 7, color: "#715F61" },
+  { name: "Tech/Engineering", value: 5, color: "#5F4A4D" },
+  { name: "Science/Conservation", value: 4, color: "#EE6853" },
 ];
 
 const denverBarData = [
