@@ -11,6 +11,7 @@ import EventROI from "@/components/event/EventROI";
 import EventSetup from "@/components/event/EventSetup";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
+import RecruiterValue from "@/components/RecruiterValue";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
@@ -152,6 +153,8 @@ const GatherDenver = () => {
         brands={denverBrands}
         headline="Where leaders from the outdoor industry's most iconic brands gather"
       />
+
+      <RecruiterValue />
 
       <EventQuote quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
