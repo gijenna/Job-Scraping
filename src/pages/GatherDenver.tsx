@@ -146,7 +146,7 @@ const GatherDenver = () => {
         date="May 29, 2026 · Denver, CO"
         ctaEmail="Jenna@wearetheoutdoorindustry.com"
         ctaSubject="I'd like to sponsor Gather Denver 2026"
-        accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"
+        
       />
 
       <EventLogoTicker

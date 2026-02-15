@@ -146,7 +146,7 @@ const GatherPNW = () => {
         date="April 16, 2026 · Portland, OR"
         ctaEmail="Jenna@wearetheoutdoorindustry.com"
         ctaSubject="I'd like to sponsor Gather PNW 2026"
-        accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"
+        
       />
 
       <EventLogoTicker
