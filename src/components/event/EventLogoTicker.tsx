@@ -13,8 +13,8 @@ const EventLogoTicker = ({
   headline = "Where leaders from the world's most iconic brands gather",
 }: EventLogoTickerProps) => {
   return (
-    <section className="py-12 border-y border-border overflow-hidden">
-      <p className="text-center text-muted-foreground text-xs tracking-[0.3em] uppercase mb-8 font-body">
+    <section className="py-12 bg-white overflow-hidden">
+      <p className="text-center text-gray-500 text-xs tracking-[0.3em] uppercase mb-8 font-body">
         {headline}
       </p>
       <div className="relative">
@@ -27,7 +27,7 @@ const EventLogoTicker = ({
               <img
                 src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
                 alt={brand.name}
-                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                className="h-8 md:h-10 w-auto object-contain transition-transform hover:scale-110"
                 loading="lazy"
                 onError={(e) => {
                   // Fallback to text if logo fails
