@@ -134,52 +134,6 @@ const RecruiterValue = () => {
           </div>
         </motion.div>
 
-        {/* How Brands Show Up */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10"
-        >
-          <h3 className="font-display font-bold text-2xl md:text-3xl text-foreground">
-            How Brands Show Up
-          </h3>
-          <p className="text-muted-foreground font-body mt-2 max-w-xl mx-auto">
-            Three ways to engage — mix and match based on your goals and bandwidth.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {showUpOptions.map((opt, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-gradient-card border border-border rounded-xl p-8 shadow-card relative"
-            >
-              <span className="absolute top-4 right-4 text-[10px] tracking-wider uppercase font-body text-primary bg-primary/10 px-2 py-1 rounded-full">
-                {opt.tag}
-              </span>
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-5">
-                <opt.icon className="w-6 h-6 text-primary" />
-              </div>
-              <h4 className="font-display font-bold text-lg text-foreground mb-3">
-                {opt.title}
-              </h4>
-              <p className="text-muted-foreground font-body text-sm leading-relaxed mb-4">
-                {opt.desc}
-              </p>
-              <div className="bg-primary/5 border border-primary/10 rounded-lg p-3">
-                <p className="text-xs text-muted-foreground font-body leading-relaxed">
-                  <span className="text-primary font-semibold">What brands have done: </span>
-                  {opt.example}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
