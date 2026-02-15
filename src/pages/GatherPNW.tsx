@@ -34,12 +34,12 @@ const pnwBrands = [
 ];
 
 const pnwDonutData = [
-  { name: "Marketing & Creative", value: 38, color: "hsl(5, 65%, 65%)" },
-  { name: "Product, Design & Engineering", value: 22, color: "hsl(180, 30%, 45%)" },
-  { name: "Operations & Supply Chain", value: 15, color: "hsl(35, 50%, 55%)" },
-  { name: "Sales & Biz Dev", value: 12, color: "hsl(15, 70%, 55%)" },
-  { name: "Outdoor Ed & Tech", value: 8, color: "hsl(160, 25%, 50%)" },
-  { name: "Career Transitioners", value: 5, color: "hsl(180, 15%, 50%)" },
+  { name: "Marketing & Creative", value: 38, color: "#ED7660" },
+  { name: "Product, Design & Engineering", value: 22, color: "#19363B" },
+  { name: "Operations & Supply Chain", value: 15, color: "#809482" },
+  { name: "Sales & Biz Dev", value: 12, color: "#E1B624" },
+  { name: "Outdoor Ed & Tech", value: 8, color: "#BD665A" },
+  { name: "Career Transitioners", value: 5, color: "#715F61" },
 ];
 
 const pnwBarData = [

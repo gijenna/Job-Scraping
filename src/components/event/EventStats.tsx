@@ -133,7 +133,7 @@ const EventStats = ({ donutData, barData, stats, subtitle }: EventStatsProps) =>
                 <Tooltip content={<CustomTooltip />} />
                 <Bar
                   dataKey="count"
-                  fill="hsl(5, 65%, 65%)"
+                  fill="#ED7660"
                   radius={[0, 4, 4, 0]}
                   barSize={18}
                 />
