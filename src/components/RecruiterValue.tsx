@@ -114,8 +114,7 @@ const RecruiterValue = () => {
             <p className="text-muted-foreground font-body leading-relaxed mb-6">
               Hundreds, not tens of thousands. Every attendee is pre-qualified and
               aligned with outdoor, product, and creative corporate roles. Your
-              recruiters have real conversations — not shouting over a convention
-              floor.
+              recruiters have real conversations with the active AND passive talent they often can't reach.
             </p>
             <div className="grid grid-cols-3 gap-4">
               {[
