@@ -1,5 +1,12 @@
 import { motion } from "framer-motion";
 import { Briefcase, MessageCircle, Mic, Globe, Mail, Share2 } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 
 interface ShowUpOption {
   icon: typeof Briefcase;
@@ -60,6 +67,75 @@ const EventBrandShowUp = ({ options }: EventBrandShowUpProps) => {
           </p>
         </motion.div>
 
+        {/* Photo Carousel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <Carousel opts={{ loop: true }} className="w-full max-w-5xl mx-auto">
+            <CarouselContent>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 1"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 2"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 3"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 4"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 5"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/3">
+                <div className="p-2">
+                  <img
+                    src="/placeholder.svg"
+                    alt="Event photo 6"
+                    className="w-full h-56 object-cover rounded-xl border border-border"
+                  />
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+        </motion.div>
+
         {/* In-Person Options */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {options.map((opt, i) => (
@@ -69,37 +145,28 @@ const EventBrandShowUp = ({ options }: EventBrandShowUpProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-gradient-card border border-border rounded-xl shadow-card relative flex flex-col"
+              className="bg-gradient-card border border-border rounded-xl p-8 shadow-card flex flex-col"
             >
-              <span className="absolute top-4 right-4 text-[10px] tracking-wider uppercase font-body text-primary bg-primary/10 px-2 py-1 rounded-full">
-                {opt.tag}
-              </span>
-
-              {/* Photo carousel placeholder */}
-              <div className="h-48 bg-muted/30 rounded-t-xl flex items-center justify-center border-b border-border overflow-hidden">
-                <div className="text-center px-4">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <opt.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <p className="text-muted-foreground/50 text-xs font-body">
-                    Add photos from past events here
-                  </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <opt.icon className="w-5 h-5 text-primary" />
                 </div>
+                <span className="text-[10px] tracking-wider uppercase font-body text-primary bg-primary/10 px-2 py-1 rounded-full">
+                  {opt.tag}
+                </span>
               </div>
 
-              <div className="p-8 flex flex-col flex-1">
-                <h4 className="font-display font-bold text-lg text-foreground mb-3">
-                  {opt.title}
-                </h4>
-                <p className="text-muted-foreground font-body text-sm leading-relaxed mb-4">
-                  {opt.desc}
+              <h4 className="font-display font-bold text-lg text-foreground mb-3">
+                {opt.title}
+              </h4>
+              <p className="text-muted-foreground font-body text-sm leading-relaxed mb-4">
+                {opt.desc}
+              </p>
+              <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-auto">
+                <p className="text-xs text-muted-foreground font-body leading-relaxed">
+                  <span className="text-primary font-semibold">What brands have done: </span>
+                  {opt.example}
                 </p>
-                <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 mt-auto">
-                  <p className="text-xs text-muted-foreground font-body leading-relaxed">
-                    <span className="text-primary font-semibold">What brands have done: </span>
-                    {opt.example}
-                  </p>
-                </div>
               </div>
             </motion.div>
           ))}
