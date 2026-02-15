@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Outfit', 'sans-serif'],
+        display: ['Josefin Sans', 'sans-serif'],
         body: ['Space Grotesk', 'sans-serif'],
       },
       colors: {
