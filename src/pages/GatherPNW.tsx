@@ -8,6 +8,7 @@ import EventStats from "@/components/event/EventStats";
 import EventTiers from "@/components/event/EventTiers";
 import EventCTA from "@/components/event/EventCTA";
 import EventROI from "@/components/event/EventROI";
+import EventSetup from "@/components/event/EventSetup";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 
@@ -142,6 +143,7 @@ const GatherPNW = () => {
       <EventBrandShowUp options={pnwShowUpOptions} />
 
       <EventROI eventSize="250–500" />
+      <EventSetup variant="pnw" />
 
       <EventStats
         donutData={pnwDonutData}
