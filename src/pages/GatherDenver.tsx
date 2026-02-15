@@ -142,17 +142,17 @@ const GatherDenver = () => {
 
       <EventQuote quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
-      <EventBrandShowUp options={denverShowUpOptions} />
-
-      <EventROI eventSize="600–900" />
-      <EventSetup variant="denver" />
-
       <EventStats
         donutData={denverDonutData}
         barData={denverBarData}
         stats={denverStats}
         subtitle="We don't just fill seats — we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
       />
+
+      <EventBrandShowUp options={denverShowUpOptions} />
+
+      <EventROI eventSize="600–900" />
+      <EventSetup variant="denver" />
 
       <Testimonials />
       <Schedule />
