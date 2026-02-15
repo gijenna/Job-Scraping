@@ -2,12 +2,12 @@ import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 
 const donutData = [
-  { name: "Marketing & Creative", value: 38, color: "hsl(38, 90%, 55%)" },
-  { name: "Product & Design", value: 22, color: "hsl(160, 30%, 40%)" },
-  { name: "Operations & Supply Chain", value: 15, color: "hsl(220, 40%, 50%)" },
-  { name: "Sales & Biz Dev", value: 12, color: "hsl(28, 85%, 45%)" },
-  { name: "Outdoor Ed & Tech", value: 8, color: "hsl(190, 40%, 45%)" },
-  { name: "Career Transitioners", value: 5, color: "hsl(0, 0%, 45%)" },
+  { name: "Marketing & Creative", value: 38, color: "hsl(5, 65%, 65%)" },
+  { name: "Product & Design", value: 22, color: "hsl(180, 30%, 45%)" },
+  { name: "Operations & Supply Chain", value: 15, color: "hsl(35, 50%, 55%)" },
+  { name: "Sales & Biz Dev", value: 12, color: "hsl(15, 70%, 55%)" },
+  { name: "Outdoor Ed & Tech", value: 8, color: "hsl(160, 25%, 50%)" },
+  { name: "Career Transitioners", value: 5, color: "hsl(180, 15%, 50%)" },
 ];
 
 const barData = [
@@ -108,7 +108,7 @@ const StatsSection = () => {
                   tickLine={false}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="count" fill="hsl(38, 90%, 55%)" radius={[0, 4, 4, 0]} barSize={18} />
+                <Bar dataKey="count" fill="hsl(5, 65%, 65%)" radius={[0, 4, 4, 0]} barSize={18} />
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
