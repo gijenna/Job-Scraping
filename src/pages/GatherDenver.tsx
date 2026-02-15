@@ -8,6 +8,7 @@ import EventStats from "@/components/event/EventStats";
 import EventTiers from "@/components/event/EventTiers";
 import EventCTA from "@/components/event/EventCTA";
 import EventROI from "@/components/event/EventROI";
+import EventSetup from "@/components/event/EventSetup";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 
@@ -144,6 +145,7 @@ const GatherDenver = () => {
       <EventBrandShowUp options={denverShowUpOptions} />
 
       <EventROI eventSize="600–900" />
+      <EventSetup variant="denver" />
 
       <EventStats
         donutData={denverDonutData}
