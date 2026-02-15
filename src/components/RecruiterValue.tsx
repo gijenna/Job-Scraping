@@ -10,7 +10,7 @@ const qualityPoints = [
   },
   {
     icon: Users,
-    stat: "250–600",
+    stat: "250–500",
     label: "Per Event",
     desc: "Smaller pool, far higher concentration of relevant candidates. Every conversation is intentional — no 30-second drive-bys.",
   },
