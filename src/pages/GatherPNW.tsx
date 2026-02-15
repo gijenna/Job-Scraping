@@ -162,7 +162,7 @@ const GatherPNW = () => {
         donutData={pnwDonutData}
         barData={pnwBarData}
         stats={pnwStats}
-        subtitle="We don't just fill seats — we curate a community. Based on 425+ registrants from our 2025 PNW event, plus the UO Sports Product Management pipeline."
+        subtitle="Candidates worth putting in front of a hiring manager."
       />
 
       <EventBrandShowUp options={pnwShowUpOptions} />
