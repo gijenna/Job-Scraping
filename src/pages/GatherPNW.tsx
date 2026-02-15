@@ -13,9 +13,24 @@ import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 
 const pnwBrands = [
-  "Nike", "Adidas", "Columbia", "Patagonia", "REI", "KEEN", "On Running",
-  "Lululemon", "Garmin", "Snow Peak", "Ruffwear", "Rivian", "HP Inc",
-  "AllTrails", "Dovetail Workwear", "Superfeet", "Microsoft", "Bob's Red Mill",
+  { name: "Nike", domain: "nike.com" },
+  { name: "Adidas", domain: "adidas.com" },
+  { name: "Columbia", domain: "columbia.com" },
+  { name: "Patagonia", domain: "patagonia.com" },
+  { name: "REI", domain: "rei.com" },
+  { name: "KEEN", domain: "keenfootwear.com" },
+  { name: "On Running", domain: "on-running.com" },
+  { name: "Lululemon", domain: "lululemon.com" },
+  { name: "Garmin", domain: "garmin.com" },
+  { name: "Snow Peak", domain: "snowpeak.com" },
+  { name: "Ruffwear", domain: "ruffwear.com" },
+  { name: "Rivian", domain: "rivian.com" },
+  { name: "HP Inc", domain: "hp.com" },
+  { name: "AllTrails", domain: "alltrails.com" },
+  { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
+  { name: "Superfeet", domain: "superfeet.com" },
+  { name: "Microsoft", domain: "microsoft.com" },
+  { name: "Bob's Red Mill", domain: "bobsredmill.com" },
 ];
 
 const pnwDonutData = [
