@@ -1,5 +1,10 @@
+interface Brand {
+  name: string;
+  domain: string;
+}
+
 interface EventLogoTickerProps {
-  brands: string[];
+  brands: Brand[];
   headline?: string;
 }
 
@@ -13,22 +18,33 @@ const EventLogoTicker = ({
         {headline}
       </p>
       <div className="relative">
-        <div className="flex animate-logo-scroll whitespace-nowrap">
+        <div className="flex animate-logo-scroll whitespace-nowrap items-center">
           {[...brands, ...brands].map((brand, i) => (
-            <span
+            <div
               key={i}
-              className="inline-block mx-6 md:mx-10 text-muted-foreground/60 font-display font-semibold text-sm md:text-base whitespace-nowrap hover:text-primary transition-colors"
+              className="inline-flex items-center justify-center mx-6 md:mx-10 shrink-0"
             >
-              {brand}
-            </span>
+              <img
+                src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
+                alt={brand.name}
+                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                loading="lazy"
+                onError={(e) => {
+                  // Fallback to text if logo fails
+                  const target = e.currentTarget;
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `<span class="text-muted-foreground/60 font-display font-semibold text-sm md:text-base whitespace-nowrap">${brand.name}</span>`;
+                  }
+                }}
+              />
+            </div>
           ))}
         </div>
       </div>
-      <p className="text-center text-muted-foreground/40 text-xs mt-6 font-body italic">
-        Logos coming soon — brand names shown as placeholder
-      </p>
     </section>
   );
 };
 
+export type { Brand };
 export default EventLogoTicker;

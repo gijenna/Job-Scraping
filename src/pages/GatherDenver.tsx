@@ -13,9 +13,22 @@ import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 
 const denverBrands = [
-  "REI", "Patagonia", "The North Face", "Cotopaxi", "Alterra Mountain Co",
-  "Black Diamond", "Vail Resorts", "Smartwool", "Nike", "Google", "Apple",
-  "KPMG", "Amazon", "Backbone Media", "Outside Inc", "Yeti",
+  { name: "REI", domain: "rei.com" },
+  { name: "Patagonia", domain: "patagonia.com" },
+  { name: "The North Face", domain: "thenorthface.com" },
+  { name: "Cotopaxi", domain: "cotopaxi.com" },
+  { name: "Alterra Mountain Co", domain: "alterramtnco.com" },
+  { name: "Black Diamond", domain: "blackdiamondequipment.com" },
+  { name: "Vail Resorts", domain: "vailresorts.com" },
+  { name: "Smartwool", domain: "smartwool.com" },
+  { name: "Nike", domain: "nike.com" },
+  { name: "Google", domain: "google.com" },
+  { name: "Apple", domain: "apple.com" },
+  { name: "KPMG", domain: "kpmg.com" },
+  { name: "Amazon", domain: "amazon.com" },
+  { name: "Backbone Media", domain: "backbonemedia.com" },
+  { name: "Outside Inc", domain: "outsideinc.com" },
+  { name: "Yeti", domain: "yeti.com" },
 ];
 
 const denverDonutData = [
