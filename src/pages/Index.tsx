@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import LogoTicker from "@/components/LogoTicker";
 import ValueProps from "@/components/ValueProps";
+import RecruiterValue from "@/components/RecruiterValue";
 import StatsSection from "@/components/StatsSection";
 import Testimonials from "@/components/Testimonials";
 import PartnershipTiers from "@/components/PartnershipTiers";
@@ -13,6 +14,7 @@ const Index = () => {
       <HeroSection />
       <LogoTicker />
       <ValueProps />
+      <RecruiterValue />
       <StatsSection />
       <Testimonials />
       <Schedule />
