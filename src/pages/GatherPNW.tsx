@@ -140,17 +140,17 @@ const GatherPNW = () => {
 
       <EventQuote quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
-      <EventBrandShowUp options={pnwShowUpOptions} />
-
-      <EventROI eventSize="250–500" />
-      <EventSetup variant="pnw" />
-
       <EventStats
         donutData={pnwDonutData}
         barData={pnwBarData}
         stats={pnwStats}
         subtitle="We don't just fill seats — we curate a community. Based on 425+ registrants from our 2025 PNW event, plus the UO Sports Product Management pipeline."
       />
+
+      <EventBrandShowUp options={pnwShowUpOptions} />
+
+      <EventROI eventSize="250–500" />
+      <EventSetup variant="pnw" />
 
       <Testimonials />
       <Schedule />
