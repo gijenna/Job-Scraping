@@ -7,6 +7,23 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import eventYeti from "@/assets/event-yeti.jpg";
+import eventRei from "@/assets/event-rei.jpg";
+import eventBoa from "@/assets/event-boa.jpg";
+import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
+import eventShar from "@/assets/event-shar.jpg";
+import eventPow from "@/assets/event-pow.jpg";
+import eventOutsideBooth from "@/assets/event-outside-booth.jpg";
+
+const carouselPhotos = [
+  { src: eventYeti, alt: "YETI brand booth at Basecamp Outdoor event" },
+  { src: eventRei, alt: "REI booth with attendees at Basecamp Outdoor" },
+  { src: eventBoa, alt: "BOA booth engaging with attendees" },
+  { src: eventCareerCoaching, alt: "Career Coaching Pop-Up at Outside Festival" },
+  { src: eventShar, alt: "Shar Snacks booth at Basecamp Outdoor" },
+  { src: eventPow, alt: "Protect Our Winters booth at event" },
+  { src: eventOutsideBooth, alt: "Outside+ booth at Basecamp Outdoor" },
+];
 
 interface ShowUpOption {
   icon: typeof Briefcase;
@@ -76,60 +93,17 @@ const EventBrandShowUp = ({ options }: EventBrandShowUpProps) => {
         >
           <Carousel opts={{ loop: true }} className="w-full max-w-5xl mx-auto">
             <CarouselContent>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 1"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 2"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 3"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 4"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 5"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/3">
-                <div className="p-2">
-                  <img
-                    src="/placeholder.svg"
-                    alt="Event photo 6"
-                    className="w-full h-56 object-cover rounded-xl border border-border"
-                  />
-                </div>
-              </CarouselItem>
+              {carouselPhotos.map((photo, i) => (
+                <CarouselItem key={i} className="md:basis-1/3">
+                  <div className="p-2">
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-56 object-cover rounded-xl border border-border"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious className="hidden md:flex" />
             <CarouselNext className="hidden md:flex" />
