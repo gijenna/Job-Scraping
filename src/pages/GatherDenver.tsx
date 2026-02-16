@@ -98,7 +98,7 @@ const denverTiers = [
       "Logo & careers page link on event website & registration",
       "Exposure to our 300K+ community",
       "Logo across all digital channels",
-      "Dedicated social post to 50K LinkedIn / 75K Facebook / 40K IG",
+      "Dedicated social post to 50K LinkedIn / 80K Facebook / 40K IG",
     ],
   },
   {
