@@ -120,7 +120,7 @@ const denverTiers = [
     price: "$3,000+",
     spots: "10 available",
     icon: Zap,
-    popular: true,
+    popular: false,
     bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
     perks: [
       "Hiring table inside event",
@@ -134,7 +134,7 @@ const denverTiers = [
     price: "$6,000–12,000",
     spots: "4 available",
     icon: Star,
-    popular: false,
+    popular: true,
     bestFor: "Brands wanting hiring access AND marketing activation at Outside Days",
     perks: [
       "Everything in Hiring Table, plus:",
