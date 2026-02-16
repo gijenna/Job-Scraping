@@ -189,6 +189,8 @@ const GatherPNW = () => {
 
       <RecruiterValue />
 
+      <Testimonials />
+
       <EventStats
         donutData={pnwDonutData}
         barData={pnwBarData}
@@ -197,8 +199,6 @@ const GatherPNW = () => {
       />
 
       <EventTalentInsights insights={pnwTalentInsights} />
-
-      <Testimonials />
 
       <EventBrandShowUp options={pnwShowUpOptions} />
 

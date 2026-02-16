@@ -16,10 +16,10 @@ const testimonials = [
     domain: "elevateoc.com",
   },
   {
-    quote: "The job seekers were super motivated and highly aligned. I will definitely seek out this event in the future!",
-    name: "Crystal Weaver",
-    title: "Recruiting Manager, Eleven Experience",
-    domain: "elevenexperience.com",
+    quote: "We had a GREAT time at Gather! I thought it was a very successful event - the volunteers you had helping were very much appreciated!",
+    name: "Jessica Martin",
+    title: "Talent Acquisition, YETI",
+    domain: "yeti.com",
   },
   {
     quote: "We use Gather as a branding opportunity for when we're hiring in the future.",
@@ -34,10 +34,10 @@ const testimonials = [
     domain: "du.edu",
   },
   {
-    quote: "We had a GREAT time at Gather! I thought it was a very successful event - the volunteers you had helping were very much appreciated!",
-    name: "Jessica Martin",
-    title: "Talent Acquisition, YETI",
-    domain: "yeti.com",
+    quote: "The job seekers were super motivated and highly aligned. I will definitely seek out this event in the future!",
+    name: "Crystal Weaver",
+    title: "Recruiting Manager, Eleven Experience",
+    domain: "elevenexperience.com",
   },
 ];
 
