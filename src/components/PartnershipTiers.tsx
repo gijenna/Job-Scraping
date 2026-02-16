@@ -7,7 +7,7 @@ const tiers = [
     price: "$3,000+",
     spots: "7 available",
     icon: Zap,
-    popular: true,
+    popular: false,
     bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
     perks: [
       "Hiring table inside event",
@@ -21,7 +21,7 @@ const tiers = [
     price: "$6,000–12,000",
     spots: "4 available",
     icon: Star,
-    popular: false,
+    popular: true,
     bestFor: "Hiring AND marketing teams looking to split budget, or brands consolidating niche influence",
     perks: [
       "Everything in Hiring Table, plus:",
