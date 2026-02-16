@@ -10,6 +10,7 @@ interface EventHeroProps {
   ctaEmail: string;
   ctaSubject: string;
   accolade?: string;
+  logoSrc?: string;
 }
 
 const EventHero = ({
@@ -22,6 +23,7 @@ const EventHero = ({
   ctaEmail,
   ctaSubject,
   accolade,
+  logoSrc,
 }: EventHeroProps) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -41,19 +43,20 @@ const EventHero = ({
       </div>
 
       <div className="relative z-10 container mx-auto px-6 text-center">
-        {/* Logo placeholder */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
-          <div className="w-48 h-24 mx-auto border-2 border-dashed border-primary/30 rounded-xl flex items-center justify-center bg-background/20 backdrop-blur-sm">
-            <span className="text-muted-foreground text-xs font-body tracking-wider uppercase">
-              Event Logo
-            </span>
-          </div>
-        </motion.div>
+        {logoSrc && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+          >
+            <img
+              src={logoSrc}
+              alt="Event logo"
+              className="w-64 md:w-80 h-auto mx-auto drop-shadow-lg"
+            />
+          </motion.div>
+        )}
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
