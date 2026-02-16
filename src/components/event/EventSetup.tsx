@@ -69,7 +69,17 @@ const EventSetup = ({ variant }: EventSetupProps) => {
           <div className="border-t border-border pt-6">
             <p className="text-muted-foreground font-body text-sm leading-relaxed">
               <span className="text-primary font-semibold">Venue note: </span>
-              {variantNote[variant]}
+              {variant === "pnw" ? (
+                <>
+                  Hosted at U of O Portland's{" "}
+                  <a href="https://pdx.uoregon.edu/uo-portland-campus-center" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+                    Campus Center
+                  </a>{" "}
+                  at 2800 NE Liberty St, Portland, OR, 97211 — a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.
+                </>
+              ) : (
+                variantNote[variant]
+              )}
             </p>
           </div>
         </motion.div>
