@@ -158,7 +158,7 @@ const GatherDenver = () => {
 
       <RecruiterValue />
 
-      <EventQuote title="Make it a collab with marketing" quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
+      
 
       <Testimonials />
 
@@ -175,6 +175,8 @@ const GatherDenver = () => {
 
       <EventSetup variant="denver" />
       <EventROI eventSize="600–900" />
+
+      <EventQuote title="Make it a collab with marketing" quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
       <EventTiers
         tiers={denverTiers}
