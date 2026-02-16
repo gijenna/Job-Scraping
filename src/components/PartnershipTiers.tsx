@@ -29,7 +29,7 @@ const tiers = [
       "Much larger activation space",
       "Up to 20 brand representatives",
       "Room for product display or activation",
-      "Dedicated social post to 50K LinkedIn / 75K Facebook / 40K IG",
+      "Dedicated social post to 50K LinkedIn / 80K Facebook / 40K IG",
     ],
   },
   {

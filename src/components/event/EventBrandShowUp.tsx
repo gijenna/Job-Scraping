@@ -58,7 +58,7 @@ const digitalPerks: DigitalPerk[] = [
   {
     icon: Share2,
     title: "Social Media Amplification",
-    desc: "Dedicated posts across our 50K LinkedIn, 75K Facebook, and 40K Instagram channels — promoting your brand to our full 300K+ audience.",
+    desc: "Event posts will reach industry leaders, athletes & influencers across our 50K LinkedIn, 80K Facebook, and 40K Instagram channels — promoting your brand to our full 300K+ audience.",
   },
 ];
 
