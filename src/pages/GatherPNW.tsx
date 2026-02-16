@@ -202,8 +202,8 @@ const GatherPNW = () => {
 
       <EventBrandShowUp options={pnwShowUpOptions} />
 
-      <EventROI eventSize="250–500" />
       <EventSetup variant="pnw" />
+      <EventROI eventSize="250–500" />
 
       <Schedule />
 
