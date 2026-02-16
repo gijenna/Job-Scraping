@@ -1,5 +1,6 @@
 import { Zap, Star, Crown, Briefcase, MessageCircle, Mic } from "lucide-react";
 import heroDenver from "@/assets/hero-denver.mp4";
+import denverLogo from "@/assets/denver-logo.png";
 import EventHero from "@/components/event/EventHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import EventQuote from "@/components/event/EventQuote";
@@ -139,13 +140,15 @@ const GatherDenver = () => {
       <EventHero
         videoSrc={heroDenver}
         tagline="Basecamp Outdoor × Outside Days Festival"
-        title="GATHER"
-        titleAccent="DENVER 2026"
-        subtitle="The outdoor industry's largest career event. 900+ candidates. 25+ brands. Set inside the 40,000-person Outside Days Festival."
-        date="May 29, 2026 · Denver, CO"
+        title=""
+        titleAccent=""
+        subtitle={'The outdoor industry\'s best career event of the year.\n500+ candidates, 25+ brands.\nRight before Friday night music at the 40,000 person'}
+        subtitleLink={{ text: "Outside Days Festival", url: "https://bit.ly/4bDCrsv" }}
+        date="May 29, 2026 · 2–5 PM · Denver, CO"
         ctaEmail="Jenna@wearetheoutdoorindustry.com"
         ctaSubject="I'd like to sponsor Gather Denver 2026"
-        
+        accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"
+        logoSrc={denverLogo}
       />
 
       <EventLogoTicker

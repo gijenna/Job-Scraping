@@ -6,6 +6,7 @@ interface EventHeroProps {
   title: string;
   titleAccent: string;
   subtitle: string;
+  subtitleLink?: { text: string; url: string };
   date: string;
   ctaEmail: string;
   ctaSubject: string;
@@ -19,6 +20,7 @@ const EventHero = ({
   title,
   titleAccent,
   subtitle,
+  subtitleLink,
   date,
   ctaEmail,
   ctaSubject,
@@ -86,6 +88,20 @@ const EventHero = ({
           className="font-body text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-4 whitespace-pre-line"
         >
           {subtitle}
+          {subtitleLink && (
+            <>
+              {" "}
+              <a
+                href={subtitleLink.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline hover:opacity-80"
+              >
+                {subtitleLink.text}
+              </a>
+              .
+            </>
+          )}
         </motion.p>
 
         <motion.p
