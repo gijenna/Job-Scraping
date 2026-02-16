@@ -183,7 +183,7 @@ const GatherPNW = () => {
         titleAccent=""
         subtitle={"The Pacific Northwest's premier outdoor industry career event.\n300+ registrants & up to 20 brands. Intimate, high-quality networking at U of O's new Portland Campus."}
         date="April 16, 2026 · Portland, OR · 5:30–8:30 PM"
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         ctaSubject="I'd like to sponsor Gather PNW 2026"
         logoSrc={gatherPnwLogo}
       />
@@ -217,12 +217,12 @@ const GatherPNW = () => {
 
       <EventTiers
         tiers={pnwTiers}
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         eventName="Gather PNW 2026"
       />
 
       <EventCTA
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         eventName="Gather PNW 2026"
         subtitle="Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event — where 250–500 highly relevant professionals gather in one room."
       />

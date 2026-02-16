@@ -14,6 +14,14 @@ import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 import RecruiterValue from "@/components/RecruiterValue";
 
+const denverSchedule = [
+  { time: "12–2:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
+  { time: "2–2:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
+  { time: "2–5 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
+  { time: "5–5:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
+  { time: "5 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
+];
+
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
   { name: "Patagonia", domain: "patagonia.com" },
@@ -112,7 +120,6 @@ const denverTiers = [
       "Much larger activation space",
       "Up to 20 brand representatives",
       "Room for product display or activation",
-      "2-minute stage spotlight during main program",
       "Dedicated social post to 50K LinkedIn / 80K Facebook / 40K IG",
       'Free Candidate Match boost ($400) from <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" class="text-primary underline hover:opacity-80">Basecamp Match</a>',
     ],
@@ -125,9 +132,8 @@ const denverTiers = [
     popular: false,
     bestFor: "Major players wanting top billing at the biggest outdoor career event of the year",
     perks: [
-      '"Gather Denver 2026, Presented by [You]"',
-      "Keynote introduction opportunity",
-      "Prime branding at entrance, bar & stage",
+      '"Outside Days Career Fair presented by [You]"',
+      "Prime branding at entrance & stage",
       "Post-event engagement & lead report",
       "Custom in-person and/or digital activation built with your creative team",
     ],
@@ -145,7 +151,7 @@ const GatherDenver = () => {
         subtitle={'The outdoor industry\'s best career event of the year.\n500+ candidates, 25+ brands.\nRight before Friday night music at the 40,000 person'}
         subtitleLink={{ text: "Outside Days Festival", url: "https://bit.ly/4bDCrsv" }}
         date="May 29, 2026 · 2–5 PM · Denver, CO"
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         ctaSubject="I'd like to sponsor Gather Denver 2026"
         accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"
         logoSrc={denverLogo}
@@ -171,7 +177,7 @@ const GatherDenver = () => {
 
       <EventBrandShowUp options={denverShowUpOptions} />
 
-      <Schedule />
+      <Schedule items={denverSchedule} />
 
       <EventSetup variant="denver" />
       <EventROI eventSize="600–900" />
@@ -180,12 +186,12 @@ const GatherDenver = () => {
 
       <EventTiers
         tiers={denverTiers}
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         eventName="Gather Denver 2026"
       />
 
       <EventCTA
-        ctaEmail="Jenna@wearetheoutdoorindustry.com"
+        ctaEmail="Austin@basecampjobs.com"
         eventName="Gather Denver 2026"
         subtitle="Spots are limited. Secure your presence at the outdoor industry's biggest career event — embedded inside the 40,000-person Outside Days Festival in Denver."
       />

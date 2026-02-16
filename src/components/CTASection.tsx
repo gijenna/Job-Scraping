@@ -17,15 +17,15 @@ const CTASection = () => {
             at the outdoor industry's most talked-about career event.
           </p>
           <a
-            href="mailto:Jenna@wearetheoutdoorindustry.com?subject=I'd like to sponsor GATHER Denver 2026"
+            href="mailto:Austin@basecampjobs.com?subject=I'd like to sponsor GATHER Denver 2026"
             className="inline-flex items-center justify-center px-10 py-4 bg-gradient-gold text-primary-foreground font-display font-bold text-lg rounded-lg hover:opacity-90 transition-opacity shadow-gold"
           >
             Get in Touch
           </a>
           <p className="mt-6 text-muted-foreground text-sm font-body">
             Contact:{" "}
-            <a href="mailto:Jenna@wearetheoutdoorindustry.com" className="text-primary hover:underline">
-              Jenna@wearetheoutdoorindustry.com
+            <a href="mailto:Austin@basecampjobs.com" className="text-primary hover:underline">
+              Austin@basecampjobs.com
             </a>
           </p>
         </motion.div>
