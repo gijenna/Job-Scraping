@@ -9,9 +9,14 @@ import EventTiers from "@/components/event/EventTiers";
 import EventCTA from "@/components/event/EventCTA";
 import EventROI from "@/components/event/EventROI";
 import EventSetup from "@/components/event/EventSetup";
+import EventTalentInsights from "@/components/event/EventTalentInsights";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 import RecruiterValue from "@/components/RecruiterValue";
+import insightTalentPool from "@/assets/insight-talent-pool.jpg";
+import insightBrandInfluence from "@/assets/insight-brand-influence.jpg";
+import insightSpmPipeline from "@/assets/insight-spm-pipeline.jpg";
+import insightPivots from "@/assets/insight-pivots.jpg";
 
 const pnwBrands = [
   { name: "Nike", domain: "nike.com" },
