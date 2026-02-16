@@ -83,7 +83,7 @@ const EventHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="font-body text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-4"
+          className="font-body text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-4 whitespace-pre-line"
         >
           {subtitle}
         </motion.p>
