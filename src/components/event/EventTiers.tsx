@@ -79,7 +79,7 @@ const EventTiers = ({ tiers, ctaEmail, eventName }: EventTiersProps) => {
                     className="flex gap-3 text-sm text-muted-foreground font-body"
                   >
                     <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    {perk}
+                    <span dangerouslySetInnerHTML={{ __html: perk }} />
                   </li>
                 ))}
               </ul>
