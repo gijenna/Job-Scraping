@@ -48,7 +48,7 @@ const showUpOptions = [
 
 const RecruiterValue = () => {
   return (
-    <section className="py-24 px-6 border-y border-border">
+    <section className="py-24 px-6">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
