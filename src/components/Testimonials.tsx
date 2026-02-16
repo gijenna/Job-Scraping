@@ -5,21 +5,37 @@ const testimonials = [
     quote: "We all met GREAT candidates. Three of us have a candidate in play, and I am hopefully extending an offer to one today. Huge success.",
     name: "Martine Knights",
     title: "Sr Recruiter, VF Corporation",
+    domain: "vfc.com",
   },
   {
     quote: "We generated a LOT of excellent candidates & would be very happy to sponsor again! We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
     name: "Hillary St. John",
     title: "Sr. HR, Elevate Outdoor Collective",
+    domain: "elevateoc.com",
   },
   {
     quote: "The job seekers were super motivated and highly aligned. I will definitely seek out this event in the future!",
     name: "Crystal Weaver",
-    title: "Recruiting Manager",
+    title: "Recruiting Manager, Eleven Experience",
+    domain: "elevenexperience.com",
   },
   {
     quote: "We use Gather as a branding opportunity for when we're hiring in the future.",
     name: "Liz Berry",
-    title: "Sr Manager, Talent Acquisition",
+    title: "Sr Manager, Talent Acquisition, Cotopaxi",
+    domain: "cotopaxi.com",
+  },
+  {
+    quote: "We are still OVER THE MOON after Gather. Basecamp has been my FAVORITE partner and the one that has generated the most goodwill and visibility for our nascent program.",
+    name: "Chris Castilian",
+    title: "Sr Executive Director, Outdoor Industry Leadership Program, University of Denver",
+    domain: "du.edu",
+  },
+  {
+    quote: "We had a GREAT time at Gather! I thought it was a very successful event - the volunteers you had helping were very much appreciated!",
+    name: "Jessica Martin",
+    title: "Talent Acquisition, YETI",
+    domain: "yeti.com",
   },
 ];
 
@@ -47,15 +63,25 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-gradient-card border border-border rounded-xl p-8 shadow-card"
+              className="bg-card border border-border rounded-xl p-8 shadow-card"
+              style={{ backgroundColor: 'white' }}
             >
-              <p className="text-foreground font-body text-sm leading-relaxed mb-6 italic">
+              <div className="flex items-center gap-3 mb-6">
+                <img
+                  src={`https://logo.clearbit.com/${t.domain}`}
+                  alt=""
+                  className="w-10 h-10 rounded-full object-contain p-1"
+                  style={{ backgroundColor: '#f9fafb' }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+                <div>
+                  <p className="font-display font-semibold text-secondary-foreground">{t.name}</p>
+                  <p className="text-muted-foreground text-sm">{t.title}</p>
+                </div>
+              </div>
+              <p className="text-secondary-foreground font-body text-sm leading-relaxed italic">
                 "{t.quote}"
               </p>
-              <div>
-                <p className="font-display font-semibold text-foreground">{t.name}</p>
-                <p className="text-muted-foreground text-sm">{t.title}</p>
-              </div>
             </motion.div>
           ))}
         </div>
