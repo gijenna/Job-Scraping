@@ -68,11 +68,10 @@ const Testimonials = () => {
             >
               <div className="flex items-center gap-4 mb-6">
                 <img
-                  src={`https://logo.clearbit.com/${t.domain}`}
+                  src={`https://www.google.com/s2/favicons?domain=${t.domain}&sz=64`}
                   alt={`${t.name} company logo`}
                   className="w-12 h-12 rounded-lg object-contain border border-neutral-200 p-1.5"
                   style={{ backgroundColor: '#ffffff' }}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
                 <div>
                   <p className="font-display font-bold" style={{ color: '#19363B' }}>{t.name}</p>
