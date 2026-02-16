@@ -9,9 +9,14 @@ import EventTiers from "@/components/event/EventTiers";
 import EventCTA from "@/components/event/EventCTA";
 import EventROI from "@/components/event/EventROI";
 import EventSetup from "@/components/event/EventSetup";
+import EventTalentInsights from "@/components/event/EventTalentInsights";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
 import RecruiterValue from "@/components/RecruiterValue";
+import insightTalentPool from "@/assets/insight-talent-pool.jpg";
+import insightBrandInfluence from "@/assets/insight-brand-influence.jpg";
+import insightSpmPipeline from "@/assets/insight-spm-pipeline.jpg";
+import insightPivots from "@/assets/insight-pivots.jpg";
 
 const pnwBrands = [
   { name: "Nike", domain: "nike.com" },
@@ -58,6 +63,33 @@ const pnwStats = [
   { num: "38%", label: "Marketing & Creative" },
   { num: "22%", label: "Product & Design" },
   { num: "20%+", label: "UO SPM Students" },
+];
+
+const pnwTalentInsights = [
+  {
+    title: 'The "Design-to-Delivery" Talent Pool',
+    stat: "22% + 15%",
+    desc: "Recruiters meet the entire product lifecycle — from R&D labs to logistics centers. With 22% in Product/Design and 15% in Ops/Supply Chain, hire across the board from a single event.",
+    image: insightTalentPool,
+  },
+  {
+    title: "High Brand Influence & Advocacy",
+    stat: "~40%",
+    desc: "Nearly 40% work in Marketing & Comms. Sponsors get products in front of the people who manage social, PR, and brand strategy at Nike, Columbia, and On Running.",
+    image: insightBrandInfluence,
+  },
+  {
+    title: "The UO SPM Pipeline",
+    stat: "20%+",
+    desc: "Heavy concentration of UO Sports Product Management grad students — a program built to feed the top levels of footwear and apparel. First-look advantage at the PNW's most specialized emerging talent.",
+    image: insightSpmPipeline,
+  },
+  {
+    title: "A Hub for Industry Pivots",
+    stat: "High Volume",
+    desc: "Professionals from tech, military, and healthcare pivoting into outdoor — bringing transferable skills like R&D and Strategic Ops that are often missing from traditional outdoor networks.",
+    image: insightPivots,
+  },
 ];
 
 const pnwShowUpOptions = [
@@ -164,6 +196,8 @@ const GatherPNW = () => {
         stats={pnwStats}
         subtitle="Candidates worth putting in front of a hiring manager."
       />
+
+      <EventTalentInsights insights={pnwTalentInsights} />
 
       <EventBrandShowUp options={pnwShowUpOptions} />
 
