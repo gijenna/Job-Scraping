@@ -168,7 +168,7 @@ const pnwTiers = [
       "Keynote introduction opportunity",
       "Prime branding at entrance, bar & stage",
       "Post-event engagement & lead report",
-      "Custom in-person and digital activation built with your creative team",
+      "Custom in-person and/or digital activation built with your creative team",
     ],
   },
 ];
