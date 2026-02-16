@@ -13,10 +13,10 @@ interface EventSetupProps {
 const baseItems: SetupItem[] = [
   { icon: Table, label: "6-ft skirted table & 2 chairs" },
   { icon: Flag, label: "Space for pull-up banner or backdrop behind your table" },
-  { icon: Plug, label: "Power outlet at every table" },
+  { icon: Plug, label: "Power outlets available on request" },
   { icon: Wifi, label: "Venue Wi-Fi access" },
   { icon: Package, label: "Room for product samples, swag bags & handouts" },
-  { icon: MonitorSmartphone, label: "QR code stand or tablet-friendly setup space" },
+  { icon: MonitorSmartphone, label: "Free appetizers and beverages" },
   { icon: MapPin, label: "Branded name placard & table signage" },
   { icon: Users, label: "Up to 5 brand reps included (more with Deluxe tier)" },
 ];
