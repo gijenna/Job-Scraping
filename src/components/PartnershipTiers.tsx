@@ -105,7 +105,7 @@ const PartnershipTiers = () => {
               </ul>
 
               <a
-                href="mailto:Austin@basecampjobs.com?subject=I'd like to participate in GATHER Denver 2026"
+                href="mailto:Austin@basecampjobs.com?cc=jenna@wearetheoutdoorindustry.com&subject=I'd like to participate in GATHER Denver 2026"
                 className={`mt-8 inline-flex items-center justify-center px-6 py-3 rounded-lg font-display font-semibold text-sm transition-all ${
                   tier.popular
                     ? "bg-gradient-gold text-primary-foreground hover:opacity-90 shadow-gold"
