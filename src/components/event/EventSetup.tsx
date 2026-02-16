@@ -22,7 +22,7 @@ const baseItems: SetupItem[] = [
 ];
 
 const variantNote: Record<string, string> = {
-  pnw: "Hosted at UO Portland's White Stag Block — a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.",
+  pnw: "Hosted at U of O Portland's Campus Center at 2800 NE Liberty St, Portland, OR, 97211 — a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.",
   denver: "Set inside the Outside Days Festival grounds in Denver — a high-energy, outdoor-adjacent venue with festival foot traffic flowing directly past the Gather career activation zone.",
 };
 
