@@ -1,7 +1,19 @@
 import { motion } from "framer-motion";
-import { Users, Star, MessageCircle, Target, Briefcase, Mic } from "lucide-react";
+import { Users, Star, Target } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
-const qualityPoints = [
+interface QualityPoint {
+  icon: LucideIcon;
+  stat: string;
+  label: string;
+  desc: string;
+}
+
+interface RecruiterValueProps {
+  qualityPoints?: QualityPoint[];
+}
+
+const defaultQualityPoints: QualityPoint[] = [
 {
   icon: Target,
   stat: "92%",
@@ -22,31 +34,9 @@ const qualityPoints = [
 }];
 
 
-const showUpOptions = [
-{
-  icon: Briefcase,
-  title: "Employer Table / Booth",
-  desc: "Recruiters or hiring managers take 5–10 minute quality conversations. Space for banners, pull-ups, printed materials, QR codes to your careers page, and swag.",
-  tag: "Most Popular",
-  example: "Columbia brings product samples and a banner; VF brands set up QR-code stands linking directly to open roles. Keen brings swag bags with branded materials."
-},
-{
-  icon: MessageCircle,
-  title: "Industry Expert / Mentor",
-  desc: "Your leaders are featured by name — called out just as prominently as the brand itself. Show up as approachable mentors, not just a logo. 1:1 mini-mentorship conversations.",
-  tag: "Low Lift",
-  example: "Individual leaders from Nike, Adidas, and Columbia have participated as named mentors — even when their company wasn't formally tabling."
-},
-{
-  icon: Mic,
-  title: "Panel Speaker",
-  desc: "Join the 'How I Broke In' panel — 45 minutes of concrete career steps, networking tactics, and Q&A. Your people become the face of what it means to work at your brand.",
-  tag: "High Visibility",
-  example: "Panelists share their exact career trajectory — who they talked to, what they said, how they found the role. It's the most-requested segment at every event."
-}];
 
-
-const RecruiterValue = () => {
+const RecruiterValue = ({ qualityPoints: qualityPointsProp }: RecruiterValueProps) => {
+  const points = qualityPointsProp || defaultQualityPoints;
   return (
     <section className="py-24 px-6">
       <div className="container mx-auto max-w-6xl">
@@ -72,7 +62,7 @@ const RecruiterValue = () => {
 
         {/* Candidate Quality Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
-          {qualityPoints.map((point, i) =>
+          {points.map((point, i) =>
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}

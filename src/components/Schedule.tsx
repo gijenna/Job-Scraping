@@ -11,9 +11,10 @@ const defaultSchedule = [
 
 interface ScheduleProps {
   items?: { time: string; label: string; desc: string }[];
+  heading?: string;
 }
 
-const Schedule = ({ items }: ScheduleProps) => {
+const Schedule = ({ items, heading = "The Evening" }: ScheduleProps) => {
   const schedule = items || defaultSchedule;
   return (
     <section className="py-24 px-6">
@@ -26,7 +27,7 @@ const Schedule = ({ items }: ScheduleProps) => {
         >
           <p className="text-primary text-xs tracking-[0.3em] uppercase mb-4 font-body">Run of Show</p>
           <h2 className="font-display font-extrabold text-4xl md:text-5xl text-foreground">
-            The Evening
+            {heading}
           </h2>
         </motion.div>
 
