@@ -67,7 +67,7 @@ const pnwStats = [
 
 const pnwTalentInsights = [
   {
-    title: "The "Design-to-Delivery" Talent Pool",
+    title: 'The "Design-to-Delivery" Talent Pool',
     stat: "22% + 15%",
     desc: "Recruiters meet the entire product lifecycle — from R&D labs to logistics centers. With 22% in Product/Design and 15% in Ops/Supply Chain, hire across the board from a single event.",
     image: insightTalentPool,
