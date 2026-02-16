@@ -1,5 +1,6 @@
 import { Zap, Star, Crown, Briefcase, MessageCircle, Mic } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
+import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
 import EventHero from "@/components/event/EventHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import EventQuote from "@/components/event/EventQuote";
@@ -175,10 +176,10 @@ const GatherPNW = () => {
         title="GATHER"
         titleAccent="PNW 2026"
         subtitle="The Pacific Northwest's premier outdoor industry career event. 425+ registrants. 20+ brands. Intimate, high-quality networking at UO Portland."
-        date="April 16, 2026 · Portland, OR"
+        date="April 16, 2026 · Portland, OR · 5:30–8:30 PM"
         ctaEmail="Jenna@wearetheoutdoorindustry.com"
         ctaSubject="I'd like to sponsor Gather PNW 2026"
-        
+        logoSrc={gatherPnwLogo}
       />
 
       <EventLogoTicker
