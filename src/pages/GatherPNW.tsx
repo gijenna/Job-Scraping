@@ -93,6 +93,13 @@ const pnwTalentInsights = [
   },
 ];
 
+const pnwSchedule = [
+  { time: "4:30–5 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
+  { time: "5:30–8 PM", label: "Main Event", desc: "Registrants network with brands, industry experts & each other" },
+  { time: "6–6:45 PM", label: "How I Broke In Panel", desc: "45 minutes of concrete career steps, networking tactics, and Q&A" },
+  { time: "8–8:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
+];
+
 const pnwShowUpOptions = [
   {
     icon: Briefcase,
@@ -202,10 +209,10 @@ const GatherPNW = () => {
 
       <EventBrandShowUp options={pnwShowUpOptions} />
 
+      <Schedule items={pnwSchedule} />
+
       <EventSetup variant="pnw" />
       <EventROI eventSize="250–500" />
-
-      <Schedule />
 
       <EventQuote quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
