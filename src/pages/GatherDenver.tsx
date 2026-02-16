@@ -169,10 +169,10 @@ const GatherDenver = () => {
 
       <EventBrandShowUp options={denverShowUpOptions} />
 
+      <Schedule />
+
       <EventSetup variant="denver" />
       <EventROI eventSize="600–900" />
-
-      <Schedule />
 
       <EventTiers
         tiers={denverTiers}

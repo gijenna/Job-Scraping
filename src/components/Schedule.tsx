@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 
-const schedule = [
+const defaultSchedule = [
   { time: "4:30–5 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
   { time: "5–5:30 PM", label: "VIP Hour", desc: "Select candidates get exclusive early access" },
   { time: "5:30–8 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
@@ -9,7 +9,12 @@ const schedule = [
   { time: "9 PM+", label: "Unofficial After-Party", desc: "Just ask us!" },
 ];
 
-const Schedule = () => {
+interface ScheduleProps {
+  items?: { time: string; label: string; desc: string }[];
+}
+
+const Schedule = ({ items }: ScheduleProps) => {
+  const schedule = items || defaultSchedule;
   return (
     <section className="py-24 px-6">
       <div className="container mx-auto max-w-3xl">
