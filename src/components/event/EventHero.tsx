@@ -67,15 +67,17 @@ const EventHero = ({
           {tagline}
         </motion.p>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-display font-900 text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6"
-        >
-          <span className="block text-foreground">{title}</span>
-          <span className="block text-gradient-gold">{titleAccent}</span>
-        </motion.h1>
+        {(title || titleAccent) && (
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="font-display font-900 text-5xl md:text-7xl lg:text-8xl leading-[0.9] mb-6"
+          >
+            {title && <span className="block text-foreground">{title}</span>}
+            {titleAccent && <span className="block text-gradient-gold">{titleAccent}</span>}
+          </motion.h1>
+        )}
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
