@@ -1,4 +1,4 @@
-import { Zap, Star, Crown, Briefcase, MessageCircle, Mic } from "lucide-react";
+import { Zap, Star, Crown, Briefcase, MessageCircle, Target, Users } from "lucide-react";
 import heroDenver from "@/assets/hero-denver.mp4";
 import denverLogo from "@/assets/denver-logo.png";
 import EventHero from "@/components/event/EventHero";
@@ -62,8 +62,29 @@ const denverBarData = [
   { role: "Sustainability & ESG", count: 17 },
 ];
 
+const denverQualityPoints = [
+  {
+    icon: Target,
+    stat: "92%",
+    label: "Role-Relevant",
+    desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic."
+  },
+  {
+    icon: Users,
+    stat: "500–800",
+    label: "Per Event",
+    desc: "A concentrated, high-quality talent pool. Every conversation is intentional — no 30-second drive-bys."
+  },
+  {
+    icon: Star,
+    stat: "Mid-to-Senior",
+    label: "Career Level",
+    desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, REI, Deloitte, The North Face, and Arc'teryx."
+  }
+];
+
 const denverStats = [
-  { num: "900+", label: "Expected Attendees" },
+  { num: "500+", label: "Expected Attendees" },
   { num: "40K+", label: "Festival Attendees" },
   { num: "67%", label: "6+ Years Experience" },
   { num: "88%", label: "Management Experience" },
@@ -82,14 +103,14 @@ const denverShowUpOptions = [
     title: "Industry Expert / Mentor",
     desc: "Your leaders are featured by name — called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
     tag: "Low Lift",
-    example: "Leaders from Patagonia, Black Diamond, and Cotopaxi have shown up as individual mentors — building authentic connections beyond their corporate role.",
+    example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors — building authentic connections beyond their corporate role.",
   },
   {
-    icon: Mic,
-    title: "Panel Speaker",
-    desc: "Join the 'How I Broke In' panel — 45 minutes of concrete career journeys, networking tactics, and live Q&A. The most-requested segment at every Gather event.",
+    icon: Star,
+    title: "Branding / Discovery Partner",
+    desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
     tag: "High Visibility",
-    example: "Panelists from Google, Nike, and REI have shared their exact career trajectories — creating unforgettable brand impressions with hundreds of attendees.",
+    example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry.",
   },
 ];
 
@@ -162,7 +183,7 @@ const GatherDenver = () => {
         headline="Where leaders from the outdoor industry's most iconic brands gather"
       />
 
-      <RecruiterValue />
+      <RecruiterValue qualityPoints={denverQualityPoints} />
 
       
 
@@ -177,7 +198,7 @@ const GatherDenver = () => {
 
       <EventBrandShowUp options={denverShowUpOptions} />
 
-      <Schedule items={denverSchedule} />
+      <Schedule items={denverSchedule} heading="The Afternoon" />
 
       <EventSetup variant="denver" />
       <EventROI eventSize="600–900" />
