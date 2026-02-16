@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, MonitorSmartphone, Wifi, Plug, Table, Flag, Package, Users, MapPin } from "lucide-react";
+import { Check, MonitorSmartphone, Wifi, Plug, Table, Flag, Package, Users, MapPin, Ticket } from "lucide-react";
 
 interface SetupItem {
   icon: typeof Check;
@@ -10,20 +10,24 @@ interface EventSetupProps {
   variant: "pnw" | "denver";
 }
 
-const baseItems: SetupItem[] = [
+const commonItems: SetupItem[] = [
   { icon: Table, label: "6-ft skirted table & 2 chairs" },
   { icon: Flag, label: "Space for pull-up banner or backdrop behind your table" },
   { icon: Plug, label: "Power outlets available on request" },
   { icon: Wifi, label: "Venue Wi-Fi access" },
   { icon: Package, label: "Room for product samples, swag bags & handouts" },
-  { icon: MonitorSmartphone, label: "Free appetizers and beverages" },
   { icon: MapPin, label: "Branded name placard & table signage" },
   { icon: Users, label: "Up to 5 brand reps included (more with Deluxe tier)" },
 ];
 
+const variantItems: Record<string, SetupItem> = {
+  pnw: { icon: MonitorSmartphone, label: "Free appetizers and beverages" },
+  denver: { icon: Ticket, label: "Free 3-day festival tickets for your attending team" },
+};
+
 const variantNote: Record<string, string> = {
   pnw: "Hosted at U of O Portland's Campus Center at 2800 NE Liberty St, Portland, OR, 97211 — a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.",
-  denver: "Set inside the Outside Days Festival grounds in Denver — a high-energy, outdoor-adjacent venue with festival foot traffic flowing directly past the Gather career activation zone.",
+  denver: "Set on the Auraria Campus — this year's Outside Days Festival grounds in Denver — a high-energy, outdoor-adjacent venue with easy walkability to the main stage.",
 };
 
 const EventSetup = ({ variant }: EventSetupProps) => {
@@ -54,7 +58,7 @@ const EventSetup = ({ variant }: EventSetupProps) => {
           className="bg-gradient-card border border-border rounded-xl p-8 md:p-10 shadow-card"
         >
           <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mb-8">
-            {baseItems.map((item, i) => (
+            {[...commonItems, variantItems[variant]].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                   <item.icon className="w-4 h-4 text-primary" />
