@@ -4,22 +4,21 @@ import { Check, Star, Zap, Crown } from "lucide-react";
 const tiers = [
   {
     name: "Hiring Table",
-    price: "$2,500",
+    price: "$3,000+",
     spots: "7 available",
     icon: Zap,
     popular: true,
-    bestFor: "Outdoor/active lifestyle brands hiring anytime in 2025–26",
+    bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
     perks: [
       "Hiring table inside event",
       "Up to 5 brand representatives",
       "Logo & careers page link across event website & registration",
       "Exposure to our 300K community",
-      "Logo on all digital channels",
     ],
   },
   {
     name: "Deluxe Hiring + Branding",
-    price: "$5,000",
+    price: "$6,000–12,000",
     spots: "4 available",
     icon: Star,
     popular: false,
@@ -30,11 +29,12 @@ const tiers = [
       "Up to 20 brand representatives",
       "Room for product display or activation",
       "Dedicated social post to 50K LinkedIn / 80K Facebook / 40K IG",
+      'Free Candidate Match boost ($400) from <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" class="text-primary underline hover:opacity-80">Basecamp Match</a>',
     ],
   },
   {
     name: "Title Sponsorship",
-    price: "$10–20K",
+    price: "$15,000–$25,000",
     spots: "1–2 available",
     icon: Crown,
     popular: false,
@@ -44,7 +44,7 @@ const tiers = [
       "Keynote introduction opportunity",
       "Prime branding at entrance, bar & stage",
       "Post-event engagement & lead report",
-      "Custom activation built with your creative team",
+      "Custom in-person and digital activation built with your creative team",
     ],
   },
 ];
@@ -99,7 +99,7 @@ const PartnershipTiers = () => {
                 {tier.perks.map((perk, j) => (
                   <li key={j} className="flex gap-3 text-sm text-muted-foreground font-body">
                     <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    {perk}
+                    <span dangerouslySetInnerHTML={{ __html: perk }} />
                   </li>
                 ))}
               </ul>
