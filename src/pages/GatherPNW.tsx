@@ -172,10 +172,10 @@ const GatherPNW = () => {
     <main className="bg-background min-h-screen">
       <EventHero
         videoSrc={heroPnw}
-        tagline="Free thanks to U of O Sports Product Management Program"
+        tagline="Basecamp Outdoor × University of Oregon"
         title=""
         titleAccent=""
-        subtitle="The Pacific Northwest's premier outdoor industry career event. 425+ registrants. 20+ brands. Intimate, high-quality networking at UO Portland."
+        subtitle="The Pacific Northwest's premier outdoor industry career event. 300+ registrants & up to 20 brands. Intimate, high-quality networking at U of O's new Portland Campus."
         date="April 16, 2026 · Portland, OR · 5:30–8:30 PM"
         ctaEmail="Jenna@wearetheoutdoorindustry.com"
         ctaSubject="I'd like to sponsor Gather PNW 2026"

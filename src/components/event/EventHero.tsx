@@ -43,11 +43,20 @@ const EventHero = ({
       </div>
 
       <div className="relative z-10 container mx-auto px-6 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-primary font-body text-sm tracking-[0.3em] uppercase mb-6"
+        >
+          {tagline}
+        </motion.p>
+
         {logoSrc && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.4 }}
             className="mb-8"
           >
             <img
@@ -57,15 +66,6 @@ const EventHero = ({
             />
           </motion.div>
         )}
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-primary font-body text-sm tracking-[0.3em] uppercase mb-6"
-        >
-          {tagline}
-        </motion.p>
 
         {(title || titleAccent) && (
           <motion.h1
