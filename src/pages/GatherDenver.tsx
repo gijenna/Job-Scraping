@@ -165,12 +165,13 @@ const GatherDenver = () => {
         subtitle="We don't just fill seats — we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
       />
 
+      <Testimonials />
+
       <EventBrandShowUp options={denverShowUpOptions} />
 
       <EventROI eventSize="600–900" />
       <EventSetup variant="denver" />
 
-      <Testimonials />
       <Schedule />
 
       <EventTiers
