@@ -63,23 +63,23 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border rounded-xl p-8 shadow-card"
-              style={{ backgroundColor: 'white' }}
+              className="rounded-xl p-8 shadow-lg border border-neutral-200"
+              style={{ backgroundColor: '#ffffff' }}
             >
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-4 mb-6">
                 <img
                   src={`https://logo.clearbit.com/${t.domain}`}
-                  alt=""
-                  className="w-10 h-10 rounded-full object-contain p-1"
-                  style={{ backgroundColor: '#f9fafb' }}
+                  alt={`${t.name} company logo`}
+                  className="w-12 h-12 rounded-lg object-contain border border-neutral-200 p-1.5"
+                  style={{ backgroundColor: '#ffffff' }}
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
                 <div>
-                  <p className="font-display font-semibold text-secondary-foreground">{t.name}</p>
-                  <p className="text-muted-foreground text-sm">{t.title}</p>
+                  <p className="font-display font-bold" style={{ color: '#19363B' }}>{t.name}</p>
+                  <p className="text-sm" style={{ color: '#715F61' }}>{t.title}</p>
                 </div>
               </div>
-              <p className="text-secondary-foreground font-body text-sm leading-relaxed italic">
+              <p className="text-base leading-relaxed font-body italic" style={{ color: '#19363B' }}>
                 "{t.quote}"
               </p>
             </motion.div>
