@@ -85,7 +85,7 @@ const EventTiers = ({ tiers, ctaEmail, eventName }: EventTiersProps) => {
               </ul>
 
               <a
-                href={`mailto:${ctaEmail}?subject=I'd like to participate in ${eventName}`}
+                href={`mailto:${ctaEmail}?cc=jenna@wearetheoutdoorindustry.com&subject=I'd like to participate in ${eventName}`}
                 className={`mt-8 inline-flex items-center justify-center px-6 py-3 rounded-lg font-display font-semibold text-sm transition-all ${
                   tier.popular
                     ? "bg-gradient-gold text-primary-foreground hover:opacity-90 shadow-gold"
