@@ -197,6 +197,8 @@ const GatherPNW = () => {
         subtitle="Candidates worth putting in front of a hiring manager."
       />
 
+      <EventTalentInsights insights={pnwTalentInsights} />
+
       <EventBrandShowUp options={pnwShowUpOptions} />
 
       <EventROI eventSize="250–500" />
