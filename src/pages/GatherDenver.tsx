@@ -92,8 +92,15 @@ const denverStats = [
 
 const denverShowUpOptions = [
   {
+    icon: Star,
+    title: "Branding / Discovery Partner",
+    desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
+    tag: "High Visibility",
+    example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry.",
+  },
+  {
     icon: Briefcase,
-    title: "Employer Table / Booth",
+    title: "Employer Partner",
     desc: "Set up in our Recruitment Zone for quality 5–10 minute conversations with highly experienced candidates. Space for banners, product samples, QR codes, and swag.",
     tag: "Most Popular",
     example: "VF brands set up interactive QR-code stations; REI brings their team leads for on-the-spot conversations; Yeti showcases new product alongside career info.",
@@ -104,13 +111,6 @@ const denverShowUpOptions = [
     desc: "Your leaders are featured by name — called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
     tag: "Low Lift",
     example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors — building authentic connections beyond their corporate role.",
-  },
-  {
-    icon: Star,
-    title: "Branding / Discovery Partner",
-    desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
-    tag: "High Visibility",
-    example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry.",
   },
 ];
 
