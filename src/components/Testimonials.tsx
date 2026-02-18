@@ -76,7 +76,7 @@ const Testimonials = () => {
           <div>
             <p className="text-primary text-xs tracking-[0.3em] uppercase mb-3 font-body">Social Proof</p>
             <h2 className="font-display font-extrabold text-3xl md:text-4xl text-foreground">
-              Recruiters Love Gather
+              Brands Love Gather
             </h2>
           </div>
           <div className="hidden md:flex gap-2">
@@ -121,8 +121,8 @@ const Testimonials = () => {
                   style={{ backgroundColor: "#ffffff" }}
                 />
                 <div className="min-w-0">
-                  <p className="font-display font-bold text-sm truncate" style={{ color: "#19363B" }}>{t.name}</p>
-                  <p className="text-xs truncate" style={{ color: "#715F61" }}>{t.title}</p>
+                  <p className="font-display font-bold text-sm leading-snug" style={{ color: "#19363B" }}>{t.name}</p>
+                  <p className="text-xs leading-snug mt-0.5" style={{ color: "#715F61" }}>{t.title}</p>
                 </div>
               </div>
               <p className="text-sm leading-relaxed font-body italic flex-1" style={{ color: "#19363B" }}>
