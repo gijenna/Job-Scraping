@@ -125,12 +125,6 @@ const EventHero = ({
           >
             Become a Sponsor
           </a>
-          <a
-            href="#tiers"
-            className="inline-flex items-center justify-center px-8 py-4 border border-primary/30 text-primary font-display font-semibold text-lg rounded-lg hover:bg-primary/10 transition-colors"
-          >
-            View Partnership Tiers
-          </a>
         </motion.div>
 
         {accolade && (
