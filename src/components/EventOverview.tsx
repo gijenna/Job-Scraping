@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { MapPin, Calendar, Users, Music, Building2, GraduationCap } from "lucide-react";
 
 const events = [
@@ -22,6 +23,7 @@ const events = [
     ],
     icon: GraduationCap,
     highlight: "5th annual — proven format, growing every year",
+    link: "/gather-pnw",
   },
   {
     label: "Gather Denver @ Outside Days",
@@ -43,6 +45,7 @@ const events = [
     ],
     icon: Music,
     highlight: "3rd year with Outside Inc — named top activation 2024 & 2025",
+    link: "/gather-denver",
   },
 ];
 
@@ -146,6 +149,14 @@ const EventOverview = () => {
                     ))}
                   </ul>
                 </div>
+
+                {/* Learn More */}
+                <Link
+                  to={event.link}
+                  className="inline-flex items-center justify-center w-full px-6 py-3 bg-gradient-gold text-primary-foreground font-display font-bold text-sm rounded-lg hover:opacity-90 transition-opacity shadow-gold"
+                >
+                  Learn More →
+                </Link>
               </div>
             </motion.div>
           ))}
