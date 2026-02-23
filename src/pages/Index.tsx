@@ -3,7 +3,7 @@ import LogoTicker from "@/components/LogoTicker";
 import EventOverview from "@/components/EventOverview";
 import ValueProps from "@/components/ValueProps";
 import RecruiterValue from "@/components/RecruiterValue";
-import StatsSection from "@/components/StatsSection";
+import AudienceSection from "@/components/AudienceSection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
 
@@ -15,7 +15,7 @@ const Index = () => {
       <EventOverview />
       <ValueProps />
       <RecruiterValue />
-      <StatsSection />
+      <AudienceSection />
       <Testimonials />
       <CTASection />
     </main>

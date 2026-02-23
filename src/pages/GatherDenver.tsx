@@ -15,10 +15,10 @@ import Schedule from "@/components/Schedule";
 import RecruiterValue from "@/components/RecruiterValue";
 
 const denverSchedule = [
-  { time: "12–2:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
-  { time: "2–2:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
-  { time: "2–5 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
-  { time: "5–5:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
+  { time: "11 AM–12:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
+  { time: "1–1:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
+  { time: "1–4 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
+  { time: "4–4:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
   { time: "5 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
 ];
 
@@ -171,7 +171,7 @@ const GatherDenver = () => {
         titleAccent=""
         subtitle={'The outdoor industry\'s best career event of the year.\n500+ candidates, 25+ brands.\nRight before Friday night music at the 40,000 person'}
         subtitleLink={{ text: "Outside Days Festival", url: "https://bit.ly/4bDCrsv" }}
-        date="May 29, 2026 · 2–5 PM · Denver, CO"
+        date="May 29, 2026 · 1–4 PM · Denver, CO"
         ctaEmail="Austin@basecampjobs.com"
         ctaSubject="I'd like to sponsor Gather Denver 2026"
         accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"

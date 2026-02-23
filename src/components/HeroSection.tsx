@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-event.jpg";
-import basecampLogo from "@/assets/Basecamp_Logo_MAIN_1.png";
+import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-16">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -25,9 +25,9 @@ const HeroSection = () => {
           className="flex justify-center mb-8"
         >
           <img
-            src={basecampLogo}
-            alt="Basecamp logo"
-            className="h-16 md:h-20 w-auto"
+           src={basecampLogo}
+            alt="Basecamp Outdoor logo"
+            className="h-24 md:h-32 w-auto"
           />
         </motion.div>
 
