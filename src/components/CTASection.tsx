@@ -17,7 +17,7 @@ const CTASection = () => {
             at the outdoor industry's most talked-about career event.
           </p>
           <a
-            href="mailto:Austin@basecampjobs.com?cc=jenna@wearetheoutdoorindustry.com&subject=I'd like to sponsor GATHER Denver 2026"
+            href="mailto:Austin@basecampjobs.com?cc=jenna@wearetheoutdoorindustry.com&subject=I'd like to sponsor GATHER Events 2026"
             className="inline-flex items-center justify-center px-10 py-4 bg-gradient-gold text-primary-foreground font-display font-bold text-lg rounded-lg hover:opacity-90 transition-opacity shadow-gold"
           >
             Get in Touch

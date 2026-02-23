@@ -5,8 +5,6 @@ import ValueProps from "@/components/ValueProps";
 import RecruiterValue from "@/components/RecruiterValue";
 import StatsSection from "@/components/StatsSection";
 import Testimonials from "@/components/Testimonials";
-import PartnershipTiers from "@/components/PartnershipTiers";
-import Schedule from "@/components/Schedule";
 import CTASection from "@/components/CTASection";
 
 const Index = () => {
@@ -19,8 +17,6 @@ const Index = () => {
       <RecruiterValue />
       <StatsSection />
       <Testimonials />
-      <Schedule />
-      <PartnershipTiers />
       <CTASection />
     </main>
   );
