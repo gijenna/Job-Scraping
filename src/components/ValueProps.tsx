@@ -61,7 +61,7 @@ const ValueProps = () => {
           className="mt-12 bg-gradient-card border border-primary/20 rounded-xl p-8 text-center shadow-gold"
         >
           <p className="text-foreground font-display text-lg md:text-xl italic max-w-3xl mx-auto">
-            "You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers."
+            "Gather is where our audience discovers what's next. Half the room manages social feeds and brand stories for the biggest names in outdoor — your product doesn't just get seen, it gets talked about."
           </p>
         </motion.div>
       </div>
