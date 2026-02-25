@@ -13,10 +13,10 @@ const Index = () => {
       <HeroSection />
       <LogoTicker />
       <EventOverview />
-      <ValueProps />
-      <RecruiterValue />
       <AudienceSection />
       <Testimonials />
+      <ValueProps />
+      <RecruiterValue />
       <CTASection />
     </main>
   );
