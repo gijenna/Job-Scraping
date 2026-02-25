@@ -15,8 +15,8 @@ const Index = () => {
       <EventOverview />
       <AudienceSection />
       <Testimonials />
-      <ValueProps />
       <RecruiterValue />
+      <ValueProps />
       <CTASection />
     </main>
   );
