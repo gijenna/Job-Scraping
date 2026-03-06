@@ -1,29 +1,35 @@
-import heroIllustration from "@/assets/events-hero-illustration.jpg";
-
 const EventsHero = () => {
   return (
     <section className="relative pt-16">
       {/* Hero content */}
-      <div className="relative bg-events-teal min-h-[70vh] flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-8 items-center w-full relative z-10">
-          {/* Left: Text */}
-          <div>
-            <p className="font-glacial text-events-cream/80 text-lg md:text-xl tracking-wide mb-3">
-              What's On
-            </p>
-            <h1 className="font-display text-events-cream text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-              Happenings<br />at Basecamp
-            </h1>
-          </div>
-
-          {/* Right: Illustration */}
-          <div className="flex justify-center md:justify-end">
-            <img
-              src={heroIllustration}
-              alt="Whimsical outdoor community illustration with bees, honeycomb, and diverse characters in a forest"
-              className="w-full max-w-lg rounded-2xl shadow-2xl"
+      <div className="relative min-h-[70vh] flex items-center overflow-hidden">
+        {/* Background video */}
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source
+              src="https://videos.pexels.com/video-files/31477724/13421411_2560_1440_30fps.mp4"
+              type="video/mp4"
             />
-          </div>
+          </video>
+          {/* Dark overlay for text legibility */}
+          <div className="absolute inset-0 bg-events-teal/65" />
+          <div className="absolute inset-0 bg-gradient-to-t from-events-teal via-transparent to-events-teal/30" />
+        </div>
+
+        {/* Centered text */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 text-center w-full">
+          <p className="font-glacial text-events-cream/80 text-lg md:text-xl tracking-wide mb-3">
+            What's On
+          </p>
+          <h1 className="font-display text-events-cream text-4xl md:text-6xl lg:text-7xl font-bold leading-tight drop-shadow-lg">
+            Happenings<br />at Basecamp
+          </h1>
         </div>
       </div>
 
