@@ -8,6 +8,8 @@ import GatherPNW from "./pages/GatherPNW";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
+import Events from "./pages/Events";
+import EventCalendar from "./pages/EventCalendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
