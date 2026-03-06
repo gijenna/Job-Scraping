@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, LogOut, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
@@ -11,6 +12,23 @@ interface EventsNavProps {
 
 const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAdmin(!!data.session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setMenuOpen(false);
+  };
 
   const handleHappeningsClick = (filter: string) => {
     setMenuOpen(false);
@@ -108,6 +126,22 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
               >
                 Partner with us
               </button>
+            </div>
+
+            {/* Admin */}
+            <div>
+              <h3 className="text-events-yellow font-display text-sm uppercase tracking-widest mb-2">Admin</h3>
+              <div className="space-y-1 pl-2">
+                {isAdmin ? (
+                  <button onClick={handleLogout} className="flex items-center gap-2 text-events-cream hover:text-events-coral transition-colors">
+                    <LogOut size={14} /> Sign Out
+                  </button>
+                ) : (
+                  <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-events-cream hover:text-events-coral transition-colors">
+                    <Shield size={14} /> Admin Login
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>
