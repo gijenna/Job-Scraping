@@ -8,6 +8,8 @@ import GatherPNW from "./pages/GatherPNW";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
+import Events from "./pages/Events";
+import EventCalendar from "./pages/EventCalendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/calendar" element={<EventCalendar />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

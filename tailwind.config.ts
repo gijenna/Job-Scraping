@@ -16,6 +16,8 @@ export default {
       fontFamily: {
         display: ['Josefin Sans', 'sans-serif'],
         body: ['Space Grotesk', 'sans-serif'],
+        glacial: ['Raleway', 'sans-serif'],
+        ticker: ['Pacifico', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,6 +53,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        events: {
+          teal: "#19363B",
+          coral: "#ED7660",
+          yellow: "#E1B624",
+          cream: "#F5E6D3",
+          card: "#1E3A3F",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,11 +89,16 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
         },
+        "events-ticker": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "logo-scroll": "logo-scroll 30s linear infinite",
+        "events-ticker": "events-ticker 25s linear infinite",
       },
     },
   },
