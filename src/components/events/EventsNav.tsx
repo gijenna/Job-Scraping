@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, LogOut, Shield } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
