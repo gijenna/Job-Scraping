@@ -10,6 +10,7 @@ import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
 import Events from "./pages/Events";
 import EventCalendar from "./pages/EventCalendar";
+import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
