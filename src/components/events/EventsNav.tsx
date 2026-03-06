@@ -127,6 +127,22 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
                 Partner with us
               </button>
             </div>
+
+            {/* Admin */}
+            <div>
+              <h3 className="text-events-yellow font-display text-sm uppercase tracking-widest mb-2">Admin</h3>
+              <div className="space-y-1 pl-2">
+                {isAdmin ? (
+                  <button onClick={handleLogout} className="flex items-center gap-2 text-events-cream hover:text-events-coral transition-colors">
+                    <LogOut size={14} /> Sign Out
+                  </button>
+                ) : (
+                  <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-events-cream hover:text-events-coral transition-colors">
+                    <Shield size={14} /> Admin Login
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
