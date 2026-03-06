@@ -26,6 +26,8 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/calendar" element={<EventCalendar />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
