@@ -12,6 +12,23 @@ interface EventsNavProps {
 
 const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAdmin(!!data.session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setMenuOpen(false);
+  };
 
   const handleHappeningsClick = (filter: string) => {
     setMenuOpen(false);

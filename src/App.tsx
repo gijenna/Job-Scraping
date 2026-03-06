@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
+          <Route path="/admin" element={<AdminLogin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
