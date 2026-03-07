@@ -115,7 +115,6 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
