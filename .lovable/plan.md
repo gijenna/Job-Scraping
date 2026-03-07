@@ -1,77 +1,110 @@
+# Multi-Feature Update Plan
 
-
-# Main Page Updates: Logo, Content, and Denver Time Change
-
-## Overview
-Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
+This covers all 8 requests in one batch.
 
 ---
 
-## Changes
+## 1. Restrict sign-up to approved email domains
 
-### 1. Swap Logo on Main Page
-- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
-- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
-- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
+**File:** `src/pages/AdminLogin.tsx`
 
-### 2. Ensure "GATHER" Uses Josefin Sans
-- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
-
-### 3. Update Denver Event Time to 1-4 PM
-Files to update:
-- `src/components/EventOverview.tsx`: Update the Denver event format/description references
-- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
-- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
-
-### 4. Reduce Spacing Below Hero Buttons
-- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
-
-### 5. Replace StatsSection with New Audience Content
-Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
-
-**a) Companies of Note Represented**
-A section listing the brands organized by category:
-- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
-- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
-- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
-
-**b) Event Audience Executive Summary**
-Three highlight cards:
-- "The Industry Tastemakers" -- 50% Marketing and Communications
-- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
-- "The Ultimate Career Pivot Point" -- 17% Transitioners
-
-**c) Attendee Persona Snapshot**
-Three stat highlights:
-- 30% Creative Leaders
-- 22% Emerging Talent
-- 18% Strategic Decision Makers
-
-### 6. Remove Old StatsSection from Index
-- Remove the `StatsSection` import and usage from `Index.tsx`
-- Add the new `AudienceSection` component in its place
+- Before calling `supabase.auth.signUp`, validate that the email ends with `@wearetheoutdoorindustry.com` or `@basecampjobs.com`
+- Show an error toast if the domain doesn't match
+- Sign-in remains unrestricted (only existing accounts can sign in)
 
 ---
 
-## Technical Details
+## 2. Delete events (admin)
 
-### Files Created
-| File | Description |
-|------|-------------|
-| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
-| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
+**File:** `src/components/events/EventCard.tsx`, `src/pages/Events.tsx`
 
-### Files Modified
-| File | Change |
-|------|--------|
-| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
-| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
-| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
-| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
-| `src/components/EventOverview.tsx` | Update any Denver time references |
-| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
+- Add an `isAdmin` prop + `onDelete` callback to `EventCard`
+- When admin, show a small trash icon button on the card
+- On click, confirm with a dialog, then call `supabase.from("events").delete().eq("id", event.id)`
+- RLS already allows creator to delete; also update RLS to allow any authenticated user to delete (since all admins should manage all events)
 
-### No Changes To
-- PNW pages (no time changes requested)
-- Export PNW page
-- Individual event components (EventHero, EventTiers, etc.)
+**Database migration:** Update the delete RLS policy from `auth.uid() = created_by` to `true` for authenticated users, matching the insert policy pattern.
+
+---
+
+## 3. Calendar: back-to-events navigation
+
+**File:** `src/pages/EventCalendar.tsx`
+
+- Add a "← Back to Events" link next to the "Event Calendar" heading, linking to `/events`
+
+---
+
+## 4. Calendar: better hover card (clickable, mobile-friendly)
+
+**File:** `src/components/events/CalendarGrid.tsx`
+
+- Replace the tiny dot with a slightly larger clickable pill/chip showing a truncated event title
+- On hover (desktop): show the preview card positioned within viewport bounds
+- On mobile: instead of hover, tap the event to show a bottom sheet or inline expanded card below the calendar
+- Ensure the hover card is clamped to viewport boundaries (check `window.innerWidth/Height` vs position)
+
+---
+
+## 5. Ticker: different font + black background
+
+**File:** `src/components/events/EventsTicker.tsx`
+
+- Change background from `bg-events-teal` to `bg-black`
+- Change font from `font-ticker` (Pacifico) to `font-display` (Josefin Sans) or `font-body` (Space Grotesk) for better variety — use `font-display` with uppercase tracking for a bold editorial feel
+
+---
+
+## 6. Time zones: input in PT, display PT/MT/ET
+
+**Database migration:** Add two new columns to the `events` table:
+
+- `end_date` (timestamp with time zone, nullable) — for event end time
+- Keep existing `date` column as start time
+
+**File:** `src/components/events/AddEventDialog.tsx`
+
+- Add a second datetime-local input for "End Time"
+- Label the start time as "Start Time (Pacific)"
+- Store both times as UTC (the datetime-local input will be treated as Pacific and converted)
+
+**File:** `src/components/events/EventCard.tsx`, `src/components/events/CalendarGrid.tsx`
+
+- Display time in three zones: PT, MT, ET
+- Use manual UTC offset conversion: PT = UTC-7 (PDT) / UTC-8 (PST), MT = PT+1, ET = PT+3
+- Format like: `2:00 PM PT / 3:00 PM MT / 5:00 PM ET`
+- If end time exists, show range: `2:00–4:00 PM PT / 3:00–5:00 PM MT / 5:00–7:00 PM ET`
+
+---
+
+## 7. Connect dropdown: link to event signup + newsletter
+
+**File:** `src/components/events/EventsNav.tsx`
+
+- Under the "Connect" section in the nav menu:
+  - "Sign up for events" → link to [https://basecampoutdoor.typeform.com/Basecamp](https://basecampoutdoor.typeform.com/Basecamp)
+  - "Newsletter signup" → link to basecampjobs.com 
+- Replace the current static text with actual clickable links
+
+---
+
+## 8. Nav closes on outside click
+
+**File:** `src/components/events/EventsNav.tsx`
+
+- Add a click-outside listener: when `menuOpen` is true, clicking anywhere outside the nav menu closes it
+- Use a `useEffect` with a `mousedown` event listener on `document`, checking if the click target is outside the nav ref
+
+---
+
+## Files modified summary
+
+- `src/pages/AdminLogin.tsx` — email domain validation
+- `src/components/events/EventCard.tsx` — delete button for admins
+- `src/pages/Events.tsx` — pass isAdmin/onDelete to EventCard
+- `src/pages/EventCalendar.tsx` — back link
+- `src/components/events/CalendarGrid.tsx` — better hover/tap UX, mobile-friendly
+- `src/components/events/EventsTicker.tsx` — black bg, different font
+- `src/components/events/AddEventDialog.tsx` — end time field, PT label
+- `src/components/events/EventsNav.tsx` — connect links, click-outside-to-close
+- Database migration: add `end_date` column, update delete RLS policy
