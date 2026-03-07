@@ -31,10 +31,13 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
-    // Check if user is authenticated (admin)
     supabase.auth.getSession().then(({ data }) => {
       setIsAdmin(!!data.session);
     });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleFilterSelect = (f: string) => {
@@ -101,7 +104,7 @@ const Events = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <EventCard key={event.id} event={event} isAdmin={isAdmin} onDelete={fetchEvents} />
               ))}
             </div>
           )}
