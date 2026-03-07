@@ -115,8 +115,6 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
