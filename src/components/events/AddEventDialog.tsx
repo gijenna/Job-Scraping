@@ -11,11 +11,37 @@ interface AddEventDialogProps {
   onEventAdded: () => void;
 }
 
+// Convert a Pacific Time datetime-local string to UTC ISO string
+const pacificToUTC = (localStr: string): string => {
+  // Parse the datetime-local value
+  const d = new Date(localStr);
+  const year = d.getFullYear();
+  // Determine if PDT or PST
+  const marchSecondSun = new Date(year, 2, 8);
+  marchSecondSun.setDate(8 + (7 - marchSecondSun.getDay()) % 7);
+  const novFirstSun = new Date(year, 10, 1);
+  novFirstSun.setDate(1 + (7 - novFirstSun.getDay()) % 7);
+  const isPDT = d >= marchSecondSun && d < novFirstSun;
+  const offsetHours = isPDT ? 7 : 8;
+  // The datetime-local gives us the "wall clock" time in PT
+  // We need to add the offset to get UTC
+  const parts = localStr.split(/[-T:]/);
+  const utc = new Date(Date.UTC(
+    parseInt(parts[0]),
+    parseInt(parts[1]) - 1,
+    parseInt(parts[2]),
+    parseInt(parts[3]) + offsetHours,
+    parseInt(parts[4])
+  ));
+  return utc.toISOString();
+};
+
 const AddEventDialog = ({ onEventAdded }: AddEventDialogProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [cost, setCost] = useState("0");
   const [registrationLink, setRegistrationLink] = useState("");
   const [type, setType] = useState<"in-person" | "digital" | "workshop">("in-person");
@@ -25,6 +51,7 @@ const AddEventDialog = ({ onEventAdded }: AddEventDialogProps) => {
   const resetForm = () => {
     setTitle("");
     setDate("");
+    setEndDate("");
     setCost("0");
     setRegistrationLink("");
     setType("in-person");
@@ -58,15 +85,19 @@ const AddEventDialog = ({ onEventAdded }: AddEventDialogProps) => {
         photoUrl = urlData.publicUrl;
       }
 
+      const startUTC = pacificToUTC(date);
+      const endUTC = endDate ? pacificToUTC(endDate) : null;
+
       const { error } = await supabase.from("events").insert({
         title: title.trim(),
-        date: new Date(date).toISOString(),
+        date: startUTC,
         cost: parseFloat(cost) || 0,
         registration_link: registrationLink.trim(),
         type,
         location: type === "digital" ? "Digital" : location.trim() || null,
         photo_url: photoUrl,
-      });
+        end_date: endUTC,
+      } as any);
 
       if (error) throw error;
 
@@ -114,13 +145,22 @@ const AddEventDialog = ({ onEventAdded }: AddEventDialogProps) => {
             />
           </div>
           <div>
-            <Label className="text-events-cream/80">Date *</Label>
+            <Label className="text-events-cream/80">Start Time (Pacific) *</Label>
             <Input
               type="datetime-local"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="bg-events-card border-events-cream/20 text-events-cream"
               required
+            />
+          </div>
+          <div>
+            <Label className="text-events-cream/80">End Time (Pacific)</Label>
+            <Input
+              type="datetime-local"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="bg-events-card border-events-cream/20 text-events-cream"
             />
           </div>
           <div>

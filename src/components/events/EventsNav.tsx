@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +14,7 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -24,6 +25,18 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [menuOpen]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -36,7 +49,7 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black">
+    <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 bg-black">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Left: Hamburger */}
         <button
@@ -104,8 +117,22 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
             <div>
               <h3 className="text-events-yellow font-display text-sm uppercase tracking-widest mb-2">Connect</h3>
               <div className="space-y-1 pl-2">
-                <p className="text-events-cream">Never miss an event</p>
-                <p className="text-events-cream/70 text-sm">Free newsletter (60K subs)</p>
+                <a
+                  href="https://basecampoutdoor.typeform.com/Basecamp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-events-cream hover:text-events-coral transition-colors"
+                >
+                  Sign up for events
+                </a>
+                <a
+                  href="https://basecampjobs.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-events-cream hover:text-events-coral transition-colors"
+                >
+                  Newsletter signup
+                </a>
               </div>
             </div>
 

@@ -20,12 +20,12 @@ const EventsTicker = () => {
   const doubled = [...words, ...words];
 
   return (
-    <section className="bg-events-teal py-5 overflow-hidden border-y border-events-cream/10">
+    <section className="bg-black py-5 overflow-hidden border-y border-events-cream/10">
       <div className="flex animate-events-ticker whitespace-nowrap">
         {doubled.map((word, i) => (
           <span
             key={i}
-            className={`inline-block mx-6 text-xl md:text-2xl font-ticker ${colors[i % colors.length]}`}
+            className={`inline-block mx-6 text-xl md:text-2xl font-display uppercase tracking-widest ${colors[i % colors.length]}`}
           >
             {word} ✦
           </span>
