@@ -161,19 +161,7 @@ const denverTiers = [
 const GatherDenver = () => {
   return (
     <main className="bg-background min-h-screen">
-      <EventHero
-        videoSrc={heroDenver}
-        tagline="Basecamp Outdoor × Outside Days Festival"
-        title=""
-        titleAccent=""
-        subtitle={'The outdoor industry\'s best career event of the year.\n500+ candidates, 25+ brands.\nRight before Friday night music at the 40,000 person'}
-        subtitleLink={{ text: "Outside Days Festival", url: "https://bit.ly/4bDCrsv" }}
-        date="May 29, 2026 · 1–4 PM · Denver, CO"
-        ctaEmail="Austin@basecampjobs.com"
-        ctaSubject="I'd like to sponsor Gather Denver 2026"
-        accolade="Named one of two top activations from 2024 & 2025 by Outside, Inc"
-        logoSrc={denverLogo}
-      />
+      <DenverHero />
 
       <EventLogoTicker
         brands={denverBrands}
