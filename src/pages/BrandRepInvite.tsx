@@ -211,13 +211,15 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
                       {expert ? (
                         <>
-                          Hey <span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{firstName}</span>,
-                          <br />
                           <span className="text-events-yellow">{companyName}</span> is
                           <br />
                           confirmed at our
                           <br />
-                          {cityName} event.
+                          {cityName} event —
+                          <br />
+                          <span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{firstName}</span>, they'd love
+                          <br />
+                          you to attend.
                         </>
                       ) : (
                         <>
