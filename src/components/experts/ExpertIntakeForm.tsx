@@ -241,7 +241,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           .eq('slug', baseSlug)
           .maybeSingle();
 
-        if (existing) {
+        if (existing && existing.id !== brandExpertId) {
           finalExpertId = existing.id;
           // Merge: use existing data as base, overlay with non-empty form values
           const mergedPayload = { ...payload };
