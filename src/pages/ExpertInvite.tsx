@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert, ExpertCity } from "@/lib/expert-types";
 import ExpertIntakeForm from "@/components/experts/ExpertIntakeForm";
+import { ExpertQuestion } from "@/lib/expert-types";
 import LeafConfetti from "@/components/experts/LeafConfetti";
 import QuestionDialog from "@/components/experts/QuestionDialog";
 import { Button } from "@/components/ui/button";
