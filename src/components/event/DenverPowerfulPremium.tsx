@@ -39,7 +39,7 @@ const DenverPowerfulPremium = () => {
         </div>
 
         {/* ── Cloud field with text overlaid ── */}
-        <div className="relative w-full pt-32 md:pt-44 pb-12 md:pb-16" style={{ minHeight: "450px" }}>
+        <div className="relative w-full pt-20 md:pt-28 pb-12 md:pb-16" style={{ minHeight: "450px" }}>
           {/* Cloud puffs */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[220px] md:h-[260px]"
