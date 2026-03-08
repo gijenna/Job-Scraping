@@ -25,6 +25,7 @@ const statusColors: Record<string, string> = {
 
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
+  const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
