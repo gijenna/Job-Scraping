@@ -271,7 +271,7 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
           </div>
           <ExpertIntakeForm
             expertId={expert?.id}
-            existingData={expert || undefined}
+            existingData={expert || (lookupName ? { full_name: lookupName.trim() } : undefined)}
             citySlug={citySlug}
             cityName={cityName}
             onComplete={() => loadData()}
