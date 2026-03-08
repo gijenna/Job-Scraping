@@ -138,40 +138,53 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           .eq('id', expertId);
         if (error) throw error;
       } else {
-        // New expert — insert record and city assignment with unique slug
-        let baseSlug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        let slug = baseSlug;
-        let attempt = 0;
-        let newExpert: any = null;
-        
-        while (attempt < 5) {
-          const { data, error: insertError } = await supabase
+        // Check if expert already exists by slug
+        const baseSlug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const { data: existing } = await supabase
+          .from('industry_experts')
+          .select('id')
+          .eq('slug', baseSlug)
+          .maybeSingle();
+
+        if (existing) {
+          // Update existing expert
+          const { error } = await supabase
             .from('industry_experts')
-            .insert({ ...payload, slug })
+            .update(payload)
+            .eq('id', existing.id);
+          if (error) throw error;
+
+          // Ensure city assignment exists
+          const { data: assignmentExists } = await supabase
+            .from('expert_city_assignments')
+            .select('id')
+            .eq('expert_id', existing.id)
+            .eq('city_slug', citySlug)
+            .maybeSingle();
+
+          if (!assignmentExists) {
+            await supabase.from('expert_city_assignments').insert({
+              expert_id: existing.id,
+              city_slug: citySlug,
+              published: false,
+            });
+          }
+        } else {
+          // Insert new expert
+          const { data: newExpert, error } = await supabase
+            .from('industry_experts')
+            .insert({ ...payload, slug: baseSlug })
             .select()
             .single();
-          
-          if (!insertError) {
-            newExpert = data;
-            break;
-          }
-          
-          if (insertError.code === '23505' && insertError.message.includes('slug')) {
-            attempt++;
-            slug = `${baseSlug}-${attempt}`;
-          } else {
-            throw insertError;
-          }
-        }
-        
-        if (!newExpert) throw new Error('Could not create a unique profile. Please try a slightly different name.');
+          if (error) throw error;
 
-        if (newExpert) {
-          await supabase.from('expert_city_assignments').insert({
-            expert_id: newExpert.id,
-            city_slug: citySlug,
-            published: false,
-          });
+          if (newExpert) {
+            await supabase.from('expert_city_assignments').insert({
+              expert_id: newExpert.id,
+              city_slug: citySlug,
+              published: false,
+            });
+          }
         }
       }
 
