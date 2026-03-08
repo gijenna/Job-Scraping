@@ -44,7 +44,7 @@ const EventLogoTicker = ({
               <img
                 src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
                 alt={brand.name}
-                className="h-6 md:h-8 w-auto object-contain transition-transform hover:scale-110"
+                className="h-6 md:h-8 w-auto object-contain transition-transform hover:scale-110 mix-blend-multiply"
                 loading="lazy"
                 onError={(e) => {
                   const target = e.currentTarget;
