@@ -25,7 +25,7 @@ const DenverHero = () => {
   }, [phraseIndex, settled]);
 
   return (
-    <section className="relative min-h-[55vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
       {/* Ken Burns background */}
       <div className="absolute inset-0">
         <img
@@ -37,9 +37,9 @@ const DenverHero = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/40" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center max-w-6xl mx-auto">
-          {/* Left — logo + minimal event details */}
+      <div className="relative z-10 container mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center max-w-7xl mx-auto">
+          {/* Left — logo + date */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -59,22 +59,22 @@ const DenverHero = () => {
           {/* Divider */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-48 w-px bg-gradient-to-b from-transparent via-foreground/15 to-transparent" />
 
-          {/* Right — headline with rotating text images */}
+          {/* Right — large text images filling the space */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
-            className="flex flex-col items-center lg:items-start gap-2"
+            className="flex flex-col items-center lg:items-center px-4 lg:px-8"
           >
-            {/* "Connect with your" as image */}
+            {/* "Connect with your" — smaller header image */}
             <img
               src={textConnect}
               alt="Connect with your"
-              className="h-8 md:h-10 lg:h-12 w-auto"
+              className="w-[70%] md:w-[60%] lg:w-[75%] h-auto mb-2"
             />
 
-            {/* Rotating phrase images */}
-            <div className="relative h-20 md:h-28 lg:h-32 w-full overflow-hidden">
+            {/* Rotating phrase — LARGE, fills the space */}
+            <div className="relative w-full aspect-[2.5/1] overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={phraseIndex}
@@ -84,7 +84,7 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-0 lg:left-0 h-full w-auto max-w-full object-contain"
+                  className="absolute inset-0 w-full h-full object-contain"
                 />
               </AnimatePresence>
             </div>
@@ -93,7 +93,7 @@ const DenverHero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="mt-2 text-xs text-muted-foreground/60 italic font-body text-center lg:text-left"
+              className="mt-3 text-xs text-muted-foreground/60 italic font-body text-center"
             >
               Named one of two top activations from 2024 &amp; 2025 by Outside, Inc
             </motion.p>
