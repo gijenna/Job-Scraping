@@ -61,14 +61,16 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
             <div className="flex items-center gap-1.5 mt-2 flex-wrap">
               <span className="text-events-cream/50 text-xs">Previously:</span>
               {previousCompanies.map((company) => (
-                <img
-                  key={company}
-                  src={getCompanyLogoUrl(company)}
-                  alt={company}
-                  title={company}
-                  className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
+                <span key={company} className="inline-flex items-center gap-1">
+                  <img
+                    src={getCompanyLogoUrl(company)}
+                    alt={company}
+                    title={company}
+                    className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                  <span className="text-events-cream/60 text-xs">{company}</span>
+                </span>
               ))}
             </div>
           )}
