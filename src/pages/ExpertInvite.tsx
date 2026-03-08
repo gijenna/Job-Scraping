@@ -23,10 +23,93 @@ const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   minneapolis: { image: heroMinneapolis },
 };
 
-const COMPANIES_IN_ROOM = [
-  'Nike', 'Adidas', 'REI', 'Patagonia', 'Columbia', 'The North Face',
-  'KEEN', 'On Running', 'Lululemon', 'Cotopaxi', 'Garmin', 'VF Corporation',
-];
+const CITY_EVENT_DATA: Record<string, {
+  tagline: string;
+  yearNote: string;
+  attendance: string;
+  attendanceNote: string;
+  venue: string;
+  time: string;
+  whoAttends: string[];
+  format: string[];
+  companies: string[];
+}> = {
+  denver: {
+    tagline: 'Basecamp × Outside Days Festival',
+    yearNote: '3rd year with Outside Inc — named top activation 2024 & 2025',
+    attendance: '500–800',
+    attendanceNote: 'career event · 40,000+ at full festival',
+    venue: 'Denver, CO — part of Outside Days Festival',
+    time: '1–4 PM MT',
+    whoAttends: [
+      'Strong presence of passive experts — not actively searching but networking',
+      'Outdoor-oriented talent applying skills at mission-aligned companies',
+      'Heavily product, design, creative, and corporate roles',
+      'Professionals from VF brands, Yeti, REI, and more',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      'VIP hour for underrepresented communities (200 candidates)',
+      'Full festival access — Death Cab headlining Friday night',
+    ],
+    companies: [
+      'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
+      'Vail Resorts', 'Smartwool', 'Nike', 'Google', 'Apple', 'KPMG',
+      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti',
+    ],
+  },
+  portland: {
+    tagline: 'Basecamp × University of Oregon Portland',
+    yearNote: '5th annual — proven format, growing every year',
+    attendance: '250–500',
+    attendanceNote: 'intimate, high-concentration',
+    venue: 'U of O Portland Downtown Campus',
+    time: '5:30–8:30 PM PT',
+    whoAttends: [
+      'Active job seekers (especially in current market)',
+      'Mid-career outdoor industry professionals',
+      'SPM students & recent grads entering the industry',
+      'People already at Patagonia, TNF, Columbia, KEEN, Nike, Adidas',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      '"How I Broke In" panel — 45 min career tactics',
+      'Light snacks & drinks provided by U of O',
+    ],
+    companies: [
+      'Nike', 'Adidas', 'Columbia', 'Patagonia', 'REI', 'KEEN',
+      'On Running', 'Lululemon', 'Garmin', 'Snow Peak', 'Ruffwear',
+      'Rivian', 'HP Inc', 'AllTrails', 'Dovetail Workwear', 'Microsoft',
+    ],
+  },
+  minneapolis: {
+    tagline: 'Basecamp Outdoor — Minneapolis',
+    yearNote: 'New market launch — expanding the Gather community',
+    attendance: '200+',
+    attendanceNote: 'intimate, curated audience',
+    venue: 'Minneapolis, MN',
+    time: 'TBD',
+    whoAttends: [
+      'Active job seekers in the outdoor & active lifestyle space',
+      'Mid-career professionals from Midwest outdoor brands',
+      'Students from regional outdoor programs',
+      'Career transitioners with transferable skills',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      '"How I Broke In" panel — career tactics from real leaders',
+      'Networking reception with light snacks & drinks',
+    ],
+    companies: [
+      'REI', 'Patagonia', 'The North Face', 'Columbia', 'Nike',
+      'Adidas', 'On Running', 'Lululemon', 'Cotopaxi', 'Garmin',
+      'VF Corporation', 'KEEN',
+    ],
+  },
+};
 
 const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
   const { name } = useParams();
@@ -282,80 +365,98 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
           </section>
 
           {/* === THE EVENT SECTION === */}
-          <section className="bg-events-card/30 py-16 md:py-24 border-t border-b border-events-cream/5">
-            <div className="max-w-4xl mx-auto px-4">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
-                The Event
-              </h2>
-              <p className="text-events-cream/50 text-center mt-2">Here's what you're signing up for.</p>
+          {(() => {
+            const eventData = CITY_EVENT_DATA[citySlug] || CITY_EVENT_DATA.denver;
+            return (
+              <section className="bg-events-cream py-16 md:py-24">
+                <div className="max-w-4xl mx-auto px-4">
+                  {/* Header */}
+                  <div className="text-center mb-12">
+                    <p className="text-events-coral font-display font-semibold text-sm uppercase tracking-widest">{eventData.tagline}</p>
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-events-teal mt-3">
+                      The Event
+                    </h2>
+                    <p className="text-events-teal/60 text-lg mt-3 max-w-xl mx-auto">Here's what you're signing up for.</p>
+                  </div>
 
-              <div className="bg-events-card rounded-2xl border border-events-cream/10 p-8 mt-8">
-                <h3 className="font-display text-2xl font-bold text-events-coral">{eventTitle}</h3>
-                <p className="text-events-cream/50 text-sm mt-1">5th annual — proven format, growing every year</p>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                  {city?.event_date && (
-                    <div>
-                      <span className="text-events-cream/40 text-xs uppercase tracking-wider">Date</span>
-                      <p className="text-events-cream font-medium mt-1">{new Date(city.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                  {/* Key Details Cards */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                    {city?.event_date && (
+                      <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
+                        <CalendarDays className="w-6 h-6 text-events-coral mx-auto" />
+                        <p className="text-events-teal font-display font-bold mt-3 text-lg">
+                          {new Date(city.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </p>
+                        <p className="text-events-teal/50 text-xs mt-1">
+                          {new Date(city.event_date).getFullYear()}
+                        </p>
+                      </div>
+                    )}
+                    <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
+                      <Clock className="w-6 h-6 text-events-coral mx-auto" />
+                      <p className="text-events-teal font-display font-bold mt-3 text-lg">{eventData.time}</p>
+                      <p className="text-events-teal/50 text-xs mt-1">Event hours</p>
                     </div>
-                  )}
-                  {city?.event_location && (
-                    <div>
-                      <span className="text-events-cream/40 text-xs uppercase tracking-wider">Venue</span>
-                      <p className="text-events-cream font-medium mt-1">{city.event_location}</p>
+                    <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
+                      <Users className="w-6 h-6 text-events-coral mx-auto" />
+                      <p className="text-events-teal font-display font-bold mt-3 text-lg">{eventData.attendance}</p>
+                      <p className="text-events-teal/50 text-xs mt-1">{eventData.attendanceNote}</p>
                     </div>
-                  )}
-                  <div>
-                    <span className="text-events-cream/40 text-xs uppercase tracking-wider">Attendance</span>
-                    <p className="text-events-cream font-medium mt-1">250+</p>
-                    <p className="text-events-cream/40 text-xs">intimate, high-concentration</p>
-                  </div>
-                  {city?.event_time_details && (
-                    <div>
-                      <span className="text-events-cream/40 text-xs uppercase tracking-wider">Format</span>
-                      <p className="text-events-cream font-medium mt-1">Half-day event</p>
-                      <p className="text-events-cream/40 text-xs">{city.event_time_details}</p>
+                    <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
+                      <MapPin className="w-6 h-6 text-events-coral mx-auto" />
+                      <p className="text-events-teal font-display font-bold mt-3 text-sm leading-tight">{eventData.venue}</p>
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                {/* Event format */}
-                <div className="grid md:grid-cols-2 gap-8 mt-8 pt-8 border-t border-events-cream/10">
-                  <div>
-                    <h4 className="text-events-yellow font-display font-semibold text-sm uppercase tracking-wider mb-3">Who Attends</h4>
-                    <ul className="space-y-2 text-events-cream/70 text-sm">
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> Active job seekers in the current market</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> Mid-career outdoor industry professionals</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> People from Patagonia, TNF, Columbia, KEEN, Nike</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> SPM students & recent grads entering the industry</li>
-                    </ul>
+                  {/* Year Note Banner */}
+                  <div className="bg-events-teal rounded-xl px-6 py-4 mb-10 text-center">
+                    <p className="text-events-cream font-display font-medium text-sm">
+                      <Sparkles className="w-4 h-4 inline mr-2 text-events-yellow" />
+                      {eventData.yearNote}
+                    </p>
                   </div>
-                  <div>
-                    <h4 className="text-events-yellow font-display font-semibold text-sm uppercase tracking-wider mb-3">Event Format</h4>
-                    <ul className="space-y-2 text-events-cream/70 text-sm">
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> Employer tables with 5-10 min recruiter conversations</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> Industry Expert / Mentor Zone (that's you!)</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> "How I Broke In" panel — 45 min career tactics</li>
-                      <li className="flex gap-2"><span className="text-events-coral">•</span> Light snacks & drinks provided</li>
-                    </ul>
-                  </div>
-                </div>
 
-                {/* Companies */}
-                <div className="mt-8 pt-6 border-t border-events-cream/10">
-                  <p className="text-events-cream/40 text-xs uppercase tracking-wider mb-3">Companies Represented In The Room</p>
-                  <div className="flex flex-wrap gap-2">
-                    {COMPANIES_IN_ROOM.map((company) => (
-                      <span key={company} className="bg-events-cream/5 text-events-cream/60 text-xs px-3 py-1.5 rounded-full border border-events-cream/10">
-                        {company}
-                      </span>
-                    ))}
+                  {/* Two Column: Who Attends + Format */}
+                  <div className="grid md:grid-cols-2 gap-6 mb-12">
+                    <div className="bg-white rounded-xl p-6 shadow-sm border border-events-teal/10">
+                      <h4 className="text-events-coral font-display font-bold text-sm uppercase tracking-wider mb-4">Who Attends</h4>
+                      <ul className="space-y-3">
+                        {eventData.whoAttends.map((item, i) => (
+                          <li key={i} className="flex gap-3 text-events-teal/80 text-sm">
+                            <span className="text-events-coral font-bold mt-0.5">›</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-sm border border-events-teal/10">
+                      <h4 className="text-events-coral font-display font-bold text-sm uppercase tracking-wider mb-4">Event Format</h4>
+                      <ul className="space-y-3">
+                        {eventData.format.map((item, i) => (
+                          <li key={i} className="flex gap-3 text-events-teal/80 text-sm">
+                            <span className="text-events-coral font-bold mt-0.5">›</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Companies */}
+                  <div className="text-center">
+                    <p className="text-events-teal/40 text-xs uppercase tracking-widest font-display mb-4">Companies Represented In The Room</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {eventData.companies.map((company) => (
+                        <span key={company} className="bg-events-teal/5 text-events-teal/70 text-xs px-4 py-2 rounded-full border border-events-teal/10 font-medium">
+                          {company}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </section>
+              </section>
+            );
+          })()}
 
           {/* === FAQ SECTION === */}
           {faqs.length > 0 && (
