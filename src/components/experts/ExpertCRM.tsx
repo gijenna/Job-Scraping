@@ -164,7 +164,11 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </div>
                     </td>
                     <td className="p-3">
-                      <Badge className={`${statusColors[expert.status]} text-xs`}>
+                      <Badge
+                        className={`${statusColors[expert.status]} text-xs ${expert.status === 'confirmed' ? 'cursor-pointer hover:ring-2 hover:ring-green-400/40 transition-all' : ''}`}
+                        onClick={() => expert.status === 'confirmed' && setPreviewExpert(expert)}
+                        title={expert.status === 'confirmed' ? 'Click to preview card' : undefined}
+                      >
                         {expert.status}
                       </Badge>
                     </td>
