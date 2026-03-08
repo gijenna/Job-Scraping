@@ -141,6 +141,11 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </div>
                     </td>
                     <td className="p-3">
+                      <Badge variant="outline" className={`text-xs ${(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'text-events-yellow border-events-yellow/30' : 'text-events-coral border-events-coral/30'}`}>
+                        {(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'Brand Rep' : 'Expert'}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
                       {expertAssigns.length > 0 ? (
                         <div className="space-y-1">
                           {expertAssigns.map((a) => {
