@@ -102,6 +102,49 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
     }
   }, [existingData]);
 
+  // When the name field loses focus, look up existing expert and populate form
+  const handleNameBlur = async () => {
+    if (expertId) return; // Already linked to an expert
+    const trimmed = form.full_name.trim();
+    if (!trimmed) return;
+    const slug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    // Try by slug first, then ilike name
+    let found: any = null;
+    const { data: bySlug } = await supabase
+      .from('industry_experts').select('*').eq('slug', slug).maybeSingle();
+    if (bySlug) {
+      found = bySlug;
+    } else {
+      const { data: byName } = await supabase
+        .from('industry_experts').select('*').ilike('full_name', trimmed).maybeSingle();
+      if (byName) found = byName;
+    }
+
+    if (found) {
+      const ex = found as unknown as Expert;
+      setForm(prev => ({
+        ...prev,
+        full_name: ex.full_name || prev.full_name,
+        email: ex.email || prev.email,
+        job_title: ex.job_title || prev.job_title,
+        current_company: ex.current_company || prev.current_company,
+        photo_url: ex.photo_url || prev.photo_url,
+        linkedin_url: ex.linkedin_url || prev.linkedin_url,
+        field_of_work: ex.field_of_work || prev.field_of_work,
+        years_in_industry: ex.years_in_industry?.toString() || prev.years_in_industry,
+        years_in_city: ex.years_in_city?.toString() || prev.years_in_city,
+        ask_me_about: ex.ask_me_about || prev.ask_me_about,
+        favorite_media: ex.favorite_media || prev.favorite_media,
+        previous_companies: ex.previous_companies || prev.previous_companies,
+        niche_interests: ex.niche_interests?.length ? ex.niche_interests : prev.niche_interests,
+      }));
+      // Notify parent so expertId gets set
+      onComplete(ex);
+      toast({ title: "Welcome back!", description: "We found your existing profile and loaded your details." });
+    }
+  };
+
   const update = (key: string, value: any) => setForm(prev => ({ ...prev, [key]: value }));
 
   const toggleNiche = (niche: string) => {
@@ -308,7 +351,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
 
           <div className="space-y-2">
             <Label className="text-events-cream">Full Name *</Label>
-            <Input value={form.full_name} onChange={e => update('full_name', e.target.value)} required
+            <Input value={form.full_name} onChange={e => update('full_name', e.target.value)} onBlur={handleNameBlur} required
               className="bg-events-card border-events-cream/20 text-events-cream" />
           </div>
 
