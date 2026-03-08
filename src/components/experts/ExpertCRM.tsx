@@ -163,13 +163,35 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       )}
                     </td>
                     <td className="p-3">
-                      <div className="flex flex-wrap gap-1">
-                        {expertAssigns.map((a) => (
-                          <Badge key={a.id} variant="outline" className="text-events-cream/70 border-events-cream/20 text-xs">
-                            {cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}
-                            {a.published && <span className="ml-1 text-green-400">●</span>}
-                          </Badge>
-                        ))}
+                      <div className="flex flex-wrap gap-1.5">
+                        {expertAssigns.map((a) => {
+                          const cityName = cities.find(c => c.slug === a.city_slug)?.name || a.city_slug;
+                          const eventPageMap: Record<string, string> = {
+                            portland: '/PNW26',
+                            denver: '/OutsideDays26',
+                            minneapolis: '/OR26',
+                          };
+                          const eventPage = eventPageMap[a.city_slug];
+                          return (
+                            <div key={a.id} className="flex items-center gap-1">
+                              <Badge variant="outline" className="text-events-cream/70 border-events-cream/20 text-xs">
+                                {cityName}
+                                {a.published && <span className="ml-1 text-green-400">●</span>}
+                              </Badge>
+                              {eventPage && (
+                                <a
+                                  href={eventPage}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-events-cream/40 hover:text-events-coral transition-colors"
+                                  title={`View ${cityName} event page`}
+                                >
+                                  <Eye className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </td>
                     <td className="p-3">

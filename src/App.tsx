@@ -15,6 +15,9 @@ import AdminExperts from "./pages/AdminExperts";
 import ExpertInvite from "./pages/ExpertInvite";
 import CityExperts from "./pages/CityExperts";
 import ExpertDetail from "./pages/ExpertDetail";
+import EventPNW26 from "./pages/EventPNW26";
+import EventOutsideDays26 from "./pages/EventOutsideDays26";
+import EventOR26 from "./pages/EventOR26";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +36,9 @@ const App = () => (
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
+          <Route path="/PNW26" element={<EventPNW26 />} />
+          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
+          <Route path="/OR26" element={<EventOR26 />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           {/* Public expert browsing pages */}
