@@ -18,6 +18,7 @@ export default {
         body: ['Space Grotesk', 'sans-serif'],
         glacial: ['Raleway', 'sans-serif'],
         ticker: ['Pacifico', 'cursive'],
+        headline: ['Bebas Neue', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -93,12 +94,18 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
         },
+        "ken-burns": {
+          "0%": { transform: "scale(1.1) translate(0%, 0%)" },
+          "50%": { transform: "scale(1.15) translate(-2%, -1%)" },
+          "100%": { transform: "scale(1.1) translate(1%, 0.5%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "logo-scroll": "logo-scroll 30s linear infinite",
+        "logo-scroll": "logo-scroll 40s linear infinite",
         "events-ticker": "events-ticker 25s linear infinite",
+        "ken-burns": "ken-burns 60s ease-in-out infinite alternate",
       },
     },
   },
