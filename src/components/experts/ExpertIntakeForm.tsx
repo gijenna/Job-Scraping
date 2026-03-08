@@ -130,7 +130,8 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         full_name: ex.full_name || prev.full_name,
         email: ex.email || prev.email,
         job_title: ex.job_title || prev.job_title,
-        current_company: ex.current_company || prev.current_company,
+        // For brand reps, keep the brand's company — don't overwrite with the person's existing company
+        current_company: expertType === 'brand_rep' ? prev.current_company : (ex.current_company || prev.current_company),
         photo_url: ex.photo_url || prev.photo_url,
         linkedin_url: ex.linkedin_url || prev.linkedin_url,
         field_of_work: ex.field_of_work || prev.field_of_work,
@@ -141,7 +142,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         previous_companies: ex.previous_companies || prev.previous_companies,
         niche_interests: ex.niche_interests?.length ? ex.niche_interests : prev.niche_interests,
       }));
-      // Notify parent so expertId gets set
+      // Notify parent so expertId gets set — pass found expert but DON'T trigger full reload
       onComplete(ex);
       toast({ title: "Welcome back!", description: "We found your existing profile and loaded your details." });
     }
