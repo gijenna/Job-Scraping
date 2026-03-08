@@ -19,6 +19,11 @@ interface ExpertIntakeFormProps {
   onComplete: () => void;
 }
 
+interface CityAssignment {
+  city_slug: string;
+  city_name: string;
+}
+
 const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
