@@ -145,6 +145,15 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                                 >
                                   <Copy className="w-3.5 h-3.5" />
                                 </Button>
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-events-cream/60 hover:text-events-cream h-6 w-6 p-0 shrink-0 inline-flex items-center justify-center"
+                                  title="Open invite page"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
                               </div>
                             );
                           })}
