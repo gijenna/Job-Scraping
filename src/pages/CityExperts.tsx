@@ -114,7 +114,7 @@ const ExpertPublicCard = ({ expert, citySlug }: { expert: Expert; citySlug: stri
 
   return (
     <Link
-      to={`/${cityPrefix}experts/${expert.slug}`}
+      to={`/${cityPrefix}experts/view/${expert.slug}`}
       className="block bg-events-card rounded-xl border border-events-cream/10 overflow-hidden hover:border-events-coral/30 transition-all hover:shadow-lg hover:shadow-events-coral/5 group"
     >
       {/* Polaroid photo */}
