@@ -271,8 +271,16 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         }
       }
 
-      toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
-      onComplete();
+      // Fetch the final saved expert to pass back
+      if (finalExpertId) {
+        const { data: savedExpert } = await supabase
+          .from('industry_experts').select('*').eq('id', finalExpertId).single();
+        toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        onComplete(savedExpert as unknown as Expert);
+      } else {
+        toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        onComplete();
+      }
     } catch (err: any) {
       toast({ title: "Error saving", description: err.message, variant: "destructive" });
     } finally {
