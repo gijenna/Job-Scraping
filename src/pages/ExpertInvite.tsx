@@ -61,6 +61,12 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
         }
       }
     }
+    // Load published FAQs for this city
+    const { data: faqData } = await supabase
+      .from('expert_questions').select('*')
+      .eq('city_slug', citySlug).eq('show_in_faq', true)
+      .order('created_at', { ascending: true });
+    if (faqData) setFaqs(faqData as unknown as ExpertQuestion[]);
     setLoading(false);
   };
 
