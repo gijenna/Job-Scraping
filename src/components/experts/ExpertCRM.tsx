@@ -156,12 +156,20 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       {expertAssigns.length > 0 ? (
                         <div className="space-y-1">
                           {expertAssigns.map((a) => {
-                            const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
-                            const url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+                            const isBrandRep = (expert.expert_type || 'industry_expert') === 'brand_rep';
+                            let linkPath: string;
+                            if (isBrandRep) {
+                              const repPrefix = a.city_slug === 'portland' ? 'pnw' : a.city_slug;
+                              linkPath = `/${repPrefix}reps/${expert.slug}`;
+                            } else {
+                              const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
+                              linkPath = `/${cityPrefix}experts/${expert.slug}`;
+                            }
+                            const url = `${window.location.origin}${linkPath}`;
                             return (
                               <div key={a.id} className="flex items-center gap-1.5">
                                 <code className="text-[11px] text-events-coral bg-events-coral/10 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={url}>
-                                  /{cityPrefix}experts/{expert.slug}
+                                  {linkPath}
                                 </code>
                                 <Button
                                   size="sm"
