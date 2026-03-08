@@ -25,7 +25,7 @@ const EventLogoTicker = ({
         backgroundRepeat: 'repeat',
       }}
     >
-      <p className="text-center text-sm tracking-[0.3em] uppercase mb-8 font-body" style={{ color: '#9A8B76' }}>
+      <p className="text-center text-sm tracking-[0.3em] uppercase mb-4 font-body" style={{ color: '#9A8B76' }}>
         {headline}
       </p>
       <div className="relative overflow-hidden">
