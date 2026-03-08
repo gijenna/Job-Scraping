@@ -139,6 +139,7 @@ serve(async (req) => {
     const spreadsheetId = sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID');
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
+        console.log('Service account key length:', serviceAccountKeyStr.length, 'first 20 chars:', serviceAccountKeyStr.substring(0, 20));
         const serviceAccount = JSON.parse(serviceAccountKeyStr);
         const accessToken = await getGoogleAccessToken(serviceAccount);
 
