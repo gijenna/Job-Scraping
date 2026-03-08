@@ -481,7 +481,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                 <br />are you in?
               </h2>
               <p className="text-events-cream/60 text-lg mt-4 max-w-xl mx-auto">
-                Your team is counting on you to represent {companyName} and connect with
+                Your team is counting on you to represent {brandName} and connect with
                 the Basecamp {cityName} community.
               </p>
 
