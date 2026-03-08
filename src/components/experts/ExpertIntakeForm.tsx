@@ -19,10 +19,42 @@ interface ExpertIntakeFormProps {
   onComplete: () => void;
 }
 
+interface CityAssignment {
+  city_slug: string;
+  city_name: string;
+}
+
 const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [customNiche, setCustomNiche] = useState("");
+  const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
+  const [allCities, setAllCities] = useState<{ slug: string; name: string }[]>([]);
+
+  // Load existing city assignments for this expert
+  useEffect(() => {
+    const loadAssignments = async () => {
+      // Load all cities
+      const { data: citiesData } = await supabase.from('expert_cities').select('slug, name').eq('active', true);
+      if (citiesData) setAllCities(citiesData);
+
+      if (!expertId) {
+        setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
+        return;
+      }
+      const { data: assigns } = await supabase
+        .from('expert_city_assignments').select('city_slug').eq('expert_id', expertId);
+      if (assigns && citiesData) {
+        const mapped = assigns.map(a => ({
+          city_slug: a.city_slug,
+          city_name: citiesData.find(c => c.slug === a.city_slug)?.name || a.city_slug,
+        }));
+        // If current city isn't in assignments, don't auto-add — let user choose
+        setMyAssignments(mapped);
+      }
+    };
+    loadAssignments();
+  }, [expertId, citySlug, cityName]);
 
   const [form, setForm] = useState({
     full_name: existingData?.full_name || '',
@@ -131,6 +163,8 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         updated_at: new Date().toISOString(),
       };
 
+      let finalExpertId = expertId;
+
       if (expertId) {
         const { error } = await supabase
           .from('industry_experts')
@@ -138,7 +172,6 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           .eq('id', expertId);
         if (error) throw error;
       } else {
-        // Check if expert already exists by slug
         const baseSlug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const { data: existing } = await supabase
           .from('industry_experts')
@@ -147,41 +180,36 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           .maybeSingle();
 
         if (existing) {
-          // Update existing expert
+          finalExpertId = existing.id;
           const { error } = await supabase
             .from('industry_experts')
             .update(payload)
             .eq('id', existing.id);
           if (error) throw error;
-
-          // Ensure city assignment exists
-          const { data: assignmentExists } = await supabase
-            .from('expert_city_assignments')
-            .select('id')
-            .eq('expert_id', existing.id)
-            .eq('city_slug', citySlug)
-            .maybeSingle();
-
-          if (!assignmentExists) {
-            await supabase.from('expert_city_assignments').insert({
-              expert_id: existing.id,
-              city_slug: citySlug,
-              published: false,
-            });
-          }
         } else {
-          // Insert new expert
           const { data: newExpert, error } = await supabase
             .from('industry_experts')
             .insert({ ...payload, slug: baseSlug })
             .select()
             .single();
           if (error) throw error;
+          finalExpertId = newExpert?.id;
+        }
+      }
 
-          if (newExpert) {
+      // Sync city assignments — add any new ones from the form
+      if (finalExpertId) {
+        for (const assignment of myAssignments) {
+          const { data: exists } = await supabase
+            .from('expert_city_assignments')
+            .select('id')
+            .eq('expert_id', finalExpertId)
+            .eq('city_slug', assignment.city_slug)
+            .maybeSingle();
+          if (!exists) {
             await supabase.from('expert_city_assignments').insert({
-              expert_id: newExpert.id,
-              city_slug: citySlug,
+              expert_id: finalExpertId,
+              city_slug: assignment.city_slug,
               published: false,
             });
           }
@@ -234,8 +262,33 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           </div>
 
           <div className="space-y-2">
-            <Label className="text-events-cream">Location *</Label>
-            <p className="text-events-cream/60 text-xs">Currently assigned to: <strong className="text-events-coral">{cityName}</strong></p>
+            <Label className="text-events-cream">Event Location(s)</Label>
+            <div className="flex flex-wrap gap-2">
+              {myAssignments.map(a => (
+                <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs">
+                  {a.city_name}
+                </Badge>
+              ))}
+            </div>
+            {/* Show cities not yet assigned */}
+            {allCities.filter(c => !myAssignments.some(a => a.city_slug === c.slug)).length > 0 && (
+              <div className="mt-2">
+                <p className="text-events-cream/40 text-xs mb-1.5">Add another event location:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {allCities
+                    .filter(c => !myAssignments.some(a => a.city_slug === c.slug))
+                    .map(c => (
+                      <Badge
+                        key={c.slug}
+                        className="cursor-pointer bg-transparent text-events-cream/50 border-events-cream/20 hover:border-events-coral hover:text-events-coral text-xs transition-colors"
+                        onClick={() => setMyAssignments(prev => [...prev, { city_slug: c.slug, city_name: c.name }])}
+                      >
+                        + {c.name}
+                      </Badge>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
