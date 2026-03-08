@@ -149,15 +149,27 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </div>
                     </td>
                     <td className="p-3">
-                      <Badge variant="outline" className={`text-xs ${(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'text-events-yellow border-events-yellow/30' : 'text-events-coral border-events-coral/30'}`}>
-                        {(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'Brand Rep' : 'Expert'}
-                      </Badge>
+                      {expertAssigns.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {expertAssigns.map((a) => {
+                            const aType = (a.expert_type || 'industry_expert');
+                            return (
+                              <Badge key={a.id} variant="outline" className={`text-xs ${aType === 'brand_rep' ? 'text-events-yellow border-events-yellow/30' : 'text-events-coral border-events-coral/30'}`}>
+                                {aType === 'brand_rep' ? 'Brand Rep' : 'Expert'}
+                                <span className="ml-1 text-events-cream/40">({cities.find(c => c.slug === a.city_slug)?.name || a.city_slug})</span>
+                              </Badge>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span className="text-events-cream/30 text-xs">—</span>
+                      )}
                     </td>
                     <td className="p-3">
                       {expertAssigns.length > 0 ? (
                         <div className="space-y-1">
                           {expertAssigns.map((a) => {
-                            const isBrandRep = (expert.expert_type || 'industry_expert') === 'brand_rep';
+                            const isBrandRep = (a.expert_type || 'industry_expert') === 'brand_rep';
                             let linkPath: string;
                             if (isBrandRep) {
                               const repPrefix = a.city_slug === 'portland' ? 'pnw' : a.city_slug;
@@ -175,7 +187,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                                 <Button
                                   size="sm"
                                   variant="ghost"
-                                  onClick={() => copyLink(expert, a.city_slug)}
+                                  onClick={() => copyLink(expert, a)}
                                   className="text-events-cream/60 hover:text-events-cream h-6 w-6 p-0 shrink-0"
                                   title="Copy full URL"
                                 >
