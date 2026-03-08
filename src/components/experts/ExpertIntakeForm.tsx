@@ -17,7 +17,7 @@ interface ExpertIntakeFormProps {
   existingData?: Partial<Expert>;
   citySlug: string;
   cityName: string;
-  onComplete: () => void;
+  onComplete: (savedExpert?: Expert) => void;
 }
 
 interface CityAssignment {
