@@ -91,7 +91,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             <thead>
               <tr className="border-b border-events-cream/10">
                 <th className="text-left p-3 text-events-cream/60 font-medium">Name</th>
-                <th className="text-left p-3 text-events-cream/60 font-medium">Email</th>
+                <th className="text-left p-3 text-events-cream/60 font-medium">Invite Link</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">City/Event</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Status</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Company</th>
@@ -122,7 +122,34 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 text-events-cream/60">{expert.email || '—'}</td>
+                    <td className="p-3">
+                      {expertAssigns.length > 0 ? (
+                        <div className="space-y-1">
+                          {expertAssigns.map((a) => {
+                            const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
+                            const url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+                            return (
+                              <div key={a.id} className="flex items-center gap-1.5">
+                                <code className="text-[11px] text-events-coral bg-events-coral/10 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={url}>
+                                  /{cityPrefix}experts/{expert.slug}
+                                </code>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => copyLink(expert, a.city_slug)}
+                                  className="text-events-cream/60 hover:text-events-cream h-6 w-6 p-0 shrink-0"
+                                  title="Copy full URL"
+                                >
+                                  <Copy className="w-3.5 h-3.5" />
+                                </Button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span className="text-events-cream/30 text-xs">No assignment</span>
+                      )}
+                    </td>
                     <td className="p-3">
                       <div className="flex flex-wrap gap-1">
                         {expertAssigns.map((a) => (
@@ -131,11 +158,6 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                             {a.published && <span className="ml-1 text-green-400">●</span>}
                           </Badge>
                         ))}
-                        {expertAssigns.length > 1 && (
-                          <Badge className="bg-events-yellow/20 text-events-yellow border-events-yellow/30 text-xs">
-                            Multi-city
-                          </Badge>
-                        )}
                       </div>
                     </td>
                     <td className="p-3">
@@ -147,26 +169,16 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
                         {expertAssigns.map((a) => (
-                          <div key={a.id} className="flex items-center gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => togglePublish(a.id, a.published)}
-                              className="text-events-cream/60 hover:text-events-cream h-7 px-2"
-                              title={a.published ? 'Unpublish' : 'Publish'}
-                            >
-                              {a.published ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => copyLink(expert, a.city_slug)}
-                              className="text-events-cream/60 hover:text-events-cream h-7 px-2"
-                              title="Copy link"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
+                          <Button
+                            key={a.id}
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => togglePublish(a.id, a.published)}
+                            className="text-events-cream/60 hover:text-events-cream h-7 px-2"
+                            title={a.published ? 'Unpublish' : 'Publish'}
+                          >
+                            {a.published ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                          </Button>
                         ))}
                         <Button
                           size="sm"
