@@ -5,3 +5,5 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.scrape-linkedin]
     verify_jwt = false
+  [functions.sync-expert]
+    verify_jwt = false
