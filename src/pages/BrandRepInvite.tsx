@@ -568,7 +568,6 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                   }));
                 }
               }}
-              }}
             />
           </div>
         </>
