@@ -1,6 +1,7 @@
 import { Zap, Star, Crown, Briefcase, MessageCircle, Target, Users } from "lucide-react";
 import DenverHero from "@/components/event/DenverHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
+import EventQuote from "@/components/event/EventQuote";
 import EventBrandShowUp from "@/components/event/EventBrandShowUp";
 import EventStats from "@/components/event/EventStats";
 import EventTiers from "@/components/event/EventTiers";
