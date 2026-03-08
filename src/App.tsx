@@ -12,6 +12,7 @@ import Events from "./pages/Events";
 import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
 import AdminExperts from "./pages/AdminExperts";
+import ExpertInvite from "./pages/ExpertInvite";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
