@@ -138,14 +138,33 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           .eq('id', expertId);
         if (error) throw error;
       } else {
-        // New expert — insert record and city assignment
-        const slug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        const { data: newExpert, error } = await supabase
-          .from('industry_experts')
-          .insert({ ...payload, slug })
-          .select()
-          .single();
-        if (error) throw error;
+        // New expert — insert record and city assignment with unique slug
+        let baseSlug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        let slug = baseSlug;
+        let attempt = 0;
+        let newExpert: any = null;
+        
+        while (attempt < 5) {
+          const { data, error: insertError } = await supabase
+            .from('industry_experts')
+            .insert({ ...payload, slug })
+            .select()
+            .single();
+          
+          if (!insertError) {
+            newExpert = data;
+            break;
+          }
+          
+          if (insertError.code === '23505' && insertError.message.includes('slug')) {
+            attempt++;
+            slug = `${baseSlug}-${attempt}`;
+          } else {
+            throw insertError;
+          }
+        }
+        
+        if (!newExpert) throw new Error('Could not create a unique profile. Please try a slightly different name.');
 
         if (newExpert) {
           await supabase.from('expert_city_assignments').insert({
