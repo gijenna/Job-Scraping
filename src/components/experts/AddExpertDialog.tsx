@@ -76,6 +76,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
           expert_id: expertId,
           city_slug: citySlug,
           published: false,
+          expert_type: type,
         });
       }
 

@@ -42,6 +42,7 @@ export interface ExpertCityAssignment {
   city_slug: string;
   card_version: Record<string, any>;
   published: boolean;
+  expert_type: ExpertType;
   created_at: string;
 }
 

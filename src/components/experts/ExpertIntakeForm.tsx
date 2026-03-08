@@ -300,7 +300,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           if (existingCitySlugs.has(assignment.city_slug)) continue;
           const { error: insertAssignmentError } = await supabase
             .from('expert_city_assignments')
-            .insert({ expert_id: finalExpertId, city_slug: assignment.city_slug, published: false });
+            .insert({ expert_id: finalExpertId, city_slug: assignment.city_slug, published: false, expert_type: expertType });
           if (insertAssignmentError) throw insertAssignmentError;
         }
 
