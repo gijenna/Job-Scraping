@@ -269,7 +269,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               })}
               {filteredExperts.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-events-cream/40">
+                  <td colSpan={7} className="p-8 text-center text-events-cream/40">
                     No experts found. Add one to get started.
                   </td>
                 </tr>
