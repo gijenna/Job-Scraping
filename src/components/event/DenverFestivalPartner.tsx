@@ -31,8 +31,12 @@ const DenverFestivalPartner = () => {
               at Outside Days' 40,000-person festival — and we've been a partner since day one.
             </p>
 
+            <p className="text-events-yellow/80 font-body text-sm italic">
+              Psst — Basecamp partners get free tix 🎟️
+            </p>
+
             <a
-              href="https://outsidedays.outsideonline.com/"
+              href="https://bit.ly/outside-days"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-events-yellow font-body text-sm tracking-widest uppercase hover:opacity-80 transition-opacity"
