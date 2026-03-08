@@ -14,39 +14,23 @@ const EventLogoTicker = ({
   brands,
   headline = "Where leaders from the world's most iconic brands gather",
 }: EventLogoTickerProps) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollWidth, setScrollWidth] = useState(0);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      // Measure width of one set of brands
-      const children = scrollRef.current.children;
-      let w = 0;
-      for (let i = 0; i < brands.length; i++) {
-        const child = children[i] as HTMLElement;
-        if (child) w += child.offsetWidth;
-      }
-      setScrollWidth(w);
-    }
-  }, [brands]);
+  // Triple the brands for seamless infinite scroll
+  const tripled = [...brands, ...brands, ...brands];
 
   return (
-    <section className="py-12 bg-white overflow-hidden">
-      <p className="text-center text-gray-500 text-xs tracking-[0.3em] uppercase mb-8 font-body">
+    <section className="py-12 overflow-hidden" style={{ backgroundColor: '#FAF3E8' }}>
+      <p className="text-center text-sm tracking-[0.3em] uppercase mb-8 font-body" style={{ color: '#9A8B76' }}>
         {headline}
       </p>
       <div className="relative overflow-hidden">
         <div
-          ref={scrollRef}
           className="flex whitespace-nowrap items-center"
           style={{
-            animation: scrollWidth
-              ? `ticker-scroll ${brands.length * 2.5}s linear infinite`
-              : undefined,
+            animation: `ticker-scroll ${brands.length * 2.5}s linear infinite`,
+            width: 'max-content',
           }}
         >
-          {/* Render brands 3x for seamless wrapping */}
-          {[...brands, ...brands, ...brands].map((brand, i) => (
+          {tripled.map((brand, i) => (
             <div
               key={i}
               className="inline-flex items-center justify-center mx-6 md:mx-10 shrink-0"
@@ -60,7 +44,7 @@ const EventLogoTicker = ({
                   const target = e.currentTarget;
                   const parent = target.parentElement;
                   if (parent) {
-                    parent.innerHTML = `<span class="text-gray-400 font-display font-semibold text-sm md:text-base whitespace-nowrap">${brand.name}</span>`;
+                    parent.innerHTML = `<span class="font-display font-semibold text-sm md:text-base whitespace-nowrap" style="color: #9A8B76">${brand.name}</span>`;
                   }
                 }}
               />
