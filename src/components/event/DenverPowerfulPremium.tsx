@@ -9,20 +9,37 @@ const DenverPowerfulPremium = () => {
           background: `
             linear-gradient(180deg, 
               #19363B 0%, 
-              #19363B 2%,
-              #c4b49a 10%, 
-              #F5E6D3 18%,
-              #e8d5bf 40%,
-              #b8a888 55%,
-              #4a6a6e 72%,
-              #1a3a3f 85%,
+              #19363B 10%,
+              #c4b49a 25%, 
+              #F5E6D3 35%,
+              #e8d5bf 50%,
+              #b8a888 65%,
+              #4a6a6e 80%,
+              #1a3a3f 90%,
               #0d1f22 100%
             )
           `,
         }}
       >
+        {/* ── Top clouds fading into Teal ── */}
+        <div className="absolute top-0 w-full h-[250px] pointer-events-none">
+          {/* Teal puffs hanging down */}
+          <div className="absolute -top-10 left-[5%] w-[400px] h-[200px] rounded-full opacity-90"
+            style={{ background: "radial-gradient(ellipse, #19363B 0%, transparent 70%)" }} />
+          <div className="absolute -top-16 left-[35%] w-[550px] h-[250px] rounded-full opacity-95"
+            style={{ background: "radial-gradient(ellipse, #19363B 0%, transparent 70%)" }} />
+          <div className="absolute -top-8 right-[15%] w-[450px] h-[220px] rounded-full opacity-90"
+            style={{ background: "radial-gradient(ellipse, #19363B 0%, transparent 70%)" }} />
+            
+          {/* Creamy transition puffs pushing up */}
+          <div className="absolute top-[80px] left-[15%] w-[400px] h-[180px] rounded-full opacity-60"
+            style={{ background: "radial-gradient(ellipse, #c4b49a 0%, transparent 70%)" }} />
+          <div className="absolute top-[60px] right-[25%] w-[450px] h-[200px] rounded-full opacity-50"
+            style={{ background: "radial-gradient(ellipse, #c4b49a 0%, transparent 70%)" }} />
+        </div>
+
         {/* ── Cloud field with text overlaid ── */}
-        <div className="relative w-full pt-20 md:pt-28 pb-0" style={{ minHeight: "380px" }}>
+        <div className="relative w-full pt-32 md:pt-44 pb-12 md:pb-16" style={{ minHeight: "450px" }}>
           {/* Cloud puffs */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[220px] md:h-[260px]"
