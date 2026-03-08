@@ -67,14 +67,13 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
     onRefresh();
   };
 
-  // Count how many people have filled out forms as brand reps for each brand
-  const getFilledCount = (brandName: string) => {
+  // Find people who filled out forms as brand reps for each brand
+  const getBrandPeople = (brandName: string, brandExpertId: string) => {
     return experts.filter(
       (e) =>
         e.current_company === brandName &&
-        e.status === 'confirmed' &&
-        e.full_name !== brandName // actual people, not the brand shell
-    ).length;
+        e.id !== brandExpertId // exclude the brand shell itself
+    );
   };
 
   const statusColors: Record<string, string> = {
