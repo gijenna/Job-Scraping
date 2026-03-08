@@ -545,13 +545,13 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               </p>
             </div>
             <ExpertIntakeForm
-              expertId={expert?.id}
-              existingData={expert ? { ...expert, full_name: '', job_title: '', photo_url: '' } : (lookupName ? { full_name: lookupName.trim() } : undefined)}
+              expertId={formExpertId}
+              existingData={formExistingData}
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
               onComplete={(savedExpert) => {
-                if (savedExpert) setExpert(savedExpert);
+                if (savedExpert) setFormExpertId(savedExpert.id);
                 loadData();
               }}
             />
