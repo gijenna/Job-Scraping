@@ -33,6 +33,13 @@ const App = () => (
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          {/* Expert invite pages - personalized and generic */}
+          <Route path="/Denverexperts" element={<ExpertInvite citySlug="denver" />} />
+          <Route path="/Denverexperts/:name" element={<ExpertInvite citySlug="denver" />} />
+          <Route path="/Portlandexperts" element={<ExpertInvite citySlug="portland" />} />
+          <Route path="/Portlandexperts/:name" element={<ExpertInvite citySlug="portland" />} />
+          <Route path="/MNexperts" element={<ExpertInvite citySlug="minneapolis" />} />
+          <Route path="/MNexperts/:name" element={<ExpertInvite citySlug="minneapolis" />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
