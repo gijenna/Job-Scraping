@@ -18,7 +18,7 @@ export default {
         body: ['Space Grotesk', 'sans-serif'],
         glacial: ['Raleway', 'sans-serif'],
         ticker: ['Pacifico', 'cursive'],
-        headline: ['Oswald', 'sans-serif'],
+        headline: ['Righteous', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
