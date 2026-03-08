@@ -93,6 +93,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendance: '200+',
     attendanceNote: 'intimate, curated audience',
     venue: 'Minneapolis, MN',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
     time: 'TBD',
     whoAttends: [
       'Active job seekers in the outdoor & active lifestyle space',
