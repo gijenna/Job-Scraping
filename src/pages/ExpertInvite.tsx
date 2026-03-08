@@ -23,10 +23,93 @@ const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   minneapolis: { image: heroMinneapolis },
 };
 
-const COMPANIES_IN_ROOM = [
-  'Nike', 'Adidas', 'REI', 'Patagonia', 'Columbia', 'The North Face',
-  'KEEN', 'On Running', 'Lululemon', 'Cotopaxi', 'Garmin', 'VF Corporation',
-];
+const CITY_EVENT_DATA: Record<string, {
+  tagline: string;
+  yearNote: string;
+  attendance: string;
+  attendanceNote: string;
+  venue: string;
+  time: string;
+  whoAttends: string[];
+  format: string[];
+  companies: string[];
+}> = {
+  denver: {
+    tagline: 'Basecamp × Outside Days Festival',
+    yearNote: '3rd year with Outside Inc — named top activation 2024 & 2025',
+    attendance: '500–800',
+    attendanceNote: 'career event · 40,000+ at full festival',
+    venue: 'Denver, CO — part of Outside Days Festival',
+    time: '1–4 PM MT',
+    whoAttends: [
+      'Strong presence of passive experts — not actively searching but networking',
+      'Outdoor-oriented talent applying skills at mission-aligned companies',
+      'Heavily product, design, creative, and corporate roles',
+      'Professionals from VF brands, Yeti, REI, and more',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      'VIP hour for underrepresented communities (200 candidates)',
+      'Full festival access — Death Cab headlining Friday night',
+    ],
+    companies: [
+      'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
+      'Vail Resorts', 'Smartwool', 'Nike', 'Google', 'Apple', 'KPMG',
+      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti',
+    ],
+  },
+  portland: {
+    tagline: 'Basecamp × University of Oregon Portland',
+    yearNote: '5th annual — proven format, growing every year',
+    attendance: '250–500',
+    attendanceNote: 'intimate, high-concentration',
+    venue: 'U of O Portland Downtown Campus',
+    time: '5:30–8:30 PM PT',
+    whoAttends: [
+      'Active job seekers (especially in current market)',
+      'Mid-career outdoor industry professionals',
+      'SPM students & recent grads entering the industry',
+      'People already at Patagonia, TNF, Columbia, KEEN, Nike, Adidas',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      '"How I Broke In" panel — 45 min career tactics',
+      'Light snacks & drinks provided by U of O',
+    ],
+    companies: [
+      'Nike', 'Adidas', 'Columbia', 'Patagonia', 'REI', 'KEEN',
+      'On Running', 'Lululemon', 'Garmin', 'Snow Peak', 'Ruffwear',
+      'Rivian', 'HP Inc', 'AllTrails', 'Dovetail Workwear', 'Microsoft',
+    ],
+  },
+  minneapolis: {
+    tagline: 'Basecamp Outdoor — Minneapolis',
+    yearNote: 'New market launch — expanding the Gather community',
+    attendance: '200+',
+    attendanceNote: 'intimate, curated audience',
+    venue: 'Minneapolis, MN',
+    time: 'TBD',
+    whoAttends: [
+      'Active job seekers in the outdoor & active lifestyle space',
+      'Mid-career professionals from Midwest outdoor brands',
+      'Students from regional outdoor programs',
+      'Career transitioners with transferable skills',
+    ],
+    format: [
+      'Employer tables with 5–10 min recruiter conversations',
+      'Industry Expert / Mentor Zone (that\'s you!)',
+      '"How I Broke In" panel — career tactics from real leaders',
+      'Networking reception with light snacks & drinks',
+    ],
+    companies: [
+      'REI', 'Patagonia', 'The North Face', 'Columbia', 'Nike',
+      'Adidas', 'On Running', 'Lululemon', 'Cotopaxi', 'Garmin',
+      'VF Corporation', 'KEEN',
+    ],
+  },
+};
 
 const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
   const { name } = useParams();
