@@ -334,9 +334,13 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         const { data: savedExpert } = await supabase
           .from('industry_experts').select('*').eq('id', finalExpertId).single();
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        setSavedEmail(form.email.trim());
+        setShowSuccess(true);
         onComplete(savedExpert as unknown as Expert);
       } else {
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        setSavedEmail(form.email.trim());
+        setShowSuccess(true);
         onComplete();
       }
     } catch (err: any) {
