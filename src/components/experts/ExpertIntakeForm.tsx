@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import { X, Mail, CheckCircle2 } from "lucide-react";
 import { Expert, FIELD_OPTIONS, NICHE_OPTIONS, getCompanyLogoUrl } from "@/lib/expert-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
