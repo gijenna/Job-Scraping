@@ -1,0 +1,1 @@
+UPDATE public.expert_cities SET event_date = '2026-04-16' WHERE slug = 'portland';
