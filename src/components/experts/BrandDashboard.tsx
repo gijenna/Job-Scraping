@@ -23,7 +23,8 @@ interface BrandEntry {
 const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashboardProps) => {
   const { toast } = useToast();
 
-  // Find brand entries: experts that have at least one brand_rep assignment
+  // Find brand entries: only brand SHELL records (admin-created), not individual people
+  // Brand shells have a slug derived from the company/brand name
   const brandEntries: BrandEntry[] = experts
     .map((expert) => {
       const brandAssigns = assignments.filter(
@@ -32,6 +33,11 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
       if (brandAssigns.length === 0) return null;
 
       const brandName = expert.current_company || expert.full_name;
+      // Only treat as a brand card if the slug matches the company name (brand shell)
+      // Individual people have slugs based on their personal name
+      const companySlug = nameToSlug(brandName);
+      if (expert.slug !== companySlug) return null;
+
       const hasKnownRep = expert.full_name && expert.current_company && expert.full_name !== expert.current_company;
       const companyRep = hasKnownRep ? expert.full_name : null;
 
