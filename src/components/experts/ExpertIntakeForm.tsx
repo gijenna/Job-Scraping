@@ -88,7 +88,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
 
     const { data, error } = await supabase.storage
       .from('email-assets')
-      .upload(`expert-photos/${fileName}`, file, { upsert: true });
+      .upload(`expert-photos/${fileName}`, file, { upsert: false });
 
     if (error) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
