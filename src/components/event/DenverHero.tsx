@@ -2,13 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
-import textConnect from "@/assets/text-connect-with-your.png";
-import textTalentPipeline from "@/assets/text-talent-pipeline.png";
-import textCustomerBase from "@/assets/text-customer-base.png";
-import textCommunity from "@/assets/text-community.png";
 
-const phraseImages = [textTalentPipeline, textCustomerBase, textCommunity];
-const phraseAlts = ["talent pipeline", "customer base", "community"];
+const phrases = ["talent pipeline", "customer base", "community"];
 
 const DenverHero = () => {
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -16,7 +11,7 @@ const DenverHero = () => {
 
   useEffect(() => {
     if (settled) return;
-    if (phraseIndex < phraseImages.length - 1) {
+    if (phraseIndex < phrases.length - 1) {
       const timer = setTimeout(() => setPhraseIndex(phraseIndex + 1), 2400);
       return () => clearTimeout(timer);
     } else {
@@ -59,33 +54,32 @@ const DenverHero = () => {
           {/* Divider */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-48 w-px bg-gradient-to-b from-transparent via-foreground/15 to-transparent" />
 
-          {/* Right — large text images filling the space */}
+          {/* Right — Fredoka text */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
-            className="flex flex-col items-center lg:items-center px-4 lg:px-8"
+            className="flex flex-col items-center lg:items-start px-4 lg:px-8"
           >
-            {/* "Connect with your" — smaller header image */}
-            <img
-              src={textConnect}
-              alt="Connect with your"
-              className="w-[70%] md:w-[60%] lg:w-[75%] h-auto mb-2"
-            />
+            <h2
+              className="font-headline font-medium text-events-cream text-2xl md:text-3xl leading-tight mb-1"
+            >
+              Connect with your
+            </h2>
 
-            {/* Rotating phrase — LARGE, fills the space */}
-            <div className="relative w-full aspect-[2.5/1] overflow-hidden">
+            {/* Rotating phrase */}
+            <div className="relative h-[1.2em] overflow-hidden" style={{ fontSize: "clamp(3rem, 6vw, 5.5rem)" }}>
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.span
                   key={phraseIndex}
-                  src={phraseImages[phraseIndex]}
-                  alt={phraseAlts[phraseIndex]}
                   initial={{ y: "100%", opacity: 0 }}
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute inset-0 w-full h-full object-contain"
-                />
+                  className="absolute left-0 font-headline font-bold text-events-yellow whitespace-nowrap leading-none"
+                >
+                  {phrases[phraseIndex]}
+                </motion.span>
               </AnimatePresence>
             </div>
 
@@ -93,7 +87,7 @@ const DenverHero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="mt-3 text-xs text-muted-foreground/60 italic font-body text-center"
+              className="mt-4 text-xs text-muted-foreground/60 italic font-body"
             >
               Named one of two top activations from 2024 &amp; 2025 by Outside, Inc
             </motion.p>
