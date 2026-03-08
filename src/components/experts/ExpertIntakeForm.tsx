@@ -266,8 +266,33 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           </div>
 
           <div className="space-y-2">
-            <Label className="text-events-cream">Location *</Label>
-            <p className="text-events-cream/60 text-xs">Currently assigned to: <strong className="text-events-coral">{cityName}</strong></p>
+            <Label className="text-events-cream">Event Location(s)</Label>
+            <div className="flex flex-wrap gap-2">
+              {myAssignments.map(a => (
+                <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs">
+                  {a.city_name}
+                </Badge>
+              ))}
+            </div>
+            {/* Show cities not yet assigned */}
+            {allCities.filter(c => !myAssignments.some(a => a.city_slug === c.slug)).length > 0 && (
+              <div className="mt-2">
+                <p className="text-events-cream/40 text-xs mb-1.5">Add another event location:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {allCities
+                    .filter(c => !myAssignments.some(a => a.city_slug === c.slug))
+                    .map(c => (
+                      <Badge
+                        key={c.slug}
+                        className="cursor-pointer bg-transparent text-events-cream/50 border-events-cream/20 hover:border-events-coral hover:text-events-coral text-xs transition-colors"
+                        onClick={() => setMyAssignments(prev => [...prev, { city_slug: c.slug, city_name: c.name }])}
+                      >
+                        + {c.name}
+                      </Badge>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
