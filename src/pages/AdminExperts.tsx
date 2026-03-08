@@ -71,7 +71,10 @@ const AdminExperts = () => {
               Industry Expert <span className="text-events-coral">CRM</span>
             </h1>
           </div>
-          <AddExpertDialog cities={cities} onAdded={fetchAll} />
+          <div className="flex items-center gap-2">
+            <AddExpertDialog cities={cities} onAdded={fetchAll} />
+            <AddExpertDialog cities={cities} onAdded={fetchAll} type="brand_rep" />
+          </div>
         </div>
       </div>
 

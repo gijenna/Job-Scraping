@@ -5,15 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { nameToSlug, ExpertCity } from "@/lib/expert-types";
-import { Plus, Loader2, Copy, ExternalLink, Link2, Check } from "lucide-react";
+import { nameToSlug, ExpertCity, ExpertType } from "@/lib/expert-types";
+import { Plus, Loader2, Copy, ExternalLink, Link2, Check, Building2 } from "lucide-react";
 
 interface AddExpertDialogProps {
   cities: ExpertCity[];
   onAdded: () => void;
+  type?: ExpertType;
 }
 
-const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
+const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExpertDialogProps) => {
+  const isBrandRep = type === 'brand_rep';
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [citySlug, setCitySlug] = useState("");
@@ -22,8 +24,14 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const getCityPrefix = (slug: string) =>
-    slug === 'denver' ? 'Denver' : slug === 'portland' ? 'Portland' : 'MN';
+  const getUrl = (slug: string, city: string) => {
+    if (isBrandRep) {
+      const repPrefix = city === 'portland' ? 'pnw' : city;
+      return `${window.location.origin}/${repPrefix}reps/${slug}`;
+    }
+    const cityPrefix = city === 'denver' ? 'Denver' : city === 'portland' ? 'Portland' : 'MN';
+    return `${window.location.origin}/${cityPrefix}experts/${slug}`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +42,6 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
       const slug = nameToSlug(name);
       const { data: user } = await supabase.auth.getUser();
 
-      // Check if expert already exists
       const { data: existing } = await supabase
         .from('industry_experts')
         .select('id')
@@ -45,11 +52,14 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
 
       if (existing) {
         expertId = existing.id;
+        // Update type if needed
+        await supabase.from('industry_experts').update({ expert_type: type }).eq('id', expertId);
       } else {
         const { data: newExpert, error } = await supabase.from('industry_experts').insert({
           full_name: name.trim(),
           slug,
           status: 'invited' as const,
+          expert_type: type,
           created_by: user.user?.id || null,
         }).select('id').single();
 
@@ -57,7 +67,6 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
         expertId = newExpert.id;
       }
 
-      // Ensure city assignment exists
       const { data: assignmentExists } = await supabase
         .from('expert_city_assignments')
         .select('id')
@@ -73,9 +82,7 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
         });
       }
 
-      const prefix = getCityPrefix(citySlug);
-      const url = `${window.location.origin}/${prefix}experts/${slug}`;
-      setGeneratedUrl(url);
+      setGeneratedUrl(getUrl(slug, citySlug));
       onAdded();
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
@@ -103,23 +110,35 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
     if (!isOpen) handleReset();
   };
 
+  const label = isBrandRep ? 'Brand' : 'Expert';
+  const nameLabel = isBrandRep ? 'Brand Name' : "Expert's Name";
+  const namePlaceholder = isBrandRep ? 'Patagonia' : 'Hannah Harrick';
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogTrigger asChild>
-        <Button className="bg-events-coral hover:bg-events-coral/90 text-events-cream">
-          <Plus className="w-4 h-4 mr-1" /> Add Expert
+        <Button className={isBrandRep
+          ? "bg-events-yellow hover:bg-events-yellow/90 text-events-teal"
+          : "bg-events-coral hover:bg-events-coral/90 text-events-cream"
+        }>
+          {isBrandRep ? <Building2 className="w-4 h-4 mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
+          Add {label}
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-events-cream border-events-cream/20 text-events-teal sm:max-w-lg">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-events-teal/10 flex items-center justify-center">
-              <Link2 className="w-5 h-5 text-events-teal" />
+              {isBrandRep ? <Building2 className="w-5 h-5 text-events-teal" /> : <Link2 className="w-5 h-5 text-events-teal" />}
             </div>
             <div>
-              <DialogTitle className="font-display text-xl text-events-teal">Generate Pitch Link</DialogTitle>
+              <DialogTitle className="font-display text-xl text-events-teal">
+                Generate {label} Link
+              </DialogTitle>
               <p className="text-events-teal/60 text-sm mt-0.5">
-                Create a personalized landing page URL to send to prospective Industry Experts.
+                {isBrandRep
+                  ? 'Create a personalized landing page URL for a brand team to send to their reps.'
+                  : 'Create a personalized landing page URL to send to prospective Industry Experts.'}
               </p>
             </div>
           </div>
@@ -127,23 +146,21 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
 
         {!generatedUrl ? (
           <form onSubmit={handleSubmit} className="space-y-5 mt-2">
-            {/* Name */}
             <div className="space-y-2">
-              <Label className="text-events-teal font-semibold">Expert's Name</Label>
+              <Label className="text-events-teal font-semibold">{nameLabel}</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="bg-events-teal/5 border-events-teal/15 text-events-teal h-12 text-base"
-                placeholder="Hannah Harrick"
+                placeholder={namePlaceholder}
               />
             </div>
 
-            {/* City Selection - Card Style */}
             <div className="space-y-2">
               <Label className="text-events-teal font-semibold">Event Location</Label>
               <div className="grid grid-cols-2 gap-3">
-                {cities.map((city) => (
+                {cities.filter(c => isBrandRep ? (c.slug === 'denver' || c.slug === 'portland') : true).map((city) => (
                   <button
                     key={city.slug}
                     type="button"
@@ -179,7 +196,6 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
             </Button>
           </form>
         ) : (
-          /* Success State - Show URL */
           <div className="space-y-5 mt-2">
             <div className="space-y-2">
               <Label className="text-events-teal font-semibold">Your Personalized Link</Label>
@@ -214,7 +230,7 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
               onClick={handleReset}
               className="w-full text-events-teal/40 hover:text-events-teal/70 text-sm transition-colors"
             >
-              + Add another expert
+              + Add another {label.toLowerCase()}
             </button>
           </div>
         )}
