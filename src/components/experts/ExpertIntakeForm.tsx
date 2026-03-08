@@ -207,20 +207,26 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
 
       // Sync city assignments — add any new ones from the form
       if (finalExpertId) {
+        const { data: existingAssignments, error: existingAssignmentsError } = await supabase
+          .from('expert_city_assignments')
+          .select('city_slug')
+          .eq('expert_id', finalExpertId);
+
+        if (existingAssignmentsError) throw existingAssignmentsError;
+
+        const existingCitySlugs = new Set((existingAssignments || []).map(a => a.city_slug));
         for (const assignment of myAssignments) {
-          const { data: exists } = await supabase
+          if (existingCitySlugs.has(assignment.city_slug)) continue;
+
+          const { error: insertAssignmentError } = await supabase
             .from('expert_city_assignments')
-            .select('id')
-            .eq('expert_id', finalExpertId)
-            .eq('city_slug', assignment.city_slug)
-            .maybeSingle();
-          if (!exists) {
-            await supabase.from('expert_city_assignments').insert({
+            .insert({
               expert_id: finalExpertId,
               city_slug: assignment.city_slug,
               published: false,
             });
-          }
+
+          if (insertAssignmentError) throw insertAssignmentError;
         }
       }
 
