@@ -338,6 +338,20 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
       if (finalExpertId) {
         const { data: savedExpert } = await supabase
           .from('industry_experts').select('*').eq('id', finalExpertId).single();
+
+        // Sync to Folk CRM + Google Sheets (fire-and-forget)
+        try {
+          supabase.functions.invoke('sync-expert', {
+            body: {
+              ...savedExpert,
+              city_slug: citySlug,
+              expert_type: expertType,
+            },
+          });
+        } catch (syncErr) {
+          console.error('CRM sync error (non-blocking):', syncErr);
+        }
+
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
         setSavedEmail(form.email.trim());
         setShowSuccess(true);
