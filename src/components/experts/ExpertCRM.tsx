@@ -63,8 +63,15 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   };
 
   const copyLink = (expert: Expert, citySlug: string) => {
-    const cityPrefix = citySlug === 'denver' ? 'Denver' : citySlug === 'portland' ? 'Portland' : 'MN';
-    const url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+    const isBrandRep = (expert.expert_type || 'industry_expert') === 'brand_rep';
+    let url: string;
+    if (isBrandRep) {
+      const repPrefix = citySlug === 'portland' ? 'pnw' : citySlug;
+      url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+    } else {
+      const cityPrefix = citySlug === 'denver' ? 'Denver' : citySlug === 'portland' ? 'Portland' : 'MN';
+      url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+    }
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
   };
