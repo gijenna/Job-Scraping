@@ -97,7 +97,21 @@ const AdminExperts = () => {
             {loading ? (
               <p className="text-events-cream/40 text-center py-12">Loading...</p>
             ) : (
-              <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+              <div className="space-y-10">
+                <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                <div>
+                  <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
+                    <span className="text-events-coral">People</span> CRM
+                    <span className="text-events-cream/40 text-sm font-normal">
+                      ({experts.filter(e => {
+                        const assigns = assignments.filter(a => a.expert_id === e.id);
+                        return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
+                      }).length})
+                    </span>
+                  </h3>
+                  <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                </div>
+              </div>
             )}
           </TabsContent>
 
