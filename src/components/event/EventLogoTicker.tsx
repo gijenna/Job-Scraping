@@ -18,7 +18,7 @@ const EventLogoTicker = ({
 
   return (
     <section
-      className="py-12 overflow-hidden relative"
+      className="py-6 overflow-hidden relative"
       style={{
         backgroundImage: `url(${creamTexture})`,
         backgroundSize: '512px 512px',
