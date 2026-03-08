@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Expert, FIELD_OPTIONS, NICHE_OPTIONS, getCompanyLogoUrl } from "@/lib/expert-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
   const [customNiche, setCustomNiche] = useState("");
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
   const [allCities, setAllCities] = useState<{ slug: string; name: string }[]>([]);
+  const assignmentsLoadedRef = useRef(false);
 
   // Load existing city assignments for this expert
   useEffect(() => {
@@ -38,19 +39,26 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
       const { data: citiesData } = await supabase.from('expert_cities').select('slug, name').eq('active', true);
       if (citiesData) setAllCities(citiesData);
 
+      // Only load from DB on first mount or when expertId first becomes available
+      if (assignmentsLoadedRef.current) return;
+
       if (!expertId) {
         setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
         return;
       }
+
+      assignmentsLoadedRef.current = true;
       const { data: assigns } = await supabase
         .from('expert_city_assignments').select('city_slug').eq('expert_id', expertId);
-      if (assigns && citiesData) {
+      if (assigns && assigns.length > 0 && citiesData) {
         const mapped = assigns.map(a => ({
           city_slug: a.city_slug,
           city_name: citiesData.find(c => c.slug === a.city_slug)?.name || a.city_slug,
         }));
-        // If current city isn't in assignments, don't auto-add — let user choose
         setMyAssignments(mapped);
+      } else if (citiesData) {
+        // Expert exists but no assignments found — default to current city
+        setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
       }
     };
     loadAssignments();
