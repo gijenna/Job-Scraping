@@ -79,7 +79,7 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-0 w-full text-center lg:text-left font-headline tracking-tight leading-[1]"
+                  className="absolute left-0 w-full text-center lg:text-left font-headline font-bold uppercase tracking-tight leading-[0.95]"
                   style={{ fontSize: '1em', color: '#E1B624' }}
                 >
                   {phrases[phraseIndex]}
