@@ -560,10 +560,13 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               onComplete={(savedExpert) => {
                 if (savedExpert) {
                   setFormExpertId(savedExpert.id);
-                  // Only reload if the expert was actually saved (status confirmed), not just looked up
-                  if (savedExpert.status === 'confirmed') {
-                    loadData();
-                  }
+                  // Update existingData so form preserves data across re-renders
+                  setFormExistingData(prev => ({
+                    ...prev,
+                    ...savedExpert,
+                    // Keep the brand's company name
+                    current_company: prev?.current_company || savedExpert.current_company,
+                  }));
                 }
               }}
             />
