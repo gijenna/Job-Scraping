@@ -10,7 +10,7 @@ import AddExpertDialog from "@/components/experts/AddExpertDialog";
 import FAQManager from "@/components/experts/FAQManager";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
+import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, Download } from "lucide-react";
 
 const AdminExperts = () => {
   const navigate = useNavigate();
@@ -21,6 +21,29 @@ const AdminExperts = () => {
   const [assignments, setAssignments] = useState<ExpertCityAssignment[]>([]);
   const [questions, setQuestions] = useState<ExpertQuestion[]>([]);
   const [previewMode, setPreviewMode] = useState<'carousel' | 'grid'>('carousel');
+
+  const downloadCSV = () => {
+    const headers = ['Name', 'Email', 'Job Title', 'Company', 'Field', 'Status', 'LinkedIn', 'Cities', 'Type', 'Years in Industry', 'Years in City', 'Ask Me About', 'Niche Interests'];
+    const rows = experts.map(e => {
+      const expertAssigns = assignments.filter(a => a.expert_id === e.id);
+      const cityNames = expertAssigns.map(a => a.city_slug).join('; ');
+      const types = [...new Set(expertAssigns.map(a => a.expert_type))].join('; ');
+      return [
+        e.full_name, e.email || '', e.job_title || '', e.current_company || '',
+        e.field_of_work || '', e.status || '', e.linkedin_url || '',
+        cityNames, types, e.years_in_industry ?? '', e.years_in_city ?? '',
+        e.ask_me_about || '', (e.niche_interests || []).join('; ')
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `basecamp-experts-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     checkAuth();
@@ -73,6 +96,14 @@ const AdminExperts = () => {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={downloadCSV}
+              className="text-events-cream/60 border-events-cream/20 hover:text-events-cream hover:bg-events-cream/10"
+            >
+              <Download className="w-4 h-4 mr-1" /> Export CSV
+            </Button>
             <AddExpertDialog cities={cities} onAdded={fetchAll} />
             <AddExpertDialog cities={cities} onAdded={fetchAll} type="brand_rep" />
           </div>
