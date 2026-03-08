@@ -36,6 +36,7 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
   const [showForm, setShowForm] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
+  const [faqs, setFaqs] = useState<ExpertQuestion[]>([]);
   const [returning, setReturning] = useState(false);
   const [lookupName, setLookupName] = useState("");
 
