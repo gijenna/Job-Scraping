@@ -17,7 +17,6 @@ export interface Expert {
   previous_companies: string | null;
   niche_interests: string[];
   status: 'invited' | 'viewed' | 'started' | 'confirmed';
-  expert_type: ExpertType;
   created_by: string | null;
   created_at: string;
   updated_at: string;
