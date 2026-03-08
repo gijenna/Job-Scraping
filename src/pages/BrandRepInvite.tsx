@@ -468,12 +468,14 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
               <h2 className="font-display text-3xl md:text-5xl font-bold text-events-cream leading-tight">
-                So, {expert ? <span className="text-events-coral">{expert.full_name}</span> : 'friend'}...
-                <br />are you in?
+                So... are you in?
               </h2>
               <p className="text-events-cream/60 text-lg mt-4 max-w-xl mx-auto">
-                Your team is counting on you to represent {brandName} and connect with
-                the Basecamp {cityName} community.
+                {brandName !== 'Your Company' ? (
+                  <>{brandName} is counting on you to represent the brand and connect with the Basecamp {cityName} community.</>
+                ) : (
+                  <>Your team is counting on you to represent the brand and connect with the Basecamp {cityName} community.</>
+                )}
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
