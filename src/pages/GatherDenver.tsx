@@ -175,10 +175,10 @@ const GatherDenver = () => {
         headline="Where leaders from the outdoor industry's most iconic brands gather"
       />
 
+      <DenverFestivalPartner />
+
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
-
-      <DenverFestivalPartner />
 
       
 
