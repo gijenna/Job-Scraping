@@ -96,6 +96,14 @@ const AdminExperts = () => {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={downloadCSV}
+              className="text-events-cream/60 border-events-cream/20 hover:text-events-cream hover:bg-events-cream/10"
+            >
+              <Download className="w-4 h-4 mr-1" /> Export CSV
+            </Button>
             <AddExpertDialog cities={cities} onAdded={fetchAll} />
             <AddExpertDialog cities={cities} onAdded={fetchAll} type="brand_rep" />
           </div>
