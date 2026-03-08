@@ -351,7 +351,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
 
           <div className="space-y-2">
             <Label className="text-events-cream">Full Name *</Label>
-            <Input value={form.full_name} onChange={e => update('full_name', e.target.value)} required
+            <Input value={form.full_name} onChange={e => update('full_name', e.target.value)} onBlur={handleNameBlur} required
               className="bg-events-card border-events-cream/20 text-events-cream" />
           </div>
 
