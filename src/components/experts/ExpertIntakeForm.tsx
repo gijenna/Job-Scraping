@@ -127,6 +127,10 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     }
 
     if (found) {
+      // Never match the brand shell record — reps must create their own
+      if (brandExpertId && found.id === brandExpertId) {
+        return;
+      }
       const ex = found as unknown as Expert;
       setForm(prev => ({
         ...prev,
