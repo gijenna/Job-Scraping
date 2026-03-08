@@ -52,14 +52,11 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
       if (existing) {
         expertId = existing.id;
-        // Update type if needed
-        await supabase.from('industry_experts').update({ expert_type: type }).eq('id', expertId);
       } else {
         const { data: newExpert, error } = await supabase.from('industry_experts').insert({
           full_name: name.trim(),
           slug,
           status: 'invited' as const,
-          expert_type: type,
           created_by: user.user?.id || null,
         }).select('id').single();
 
