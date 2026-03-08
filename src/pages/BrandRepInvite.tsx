@@ -98,6 +98,9 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
   const [faqs, setFaqs] = useState<ExpertQuestion[]>([]);
   const [returning, setReturning] = useState(false);
   const [lookupName, setLookupName] = useState("");
+  // Track the actual person filling out the form (NOT the brand shell)
+  const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
+  const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
 
   useEffect(() => {
     loadData();
@@ -130,12 +133,11 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
   const handleImIn = () => {
     setShowConfetti(true);
+    // Reset form state for a fresh person — only pre-fill the brand's company name
+    setFormExpertId(undefined);
+    setFormExistingData({ current_company: expert?.current_company || '' });
     setTimeout(() => setShowForm(true), 800);
     setTimeout(() => setShowConfetti(false), 4500);
-    if (expert?.id) {
-      supabase.from('industry_experts')
-        .update({ status: 'started' }).eq('id', expert.id);
-    }
   };
 
   const handleNameLookup = async () => {
@@ -144,7 +146,8 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       .from('industry_experts').select('*')
       .ilike('full_name', lookupName.trim()).maybeSingle();
     if (data) {
-      setExpert(data as unknown as Expert);
+      setFormExpertId(data.id);
+      setFormExistingData(data as unknown as Expert);
       setReturning(false);
       setShowForm(true);
     } else {
@@ -152,10 +155,14 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       const { data: slugMatch } = await supabase
         .from('industry_experts').select('*').eq('slug', slug).maybeSingle();
       if (slugMatch) {
-        setExpert(slugMatch as unknown as Expert);
+        setFormExpertId(slugMatch.id);
+        setFormExistingData(slugMatch as unknown as Expert);
         setReturning(false);
         setShowForm(true);
       } else {
+        // New person — pre-fill company from the brand shell, and the name they typed
+        setFormExpertId(undefined);
+        setFormExistingData({ current_company: expert?.current_company || '', full_name: lookupName.trim() });
         setReturning(false);
         setShowForm(true);
       }
@@ -545,13 +552,13 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               </p>
             </div>
             <ExpertIntakeForm
-              expertId={expert?.id}
-              existingData={expert ? { ...expert, full_name: '', job_title: '', photo_url: '' } : (lookupName ? { full_name: lookupName.trim() } : undefined)}
+              expertId={formExpertId}
+              existingData={formExistingData}
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
               onComplete={(savedExpert) => {
-                if (savedExpert) setExpert(savedExpert);
+                if (savedExpert) setFormExpertId(savedExpert.id);
                 loadData();
               }}
             />
