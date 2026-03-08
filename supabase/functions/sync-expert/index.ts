@@ -139,7 +139,14 @@ serve(async (req) => {
     const spreadsheetId = sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID');
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
-        const serviceAccount = JSON.parse(atob(serviceAccountKeyStr));
+        let serviceAccount: any;
+        try {
+          serviceAccount = JSON.parse(serviceAccountKeyStr);
+        } catch {
+          // Try base64 decode
+          serviceAccount = JSON.parse(atob(serviceAccountKeyStr));
+        }
+        console.log('Service account parsed, client_email:', serviceAccount.client_email || 'MISSING');
         const accessToken = await getGoogleAccessToken(serviceAccount);
 
         const row = [
