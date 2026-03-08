@@ -20,7 +20,7 @@ const DenverHero = () => {
   }, [phraseIndex, settled]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Ken Burns background */}
       <div className="absolute inset-0">
         <img
@@ -32,7 +32,7 @@ const DenverHero = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/40" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center max-w-6xl mx-auto">
           {/* Left — logo + minimal event details */}
           <motion.div
@@ -50,9 +50,6 @@ const DenverHero = () => {
             <p className="text-foreground/60 font-body text-sm tracking-widest uppercase">
               May 29, 2026 · Denver, CO
             </p>
-            <p className="text-foreground/40 font-body text-xs tracking-wide mt-1">
-              1–4 PM · Doors 12 PM MT
-            </p>
           </motion.div>
 
           {/* Divider */}
@@ -65,7 +62,7 @@ const DenverHero = () => {
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
             className="flex flex-col items-center lg:items-start"
           >
-            <h1 className="font-headline font-bold uppercase leading-[0.95] tracking-tight text-foreground text-center lg:text-left">
+            <h1 className="font-headline font-semibold uppercase leading-[1] text-foreground text-center lg:text-left">
               <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">Connect</span>
               <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">with your</span>
             </h1>
@@ -79,7 +76,7 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-0 w-full text-center lg:text-left font-headline font-bold uppercase tracking-tight leading-[0.95]"
+                  className="absolute left-0 w-full text-center lg:text-left font-headline font-semibold uppercase leading-[1]"
                   style={{ fontSize: '1em', color: '#E1B624' }}
                 >
                   {phrases[phraseIndex]}
