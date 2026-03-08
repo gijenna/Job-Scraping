@@ -18,6 +18,7 @@ interface ExpertIntakeFormProps {
   citySlug: string;
   cityName: string;
   expertType?: 'industry_expert' | 'brand_rep';
+  brandExpertId?: string; // The brand shell record ID — never overwrite this
   onComplete: (savedExpert?: Expert) => void;
 }
 
