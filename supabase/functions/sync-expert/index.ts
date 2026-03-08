@@ -130,9 +130,14 @@ serve(async (req) => {
       }
     }
 
-    // --- Google Sheets sync ---
+    // --- Google Sheets sync (city-specific) ---
     const serviceAccountKeyStr = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_KEY');
-    const spreadsheetId = Deno.env.get('GOOGLE_SPREADSHEET_ID');
+    const citySlug = (expert.city_slug || '').toLowerCase();
+    const sheetIdMap: Record<string, string | undefined> = {
+      denver: Deno.env.get('GOOGLE_SPREADSHEET_ID_DENVER'),
+      portland: Deno.env.get('GOOGLE_SPREADSHEET_ID_PORTLAND'),
+    };
+    const spreadsheetId = sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID');
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         const serviceAccount = JSON.parse(serviceAccountKeyStr);
@@ -152,6 +157,7 @@ serve(async (req) => {
           (expert.niche_interests || []).join(', '),
           expert.years_in_industry || '',
           expert.years_in_city || '',
+          expert.ask_me_about || '',
         ];
 
         const appendRes = await fetch(
@@ -167,7 +173,7 @@ serve(async (req) => {
         );
 
         const appendData = await appendRes.json();
-        results.sheets = { status: appendRes.status, data: appendData };
+        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, data: appendData };
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
