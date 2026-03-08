@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { firecrawlApi } from "@/lib/api/firecrawl";
 import { nameToSlug, ExpertCity } from "@/lib/expert-types";
 import { Plus, Loader2 } from "lucide-react";
 
@@ -37,10 +36,12 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
       if (linkedinUrl.trim()) {
         setScraping(true);
         try {
-          const result = await firecrawlApi.scrape(linkedinUrl);
-          if (result.success && result.data) {
-            scrapedData = result.data;
-            toast({ title: "LinkedIn data extracted!", description: `Found: ${scrapedData.headline || 'basic info'}` });
+          const { data, error } = await supabase.functions.invoke('scrape-linkedin', {
+            body: { url: linkedinUrl.trim() },
+          });
+          if (!error && data?.success && data?.data) {
+            scrapedData = data.data;
+            toast({ title: "LinkedIn data extracted!", description: `Found: ${scrapedData.headline || scrapedData.name || 'basic info'}` });
           } else {
             toast({ title: "LinkedIn scrape limited", description: "Could not extract full profile. You can fill in details manually.", variant: "destructive" });
           }
