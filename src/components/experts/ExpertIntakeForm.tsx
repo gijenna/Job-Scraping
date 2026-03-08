@@ -17,7 +17,7 @@ interface ExpertIntakeFormProps {
   existingData?: Partial<Expert>;
   citySlug: string;
   cityName: string;
-  onComplete: () => void;
+  onComplete: (savedExpert?: Expert) => void;
 }
 
 interface CityAssignment {
@@ -184,17 +184,49 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         const baseSlug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const { data: existing } = await supabase
           .from('industry_experts')
-          .select('id')
+          .select('*')
           .eq('slug', baseSlug)
           .maybeSingle();
 
         if (existing) {
           finalExpertId = existing.id;
+          // Merge: use existing data as base, overlay with non-empty form values
+          const mergedPayload = { ...payload };
+          const existingExpert = existing as unknown as Expert;
+          // For each field, only overwrite if the form value is non-empty
+          if (!mergedPayload.job_title && existingExpert.job_title) mergedPayload.job_title = existingExpert.job_title;
+          if (!mergedPayload.photo_url && existingExpert.photo_url) mergedPayload.photo_url = existingExpert.photo_url;
+          if (!mergedPayload.linkedin_url && existingExpert.linkedin_url) mergedPayload.linkedin_url = existingExpert.linkedin_url;
+          if (!mergedPayload.field_of_work && existingExpert.field_of_work) mergedPayload.field_of_work = existingExpert.field_of_work;
+          if (!mergedPayload.years_in_industry && existingExpert.years_in_industry) mergedPayload.years_in_industry = existingExpert.years_in_industry;
+          if (!mergedPayload.years_in_city && existingExpert.years_in_city) mergedPayload.years_in_city = existingExpert.years_in_city;
+          if (!mergedPayload.ask_me_about && existingExpert.ask_me_about) mergedPayload.ask_me_about = existingExpert.ask_me_about;
+          if (!mergedPayload.favorite_media && existingExpert.favorite_media) mergedPayload.favorite_media = existingExpert.favorite_media;
+          if (!mergedPayload.previous_companies && existingExpert.previous_companies) mergedPayload.previous_companies = existingExpert.previous_companies;
+          if ((!mergedPayload.niche_interests || mergedPayload.niche_interests.length === 0) && existingExpert.niche_interests?.length) {
+            mergedPayload.niche_interests = existingExpert.niche_interests;
+          }
+
           const { error } = await supabase
             .from('industry_experts')
-            .update(payload)
+            .update(mergedPayload)
             .eq('id', existing.id);
           if (error) throw error;
+
+          // Populate the form with the merged/existing data so the user sees it
+          setForm(prev => ({
+            ...prev,
+            job_title: mergedPayload.job_title || '',
+            photo_url: mergedPayload.photo_url || '',
+            linkedin_url: mergedPayload.linkedin_url || '',
+            field_of_work: mergedPayload.field_of_work || '',
+            years_in_industry: mergedPayload.years_in_industry?.toString() || '',
+            years_in_city: mergedPayload.years_in_city?.toString() || '',
+            ask_me_about: mergedPayload.ask_me_about || '',
+            favorite_media: mergedPayload.favorite_media || '',
+            previous_companies: mergedPayload.previous_companies || '',
+            niche_interests: mergedPayload.niche_interests || [],
+          }));
         } else {
           const { data: newExpert, error } = await supabase
             .from('industry_experts')
@@ -239,8 +271,16 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         }
       }
 
-      toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
-      onComplete();
+      // Fetch the final saved expert to pass back
+      if (finalExpertId) {
+        const { data: savedExpert } = await supabase
+          .from('industry_experts').select('*').eq('id', finalExpertId).single();
+        toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        onComplete(savedExpert as unknown as Expert);
+      } else {
+        toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        onComplete();
+      }
     } catch (err: any) {
       toast({ title: "Error saving", description: err.message, variant: "destructive" });
     } finally {
