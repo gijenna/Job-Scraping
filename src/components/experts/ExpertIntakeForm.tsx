@@ -214,6 +214,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         previous_companies: form.previous_companies.trim() || null,
         niche_interests: form.niche_interests,
         status: 'confirmed' as const,
+        expert_type: expertType,
         updated_at: new Date().toISOString(),
       };
 

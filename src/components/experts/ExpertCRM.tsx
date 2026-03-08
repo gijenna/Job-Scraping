@@ -25,15 +25,18 @@ const statusColors: Record<string, string> = {
 
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
+  const [filterType, setFilterType] = useState<string>("all");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
     assignments.filter(a => a.expert_id === expertId);
 
-  const filteredExperts = filterCity === "all"
-    ? experts
-    : experts.filter(e => getExpertAssignments(e.id).some(a => a.city_slug === filterCity));
+  const filteredExperts = experts.filter(e => {
+    const cityMatch = filterCity === "all" || getExpertAssignments(e.id).some(a => a.city_slug === filterCity);
+    const typeMatch = filterType === "all" || (e.expert_type || 'industry_expert') === filterType;
+    return cityMatch && typeMatch;
+  });
 
   const togglePublish = async (assignmentId: string, currentlyPublished: boolean) => {
     const { error } = await supabase
