@@ -349,7 +349,31 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
             </div>
           </section>
 
-          {/* === FINAL CTA SECTION === */}
+          {/* === FAQ SECTION === */}
+          {faqs.length > 0 && (
+            <section className="bg-events-teal py-16 md:py-20">
+              <div className="max-w-3xl mx-auto px-4">
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-events-cream text-center">
+                  <MessageSquare className="w-6 h-6 inline-block mr-2 text-events-coral" />
+                  Frequently Asked Questions
+                </h2>
+                <p className="text-events-cream/40 text-center mt-2 text-sm">From people just like you</p>
+                <div className="mt-8 space-y-4">
+                  {faqs.map((faq) => (
+                    <div key={faq.id} className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6">
+                      <p className="text-events-cream font-medium">{faq.question_text}</p>
+                      {faq.admin_answer && (
+                        <p className="text-events-cream/60 text-sm mt-3 pl-4 border-l-2 border-events-coral/40">
+                          {faq.admin_answer}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           <section className="relative py-16 md:py-24">
             {/* Background image */}
             <div className="absolute inset-0 z-0">
