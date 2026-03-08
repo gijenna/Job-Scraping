@@ -241,7 +241,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
                       {expert ? (
                         <>
-                          {companyName} would love for you to represent the brand at our upcoming {cityName} event.
+                          {brandName} would love for you to represent the brand at our upcoming {cityName} event.
                           You'll chat with our community, tell your story, and help attendees get to know who's behind the brand.
                         </>
                       ) : (
