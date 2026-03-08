@@ -15,6 +15,9 @@ import AdminExperts from "./pages/AdminExperts";
 import ExpertInvite from "./pages/ExpertInvite";
 import CityExperts from "./pages/CityExperts";
 import ExpertDetail from "./pages/ExpertDetail";
+import EventPNW26 from "./pages/EventPNW26";
+import EventOutsideDays26 from "./pages/EventOutsideDays26";
+import EventOR26 from "./pages/EventOR26";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
