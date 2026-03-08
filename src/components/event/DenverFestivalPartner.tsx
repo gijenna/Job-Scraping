@@ -31,8 +31,12 @@ const DenverFestivalPartner = () => {
               at Outside Days' 40,000-person festival — and we've been a partner since day one.
             </p>
 
+            <p className="text-events-yellow/80 font-body text-sm italic">
+              Psst — Basecamp partners get free tix 🎟️
+            </p>
+
             <a
-              href="https://outsidedays.outsideonline.com/"
+              href="https://bit.ly/outside-days"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-events-yellow font-body text-sm tracking-widest uppercase hover:opacity-80 transition-opacity"
@@ -49,13 +53,18 @@ const DenverFestivalPartner = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="relative"
           >
-            <div className="rounded-xl overflow-hidden shadow-2xl">
+            <a
+              href="https://bit.ly/outside-days"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow"
+            >
               <img
                 src={headlinersImg}
                 alt="Outside Days 2026 headliners — Death Cab for Cutie, My Morning Jacket, Cage the Elephant"
                 className="w-full h-auto object-cover"
               />
-            </div>
+            </a>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
               2026 Outside Days headliners — May 29–31, Denver CO
             </p>
