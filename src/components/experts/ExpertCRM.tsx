@@ -71,8 +71,8 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
 
   return (
     <div className="space-y-4">
-      {/* Filter */}
-      <div className="flex items-center gap-3">
+      {/* Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
         <span className="text-events-cream/60 text-sm">Filter by city:</span>
         <Select value={filterCity} onValueChange={setFilterCity}>
           <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
@@ -85,6 +85,17 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                 {city.name}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+        <span className="text-events-cream/60 text-sm">Type:</span>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-events-card border-events-cream/20">
+            <SelectItem value="all" className="text-events-cream">All Types</SelectItem>
+            <SelectItem value="industry_expert" className="text-events-cream">Industry Experts</SelectItem>
+            <SelectItem value="brand_rep" className="text-events-cream">Brand Reps</SelectItem>
           </SelectContent>
         </Select>
         <span className="text-events-cream/40 text-sm ml-auto">{filteredExperts.length} experts</span>
