@@ -65,13 +65,13 @@ const DenverHero = () => {
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
             className="flex flex-col items-center lg:items-start"
           >
-            <h1 className="font-headline leading-[1] tracking-tight text-foreground text-center lg:text-left">
-              <span className="block text-4xl md:text-6xl lg:text-[4.5rem]">Connect</span>
-              <span className="block text-4xl md:text-6xl lg:text-[4.5rem]">with your</span>
+            <h1 className="font-headline font-bold uppercase leading-[0.95] tracking-tight text-foreground text-center lg:text-left">
+              <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">Connect</span>
+              <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">with your</span>
             </h1>
 
             {/* Rotating word — yellow accent, stops on community */}
-            <div className="relative h-[1.15em] w-full overflow-hidden" style={{ fontSize: 'clamp(2.25rem, 5vw, 4.5rem)' }}>
+            <div className="relative h-[1.15em] w-full overflow-hidden" style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)' }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phraseIndex}
@@ -79,7 +79,7 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-0 w-full text-center lg:text-left font-headline tracking-tight leading-[1]"
+                  className="absolute left-0 w-full text-center lg:text-left font-headline font-bold uppercase tracking-tight leading-[0.95]"
                   style={{ fontSize: '1em', color: '#E1B624' }}
                 >
                   {phrases[phraseIndex]}
