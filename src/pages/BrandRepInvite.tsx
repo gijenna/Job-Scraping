@@ -145,7 +145,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
     const { data } = await supabase
       .from('industry_experts').select('*')
       .ilike('full_name', lookupName.trim()).maybeSingle();
-    if (data) {
+    if (data && data.id !== expert?.id) {
       setFormExpertId(data.id);
       setFormExistingData(data as unknown as Expert);
       setReturning(false);
@@ -154,7 +154,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       const slug = lookupName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       const { data: slugMatch } = await supabase
         .from('industry_experts').select('*').eq('slug', slug).maybeSingle();
-      if (slugMatch) {
+      if (slugMatch && slugMatch.id !== expert?.id) {
         setFormExpertId(slugMatch.id);
         setFormExistingData(slugMatch as unknown as Expert);
         setReturning(false);
@@ -557,14 +557,13 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
+              brandExpertId={expert?.id}
               onComplete={(savedExpert) => {
-                if (savedExpert) {
+                if (savedExpert && savedExpert.id !== expert?.id) {
                   setFormExpertId(savedExpert.id);
-                  // Update existingData so form preserves data across re-renders
                   setFormExistingData(prev => ({
                     ...prev,
                     ...savedExpert,
-                    // Keep the brand's company name
                     current_company: prev?.current_company || savedExpert.current_company,
                   }));
                 }

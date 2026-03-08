@@ -18,6 +18,7 @@ interface ExpertIntakeFormProps {
   citySlug: string;
   cityName: string;
   expertType?: 'industry_expert' | 'brand_rep';
+  brandExpertId?: string; // The brand shell record ID — never overwrite this
   onComplete: (savedExpert?: Expert) => void;
 }
 
@@ -26,7 +27,7 @@ interface CityAssignment {
   city_name: string;
 }
 
-const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertType = 'industry_expert', onComplete }: ExpertIntakeFormProps) => {
+const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertType = 'industry_expert', brandExpertId, onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -126,6 +127,10 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     }
 
     if (found) {
+      // Never match the brand shell record — reps must create their own
+      if (brandExpertId && found.id === brandExpertId) {
+        return;
+      }
       const ex = found as unknown as Expert;
       setForm(prev => ({
         ...prev,
@@ -236,7 +241,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           .eq('slug', baseSlug)
           .maybeSingle();
 
-        if (existing) {
+        if (existing && existing.id !== brandExpertId) {
           finalExpertId = existing.id;
           // Merge: use existing data as base, overlay with non-empty form values
           const mergedPayload = { ...payload };
