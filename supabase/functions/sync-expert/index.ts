@@ -94,10 +94,9 @@ serve(async (req) => {
         const folkPayload: any = {
           firstName,
           lastName,
-          emails: expert.email ? [{ value: expert.email }] : [],
+          emails: expert.email ? [expert.email] : [],
           ...(expert.job_title && { jobTitle: expert.job_title }),
-          ...(expert.current_company && { organization: expert.current_company }),
-          ...(expert.linkedin_url && { urls: [{ value: expert.linkedin_url, label: 'LinkedIn' }] }),
+          ...(expert.linkedin_url && { urls: [expert.linkedin_url] }),
         };
 
         if (folkPersonId) {
