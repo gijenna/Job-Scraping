@@ -471,7 +471,20 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
                 className="bg-events-card border-events-cream/20 text-events-cream [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             </div>
             <div className="space-y-2">
-              <Label className="text-events-cream">Years in {cityName}</Label>
+              <Label className="text-events-cream flex items-center gap-1.5">
+                Years in
+                <select
+                  value={yearsInCityLabel}
+                  onChange={e => setYearsInCityLabel(e.target.value)}
+                  className="bg-events-card border border-events-cream/20 text-events-coral rounded px-1.5 py-0.5 text-sm font-semibold cursor-pointer outline-none"
+                >
+                  {allCities.length > 0 ? allCities.map(c => (
+                    <option key={c.slug} value={c.name}>{c.name}</option>
+                  )) : (
+                    <option value={cityName}>{cityName}</option>
+                  )}
+                </select>
+              </Label>
               <Input inputMode="numeric" pattern="[0-9]*" value={form.years_in_city} onChange={e => update('years_in_city', e.target.value.replace(/[^0-9]/g, ''))}
                 className="bg-events-card border-events-cream/20 text-events-cream [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             </div>
