@@ -8,13 +8,17 @@ const phrases = ["talent pipeline", "customer base", "community"];
 
 const DenverHero = () => {
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [settled, setSettled] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPhraseIndex((prev) => (prev + 1) % phrases.length);
-    }, 2400);
-    return () => clearInterval(interval);
-  }, []);
+    if (settled) return;
+    if (phraseIndex < phrases.length - 1) {
+      const timer = setTimeout(() => setPhraseIndex(phraseIndex + 1), 2400);
+      return () => clearTimeout(timer);
+    } else {
+      setSettled(true);
+    }
+  }, [phraseIndex, settled]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -30,13 +34,13 @@ const DenverHero = () => {
       </div>
 
       <div className="relative z-10 container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-6xl mx-auto">
-          {/* Left — logo + event details */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center max-w-6xl mx-auto">
+          {/* Left — logo + event details, centered in its half */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.9, ease: "easeOut" }}
-            className="flex flex-col items-center lg:items-end"
+            className="flex flex-col items-center"
           >
             <img
               src={denverLogo}
@@ -45,21 +49,21 @@ const DenverHero = () => {
             />
 
             <div className="space-y-2 text-foreground/80">
-              <div className="flex items-center gap-2.5 justify-center lg:justify-end">
+              <div className="flex items-center gap-2.5 justify-center">
                 <Calendar className="w-4 h-4 text-primary/80 shrink-0" />
                 <span className="font-body text-sm tracking-wide">May 29, 2026</span>
               </div>
-              <div className="flex items-center gap-2.5 justify-center lg:justify-end">
+              <div className="flex items-center gap-2.5 justify-center">
                 <Clock className="w-4 h-4 text-primary/80 shrink-0" />
                 <span className="font-body text-sm tracking-wide">1–4 PM · Doors 12 PM MT</span>
               </div>
-              <div className="flex items-center gap-2.5 justify-center lg:justify-end">
+              <div className="flex items-center gap-2.5 justify-center">
                 <MapPin className="w-4 h-4 text-primary/80 shrink-0" />
                 <span className="font-body text-sm tracking-wide">Auraria Campus · Denver, CO</span>
               </div>
             </div>
 
-            <p className="mt-4 text-xs text-muted-foreground max-w-xs text-center lg:text-right font-body">
+            <p className="mt-4 text-xs text-muted-foreground max-w-xs text-center font-body">
               Part of the 40,000-person{" "}
               <a
                 href="https://bit.ly/4bDCrsv"
@@ -75,37 +79,40 @@ const DenverHero = () => {
           {/* Divider */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-48 w-px bg-gradient-to-b from-transparent via-foreground/15 to-transparent" />
 
-          {/* Right — headline */}
+          {/* Right — headline with full visible text */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
             className="flex flex-col items-center lg:items-start"
           >
-            <h1 className="font-headline uppercase leading-[0.92] tracking-tight text-foreground">
+            <h1 className="font-headline font-bold uppercase leading-[0.95] tracking-tight text-foreground text-center lg:text-left">
               <span className="block text-4xl md:text-6xl lg:text-7xl">Connect</span>
               <span className="block text-4xl md:text-6xl lg:text-7xl">with your</span>
-              <span className="block relative h-[1.05em] text-4xl md:text-6xl lg:text-7xl overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={phraseIndex}
-                    initial={{ y: 50, opacity: 0, filter: "blur(4px)" }}
-                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                    exit={{ y: -50, opacity: 0, filter: "blur(4px)" }}
-                    transition={{ duration: 0.45, ease: "easeInOut" }}
-                    className="absolute left-0 text-primary whitespace-nowrap"
-                  >
-                    {phrases[phraseIndex]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
             </h1>
+
+            {/* Rotating word — always fully visible, no clipping */}
+            <div className="relative h-[1.15em] w-full overflow-hidden" style={{ fontSize: 'clamp(2.25rem, 5vw, 4.5rem)' }}>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={phraseIndex}
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="absolute left-0 lg:left-0 w-full text-center lg:text-left font-headline font-bold uppercase tracking-tight text-primary leading-[0.95]"
+                  style={{ fontSize: '1em' }}
+                >
+                  {phrases[phraseIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="mt-6 text-xs text-muted-foreground/70 italic font-body"
+              className="mt-6 text-xs text-muted-foreground/70 italic font-body text-center lg:text-left"
             >
               Named one of two top activations from 2024 &amp; 2025 by Outside, Inc
             </motion.p>
