@@ -67,6 +67,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendance: '300+',
     attendanceNote: 'fresh grads, tenured leaders & industry-curious',
     venue: 'UO Portland Campus — 2800 NE Liberty St, Portland',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=2800+NE+Liberty+St+Portland+OR',
     time: '5:30–8:30 PM PT',
     whoAttends: [
       'UO Sports Product Management grads — elite & diverse cohort',
