@@ -406,10 +406,11 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                       <p className="text-events-teal font-display font-bold mt-3 text-lg">{eventData.attendance}</p>
                       <p className="text-events-teal/50 text-xs mt-1">{eventData.attendanceNote}</p>
                     </div>
-                    <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
-                      <MapPin className="w-6 h-6 text-events-coral mx-auto" />
-                      <p className="text-events-teal font-display font-bold mt-3 text-sm leading-tight">{eventData.venue}</p>
-                    </div>
+                     <a href={eventData.venueMapUrl} target="_blank" rel="noopener noreferrer" className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center hover:shadow-md hover:border-events-coral/30 transition-all cursor-pointer group">
+                       <MapPin className="w-6 h-6 text-events-coral mx-auto" />
+                       <p className="text-events-teal font-display font-bold mt-3 text-sm leading-tight group-hover:text-events-coral transition-colors">{eventData.venue}</p>
+                       <p className="text-events-teal/40 text-xs mt-1 group-hover:text-events-coral/60 transition-colors">View on map ↗</p>
+                     </a>
                   </div>
 
                   {/* Year Note Banner */}
