@@ -82,38 +82,33 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
 
   const handleNameLookup = async () => {
     if (!lookupName.trim()) return;
-    const slug = lookupName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+    // Try case-insensitive name match first
     const { data } = await supabase
       .from('industry_experts')
       .select('*')
-      .eq('slug', slug)
-      .single();
+      .ilike('full_name', lookupName.trim())
+      .maybeSingle();
 
     if (data) {
       setExpert(data as unknown as Expert);
       setReturning(false);
       setShowForm(true);
     } else {
-      // Create new expert for non-personalized flow
-      const { data: newExpert, error } = await supabase
+      // Also try slug match as fallback
+      const slug = lookupName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const { data: slugMatch } = await supabase
         .from('industry_experts')
-        .insert({
-          full_name: lookupName.trim(),
-          slug,
-          status: 'started' as const,
-        })
-        .select()
-        .single();
+        .select('*')
+        .eq('slug', slug)
+        .maybeSingle();
 
-      if (newExpert) {
-        // Create city assignment
-        await supabase.from('expert_city_assignments').insert({
-          expert_id: newExpert.id,
-          city_slug: citySlug,
-          published: false,
-        });
-        setExpert(newExpert as unknown as Expert);
+      if (slugMatch) {
+        setExpert(slugMatch as unknown as Expert);
+        setReturning(false);
+        setShowForm(true);
+      } else {
+        // Not found — just show the form with no existing data (they'll create on save)
         setReturning(false);
         setShowForm(true);
       }
@@ -276,7 +271,7 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
           </div>
           <ExpertIntakeForm
             expertId={expert?.id}
-            existingData={expert || undefined}
+            existingData={expert || (lookupName ? { full_name: lookupName.trim() } : undefined)}
             citySlug={citySlug}
             cityName={cityName}
             onComplete={() => loadData()}
