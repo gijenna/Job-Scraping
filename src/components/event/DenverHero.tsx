@@ -65,9 +65,9 @@ const DenverHero = () => {
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
             className="flex flex-col items-center lg:items-start"
           >
-            <h1 className="font-headline leading-[1] tracking-tight text-foreground text-center lg:text-left">
-              <span className="block text-4xl md:text-6xl lg:text-[4.5rem]">Connect</span>
-              <span className="block text-4xl md:text-6xl lg:text-[4.5rem]">with your</span>
+            <h1 className="font-headline font-bold uppercase leading-[0.95] tracking-tight text-foreground text-center lg:text-left">
+              <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">Connect</span>
+              <span className="block text-5xl md:text-7xl lg:text-[5.5rem]">with your</span>
             </h1>
 
             {/* Rotating word — yellow accent, stops on community */}
