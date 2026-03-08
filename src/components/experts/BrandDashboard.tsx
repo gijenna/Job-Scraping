@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Expert, ExpertCityAssignment, ExpertCity } from "@/lib/expert-types";
+import { Expert, ExpertCityAssignment, ExpertCity, nameToSlug } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
