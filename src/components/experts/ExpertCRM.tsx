@@ -108,6 +108,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             <thead>
               <tr className="border-b border-events-cream/10">
                 <th className="text-left p-3 text-events-cream/60 font-medium">Name</th>
+                <th className="text-left p-3 text-events-cream/60 font-medium">Type</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Invite Link</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">City/Event</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Status</th>
