@@ -18,6 +18,7 @@ export default {
         body: ['Space Grotesk', 'sans-serif'],
         glacial: ['Raleway', 'sans-serif'],
         ticker: ['Pacifico', 'cursive'],
+        headline: ['Bebas Neue', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
