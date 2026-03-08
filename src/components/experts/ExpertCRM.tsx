@@ -210,7 +210,18 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               )}
             </tbody>
           </table>
-        </div>
+      {/* Card Preview Dialog */}
+      <Dialog open={!!previewExpert} onOpenChange={(open) => !open && setPreviewExpert(null)}>
+        <DialogContent className="bg-events-teal border-events-cream/20 max-w-sm p-0 overflow-hidden">
+          {previewExpert && (
+            <div className="p-4">
+              <p className="text-events-cream/40 text-xs uppercase tracking-wider mb-3 text-center">Card Preview</p>
+              <ExpertCard expert={previewExpert} expanded />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
       </div>
     </div>
   );
