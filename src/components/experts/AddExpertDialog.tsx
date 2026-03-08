@@ -40,7 +40,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
     setLoading(true);
     try {
-      const slug = nameToSlug(isBrandRep && companyRep.trim() ? companyRep.trim() : name.trim());
+      const slug = nameToSlug(isBrandRep ? name.trim() : name.trim());
       const { data: user } = await supabase.auth.getUser();
 
       const { data: existing } = await supabase
@@ -56,7 +56,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
         // Update company name for brand reps
         if (isBrandRep) {
           await supabase.from('industry_experts')
-            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim() })
+            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim(), slug })
             .eq('id', expertId);
         }
       } else {
