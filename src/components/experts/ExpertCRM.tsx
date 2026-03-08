@@ -33,8 +33,9 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
     assignments.filter(a => a.expert_id === expertId);
 
   const filteredExperts = experts.filter(e => {
-    const cityMatch = filterCity === "all" || getExpertAssignments(e.id).some(a => a.city_slug === filterCity);
-    const typeMatch = filterType === "all" || (e.expert_type || 'industry_expert') === filterType;
+    const expertAssigns = getExpertAssignments(e.id);
+    const cityMatch = filterCity === "all" || expertAssigns.some(a => a.city_slug === filterCity);
+    const typeMatch = filterType === "all" || expertAssigns.some(a => (a.expert_type || 'industry_expert') === filterType);
     return cityMatch && typeMatch;
   });
 
