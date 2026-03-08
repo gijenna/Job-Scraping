@@ -94,6 +94,11 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
         },
+        "ken-burns": {
+          "0%": { transform: "scale(1.1) translate(0%, 0%)" },
+          "50%": { transform: "scale(1.15) translate(-2%, -1%)" },
+          "100%": { transform: "scale(1.1) translate(1%, 0.5%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
