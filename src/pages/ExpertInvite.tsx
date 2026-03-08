@@ -192,9 +192,12 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                     </div>
                   </div>
 
-                  {/* Right - Mini Card Preview */}
+                  {/* Right - Mini Card Preview (clickable) */}
                   <div className="hidden md:block">
-                    <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl">
+                    <div
+                      onClick={handleImIn}
+                      className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
+                    >
                       <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20">
                         {expert?.photo_url ? (
                           <img src={expert.photo_url} alt="" className="w-full h-full rounded-full object-cover" />
@@ -208,7 +211,12 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                         {expert?.full_name || 'Your Name'}
                       </h3>
                       <p className="text-events-coral text-sm text-center font-medium">Industry Expert</p>
-                      <p className="text-white/40 text-xs text-center mt-2">Your profile will appear here</p>
+                      {expert?.job_title && (
+                        <p className="text-white/50 text-xs text-center mt-1">{expert.job_title}</p>
+                      )}
+                      <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
+                        {expert ? 'Click to edit your card →' : 'Click to build your card →'}
+                      </p>
                     </div>
                   </div>
                 </div>
