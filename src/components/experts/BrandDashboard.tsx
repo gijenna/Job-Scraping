@@ -106,7 +106,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {brandEntries.map((brand) => {
-          const filledCount = getFilledCount(brand.brandName);
+          const brandPeople = getBrandPeople(brand.brandName, brand.expert.id);
           return (
             <div
               key={brand.expert.id}
@@ -123,7 +123,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                     </h4>
                     {brand.companyRep && (
                       <p className="text-events-cream/40 text-xs mt-0.5">
-                        Rep: {brand.companyRep}
+                        Contact: {brand.companyRep}
                       </p>
                     )}
                   </div>
@@ -180,15 +180,34 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                 })}
               </div>
 
-              {/* Footer stats */}
+              {/* People who signed up for this brand */}
+              {brandPeople.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-events-cream/5">
+                  <p className="text-events-cream/40 text-xs flex items-center gap-1 mb-2">
+                    <Users className="w-3 h-3" /> {brandPeople.length} signed up
+                  </p>
+                  <div className="space-y-1.5">
+                    {brandPeople.map((person) => (
+                      <div key={person.id} className="flex items-center justify-between bg-events-teal/30 rounded-md px-3 py-1.5">
+                        <span className="text-events-cream text-sm font-medium truncate">
+                          {person.full_name}
+                        </span>
+                        <Badge className={`${statusColors[person.status]} text-[10px] px-1.5 py-0`}>
+                          {person.status}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Footer */}
               <div className="mt-3 flex items-center justify-between pt-3 border-t border-events-cream/5">
                 <Badge className={`${statusColors[brand.expert.status]} text-xs`}>
                   {brand.expert.status}
                 </Badge>
-                {filledCount > 0 && (
-                  <span className="text-events-cream/40 text-xs flex items-center gap-1">
-                    <Users className="w-3 h-3" /> {filledCount} filled
-                  </span>
+                {brandPeople.length === 0 && (
+                  <span className="text-events-cream/30 text-xs">No signups yet</span>
                 )}
               </div>
             </div>
