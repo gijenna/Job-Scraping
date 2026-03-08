@@ -30,14 +30,17 @@ const denverBrands = [
   { name: "Black Diamond", domain: "blackdiamondequipment.com" },
   { name: "Vail Resorts", domain: "vailresorts.com" },
   { name: "Smartwool", domain: "smartwool.com" },
+  { name: "Brooks", domain: "brooksrunning.com" },
   { name: "Nike", domain: "nike.com" },
   { name: "Google", domain: "google.com" },
   { name: "Apple", domain: "apple.com" },
-  { name: "KPMG", domain: "kpmg.com" },
   { name: "Amazon", domain: "amazon.com" },
-  { name: "Backbone Media", domain: "backbonemedia.com" },
-  { name: "Outside Inc", domain: "outsideinc.com" },
+  { name: "Outside Inc", domain: "outsideonline.com" },
   { name: "Yeti", domain: "yeti.com" },
+  { name: "Gaia", domain: "gaiagps.com" },
+  { name: "onX", domain: "onxmaps.com" },
+  { name: "lululemon", domain: "lululemon.com" },
+  { name: "AllTrails", domain: "alltrails.com" },
 ];
 
 const denverDonutData = [

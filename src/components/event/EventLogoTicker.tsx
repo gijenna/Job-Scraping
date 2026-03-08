@@ -18,14 +18,14 @@ const EventLogoTicker = ({
 
   return (
     <section
-      className="py-12 overflow-hidden relative"
+      className="py-6 overflow-hidden relative"
       style={{
         backgroundImage: `url(${creamTexture})`,
         backgroundSize: '512px 512px',
         backgroundRepeat: 'repeat',
       }}
     >
-      <p className="text-center text-sm tracking-[0.3em] uppercase mb-8 font-body" style={{ color: '#9A8B76' }}>
+      <p className="text-center text-sm tracking-[0.3em] uppercase mb-4 font-body" style={{ color: '#9A8B76' }}>
         {headline}
       </p>
       <div className="relative overflow-hidden">
@@ -44,7 +44,7 @@ const EventLogoTicker = ({
               <img
                 src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
                 alt={brand.name}
-                className="h-8 md:h-10 w-auto object-contain transition-transform hover:scale-110"
+                className="h-6 md:h-8 w-auto object-contain transition-transform hover:scale-110"
                 loading="lazy"
                 onError={(e) => {
                   const target = e.currentTarget;
