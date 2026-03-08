@@ -29,6 +29,8 @@ interface CityAssignment {
 const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertType = 'industry_expert', onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [savedEmail, setSavedEmail] = useState("");
   const [customNiche, setCustomNiche] = useState("");
   const [yearsInCityLabel, setYearsInCityLabel] = useState(cityName);
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
