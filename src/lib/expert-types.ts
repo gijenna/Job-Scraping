@@ -17,7 +17,6 @@ export interface Expert {
   previous_companies: string | null;
   niche_interests: string[];
   status: 'invited' | 'viewed' | 'started' | 'confirmed';
-  expert_type: ExpertType;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -43,6 +42,7 @@ export interface ExpertCityAssignment {
   city_slug: string;
   card_version: Record<string, any>;
   published: boolean;
+  expert_type: ExpertType;
   created_at: string;
 }
 
