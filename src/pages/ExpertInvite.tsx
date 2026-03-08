@@ -29,6 +29,7 @@ const CITY_EVENT_DATA: Record<string, {
   attendance: string;
   attendanceNote: string;
   venue: string;
+  venueMapUrl: string;
   time: string;
   whoAttends: string[];
   format: string[];
@@ -39,7 +40,8 @@ const CITY_EVENT_DATA: Record<string, {
     yearNote: '3rd year with Outside Inc — named top activation 2024 & 2025',
     attendance: '500–800',
     attendanceNote: 'career event · 40,000+ at full festival',
-    venue: 'Denver, CO — part of Outside Days Festival',
+    venue: 'Auraria Campus, Denver, CO',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Auraria+Campus+Denver+CO',
     time: '1–4 PM MT',
     whoAttends: [
       'Strong presence of passive experts — not actively searching but networking',
