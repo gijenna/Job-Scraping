@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Expert, ExpertCityAssignment, ExpertCity } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Trash2, ExternalLink, Copy } from "lucide-react";
+import ExpertCard from "./ExpertCard";
 
 interface ExpertCRMProps {
   experts: Expert[];
@@ -23,6 +25,7 @@ const statusColors: Record<string, string> = {
 
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
+  const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
@@ -161,7 +164,11 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </div>
                     </td>
                     <td className="p-3">
-                      <Badge className={`${statusColors[expert.status]} text-xs`}>
+                      <Badge
+                        className={`${statusColors[expert.status]} text-xs ${expert.status === 'confirmed' ? 'cursor-pointer hover:ring-2 hover:ring-green-400/40 transition-all' : ''}`}
+                        onClick={() => expert.status === 'confirmed' && setPreviewExpert(expert)}
+                        title={expert.status === 'confirmed' ? 'Click to preview card' : undefined}
+                      >
                         {expert.status}
                       </Badge>
                     </td>
@@ -203,7 +210,18 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               )}
             </tbody>
           </table>
-        </div>
+      {/* Card Preview Dialog */}
+      <Dialog open={!!previewExpert} onOpenChange={(open) => !open && setPreviewExpert(null)}>
+        <DialogContent className="bg-events-teal border-events-cream/20 max-w-sm p-0 overflow-hidden">
+          {previewExpert && (
+            <div className="p-4">
+              <p className="text-events-cream/40 text-xs uppercase tracking-wider mb-3 text-center">Card Preview</p>
+              <ExpertCard expert={previewExpert} expanded />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
       </div>
     </div>
   );
