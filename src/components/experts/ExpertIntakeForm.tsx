@@ -295,9 +295,19 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         const existingCitySlugs = new Set((existingAssignments || []).map(a => a.city_slug));
         const selectedCitySlugs = new Set(myAssignments.map(a => a.city_slug));
 
-        // Add new assignments
+        // Add new assignments or update expert_type on existing ones
         for (const assignment of myAssignments) {
-          if (existingCitySlugs.has(assignment.city_slug)) continue;
+          if (existingCitySlugs.has(assignment.city_slug)) {
+            // Update expert_type on the current city's assignment (the one matching the invite URL)
+            if (assignment.city_slug === citySlug) {
+              await supabase
+                .from('expert_city_assignments')
+                .update({ expert_type: expertType })
+                .eq('expert_id', finalExpertId)
+                .eq('city_slug', assignment.city_slug);
+            }
+            continue;
+          }
           const { error: insertAssignmentError } = await supabase
             .from('expert_city_assignments')
             .insert({ expert_id: finalExpertId, city_slug: assignment.city_slug, published: false, expert_type: expertType });
