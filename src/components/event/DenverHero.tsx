@@ -59,16 +59,14 @@ const DenverHero = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
-            className="flex flex-col items-center lg:items-start px-4 lg:px-8"
+            className="flex flex-col justify-center items-center lg:items-start px-4 lg:px-8"
           >
-            <h2
-              className="font-headline font-medium text-events-cream text-2xl md:text-3xl leading-tight mb-1"
-            >
+            <h2 className="font-headline font-medium text-events-cream text-3xl md:text-4xl lg:text-5xl leading-tight mb-2">
               Connect with your
             </h2>
 
-            {/* Rotating phrase */}
-            <div className="relative h-[1.2em] overflow-hidden" style={{ fontSize: "clamp(3rem, 6vw, 5.5rem)" }}>
+            {/* Rotating phrase — dominant element */}
+            <div className="relative w-full overflow-hidden" style={{ height: "clamp(4rem, 12vw, 10rem)" }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phraseIndex}
@@ -76,7 +74,8 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-0 font-headline font-bold text-events-yellow whitespace-nowrap leading-none"
+                  className="absolute left-0 top-0 font-headline font-bold text-events-yellow whitespace-nowrap leading-none"
+                  style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}
                 >
                   {phrases[phraseIndex]}
                 </motion.span>
