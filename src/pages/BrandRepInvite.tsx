@@ -558,8 +558,13 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               cityName={cityName}
               expertType="brand_rep"
               onComplete={(savedExpert) => {
-                if (savedExpert) setFormExpertId(savedExpert.id);
-                loadData();
+                if (savedExpert) {
+                  setFormExpertId(savedExpert.id);
+                  // Only reload if the expert was actually saved (status confirmed), not just looked up
+                  if (savedExpert.status === 'confirmed') {
+                    loadData();
+                  }
+                }
               }}
             />
           </div>
