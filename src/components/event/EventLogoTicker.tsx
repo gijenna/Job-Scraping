@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import creamTexture from "@/assets/cream-fabric-texture.jpg";
 
 interface Brand {
   name: string;
@@ -14,11 +14,17 @@ const EventLogoTicker = ({
   brands,
   headline = "Where leaders from the world's most iconic brands gather",
 }: EventLogoTickerProps) => {
-  // Triple the brands for seamless infinite scroll
   const tripled = [...brands, ...brands, ...brands];
 
   return (
-    <section className="py-12 overflow-hidden" style={{ backgroundColor: '#FAF3E8' }}>
+    <section
+      className="py-12 overflow-hidden relative"
+      style={{
+        backgroundImage: `url(${creamTexture})`,
+        backgroundSize: '512px 512px',
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <p className="text-center text-sm tracking-[0.3em] uppercase mb-8 font-body" style={{ color: '#9A8B76' }}>
         {headline}
       </p>
