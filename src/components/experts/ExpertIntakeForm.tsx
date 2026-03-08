@@ -137,6 +137,23 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           .update(payload)
           .eq('id', expertId);
         if (error) throw error;
+      } else {
+        // New expert — insert record and city assignment
+        const slug = form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const { data: newExpert, error } = await supabase
+          .from('industry_experts')
+          .insert({ ...payload, slug })
+          .select()
+          .single();
+        if (error) throw error;
+
+        if (newExpert) {
+          await supabase.from('expert_city_assignments').insert({
+            expert_id: newExpert.id,
+            city_slug: citySlug,
+            published: false,
+          });
+        }
       }
 
       toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
