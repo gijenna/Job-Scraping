@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { X } from "lucide-react";
 import { Expert, FIELD_OPTIONS, NICHE_OPTIONS, getCompanyLogoUrl } from "@/lib/expert-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -205,7 +206,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         }
       }
 
-      // Sync city assignments — add any new ones from the form
+      // Sync city assignments — add new ones, remove deleted ones
       if (finalExpertId) {
         const { data: existingAssignments, error: existingAssignmentsError } = await supabase
           .from('expert_city_assignments')
@@ -215,18 +216,26 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         if (existingAssignmentsError) throw existingAssignmentsError;
 
         const existingCitySlugs = new Set((existingAssignments || []).map(a => a.city_slug));
+        const selectedCitySlugs = new Set(myAssignments.map(a => a.city_slug));
+
+        // Add new assignments
         for (const assignment of myAssignments) {
           if (existingCitySlugs.has(assignment.city_slug)) continue;
-
           const { error: insertAssignmentError } = await supabase
             .from('expert_city_assignments')
-            .insert({
-              expert_id: finalExpertId,
-              city_slug: assignment.city_slug,
-              published: false,
-            });
-
+            .insert({ expert_id: finalExpertId, city_slug: assignment.city_slug, published: false });
           if (insertAssignmentError) throw insertAssignmentError;
+        }
+
+        // Remove deselected assignments
+        for (const slug of existingCitySlugs) {
+          if (selectedCitySlugs.has(slug)) continue;
+          const { error: deleteError } = await supabase
+            .from('expert_city_assignments')
+            .delete()
+            .eq('expert_id', finalExpertId)
+            .eq('city_slug', slug);
+          if (deleteError) throw deleteError;
         }
       }
 
@@ -279,8 +288,18 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
             <Label className="text-events-cream">Event Location(s)</Label>
             <div className="flex flex-wrap gap-2">
               {myAssignments.map(a => (
-                <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs">
+                <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs flex items-center gap-1">
                   {a.city_name}
+                  {myAssignments.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setMyAssignments(prev => prev.filter(p => p.city_slug !== a.city_slug))}
+                      className="hover:text-white transition-colors ml-0.5"
+                      title={`Remove ${a.city_name}`}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
                 </Badge>
               ))}
             </div>
