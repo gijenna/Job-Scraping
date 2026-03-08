@@ -79,11 +79,43 @@ export const NICHE_OPTIONS = [
   'Cycling', 'Paddleboarding', 'Hunting', 'Birdwatching',
 ] as const;
 
+const COMPANY_DOMAINS: Record<string, string> = {
+  'rei': 'rei.com',
+  'patagonia': 'patagonia.com',
+  'the north face': 'thenorthface.com',
+  'nike': 'nike.com',
+  'adidas': 'adidas.com',
+  'columbia': 'columbia.com',
+  'google': 'google.com',
+  'apple': 'apple.com',
+  'amazon': 'amazon.com',
+  'microsoft': 'microsoft.com',
+  'cotopaxi': 'cotopaxi.com',
+  'black diamond': 'blackdiamondequipment.com',
+  'vail resorts': 'vailresorts.com',
+  'smartwool': 'smartwool.com',
+  'lululemon': 'lululemon.com',
+  'on running': 'on-running.com',
+  'garmin': 'garmin.com',
+  'keen': 'keenfootwear.com',
+  'basecamp outdoor': 'basecampoutdoor.com',
+  'backbone media': 'backbonemedia.com',
+  'outside inc': 'outsideinc.com',
+  'deloitte': 'deloitte.com',
+  'arcteryx': 'arcteryx.com',
+  'marriott': 'marriott.com',
+  'kpmg': 'kpmg.com',
+};
+
 export function getCompanyLogoUrl(company: string): string {
-  const domain = company.toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-    .replace(/inc$|llc$|corp$|co$/, '');
-  return `https://logo.clearbit.com/${domain}.com`;
+  const key = company.toLowerCase().trim();
+  const domain = COMPANY_DOMAINS[key];
+  if (domain) {
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  }
+  // Fallback: guess domain from company name
+  const guess = key.replace(/[^a-z0-9]/g, '').replace(/inc$|llc$|corp$|co$/, '');
+  return `https://www.google.com/s2/favicons?domain=${guess}.com&sz=128`;
 }
 
 export function nameToSlug(name: string): string {
