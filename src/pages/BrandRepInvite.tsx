@@ -172,9 +172,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
   const cityName = city?.name || 'Your City';
   const eventTitle = city?.event_title || 'GATHER';
-  const firstName = expert?.full_name?.split(' ')[0] || '';
   const heroMedia = CITY_HEROES[citySlug];
-  const companyName = expert?.current_company || 'Your Company';
+  const brandName = expert?.current_company || 'Your Company';
+  // If full_name differs from current_company, we have a known rep
+  const hasKnownRep = expert && expert.full_name && expert.current_company && expert.full_name !== expert.current_company;
+  const repFirstName = hasKnownRep ? expert.full_name.split(' ')[0] : '';
+  const firstName = expert?.full_name?.split(' ')[0] || '';
 
   return (
     <div className="min-h-screen bg-events-teal">
