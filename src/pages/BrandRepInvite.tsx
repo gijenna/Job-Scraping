@@ -557,6 +557,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
+              brandExpertId={expert?.id}
               onComplete={(savedExpert) => {
                 if (savedExpert) {
                   setFormExpertId(savedExpert.id);
