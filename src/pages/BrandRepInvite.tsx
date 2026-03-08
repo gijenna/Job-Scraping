@@ -133,12 +133,11 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
   const handleImIn = () => {
     setShowConfetti(true);
+    // Reset form state for a fresh person — only pre-fill the brand's company name
+    setFormExpertId(undefined);
+    setFormExistingData({ current_company: expert?.current_company || '' });
     setTimeout(() => setShowForm(true), 800);
     setTimeout(() => setShowConfetti(false), 4500);
-    if (expert?.id) {
-      supabase.from('industry_experts')
-        .update({ status: 'started' }).eq('id', expert.id);
-    }
   };
 
   const handleNameLookup = async () => {
