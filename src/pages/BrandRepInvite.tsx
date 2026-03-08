@@ -524,7 +524,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
           <div className="border-b border-events-cream/10">
             <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
               <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
-              <span className="text-events-cream/40 text-xs font-display uppercase tracking-widest">{eventTitle}</span>
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-events-cream/50 hover:text-events-cream text-sm font-display flex items-center gap-1 transition-colors"
+              >
+                ← Back to event info
+              </button>
             </div>
           </div>
           <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
@@ -539,7 +544,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
             </div>
             <ExpertIntakeForm
               expertId={expert?.id}
-              existingData={expert || (lookupName ? { full_name: lookupName.trim() } : undefined)}
+              existingData={expert ? { ...expert, full_name: '', job_title: '', photo_url: '' } : (lookupName ? { full_name: lookupName.trim() } : undefined)}
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
