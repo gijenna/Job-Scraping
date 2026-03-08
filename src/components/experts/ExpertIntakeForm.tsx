@@ -29,6 +29,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [customNiche, setCustomNiche] = useState("");
+  const [yearsInCityLabel, setYearsInCityLabel] = useState(cityName);
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
   const [allCities, setAllCities] = useState<{ slug: string; name: string }[]>([]);
   const assignmentsLoadedRef = useRef(false);
