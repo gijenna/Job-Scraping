@@ -36,6 +36,9 @@ const App = () => (
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
+          <Route path="/PNW26" element={<EventPNW26 />} />
+          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
+          <Route path="/OR26" element={<EventOR26 />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           {/* Public expert browsing pages */}
