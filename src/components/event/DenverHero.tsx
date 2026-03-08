@@ -71,7 +71,7 @@ const DenverHero = () => {
             </h1>
 
             {/* Rotating word — yellow accent, stops on community */}
-            <div className="relative h-[1.15em] w-full overflow-hidden" style={{ fontSize: 'clamp(2.25rem, 5vw, 4.5rem)' }}>
+            <div className="relative h-[1.15em] w-full overflow-hidden" style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)' }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phraseIndex}
