@@ -3,3 +3,5 @@ project_id = "qpnzjcbdtybwazceggmv"
 [functions]
   [functions.auth-email-hook]
     verify_jwt = false
+  [functions.scrape-linkedin]
+    verify_jwt = false

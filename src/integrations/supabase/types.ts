@@ -56,6 +56,200 @@ export type Database = {
         }
         Relationships: []
       }
+      expert_cities: {
+        Row: {
+          active: boolean | null
+          arrival_time: string | null
+          branding_color: string | null
+          created_at: string | null
+          event_date: string | null
+          event_location: string | null
+          event_time_details: string | null
+          event_title: string
+          hero_image_url: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          active?: boolean | null
+          arrival_time?: string | null
+          branding_color?: string | null
+          created_at?: string | null
+          event_date?: string | null
+          event_location?: string | null
+          event_time_details?: string | null
+          event_title: string
+          hero_image_url?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          active?: boolean | null
+          arrival_time?: string | null
+          branding_color?: string | null
+          created_at?: string | null
+          event_date?: string | null
+          event_location?: string | null
+          event_time_details?: string | null
+          event_title?: string
+          hero_image_url?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      expert_city_assignments: {
+        Row: {
+          card_version: Json | null
+          city_slug: string
+          created_at: string | null
+          expert_id: string
+          id: string
+          published: boolean | null
+        }
+        Insert: {
+          card_version?: Json | null
+          city_slug: string
+          created_at?: string | null
+          expert_id: string
+          id?: string
+          published?: boolean | null
+        }
+        Update: {
+          card_version?: Json | null
+          city_slug?: string
+          created_at?: string | null
+          expert_id?: string
+          id?: string
+          published?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expert_city_assignments_city_slug_fkey"
+            columns: ["city_slug"]
+            isOneToOne: false
+            referencedRelation: "expert_cities"
+            referencedColumns: ["slug"]
+          },
+          {
+            foreignKeyName: "expert_city_assignments_expert_id_fkey"
+            columns: ["expert_id"]
+            isOneToOne: false
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expert_questions: {
+        Row: {
+          admin_answer: string | null
+          city_slug: string | null
+          created_at: string | null
+          expert_id: string | null
+          expert_name: string | null
+          id: string
+          question_text: string
+          show_in_faq: boolean | null
+        }
+        Insert: {
+          admin_answer?: string | null
+          city_slug?: string | null
+          created_at?: string | null
+          expert_id?: string | null
+          expert_name?: string | null
+          id?: string
+          question_text: string
+          show_in_faq?: boolean | null
+        }
+        Update: {
+          admin_answer?: string | null
+          city_slug?: string | null
+          created_at?: string | null
+          expert_id?: string | null
+          expert_name?: string | null
+          id?: string
+          question_text?: string
+          show_in_faq?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expert_questions_expert_id_fkey"
+            columns: ["expert_id"]
+            isOneToOne: false
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      industry_experts: {
+        Row: {
+          ask_me_about: string | null
+          created_at: string | null
+          created_by: string | null
+          current_company: string | null
+          email: string | null
+          favorite_media: string | null
+          field_of_work: string | null
+          full_name: string
+          id: string
+          job_title: string | null
+          linkedin_url: string | null
+          niche_interests: string[] | null
+          photo_url: string | null
+          previous_companies: string | null
+          slug: string
+          status: Database["public"]["Enums"]["expert_status"] | null
+          updated_at: string | null
+          years_in_city: number | null
+          years_in_industry: number | null
+        }
+        Insert: {
+          ask_me_about?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_company?: string | null
+          email?: string | null
+          favorite_media?: string | null
+          field_of_work?: string | null
+          full_name: string
+          id?: string
+          job_title?: string | null
+          linkedin_url?: string | null
+          niche_interests?: string[] | null
+          photo_url?: string | null
+          previous_companies?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["expert_status"] | null
+          updated_at?: string | null
+          years_in_city?: number | null
+          years_in_industry?: number | null
+        }
+        Update: {
+          ask_me_about?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_company?: string | null
+          email?: string | null
+          favorite_media?: string | null
+          field_of_work?: string | null
+          full_name?: string
+          id?: string
+          job_title?: string | null
+          linkedin_url?: string | null
+          niche_interests?: string[] | null
+          photo_url?: string | null
+          previous_companies?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["expert_status"] | null
+          updated_at?: string | null
+          years_in_city?: number | null
+          years_in_industry?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -64,7 +258,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      expert_status: "invited" | "viewed" | "started" | "confirmed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -191,6 +385,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      expert_status: ["invited", "viewed", "started", "confirmed"],
+    },
   },
 } as const

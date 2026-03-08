@@ -11,6 +11,7 @@ import GatherDenverExport from "./pages/GatherDenverExport";
 import Events from "./pages/Events";
 import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
+import AdminExperts from "./pages/AdminExperts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/experts" element={<AdminExperts />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
