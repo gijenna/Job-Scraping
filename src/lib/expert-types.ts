@@ -1,3 +1,5 @@
+export type ExpertType = 'industry_expert' | 'brand_rep';
+
 export interface Expert {
   id: string;
   full_name: string;
@@ -15,6 +17,7 @@ export interface Expert {
   previous_companies: string | null;
   niche_interests: string[];
   status: 'invited' | 'viewed' | 'started' | 'confirmed';
+  expert_type: ExpertType;
   created_by: string | null;
   created_at: string;
   updated_at: string;

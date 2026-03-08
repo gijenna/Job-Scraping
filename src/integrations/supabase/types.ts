@@ -191,6 +191,7 @@ export type Database = {
           created_by: string | null
           current_company: string | null
           email: string | null
+          expert_type: string
           favorite_media: string | null
           field_of_work: string | null
           full_name: string
@@ -212,6 +213,7 @@ export type Database = {
           created_by?: string | null
           current_company?: string | null
           email?: string | null
+          expert_type?: string
           favorite_media?: string | null
           field_of_work?: string | null
           full_name: string
@@ -233,6 +235,7 @@ export type Database = {
           created_by?: string | null
           current_company?: string | null
           email?: string | null
+          expert_type?: string
           favorite_media?: string | null
           field_of_work?: string | null
           full_name?: string

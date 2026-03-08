@@ -25,15 +25,18 @@ const statusColors: Record<string, string> = {
 
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
+  const [filterType, setFilterType] = useState<string>("all");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
     assignments.filter(a => a.expert_id === expertId);
 
-  const filteredExperts = filterCity === "all"
-    ? experts
-    : experts.filter(e => getExpertAssignments(e.id).some(a => a.city_slug === filterCity));
+  const filteredExperts = experts.filter(e => {
+    const cityMatch = filterCity === "all" || getExpertAssignments(e.id).some(a => a.city_slug === filterCity);
+    const typeMatch = filterType === "all" || (e.expert_type || 'industry_expert') === filterType;
+    return cityMatch && typeMatch;
+  });
 
   const togglePublish = async (assignmentId: string, currentlyPublished: boolean) => {
     const { error } = await supabase
@@ -60,16 +63,23 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   };
 
   const copyLink = (expert: Expert, citySlug: string) => {
-    const cityPrefix = citySlug === 'denver' ? 'Denver' : citySlug === 'portland' ? 'Portland' : 'MN';
-    const url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+    const isBrandRep = (expert.expert_type || 'industry_expert') === 'brand_rep';
+    let url: string;
+    if (isBrandRep) {
+      const repPrefix = citySlug === 'portland' ? 'pnw' : citySlug;
+      url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+    } else {
+      const cityPrefix = citySlug === 'denver' ? 'Denver' : citySlug === 'portland' ? 'Portland' : 'MN';
+      url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+    }
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
   };
 
   return (
     <div className="space-y-4">
-      {/* Filter */}
-      <div className="flex items-center gap-3">
+      {/* Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
         <span className="text-events-cream/60 text-sm">Filter by city:</span>
         <Select value={filterCity} onValueChange={setFilterCity}>
           <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
@@ -84,6 +94,17 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             ))}
           </SelectContent>
         </Select>
+        <span className="text-events-cream/60 text-sm">Type:</span>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-events-card border-events-cream/20">
+            <SelectItem value="all" className="text-events-cream">All Types</SelectItem>
+            <SelectItem value="industry_expert" className="text-events-cream">Industry Experts</SelectItem>
+            <SelectItem value="brand_rep" className="text-events-cream">Brand Reps</SelectItem>
+          </SelectContent>
+        </Select>
         <span className="text-events-cream/40 text-sm ml-auto">{filteredExperts.length} experts</span>
       </div>
 
@@ -94,6 +115,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             <thead>
               <tr className="border-b border-events-cream/10">
                 <th className="text-left p-3 text-events-cream/60 font-medium">Name</th>
+                <th className="text-left p-3 text-events-cream/60 font-medium">Type</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Invite Link</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">City/Event</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Status</th>
@@ -126,15 +148,28 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </div>
                     </td>
                     <td className="p-3">
+                      <Badge variant="outline" className={`text-xs ${(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'text-events-yellow border-events-yellow/30' : 'text-events-coral border-events-coral/30'}`}>
+                        {(expert.expert_type || 'industry_expert') === 'brand_rep' ? 'Brand Rep' : 'Expert'}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
                       {expertAssigns.length > 0 ? (
                         <div className="space-y-1">
                           {expertAssigns.map((a) => {
-                            const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
-                            const url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+                            const isBrandRep = (expert.expert_type || 'industry_expert') === 'brand_rep';
+                            let linkPath: string;
+                            if (isBrandRep) {
+                              const repPrefix = a.city_slug === 'portland' ? 'pnw' : a.city_slug;
+                              linkPath = `/${repPrefix}reps/${expert.slug}`;
+                            } else {
+                              const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
+                              linkPath = `/${cityPrefix}experts/${expert.slug}`;
+                            }
+                            const url = `${window.location.origin}${linkPath}`;
                             return (
                               <div key={a.id} className="flex items-center gap-1.5">
                                 <code className="text-[11px] text-events-coral bg-events-coral/10 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={url}>
-                                  /{cityPrefix}experts/{expert.slug}
+                                  {linkPath}
                                 </code>
                                 <Button
                                   size="sm"
@@ -234,7 +269,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               })}
               {filteredExperts.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-events-cream/40">
+                  <td colSpan={7} className="p-8 text-center text-events-cream/40">
                     No experts found. Add one to get started.
                   </td>
                 </tr>

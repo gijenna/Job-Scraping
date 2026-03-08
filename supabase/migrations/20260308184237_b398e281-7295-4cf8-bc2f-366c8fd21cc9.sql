@@ -1,0 +1,1 @@
+ALTER TABLE public.industry_experts ADD COLUMN expert_type text NOT NULL DEFAULT 'industry_expert';

@@ -17,6 +17,7 @@ interface ExpertIntakeFormProps {
   existingData?: Partial<Expert>;
   citySlug: string;
   cityName: string;
+  expertType?: 'industry_expert' | 'brand_rep';
   onComplete: (savedExpert?: Expert) => void;
 }
 
@@ -25,7 +26,7 @@ interface CityAssignment {
   city_name: string;
 }
 
-const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComplete }: ExpertIntakeFormProps) => {
+const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertType = 'industry_expert', onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [customNiche, setCustomNiche] = useState("");
@@ -213,6 +214,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
         previous_companies: form.previous_companies.trim() || null,
         niche_interests: form.niche_interests,
         status: 'confirmed' as const,
+        expert_type: expertType,
         updated_at: new Date().toISOString(),
       };
 

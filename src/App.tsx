@@ -13,6 +13,7 @@ import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
 import AdminExperts from "./pages/AdminExperts";
 import ExpertInvite from "./pages/ExpertInvite";
+import BrandRepInvite from "./pages/BrandRepInvite";
 import CityExperts from "./pages/CityExperts";
 import ExpertDetail from "./pages/ExpertDetail";
 import EventPNW26 from "./pages/EventPNW26";
@@ -41,6 +42,11 @@ const App = () => (
           <Route path="/OR26" element={<EventOR26 />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          {/* Brand Rep invite pages */}
+          <Route path="/denverreps" element={<BrandRepInvite citySlug="denver" />} />
+          <Route path="/denverreps/:name" element={<BrandRepInvite citySlug="denver" />} />
+          <Route path="/pnwreps" element={<BrandRepInvite citySlug="portland" />} />
+          <Route path="/pnwreps/:name" element={<BrandRepInvite citySlug="portland" />} />
           {/* Public expert browsing pages */}
           <Route path="/Denverexperts/browse" element={<CityExperts citySlug="denver" />} />
           <Route path="/Portlandexperts/browse" element={<CityExperts citySlug="portland" />} />
