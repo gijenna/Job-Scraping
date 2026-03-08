@@ -29,6 +29,7 @@ const CITY_EVENT_DATA: Record<string, {
   attendance: string;
   attendanceNote: string;
   venue: string;
+  venueMapUrl: string;
   time: string;
   whoAttends: string[];
   format: string[];
@@ -39,7 +40,8 @@ const CITY_EVENT_DATA: Record<string, {
     yearNote: '3rd year with Outside Inc — named top activation 2024 & 2025',
     attendance: '500–800',
     attendanceNote: 'career event · 40,000+ at full festival',
-    venue: 'Denver, CO — part of Outside Days Festival',
+    venue: 'Auraria Campus, Denver, CO',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Auraria+Campus+Denver+CO',
     time: '1–4 PM MT',
     whoAttends: [
       'Strong presence of passive experts — not actively searching but networking',
@@ -65,6 +67,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendance: '300+',
     attendanceNote: 'fresh grads, tenured leaders & industry-curious',
     venue: 'UO Portland Campus — 2800 NE Liberty St, Portland',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=2800+NE+Liberty+St+Portland+OR',
     time: '5:30–8:30 PM PT',
     whoAttends: [
       'UO Sports Product Management grads — elite & diverse cohort',
@@ -90,6 +93,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendance: '200+',
     attendanceNote: 'intimate, curated audience',
     venue: 'Minneapolis, MN',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
     time: 'TBD',
     whoAttends: [
       'Active job seekers in the outdoor & active lifestyle space',
@@ -402,10 +406,11 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                       <p className="text-events-teal font-display font-bold mt-3 text-lg">{eventData.attendance}</p>
                       <p className="text-events-teal/50 text-xs mt-1">{eventData.attendanceNote}</p>
                     </div>
-                    <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
-                      <MapPin className="w-6 h-6 text-events-coral mx-auto" />
-                      <p className="text-events-teal font-display font-bold mt-3 text-sm leading-tight">{eventData.venue}</p>
-                    </div>
+                     <a href={eventData.venueMapUrl} target="_blank" rel="noopener noreferrer" className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center hover:shadow-md hover:border-events-coral/30 transition-all cursor-pointer group">
+                       <MapPin className="w-6 h-6 text-events-coral mx-auto" />
+                       <p className="text-events-teal font-display font-bold mt-3 text-sm leading-tight group-hover:text-events-coral transition-colors">{eventData.venue}</p>
+                       <p className="text-events-teal/40 text-xs mt-1 group-hover:text-events-coral/60 transition-colors">View on map ↗</p>
+                     </a>
                   </div>
 
                   {/* Year Note Banner */}
