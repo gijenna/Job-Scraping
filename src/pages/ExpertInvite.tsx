@@ -572,7 +572,10 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
               existingData={expert || (lookupName ? { full_name: lookupName.trim() } : undefined)}
               citySlug={citySlug}
               cityName={cityName}
-              onComplete={() => loadData()}
+              onComplete={(savedExpert) => {
+                if (savedExpert) setExpert(savedExpert);
+                loadData();
+              }}
             />
           </div>
         </>
