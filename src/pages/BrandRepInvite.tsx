@@ -559,16 +559,15 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
               expertType="brand_rep"
               brandExpertId={expert?.id}
               onComplete={(savedExpert) => {
-                if (savedExpert) {
+                if (savedExpert && savedExpert.id !== expert?.id) {
                   setFormExpertId(savedExpert.id);
-                  // Update existingData so form preserves data across re-renders
                   setFormExistingData(prev => ({
                     ...prev,
                     ...savedExpert,
-                    // Keep the brand's company name
                     current_company: prev?.current_company || savedExpert.current_company,
                   }));
                 }
+              }}
               }}
             />
           </div>
