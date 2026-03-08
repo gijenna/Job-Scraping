@@ -98,6 +98,9 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
   const [faqs, setFaqs] = useState<ExpertQuestion[]>([]);
   const [returning, setReturning] = useState(false);
   const [lookupName, setLookupName] = useState("");
+  // Track the actual person filling out the form (NOT the brand shell)
+  const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
+  const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
 
   useEffect(() => {
     loadData();
