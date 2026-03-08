@@ -74,6 +74,23 @@ serve(async (req) => {
     const folkApiKey = Deno.env.get('FOLK_API_KEY');
     if (folkApiKey) {
       try {
+        // Find the "Industry Experts" group
+        let groupId: string | null = null;
+        const groupsRes = await fetch('https://api.folk.app/v1/groups?limit=100', {
+          headers: { 'Authorization': `Bearer ${folkApiKey}` },
+        });
+        const groupsData = await groupsRes.json();
+        const targetGroup = (groupsData.data?.items || []).find(
+          (g: any) => g.name.toLowerCase() === 'industry experts'
+        );
+        if (targetGroup) {
+          groupId = targetGroup.id;
+          console.log('Found Folk group "Industry Experts":', groupId);
+        } else {
+          console.warn('Folk group "Industry Experts" not found. Available groups:', 
+            (groupsData.data?.items || []).map((g: any) => g.name));
+        }
+
         // Search for existing person by email first
         let folkPersonId: string | null = null;
         if (expert.email) {
@@ -97,6 +114,7 @@ serve(async (req) => {
           emails: expert.email ? [expert.email] : [],
           ...(expert.job_title && { jobTitle: expert.job_title }),
           ...(expert.linkedin_url && { urls: [expert.linkedin_url] }),
+          ...(groupId && { groups: [{ id: groupId }] }),
         };
 
         if (folkPersonId) {
@@ -109,7 +127,7 @@ serve(async (req) => {
             },
             body: JSON.stringify(folkPayload),
           });
-          results.folk = { status: updateRes.status, action: 'updated', id: folkPersonId };
+          results.folk = { status: updateRes.status, action: 'updated', id: folkPersonId, groupId };
         } else {
           // Create new
           const createRes = await fetch('https://api.folk.app/v1/people', {
@@ -121,7 +139,7 @@ serve(async (req) => {
             body: JSON.stringify(folkPayload),
           });
           const createData = await createRes.json();
-          results.folk = { status: createRes.status, action: 'created', data: createData };
+          results.folk = { status: createRes.status, action: 'created', data: createData, groupId };
         }
       } catch (folkErr: any) {
         console.error('Folk sync error:', folkErr);
