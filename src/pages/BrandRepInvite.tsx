@@ -146,7 +146,8 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       .from('industry_experts').select('*')
       .ilike('full_name', lookupName.trim()).maybeSingle();
     if (data) {
-      setExpert(data as unknown as Expert);
+      setFormExpertId(data.id);
+      setFormExistingData(data as unknown as Expert);
       setReturning(false);
       setShowForm(true);
     } else {
@@ -154,10 +155,14 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       const { data: slugMatch } = await supabase
         .from('industry_experts').select('*').eq('slug', slug).maybeSingle();
       if (slugMatch) {
-        setExpert(slugMatch as unknown as Expert);
+        setFormExpertId(slugMatch.id);
+        setFormExistingData(slugMatch as unknown as Expert);
         setReturning(false);
         setShowForm(true);
       } else {
+        // New person — pre-fill company from the brand shell, and the name they typed
+        setFormExpertId(undefined);
+        setFormExistingData({ current_company: expert?.current_company || '', full_name: lookupName.trim() });
         setReturning(false);
         setShowForm(true);
       }
