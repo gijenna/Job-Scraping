@@ -172,9 +172,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
   const cityName = city?.name || 'Your City';
   const eventTitle = city?.event_title || 'GATHER';
-  const firstName = expert?.full_name?.split(' ')[0] || '';
   const heroMedia = CITY_HEROES[citySlug];
-  const companyName = expert?.current_company || 'Your Company';
+  const brandName = expert?.current_company || 'Your Company';
+  // If full_name differs from current_company, we have a known rep
+  const hasKnownRep = expert && expert.full_name && expert.current_company && expert.full_name !== expert.current_company;
+  const repFirstName = hasKnownRep ? expert.full_name.split(' ')[0] : '';
+  const firstName = expert?.full_name?.split(' ')[0] || '';
 
   return (
     <div className="min-h-screen bg-events-teal">
@@ -211,15 +214,18 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
                       {expert ? (
                         <>
-                          <span className="text-events-yellow">{companyName}</span> is
+                          <span className="text-events-yellow">{brandName}</span> is
                           <br />
                           confirmed at our
                           <br />
-                          {cityName} event —
+                          {cityName} event &{' '}
+                          {hasKnownRep ? (
+                            <><span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{repFirstName}</span> would love</>
+                          ) : (
+                            <>they'd love</>
+                          )}
                           <br />
-                          <span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{firstName}</span>, they'd love
-                          <br />
-                          you to attend.
+                          you to attend!
                         </>
                       ) : (
                         <>
@@ -235,7 +241,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
                       {expert ? (
                         <>
-                          {companyName} would love for you to represent the brand at our upcoming {cityName} event.
+                          {brandName} would love for you to represent the brand at our upcoming {cityName} event.
                           You'll chat with our community, tell your story, and help attendees get to know who's behind the brand.
                         </>
                       ) : (
@@ -475,7 +481,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                 <br />are you in?
               </h2>
               <p className="text-events-cream/60 text-lg mt-4 max-w-xl mx-auto">
-                Your team is counting on you to represent {companyName} and connect with
+                Your team is counting on you to represent {brandName} and connect with
                 the Basecamp {cityName} community.
               </p>
 

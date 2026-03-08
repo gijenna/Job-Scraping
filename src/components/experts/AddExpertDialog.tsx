@@ -18,6 +18,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const isBrandRep = type === 'brand_rep';
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [companyRep, setCompanyRep] = useState("");
   const [citySlug, setCitySlug] = useState("");
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState("");
@@ -39,7 +40,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
     setLoading(true);
     try {
-      const slug = nameToSlug(name);
+      const slug = nameToSlug(isBrandRep && companyRep.trim() ? companyRep.trim() : name.trim());
       const { data: user } = await supabase.auth.getUser();
 
       const { data: existing } = await supabase
@@ -52,13 +53,25 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
       if (existing) {
         expertId = existing.id;
+        // Update company name for brand reps
+        if (isBrandRep) {
+          await supabase.from('industry_experts')
+            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim() })
+            .eq('id', expertId);
+        }
       } else {
-        const { data: newExpert, error } = await supabase.from('industry_experts').insert({
-          full_name: name.trim(),
+        const insertData: any = {
+          full_name: isBrandRep ? (companyRep.trim() || name.trim()) : name.trim(),
           slug,
           status: 'invited' as const,
           created_by: user.user?.id || null,
-        }).select('id').single();
+        };
+        if (isBrandRep) {
+          insertData.current_company = name.trim();
+        }
+
+        const { data: newExpert, error } = await supabase.from('industry_experts')
+          .insert(insertData).select('id').single();
 
         if (error) throw error;
         expertId = newExpert.id;
@@ -98,6 +111,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
   const handleReset = () => {
     setName("");
+    setCompanyRep("");
     setCitySlug("");
     setGeneratedUrl("");
     setCopied(false);
@@ -109,8 +123,6 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   };
 
   const label = isBrandRep ? 'Brand' : 'Expert';
-  const nameLabel = isBrandRep ? 'Brand Name' : "Expert's Name";
-  const namePlaceholder = isBrandRep ? 'Patagonia' : 'Hannah Harrick';
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -135,7 +147,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
               </DialogTitle>
               <p className="text-events-teal/60 text-sm mt-0.5">
                 {isBrandRep
-                  ? 'Create a personalized landing page URL for a brand team to send to their reps.'
+                  ? 'Create a personalized landing page for a brand to send to their team.'
                   : 'Create a personalized landing page URL to send to prospective Industry Experts.'}
               </p>
             </div>
@@ -145,15 +157,42 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
         {!generatedUrl ? (
           <form onSubmit={handleSubmit} className="space-y-5 mt-2">
             <div className="space-y-2">
-              <Label className="text-events-teal font-semibold">{nameLabel}</Label>
+              <Label className="text-events-teal font-semibold">
+                {isBrandRep ? 'Brand Name' : "Expert's Name"}
+              </Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="bg-events-teal/5 border-events-teal/15 text-events-teal h-12 text-base"
-                placeholder={namePlaceholder}
+                placeholder={isBrandRep ? 'Superfeet' : 'Hannah Harrick'}
               />
+              {isBrandRep && (
+                <p className="text-events-teal/40 text-xs">
+                  This appears in the headline: "<strong>{name || 'Brand'}</strong> is confirmed at our event"
+                </p>
+              )}
             </div>
+
+            {isBrandRep && (
+              <div className="space-y-2">
+                <Label className="text-events-teal font-semibold">
+                  Company Rep <span className="text-events-teal/40 font-normal">(optional)</span>
+                </Label>
+                <Input
+                  value={companyRep}
+                  onChange={(e) => setCompanyRep(e.target.value)}
+                  className="bg-events-teal/5 border-events-teal/15 text-events-teal h-12 text-base"
+                  placeholder="Nicole"
+                />
+                <p className="text-events-teal/40 text-xs">
+                  {companyRep.trim()
+                    ? <>Headline will read: "<strong>{name || 'Brand'}</strong> is confirmed… & <strong>{companyRep}</strong> would love you to attend!"</>
+                    : <>If left blank, headline reads: "<strong>{name || 'Brand'}</strong> is confirmed… & they'd love you to attend!"</>
+                  }
+                </p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label className="text-events-teal font-semibold">Event Location</Label>
