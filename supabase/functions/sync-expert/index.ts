@@ -139,7 +139,7 @@ serve(async (req) => {
     const spreadsheetId = sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID');
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
-        const serviceAccount = JSON.parse(serviceAccountKeyStr);
+        const serviceAccount = JSON.parse(atob(serviceAccountKeyStr));
         const accessToken = await getGoogleAccessToken(serviceAccount);
 
         const row = [
