@@ -360,6 +360,31 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
+        {showSuccess && (
+          <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-events-coral" />
+              <h4 className="font-display font-bold text-events-cream">Card saved!</h4>
+            </div>
+            <p className="text-events-cream/70 text-sm">
+              You can return to this page anytime to update your card. Bookmark it or send yourself a reminder below.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="border-events-coral/30 text-events-coral hover:bg-events-coral/10 gap-2"
+              onClick={() => {
+                const currentUrl = window.location.href;
+                const subject = encodeURIComponent("Your Basecamp brand rep card link");
+                const body = encodeURIComponent(`Here's your link to update your brand rep card anytime:\n\n${currentUrl}\n\nJust click the link above to make changes.`);
+                window.open(`mailto:${savedEmail}?subject=${subject}&body=${body}`, '_blank');
+              }}
+            >
+              <Mail className="w-4 h-4" />
+              Email me this link
+            </Button>
+          </div>
+        )}
         <p className="text-events-cream/50 text-sm">
           Return anytime to edit your card. Fields marked * are required — everything else makes your card shine.
         </p>
