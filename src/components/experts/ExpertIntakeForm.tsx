@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Expert, FIELD_OPTIONS, NICHE_OPTIONS, getCompanyLogoUrl } from "@/lib/expert-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
