@@ -37,10 +37,12 @@ const AddExpertDialog = ({ cities, onAdded }: AddExpertDialogProps) => {
       if (linkedinUrl.trim()) {
         setScraping(true);
         try {
-          const result = await firecrawlApi.scrape(linkedinUrl);
-          if (result.success && result.data) {
-            scrapedData = result.data;
-            toast({ title: "LinkedIn data extracted!", description: `Found: ${scrapedData.headline || 'basic info'}` });
+          const { data, error } = await supabase.functions.invoke('scrape-linkedin', {
+            body: { url: linkedinUrl.trim() },
+          });
+          if (!error && data?.success && data?.data) {
+            scrapedData = data.data;
+            toast({ title: "LinkedIn data extracted!", description: `Found: ${scrapedData.headline || scrapedData.name || 'basic info'}` });
           } else {
             toast({ title: "LinkedIn scrape limited", description: "Could not extract full profile. You can fill in details manually.", variant: "destructive" });
           }

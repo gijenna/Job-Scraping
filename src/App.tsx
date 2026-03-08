@@ -13,6 +13,8 @@ import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
 import AdminExperts from "./pages/AdminExperts";
 import ExpertInvite from "./pages/ExpertInvite";
+import CityExperts from "./pages/CityExperts";
+import ExpertDetail from "./pages/ExpertDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,14 @@ const App = () => (
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          {/* Public expert browsing pages */}
+          <Route path="/Denverexperts/browse" element={<CityExperts citySlug="denver" />} />
+          <Route path="/Portlandexperts/browse" element={<CityExperts citySlug="portland" />} />
+          <Route path="/MNexperts/browse" element={<CityExperts citySlug="minneapolis" />} />
+          {/* Public expert detail pages */}
+          <Route path="/Denverexperts/view/:name" element={<ExpertDetail citySlug="denver" />} />
+          <Route path="/Portlandexperts/view/:name" element={<ExpertDetail citySlug="portland" />} />
+          <Route path="/MNexperts/view/:name" element={<ExpertDetail citySlug="minneapolis" />} />
           {/* Expert invite pages - personalized and generic */}
           <Route path="/Denverexperts" element={<ExpertInvite citySlug="denver" />} />
           <Route path="/Denverexperts/:name" element={<ExpertInvite citySlug="denver" />} />
