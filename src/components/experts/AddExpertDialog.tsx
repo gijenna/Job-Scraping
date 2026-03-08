@@ -40,7 +40,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
     setLoading(true);
     try {
-      const slug = nameToSlug(isBrandRep && companyRep.trim() ? companyRep.trim() : name.trim());
+      const slug = nameToSlug(isBrandRep ? name.trim() : name.trim());
       const { data: user } = await supabase.auth.getUser();
 
       const { data: existing } = await supabase
