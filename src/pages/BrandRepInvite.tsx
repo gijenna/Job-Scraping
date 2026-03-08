@@ -269,26 +269,17 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                       className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
                     >
                       <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20">
-                        {expert?.photo_url ? (
-                          <img src={expert.photo_url} alt="" className="w-full h-full rounded-full object-cover" />
-                        ) : (
-                          <span className="text-white/60 font-display text-2xl font-bold">
-                            {expert ? expert.full_name.split(' ').map(n => n[0]).join('') : '?'}
-                          </span>
-                        )}
+                        <span className="text-white/60 font-display text-2xl font-bold">?</span>
                       </div>
                       <h3 className="font-display text-lg font-bold text-white text-center mt-4">
-                        {expert?.full_name || 'Your Name'}
+                        Your Name Here
                       </h3>
                       <p className="text-events-yellow text-sm text-center font-medium">Brand Representative</p>
-                      {expert?.job_title && (
-                        <p className="text-white/50 text-xs text-center mt-1">{expert.job_title}</p>
-                      )}
-                      {expert?.current_company && (
-                        <p className="text-white/40 text-xs text-center mt-0.5">{expert.current_company}</p>
+                      {brandName !== 'Your Company' && (
+                        <p className="text-white/40 text-xs text-center mt-0.5">{brandName}</p>
                       )}
                       <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
-                        {expert ? 'Click to edit your card →' : 'Click to build your card →'}
+                        Click to build your card →
                       </p>
                     </div>
                   </div>
@@ -533,7 +524,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
           <div className="border-b border-events-cream/10">
             <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
               <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
-              <span className="text-events-cream/40 text-xs font-display uppercase tracking-widest">{eventTitle}</span>
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-events-cream/50 hover:text-events-cream text-sm font-display flex items-center gap-1 transition-colors"
+              >
+                ← Back to event info
+              </button>
             </div>
           </div>
           <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
@@ -548,7 +544,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
             </div>
             <ExpertIntakeForm
               expertId={expert?.id}
-              existingData={expert || (lookupName ? { full_name: lookupName.trim() } : undefined)}
+              existingData={expert ? { ...expert, full_name: '', job_title: '', photo_url: '' } : (lookupName ? { full_name: lookupName.trim() } : undefined)}
               citySlug={citySlug}
               cityName={cityName}
               expertType="brand_rep"
