@@ -177,7 +177,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
             {isBrandRep && (
               <div className="space-y-2">
                 <Label className="text-events-teal font-semibold">
-                  Company Rep <span className="text-events-teal/40 font-normal">(optional)</span>
+                  Brand Point of Contact <span className="text-events-teal/40 font-normal">(optional)</span>
                 </Label>
                 <Input
                   value={companyRep}
