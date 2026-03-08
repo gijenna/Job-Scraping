@@ -364,13 +364,13 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, onComple
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label className="text-events-cream">Years in Industry</Label>
-              <Input type="number" min="0" value={form.years_in_industry} onChange={e => update('years_in_industry', e.target.value)}
-                className="bg-events-card border-events-cream/20 text-events-cream" />
+              <Input inputMode="numeric" pattern="[0-9]*" value={form.years_in_industry} onChange={e => update('years_in_industry', e.target.value.replace(/[^0-9]/g, ''))}
+                className="bg-events-card border-events-cream/20 text-events-cream [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             </div>
             <div className="space-y-2">
               <Label className="text-events-cream">Years in {cityName}</Label>
-              <Input type="number" min="0" value={form.years_in_city} onChange={e => update('years_in_city', e.target.value)}
-                className="bg-events-card border-events-cream/20 text-events-cream" />
+              <Input inputMode="numeric" pattern="[0-9]*" value={form.years_in_city} onChange={e => update('years_in_city', e.target.value.replace(/[^0-9]/g, ''))}
+                className="bg-events-card border-events-cream/20 text-events-cream [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
             </div>
           </div>
 
