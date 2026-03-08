@@ -379,9 +379,10 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               variant="outline"
               className="border-events-coral/30 text-events-coral hover:bg-events-coral/10 gap-2"
               onClick={() => {
-                const currentUrl = window.location.href;
-                const subject = encodeURIComponent("Your Basecamp brand rep card link");
-                const body = encodeURIComponent(`Here's your link to update your brand rep card anytime:\n\n${currentUrl}\n\nJust click the link above to make changes.`);
+                const path = window.location.pathname + window.location.search;
+                const editUrl = `https://www.basecampoutdoorevents.com${path}`;
+                const subject = encodeURIComponent("Your Basecamp card link");
+                const body = encodeURIComponent(`Here's your link to update your card anytime:\n\n${editUrl}\n\nJust click the link above to make changes.`);
                 window.open(`mailto:${savedEmail}?subject=${subject}&body=${body}`, '_blank');
               }}
             >
