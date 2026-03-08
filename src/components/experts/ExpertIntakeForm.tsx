@@ -17,6 +17,7 @@ interface ExpertIntakeFormProps {
   existingData?: Partial<Expert>;
   citySlug: string;
   cityName: string;
+  expertType?: 'industry_expert' | 'brand_rep';
   onComplete: (savedExpert?: Expert) => void;
 }
 
