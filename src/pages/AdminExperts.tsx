@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert, ExpertCity, ExpertCityAssignment, ExpertQuestion } from "@/lib/expert-types";
 import ExpertCRM from "@/components/experts/ExpertCRM";
+import BrandDashboard from "@/components/experts/BrandDashboard";
 import ExpertCarousel from "@/components/experts/ExpertCarousel";
 import ExpertGrid from "@/components/experts/ExpertGrid";
 import AddExpertDialog from "@/components/experts/AddExpertDialog";
