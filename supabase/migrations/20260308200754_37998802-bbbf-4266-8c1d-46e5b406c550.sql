@@ -1,0 +1,2 @@
+DELETE FROM expert_city_assignments WHERE expert_id IN ('fe1c3401-28f6-4f32-bf36-5852cba035eb', 'd7e8ce63-eab3-433b-b3cb-2288f46f1b1b');
+DELETE FROM industry_experts WHERE id IN ('fe1c3401-28f6-4f32-bf36-5852cba035eb', 'd7e8ce63-eab3-433b-b3cb-2288f46f1b1b');
