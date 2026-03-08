@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import { X, Mail, CheckCircle2 } from "lucide-react";
 import { Expert, FIELD_OPTIONS, NICHE_OPTIONS, getCompanyLogoUrl } from "@/lib/expert-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,8 @@ interface CityAssignment {
 const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertType = 'industry_expert', onComplete }: ExpertIntakeFormProps) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [savedEmail, setSavedEmail] = useState("");
   const [customNiche, setCustomNiche] = useState("");
   const [yearsInCityLabel, setYearsInCityLabel] = useState(cityName);
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
@@ -332,9 +334,13 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         const { data: savedExpert } = await supabase
           .from('industry_experts').select('*').eq('id', finalExpertId).single();
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        setSavedEmail(form.email.trim());
+        setShowSuccess(true);
         onComplete(savedExpert as unknown as Expert);
       } else {
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
+        setSavedEmail(form.email.trim());
+        setShowSuccess(true);
         onComplete();
       }
     } catch (err: any) {
@@ -354,6 +360,31 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
+        {showSuccess && (
+          <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-events-coral" />
+              <h4 className="font-display font-bold text-events-cream">Card saved!</h4>
+            </div>
+            <p className="text-events-cream/70 text-sm">
+              You can return to this page anytime to update your card. Bookmark it or send yourself a reminder below.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="border-events-coral/30 text-events-coral hover:bg-events-coral/10 gap-2"
+              onClick={() => {
+                const currentUrl = window.location.href;
+                const subject = encodeURIComponent("Your Basecamp brand rep card link");
+                const body = encodeURIComponent(`Here's your link to update your brand rep card anytime:\n\n${currentUrl}\n\nJust click the link above to make changes.`);
+                window.open(`mailto:${savedEmail}?subject=${subject}&body=${body}`, '_blank');
+              }}
+            >
+              <Mail className="w-4 h-4" />
+              Email me this link
+            </Button>
+          </div>
+        )}
         <p className="text-events-cream/50 text-sm">
           Return anytime to edit your card. Fields marked * are required — everything else makes your card shine.
         </p>
