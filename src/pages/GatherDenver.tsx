@@ -80,7 +80,7 @@ const denverQualityPoints = [
     icon: Users,
     stat: "500–800",
     label: "Per Event",
-    desc: "A concentrated, high-quality talent pool. Every conversation is intentional — no 30-second drive-bys."
+    desc: "A concentrated, high-quality talent pool. Every conversation is intentional - no 30-second drive-bys."
   },
   {
     icon: Star,
