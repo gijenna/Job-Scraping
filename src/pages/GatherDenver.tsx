@@ -180,9 +180,9 @@ const GatherDenver = () => {
 
       <DenverFestivalPartner />
 
+      <DenverPowerfulPremium />
       <DenverByTheNumbers />
       <DenverHowItWorks />
-      <DenverGallery />
       <DenverGallery />
 
       <DenverWhoAttends />
