@@ -45,7 +45,7 @@ const testimonials: Testimonial[] = [
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
-// Scattered placements — no pattern, no touching, evenly distributed, avoiding center column (25%-75%)
+// Scattered placements — use full width including closer to center, evenly distributed
 const scatteredElements: Array<{
   type: 'logo' | 'testimonial';
   index: number;
@@ -54,31 +54,34 @@ const scatteredElements: Array<{
   right?: string;
   rotate: string;
 }> = [
-  // Spread across the full height, alternating sides irregularly
-  { type: 'logo', index: 0, top: '2%', left: '4%', rotate: '-7deg' },
-  { type: 'testimonial', index: 0, top: '5%', right: '2%', rotate: '3deg' },
+  // Top band (0-15%)
+  { type: 'logo', index: 0, top: '1%', left: '8%', rotate: '-5deg' },
+  { type: 'testimonial', index: 0, top: '3%', right: '3%', rotate: '3deg' },
+  { type: 'logo', index: 1, top: '8%', left: '22%', rotate: '9deg' },
+  { type: 'testimonial', index: 6, top: '10%', right: '18%', rotate: '-4deg' },
 
-  { type: 'logo', index: 1, top: '14%', right: '6%', rotate: '11deg' },
-  { type: 'logo', index: 2, top: '18%', left: '1%', rotate: '-4deg' },
+  // Upper band (18-32%)
+  { type: 'logo', index: 2, top: '20%', right: '6%', rotate: '-8deg' },
+  { type: 'testimonial', index: 1, top: '24%', left: '2%', rotate: '2deg' },
+  { type: 'logo', index: 3, top: '30%', left: '18%', rotate: '12deg' },
 
-  { type: 'testimonial', index: 1, top: '26%', left: '2%', rotate: '-2deg' },
-  { type: 'logo', index: 3, top: '30%', right: '2%', rotate: '8deg' },
+  // Middle band (35-50%)
+  { type: 'testimonial', index: 2, top: '37%', right: '2%', rotate: '-3deg' },
+  { type: 'logo', index: 4, top: '42%', left: '5%', rotate: '7deg' },
+  { type: 'logo', index: 5, top: '48%', right: '16%', rotate: '-11deg' },
 
-  { type: 'logo', index: 4, top: '40%', left: '5%', rotate: '13deg' },
-  { type: 'testimonial', index: 2, top: '43%', right: '1%', rotate: '-5deg' },
+  // Lower-mid band (52-68%)
+  { type: 'testimonial', index: 3, top: '55%', left: '1%', rotate: '4deg' },
+  { type: 'logo', index: 6, top: '58%', right: '4%', rotate: '6deg' },
+  { type: 'testimonial', index: 7, top: '64%', left: '16%', rotate: '-5deg' },
 
-  { type: 'testimonial', index: 3, top: '54%', left: '1%', rotate: '4deg' },
-  { type: 'logo', index: 5, top: '56%', right: '4%', rotate: '-10deg' },
+  // Lower band (70-85%)
+  { type: 'testimonial', index: 4, top: '72%', right: '2%', rotate: '3deg' },
+  { type: 'logo', index: 7, top: '76%', left: '4%', rotate: '-9deg' },
 
-  { type: 'logo', index: 6, top: '66%', left: '3%', rotate: '6deg' },
-  { type: 'testimonial', index: 4, top: '70%', right: '2%', rotate: '-3deg' },
-
-  { type: 'logo', index: 7, top: '80%', right: '5%', rotate: '9deg' },
-  { type: 'testimonial', index: 5, top: '84%', left: '2%', rotate: '-6deg' },
-
-  { type: 'logo', index: 8, top: '92%', left: '6%', rotate: '5deg' },
-  { type: 'testimonial', index: 6, top: '12%', left: '3%', rotate: '5deg' },
-  { type: 'testimonial', index: 7, top: '78%', right: '3%', rotate: '4deg' },
+  // Bottom band (85-95%)
+  { type: 'testimonial', index: 5, top: '86%', right: '14%', rotate: '-2deg' },
+  { type: 'logo', index: 8, top: '90%', left: '10%', rotate: '8deg' },
 ];
 
 const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
