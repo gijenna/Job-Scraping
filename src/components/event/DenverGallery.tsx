@@ -54,10 +54,10 @@ const DenverGallery = () => {
         </motion.p>
 
         {/* Gallery carousel */}
-        <div className="relative flex items-center justify-center gap-4 md:gap-8">
+        <div className="relative flex items-center justify-center gap-4 md:gap-6">
           {/* Previous image (partially visible) */}
           <div 
-            className="hidden md:block w-[400px] lg:w-[560px] h-[560px] lg:h-[760px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
+            className="hidden md:block w-[280px] lg:w-[380px] h-[380px] lg:h-[520px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
             onClick={goToPrevious}
           >
             <img
@@ -77,7 +77,7 @@ const DenverGallery = () => {
           </button>
 
           {/* Center image (main) */}
-          <div className="relative w-full max-w-[1000px] lg:max-w-[1200px]">
+          <div className="relative">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -85,7 +85,7 @@ const DenverGallery = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="aspect-[4/3] rounded-xl overflow-hidden"
+                className="w-[320px] md:w-[420px] lg:w-[520px] h-[420px] md:h-[560px] lg:h-[680px] rounded-xl overflow-hidden"
               >
                 <img
                   src={galleryImages[currentIndex].src}
@@ -122,7 +122,7 @@ const DenverGallery = () => {
 
           {/* Next image (partially visible) */}
           <div 
-            className="hidden md:block w-[400px] lg:w-[560px] h-[560px] lg:h-[760px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
+            className="hidden md:block w-[280px] lg:w-[380px] h-[380px] lg:h-[520px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
             onClick={goToNext}
           >
             <img
