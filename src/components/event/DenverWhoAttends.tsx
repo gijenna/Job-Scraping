@@ -360,20 +360,23 @@ interface FilterSelectProps {
 }
 
 const FilterSelect = ({ label, options, value, onChange, placeholder }: FilterSelectProps) => (
-  <div>
+  <div className="relative">
     <label className="text-xs text-[#F5E6D3]/50 font-body uppercase tracking-wider mb-1.5 block">
       {label}
     </label>
-    <select
-      value={value || ''}
-      onChange={(e) => onChange(e.target.value || null)}
-      className="w-full bg-[#19363B] border border-[#F5E6D3]/15 rounded-lg px-3 py-2.5 text-sm text-[#F5E6D3] font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5BC0EB]/40"
-    >
-      <option value="">{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt} value={opt}>{opt}</option>
-      ))}
-    </select>
+    <div className="relative">
+      <select
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value || null)}
+        className="w-full bg-[#19363B] border border-[#E1B624]/20 rounded-lg px-3 py-2.5 pr-8 text-sm text-[#F5E6D3] font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5BC0EB]/40 hover:border-[#E1B624]/40 transition-colors"
+      >
+        <option value="">{placeholder}</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+      </select>
+      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#E1B624]/60 pointer-events-none" />
+    </div>
   </div>
 );
 
