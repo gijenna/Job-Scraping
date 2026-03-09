@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
