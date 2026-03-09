@@ -115,10 +115,9 @@ const Testimonials = () => {
             >
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={`https://www.google.com/s2/favicons?domain=${t.domain}&sz=64`}
+                  src={`https://www.google.com/s2/favicons?domain=${t.domain}&sz=128`}
                   alt={`${t.name} company logo`}
-                  className="w-9 h-9 rounded-lg object-contain border border-neutral-200 p-1"
-                  style={{ backgroundColor: "#ffffff" }}
+                  className="w-10 h-10 rounded-lg object-contain"
                 />
                 <div className="min-w-0">
                   <p className="font-display font-bold text-sm leading-snug" style={{ color: "#19363B" }}>{t.name}</p>
