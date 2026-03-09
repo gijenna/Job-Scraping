@@ -122,23 +122,14 @@ const DenverGallery = () => {
 
           {/* Next image (partially visible) */}
           <div 
-            className="hidden md:block w-[200px] lg:w-[280px] h-[280px] lg:h-[380px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
+            className="hidden md:block w-[400px] lg:w-[560px] h-[560px] lg:h-[760px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
             onClick={goToNext}
           >
-            {galleryImages[getNextIndex()].src ? (
-              <img
-                src={galleryImages[getNextIndex()].src}
-                alt={galleryImages[getNextIndex()].caption}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div 
-                className="w-full h-full flex items-center justify-center text-xs font-body"
-                style={{ backgroundColor: "#19363B", color: "#F5E6D3", opacity: 0.3 }}
-              >
-                Photo {getNextIndex() + 1}
-              </div>
-            )}
+            <img
+              src={galleryImages[getNextIndex()].src}
+              alt={galleryImages[getNextIndex()].caption}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
 
