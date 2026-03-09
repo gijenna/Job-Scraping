@@ -173,7 +173,7 @@ const DenverHowItWorks = () => {
                       <div
                         className="relative p-6 md:p-10 min-h-[320px] md:min-h-[400px] flex flex-col justify-end"
                         style={{
-                          backgroundImage: `linear-gradient(to top, rgba(25, 54, 59, 0.95) 30%, rgba(25, 54, 59, 0.7) 70%, rgba(25, 54, 59, 0.5) 100%), url(${tier.backgroundImage})`,
+                          backgroundImage: `linear-gradient(to top, rgba(10, 60, 90, 0.95) 20%, rgba(10, 80, 120, 0.75) 60%, rgba(10, 100, 140, 0.6) 100%), url(${tier.backgroundImage})`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",
                         }}
