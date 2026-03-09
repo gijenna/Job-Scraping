@@ -300,16 +300,20 @@ const DenverWhoAttends = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 + i * 0.08 }}
-                className="bg-gradient-card border border-border rounded-xl p-5 shadow-card group hover:border-primary/30 transition-colors"
+                className="bg-black border rounded-xl p-5 shadow-lg group hover:border-opacity-60 transition-colors"
+                style={{ borderColor: `${seg.color}33` }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg ${seg.bgToken} flex items-center justify-center`}>
-                      <seg.icon className={`w-5 h-5 ${seg.tokenColor}`} />
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: `${seg.color}20` }}
+                    >
+                      <seg.icon className="w-5 h-5" style={{ color: seg.color }} />
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-foreground text-base">{seg.title}</h3>
-                      <p className="text-muted-foreground text-xs font-body">{seg.count} attendees</p>
+                      <h3 className="font-display font-bold text-[#F5E6D3] text-base">{seg.title}</h3>
+                      <p className="text-[#F5E6D3]/50 text-xs font-body">{seg.count} attendees</p>
                     </div>
                   </div>
                   <div
@@ -319,12 +323,12 @@ const DenverWhoAttends = () => {
                     {seg.pct}%
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm font-body leading-relaxed">
+                <p className="text-[#F5E6D3]/60 text-sm font-body leading-relaxed">
                   <span className="font-display font-extrabold text-base" style={{ color: seg.color }}>{seg.yearHighlight}</span>
                   {seg.desc}
                 </p>
                 {/* Mini progress bar */}
-                <div className="mt-3 h-1 rounded-full bg-secondary overflow-hidden">
+                <div className="mt-3 h-1 rounded-full bg-[#F5E6D3]/10 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${seg.pct}%` }}
