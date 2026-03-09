@@ -5,9 +5,32 @@ const corsHeaders = {
 
 interface AttendeeRow {
   field: string;
+  normalizedField: string;
   years: string;
   workType: string;
   region: string;
+}
+
+function normalizeField(field: string): string {
+  if (!field) return 'Other';
+  const f = field.toLowerCase().trim();
+  
+  if (f.includes('marketing') || f.includes('brand') || f.includes('digital marketing')) return 'Marketing & Brand Strategy';
+  if (f.includes('creative') || f.includes('design') || f.includes('ui/ux') || f.includes('graphic') || f.includes('industrial') || f.includes('branding')) return 'Creative & Design';
+  if (f.includes('communications') || f.includes('pr') || f.includes('public relations') || f.includes('content') || f.includes('social media')) return 'Communications & PR';
+  if (f.includes('product') || f.includes('development') || f.includes('merchandise') || f.includes('apparel')) return 'Product Design & Development';
+  if (f.includes('sales') || f.includes('partnership') || f.includes('account') || f.includes('retail') || f.includes('e-commerce') || f.includes('ecommerce')) return 'Sales & Partnerships';
+  if (f.includes('operations') || f.includes('supply chain') || f.includes('manufacturing') || f.includes('logistics') || f.includes('warehouse')) return 'Operations & Supply Chain';
+  if (f.includes('tech') || f.includes('engineering') || f.includes('software') || f.includes('data') || f.includes('ai') || f.includes('it')) return 'Tech & Engineering';
+  if (f.includes('science') || f.includes('conservation') || f.includes('sustainability') || f.includes('environment') || f.includes('policy') || f.includes('advocacy')) return 'Science, Conservation & Policy';
+  if (f.includes('event') || f.includes('community') || f.includes('nonprofit') || f.includes('non-profit')) return 'Events & Community';
+  if (f.includes('education') || f.includes('training') || f.includes('coaching') || f.includes('teaching')) return 'Education & Training';
+  if (f.includes('finance') || f.includes('accounting') || f.includes('strategy') || f.includes('innovation') || f.includes('consulting')) return 'Strategy & Finance';
+  if (f.includes('human') || f.includes('hr') || f.includes('people') || f.includes('talent') || f.includes('recruiting')) return 'People & HR';
+  if (f.includes('photo') || f.includes('video') || f.includes('film') || f.includes('media') || f.includes('journalism')) return 'Media & Production';
+  if (f.includes('admin') || f.includes('assistant') || f.includes('executive')) return 'Operations & Supply Chain';
+  
+  return 'Other';
 }
 
 function parseCSVLine(line: string): string[] {
@@ -107,7 +130,7 @@ Deno.serve(async (req) => {
       // Skip rows without meaningful data
       if (!field && !workType && !region && !years) continue;
       
-      attendees.push({ field, years, workType, region });
+      attendees.push({ field, normalizedField: normalizeField(field), years, workType, region });
     }
     
     // Build unique filter options
@@ -117,7 +140,7 @@ Deno.serve(async (req) => {
     const regionSet = new Set<string>();
     
     for (const a of attendees) {
-      if (a.field) fieldSet.add(a.field);
+      if (a.normalizedField) fieldSet.add(a.normalizedField);
       if (a.years) yearsSet.add(a.years);
       for (const wt of normalizeWorkType(a.workType)) workTypeSet.add(wt);
       for (const r of normalizeRegion(a.region)) regionSet.add(r);
@@ -134,7 +157,7 @@ Deno.serve(async (req) => {
     let filtered = attendees;
     
     if (filterField) {
-      filtered = filtered.filter(a => a.field === filterField);
+      filtered = filtered.filter(a => a.normalizedField === filterField);
     }
     if (filterYears) {
       filtered = filtered.filter(a => a.years === filterYears);
