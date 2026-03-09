@@ -47,7 +47,29 @@ const testimonials: Testimonial[] = [
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
-// Scattered placements — use full width including closer to center, evenly distributed
+// Mobile-safe scattered positions — logos only, pushed to edges, no overlap with center stats
+const mobileScatteredElements: Array<{
+  type: 'logo';
+  index: number;
+  top: string;
+  left?: string;
+  right?: string;
+  rotate: string;
+}> = [
+  { type: 'logo', index: 0, top: '2%', left: '3%', rotate: '-5deg' },
+  { type: 'logo', index: 1, top: '2%', right: '3%', rotate: '7deg' },
+  { type: 'logo', index: 2, top: '18%', right: '2%', rotate: '-8deg' },
+  { type: 'logo', index: 3, top: '35%', left: '2%', rotate: '6deg' },
+  { type: 'logo', index: 4, top: '52%', right: '2%', rotate: '-4deg' },
+  { type: 'logo', index: 5, top: '68%', left: '2%', rotate: '9deg' },
+  { type: 'logo', index: 6, top: '68%', right: '3%', rotate: '-7deg' },
+  { type: 'logo', index: 7, top: '85%', left: '5%', rotate: '5deg' },
+  { type: 'logo', index: 8, top: '85%', right: '5%', rotate: '-3deg' },
+  { type: 'logo', index: 9, top: '50%', left: '4%', rotate: '11deg' },
+  { type: 'logo', index: 10, top: '35%', right: '3%', rotate: '-6deg' },
+];
+
+// Desktop scattered placements — use full width including closer to center, evenly distributed
 const scatteredElements: Array<{
   type: 'logo' | 'testimonial';
   index: number;
