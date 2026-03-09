@@ -15,6 +15,7 @@ interface RegistrantHowToTapInProps {
   expertsPageUrl: string;
   accentColor?: string;
   bgColor?: string;
+  images?: [string, string, string];
 }
 
 const RegistrantHowToTapIn = ({
