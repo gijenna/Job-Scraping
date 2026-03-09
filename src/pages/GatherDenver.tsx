@@ -130,7 +130,7 @@ const denverTiers = [
     popular: false,
     bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
     perks: [
-      "Hiring table inside event",
+      "6ft space inside event",
       "Up to 5 brand representatives",
       "Logo & careers page link on event website & registration",
       "Exposure to our 300K+ community",
@@ -161,7 +161,7 @@ const denverTiers = [
     bestFor: "Major players wanting top billing at the biggest outdoor career event of the year",
     perks: [
       '"Outside Days Career Fair presented by [You]"',
-      "Prime branding at entrance & stage",
+      "Prime branding at entrance",
       "Post-event engagement & lead report",
       "Custom in-person and/or digital activation built with your creative team",
     ],
