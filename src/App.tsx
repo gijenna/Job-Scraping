@@ -36,6 +36,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
+          <Route path="/oldstuffbyjenna" element={<OldStuffByJenna />} />
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/PNW26" element={<EventPNW26 />} />
