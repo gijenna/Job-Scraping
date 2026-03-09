@@ -48,7 +48,7 @@ const digitalPerks: DigitalPerk[] = [
   {
     icon: Globe,
     title: "Website & Registration Placement",
-    desc: "Your logo featured prominently on the event website and registration page — seen by every single attendee before they arrive.",
+    desc: "Your logo featured prominently on the event website and registration page - seen by every single attendee before they arrive.",
   },
   {
     icon: Mail,
