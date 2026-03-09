@@ -5,11 +5,13 @@ import eventBoa from "@/assets/event-boa.jpg";
 import eventCareerCoachingPopup from "@/assets/event-career-coaching-popup.jpg";
 import eventOutsideBooth from "@/assets/event-outside-booth.jpg";
 import eventAlisonVolunteer from "@/assets/event-alison-volunteer.jpg";
-import eventBasecampTeam from "@/assets/event-basecamp-team.jpg";
 import eventBoaSwag from "@/assets/event-boa-swag.jpg";
 import eventCrowd from "@/assets/event-crowd.jpg";
 import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
 import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
+import eventGroupPhoto from "@/assets/event-group-photo.jpg";
+import eventBoaConvo from "@/assets/event-boa-convo.jpg";
+import eventYetiKate from "@/assets/event-yeti-kate.jpg";
 
 interface PhotoItem {
   src: string;
