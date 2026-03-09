@@ -12,7 +12,6 @@ interface TierAccordion {
   id: string;
   title: string;
   subtitle: string;
-  price: string;
   spots: string;
   backgroundImage: string;
   perks: string[];
