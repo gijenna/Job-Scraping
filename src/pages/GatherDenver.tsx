@@ -7,6 +7,7 @@ import DenverByTheNumbers from "@/components/event/DenverByTheNumbers";
 import DenverGallery from "@/components/event/DenverGallery";
 import DenverHowItWorks from "@/components/event/DenverHowItWorks";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
+import DenverWhoAttends from "@/components/event/DenverWhoAttends";
 import EventQuote from "@/components/event/EventQuote";
 import EventBrandShowUp from "@/components/event/EventBrandShowUp";
 import EventStats from "@/components/event/EventStats";
@@ -183,6 +184,8 @@ const GatherDenver = () => {
       <DenverByTheNumbers />
       <DenverGallery />
       <DenverHowItWorks />
+
+      <DenverWhoAttends />
 
       <Testimonials />
 
