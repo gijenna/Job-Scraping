@@ -8,6 +8,7 @@ import GatherPNW from "./pages/GatherPNW";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
+import OldStuffByJenna from "./pages/OldStuffByJenna";
 import Events from "./pages/Events";
 import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
           <Route path="/gather-denver-export" element={<GatherDenverExport />} />
+          <Route path="/oldstuffbyjenna" element={<OldStuffByJenna />} />
           <Route path="/events" element={<Events />} />
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/PNW26" element={<EventPNW26 />} />
