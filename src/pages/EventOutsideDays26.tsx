@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
+import eventCrowd from "@/assets/event-crowd.jpg";
+import eventBoa from "@/assets/event-boa.jpg";
+import eventGroupPhoto from "@/assets/event-group-photo.jpg";
 import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
@@ -61,6 +64,7 @@ const EventOutsideDays26 = () => {
         expertsPageUrl="/Denverexperts"
         accentColor="#E1B624"
         bgColor="#0d1f22"
+        images={[eventCrowd, eventBoa, eventGroupPhoto]}
       />
 
       <RegistrantVenue
