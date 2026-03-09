@@ -177,7 +177,6 @@ const GatherDenver = () => {
       <DenverFestivalPartner />
 
       <DenverPowerfulPremium />
-      <DenverOrbitingStats />
       <DenverByTheNumbers />
 
       
