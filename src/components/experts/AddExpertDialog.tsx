@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { nameToSlug, ExpertCity, ExpertType } from "@/lib/expert-types";
+import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import { Plus, Loader2, Copy, ExternalLink, Link2, Check, Building2 } from "lucide-react";
 
 interface AddExpertDialogProps {
