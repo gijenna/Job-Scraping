@@ -115,9 +115,9 @@ const denverShowUpOptions = [
   {
     icon: MessageCircle,
     title: "Industry Expert / Mentor",
-    desc: "Your leaders are featured by name — called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
+    desc: "Your leaders are featured by name - called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
     tag: "Low Lift",
-    example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors — building authentic connections beyond their corporate role.",
+    example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors - building authentic connections beyond their corporate role.",
   },
 ];
 
