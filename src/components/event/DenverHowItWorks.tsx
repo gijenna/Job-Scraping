@@ -173,8 +173,8 @@ const DenverHowItWorks = () => {
                         className="relative p-6 md:p-10 min-h-[320px] md:min-h-[400px] flex flex-col justify-end"
                         style={{
                           backgroundImage: `linear-gradient(to top, rgba(13, 31, 34, 0.97) 15%, rgba(13, 31, 34, 0.75) 55%, rgba(13, 31, 34, 0.4) 100%), url(${tier.backgroundImage})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
+                          backgroundSize: tier.id === "title" ? "140%" : "cover",
+                          backgroundPosition: tier.id === "title" ? "center 30%" : "center",
                         }}
                       >
                         {/* Price */}
