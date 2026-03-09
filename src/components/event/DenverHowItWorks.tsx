@@ -25,7 +25,7 @@ const tiers: TierAccordion[] = [
     spots: "10 available",
     backgroundImage: eventCotopaxiConvo,
     perks: [
-      "Hiring table inside event",
+      "6ft space inside event",
       "Up to 5 brand representatives",
       "Logo & careers page link on event website & registration",
       "Exposure to our 300K+ community",
@@ -54,7 +54,7 @@ const tiers: TierAccordion[] = [
     backgroundImage: eventCrowdConvo,
     perks: [
       '"Outside Days Career Fair presented by [You]"',
-      "Prime branding at entrance & stage",
+      "Prime branding at entrance",
       "Post-event engagement & lead report",
       "Custom in-person and/or digital activation built with your creative team",
     ],
