@@ -5,7 +5,6 @@ import { ChevronDown, Check } from "lucide-react";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
 import eventYeti from "@/assets/event-yeti.jpg";
-import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
 import eventShar from "@/assets/event-shar.jpg";
 
 interface TierAccordion {
@@ -258,7 +257,7 @@ const DenverHowItWorks = () => {
               style={{ rotate: "3deg" }}
             >
               <img
-                src={eventYetiBestday}
+                src={eventYeti}
                 alt="YETI team at event"
                 className="w-full h-full object-cover object-bottom"
               />
