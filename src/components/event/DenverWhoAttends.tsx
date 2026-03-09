@@ -315,33 +315,7 @@ const DenverWhoAttends = () => {
           </div>
         </motion.div>
 
-        {/* "We gather" stacked list with + signs */}
-        <div className="mb-20 max-w-3xl mx-auto">
-          {weGather.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-            >
-              <div className="flex items-start gap-4 py-4">
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <item.icon className="w-4.5 h-4.5 text-primary" />
-                </div>
-                <p className="text-foreground font-body text-base md:text-lg leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
-              {i < weGather.length - 1 && (
-                <div className="flex items-center gap-3 pl-3">
-                  <span className="text-primary font-display font-extrabold text-2xl leading-none">+</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
+
       </div>
     </section>
   );
