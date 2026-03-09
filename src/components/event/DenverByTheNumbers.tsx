@@ -41,6 +41,8 @@ const testimonials: Testimonial[] = [
   { quote: "Very friendly and energetic vibe to the whole event!", avatarId: 15 },
   { quote: "The career coaching helped me work up courage to talk to Outside.", avatarId: 67 },
   { quote: "Thank you for providing this space for under-represented communities.", avatarId: 23 },
+  { quote: "The layout and overall vibe of the event was great.", avatarId: 51 },
+  { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
 // Scattered placements — no pattern, no touching, evenly distributed, avoiding center column (25%-75%)
@@ -75,6 +77,8 @@ const scatteredElements: Array<{
   { type: 'testimonial', index: 5, top: '84%', left: '2%', rotate: '-6deg' },
 
   { type: 'logo', index: 8, top: '92%', left: '6%', rotate: '5deg' },
+  { type: 'testimonial', index: 6, top: '12%', left: '3%', rotate: '5deg' },
+  { type: 'testimonial', index: 7, top: '78%', right: '3%', rotate: '4deg' },
 ];
 
 const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
