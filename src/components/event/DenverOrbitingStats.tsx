@@ -67,145 +67,6 @@ const testimonials: OrbitingItem[] = [
   },
 ];
 
-const OrbitingPhoto = ({ 
-  item, 
-  index, 
-  total, 
-  rotation,
-  scale,
-  opacity,
-}: { 
-  item: OrbitingItem; 
-  index: number; 
-  total: number;
-  rotation: number;
-  scale: number;
-  opacity: number;
-}) => {
-  const baseAngle = (360 / total) * index;
-  const currentAngle = baseAngle + rotation;
-  const radius = 220;
-  
-  const x = Math.cos((currentAngle * Math.PI) / 180) * radius;
-  const y = Math.sin((currentAngle * Math.PI) / 180) * radius;
-
-  return (
-    <motion.div
-      className="absolute w-32 h-40 md:w-40 md:h-48 rounded-xl overflow-hidden shadow-2xl"
-      style={{
-        x,
-        y,
-        scale,
-        opacity,
-        rotate: currentAngle * 0.1,
-      }}
-    >
-      <img
-        src={item.image}
-        alt="Event photo"
-        className="w-full h-full object-cover"
-      />
-    </motion.div>
-  );
-};
-
-const OrbitingLogo = ({ 
-  item, 
-  index, 
-  total, 
-  rotation,
-  scale,
-  opacity,
-}: { 
-  item: OrbitingItem; 
-  index: number; 
-  total: number;
-  rotation: number;
-  scale: number;
-  opacity: number;
-}) => {
-  const baseAngle = (360 / total) * index;
-  const currentAngle = baseAngle + rotation;
-  const radius = 200;
-  
-  const x = Math.cos((currentAngle * Math.PI) / 180) * radius;
-  const y = Math.sin((currentAngle * Math.PI) / 180) * radius;
-
-  return (
-    <motion.div
-      className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full bg-events-cream/90 flex items-center justify-center shadow-lg"
-      style={{
-        x,
-        y,
-        scale,
-        opacity,
-      }}
-    >
-      <img
-        src={`https://www.google.com/s2/favicons?domain=${item.domain}&sz=64`}
-        alt={item.content}
-        className="w-10 h-10 md:w-12 md:h-12 object-contain"
-        onError={(e) => {
-          const target = e.currentTarget;
-          target.style.display = 'none';
-          target.parentElement!.innerHTML = `<span class="text-xs font-semibold text-events-teal text-center px-1">${item.content}</span>`;
-        }}
-      />
-    </motion.div>
-  );
-};
-
-const OrbitingTestimonial = ({ 
-  item, 
-  index, 
-  total, 
-  rotation,
-  scale,
-  opacity,
-}: { 
-  item: OrbitingItem; 
-  index: number; 
-  total: number;
-  rotation: number;
-  scale: number;
-  opacity: number;
-}) => {
-  const baseAngle = (360 / total) * index + 45; // offset to avoid overlap
-  const currentAngle = baseAngle + rotation;
-  const radius = 240;
-  
-  const x = Math.cos((currentAngle * Math.PI) / 180) * radius;
-  const y = Math.sin((currentAngle * Math.PI) / 180) * radius;
-
-  return (
-    <motion.div
-      className="absolute w-44 md:w-52 rounded-2xl bg-events-teal/80 backdrop-blur-sm border border-events-cream/20 p-4 shadow-xl"
-      style={{
-        x,
-        y,
-        scale,
-        opacity,
-      }}
-    >
-      <div className="flex items-start gap-3">
-        <img
-          src={item.avatar}
-          alt={item.author}
-          className="w-8 h-8 rounded-full shrink-0"
-        />
-        <div>
-          <p className="text-events-cream/90 text-xs leading-relaxed italic">
-            "{item.content}"
-          </p>
-          <p className="text-events-yellow text-[10px] mt-2 font-medium">
-            — {item.author}
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 const DenverOrbitingStats = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -214,41 +75,45 @@ const DenverOrbitingStats = () => {
     offset: ["start end", "end start"],
   });
 
-  // Three phases: 0-0.33 = photos, 0.33-0.66 = logos, 0.66-1 = testimonials
-  const photoOpacity = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.4], [0, 1, 1, 0]);
-  const photoScale = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.4], [0.5, 1, 1, 0.5]);
-  const photoRotation = useTransform(scrollYProgress, [0, 0.4], [0, 180]);
+  // Three phases: photos → logos → testimonials
+  const photoOpacity = useTransform(scrollYProgress, [0.05, 0.15, 0.28, 0.35], [0, 1, 1, 0]);
+  const photoScale = useTransform(scrollYProgress, [0.05, 0.15, 0.28, 0.35], [0.6, 1, 1, 0.6]);
+  const photoRotate = useTransform(scrollYProgress, [0.05, 0.35], [0, 270]);
   
-  const logoOpacity = useTransform(scrollYProgress, [0.3, 0.45, 0.6, 0.7], [0, 1, 1, 0]);
-  const logoScale = useTransform(scrollYProgress, [0.3, 0.45, 0.6, 0.7], [0.5, 1, 1, 0.5]);
-  const logoRotation = useTransform(scrollYProgress, [0.3, 0.7], [0, 180]);
+  const logoOpacity = useTransform(scrollYProgress, [0.32, 0.42, 0.55, 0.62], [0, 1, 1, 0]);
+  const logoScale = useTransform(scrollYProgress, [0.32, 0.42, 0.55, 0.62], [0.6, 1, 1, 0.6]);
+  const logoRotate = useTransform(scrollYProgress, [0.32, 0.62], [0, 270]);
   
-  const testimonialOpacity = useTransform(scrollYProgress, [0.6, 0.75, 0.95], [0, 1, 1]);
-  const testimonialScale = useTransform(scrollYProgress, [0.6, 0.75, 0.95], [0.5, 1, 1]);
-  const testimonialRotation = useTransform(scrollYProgress, [0.6, 1], [0, 90]);
+  const testimonialOpacity = useTransform(scrollYProgress, [0.58, 0.68, 0.85], [0, 1, 1]);
+  const testimonialScale = useTransform(scrollYProgress, [0.58, 0.68, 0.85], [0.6, 1, 1]);
+  const testimonialRotate = useTransform(scrollYProgress, [0.58, 0.9], [0, 120]);
 
   // Number transitions
-  const num1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.3, 0.4], [0, 1, 1, 0]);
-  const num2Opacity = useTransform(scrollYProgress, [0.3, 0.45, 0.6, 0.7], [0, 1, 1, 0]);
-  const num3Opacity = useTransform(scrollYProgress, [0.6, 0.75, 0.95], [0, 1, 1]);
+  const num1Opacity = useTransform(scrollYProgress, [0.05, 0.15, 0.28, 0.35], [0, 1, 1, 0]);
+  const num2Opacity = useTransform(scrollYProgress, [0.32, 0.42, 0.55, 0.62], [0, 1, 1, 0]);
+  const num3Opacity = useTransform(scrollYProgress, [0.58, 0.68, 0.85], [0, 1, 1]);
+
+  const photoRadius = 180;
+  const logoRadius = 200;
+  const testimonialRadius = 280;
 
   return (
     <section 
       ref={containerRef}
-      className="relative h-[300vh]"
+      className="relative h-[250vh]"
       style={{ backgroundColor: "#0d1f22" }}
     >
       {/* Sticky container */}
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
         {/* Center content */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center w-full h-full">
           
-          {/* "500+" with photos */}
+          {/* PHASE 1: "500+" with photos */}
           <motion.div
             className="absolute flex items-center justify-center"
             style={{ opacity: num1Opacity }}
           >
-            <div className="text-center z-10">
+            <div className="text-center z-20">
               <span
                 className="font-display font-extrabold leading-none"
                 style={{
@@ -264,27 +129,45 @@ const DenverOrbitingStats = () => {
             </div>
           </motion.div>
           
-          {/* Orbiting photos */}
-          <motion.div style={{ opacity: photoOpacity, scale: photoScale }}>
-            {eventPhotos.map((photo, i) => (
-              <OrbitingPhoto
-                key={photo.id}
-                item={photo}
-                index={i}
-                total={eventPhotos.length}
-                rotation={photoRotation.get()}
-                scale={1}
-                opacity={1}
-              />
-            ))}
+          {/* Orbiting photos container */}
+          <motion.div 
+            className="absolute"
+            style={{ 
+              opacity: photoOpacity, 
+              scale: photoScale,
+              rotate: photoRotate,
+            }}
+          >
+            {eventPhotos.map((photo, i) => {
+              const angle = (360 / eventPhotos.length) * i - 90;
+              const x = Math.cos((angle * Math.PI) / 180) * photoRadius;
+              const y = Math.sin((angle * Math.PI) / 180) * photoRadius;
+              return (
+                <motion.div
+                  key={photo.id}
+                  className="absolute w-28 h-36 md:w-36 md:h-44 rounded-xl overflow-hidden shadow-2xl border-2 border-events-cream/20"
+                  style={{
+                    left: x,
+                    top: y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <img
+                    src={photo.image}
+                    alt="Event photo"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              );
+            })}
           </motion.div>
 
-          {/* "30+" with logos */}
+          {/* PHASE 2: "30+" with logos */}
           <motion.div
             className="absolute flex items-center justify-center"
             style={{ opacity: num2Opacity }}
           >
-            <div className="text-center z-10">
+            <div className="text-center z-20">
               <span
                 className="font-display font-extrabold leading-none"
                 style={{
@@ -300,31 +183,53 @@ const DenverOrbitingStats = () => {
             </div>
           </motion.div>
           
-          {/* Orbiting logos */}
-          <motion.div style={{ opacity: logoOpacity, scale: logoScale }}>
-            {brandLogos.map((logo, i) => (
-              <OrbitingLogo
-                key={logo.id}
-                item={logo}
-                index={i}
-                total={brandLogos.length}
-                rotation={logoRotation.get()}
-                scale={1}
-                opacity={1}
-              />
-            ))}
+          {/* Orbiting logos container */}
+          <motion.div 
+            className="absolute"
+            style={{ 
+              opacity: logoOpacity, 
+              scale: logoScale,
+              rotate: logoRotate,
+            }}
+          >
+            {brandLogos.map((logo, i) => {
+              const angle = (360 / brandLogos.length) * i - 90;
+              const x = Math.cos((angle * Math.PI) / 180) * logoRadius;
+              const y = Math.sin((angle * Math.PI) / 180) * logoRadius;
+              return (
+                <motion.div
+                  key={logo.id}
+                  className="absolute w-14 h-14 md:w-16 md:h-16 rounded-full bg-events-cream flex items-center justify-center shadow-lg"
+                  style={{
+                    left: x,
+                    top: y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <img
+                    src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=64`}
+                    alt={logo.content}
+                    className="w-8 h-8 md:w-10 md:h-10 object-contain"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </motion.div>
+              );
+            })}
           </motion.div>
 
-          {/* "Thousands" with testimonials */}
+          {/* PHASE 3: "Thousands" with testimonials */}
           <motion.div
             className="absolute flex items-center justify-center"
             style={{ opacity: num3Opacity }}
           >
-            <div className="text-center z-10">
+            <div className="text-center z-20">
               <span
                 className="font-display font-extrabold leading-none"
                 style={{
-                  fontSize: "clamp(3rem, 10vw, 8rem)",
+                  fontSize: "clamp(3rem, 10vw, 7rem)",
                   color: "#E1B624",
                 }}
               >
@@ -336,19 +241,47 @@ const DenverOrbitingStats = () => {
             </div>
           </motion.div>
           
-          {/* Orbiting testimonials */}
-          <motion.div style={{ opacity: testimonialOpacity, scale: testimonialScale }}>
-            {testimonials.map((testimonial, i) => (
-              <OrbitingTestimonial
-                key={testimonial.id}
-                item={testimonial}
-                index={i}
-                total={testimonials.length}
-                rotation={testimonialRotation.get()}
-                scale={1}
-                opacity={1}
-              />
-            ))}
+          {/* Orbiting testimonials container */}
+          <motion.div 
+            className="absolute"
+            style={{ 
+              opacity: testimonialOpacity, 
+              scale: testimonialScale,
+              rotate: testimonialRotate,
+            }}
+          >
+            {testimonials.map((testimonial, i) => {
+              const angle = (360 / testimonials.length) * i - 45;
+              const x = Math.cos((angle * Math.PI) / 180) * testimonialRadius;
+              const y = Math.sin((angle * Math.PI) / 180) * testimonialRadius;
+              return (
+                <motion.div
+                  key={testimonial.id}
+                  className="absolute w-40 md:w-48 rounded-2xl bg-events-teal/90 backdrop-blur-sm border border-events-cream/20 p-3 shadow-xl"
+                  style={{
+                    left: x,
+                    top: y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <div className="flex items-start gap-2">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.author}
+                      className="w-7 h-7 rounded-full shrink-0 border border-events-cream/30"
+                    />
+                    <div>
+                      <p className="text-events-cream/90 text-[10px] md:text-xs leading-relaxed italic">
+                        "{testimonial.content}"
+                      </p>
+                      <p className="text-events-yellow text-[9px] md:text-[10px] mt-1 font-medium">
+                        — {testimonial.author}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </div>
