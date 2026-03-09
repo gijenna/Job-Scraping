@@ -1,5 +1,5 @@
-import { Zap, Star, Crown, Briefcase, MessageCircle } from "lucide-react";
-
+import { Zap, Star, Crown, Briefcase, MessageCircle, Compass, Sparkles, GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 import EventQuote from "@/components/event/EventQuote";
 import EventBrandShowUp from "@/components/event/EventBrandShowUp";
 import EventStats from "@/components/event/EventStats";
