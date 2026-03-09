@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
@@ -78,6 +79,16 @@ const DenverHero = () => {
                   style={{ fontSize: "clamp(2rem, 4.5vw, 4rem)" }}
                 >
                   {phrases[phraseIndex]}
+                  {settled && phraseIndex === phrases.length - 1 && (
+                    <motion.span
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.4, type: "spring", stiffness: 400, damping: 10 }}
+                      className="inline-block ml-2 align-middle"
+                    >
+                      <Heart className="w-5 h-5 md:w-7 md:h-7 text-events-yellow fill-events-yellow inline-block" />
+                    </motion.span>
+                  )}
                 </motion.span>
               </AnimatePresence>
             </div>
