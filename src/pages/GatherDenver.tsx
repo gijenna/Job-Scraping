@@ -74,7 +74,7 @@ const denverQualityPoints = [
     icon: Target,
     stat: "92%",
     label: "Role-Relevant",
-    desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic."
+    desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle - not random job fair traffic."
   },
   {
     icon: Users,
