@@ -50,7 +50,6 @@ const tiers: TierAccordion[] = [
     id: "title",
     title: "GET USED TO IT",
     subtitle: "The entire event is your zone & we can get Funky.",
-    price: "$15,000–$25,000",
     spots: "1–2 available",
     backgroundImage: eventCrowdConvo,
     perks: [
