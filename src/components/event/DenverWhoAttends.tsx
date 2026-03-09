@@ -152,11 +152,11 @@ const DenverWhoAttends = () => {
         >
           <button
             onClick={() => setWidgetOpen(!widgetOpen)}
-            className="group inline-flex items-center gap-3 bg-black hover:bg-[#19363B] border border-[#E1B624]/40 text-[#F5E6D3] px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
+            className="group inline-flex items-center gap-3 bg-[#E1B624] hover:bg-[#E1B624]/90 border border-[#E1B624] text-black px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
           >
-            <BarChart3 className="w-5 h-5 text-[#E1B624]" />
+            <BarChart3 className="w-5 h-5 text-black" />
             <span>Recruiter or Data Nerd? See who comes</span>
-            <ChevronDown className={`w-4 h-4 text-[#E1B624] transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-6 h-6 text-black transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
           </button>
         </motion.div>
 
