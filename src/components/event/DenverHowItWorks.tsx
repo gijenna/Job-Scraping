@@ -3,8 +3,9 @@ import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
 import outsideDaysMusic from "@/assets/outside-days-music.png";
-import eventCrowd from "@/assets/event-crowd.jpg";
-import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
+import eventReiConvo from "@/assets/event-rei-convo.jpg";
+import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
+import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
 
 interface TierAccordion {
   id: string;
@@ -23,7 +24,7 @@ const tiers: TierAccordion[] = [
     subtitle: "Plenty of space for 5 reps & pizazz",
     price: "$3,000+",
     spots: "10 available",
-    backgroundImage: eventCrowdBooth,
+    backgroundImage: eventReiConvo,
     perks: [
       "Hiring table inside event",
       "Up to 5 brand representatives",
@@ -37,7 +38,7 @@ const tiers: TierAccordion[] = [
     subtitle: "A deluxe space with room for up to 20 reps, way more room to get creative",
     price: "$6,000–$12,000",
     spots: "4 available",
-    backgroundImage: eventCrowd,
+    backgroundImage: eventAlterraChat,
     perks: [
       "Everything in Starter, plus:",
       "Much larger activation space",
@@ -53,7 +54,7 @@ const tiers: TierAccordion[] = [
     subtitle: "The entire event is your zone & we can get Funky.",
     price: "$15,000–$25,000",
     spots: "1–2 available",
-    backgroundImage: outsideDaysMusic,
+    backgroundImage: eventYetiBestday,
     perks: [
       '"Outside Days Career Fair presented by [You]"',
       "Prime branding at entrance & stage",
@@ -172,7 +173,7 @@ const DenverHowItWorks = () => {
                       <div
                         className="relative p-6 md:p-10 min-h-[320px] md:min-h-[400px] flex flex-col justify-end"
                         style={{
-                          backgroundImage: `linear-gradient(to top, rgba(25, 54, 59, 0.95) 30%, rgba(25, 54, 59, 0.7) 70%, rgba(25, 54, 59, 0.5) 100%), url(${tier.backgroundImage})`,
+                          backgroundImage: `linear-gradient(to top, rgba(10, 60, 90, 0.95) 20%, rgba(10, 80, 120, 0.75) 60%, rgba(10, 100, 140, 0.6) 100%), url(${tier.backgroundImage})`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",
                         }}
