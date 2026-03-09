@@ -26,6 +26,7 @@ const RegistrantHero = ({
   time,
   tagline,
   registrationUrl,
+  sponsorPageUrl,
   overlayColor = "rgba(25, 54, 59, 0.65)",
   accentColor = "#E1B624",
 }: RegistrantHeroProps) => {
