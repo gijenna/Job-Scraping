@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
-import eventReiConvo from "@/assets/event-rei-convo.jpg";
-import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
-import eventYeti from "@/assets/event-yeti.jpg";
+import eventCotopaxiConvo from "@/assets/event-cotopaxi-convo.png";
+import eventYetiDenver from "@/assets/event-yeti-denver.png";
+import eventCrowdConvo from "@/assets/event-crowd-convo.png";
 import eventShar from "@/assets/event-shar.jpg";
 import eventYetiCropped from "@/assets/event-yeti-cropped.jpg";
 
