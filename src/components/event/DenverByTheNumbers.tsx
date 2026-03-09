@@ -125,7 +125,7 @@ const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; st
     <img
       src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
       alt={logo.name}
-      className={`${small ? 'w-6 h-6' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
+      className={`${small ? 'w-5 h-5' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
       style={{ mixBlendMode: 'multiply' }}
     />
   </motion.div>
