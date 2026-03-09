@@ -199,37 +199,52 @@ const DenverByTheNumbers = () => {
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
-        {/* Scattered elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {elements.map((item, i) => {
-            const posStyle: React.CSSProperties = { top: item.top };
-            if (item.left !== undefined) posStyle.left = item.left;
-            if (item.right !== undefined) posStyle.right = item.right;
+        {/* Desktop: scattered logos + testimonials */}
+        {!isMobile && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {elements.map((item, i) => {
+              const posStyle: React.CSSProperties = { top: item.top };
+              if (item.left !== undefined) posStyle.left = item.left;
+              if (item.right !== undefined) posStyle.right = item.right;
 
-            if (item.type === 'logo') {
+              if (item.type === 'logo') {
+                return (
+                  <LogoBubble
+                    key={i}
+                    logo={brandLogos[item.index]}
+                    style={posStyle}
+                    rotate={item.rotate}
+                    delay={0.08 + i * 0.04}
+                  />
+                );
+              }
               return (
-                <LogoBubble
+                <TestimonialCard
                   key={i}
-                  logo={brandLogos[item.index]}
+                  testimonial={testimonials[item.index]}
                   style={posStyle}
                   rotate={item.rotate}
-                  delay={0.2 + i * 0.15}
-                  small={isMobile}
-                  rain
+                  delay={0.08 + i * 0.04}
                 />
               );
-            }
-            return (
-              <TestimonialCard
+            })}
+          </div>
+        )}
+
+        {/* Mobile: logos rain down and land at bottom */}
+        {isMobile && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {mobileRainLogos.map((item, i) => (
+              <RainingLogo
                 key={i}
-                testimonial={testimonials[item.index]}
-                style={posStyle}
+                logo={item.logo}
+                leftPercent={item.leftPercent}
+                delay={item.delay}
                 rotate={item.rotate}
-                delay={0.08 + i * 0.04}
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Center stats — protected from overlap */}
         <div className="relative z-10 container mx-auto px-6">
