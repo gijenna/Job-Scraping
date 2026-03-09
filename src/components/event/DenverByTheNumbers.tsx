@@ -66,43 +66,6 @@ const DenverByTheNumbers = () => {
             </div>
           </div>
 
-          {/* Right-mid testimonial placeholder */}
-          <div className="absolute top-1/3 right-4 md:right-10 w-40 md:w-56 h-28 md:h-36 rounded-xl bg-events-teal/25 border border-events-yellow/15 p-4 rotate-[-3deg]">
-            <div className="text-events-cream/15 text-[10px] font-body italic leading-relaxed">
-              "Placeholder testimonial quote goes here..."
-            </div>
-            <div className="mt-2 text-events-yellow/20 text-[9px] font-body">— Brand Name</div>
-          </div>
-
-          {/* Bottom-left logo - REI */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="absolute bottom-[55%] left-8 md:left-20 w-16 md:w-20 h-16 md:h-20 rounded-full bg-events-cream flex items-center justify-center rotate-[-5deg] shadow-lg"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[1].domain}&sz=64`}
-              alt={brandLogos[1].name}
-              className="w-8 h-8 md:w-10 md:h-10 object-contain"
-            />
-          </motion.div>
-
-          {/* Bottom-right photo */}
-          <div className="absolute bottom-8 right-6 md:right-14 w-36 md:w-44 h-44 md:h-56 rounded-lg bg-events-teal/35 border border-events-cream/10 overflow-hidden rotate-[5deg]">
-            <div className="w-full h-full flex items-center justify-center text-events-cream/20 text-xs font-body">
-              Photo
-            </div>
-          </div>
-
-          {/* Mid-bottom testimonial */}
-          <div className="absolute bottom-20 left-1/4 w-44 md:w-52 h-24 md:h-32 rounded-xl bg-events-teal/20 border border-events-yellow/10 p-4 rotate-[2deg] hidden md:block">
-            <div className="text-events-cream/15 text-[10px] font-body italic leading-relaxed">
-              "Another placeholder testimonial..."
-            </div>
-            <div className="mt-2 text-events-yellow/20 text-[9px] font-body">— Brand Name</div>
-          </div>
 
           {/* Cotopaxi logo - top center-left */}
           <motion.div 
