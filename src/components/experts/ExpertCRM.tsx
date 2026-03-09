@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Trash2, ExternalLink, Copy } from "lucide-react";
+import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
 
 interface ExpertCRMProps {
@@ -68,10 +69,10 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
     let url: string;
     if (isBrandRep) {
       const repPrefix = assignment.city_slug === 'portland' ? 'pnw' : assignment.city_slug;
-      url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+      url = `${PUBLISHED_BASE_URL}/${repPrefix}reps/${expert.slug}`;
     } else {
       const cityPrefix = assignment.city_slug === 'denver' ? 'Denver' : assignment.city_slug === 'portland' ? 'Portland' : 'MN';
-      url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+      url = `${PUBLISHED_BASE_URL}/${cityPrefix}experts/${expert.slug}`;
     }
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
@@ -178,7 +179,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                               const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
                               linkPath = `/${cityPrefix}experts/${expert.slug}`;
                             }
-                            const url = `${window.location.origin}${linkPath}`;
+                            const url = `${PUBLISHED_BASE_URL}${linkPath}`;
                             return (
                               <div key={a.id} className="flex items-center gap-1.5">
                                 <code className="text-[11px] text-events-coral bg-events-coral/10 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={url}>

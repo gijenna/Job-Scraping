@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, ExternalLink, Trash2, Building2, Users } from "lucide-react";
+import { PUBLISHED_BASE_URL } from "@/lib/utils";
 
 interface BrandDashboardProps {
   experts: Expert[];
@@ -52,7 +53,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
 
   const copyLink = (expert: Expert, assignment: ExpertCityAssignment) => {
     const repPrefix = assignment.city_slug === 'portland' ? 'pnw' : assignment.city_slug;
-    const url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+    const url = `${PUBLISHED_BASE_URL}/${repPrefix}reps/${expert.slug}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
   };
@@ -160,7 +161,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                       <Badge variant="outline" className="text-events-cream/70 border-events-cream/15 text-xs shrink-0">
                         {cityName}
                       </Badge>
-                      <code className="text-[10px] text-events-yellow/70 truncate flex-1" title={`${window.location.origin}${linkPath}`}>
+                      <code className="text-[10px] text-events-yellow/70 truncate flex-1" title={`${PUBLISHED_BASE_URL}${linkPath}`}>
                         {linkPath}
                       </code>
                       <Button
@@ -173,7 +174,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                         <Copy className="w-3.5 h-3.5" />
                       </Button>
                       <a
-                        href={`${window.location.origin}${linkPath}`}
+                        href={`${PUBLISHED_BASE_URL}${linkPath}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-events-cream/50 hover:text-events-cream h-6 w-6 p-0 shrink-0 inline-flex items-center justify-center"
