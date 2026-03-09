@@ -240,7 +240,7 @@ const DenverHowItWorks = () => {
                   className="font-display font-bold text-2xl md:text-3xl mb-3"
                   style={{ color: "#F5E6D3" }}
                 >
-                  You select your storytelling team
+                  Select your storytelling team
                 </h3>
                 <p
                   className="font-body text-base md:text-lg leading-relaxed max-w-sm"
