@@ -2,6 +2,7 @@ import { Zap, Star, Crown, Briefcase, MessageCircle, Target, Users } from "lucid
 import DenverHero from "@/components/event/DenverHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverPowerfulPremium from "@/components/event/DenverPowerfulPremium";
+import DenverOrbitingStats from "@/components/event/DenverOrbitingStats";
 import DenverByTheNumbers from "@/components/event/DenverByTheNumbers";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import EventQuote from "@/components/event/EventQuote";
@@ -178,6 +179,7 @@ const GatherDenver = () => {
       <DenverFestivalPartner />
 
       <DenverPowerfulPremium />
+      <DenverOrbitingStats />
       <DenverByTheNumbers />
 
       
