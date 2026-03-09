@@ -66,7 +66,7 @@ const DenverFestivalPartner = () => {
               />
             </a>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
-              2026 Outside Days headliners — May 29–31, Denver CO
+              2026 Outside Days headliners - May 29–31, Denver CO
             </p>
           </motion.div>
         </div>
