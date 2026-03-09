@@ -361,13 +361,13 @@ interface FilterSelectProps {
 
 const FilterSelect = ({ label, options, value, onChange, placeholder }: FilterSelectProps) => (
   <div>
-    <label className="text-xs text-muted-foreground font-body uppercase tracking-wider mb-1.5 block">
+    <label className="text-xs text-[#F5E6D3]/50 font-body uppercase tracking-wider mb-1.5 block">
       {label}
     </label>
     <select
       value={value || ''}
       onChange={(e) => onChange(e.target.value || null)}
-      className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
+      className="w-full bg-[#19363B] border border-[#F5E6D3]/15 rounded-lg px-3 py-2.5 text-sm text-[#F5E6D3] font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5BC0EB]/40"
     >
       <option value="">{placeholder}</option>
       {options.map((opt) => (
