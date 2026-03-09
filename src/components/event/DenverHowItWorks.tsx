@@ -5,7 +5,6 @@ import { ChevronDown, Check } from "lucide-react";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
 import eventYeti from "@/assets/event-yeti.jpg";
-import eventYeti from "@/assets/event-yeti.jpg";
 import eventShar from "@/assets/event-shar.jpg";
 
 interface TierAccordion {
