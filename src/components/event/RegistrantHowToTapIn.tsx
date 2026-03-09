@@ -85,7 +85,7 @@ const RegistrantHowToTapIn = ({
               />
 
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 transition-opacity duration-300 group-hover:from-black/85" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/20 transition-opacity duration-300 group-hover:from-black/90" />
 
               {/* Content pinned to bottom */}
               <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col items-center text-center">
