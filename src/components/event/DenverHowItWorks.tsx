@@ -107,7 +107,7 @@ const DenverHowItWorks = () => {
         >
           <div className="flex items-center gap-4 mb-6">
             <span
-              className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-lg"
+              className="w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0"
               style={{ backgroundColor: "#E1B624", color: "#19363B" }}
             >
               1
