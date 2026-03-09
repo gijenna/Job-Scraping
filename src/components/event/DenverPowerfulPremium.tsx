@@ -10,37 +10,31 @@ interface BrandTestimonial {
 
 const brandTestimonials: BrandTestimonial[] = [
   {
-    quote: "We all met GREAT candidates. Three of us have a candidate in play, and I am hopefully extending an offer to one today. Huge success.",
-    firstName: "Martine",
-    company: "VF Corporation",
-    domain: "vfc.com",
-  },
-  {
-    quote: "We generated a LOT of excellent candidates & would be very happy to sponsor again! We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
-    firstName: "Hillary",
-    company: "Elevate Outdoor Collective",
-    domain: "elevateoc.com",
-  },
-  {
-    quote: "We had a GREAT time at Gather! I thought it was a very successful event - the volunteers you had helping were very much appreciated!",
-    firstName: "Jessica",
-    company: "YETI",
-    domain: "yeti.com",
-  },
-  {
-    quote: "We use Gather as a branding opportunity for when we're hiring in the future.",
+    quote: "We use Gather as a branding opportunity.",
     firstName: "Liz",
     company: "Cotopaxi",
     domain: "cotopaxi.com",
   },
   {
-    quote: "We are still OVER THE MOON after Gather. Basecamp has been my FAVORITE partner and the one that has generated the most goodwill and visibility for our nascent program.",
+    quote: "We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
+    firstName: "Hillary",
+    company: "Elevate Outdoor Collective",
+    domain: "elevateoc.com",
+  },
+  {
+    quote: "We had a GREAT time at Gather! I thought it was a very successful event.",
+    firstName: "Jessica",
+    company: "YETI",
+    domain: "yeti.com",
+  },
+  {
+    quote: "Basecamp has been my FAVORITE partner and the one that has generated the most goodwill and visibility for our program.",
     firstName: "Chris",
     company: "University of Denver",
     domain: "du.edu",
   },
   {
-    quote: "The job seekers were super motivated and highly aligned. I will definitely seek out this event in the future!",
+    quote: "I will definitely seek out this event in the future!",
     firstName: "Crystal",
     company: "Eleven Experience",
     domain: "elevenexperience.com",
@@ -163,7 +157,7 @@ const DenverPowerfulPremium = () => {
                   className="text-center max-w-2xl"
                 >
                   <p
-                    className="font-body text-sm md:text-base italic leading-relaxed mb-3"
+                    className="font-body text-xs md:text-sm italic leading-relaxed mb-3"
                     style={{ color: "#19363B" }}
                   >
                     "{current.quote}"
