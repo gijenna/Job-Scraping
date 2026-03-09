@@ -146,8 +146,8 @@ const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; le
     whileInView={{ y: 0, opacity: 1 }}
     viewport={{ once: true, margin: "200px" }}
     transition={{
-      y: { duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] },
-      opacity: { duration: 0.3, delay },
+      y: { duration: 3, delay, ease: [0.22, 1, 0.36, 1] },
+      opacity: { duration: 0.5, delay },
     }}
     className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
     style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
