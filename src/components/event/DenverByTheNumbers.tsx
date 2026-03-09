@@ -146,8 +146,8 @@ const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; le
     whileInView={{ y: 0, opacity: 1 }}
     viewport={{ once: true, margin: "200px" }}
     transition={{
-      y: { duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] },
-      opacity: { duration: 0.3, delay },
+      y: { duration: 3, delay, ease: [0.22, 1, 0.36, 1] },
+      opacity: { duration: 0.5, delay },
     }}
     className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
     style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
@@ -156,7 +156,7 @@ const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; le
       initial={{ scale: 1 }}
       whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: delay + 1.3, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay: delay + 2.9, ease: "easeOut" }}
     >
       <img
         src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
