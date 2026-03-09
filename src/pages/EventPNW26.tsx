@@ -10,15 +10,18 @@ import PnwWhosComing from "@/components/event/PnwWhosComing";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com" },
+  { name: "On Running", domain: "on-running.com" },
   { name: "Arc'teryx", domain: "arcteryx.com" },
+  { name: "Cotopaxi", domain: "cotopaxi.com" },
+  { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org" },
+  { name: "Superfeet", domain: "superfeet.com" },
+  { name: "Popfly", domain: "popfly.com" },
   { name: "Brooks", domain: "brooksrunning.com" },
   { name: "Specialized", domain: "specialized.com" },
-  { name: "Superfeet", domain: "superfeet.com" },
   { name: "Nike", domain: "nike.com" },
   { name: "Columbia", domain: "columbia.com" },
   { name: "Patagonia", domain: "patagonia.com" },
   { name: "KEEN", domain: "keenfootwear.com" },
-  { name: "On Running", domain: "on-running.com" },
   { name: "Lululemon", domain: "lululemon.com" },
   { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
 ];
