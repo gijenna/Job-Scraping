@@ -175,16 +175,10 @@ const DenverHowItWorks = () => {
                           backgroundPosition: tier.id === "title" ? "center 58%" : "center",
                         }}
                       >
-                        {/* Price */}
+                        {/* Spots */}
                         <div className="mb-6">
                           <p
-                            className="font-display font-extrabold text-4xl md:text-5xl"
-                            style={{ color: "#E1B624" }}
-                          >
-                            {tier.price}
-                          </p>
-                          <p
-                            className="font-body text-sm mt-1"
+                            className="font-body text-sm"
                             style={{ color: "#ED7660" }}
                           >
                             {tier.spots}
