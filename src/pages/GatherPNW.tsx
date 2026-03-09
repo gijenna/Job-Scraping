@@ -1,23 +1,14 @@
-import { Zap, Star, Crown, Briefcase, MessageCircle, Mic } from "lucide-react";
-import heroPnw from "@/assets/hero-pnw.mp4";
-import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
-import EventHero from "@/components/event/EventHero";
+import { motion } from "framer-motion";
+
+import PnwHero from "@/components/event/PnwHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
-import EventQuote from "@/components/event/EventQuote";
-import EventBrandShowUp from "@/components/event/EventBrandShowUp";
-import EventStats from "@/components/event/EventStats";
-import EventTiers from "@/components/event/EventTiers";
-import EventCTA from "@/components/event/EventCTA";
-import EventROI from "@/components/event/EventROI";
-import EventSetup from "@/components/event/EventSetup";
-import EventTalentInsights from "@/components/event/EventTalentInsights";
-import Testimonials from "@/components/Testimonials";
-import Schedule from "@/components/Schedule";
-import RecruiterValue from "@/components/RecruiterValue";
-import insightTalentPool from "@/assets/insight-talent-pool.jpg";
-import insightBrandInfluence from "@/assets/insight-brand-influence.jpg";
-import insightSpmPipeline from "@/assets/insight-spm-pipeline.jpg";
-import insightPivots from "@/assets/insight-pivots.jpg";
+import PnwPowerfulPremium from "@/components/event/PnwPowerfulPremium";
+import PnwByTheNumbers from "@/components/event/PnwByTheNumbers";
+import PnwGallery from "@/components/event/PnwGallery";
+import PnwHowItWorks from "@/components/event/PnwHowItWorks";
+import PnwUOPartner from "@/components/event/PnwUOPartner";
+import PnwWhoAttends from "@/components/event/PnwWhoAttends";
+import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarousel";
 
 const pnwBrands = [
   { name: "Nike", domain: "nike.com" },
@@ -28,204 +19,62 @@ const pnwBrands = [
   { name: "KEEN", domain: "keenfootwear.com" },
   { name: "On Running", domain: "on-running.com" },
   { name: "Lululemon", domain: "lululemon.com" },
-  { name: "Garmin", domain: "garmin.com" },
-  { name: "Snow Peak", domain: "snowpeak.com" },
-  { name: "Ruffwear", domain: "ruffwear.com" },
-  { name: "Rivian", domain: "rivian.com" },
-  { name: "HP Inc", domain: "hp.com" },
-  { name: "AllTrails", domain: "alltrails.com" },
-  { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
+  { name: "Rumpl", domain: "rumpl.com" },
+  { name: "Arc'teryx", domain: "arcteryx.com" },
+  { name: "Brooks", domain: "brooksrunning.com" },
+  { name: "Specialized", domain: "specialized.com" },
   { name: "Superfeet", domain: "superfeet.com" },
+  { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
+  { name: "Ruffwear", domain: "ruffwear.com" },
+  { name: "Snow Peak", domain: "snowpeak.com" },
+  { name: "AllTrails", domain: "alltrails.com" },
   { name: "Microsoft", domain: "microsoft.com" },
-  { name: "Bob's Red Mill", domain: "bobsredmill.com" },
-];
-
-const pnwDonutData = [
-  { name: "Marketing & Creative", value: 38, color: "#ED7660" },
-  { name: "Product, Design & Engineering", value: 22, color: "#19363B" },
-  { name: "Operations & Supply Chain", value: 15, color: "#809482" },
-  { name: "Sales & Biz Dev", value: 12, color: "#E1B624" },
-  { name: "Outdoor Ed & Tech", value: 8, color: "#BD665A" },
-  { name: "Career Transitioners", value: 5, color: "#715F61" },
-];
-
-const pnwBarData = [
-  { role: "Brand Strategy & PR", count: 85 },
-  { role: "Product Development", count: 62 },
-  { role: "UX/Graphic Design", count: 48 },
-  { role: "Graduate Students (SPM)", count: 55 },
-  { role: "Operations & Logistics", count: 38 },
-  { role: "Sales & Partnerships", count: 32 },
-  { role: "Directors & VPs", count: 28 },
-];
-
-const pnwStats = [
-  { num: "425+", label: "Registrants (2025)" },
-  { num: "38%", label: "Marketing & Creative" },
-  { num: "22%", label: "Product & Design" },
-  { num: "20%+", label: "UO SPM Students" },
-];
-
-const pnwTalentInsights = [
-  {
-    title: 'The "Design-to-Delivery" Talent Pool',
-    stat: "22% + 15%",
-    desc: "Recruiters meet the entire product lifecycle — from R&D labs to logistics centers. With 22% in Product/Design and 15% in Ops/Supply Chain, hire across the board from a single event.",
-    image: insightTalentPool,
-  },
-  {
-    title: "High Brand Influence & Advocacy",
-    stat: "~40%",
-    desc: "Nearly 40% work in Marketing & Comms. Sponsors get products in front of the people who manage social, PR, and brand strategy at Nike, Columbia, and On Running.",
-    image: insightBrandInfluence,
-  },
-  {
-    title: "The UO SPM Pipeline",
-    stat: "20%+",
-    desc: "Heavy concentration of UO Sports Product Management grad students — a program built to feed the top levels of footwear and apparel. First-look advantage at the PNW's most specialized emerging talent.",
-    image: insightSpmPipeline,
-  },
-  {
-    title: "A Hub for Industry Pivots",
-    stat: "High Volume",
-    desc: "Professionals from tech, military, and healthcare pivoting into outdoor — bringing transferable skills like R&D and Strategic Ops that are often missing from traditional outdoor networks.",
-    image: insightPivots,
-  },
-];
-
-const pnwSchedule = [
-  { time: "4:30–5 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
-  { time: "5:30–8 PM", label: "Main Event", desc: "Registrants network with brands, industry experts & each other" },
-  { time: "6–6:45 PM", label: "How I Broke In Panel", desc: "45 minutes of concrete career steps, networking tactics, and Q&A" },
-  { time: "8–8:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
-];
-
-const pnwShowUpOptions = [
-  {
-    icon: Briefcase,
-    title: "Employer Table / Booth",
-    desc: "Recruiters or hiring managers take 5–10 minute quality conversations. Space for banners, pull-ups, printed materials, QR codes to your careers page, and swag.",
-    tag: "Most Popular",
-    example: "Columbia brings product samples and a banner; VF brands set up QR-code stands linking directly to open roles. Keen brings swag bags with branded materials.",
-  },
-  {
-    icon: MessageCircle,
-    title: "Industry Expert / Mentor",
-    desc: "Your leaders are featured by name — called out just as prominently as the brand itself. Show up as approachable mentors, not just a logo. 1:1 mini-mentorship conversations.",
-    tag: "Low Lift",
-    example: "Individual leaders from Nike, Adidas, and Columbia have participated as named mentors — even when their company wasn't formally tabling.",
-  },
-  {
-    icon: Mic,
-    title: "Panel Speaker",
-    desc: "Join the 'How I Broke In' panel — 45 minutes of concrete career steps, networking tactics, and Q&A. Your people become the face of what it means to work at your brand.",
-    tag: "High Visibility",
-    example: "Panelists share their exact career trajectory — who they talked to, what they said, how they found the role. It's the most-requested segment at every event.",
-  },
-];
-
-const pnwTiers = [
-  {
-    name: "Hiring Table",
-    price: "$3,000+",
-    spots: "7 available",
-    icon: Zap,
-    popular: false,
-    bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
-    perks: [
-      "Hiring table inside event",
-      "Up to 5 brand representatives",
-      "Logo & careers page link on event website & registration",
-      "Exposure to our 300K+ community",
-    ],
-  },
-  {
-    name: "Deluxe Hiring + Branding",
-    price: "$6,000–12,000",
-    spots: "4 available",
-    icon: Star,
-    popular: true,
-    bestFor: "Hiring AND marketing teams looking to split budget, or brands consolidating niche influence",
-    perks: [
-      "Everything in Hiring Table, plus:",
-      "Much larger activation space",
-      "Up to 20 brand representatives",
-      "Room for product display or activation",
-      "2-minute stage spotlight during main program",
-      "Dedicated social post to 50K LinkedIn / 80K Facebook / 40K IG",
-      'Free Candidate Match boost ($400) from <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" class="text-primary underline hover:opacity-80">Basecamp Match</a>',
-    ],
-  },
-  {
-    name: "Title Sponsorship",
-    price: "$15,000–$25,000",
-    spots: "1–2 available",
-    icon: Crown,
-    popular: false,
-    bestFor: "Major industry players wanting top billing and full integration",
-    perks: [
-      '"Gather PNW 2026, Presented by [You]"',
-      "Keynote introduction opportunity",
-      "Prime branding at entrance, bar & stage",
-      "Post-event engagement & lead report",
-      "Custom in-person and/or digital activation built with your creative team",
-    ],
-  },
 ];
 
 const GatherPNW = () => {
   return (
     <main className="bg-background min-h-screen">
-      <EventHero
-        videoSrc={heroPnw}
-        tagline="Basecamp Outdoor × University of Oregon"
-        title=""
-        titleAccent=""
-        subtitle={"The Pacific Northwest's premier outdoor industry career event.\n300+ registrants & up to 20 brands. Intimate, high-quality networking at U of O's new Portland Campus."}
-        date="April 16, 2026 · Portland, OR · 5:30–8:30 PM"
-        ctaEmail="Austin@basecampjobs.com"
-        ctaSubject="I'd like to sponsor Gather PNW 2026"
-        logoSrc={gatherPnwLogo}
-      />
+      <PnwHero />
 
       <EventLogoTicker
         brands={pnwBrands}
         headline="Network alongside professionals from the industry's top brands"
       />
 
-      <RecruiterValue />
+      <PnwUOPartner />
 
-      <Testimonials />
+      <PnwPowerfulPremium />
+      <PnwByTheNumbers />
+      <MobileTestimonialCarousel />
+      <PnwHowItWorks />
+      <PnwGallery />
 
-      <EventStats
-        donutData={pnwDonutData}
-        barData={pnwBarData}
-        stats={pnwStats}
-        subtitle="Candidates worth putting in front of a hiring manager."
-      />
+      <PnwWhoAttends />
 
-      <EventTalentInsights insights={pnwTalentInsights} />
-
-      <EventBrandShowUp options={pnwShowUpOptions} />
-
-      <Schedule items={pnwSchedule} />
-
-      <EventSetup variant="pnw" />
-      <EventROI eventSize="250–500" />
-
-      <EventQuote title="Make it a collab with marketing" quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
-
-      <EventTiers
-        tiers={pnwTiers}
-        ctaEmail="Austin@basecampjobs.com"
-        eventName="Gather PNW 2026"
-      />
-
-      <EventCTA
-        ctaEmail="Austin@basecampjobs.com"
-        eventName="Gather PNW 2026"
-        subtitle="Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event — where 250–500 highly relevant professionals gather in one room."
-      />
+      {/* Be Part of This CTA */}
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-3xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-display font-extrabold text-4xl md:text-5xl text-foreground mb-8">
+              Be Part of This
+            </h2>
+            <a
+              href="mailto:Austin@basecampjobs.com"
+              className="inline-block font-display font-bold text-lg px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 mb-6"
+              style={{ backgroundColor: "#FEE123", color: "#154733" }}
+            >
+              Austin will take care of you
+            </a>
+            <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
+              Basecamp works with every budget, because every brand deserves to Gather.
+            </p>
+          </motion.div>
+        </div>
+      </section>
     </main>
   );
 };
