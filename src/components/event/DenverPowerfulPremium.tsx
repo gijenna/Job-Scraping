@@ -45,6 +45,12 @@ const brandTestimonials: BrandTestimonial[] = [
     company: "On Running",
     domain: "on-running.com",
   },
+  {
+    quote: "We all met GREAT candidates. I am hopefully extending an offer to one today. Huge success.",
+    firstName: "Martine",
+    company: "The North Face",
+    domain: "thenorthface.com",
+  },
 ];
 
 const DenverPowerfulPremium = () => {
