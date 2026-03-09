@@ -75,25 +75,34 @@ const EventPNW26 = () => {
             className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
           >
             {pnwBrands.map((brand) => (
-              <div
-                key={brand.name}
-                className="flex flex-col items-center gap-2 group"
-              >
-                <img
-                  src={`https://logo.clearbit.com/${brand.domain}`}
-                  alt={brand.name}
-                  className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                  loading="lazy"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    target.src = `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
-                    target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
-                  }}
-                />
-                <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">
-                  {brand.name}
-                </span>
-              </div>
+              {(() => {
+                const content = (
+                  <div className="flex flex-col items-center gap-2 group">
+                    <img
+                      src={`https://logo.clearbit.com/${brand.domain}`}
+                      alt={brand.name}
+                      className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.src = `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
+                        target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
+                      }}
+                    />
+                    <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">
+                      {brand.name}
+                    </span>
+                  </div>
+                );
+
+                return brand.url ? (
+                  <a key={brand.name} href={brand.url} target="_blank" rel="noopener noreferrer">
+                    {content}
+                  </a>
+                ) : (
+                  <div key={brand.name}>{content}</div>
+                );
+              })()}
             ))}
           </motion.div>
         </div>
