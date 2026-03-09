@@ -66,7 +66,7 @@ const DenverHero = () => {
             </h2>
 
             {/* Rotating phrase */}
-            <div className="relative w-full overflow-hidden" style={{ height: "clamp(2.5rem, 5vw, 4.5rem)" }}>
+            <div className="relative w-full overflow-hidden flex justify-center lg:justify-start" style={{ height: "clamp(2.5rem, 5vw, 4.5rem)" }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phraseIndex}
@@ -74,7 +74,7 @@ const DenverHero = () => {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-1/2 lg:left-0 top-0 -translate-x-1/2 lg:translate-x-0 font-headline font-bold text-events-yellow whitespace-nowrap leading-none"
+                  className="absolute left-1/2 -translate-x-1/2 lg:left-0 lg:translate-x-0 top-0 font-headline font-bold text-events-yellow whitespace-nowrap leading-none text-center lg:text-left"
                   style={{ fontSize: "clamp(2rem, 4.5vw, 4rem)" }}
                 >
                   {phrases[phraseIndex]}
