@@ -157,7 +157,7 @@ const DenverPowerfulPremium = () => {
                   className="text-center max-w-2xl"
                 >
                   <p
-                    className="font-body text-sm md:text-base italic leading-relaxed mb-3"
+                    className="font-body text-xs md:text-sm italic leading-relaxed mb-3"
                     style={{ color: "#19363B" }}
                   >
                     "{current.quote}"
