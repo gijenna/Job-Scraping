@@ -19,7 +19,7 @@ const experienceSegments = [
     count: "~245",
     pct: 40,
     yearHighlight: "6–10",
-    desc: " years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
+    desc: " years of experience. Your \"engine room\" - professionals who entered during the massive growth period of the mid-2010s.",
     color: "#5BC0EB",
   },
   {
