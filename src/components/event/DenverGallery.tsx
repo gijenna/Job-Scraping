@@ -77,7 +77,7 @@ const DenverGallery = () => {
           </button>
 
           {/* Center image (main) */}
-          <div className="relative w-full max-w-[500px] lg:max-w-[600px]">
+          <div className="relative w-full max-w-[1000px] lg:max-w-[1200px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
@@ -87,20 +87,11 @@ const DenverGallery = () => {
                 transition={{ duration: 0.3 }}
                 className="aspect-[4/3] rounded-xl overflow-hidden"
               >
-                {galleryImages[currentIndex].src ? (
-                  <img
-                    src={galleryImages[currentIndex].src}
-                    alt={galleryImages[currentIndex].caption}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div 
-                    className="w-full h-full flex items-center justify-center text-sm font-body"
-                    style={{ backgroundColor: "#19363B", color: "#F5E6D3", opacity: 0.4 }}
-                  >
-                    Upload Photo {currentIndex + 1}
-                  </div>
-                )}
+                <img
+                  src={galleryImages[currentIndex].src}
+                  alt={galleryImages[currentIndex].caption}
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
             </AnimatePresence>
 
