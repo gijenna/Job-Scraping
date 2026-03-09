@@ -65,6 +65,7 @@ const App = () => (
           <Route path="/Portlandexperts/:name" element={<ExpertInvite citySlug="portland" />} />
           <Route path="/MNexperts" element={<ExpertInvite citySlug="minneapolis" />} />
           <Route path="/MNexperts/:name" element={<ExpertInvite citySlug="minneapolis" />} />
+          <Route path="/card-preview" element={<CardStylePreview />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
