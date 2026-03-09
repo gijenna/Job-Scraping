@@ -2,18 +2,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import eventBoa from "@/assets/event-boa.jpg";
+import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
+import eventOutsideBooth from "@/assets/event-outside-booth.jpg";
+import eventPow from "@/assets/event-pow.jpg";
+import eventRei from "@/assets/event-rei.jpg";
+import eventShar from "@/assets/event-shar.jpg";
+import eventYeti from "@/assets/event-yeti.jpg";
+
 interface GalleryImage {
   src: string;
   caption: string;
 }
 
-// Placeholder images - replace with actual event photos
 const galleryImages: GalleryImage[] = [
-  { src: "", caption: "Networking at Gather Denver 2025" },
-  { src: "", caption: "Brand activations in full swing" },
-  { src: "", caption: "Career coaching sessions" },
-  { src: "", caption: "Industry leaders connecting" },
-  { src: "", caption: "The outdoor community comes together" },
+  { src: eventRei, caption: "REI connecting with outdoor professionals" },
+  { src: eventYeti, caption: "YETI brand activation" },
+  { src: eventCareerCoaching, caption: "Career coaching sessions" },
+  { src: eventOutsideBooth, caption: "Outside booth engagement" },
+  { src: eventBoa, caption: "BOA networking moment" },
+  { src: eventPow, caption: "POW brand presence" },
+  { src: eventShar, caption: "Industry leaders connecting" },
 ];
 
 const DenverGallery = () => {
