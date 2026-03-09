@@ -28,7 +28,7 @@ const DenverFestivalPartner = () => {
 
             <p className="text-events-cream/70 font-body text-lg md:text-xl leading-relaxed">
               We're the only <span className="font-semibold text-events-cream">FREE</span> activation
-              at Outside Days' 40,000-person festival — and we've been a partner since day one.
+              at Outside Days' 40,000-person festival - and we've been a partner since day one.
             </p>
 
             <p className="text-events-yellow/80 font-body text-sm italic">
