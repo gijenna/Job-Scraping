@@ -154,12 +154,15 @@ const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: T
 );
 
 const DenverByTheNumbers = () => {
+  const isMobile = useIsMobile();
+  const elements = isMobile ? mobileScatteredElements : scatteredElements;
+
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
         {/* Scattered elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {scatteredElements.map((item, i) => {
+          {elements.map((item, i) => {
             const posStyle: React.CSSProperties = { top: item.top };
             if (item.left !== undefined) posStyle.left = item.left;
             if (item.right !== undefined) posStyle.right = item.right;
@@ -172,6 +175,7 @@ const DenverByTheNumbers = () => {
                   style={posStyle}
                   rotate={item.rotate}
                   delay={0.08 + i * 0.04}
+                  small={isMobile}
                 />
               );
             }
