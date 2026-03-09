@@ -57,17 +57,19 @@ const mobileScatteredElements: Array<{
   right?: string;
   rotate: string;
 }> = [
-  { type: 'logo', index: 0, top: '2%', left: '3%', rotate: '-5deg' },
-  { type: 'logo', index: 1, top: '2%', right: '3%', rotate: '7deg' },
-  { type: 'logo', index: 2, top: '18%', right: '2%', rotate: '-8deg' },
-  { type: 'logo', index: 3, top: '35%', left: '2%', rotate: '6deg' },
-  { type: 'logo', index: 4, top: '52%', right: '2%', rotate: '-4deg' },
-  { type: 'logo', index: 5, top: '68%', left: '2%', rotate: '9deg' },
-  { type: 'logo', index: 6, top: '68%', right: '3%', rotate: '-7deg' },
-  { type: 'logo', index: 7, top: '85%', left: '5%', rotate: '5deg' },
-  { type: 'logo', index: 8, top: '85%', right: '5%', rotate: '-3deg' },
-  { type: 'logo', index: 9, top: '50%', left: '4%', rotate: '11deg' },
-  { type: 'logo', index: 10, top: '35%', right: '3%', rotate: '-6deg' },
+  // The 3 stats sit at roughly 15%, 45%, 75% vertically
+  // Place logos in gaps: 0-10%, 25-38%, 55-65%, 85-95%
+  { type: 'logo', index: 0, top: '1%', left: '5%', rotate: '-6deg' },
+  { type: 'logo', index: 1, top: '5%', right: '8%', rotate: '8deg' },
+  { type: 'logo', index: 2, top: '27%', left: '3%', rotate: '10deg' },
+  { type: 'logo', index: 3, top: '30%', right: '4%', rotate: '-5deg' },
+  { type: 'logo', index: 4, top: '56%', left: '6%', rotate: '-9deg' },
+  { type: 'logo', index: 5, top: '60%', right: '5%', rotate: '7deg' },
+  { type: 'logo', index: 6, top: '86%', left: '4%', rotate: '5deg' },
+  { type: 'logo', index: 7, top: '88%', right: '6%', rotate: '-8deg' },
+  { type: 'logo', index: 8, top: '38%', left: '8%', rotate: '12deg' },
+  { type: 'logo', index: 9, top: '70%', right: '3%', rotate: '-4deg' },
+  { type: 'logo', index: 10, top: '95%', left: '40%', rotate: '6deg' },
 ];
 
 // Desktop scattered placements — use full width including closer to center, evenly distributed
