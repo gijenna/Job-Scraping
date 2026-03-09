@@ -257,7 +257,7 @@ const DenverHowItWorks = () => {
               style={{ rotate: "3deg" }}
             >
               <img
-                src={eventYetiBestday}
+                src={eventYeti}
                 alt="YETI team at event"
                 className="w-full h-full object-cover object-bottom"
               />
