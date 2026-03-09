@@ -64,6 +64,7 @@ const EventOutsideDays26 = () => {
         expertsPageUrl="/Denverexperts"
         accentColor="#E1B624"
         bgColor="#0d1f22"
+        images={[eventCrowd, eventBoa, eventGroupPhoto]}
       />
 
       <RegistrantVenue
