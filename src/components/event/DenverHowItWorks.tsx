@@ -243,7 +243,7 @@ const DenverHowItWorks = () => {
                   You select your storytelling team
                 </h3>
                 <p
-                  className="font-body text-base md:text-lg leading-relaxed"
+                  className="font-body text-base md:text-lg leading-relaxed max-w-sm"
                   style={{ color: "#F5E6D3", opacity: 0.8 }}
                 >
                   A mix of HR, <strong style={{ color: "#ED7660" }}>Marketing</strong>, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
@@ -254,7 +254,7 @@ const DenverHowItWorks = () => {
               initial={{ opacity: 0, scale: 0.95, rotate: 2 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 3 }}
               viewport={{ once: true }}
-              className="shrink-0 w-48 h-56 md:w-56 md:h-64 rounded-2xl overflow-hidden shadow-xl self-center md:self-start"
+              className="shrink-0 w-56 h-36 md:w-72 md:h-44 rounded-2xl overflow-hidden shadow-xl self-center md:self-start"
               style={{ rotate: "3deg" }}
             >
               <img
