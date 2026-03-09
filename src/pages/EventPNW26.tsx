@@ -51,6 +51,14 @@ const EventPNW26 = () => {
         headline="Brands & professionals in the room"
       />
 
+      <RegistrantHowToTapIn
+        registrationUrl={TYPEFORM_PNW}
+        sponsorPageUrl="/gather-pnw"
+        expertsPageUrl="/Portlandexperts"
+        accentColor="#FEE123"
+        bgColor="#0d2b1f"
+      />
+
       {/* Brand Showcase */}
       <section className="py-16 md:py-24 px-6 bg-events-cream">
         <div className="container mx-auto max-w-5xl">
