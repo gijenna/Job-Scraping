@@ -9,21 +9,21 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import PnwWhosComing from "@/components/event/PnwWhosComing";
 
 const pnwBrands = [
-  { name: "Rumpl", domain: "rumpl.com" },
-  { name: "On Running", domain: "on-running.com" },
-  { name: "Arc'teryx", domain: "arcteryx.com" },
-  { name: "Cotopaxi", domain: "cotopaxi.com" },
-  { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org" },
-  { name: "Superfeet", domain: "superfeet.com" },
-  { name: "Popfly", domain: "popfly.com" },
-  { name: "Brooks", domain: "brooksrunning.com" },
-  { name: "Specialized", domain: "specialized.com" },
-  { name: "Nike", domain: "nike.com" },
-  { name: "Columbia", domain: "columbia.com" },
-  { name: "Patagonia", domain: "patagonia.com" },
-  { name: "KEEN", domain: "keenfootwear.com" },
-  { name: "Lululemon", domain: "lululemon.com" },
-  { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
+  { name: "Rumpl", domain: "rumpl.com", url: undefined as string | undefined },
+  { name: "On Running", domain: "on-running.com", url: undefined as string | undefined },
+  { name: "Arc'teryx", domain: "arcteryx.com", url: undefined as string | undefined },
+  { name: "Cotopaxi", domain: "cotopaxi.com", url: undefined as string | undefined },
+  { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org", url: "https://www.oregonoutdooralliance.org" },
+  { name: "Superfeet", domain: "superfeet.com", url: "https://www.superfeet.com" },
+  { name: "Popfly", domain: "popfly.com", url: undefined as string | undefined },
+  { name: "Brooks", domain: "brooksrunning.com", url: undefined as string | undefined },
+  { name: "Specialized", domain: "specialized.com", url: undefined as string | undefined },
+  { name: "Nike", domain: "nike.com", url: undefined as string | undefined },
+  { name: "Columbia", domain: "columbia.com", url: undefined as string | undefined },
+  { name: "Patagonia", domain: "patagonia.com", url: undefined as string | undefined },
+  { name: "KEEN", domain: "keenfootwear.com", url: undefined as string | undefined },
+  { name: "Lululemon", domain: "lululemon.com", url: undefined as string | undefined },
+  { name: "Dovetail Workwear", domain: "dovetailworkwear.com", url: undefined as string | undefined },
 ];
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
