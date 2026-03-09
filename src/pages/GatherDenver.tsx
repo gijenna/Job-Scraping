@@ -161,7 +161,7 @@ const denverTiers = [
     bestFor: "Major players wanting top billing at the biggest outdoor career event of the year",
     perks: [
       '"Outside Days Career Fair presented by [You]"',
-      "Prime branding at entrance & stage",
+      "Prime branding at entrance",
       "Post-event engagement & lead report",
       "Custom in-person and/or digital activation built with your creative team",
     ],
