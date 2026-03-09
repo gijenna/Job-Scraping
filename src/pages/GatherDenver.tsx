@@ -4,6 +4,7 @@ import DenverHero from "@/components/event/DenverHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverPowerfulPremium from "@/components/event/DenverPowerfulPremium";
 import DenverByTheNumbers from "@/components/event/DenverByTheNumbers";
+import DenverGallery from "@/components/event/DenverGallery";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import EventQuote from "@/components/event/EventQuote";
 import EventBrandShowUp from "@/components/event/EventBrandShowUp";
@@ -179,6 +180,7 @@ const GatherDenver = () => {
 
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
+      <DenverGallery />
 
       <Testimonials />
 

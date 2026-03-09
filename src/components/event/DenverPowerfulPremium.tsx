@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 interface BrandTestimonial {
   quote: string;
   firstName: string;
+  company: string;
   domain: string;
 }
 
@@ -11,36 +12,43 @@ const brandTestimonials: BrandTestimonial[] = [
   {
     quote: "We all met GREAT candidates. Three of us have a candidate in play, and I am hopefully extending an offer to one today. Huge success.",
     firstName: "Martine",
+    company: "VF Corporation",
     domain: "vfc.com",
   },
   {
     quote: "We generated a LOT of excellent candidates & would be very happy to sponsor again! We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
     firstName: "Hillary",
+    company: "Elevate Outdoor Collective",
     domain: "elevateoc.com",
   },
   {
     quote: "We had a GREAT time at Gather! I thought it was a very successful event - the volunteers you had helping were very much appreciated!",
     firstName: "Jessica",
+    company: "YETI",
     domain: "yeti.com",
   },
   {
     quote: "We use Gather as a branding opportunity for when we're hiring in the future.",
     firstName: "Liz",
+    company: "Cotopaxi",
     domain: "cotopaxi.com",
   },
   {
     quote: "We are still OVER THE MOON after Gather. Basecamp has been my FAVORITE partner and the one that has generated the most goodwill and visibility for our nascent program.",
     firstName: "Chris",
+    company: "University of Denver",
     domain: "du.edu",
   },
   {
     quote: "The job seekers were super motivated and highly aligned. I will definitely seek out this event in the future!",
     firstName: "Crystal",
+    company: "Eleven Experience",
     domain: "elevenexperience.com",
   },
   {
     quote: "We love sponsoring an event that breeds genuine connections and brings together curious minds.",
     firstName: "Miranda",
+    company: "On Running",
     domain: "on-running.com",
   },
 ];
@@ -144,7 +152,7 @@ const DenverPowerfulPremium = () => {
             </motion.p>
 
             {/* Rotating testimonials */}
-            <div className="h-[140px] md:h-[120px] flex items-center justify-center">
+            <div className="h-[130px] md:h-[110px] flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
@@ -155,22 +163,29 @@ const DenverPowerfulPremium = () => {
                   className="text-center max-w-2xl"
                 >
                   <p
-                    className="font-body text-base md:text-lg italic leading-relaxed mb-4"
+                    className="font-body text-sm md:text-base italic leading-relaxed mb-3"
                     style={{ color: "#19363B" }}
                   >
                     "{current.quote}"
                   </p>
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-1.5">
                     <span
-                      className="font-display font-semibold text-sm"
+                      className="font-display font-semibold text-xs md:text-sm"
                       style={{ color: "#19363B" }}
                     >
-                      @{current.firstName}
+                      {current.firstName} @
+                    </span>
+                    <span
+                      className="font-display font-semibold text-xs md:text-sm"
+                      style={{ color: "#19363B" }}
+                    >
+                      {current.company}
                     </span>
                     <img
                       src={`https://www.google.com/s2/favicons?domain=${current.domain}&sz=64`}
-                      alt={current.firstName}
-                      className="w-5 h-5 object-contain"
+                      alt={current.company}
+                      className="w-4 h-4 object-contain ml-0.5"
+                      style={{ filter: "drop-shadow(0 0 0 transparent)" }}
                     />
                   </div>
                 </motion.div>
@@ -185,7 +200,7 @@ const DenverPowerfulPremium = () => {
                   onClick={() => setCurrentIndex(i)}
                   className="w-2 h-2 rounded-full transition-all duration-300"
                   style={{
-                    backgroundColor: i === currentIndex ? "#19363B" : "#19363B",
+                    backgroundColor: "#19363B",
                     opacity: i === currentIndex ? 1 : 0.3,
                     transform: i === currentIndex ? "scale(1.2)" : "scale(1)",
                   }}
