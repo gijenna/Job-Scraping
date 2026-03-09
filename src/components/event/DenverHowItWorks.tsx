@@ -35,7 +35,6 @@ const tiers: TierAccordion[] = [
     id: "deluxe",
     title: "We're GEAR",
     subtitle: "A deluxe space with room for up to 20 reps, way more room to get creative",
-    price: "$6,000–$12,000",
     spots: "4 available",
     backgroundImage: eventYetiDenver,
     perks: [
