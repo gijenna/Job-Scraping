@@ -113,12 +113,15 @@ const scatteredElements: Array<{
   { type: 'logo', index: 10, top: '70%', left: '22%', rotate: '10deg' },
 ];
 
-const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => (
+const LogoBubble = ({ logo, style, rotate, delay, small, rain }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean; rain?: boolean }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.7 }}
-    whileInView={{ opacity: 1, scale: 1 }}
+    initial={rain ? { opacity: 0, y: -80 } : { opacity: 0, scale: 0.7 }}
+    whileInView={rain ? { opacity: [0, 1, 1, 0.6], y: ["-80px", "0px", "0px", "0px"] } : { opacity: 1, scale: 1 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5, delay }}
+    transition={rain
+      ? { duration: 1.8, delay, ease: "easeOut", times: [0, 0.4, 0.7, 1] }
+      : { duration: 0.5, delay }
+    }
     className={`absolute ${small ? 'w-8 h-8' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
     style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
   >
@@ -176,8 +179,9 @@ const DenverByTheNumbers = () => {
                   logo={brandLogos[item.index]}
                   style={posStyle}
                   rotate={item.rotate}
-                  delay={0.08 + i * 0.04}
+                  delay={0.2 + i * 0.15}
                   small={isMobile}
+                  rain
                 />
               );
             }
