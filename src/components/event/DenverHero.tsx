@@ -66,7 +66,7 @@ const DenverHero = () => {
             </h2>
 
             {/* Rotating phrase */}
-            <div className="relative w-full overflow-hidden" style={{ height: "clamp(2.5rem, 5vw, 4.5rem)" }}>
+            <div className="relative w-full overflow-hidden flex justify-center lg:justify-start" style={{ height: "clamp(2.5rem, 5vw, 4.5rem)" }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phraseIndex}
