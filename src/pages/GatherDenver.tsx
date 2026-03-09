@@ -185,6 +185,8 @@ const GatherDenver = () => {
       <DenverGallery />
       <DenverHowItWorks />
 
+      <DenverWhoAttends />
+
       <Testimonials />
 
       <EventStats
