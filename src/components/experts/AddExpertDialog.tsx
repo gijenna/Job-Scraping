@@ -29,10 +29,10 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const getUrl = (slug: string, city: string) => {
     if (isBrandRep) {
       const repPrefix = city === 'portland' ? 'pnw' : city;
-      return `${window.location.origin}/${repPrefix}reps/${slug}`;
+      return `${PUBLISHED_BASE_URL}/${repPrefix}reps/${slug}`;
     }
     const cityPrefix = city === 'denver' ? 'Denver' : city === 'portland' ? 'Portland' : 'MN';
-    return `${window.location.origin}/${cityPrefix}experts/${slug}`;
+    return `${PUBLISHED_BASE_URL}/${cityPrefix}experts/${slug}`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

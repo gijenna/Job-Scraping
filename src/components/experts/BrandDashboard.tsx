@@ -174,7 +174,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                         <Copy className="w-3.5 h-3.5" />
                       </Button>
                       <a
-                        href={`${window.location.origin}${linkPath}`}
+                        href={`${PUBLISHED_BASE_URL}${linkPath}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-events-cream/50 hover:text-events-cream h-6 w-6 p-0 shrink-0 inline-flex items-center justify-center"

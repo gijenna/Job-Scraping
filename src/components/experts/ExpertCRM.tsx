@@ -179,7 +179,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                               const cityPrefix = a.city_slug === 'denver' ? 'Denver' : a.city_slug === 'portland' ? 'Portland' : 'MN';
                               linkPath = `/${cityPrefix}experts/${expert.slug}`;
                             }
-                            const url = `${window.location.origin}${linkPath}`;
+                            const url = `${PUBLISHED_BASE_URL}${linkPath}`;
                             return (
                               <div key={a.id} className="flex items-center gap-1.5">
                                 <code className="text-[11px] text-events-coral bg-events-coral/10 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={url}>
