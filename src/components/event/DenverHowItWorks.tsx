@@ -174,7 +174,7 @@ const DenverHowItWorks = () => {
                         style={{
                           backgroundImage: `linear-gradient(to top, rgba(13, 31, 34, 0.97) 15%, rgba(13, 31, 34, 0.75) 55%, rgba(13, 31, 34, 0.4) 100%), url(${tier.backgroundImage})`,
                           backgroundSize: tier.id === "title" ? "140%" : "cover",
-                          backgroundPosition: tier.id === "title" ? "center bottom" : "center",
+                          backgroundPosition: tier.id === "title" ? "center 40%" : "center",
                         }}
                       >
                         {/* Price */}
