@@ -3,11 +3,11 @@ import { ArrowRight } from "lucide-react";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
 import RegistrantHero from "@/components/event/RegistrantHero";
-import RegistrantBrands from "@/components/event/RegistrantBrands";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
+import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
@@ -49,13 +49,7 @@ const EventOutsideDays26 = () => {
 
       <DenverFestivalPartner />
 
-      <RegistrantBrands
-        brands={denverBrands}
-        citySlug="denver"
-        headline="Meet the people behind the brands"
-        accentColor="#E1B624"
-        bgColor="#0d1f22"
-      />
+      <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" />
 
       {/* What to Expect */}
       <section className="py-16 md:py-24 px-6 bg-events-teal">

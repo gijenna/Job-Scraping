@@ -3,10 +3,10 @@ import { ArrowRight } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
 import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
 import RegistrantHero from "@/components/event/RegistrantHero";
-import RegistrantBrands from "@/components/event/RegistrantBrands";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
+import PnwWhosComing from "@/components/event/PnwWhosComing";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com" },
@@ -47,13 +47,7 @@ const EventPNW26 = () => {
         headline="Brands & professionals in the room"
       />
 
-      <RegistrantBrands
-        brands={pnwBrands}
-        citySlug="portland"
-        headline="Meet the people behind the brands"
-        accentColor="#FEE123"
-        bgColor="#154733"
-      />
+      <PnwWhosComing accentColor="#FEE123" bgColor="#154733" />
 
       {/* What to Expect */}
       <section className="py-16 md:py-24 px-6 bg-events-teal">
