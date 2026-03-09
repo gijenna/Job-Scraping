@@ -5,11 +5,13 @@ import eventBoa from "@/assets/event-boa.jpg";
 import eventCareerCoachingPopup from "@/assets/event-career-coaching-popup.jpg";
 import eventOutsideBooth from "@/assets/event-outside-booth.jpg";
 import eventAlisonVolunteer from "@/assets/event-alison-volunteer.jpg";
-import eventBasecampTeam from "@/assets/event-basecamp-team.jpg";
 import eventBoaSwag from "@/assets/event-boa-swag.jpg";
 import eventCrowd from "@/assets/event-crowd.jpg";
 import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
 import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
+import eventGroupPhoto from "@/assets/event-group-photo.jpg";
+import eventBoaConvo from "@/assets/event-boa-convo.jpg";
+import eventYetiKate from "@/assets/event-yeti-kate.jpg";
 
 interface PhotoItem {
   src: string;
@@ -25,9 +27,9 @@ interface PhotoItem {
 
 const photos: PhotoItem[] = [
   // Row 1 — top row, 5 photos staggered
-  { src: eventCareerCoachingPopup, alt: "Career Coaching", top: "4%", left: "-1%", width: 220, height: 280, rotate: "-3deg", zIndex: 2, parallaxSpeed: 0.12 },
-  { src: eventCrowd, alt: "Crowd", top: "-2%", left: "16%", width: 240, height: 300, rotate: "4deg", zIndex: 3, parallaxSpeed: 0.08 },
-  { src: eventBasecampTeam, alt: "Basecamp Team", top: "2%", left: "36%", width: 230, height: 280, rotate: "-2deg", zIndex: 4, parallaxSpeed: 0.1 },
+  { src: eventBoaConvo, alt: "BOA Conversation", top: "4%", left: "-1%", width: 220, height: 280, rotate: "-3deg", zIndex: 2, parallaxSpeed: 0.12 },
+  { src: eventGroupPhoto, alt: "Group Photo", top: "-2%", left: "16%", width: 240, height: 300, rotate: "4deg", zIndex: 3, parallaxSpeed: 0.08 },
+  { src: eventYetiKate, alt: "Kate Volunteering", top: "2%", left: "36%", width: 230, height: 280, rotate: "-2deg", zIndex: 4, parallaxSpeed: 0.1 },
   { src: eventBoaSwag, alt: "BOA Swag", top: "-4%", left: "58%", width: 220, height: 270, rotate: "5deg", zIndex: 2, parallaxSpeed: 0.14 },
   { src: eventOutsideBooth, alt: "Outside Booth", top: "2%", left: "78%", width: 240, height: 290, rotate: "-4deg", zIndex: 3, parallaxSpeed: 0.09 },
 
