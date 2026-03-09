@@ -191,7 +191,7 @@ const GatherDenver = () => {
         donutData={denverDonutData}
         barData={denverBarData}
         stats={denverStats}
-        subtitle="We don't just fill seats — we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
+        subtitle="We don't just fill seats - we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
       />
 
       <Testimonials />
