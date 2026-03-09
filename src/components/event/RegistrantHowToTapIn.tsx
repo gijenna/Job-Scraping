@@ -28,21 +28,21 @@ const RegistrantHowToTapIn = ({
       description: "Show up, meet brands, and discover your next opportunity",
       linkUrl: registrationUrl,
       linkLabel: "REGISTER NOW",
-      imageSrc: "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&h=900&fit=crop",
+      imageSrc: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=900&fit=crop&q=80",
     },
     {
       title: "SHOW UP AS A BRAND",
       description: "Create a discovery zone for your brand. Engage with 300+ leaders, athletes, and influencers in the outdoor industry",
       linkUrl: sponsorPageUrl,
       linkLabel: "MORE INFO",
-      imageSrc: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=900&fit=crop",
+      imageSrc: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=900&fit=crop&q=80",
     },
     {
       title: "BECOME AN INDUSTRY EXPERT",
       description: "Share your story and be featured on the event page",
       linkUrl: expertsPageUrl,
       linkLabel: "SIGN UP",
-      imageSrc: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=900&fit=crop",
+      imageSrc: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=600&h=900&fit=crop&q=80",
     },
   ];
 

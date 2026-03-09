@@ -159,13 +159,6 @@ const EventPNW26 = () => {
         </div>
       </section>
 
-      <RegistrantHowToTapIn
-        registrationUrl={TYPEFORM_PNW}
-        sponsorPageUrl="/gather-pnw"
-        expertsPageUrl="/Portlandexperts"
-        accentColor="#FEE123"
-        bgColor="#0d2b1f"
-      />
 
       <RegistrantVenue
         venueName="UO Portland Campus"
