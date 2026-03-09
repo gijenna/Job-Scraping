@@ -27,11 +27,11 @@ interface EventStatsProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card border border-border px-3 py-2 rounded-md shadow-card">
-        <p className="text-foreground text-sm font-display font-semibold">
+      <div className="bg-[#19363B] border border-[#E1B624]/30 px-3 py-2 rounded-md shadow-lg">
+        <p className="text-[#F5E6D3] text-sm font-display font-semibold">
           {payload[0].payload.role || payload[0].name}
         </p>
-        <p className="text-primary text-sm">
+        <p className="text-[#E1B624] text-sm">
           {payload[0].value}{payload[0].payload.role ? "" : "%"}
         </p>
       </div>
