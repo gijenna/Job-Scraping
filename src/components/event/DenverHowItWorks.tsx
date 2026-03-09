@@ -22,7 +22,6 @@ const tiers: TierAccordion[] = [
     id: "starter",
     title: "We're HERE",
     subtitle: "Plenty of space for 5 reps & pizazz",
-    price: "$3,000+",
     spots: "10 available",
     backgroundImage: eventCotopaxiConvo,
     perks: [
