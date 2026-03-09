@@ -18,8 +18,8 @@ interface Testimonial {
 
 const stats: StatItem[] = [
   { number: "500", suffix: "+", label: "Outdoor Industry Professionals Per Event" },
-  { number: "88", suffix: "%", label: "Have Management Experience" },
   { number: "67", suffix: "%", label: "Have 6+ Years Industry Experience" },
+  { number: "30", suffix: "+", label: "Brands (from nonprofit to keystone)" },
   { number: "40K", suffix: "+", label: "Festival Attendees Surrounding Our Activation" },
 ];
 
