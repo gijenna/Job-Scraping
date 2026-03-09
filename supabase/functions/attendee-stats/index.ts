@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
       // Skip rows without meaningful data
       if (!field && !workType && !region && !years) continue;
       
-      attendees.push({ field, years, workType, region });
+      attendees.push({ field, normalizedField: normalizeField(field), years, workType, region });
     }
     
     // Build unique filter options
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
     const regionSet = new Set<string>();
     
     for (const a of attendees) {
-      if (a.field) fieldSet.add(a.field);
+      if (a.normalizedField) fieldSet.add(a.normalizedField);
       if (a.years) yearsSet.add(a.years);
       for (const wt of normalizeWorkType(a.workType)) workTypeSet.add(wt);
       for (const r of normalizeRegion(a.region)) regionSet.add(r);
