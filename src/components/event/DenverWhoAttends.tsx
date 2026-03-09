@@ -233,7 +233,10 @@ const DenverWhoAttends = () => {
                     {seg.pct}%
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm font-body leading-relaxed">{seg.desc}</p>
+                <p className="text-muted-foreground text-sm font-body leading-relaxed">
+                  <span className="font-display font-extrabold text-base" style={{ color: seg.color }}>{seg.yearHighlight}</span>
+                  {seg.desc}
+                </p>
                 {/* Mini progress bar */}
                 <div className="mt-3 h-1 rounded-full bg-secondary overflow-hidden">
                   <motion.div
