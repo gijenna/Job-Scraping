@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StatItem {
   number: string;
@@ -47,7 +48,29 @@ const testimonials: Testimonial[] = [
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
-// Scattered placements — use full width including closer to center, evenly distributed
+// Mobile-safe scattered positions — logos only, pushed to edges, no overlap with center stats
+const mobileScatteredElements: Array<{
+  type: 'logo';
+  index: number;
+  top: string;
+  left?: string;
+  right?: string;
+  rotate: string;
+}> = [
+  { type: 'logo', index: 0, top: '2%', left: '3%', rotate: '-5deg' },
+  { type: 'logo', index: 1, top: '2%', right: '3%', rotate: '7deg' },
+  { type: 'logo', index: 2, top: '18%', right: '2%', rotate: '-8deg' },
+  { type: 'logo', index: 3, top: '35%', left: '2%', rotate: '6deg' },
+  { type: 'logo', index: 4, top: '52%', right: '2%', rotate: '-4deg' },
+  { type: 'logo', index: 5, top: '68%', left: '2%', rotate: '9deg' },
+  { type: 'logo', index: 6, top: '68%', right: '3%', rotate: '-7deg' },
+  { type: 'logo', index: 7, top: '85%', left: '5%', rotate: '5deg' },
+  { type: 'logo', index: 8, top: '85%', right: '5%', rotate: '-3deg' },
+  { type: 'logo', index: 9, top: '50%', left: '4%', rotate: '11deg' },
+  { type: 'logo', index: 10, top: '35%', right: '3%', rotate: '-6deg' },
+];
+
+// Desktop scattered placements — use full width including closer to center, evenly distributed
 const scatteredElements: Array<{
   type: 'logo' | 'testimonial';
   index: number;
@@ -88,23 +111,25 @@ const scatteredElements: Array<{
   { type: 'logo', index: 10, top: '70%', left: '22%', rotate: '10deg' },
 ];
 
-const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
+const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.7 }}
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg"
+    className={`absolute ${small ? 'w-10 h-10' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
     style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
   >
     <img
       src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
       alt={logo.name}
-      className="w-10 h-10 md:w-12 md:h-12 object-contain"
+      className={`${small ? 'w-6 h-6' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
       style={{ mixBlendMode: 'multiply' }}
     />
   </motion.div>
 );
+
+
 
 const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: Testimonial; style: React.CSSProperties; rotate: string; delay: number }) => (
   <motion.div
@@ -129,12 +154,15 @@ const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: T
 );
 
 const DenverByTheNumbers = () => {
+  const isMobile = useIsMobile();
+  const elements = isMobile ? mobileScatteredElements : scatteredElements;
+
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
         {/* Scattered elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {scatteredElements.map((item, i) => {
+          {elements.map((item, i) => {
             const posStyle: React.CSSProperties = { top: item.top };
             if (item.left !== undefined) posStyle.left = item.left;
             if (item.right !== undefined) posStyle.right = item.right;
@@ -147,6 +175,7 @@ const DenverByTheNumbers = () => {
                   style={posStyle}
                   rotate={item.rotate}
                   delay={0.08 + i * 0.04}
+                  small={isMobile}
                 />
               );
             }

@@ -8,6 +8,7 @@ import DenverGallery from "@/components/event/DenverGallery";
 import DenverHowItWorks from "@/components/event/DenverHowItWorks";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import DenverWhoAttends from "@/components/event/DenverWhoAttends";
+import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarousel";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
@@ -45,6 +46,7 @@ const GatherDenver = () => {
 
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
+      <MobileTestimonialCarousel />
       <DenverHowItWorks />
       <DenverGallery />
 
