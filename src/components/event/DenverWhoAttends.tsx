@@ -11,9 +11,7 @@ const experienceSegments = [
     pct: 30,
     yearHighlight: "11+",
     desc: " years of experience. The legacy professionals who've survived multiple economic cycles and brand acquisitions.",
-    color: "hsl(5, 65%, 65%)",
-    tokenColor: "text-primary",
-    bgToken: "bg-primary/15",
+    color: "#E1B624",
   },
   {
     icon: Briefcase,
@@ -22,9 +20,7 @@ const experienceSegments = [
     pct: 40,
     yearHighlight: "6–10",
     desc: " years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
-    color: "hsl(45, 80%, 55%)",
-    tokenColor: "text-[hsl(45,80%,55%)]",
-    bgToken: "bg-[hsl(45,80%,55%)]/15",
+    color: "#5BC0EB",
   },
   {
     icon: ArrowRightLeft,
@@ -33,9 +29,7 @@ const experienceSegments = [
     pct: 18,
     yearHighlight: "3–5",
     desc: " years of experience. Career switchers from Tech, Finance, or CPG now seeking to align their work with their outdoor lifestyle.",
-    color: "hsl(150, 40%, 55%)",
-    tokenColor: "text-[hsl(150,40%,55%)]",
-    bgToken: "bg-[hsl(150,40%,55%)]/15",
+    color: "#F5E6D3",
   },
   {
     icon: GraduationCap,
@@ -44,9 +38,7 @@ const experienceSegments = [
     pct: 12,
     yearHighlight: "0–2",
     desc: " years of experience. Recent grads and early-career pros specifically targeting the outdoor sector for their first major roles.",
-    color: "hsl(200, 50%, 60%)",
-    tokenColor: "text-[hsl(200,50%,60%)]",
-    bgToken: "bg-[hsl(200,50%,60%)]/15",
+    color: "#19363B",
   },
 ];
 
