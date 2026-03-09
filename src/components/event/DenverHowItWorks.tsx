@@ -94,7 +94,7 @@ const DenverHowItWorks = () => {
             className="font-body text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "#F5E6D3", opacity: 0.8 }}
           >
-            We invite 500+ people who work in the outdoor industry — or want to. They visit your brand discovery zone to learn your story through the people that make your company unique.
+            We invite 500+ people who work in the outdoor industry - or want to. They visit your brand discovery zone to learn your story through the people that make your company unique.
           </p>
         </motion.div>
 
