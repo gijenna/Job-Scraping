@@ -1,6 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 import eventBoa from "@/assets/event-boa.jpg";
 import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
@@ -17,151 +16,98 @@ import eventCareerCoachingPopup from "@/assets/event-career-coaching-popup.jpg";
 import eventCrowd from "@/assets/event-crowd.jpg";
 import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
 
-interface GalleryImage {
+interface ScatteredPhoto {
   src: string;
   caption: string;
+  // Position & size as percentages/classes
+  top: string;
+  left: string;
+  width: string;
+  rotate: string;
+  zIndex: number;
+  parallaxSpeed: number; // multiplier for scroll movement
 }
 
-const galleryImages: GalleryImage[] = [
-  { src: eventRei, caption: "REI connecting with outdoor professionals" },
-  { src: eventCrowd, caption: "Packed house at Gather" },
-  { src: eventYeti, caption: "YETI brand activation" },
-  { src: eventBoaSwag, caption: "BOA swag excitement" },
-  { src: eventCareerCoachingPopup, caption: "Career Coaching Pop-Up" },
-  { src: eventBasecampTeam, caption: "The Basecamp Outdoor team" },
-  { src: eventOutsideBooth, caption: "Outside booth engagement" },
-  { src: eventYetiBestday, caption: "YETI x Best Day Brewing" },
-  { src: eventAlisonVolunteer, caption: "Volunteer welcoming attendees" },
-  { src: eventBoa, caption: "BOA networking moment" },
-  { src: eventCrowdBooth, caption: "Attendees exploring booths" },
-  { src: eventCareerCoaching, caption: "Career coaching sessions" },
-  { src: eventPow, caption: "POW brand presence" },
-  { src: eventShar, caption: "Industry leaders connecting" },
+const photos: ScatteredPhoto[] = [
+  // Row 1 — top scattered
+  { src: eventRei, caption: "REI", top: "2%", left: "3%", width: "w-36 md:w-52", rotate: "-4deg", zIndex: 2, parallaxSpeed: 0.15 },
+  { src: eventCrowd, caption: "Crowd", top: "0%", left: "28%", width: "w-44 md:w-64", rotate: "3deg", zIndex: 3, parallaxSpeed: 0.08 },
+  { src: eventYeti, caption: "YETI", top: "4%", left: "60%", width: "w-40 md:w-56", rotate: "-2deg", zIndex: 2, parallaxSpeed: 0.12 },
+  { src: eventBoaSwag, caption: "BOA", top: "1%", left: "85%", width: "w-32 md:w-44", rotate: "5deg", zIndex: 1, parallaxSpeed: 0.18 },
+
+  // Row 2 — middle
+  { src: eventCareerCoachingPopup, caption: "Coaching", top: "30%", left: "0%", width: "w-40 md:w-56", rotate: "2deg", zIndex: 3, parallaxSpeed: 0.1 },
+  { src: eventBasecampTeam, caption: "Team", top: "34%", left: "32%", width: "w-48 md:w-72", rotate: "-3deg", zIndex: 4, parallaxSpeed: 0.05 },
+  { src: eventOutsideBooth, caption: "Outside", top: "28%", left: "68%", width: "w-36 md:w-52", rotate: "4deg", zIndex: 2, parallaxSpeed: 0.14 },
+
+  // Row 3 — bottom scattered
+  { src: eventShar, caption: "Leaders", top: "58%", left: "5%", width: "w-36 md:w-48", rotate: "-5deg", zIndex: 2, parallaxSpeed: 0.16 },
+  { src: eventPow, caption: "POW", top: "62%", left: "35%", width: "w-40 md:w-56", rotate: "2deg", zIndex: 3, parallaxSpeed: 0.07 },
+  { src: eventAlisonVolunteer, caption: "Volunteers", top: "56%", left: "62%", width: "w-44 md:w-60", rotate: "-3deg", zIndex: 2, parallaxSpeed: 0.11 },
+  { src: eventBoa, caption: "BOA", top: "60%", left: "88%", width: "w-32 md:w-44", rotate: "6deg", zIndex: 1, parallaxSpeed: 0.19 },
+
+  // Row 4 — bottom edge
+  { src: eventCareerCoaching, caption: "Coaching", top: "82%", left: "8%", width: "w-40 md:w-52", rotate: "3deg", zIndex: 2, parallaxSpeed: 0.13 },
+  { src: eventCrowdBooth, caption: "Booths", top: "85%", left: "40%", width: "w-44 md:w-60", rotate: "-2deg", zIndex: 3, parallaxSpeed: 0.06 },
+  { src: eventYetiBestday, caption: "YETI x Best Day", top: "80%", left: "72%", width: "w-36 md:w-52", rotate: "4deg", zIndex: 2, parallaxSpeed: 0.15 },
 ];
 
-const DenverGallery = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const ParallaxPhoto = ({ photo }: { photo: ScatteredPhoto }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % galleryImages.length);
-  };
-
-  const getPrevIndex = () => (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-  const getNextIndex = () => (currentIndex + 1) % galleryImages.length;
+  const y = useTransform(scrollYProgress, [0, 1], [photo.parallaxSpeed * 120, -photo.parallaxSpeed * 120]);
 
   return (
-    <section className="py-16 md:py-24" style={{ backgroundColor: "#0d1f22" }}>
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center text-xs tracking-[0.3em] uppercase mb-12 font-body"
-          style={{ color: "#F5E6D3", opacity: 0.6 }}
-        >
-          Gallery
-        </motion.p>
+    <motion.div
+      ref={ref}
+      className={`absolute ${photo.width} aspect-[4/3] rounded-lg overflow-hidden shadow-xl cursor-default`}
+      style={{
+        top: photo.top,
+        left: photo.left,
+        rotate: photo.rotate,
+        zIndex: photo.zIndex,
+        y,
+      }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6 }}
+    >
+      <img
+        src={photo.src}
+        alt={photo.caption}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+      {/* Subtle dark gradient at bottom for depth */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+    </motion.div>
+  );
+};
 
-        {/* Gallery carousel */}
-        <div className="relative flex items-center justify-center gap-4 md:gap-6">
-          {/* Previous image (partially visible) */}
-          <div 
-            className="hidden md:block w-[280px] lg:w-[380px] h-[380px] lg:h-[520px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
-            onClick={goToPrevious}
-          >
-            <img
-              src={galleryImages[getPrevIndex()].src}
-              alt={galleryImages[getPrevIndex()].caption}
-              className="w-full h-full object-cover"
-            />
-          </div>
+const DenverGallery = () => {
+  return (
+    <section className="relative overflow-hidden py-8 md:py-12" style={{ backgroundColor: "#0d1f22" }}>
+      {/* Header */}
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center text-xs tracking-[0.3em] uppercase mb-8 font-body relative z-10"
+        style={{ color: "#F5E6D3", opacity: 0.6 }}
+      >
+        Gallery
+      </motion.p>
 
-          {/* Navigation button - left */}
-          <button
-            onClick={goToPrevious}
-            className="absolute left-2 md:left-auto md:relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-            style={{ backgroundColor: "rgba(245, 230, 211, 0.1)", color: "#F5E6D3" }}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
-          {/* Center image (main) */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className="w-[320px] md:w-[420px] lg:w-[520px] h-[420px] md:h-[560px] lg:h-[680px] rounded-xl overflow-hidden"
-              >
-                <img
-                  src={galleryImages[currentIndex].src}
-                  alt={galleryImages[currentIndex].caption}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Caption */}
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentIndex}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="text-center mt-6 font-body text-sm md:text-base"
-                style={{ color: "#F5E6D3" }}
-              >
-                {galleryImages[currentIndex].caption}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation button - right */}
-          <button
-            onClick={goToNext}
-            className="absolute right-2 md:right-auto md:relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-            style={{ backgroundColor: "rgba(245, 230, 211, 0.1)", color: "#F5E6D3" }}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-
-          {/* Next image (partially visible) */}
-          <div 
-            className="hidden md:block w-[280px] lg:w-[380px] h-[380px] lg:h-[520px] rounded-xl overflow-hidden opacity-40 cursor-pointer transition-opacity hover:opacity-60 shrink-0"
-            onClick={goToNext}
-          >
-            <img
-              src={galleryImages[getNextIndex()].src}
-              alt={galleryImages[getNextIndex()].caption}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        {/* Dots indicator */}
-        <div className="flex justify-center gap-2 mt-8">
-          {galleryImages.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentIndex(i)}
-              className="w-2 h-2 rounded-full transition-all duration-300"
-              style={{
-                backgroundColor: "#F5E6D3",
-                opacity: i === currentIndex ? 1 : 0.3,
-                transform: i === currentIndex ? "scale(1.2)" : "scale(1)",
-              }}
-            />
-          ))}
-        </div>
+      {/* Collage container — tall to allow scattered placement */}
+      <div className="relative w-full" style={{ height: "clamp(600px, 120vw, 1200px)" }}>
+        {photos.map((photo, i) => (
+          <ParallaxPhoto key={i} photo={photo} />
+        ))}
       </div>
     </section>
   );
