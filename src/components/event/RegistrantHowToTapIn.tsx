@@ -85,14 +85,14 @@ const RegistrantHowToTapIn = ({
               />
 
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/20 transition-opacity duration-300 group-hover:from-black/90" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-black/25 transition-opacity duration-300 group-hover:from-black/90" />
 
-              {/* Content pinned to bottom */}
-              <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col items-center text-center">
+              {/* Content centered vertically */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 md:px-8">
                 <h3 className="font-headline font-bold text-2xl md:text-3xl text-white tracking-wide leading-tight mb-3">
                   {option.title}
                 </h3>
-                <p className="font-body text-sm text-white/70 leading-relaxed mb-6 max-w-[240px]">
+                <p className="font-body text-sm text-white/70 leading-relaxed mb-6 max-w-[240px] min-h-[60px] flex items-center">
                   {option.description}
                 </p>
                 <span className="inline-block px-6 py-3 border-2 border-white text-white font-display font-bold text-xs tracking-[0.2em] uppercase transition-all duration-300 group-hover:bg-white group-hover:text-events-teal">
