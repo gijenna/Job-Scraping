@@ -2,10 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
-import outsideDaysMusic from "@/assets/outside-days-music.png";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
-import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
+import eventYeti from "@/assets/event-yeti.jpg";
 
 interface TierAccordion {
   id: string;
