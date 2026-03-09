@@ -156,7 +156,7 @@ const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; le
       initial={{ scale: 1 }}
       whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: delay + 1.3, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay: delay + 2.9, ease: "easeOut" }}
     >
       <img
         src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
