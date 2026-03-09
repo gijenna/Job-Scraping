@@ -55,7 +55,7 @@ const tiers: TierAccordion[] = [
     subtitle: "The entire event is your zone & we can get Funky.",
     price: "$15,000–$25,000",
     spots: "1–2 available",
-    backgroundImage: eventYeti,
+    backgroundImage: eventCrowdConvo,
     perks: [
       '"Outside Days Career Fair presented by [You]"',
       "Prime branding at entrance & stage",
