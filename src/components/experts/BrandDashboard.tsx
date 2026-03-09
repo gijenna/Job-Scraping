@@ -53,7 +53,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
 
   const copyLink = (expert: Expert, assignment: ExpertCityAssignment) => {
     const repPrefix = assignment.city_slug === 'portland' ? 'pnw' : assignment.city_slug;
-    const url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+    const url = `${PUBLISHED_BASE_URL}/${repPrefix}reps/${expert.slug}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
   };
