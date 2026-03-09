@@ -262,11 +262,11 @@ const DenverWhoAttends = () => {
         >
           <button
             onClick={() => setWidgetOpen(!widgetOpen)}
-            className="group inline-flex items-center gap-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300"
+            className="group inline-flex items-center gap-3 bg-black hover:bg-[#19363B] border border-[#E1B624]/40 text-[#F5E6D3] px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
           >
-            <BarChart3 className="w-5 h-5" />
+            <BarChart3 className="w-5 h-5 text-[#E1B624]" />
             <span>Recruiter or Data Nerd? See who comes</span>
-            <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 text-[#E1B624] transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
           </button>
         </motion.div>
 
@@ -280,10 +280,10 @@ const DenverWhoAttends = () => {
               transition={{ duration: 0.4, ease: 'easeInOut' }}
               className="overflow-hidden"
             >
-              <div className="mt-8 bg-gradient-card border border-border rounded-2xl p-6 md:p-8 shadow-card">
+              <div className="mt-8 bg-black border border-[#E1B624]/20 rounded-2xl p-6 md:p-8 shadow-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <Search className="w-5 h-5 text-primary" />
-                  <h3 className="font-display font-bold text-foreground text-xl">Filter the Talent Pool</h3>
+                  <Search className="w-5 h-5 text-[#E1B624]" />
+                  <h3 className="font-display font-bold text-[#F5E6D3] text-xl">Filter the Talent Pool</h3>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -321,12 +321,12 @@ const DenverWhoAttends = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <Users className="w-5 h-5 text-primary" />
-                      <span className="font-display font-extrabold text-3xl md:text-4xl text-primary">
+                      <Users className="w-5 h-5 text-[#5BC0EB]" />
+                      <span className="font-display font-extrabold text-3xl md:text-4xl text-[#E1B624]">
                         {loading ? '...' : filteredCount}
                       </span>
                     </div>
-                    <p className="text-muted-foreground font-body text-sm">
+                    <p className="text-[#F5E6D3]/60 font-body text-sm">
                       {hasActiveFilters
                         ? `registered attendees match your criteria (of ${total} total)`
                         : 'total registered attendees'}
@@ -336,7 +336,7 @@ const DenverWhoAttends = () => {
                   {hasActiveFilters && (
                     <button
                       onClick={clearFilters}
-                      className="text-primary text-sm font-body underline hover:opacity-80 transition-opacity"
+                      className="text-[#5BC0EB] text-sm font-body underline hover:opacity-80 transition-opacity"
                     >
                       Clear all
                     </button>
@@ -361,13 +361,13 @@ interface FilterSelectProps {
 
 const FilterSelect = ({ label, options, value, onChange, placeholder }: FilterSelectProps) => (
   <div>
-    <label className="text-xs text-muted-foreground font-body uppercase tracking-wider mb-1.5 block">
+    <label className="text-xs text-[#F5E6D3]/50 font-body uppercase tracking-wider mb-1.5 block">
       {label}
     </label>
     <select
       value={value || ''}
       onChange={(e) => onChange(e.target.value || null)}
-      className="w-full bg-secondary border border-border rounded-lg px-3 py-2.5 text-sm text-foreground font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
+      className="w-full bg-[#19363B] border border-[#F5E6D3]/15 rounded-lg px-3 py-2.5 text-sm text-[#F5E6D3] font-body appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5BC0EB]/40"
     >
       <option value="">{placeholder}</option>
       {options.map((opt) => (
