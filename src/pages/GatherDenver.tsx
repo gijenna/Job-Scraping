@@ -46,6 +46,7 @@ const GatherDenver = () => {
 
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
+      <MobileTestimonialCarousel />
       <DenverHowItWorks />
       <DenverGallery />
 
