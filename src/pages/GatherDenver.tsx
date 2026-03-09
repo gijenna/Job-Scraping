@@ -130,7 +130,7 @@ const denverTiers = [
     popular: false,
     bestFor: "Outdoor/active lifestyle brands hiring anytime in 2026–27",
     perks: [
-      "Hiring table inside event",
+      "6ft space inside event",
       "Up to 5 brand representatives",
       "Logo & careers page link on event website & registration",
       "Exposure to our 300K+ community",
