@@ -101,9 +101,9 @@ const denverShowUpOptions = [
   {
     icon: Star,
     title: "Branding / Discovery Partner",
-    desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
+    desc: "This isn't just a career fair - it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
     tag: "High Visibility",
-    example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry.",
+    example: "Yeti, REI, and Cotopaxi have set up product discovery zones - turning career fair foot traffic into organic brand moments shared across the industry.",
   },
   {
     icon: Briefcase,
