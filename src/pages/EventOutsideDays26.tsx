@@ -8,6 +8,7 @@ import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
+import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
