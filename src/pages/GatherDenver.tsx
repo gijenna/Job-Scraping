@@ -171,12 +171,12 @@ const GatherDenver = () => {
     <main className="bg-background min-h-screen">
       <DenverHero />
 
+      <DenverFestivalPartner />
+
       <EventLogoTicker
         brands={denverBrands}
         headline="Where leaders from the outdoor industry's most iconic brands gather"
       />
-
-      <DenverFestivalPartner />
 
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
