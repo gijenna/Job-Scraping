@@ -45,7 +45,7 @@ const Schedule = ({ items, heading = "The Evening" }: ScheduleProps) => {
                 <Clock className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="font-display font-bold text-foreground text-sm">{item.time} — {item.label}</p>
+                <p className="font-display font-bold text-foreground text-sm">{item.time} - {item.label}</p>
                 <p className="text-muted-foreground font-body text-sm">{item.desc}</p>
               </div>
             </motion.div>

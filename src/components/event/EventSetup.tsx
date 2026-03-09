@@ -79,7 +79,7 @@ const EventSetup = ({ variant }: EventSetupProps) => {
                   <a href="https://pdx.uoregon.edu/uo-portland-campus-center" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
                     Campus Center
                   </a>{" "}
-                  at 2800 NE Liberty St, Portland, OR, 97211 — a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.
+                  at 2800 NE Liberty St, Portland, OR, 97211 - a modern, open-plan venue with excellent natural light and easy attendee flow between tables, panel stage, and networking areas.
                 </>
               ) : (
                 variantNote[variant]

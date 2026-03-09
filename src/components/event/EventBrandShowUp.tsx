@@ -80,7 +80,7 @@ const EventBrandShowUp = ({ options }: EventBrandShowUpProps) => {
             How Brands Show Up
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            Three ways to engage in person — plus powerful digital reach to our 300K+ community.
+            Three ways to engage in person - plus powerful digital reach to our 300K+ community.
           </p>
         </motion.div>
 
