@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
-import eventReiConvo from "@/assets/event-rei-convo.jpg";
-import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
-import eventYeti from "@/assets/event-yeti.jpg";
+import eventCotopaxiConvo from "@/assets/event-cotopaxi-convo.png";
+import eventYetiDenver from "@/assets/event-yeti-denver.png";
+import eventCrowdConvo from "@/assets/event-crowd-convo.png";
 import eventShar from "@/assets/event-shar.jpg";
 import eventYetiCropped from "@/assets/event-yeti-cropped.jpg";
 
@@ -12,7 +12,6 @@ interface TierAccordion {
   id: string;
   title: string;
   subtitle: string;
-  price: string;
   spots: string;
   backgroundImage: string;
   perks: string[];
@@ -23,9 +22,8 @@ const tiers: TierAccordion[] = [
     id: "starter",
     title: "We're HERE",
     subtitle: "Plenty of space for 5 reps & pizazz",
-    price: "$3,000+",
     spots: "10 available",
-    backgroundImage: eventReiConvo,
+    backgroundImage: eventCotopaxiConvo,
     perks: [
       "Hiring table inside event",
       "Up to 5 brand representatives",
@@ -37,9 +35,8 @@ const tiers: TierAccordion[] = [
     id: "deluxe",
     title: "We're GEAR",
     subtitle: "A deluxe space with room for up to 20 reps, way more room to get creative",
-    price: "$6,000–$12,000",
     spots: "4 available",
-    backgroundImage: eventAlterraChat,
+    backgroundImage: eventYetiDenver,
     perks: [
       "Everything in Starter, plus:",
       "Much larger activation space",
@@ -53,9 +50,8 @@ const tiers: TierAccordion[] = [
     id: "title",
     title: "GET USED TO IT",
     subtitle: "The entire event is your zone & we can get Funky.",
-    price: "$15,000–$25,000",
     spots: "1–2 available",
-    backgroundImage: eventYeti,
+    backgroundImage: eventCrowdConvo,
     perks: [
       '"Outside Days Career Fair presented by [You]"',
       "Prime branding at entrance & stage",
@@ -179,16 +175,10 @@ const DenverHowItWorks = () => {
                           backgroundPosition: tier.id === "title" ? "center 58%" : "center",
                         }}
                       >
-                        {/* Price */}
+                        {/* Spots */}
                         <div className="mb-6">
                           <p
-                            className="font-display font-extrabold text-4xl md:text-5xl"
-                            style={{ color: "#E1B624" }}
-                          >
-                            {tier.price}
-                          </p>
-                          <p
-                            className="font-body text-sm mt-1"
+                            className="font-body text-sm"
                             style={{ color: "#ED7660" }}
                           >
                             {tier.spots}
