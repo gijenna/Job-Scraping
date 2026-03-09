@@ -139,7 +139,7 @@ const DenverWhoAttends = () => {
             Who Attends
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            We gather four distinct groups — each with something your brand needs.
+            We gather four distinct groups - each with something your brand needs.
           </p>
         </motion.div>
 
