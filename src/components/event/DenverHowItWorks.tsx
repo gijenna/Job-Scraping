@@ -25,7 +25,7 @@ const tiers: TierAccordion[] = [
     spots: "10 available",
     backgroundImage: eventCotopaxiConvo,
     perks: [
-      "Hiring table inside event",
+      "6ft space inside event",
       "Up to 5 brand representatives",
       "Logo & careers page link on event website & registration",
       "Exposure to our 300K+ community",
