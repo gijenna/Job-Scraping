@@ -37,309 +37,137 @@ const brandLogos: BrandLogo[] = [
 ];
 
 const testimonials: Testimonial[] = [
-  { quote: "You never know who you will see, meet, or make connections with at Gather!", avatarId: 32 },
-  { quote: "Networking doesn't have to be scary if you're around the RIGHT people in the RIGHT industry!", avatarId: 44 },
-  { quote: "The companies were so generous with their time and made everyone feel important and worthy of a conversation.", avatarId: 28 },
+  { quote: "You never know who you will meet or make connections with at Gather!", avatarId: 32 },
+  { quote: "Networking doesn't have to be scary around the RIGHT people!", avatarId: 44 },
+  { quote: "The companies were so generous with their time.", avatarId: 28 },
   { quote: "Very friendly and energetic vibe to the whole event!", avatarId: 15 },
-  { quote: "The career coaching was very helpful. It helped me work up the courage to go ask the staff at Outside about being a writer for them someday.", avatarId: 67 },
+  { quote: "The career coaching helped me work up courage to talk to Outside.", avatarId: 67 },
   { quote: "Thank you for providing this space for under-represented communities.", avatarId: 23 },
-  { quote: "I now have more knowledge of what skills are desired by the companies I want to work for.", avatarId: 51 },
+  { quote: "I now know what skills companies I want to work for desire.", avatarId: 51 },
 ];
+
+// Positioned items for left gutter
+const leftItems: Array<{ type: 'logo' | 'testimonial'; index: number; top: string; left: string; rotate: string }> = [
+  { type: 'logo', index: 0, top: '4%', left: '2%', rotate: '-8deg' },
+  { type: 'testimonial', index: 0, top: '14%', left: '1%', rotate: '3deg' },
+  { type: 'logo', index: 2, top: '28%', left: '4%', rotate: '-4deg' },
+  { type: 'testimonial', index: 1, top: '38%', left: '0%', rotate: '-2deg' },
+  { type: 'logo', index: 3, top: '52%', left: '2%', rotate: '6deg' },
+  { type: 'testimonial', index: 2, top: '62%', left: '1%', rotate: '4deg' },
+  { type: 'logo', index: 5, top: '76%', left: '3%', rotate: '-10deg' },
+  { type: 'testimonial', index: 6, top: '86%', left: '1%', rotate: '2deg' },
+];
+
+// Positioned items for right gutter
+const rightItems: Array<{ type: 'logo' | 'testimonial'; index: number; top: string; right: string; rotate: string }> = [
+  { type: 'logo', index: 1, top: '6%', right: '3%', rotate: '10deg' },
+  { type: 'testimonial', index: 3, top: '16%', right: '1%', rotate: '-4deg' },
+  { type: 'logo', index: 4, top: '30%', right: '2%', rotate: '5deg' },
+  { type: 'testimonial', index: 4, top: '40%', right: '0%', rotate: '3deg' },
+  { type: 'logo', index: 6, top: '54%', right: '4%', rotate: '-7deg' },
+  { type: 'testimonial', index: 5, top: '64%', right: '1%', rotate: '-3deg' },
+  { type: 'logo', index: 7, top: '78%', right: '2%', rotate: '12deg' },
+  { type: 'logo', index: 9, top: '90%', right: '4%', rotate: '-5deg' },
+];
+
+const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.7 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay }}
+    className="absolute w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-lg"
+    style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
+  >
+    <img
+      src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
+      alt={logo.name}
+      className="w-9 h-9 md:w-10 md:h-10 object-contain"
+    />
+  </motion.div>
+);
+
+const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: Testimonial; style: React.CSSProperties; rotate: string; delay: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, delay }}
+    className="absolute w-40 md:w-44 rounded-xl p-2.5 shadow-lg hidden md:block"
+    style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
+  >
+    <div className="flex gap-2 items-start">
+      <img
+        src={`https://i.pravatar.cc/80?img=${testimonial.avatarId}`}
+        alt="Attendee"
+        className="w-6 h-6 rounded-full object-cover shrink-0 mt-0.5"
+      />
+      <p className="text-[10px] leading-snug font-body" style={{ color: '#19363B' }}>
+        "{testimonial.quote}"
+      </p>
+    </div>
+  </motion.div>
+);
 
 const DenverByTheNumbers = () => {
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-24 md:py-36">
-        {/* Scattered elements — organic placement around edges */}
+        {/* Left gutter elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          
-          {/* The North Face logo - top left corner */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="absolute top-6 left-3 md:left-6 w-14 md:w-18 h-14 md:h-18 rounded-full bg-events-cream flex items-center justify-center rotate-[-8deg] shadow-lg"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[0].domain}&sz=64`}
-              alt={brandLogos[0].name}
-              className="w-7 h-7 md:w-9 md:h-9 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - top left area, offset down */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="absolute top-[12%] left-1 md:left-3 w-36 md:w-44 rounded-xl p-3 rotate-[4deg] shadow-lg hidden md:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[0].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
+          {leftItems.map((item, i) => {
+            const posStyle: React.CSSProperties = { top: item.top, left: item.left };
+            if (item.type === 'logo') {
+              return (
+                <LogoBubble
+                  key={`l-${i}`}
+                  logo={brandLogos[item.index]}
+                  style={posStyle}
+                  rotate={item.rotate}
+                  delay={0.1 + i * 0.06}
+                />
+              );
+            }
+            return (
+              <TestimonialCard
+                key={`l-${i}`}
+                testimonial={testimonials[item.index]}
+                style={posStyle}
+                rotate={item.rotate}
+                delay={0.1 + i * 0.06}
               />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[0].quote}"
-              </p>
-            </div>
-          </motion.div>
+            );
+          })}
 
-          {/* REI logo - upper right, slightly inward */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="absolute top-[8%] right-8 md:right-16 w-16 md:w-20 h-16 md:h-20 rounded-full bg-events-cream flex items-center justify-center rotate-[12deg] shadow-lg hidden lg:flex"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[1].domain}&sz=64`}
-              alt={brandLogos[1].name}
-              className="w-8 h-8 md:w-10 md:h-10 object-contain"
-            />
-          </motion.div>
-
-          {/* Cotopaxi logo - left side, higher */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="absolute top-[26%] left-6 md:left-12 w-12 md:w-14 h-12 md:h-14 rounded-full bg-events-cream flex items-center justify-center rotate-[-3deg] shadow-lg hidden md:flex"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[2].domain}&sz=64`}
-              alt={brandLogos[2].name}
-              className="w-6 h-6 md:w-7 md:h-7 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - right upper area */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="absolute top-[18%] right-2 md:right-5 w-40 md:w-48 rounded-xl p-3 rotate-[-5deg] shadow-lg hidden md:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[3].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
+          {/* Right gutter elements */}
+          {rightItems.map((item, i) => {
+            const posStyle: React.CSSProperties = { top: item.top, right: item.right };
+            if (item.type === 'logo') {
+              return (
+                <LogoBubble
+                  key={`r-${i}`}
+                  logo={brandLogos[item.index]}
+                  style={posStyle}
+                  rotate={item.rotate}
+                  delay={0.15 + i * 0.06}
+                />
+              );
+            }
+            return (
+              <TestimonialCard
+                key={`r-${i}`}
+                testimonial={testimonials[item.index]}
+                style={posStyle}
+                rotate={item.rotate}
+                delay={0.15 + i * 0.06}
               />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[3].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Testimonial - left mid-upper */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="absolute top-[35%] left-0 md:left-2 w-38 md:w-46 rounded-xl p-3 rotate-[-2deg] shadow-lg hidden lg:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[1].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
-              />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[1].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* BOA Fit logo - right side, mid */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.28 }}
-            className="absolute top-[32%] right-4 md:right-8 w-16 md:w-18 h-16 md:h-18 rounded-full bg-events-cream flex items-center justify-center rotate-[7deg] shadow-lg"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[4].domain}&sz=64`}
-              alt={brandLogos[4].name}
-              className="w-8 h-8 md:w-9 md:h-9 object-contain"
-            />
-          </motion.div>
-
-          {/* Brooks logo - left lower-mid */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="absolute top-[48%] left-2 md:left-4 w-13 md:w-15 h-13 md:h-15 rounded-full bg-events-cream flex items-center justify-center rotate-[10deg] shadow-lg hidden md:flex"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[3].domain}&sz=64`}
-              alt={brandLogos[3].name}
-              className="w-6 h-6 md:w-7 md:h-7 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - right middle */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.32 }}
-            className="absolute top-[44%] right-0 md:right-3 w-42 md:w-50 rounded-xl p-3 rotate-[3deg] shadow-lg hidden lg:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[4].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
-              />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[4].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* U of Oregon logo - lower right, inward */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.38 }}
-            className="absolute top-[56%] right-10 md:right-16 w-12 md:w-14 h-12 md:h-14 rounded-full bg-events-cream flex items-center justify-center rotate-[-6deg] shadow-lg hidden lg:flex"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[6].domain}&sz=64`}
-              alt={brandLogos[6].name}
-              className="w-6 h-6 md:w-7 md:h-7 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - left lower */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="absolute top-[58%] left-1 md:left-2 w-44 md:w-52 rounded-xl p-3 rotate-[5deg] shadow-lg hidden lg:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[2].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
-              />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[2].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Altra logo - bottom left corner */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.45 }}
-            className="absolute bottom-[18%] left-5 md:left-10 w-14 md:w-16 h-14 md:h-16 rounded-full bg-events-cream flex items-center justify-center rotate-[-9deg] shadow-lg"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[5].domain}&sz=64`}
-              alt={brandLogos[5].name}
-              className="w-7 h-7 md:w-8 md:h-8 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - right lower */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.42 }}
-            className="absolute top-[70%] right-1 md:right-4 w-40 md:w-48 rounded-xl p-3 rotate-[-4deg] shadow-lg hidden md:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[5].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
-              />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[5].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Gaia GPS logo - bottom right */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.48 }}
-            className="absolute bottom-[12%] right-6 md:right-12 w-13 md:w-15 h-13 md:h-15 rounded-full bg-events-cream flex items-center justify-center rotate-[14deg] shadow-lg"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[9].domain}&sz=64`}
-              alt={brandLogos[9].name}
-              className="w-6 h-6 md:w-7 md:h-7 object-contain"
-            />
-          </motion.div>
-
-          {/* Testimonial - bottom center-left */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="absolute bottom-[6%] left-[8%] w-44 md:w-50 rounded-xl p-3 rotate-[2deg] shadow-lg hidden md:block"
-            style={{ backgroundColor: "#F5E6D3" }}
-          >
-            <div className="flex gap-2">
-              <img
-                src={`https://i.pravatar.cc/80?img=${testimonials[6].avatarId}`}
-                alt="Attendee"
-                className="w-7 h-7 rounded-full object-cover shrink-0"
-              />
-              <p className="text-[9px] md:text-[10px] leading-relaxed" style={{ color: "#19363B" }}>
-                "{testimonials[6].quote}"
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Outside logo - bottom center-right area */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.52 }}
-            className="absolute bottom-[4%] right-[25%] w-12 md:w-14 h-12 md:h-14 rounded-full bg-events-cream flex items-center justify-center rotate-[-11deg] shadow-lg hidden lg:flex"
-          >
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${brandLogos[7].domain}&sz=64`}
-              alt={brandLogos[7].name}
-              className="w-6 h-6 md:w-7 md:h-7 object-contain"
-            />
-          </motion.div>
-
+            );
+          })}
         </div>
 
-        {/* Center stats */}
+        {/* Center stats — protected from overlap */}
         <div className="relative z-10 container mx-auto px-6">
-          <div className="flex flex-col items-center gap-16 md:gap-20 max-w-2xl mx-auto">
+          <div className="flex flex-col items-center gap-16 md:gap-20 max-w-md mx-auto">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
