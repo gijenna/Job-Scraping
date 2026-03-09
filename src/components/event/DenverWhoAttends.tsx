@@ -151,7 +151,101 @@ const DenverWhoAttends = () => {
           </p>
         </motion.div>
 
-        {/* "We gather" stacked list with + signs */}
+        {/* CTA to widget — now right after header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8"
+        >
+          <button
+            onClick={() => setWidgetOpen(!widgetOpen)}
+            className="group inline-flex items-center gap-3 bg-black hover:bg-[#19363B] border border-[#E1B624]/40 text-[#F5E6D3] px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
+          >
+            <BarChart3 className="w-5 h-5 text-[#E1B624]" />
+            <span>Recruiter or Data Nerd? See who comes</span>
+            <ChevronDown className={`w-4 h-4 text-[#E1B624] transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </motion.div>
+
+        {/* Filter widget */}
+        <AnimatePresence>
+          {widgetOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              className="overflow-hidden mb-16"
+            >
+              <div className="bg-black border border-[#E1B624]/20 rounded-2xl p-6 md:p-8 shadow-xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <Search className="w-5 h-5 text-[#E1B624]" />
+                  <h3 className="font-display font-bold text-[#F5E6D3] text-xl">Filter the Talent Pool</h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  <FilterSelect
+                    label="Field of Expertise"
+                    options={options.fields}
+                    value={filters.field}
+                    onChange={(v) => handleFilterChange('field', v)}
+                    placeholder="All fields"
+                  />
+                  <FilterSelect
+                    label="Years of Experience"
+                    options={options.years}
+                    value={filters.years}
+                    onChange={(v) => handleFilterChange('years', v)}
+                    placeholder="Any experience"
+                  />
+                  <FilterSelect
+                    label="Type of Work"
+                    options={options.workTypes}
+                    value={filters.workType}
+                    onChange={(v) => handleFilterChange('workType', v)}
+                    placeholder="All types"
+                  />
+                  <FilterSelect
+                    label="Region"
+                    options={options.regions}
+                    value={filters.region}
+                    onChange={(v) => handleFilterChange('region', v)}
+                    placeholder="All regions"
+                  />
+                </div>
+
+                {/* Results */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-5 h-5 text-[#5BC0EB]" />
+                      <span className="font-display font-extrabold text-3xl md:text-4xl text-[#E1B624]">
+                        {loading ? '...' : filteredCount}
+                      </span>
+                    </div>
+                    <p className="text-[#F5E6D3]/60 font-body text-sm">
+                      {hasActiveFilters
+                        ? `registered attendees match your criteria (of ${total} total)`
+                        : 'total registered attendees'}
+                    </p>
+                  </div>
+
+                  {hasActiveFilters && (
+                    <button
+                      onClick={clearFilters}
+                      className="text-[#5BC0EB] text-sm font-body underline hover:opacity-80 transition-opacity"
+                    >
+                      Clear all
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* "We gather" stacked list with + signs — now below widget */}
         <div className="mb-20 max-w-3xl mx-auto">
           {weGather.map((item, i) => (
             <motion.div
@@ -252,100 +346,6 @@ const DenverWhoAttends = () => {
             ))}
           </div>
         </motion.div>
-
-        {/* CTA to widget */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <button
-            onClick={() => setWidgetOpen(!widgetOpen)}
-            className="group inline-flex items-center gap-3 bg-black hover:bg-[#19363B] border border-[#E1B624]/40 text-[#F5E6D3] px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
-          >
-            <BarChart3 className="w-5 h-5 text-[#E1B624]" />
-            <span>Recruiter or Data Nerd? See who comes</span>
-            <ChevronDown className={`w-4 h-4 text-[#E1B624] transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
-          </button>
-        </motion.div>
-
-        {/* Filter widget */}
-        <AnimatePresence>
-          {widgetOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="overflow-hidden"
-            >
-              <div className="mt-8 bg-black border border-[#E1B624]/20 rounded-2xl p-6 md:p-8 shadow-xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <Search className="w-5 h-5 text-[#E1B624]" />
-                  <h3 className="font-display font-bold text-[#F5E6D3] text-xl">Filter the Talent Pool</h3>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  <FilterSelect
-                    label="Field of Expertise"
-                    options={options.fields}
-                    value={filters.field}
-                    onChange={(v) => handleFilterChange('field', v)}
-                    placeholder="All fields"
-                  />
-                  <FilterSelect
-                    label="Years of Experience"
-                    options={options.years}
-                    value={filters.years}
-                    onChange={(v) => handleFilterChange('years', v)}
-                    placeholder="Any experience"
-                  />
-                  <FilterSelect
-                    label="Type of Work"
-                    options={options.workTypes}
-                    value={filters.workType}
-                    onChange={(v) => handleFilterChange('workType', v)}
-                    placeholder="All types"
-                  />
-                  <FilterSelect
-                    label="Region"
-                    options={options.regions}
-                    value={filters.region}
-                    onChange={(v) => handleFilterChange('region', v)}
-                    placeholder="All regions"
-                  />
-                </div>
-
-                {/* Results */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <Users className="w-5 h-5 text-[#5BC0EB]" />
-                      <span className="font-display font-extrabold text-3xl md:text-4xl text-[#E1B624]">
-                        {loading ? '...' : filteredCount}
-                      </span>
-                    </div>
-                    <p className="text-[#F5E6D3]/60 font-body text-sm">
-                      {hasActiveFilters
-                        ? `registered attendees match your criteria (of ${total} total)`
-                        : 'total registered attendees'}
-                    </p>
-                  </div>
-
-                  {hasActiveFilters && (
-                    <button
-                      onClick={clearFilters}
-                      className="text-[#5BC0EB] text-sm font-body underline hover:opacity-80 transition-opacity"
-                    >
-                      Clear all
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </section>
   );
