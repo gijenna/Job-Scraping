@@ -20,6 +20,7 @@ import ExpertDetail from "./pages/ExpertDetail";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOR26 from "./pages/EventOR26";
+import CardStylePreview from "./pages/CardStylePreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
