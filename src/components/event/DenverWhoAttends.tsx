@@ -9,7 +9,8 @@ const experienceSegments = [
     title: "Industry Veterans",
     count: "~185",
     pct: 30,
-    desc: "11+ years of experience. The legacy professionals who've survived multiple economic cycles and brand acquisitions.",
+    yearHighlight: "11+",
+    desc: " years of experience. The legacy professionals who've survived multiple economic cycles and brand acquisitions.",
     color: "hsl(5, 65%, 65%)",
     tokenColor: "text-primary",
     bgToken: "bg-primary/15",
@@ -19,7 +20,8 @@ const experienceSegments = [
     title: "Active Insiders",
     count: "~245",
     pct: 40,
-    desc: "6–10 years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
+    yearHighlight: "6–10",
+    desc: " years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
     color: "hsl(45, 80%, 55%)",
     tokenColor: "text-[hsl(45,80%,55%)]",
     bgToken: "bg-[hsl(45,80%,55%)]/15",
@@ -29,7 +31,8 @@ const experienceSegments = [
     title: 'The "Great Pivoters"',
     count: "~110",
     pct: 18,
-    desc: "3–5 years of experience. Career switchers from Tech, Finance, or CPG now seeking to align their work with their outdoor lifestyle.",
+    yearHighlight: "3–5",
+    desc: " years of experience. Career switchers from Tech, Finance, or CPG now seeking to align their work with their outdoor lifestyle.",
     color: "hsl(150, 40%, 55%)",
     tokenColor: "text-[hsl(150,40%,55%)]",
     bgToken: "bg-[hsl(150,40%,55%)]/15",
@@ -39,7 +42,8 @@ const experienceSegments = [
     title: "Industry Newcomers",
     count: "~75",
     pct: 12,
-    desc: "Recent grads and early-career pros (0–2 years) specifically targeting the outdoor sector for their first major roles.",
+    yearHighlight: "0–2",
+    desc: " years of experience. Recent grads and early-career pros specifically targeting the outdoor sector for their first major roles.",
     color: "hsl(200, 50%, 60%)",
     tokenColor: "text-[hsl(200,50%,60%)]",
     bgToken: "bg-[hsl(200,50%,60%)]/15",
@@ -229,7 +233,10 @@ const DenverWhoAttends = () => {
                     {seg.pct}%
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm font-body leading-relaxed">{seg.desc}</p>
+                <p className="text-muted-foreground text-sm font-body leading-relaxed">
+                  <span className="font-display font-extrabold text-base" style={{ color: seg.color }}>{seg.yearHighlight}</span>
+                  {seg.desc}
+                </p>
                 {/* Mini progress bar */}
                 <div className="mt-3 h-1 rounded-full bg-secondary overflow-hidden">
                   <motion.div
