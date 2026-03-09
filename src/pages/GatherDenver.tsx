@@ -1,4 +1,5 @@
 import { Zap, Star, Crown, Briefcase, MessageCircle, Target, Users } from "lucide-react";
+import DenverTestimonials from "@/components/event/DenverTestimonials";
 import DenverHero from "@/components/event/DenverHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverPowerfulPremium from "@/components/event/DenverPowerfulPremium";
@@ -178,8 +179,7 @@ const GatherDenver = () => {
 
       <DenverPowerfulPremium />
       <DenverByTheNumbers />
-
-      
+      <DenverTestimonials />
 
       <Testimonials />
 
