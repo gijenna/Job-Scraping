@@ -77,6 +77,8 @@ const scatteredElements: Array<{
   { type: 'testimonial', index: 5, top: '84%', left: '2%', rotate: '-6deg' },
 
   { type: 'logo', index: 8, top: '92%', left: '6%', rotate: '5deg' },
+  { type: 'testimonial', index: 6, top: '12%', left: '3%', rotate: '5deg' },
+  { type: 'testimonial', index: 7, top: '78%', right: '3%', rotate: '4deg' },
 ];
 
 const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
