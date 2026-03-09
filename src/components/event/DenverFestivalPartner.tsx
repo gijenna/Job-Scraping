@@ -32,7 +32,7 @@ const DenverFestivalPartner = () => {
             </p>
 
             <p className="text-events-yellow/80 font-body text-sm italic">
-              Psst — Basecamp partners get free 3-day tix 🎟️
+              Psst - Basecamp partners get free 3-day tix 🎟️
             </p>
 
             <a
