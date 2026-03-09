@@ -1,5 +1,5 @@
-import { Zap, Star, Crown, Briefcase, MessageCircle } from "lucide-react";
-
+import { Zap, Star, Crown, Briefcase, MessageCircle, Compass, Sparkles, GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 import EventQuote from "@/components/event/EventQuote";
 import EventBrandShowUp from "@/components/event/EventBrandShowUp";
 import EventStats from "@/components/event/EventStats";
@@ -121,6 +121,41 @@ const OldStuffByJenna = () => {
   return (
     <main className="bg-background min-h-screen">
       <div className="pt-16">
+        {/* We Gather list */}
+        <section className="py-24 px-6">
+          <div className="container mx-auto max-w-3xl">
+            {[
+              { icon: Briefcase, text: "The outdoor industry's most skilled talent currently innovating at your competitors" },
+              { icon: Compass, text: "Outdoorsy folks currently working in sectors like tech, healthcare, aerospace who want to use their skills in a new industry" },
+              { icon: Sparkles, text: "Industry tastemakers - leaders, creatives, athletes, influencers - not actively looking for a role, but making sure they know what's next" },
+              { icon: GraduationCap, text: "Students and fresh grads hungry for entry-level, retail, or seasonal roles" },
+            ].map((item, i, arr) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+              >
+                <div className="flex items-start gap-4 py-4">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <item.icon className="w-4.5 h-4.5 text-primary" />
+                  </div>
+                  <p className="text-foreground font-body text-base md:text-lg leading-relaxed">
+                    {item.text}
+                  </p>
+                </div>
+                {i < arr.length - 1 && (
+                  <div className="flex items-center gap-3 pl-3">
+                    <span className="text-primary font-display font-extrabold text-2xl leading-none">+</span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
         <EventStats
           donutData={denverDonutData}
           barData={denverBarData}
