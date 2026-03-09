@@ -161,7 +161,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                       <Badge variant="outline" className="text-events-cream/70 border-events-cream/15 text-xs shrink-0">
                         {cityName}
                       </Badge>
-                      <code className="text-[10px] text-events-yellow/70 truncate flex-1" title={`${window.location.origin}${linkPath}`}>
+                      <code className="text-[10px] text-events-yellow/70 truncate flex-1" title={`${PUBLISHED_BASE_URL}${linkPath}`}>
                         {linkPath}
                       </code>
                       <Button
