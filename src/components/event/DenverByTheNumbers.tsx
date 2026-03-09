@@ -128,21 +128,8 @@ const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; st
     />
   </motion.div>
 );
-    initial={{ opacity: 0, scale: 0.7 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, delay }}
-    className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg"
-    style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
-  >
-    <img
-      src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
-      alt={logo.name}
-      className="w-10 h-10 md:w-12 md:h-12 object-contain"
-      style={{ mixBlendMode: 'multiply' }}
-    />
-  </motion.div>
-);
+
+
 
 const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: Testimonial; style: React.CSSProperties; rotate: string; delay: number }) => (
   <motion.div
