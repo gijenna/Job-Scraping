@@ -61,7 +61,7 @@ const DenverFestivalPartner = () => {
             >
               <img
                 src={headlinersImg}
-                alt="Outside Days 2026 headliners — Death Cab for Cutie, My Morning Jacket, Cage the Elephant"
+                alt="Outside Days 2026 headliners - Death Cab for Cutie, My Morning Jacket, Cage the Elephant"
                 className="w-full h-auto object-cover"
               />
             </a>
