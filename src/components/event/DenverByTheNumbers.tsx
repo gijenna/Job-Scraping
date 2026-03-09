@@ -32,6 +32,8 @@ const brandLogos: BrandLogo[] = [
   { name: "U of Oregon", domain: "uoregon.edu" },
   { name: "Outside", domain: "outsideonline.com" },
   { name: "Ski Magazine", domain: "skimag.com" },
+  { name: "YETI", domain: "yeti.com" },
+  { name: "Alterra", domain: "alterramtnco.com" },
 ];
 
 const testimonials: Testimonial[] = [
