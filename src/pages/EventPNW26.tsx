@@ -10,15 +10,18 @@ import PnwWhosComing from "@/components/event/PnwWhosComing";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com" },
+  { name: "On Running", domain: "on-running.com" },
   { name: "Arc'teryx", domain: "arcteryx.com" },
+  { name: "Cotopaxi", domain: "cotopaxi.com" },
+  { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org" },
+  { name: "Superfeet", domain: "superfeet.com" },
+  { name: "Popfly", domain: "popfly.com" },
   { name: "Brooks", domain: "brooksrunning.com" },
   { name: "Specialized", domain: "specialized.com" },
-  { name: "Superfeet", domain: "superfeet.com" },
   { name: "Nike", domain: "nike.com" },
   { name: "Columbia", domain: "columbia.com" },
   { name: "Patagonia", domain: "patagonia.com" },
   { name: "KEEN", domain: "keenfootwear.com" },
-  { name: "On Running", domain: "on-running.com" },
   { name: "Lululemon", domain: "lululemon.com" },
   { name: "Dovetail Workwear", domain: "dovetailworkwear.com" },
 ];
@@ -47,6 +50,54 @@ const EventPNW26 = () => {
         brands={pnwBrands}
         headline="Brands & professionals in the room"
       />
+
+      {/* Brand Showcase */}
+      <section className="py-16 md:py-24 px-6 bg-events-cream">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
+              Who's in the room
+            </p>
+            <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
+              Chat with hiring managers & industry leaders from brands like:
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
+          >
+            {pnwBrands.map((brand) => (
+              <div
+                key={brand.name}
+                className="flex flex-col items-center gap-2 group"
+              >
+                <img
+                  src={`https://logo.clearbit.com/${brand.domain}`}
+                  alt={brand.name}
+                  className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.src = `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
+                    target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
+                  }}
+                />
+                <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">
+                  {brand.name}
+                </span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       <PnwWhosComing accentColor="#FEE123" bgColor="#154733" />
 
