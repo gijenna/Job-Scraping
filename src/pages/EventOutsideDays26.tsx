@@ -40,6 +40,7 @@ const EventOutsideDays26 = () => {
         tagline="The outdoor industry's biggest career discovery event — inside the Outside Days festival."
         registrationUrl={TYPEFORM_DENVER}
         accentColor="#E1B624"
+        sponsorPageUrl="/gather-denver"
       />
 
       <EventLogoTicker

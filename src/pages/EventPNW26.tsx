@@ -40,6 +40,7 @@ const EventPNW26 = () => {
         registrationUrl={TYPEFORM_PNW}
         overlayColor="rgba(21, 71, 51, 0.65)"
         accentColor="#FEE123"
+        sponsorPageUrl="/gather-pnw"
       />
 
       <EventLogoTicker

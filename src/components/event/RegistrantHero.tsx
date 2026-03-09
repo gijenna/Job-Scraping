@@ -11,6 +11,7 @@ interface RegistrantHeroProps {
   time: string;
   tagline: string;
   registrationUrl: string;
+  sponsorPageUrl: string;
   overlayColor?: string;
   accentColor?: string;
 }
@@ -25,6 +26,7 @@ const RegistrantHero = ({
   time,
   tagline,
   registrationUrl,
+  sponsorPageUrl,
   overlayColor = "rgba(25, 54, 59, 0.65)",
   accentColor = "#E1B624",
 }: RegistrantHeroProps) => {
@@ -90,19 +92,29 @@ const RegistrantHero = ({
           {tagline}
         </motion.p>
 
-        <motion.a
-          href={registrationUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-          style={{ backgroundColor: accentColor, color: "#19363B" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
-          Register Free
-          <ArrowRight className="w-5 h-5" />
-        </motion.a>
+          <a
+            href={registrationUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            style={{ backgroundColor: accentColor, color: "#19363B" }}
+          >
+            Register Free
+            <ArrowRight className="w-5 h-5" />
+          </a>
+          <a
+            href={sponsorPageUrl}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-display font-bold text-base border-2 border-white/30 text-white/90 transition-all duration-300 hover:border-white/60 hover:text-white hover:scale-105"
+          >
+            Join as a Brand
+          </a>
+        </motion.div>
       </div>
     </section>
   );
