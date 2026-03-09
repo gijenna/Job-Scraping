@@ -6,6 +6,7 @@ import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
 import eventYeti from "@/assets/event-yeti.jpg";
 import eventShar from "@/assets/event-shar.jpg";
+import eventYetiCropped from "@/assets/event-yeti-cropped.jpg";
 
 interface TierAccordion {
   id: string;
