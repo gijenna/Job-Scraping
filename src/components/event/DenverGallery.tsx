@@ -9,6 +9,13 @@ import eventPow from "@/assets/event-pow.jpg";
 import eventRei from "@/assets/event-rei.jpg";
 import eventShar from "@/assets/event-shar.jpg";
 import eventYeti from "@/assets/event-yeti.jpg";
+import eventAlisonVolunteer from "@/assets/event-alison-volunteer.jpg";
+import eventBasecampTeam from "@/assets/event-basecamp-team.jpg";
+import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
+import eventBoaSwag from "@/assets/event-boa-swag.jpg";
+import eventCareerCoachingPopup from "@/assets/event-career-coaching-popup.jpg";
+import eventCrowd from "@/assets/event-crowd.jpg";
+import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
 
 interface GalleryImage {
   src: string;
@@ -17,10 +24,17 @@ interface GalleryImage {
 
 const galleryImages: GalleryImage[] = [
   { src: eventRei, caption: "REI connecting with outdoor professionals" },
+  { src: eventCrowd, caption: "Packed house at Gather" },
   { src: eventYeti, caption: "YETI brand activation" },
-  { src: eventCareerCoaching, caption: "Career coaching sessions" },
+  { src: eventBoaSwag, caption: "BOA swag excitement" },
+  { src: eventCareerCoachingPopup, caption: "Career Coaching Pop-Up" },
+  { src: eventBasecampTeam, caption: "The Basecamp Outdoor team" },
   { src: eventOutsideBooth, caption: "Outside booth engagement" },
+  { src: eventYetiBestday, caption: "YETI x Best Day Brewing" },
+  { src: eventAlisonVolunteer, caption: "Volunteer welcoming attendees" },
   { src: eventBoa, caption: "BOA networking moment" },
+  { src: eventCrowdBooth, caption: "Attendees exploring booths" },
+  { src: eventCareerCoaching, caption: "Career coaching sessions" },
   { src: eventPow, caption: "POW brand presence" },
   { src: eventShar, caption: "Industry leaders connecting" },
 ];
