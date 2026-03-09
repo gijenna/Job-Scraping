@@ -84,6 +84,8 @@ const scatteredElements: Array<{
   // Bottom band (85-95%)
   { type: 'testimonial', index: 5, top: '86%', right: '14%', rotate: '-2deg' },
   { type: 'logo', index: 8, top: '90%', left: '10%', rotate: '8deg' },
+  { type: 'logo', index: 9, top: '34%', right: '18%', rotate: '-6deg' },
+  { type: 'logo', index: 10, top: '68%', left: '18%', rotate: '10deg' },
 ];
 
 const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
