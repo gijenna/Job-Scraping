@@ -1,36 +1,67 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Briefcase, Sparkles, GraduationCap, Compass, Search, ChevronDown, BarChart3 } from "lucide-react";
+import { Users, Briefcase, Sparkles, GraduationCap, Compass, Search, ChevronDown, BarChart3, Award, Zap, ArrowRightLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const audienceSegments = [
+const experienceSegments = [
+  {
+    icon: Award,
+    title: "Industry Veterans",
+    count: "~185",
+    pct: 30,
+    desc: "11+ years of experience. The legacy professionals who've survived multiple economic cycles and brand acquisitions.",
+    color: "hsl(5, 65%, 65%)",
+    tokenColor: "text-primary",
+    bgToken: "bg-primary/15",
+  },
   {
     icon: Briefcase,
-    title: "Industry Pros",
-    desc: "The outdoor industry's most skilled talent currently innovating at your competitors.",
-    color: "text-primary",
-    bgColor: "bg-primary/10",
+    title: "Active Insiders",
+    count: "~245",
+    pct: 40,
+    desc: "6–10 years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
+    color: "hsl(45, 80%, 55%)",
+    tokenColor: "text-[hsl(45,80%,55%)]",
+    bgToken: "bg-[hsl(45,80%,55%)]/15",
   },
   {
-    icon: Compass,
-    title: "Cross-Sector Talent",
-    desc: "Outdoorsy folks currently working in sectors like tech, healthcare, and aerospace who want to use their skills in a new industry.",
-    color: "text-accent",
-    bgColor: "bg-accent/10",
-  },
-  {
-    icon: Sparkles,
-    title: "Industry Tastemakers",
-    desc: "Leaders, creatives, athletes, and influencers not actively looking for a role — but making sure they know what's next.",
-    color: "text-[hsl(45,80%,55%)]",
-    bgColor: "bg-[hsl(45,80%,55%)]/10",
+    icon: ArrowRightLeft,
+    title: 'The "Great Pivoters"',
+    count: "~110",
+    pct: 18,
+    desc: "3–5 years of experience. Career switchers from Tech, Finance, or CPG now seeking to align their work with their outdoor lifestyle.",
+    color: "hsl(150, 40%, 55%)",
+    tokenColor: "text-[hsl(150,40%,55%)]",
+    bgToken: "bg-[hsl(150,40%,55%)]/15",
   },
   {
     icon: GraduationCap,
-    title: "Emerging Talent",
-    desc: "Students and fresh grads hungry for entry-level, retail, or seasonal roles.",
-    color: "text-[hsl(150,40%,55%)]",
-    bgColor: "bg-[hsl(150,40%,55%)]/10",
+    title: "Industry Newcomers",
+    count: "~75",
+    pct: 12,
+    desc: "Recent grads and early-career pros (0–2 years) specifically targeting the outdoor sector for their first major roles.",
+    color: "hsl(200, 50%, 60%)",
+    tokenColor: "text-[hsl(200,50%,60%)]",
+    bgToken: "bg-[hsl(200,50%,60%)]/15",
+  },
+];
+
+const weGather = [
+  {
+    icon: Briefcase,
+    text: "The outdoor industry's most skilled talent currently innovating at your competitors",
+  },
+  {
+    icon: Compass,
+    text: "Outdoorsy folks currently working in sectors like tech, healthcare, aerospace who want to use their skills in a new industry",
+  },
+  {
+    icon: Sparkles,
+    text: "Industry tastemakers — leaders, creatives, athletes, influencers — not actively looking for a role, but making sure they know what's next",
+  },
+  {
+    icon: GraduationCap,
+    text: "Students and fresh grads hungry for entry-level, retail, or seasonal roles",
   },
 ];
 
@@ -116,27 +147,104 @@ const DenverWhoAttends = () => {
           </p>
         </motion.div>
 
-        {/* Audience segments */}
-        <div className="space-y-4 mb-16">
-          {audienceSegments.map((seg, i) => (
+        {/* "We gather" stacked list with + signs */}
+        <div className="mb-20 max-w-3xl mx-auto">
+          {weGather.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="flex items-start gap-4 bg-gradient-card border border-border rounded-xl p-5 shadow-card"
+              transition={{ delay: i * 0.08 }}
             >
-              <div className={`w-10 h-10 rounded-lg ${seg.bgColor} flex items-center justify-center shrink-0 mt-0.5`}>
-                <seg.icon className={`w-5 h-5 ${seg.color}`} />
+              <div className="flex items-start gap-4 py-4">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <item.icon className="w-4.5 h-4.5 text-primary" />
+                </div>
+                <p className="text-foreground font-body text-base md:text-lg leading-relaxed">
+                  {item.text}
+                </p>
               </div>
-              <div>
-                <h3 className="font-display font-bold text-foreground text-lg mb-1">{seg.title}</h3>
-                <p className="text-muted-foreground text-sm font-body leading-relaxed">{seg.desc}</p>
-              </div>
+              {i < weGather.length - 1 && (
+                <div className="flex items-center gap-3 pl-3">
+                  <span className="text-primary font-display font-extrabold text-2xl leading-none">+</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
+
+        {/* Experience-based segments — horizontal bar visualization */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <p className="text-primary text-xs tracking-[0.3em] uppercase mb-8 font-body text-center">
+            By Experience Level
+          </p>
+
+          {/* Stacked bar */}
+          <div className="flex rounded-full overflow-hidden h-3 mb-8">
+            {experienceSegments.map((seg, i) => (
+              <motion.div
+                key={i}
+                initial={{ width: 0 }}
+                whileInView={{ width: `${seg.pct}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 + i * 0.1, ease: 'easeOut' }}
+                style={{ backgroundColor: seg.color }}
+                className="h-full"
+              />
+            ))}
+          </div>
+
+          {/* Segment cards */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {experienceSegments.map((seg, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 + i * 0.08 }}
+                className="bg-gradient-card border border-border rounded-xl p-5 shadow-card group hover:border-primary/30 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg ${seg.bgToken} flex items-center justify-center`}>
+                      <seg.icon className={`w-5 h-5 ${seg.tokenColor}`} />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-bold text-foreground text-base">{seg.title}</h3>
+                      <p className="text-muted-foreground text-xs font-body">{seg.count} attendees</p>
+                    </div>
+                  </div>
+                  <div
+                    className="font-display font-extrabold text-2xl"
+                    style={{ color: seg.color }}
+                  >
+                    {seg.pct}%
+                  </div>
+                </div>
+                <p className="text-muted-foreground text-sm font-body leading-relaxed">{seg.desc}</p>
+                {/* Mini progress bar */}
+                <div className="mt-3 h-1 rounded-full bg-secondary overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${seg.pct}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
+                    className="h-full rounded-full"
+                    style={{ backgroundColor: seg.color }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* CTA to widget */}
         <motion.div
