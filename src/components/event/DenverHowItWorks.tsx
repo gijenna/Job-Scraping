@@ -5,6 +5,8 @@ import { ChevronDown, Check } from "lucide-react";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
 import eventYeti from "@/assets/event-yeti.jpg";
+import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
+import eventShar from "@/assets/event-shar.jpg";
 
 interface TierAccordion {
   id: string;
@@ -225,27 +227,42 @@ const DenverHowItWorks = () => {
           viewport={{ once: true }}
           className="mt-16 mb-12"
         >
-          <div className="flex items-start gap-4">
-            <span
-              className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0"
-              style={{ backgroundColor: "#E1B624", color: "#19363B" }}
-            >
-              2
-            </span>
-            <div>
-              <h3
-                className="font-display font-bold text-2xl md:text-3xl mb-3"
-                style={{ color: "#F5E6D3" }}
+          <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
+            <div className="flex items-start gap-4 flex-1">
+              <span
+                className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0"
+                style={{ backgroundColor: "#E1B624", color: "#19363B" }}
               >
-                You select your storytelling team
-              </h3>
-              <p
-                className="font-body text-base md:text-lg leading-relaxed"
-                style={{ color: "#F5E6D3", opacity: 0.8 }}
-              >
-                A mix of HR, Marketing, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
-              </p>
+                2
+              </span>
+              <div>
+                <h3
+                  className="font-display font-bold text-2xl md:text-3xl mb-3"
+                  style={{ color: "#F5E6D3" }}
+                >
+                  You select your storytelling team
+                </h3>
+                <p
+                  className="font-body text-base md:text-lg leading-relaxed"
+                  style={{ color: "#F5E6D3", opacity: 0.8 }}
+                >
+                  A mix of HR, Marketing, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
+                </p>
+              </div>
             </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, rotate: 2 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 3 }}
+              viewport={{ once: true }}
+              className="shrink-0 w-48 h-56 md:w-56 md:h-64 rounded-2xl overflow-hidden shadow-xl self-center md:self-start"
+              style={{ rotate: "3deg" }}
+            >
+              <img
+                src={eventYetiBestday}
+                alt="YETI team at event"
+                className="w-full h-full object-cover object-bottom"
+              />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -255,26 +272,41 @@ const DenverHowItWorks = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="flex items-start gap-4">
-            <span
-              className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0"
-              style={{ backgroundColor: "#E1B624", color: "#19363B" }}
+          <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, rotate: -2 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: -3 }}
+              viewport={{ once: true }}
+              className="shrink-0 w-48 h-56 md:w-56 md:h-64 rounded-2xl overflow-hidden shadow-xl self-center md:self-start order-2 md:order-first"
+              style={{ rotate: "-3deg" }}
             >
-              3
-            </span>
-            <div>
-              <h3
-                className="font-display font-bold text-2xl md:text-3xl mb-3"
-                style={{ color: "#F5E6D3" }}
+              <img
+                src={eventShar}
+                alt="Shar Snacks activation"
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+            <div className="flex items-start gap-4 flex-1">
+              <span
+                className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold text-lg shrink-0"
+                style={{ backgroundColor: "#E1B624", color: "#19363B" }}
               >
-                You get creative. Demos? Product displays? Giveaways? Dunk tanks?
-              </h3>
-              <p
-                className="font-body text-base md:text-lg leading-relaxed"
-                style={{ color: "#F5E6D3", opacity: 0.8 }}
-              >
-                How can you put your products and culture on display to go beyond your careers page and retail store to show top talent they don't just want to <strong style={{ color: "#E1B624" }}>BUY</strong> from you… they want to <strong style={{ color: "#E1B624" }}>WORK</strong> for you. And they'll be refreshing your page so they never miss when you post a dream job.
-              </p>
+                3
+              </span>
+              <div>
+                <h3
+                  className="font-display font-bold text-2xl md:text-3xl mb-3"
+                  style={{ color: "#F5E6D3" }}
+                >
+                  You get creative. Demos? Product displays? Giveaways? Dunk tanks?
+                </h3>
+                <p
+                  className="font-body text-base md:text-lg leading-relaxed"
+                  style={{ color: "#F5E6D3", opacity: 0.8 }}
+                >
+                  How can you put your products and culture on display to go beyond your careers page and retail store to show top talent they don't just want to <strong style={{ color: "#E1B624" }}>BUY</strong> from you… they want to <strong style={{ color: "#E1B624" }}>WORK</strong> for you. And they'll be refreshing your page so they never miss when you post a dream job.
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>
