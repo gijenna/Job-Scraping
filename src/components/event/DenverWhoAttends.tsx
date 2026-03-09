@@ -11,9 +11,7 @@ const experienceSegments = [
     pct: 30,
     yearHighlight: "11+",
     desc: " years of experience. The legacy professionals who've survived multiple economic cycles and brand acquisitions.",
-    color: "hsl(5, 65%, 65%)",
-    tokenColor: "text-primary",
-    bgToken: "bg-primary/15",
+    color: "#E1B624",
   },
   {
     icon: Briefcase,
@@ -22,9 +20,7 @@ const experienceSegments = [
     pct: 40,
     yearHighlight: "6–10",
     desc: " years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
-    color: "hsl(45, 80%, 55%)",
-    tokenColor: "text-[hsl(45,80%,55%)]",
-    bgToken: "bg-[hsl(45,80%,55%)]/15",
+    color: "#5BC0EB",
   },
   {
     icon: ArrowRightLeft,
@@ -33,9 +29,7 @@ const experienceSegments = [
     pct: 18,
     yearHighlight: "3–5",
     desc: " years of experience. Career switchers from Tech, Finance, or CPG now seeking to align their work with their outdoor lifestyle.",
-    color: "hsl(150, 40%, 55%)",
-    tokenColor: "text-[hsl(150,40%,55%)]",
-    bgToken: "bg-[hsl(150,40%,55%)]/15",
+    color: "#F5E6D3",
   },
   {
     icon: GraduationCap,
@@ -44,9 +38,7 @@ const experienceSegments = [
     pct: 12,
     yearHighlight: "0–2",
     desc: " years of experience. Recent grads and early-career pros specifically targeting the outdoor sector for their first major roles.",
-    color: "hsl(200, 50%, 60%)",
-    tokenColor: "text-[hsl(200,50%,60%)]",
-    bgToken: "bg-[hsl(200,50%,60%)]/15",
+    color: "#19363B",
   },
 ];
 
@@ -308,16 +300,20 @@ const DenverWhoAttends = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 + i * 0.08 }}
-                className="bg-gradient-card border border-border rounded-xl p-5 shadow-card group hover:border-primary/30 transition-colors"
+                className="bg-black border rounded-xl p-5 shadow-lg group hover:border-opacity-60 transition-colors"
+                style={{ borderColor: `${seg.color}33` }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg ${seg.bgToken} flex items-center justify-center`}>
-                      <seg.icon className={`w-5 h-5 ${seg.tokenColor}`} />
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: `${seg.color}20` }}
+                    >
+                      <seg.icon className="w-5 h-5" style={{ color: seg.color }} />
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-foreground text-base">{seg.title}</h3>
-                      <p className="text-muted-foreground text-xs font-body">{seg.count} attendees</p>
+                      <h3 className="font-display font-bold text-[#F5E6D3] text-base">{seg.title}</h3>
+                      <p className="text-[#F5E6D3]/50 text-xs font-body">{seg.count} attendees</p>
                     </div>
                   </div>
                   <div
@@ -327,12 +323,12 @@ const DenverWhoAttends = () => {
                     {seg.pct}%
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm font-body leading-relaxed">
+                <p className="text-[#F5E6D3]/60 text-sm font-body leading-relaxed">
                   <span className="font-display font-extrabold text-base" style={{ color: seg.color }}>{seg.yearHighlight}</span>
                   {seg.desc}
                 </p>
                 {/* Mini progress bar */}
-                <div className="mt-3 h-1 rounded-full bg-secondary overflow-hidden">
+                <div className="mt-3 h-1 rounded-full bg-[#F5E6D3]/10 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${seg.pct}%` }}
