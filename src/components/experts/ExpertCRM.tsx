@@ -69,10 +69,10 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
     let url: string;
     if (isBrandRep) {
       const repPrefix = assignment.city_slug === 'portland' ? 'pnw' : assignment.city_slug;
-      url = `${window.location.origin}/${repPrefix}reps/${expert.slug}`;
+      url = `${PUBLISHED_BASE_URL}/${repPrefix}reps/${expert.slug}`;
     } else {
       const cityPrefix = assignment.city_slug === 'denver' ? 'Denver' : assignment.city_slug === 'portland' ? 'Portland' : 'MN';
-      url = `${window.location.origin}/${cityPrefix}experts/${expert.slug}`;
+      url = `${PUBLISHED_BASE_URL}/${cityPrefix}experts/${expert.slug}`;
     }
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
