@@ -39,7 +39,7 @@ const tiers: TierAccordion[] = [
     subtitle: "A deluxe space with room for up to 20 reps, way more room to get creative",
     price: "$6,000–$12,000",
     spots: "4 available",
-    backgroundImage: eventAlterraChat,
+    backgroundImage: eventYetiDenver,
     perks: [
       "Everything in Starter, plus:",
       "Much larger activation space",
