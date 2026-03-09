@@ -2,7 +2,6 @@ import { Zap, Star, Crown, Briefcase, MessageCircle, Target, Users } from "lucid
 import DenverHero from "@/components/event/DenverHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverPowerfulPremium from "@/components/event/DenverPowerfulPremium";
-import DenverOrbitingStats from "@/components/event/DenverOrbitingStats";
 import DenverByTheNumbers from "@/components/event/DenverByTheNumbers";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import EventQuote from "@/components/event/EventQuote";
@@ -14,7 +13,6 @@ import EventROI from "@/components/event/EventROI";
 import EventSetup from "@/components/event/EventSetup";
 import Testimonials from "@/components/Testimonials";
 import Schedule from "@/components/Schedule";
-import RecruiterValue from "@/components/RecruiterValue";
 
 const denverSchedule = [
   { time: "11 AM–12:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
