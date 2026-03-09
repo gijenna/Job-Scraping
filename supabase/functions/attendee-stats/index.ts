@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
     let filtered = attendees;
     
     if (filterField) {
-      filtered = filtered.filter(a => a.field === filterField);
+      filtered = filtered.filter(a => a.normalizedField === filterField);
     }
     if (filterYears) {
       filtered = filtered.filter(a => a.years === filterYears);
