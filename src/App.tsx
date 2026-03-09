@@ -8,6 +8,7 @@ import GatherPNW from "./pages/GatherPNW";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
+import OldStuffByJenna from "./pages/OldStuffByJenna";
 import Events from "./pages/Events";
 import EventCalendar from "./pages/EventCalendar";
 import AdminLogin from "./pages/AdminLogin";
