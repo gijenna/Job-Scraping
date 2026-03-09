@@ -47,7 +47,7 @@ const EventSetup = ({ variant }: EventSetupProps) => {
             What You Get On-Site
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            Every hiring table comes ready to go — so your team can focus on conversations, not logistics.
+            Every hiring table comes ready to go - so your team can focus on conversations, not logistics.
           </p>
         </motion.div>
 
