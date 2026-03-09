@@ -113,15 +113,21 @@ const scatteredElements: Array<{
   { type: 'logo', index: 10, top: '70%', left: '22%', rotate: '10deg' },
 ];
 
-const LogoBubble = ({ logo, style, rotate, delay, small, rain }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean; rain?: boolean }) => (
+// Rain landing positions for mobile — logos fall to bottom and settle in a row
+const mobileRainLogos = brandLogos.map((logo, i) => ({
+  logo,
+  // Spread across the bottom evenly
+  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2, // 2% to 87%
+  delay: 0.3 + i * 0.18,
+  rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg'][i] || '0deg',
+}));
+
+const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => (
   <motion.div
-    initial={rain ? { opacity: 0, y: -80 } : { opacity: 0, scale: 0.7 }}
-    whileInView={rain ? { opacity: [0, 1, 1, 0.6], y: ["-80px", "0px", "0px", "0px"] } : { opacity: 1, scale: 1 }}
+    initial={{ opacity: 0, scale: 0.7 }}
+    whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
-    transition={rain
-      ? { duration: 1.8, delay, ease: "easeOut", times: [0, 0.4, 0.7, 1] }
-      : { duration: 0.5, delay }
-    }
+    transition={{ duration: 0.5, delay }}
     className={`absolute ${small ? 'w-8 h-8' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
     style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
   >
@@ -131,6 +137,34 @@ const LogoBubble = ({ logo, style, rotate, delay, small, rain }: { logo: BrandLo
       className={`${small ? 'w-5 h-5' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
       style={{ mixBlendMode: 'multiply' }}
     />
+  </motion.div>
+);
+
+const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; leftPercent: number; delay: number; rotate: string }) => (
+  <motion.div
+    initial={{ y: "-100vh", opacity: 0 }}
+    whileInView={{ y: 0, opacity: 1 }}
+    viewport={{ once: true, margin: "200px" }}
+    transition={{
+      y: { duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] },
+      opacity: { duration: 0.3, delay },
+    }}
+    className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
+    style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
+  >
+    <motion.div
+      initial={{ scale: 1 }}
+      whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: delay + 1.3, ease: "easeOut" }}
+    >
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
+        alt={logo.name}
+        className="w-5 h-5 object-contain"
+        style={{ mixBlendMode: 'multiply' }}
+      />
+    </motion.div>
   </motion.div>
 );
 
@@ -165,37 +199,52 @@ const DenverByTheNumbers = () => {
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
-        {/* Scattered elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {elements.map((item, i) => {
-            const posStyle: React.CSSProperties = { top: item.top };
-            if (item.left !== undefined) posStyle.left = item.left;
-            if (item.right !== undefined) posStyle.right = item.right;
+        {/* Desktop: scattered logos + testimonials */}
+        {!isMobile && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {elements.map((item, i) => {
+              const posStyle: React.CSSProperties = { top: item.top };
+              if (item.left !== undefined) posStyle.left = item.left;
+              if (item.right !== undefined) posStyle.right = item.right;
 
-            if (item.type === 'logo') {
+              if (item.type === 'logo') {
+                return (
+                  <LogoBubble
+                    key={i}
+                    logo={brandLogos[item.index]}
+                    style={posStyle}
+                    rotate={item.rotate}
+                    delay={0.08 + i * 0.04}
+                  />
+                );
+              }
               return (
-                <LogoBubble
+                <TestimonialCard
                   key={i}
-                  logo={brandLogos[item.index]}
+                  testimonial={testimonials[item.index]}
                   style={posStyle}
                   rotate={item.rotate}
-                  delay={0.2 + i * 0.15}
-                  small={isMobile}
-                  rain
+                  delay={0.08 + i * 0.04}
                 />
               );
-            }
-            return (
-              <TestimonialCard
+            })}
+          </div>
+        )}
+
+        {/* Mobile: logos rain down and land at bottom */}
+        {isMobile && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {mobileRainLogos.map((item, i) => (
+              <RainingLogo
                 key={i}
-                testimonial={testimonials[item.index]}
-                style={posStyle}
+                logo={item.logo}
+                leftPercent={item.leftPercent}
+                delay={item.delay}
                 rotate={item.rotate}
-                delay={0.08 + i * 0.04}
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Center stats — protected from overlap */}
         <div className="relative z-10 container mx-auto px-6">
