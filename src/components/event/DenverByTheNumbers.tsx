@@ -43,8 +43,7 @@ const testimonials: Testimonial[] = [
   { quote: "Thank you for providing this space for under-represented communities.", avatarId: 23 },
 ];
 
-// Manually placed items — organically scattered, never overlapping center column
-// Left side elements
+// Scattered placements — no pattern, no touching, evenly distributed, avoiding center column (25%-75%)
 const scatteredElements: Array<{
   type: 'logo' | 'testimonial';
   index: number;
@@ -53,30 +52,29 @@ const scatteredElements: Array<{
   right?: string;
   rotate: string;
 }> = [
-  // Top area
-  { type: 'logo', index: 0, top: '3%', left: '1%', rotate: '-12deg' },
-  { type: 'logo', index: 1, top: '2%', right: '5%', rotate: '8deg' },
-  { type: 'testimonial', index: 0, top: '10%', left: '0%', rotate: '4deg' },
-  { type: 'logo', index: 2, top: '15%', right: '1%', rotate: '-6deg' },
+  // Spread across the full height, alternating sides irregularly
+  { type: 'logo', index: 0, top: '2%', left: '4%', rotate: '-7deg' },
+  { type: 'testimonial', index: 0, top: '5%', right: '2%', rotate: '3deg' },
 
-  // Upper-mid area
-  { type: 'logo', index: 3, top: '24%', left: '3%', rotate: '15deg' },
-  { type: 'testimonial', index: 1, top: '22%', right: '0%', rotate: '-3deg' },
-  { type: 'logo', index: 4, top: '32%', right: '3%', rotate: '10deg' },
+  { type: 'logo', index: 1, top: '14%', right: '6%', rotate: '11deg' },
+  { type: 'logo', index: 2, top: '18%', left: '1%', rotate: '-4deg' },
 
-  // Mid area
-  { type: 'testimonial', index: 2, top: '38%', left: '1%', rotate: '-2deg' },
-  { type: 'logo', index: 5, top: '42%', right: '1%', rotate: '-14deg' },
-  { type: 'testimonial', index: 3, top: '48%', right: '0%', rotate: '5deg' },
+  { type: 'testimonial', index: 1, top: '26%', left: '2%', rotate: '-2deg' },
+  { type: 'logo', index: 3, top: '30%', right: '2%', rotate: '8deg' },
 
-  // Lower-mid
-  { type: 'logo', index: 6, top: '55%', left: '2%', rotate: '7deg' },
-  { type: 'testimonial', index: 4, top: '60%', right: '1%', rotate: '-4deg' },
-  { type: 'logo', index: 7, top: '68%', left: '1%', rotate: '-9deg' },
+  { type: 'logo', index: 4, top: '40%', left: '5%', rotate: '13deg' },
+  { type: 'testimonial', index: 2, top: '43%', right: '1%', rotate: '-5deg' },
 
-  // Bottom area
-  { type: 'testimonial', index: 5, top: '75%', left: '0%', rotate: '3deg' },
-  { type: 'logo', index: 8, top: '80%', right: '2%', rotate: '11deg' },
+  { type: 'testimonial', index: 3, top: '54%', left: '1%', rotate: '4deg' },
+  { type: 'logo', index: 5, top: '56%', right: '4%', rotate: '-10deg' },
+
+  { type: 'logo', index: 6, top: '66%', left: '3%', rotate: '6deg' },
+  { type: 'testimonial', index: 4, top: '70%', right: '2%', rotate: '-3deg' },
+
+  { type: 'logo', index: 7, top: '80%', right: '5%', rotate: '9deg' },
+  { type: 'testimonial', index: 5, top: '84%', left: '2%', rotate: '-6deg' },
+
+  { type: 'logo', index: 8, top: '92%', left: '6%', rotate: '5deg' },
 ];
 
 const LogoBubble = ({ logo, style, rotate, delay }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number }) => (
