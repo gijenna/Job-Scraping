@@ -246,7 +246,7 @@ const DenverHowItWorks = () => {
                   className="font-body text-base md:text-lg leading-relaxed"
                   style={{ color: "#F5E6D3", opacity: 0.8 }}
                 >
-                  A mix of HR, Marketing, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
+                  A mix of HR, <strong style={{ color: "#ED7660" }}>Marketing</strong>, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
                 </p>
               </div>
             </div>
@@ -298,7 +298,7 @@ const DenverHowItWorks = () => {
                   className="font-display font-bold text-2xl md:text-3xl mb-3"
                   style={{ color: "#F5E6D3" }}
                 >
-                  You get creative. Demos? Product displays? Giveaways? Dunk tanks?
+                  You get creative. Demos? <span style={{ color: "#ED7660" }}>Product displays</span>? Giveaways? Dunk tanks?
                 </h3>
                 <p
                   className="font-body text-base md:text-lg leading-relaxed"
