@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
 import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
+import uoDuckLogo from "@/assets/uo-duck-logo.svg";
 import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
