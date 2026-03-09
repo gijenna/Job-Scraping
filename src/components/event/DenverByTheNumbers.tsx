@@ -179,8 +179,9 @@ const DenverByTheNumbers = () => {
                   logo={brandLogos[item.index]}
                   style={posStyle}
                   rotate={item.rotate}
-                  delay={0.08 + i * 0.04}
+                  delay={0.2 + i * 0.15}
                   small={isMobile}
+                  rain
                 />
               );
             }
