@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Trash2, ExternalLink, Copy } from "lucide-react";
+import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
 
 interface ExpertCRMProps {
