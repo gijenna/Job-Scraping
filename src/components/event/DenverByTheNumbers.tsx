@@ -119,7 +119,7 @@ const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; st
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className={`absolute ${small ? 'w-10 h-10' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
+    className={`absolute ${small ? 'w-8 h-8' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
     style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
   >
     <img
