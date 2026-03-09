@@ -11,6 +11,7 @@ interface RegistrantHeroProps {
   time: string;
   tagline: string;
   registrationUrl: string;
+  sponsorPageUrl: string;
   overlayColor?: string;
   accentColor?: string;
 }
