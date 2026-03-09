@@ -2,10 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
-import outsideDaysMusic from "@/assets/outside-days-music.png";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
-import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
+import eventYeti from "@/assets/event-yeti.jpg";
 
 interface TierAccordion {
   id: string;
@@ -54,7 +53,7 @@ const tiers: TierAccordion[] = [
     subtitle: "The entire event is your zone & we can get Funky.",
     price: "$15,000–$25,000",
     spots: "1–2 available",
-    backgroundImage: eventYetiBestday,
+    backgroundImage: eventYeti,
     perks: [
       '"Outside Days Career Fair presented by [You]"',
       "Prime branding at entrance & stage",
@@ -173,7 +172,7 @@ const DenverHowItWorks = () => {
                       <div
                         className="relative p-6 md:p-10 min-h-[320px] md:min-h-[400px] flex flex-col justify-end"
                         style={{
-                          backgroundImage: `linear-gradient(to top, rgba(10, 60, 90, 0.95) 20%, rgba(10, 80, 120, 0.75) 60%, rgba(10, 100, 140, 0.6) 100%), url(${tier.backgroundImage})`,
+                          backgroundImage: `linear-gradient(to top, rgba(13, 31, 34, 0.97) 15%, rgba(13, 31, 34, 0.75) 55%, rgba(13, 31, 34, 0.4) 100%), url(${tier.backgroundImage})`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",
                         }}
