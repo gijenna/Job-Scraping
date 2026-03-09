@@ -53,7 +53,7 @@ const weGather = [
   },
   {
     icon: Sparkles,
-    text: "Industry tastemakers — leaders, creatives, athletes, influencers — not actively looking for a role, but making sure they know what's next",
+    text: "Industry tastemakers - leaders, creatives, athletes, influencers - not actively looking for a role, but making sure they know what's next",
   },
   {
     icon: GraduationCap,
