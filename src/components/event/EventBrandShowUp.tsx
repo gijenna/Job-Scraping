@@ -48,7 +48,7 @@ const digitalPerks: DigitalPerk[] = [
   {
     icon: Globe,
     title: "Website & Registration Placement",
-    desc: "Your logo featured prominently on the event website and registration page — seen by every single attendee before they arrive.",
+    desc: "Your logo featured prominently on the event website and registration page - seen by every single attendee before they arrive.",
   },
   {
     icon: Mail,
@@ -58,7 +58,7 @@ const digitalPerks: DigitalPerk[] = [
   {
     icon: Share2,
     title: "Social Media Amplification",
-    desc: "Event posts will reach industry leaders, athletes & influencers across our 50K LinkedIn, 80K Facebook, and 40K Instagram channels — promoting your brand to our full 300K+ audience.",
+    desc: "Event posts will reach industry leaders, athletes & influencers across our 50K LinkedIn, 80K Facebook, and 40K Instagram channels - promoting your brand to our full 300K+ audience.",
   },
 ];
 
@@ -80,7 +80,7 @@ const EventBrandShowUp = ({ options }: EventBrandShowUpProps) => {
             How Brands Show Up
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            Three ways to engage in person — plus powerful digital reach to our 300K+ community.
+            Three ways to engage in person - plus powerful digital reach to our 300K+ community.
           </p>
         </motion.div>
 

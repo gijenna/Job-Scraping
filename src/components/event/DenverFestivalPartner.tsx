@@ -28,11 +28,11 @@ const DenverFestivalPartner = () => {
 
             <p className="text-events-cream/70 font-body text-lg md:text-xl leading-relaxed">
               We're the only <span className="font-semibold text-events-cream">FREE</span> activation
-              at Outside Days' 40,000-person festival — and we've been a partner since day one.
+              at Outside Days' 40,000-person festival - and we've been a partner since day one.
             </p>
 
             <p className="text-events-yellow/80 font-body text-sm italic">
-              Psst — Basecamp partners get free 3-day tix 🎟️
+              Psst - Basecamp partners get free 3-day tix 🎟️
             </p>
 
             <a
@@ -61,12 +61,12 @@ const DenverFestivalPartner = () => {
             >
               <img
                 src={headlinersImg}
-                alt="Outside Days 2026 headliners — Death Cab for Cutie, My Morning Jacket, Cage the Elephant"
+                alt="Outside Days 2026 headliners - Death Cab for Cutie, My Morning Jacket, Cage the Elephant"
                 className="w-full h-auto object-cover"
               />
             </a>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
-              2026 Outside Days headliners — May 29–31, Denver CO
+              2026 Outside Days headliners - May 29–31, Denver CO
             </p>
           </motion.div>
         </div>

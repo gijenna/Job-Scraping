@@ -17,7 +17,7 @@ const defaultPoints: ROIPoint[] = [
     icon: Users,
     headline: "Quality Over Volume",
     detail:
-      "You're meeting 1 of 50, not 1 of 1,200. Every conversation is meaningful. Attendees are pre-qualified industry professionals — not a mass career fair crowd.",
+      "You're meeting 1 of 50, not 1 of 1,200. Every conversation is meaningful. Attendees are pre-qualified industry professionals - not a mass career fair crowd.",
   },
   {
     icon: Shield,
@@ -56,7 +56,7 @@ const EventROI = ({ eventSize, points = defaultPoints }: EventROIProps) => {
             Why This Event Delivers
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            With {eventSize} attendees, this isn't a mass career fair — it's a curated room where every interaction counts. Here's what makes it easy to say yes internally.
+            With {eventSize} attendees, this isn't a mass career fair - it's a curated room where every interaction counts. Here's what makes it easy to say yes internally.
           </p>
         </motion.div>
 

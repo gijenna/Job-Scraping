@@ -74,13 +74,13 @@ const denverQualityPoints = [
     icon: Target,
     stat: "92%",
     label: "Role-Relevant",
-    desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic."
+    desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle - not random job fair traffic."
   },
   {
     icon: Users,
     stat: "500–800",
     label: "Per Event",
-    desc: "A concentrated, high-quality talent pool. Every conversation is intentional — no 30-second drive-bys."
+    desc: "A concentrated, high-quality talent pool. Every conversation is intentional - no 30-second drive-bys."
   },
   {
     icon: Star,
@@ -101,9 +101,9 @@ const denverShowUpOptions = [
   {
     icon: Star,
     title: "Branding / Discovery Partner",
-    desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
+    desc: "This isn't just a career fair - it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry. Get your products into the hands of the storytellers.",
     tag: "High Visibility",
-    example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry.",
+    example: "Yeti, REI, and Cotopaxi have set up product discovery zones - turning career fair foot traffic into organic brand moments shared across the industry.",
   },
   {
     icon: Briefcase,
@@ -115,9 +115,9 @@ const denverShowUpOptions = [
   {
     icon: MessageCircle,
     title: "Industry Expert / Mentor",
-    desc: "Your leaders are featured by name — called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
+    desc: "Your leaders are featured by name - called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals looking for guidance.",
     tag: "Low Lift",
-    example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors — building authentic connections beyond their corporate role.",
+    example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors - building authentic connections beyond their corporate role.",
   },
 ];
 
@@ -191,7 +191,7 @@ const GatherDenver = () => {
         donutData={denverDonutData}
         barData={denverBarData}
         stats={denverStats}
-        subtitle="We don't just fill seats — we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
+        subtitle="We don't just fill seats - we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds."
       />
 
       <Testimonials />
@@ -203,7 +203,7 @@ const GatherDenver = () => {
       <EventSetup variant="denver" />
       <EventROI eventSize="600–900" />
 
-      <EventQuote title="Make it a collab with marketing" quote="You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
+      <EventQuote title="Make it a collab with marketing" quote="You aren't just buying a table - you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers." />
 
       <EventTiers
         tiers={denverTiers}
@@ -214,7 +214,7 @@ const GatherDenver = () => {
       <EventCTA
         ctaEmail="Austin@basecampjobs.com"
         eventName="Gather Denver 2026"
-        subtitle="Spots are limited. Secure your presence at the outdoor industry's biggest career event — embedded inside the 40,000-person Outside Days Festival in Denver."
+        subtitle="Spots are limited. Secure your presence at the outdoor industry's biggest career event - embedded inside the 40,000-person Outside Days Festival in Denver."
       />
     </main>
   );

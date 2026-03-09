@@ -16,7 +16,7 @@ const brandTestimonials: BrandTestimonial[] = [
     domain: "cotopaxi.com",
   },
   {
-    quote: "We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
+    quote: "We were so impressed by the depth of talent - AWESOMELY tenured individuals.",
     firstName: "Hillary",
     company: "Elevate Outdoor Collective",
     domain: "elevateoc.com",

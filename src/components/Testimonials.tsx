@@ -10,7 +10,7 @@ const testimonials = [
     domain: "vfc.com",
   },
   {
-    quote: "We generated a LOT of excellent candidates & would be very happy to sponsor again! We were so impressed by the depth of talent — AWESOMELY tenured individuals.",
+    quote: "We generated a LOT of excellent candidates & would be very happy to sponsor again! We were so impressed by the depth of talent - AWESOMELY tenured individuals.",
     name: "Hillary St. John",
     title: "Sr. HR, Elevate Outdoor Collective",
     domain: "elevateoc.com",

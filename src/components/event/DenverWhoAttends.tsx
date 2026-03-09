@@ -19,7 +19,7 @@ const experienceSegments = [
     count: "~245",
     pct: 40,
     yearHighlight: "6–10",
-    desc: " years of experience. Your \"engine room\" — professionals who entered during the massive growth period of the mid-2010s.",
+    desc: " years of experience. Your \"engine room\" - professionals who entered during the massive growth period of the mid-2010s.",
     color: "#5BC0EB",
   },
   {
@@ -53,7 +53,7 @@ const weGather = [
   },
   {
     icon: Sparkles,
-    text: "Industry tastemakers — leaders, creatives, athletes, influencers — not actively looking for a role, but making sure they know what's next",
+    text: "Industry tastemakers - leaders, creatives, athletes, influencers - not actively looking for a role, but making sure they know what's next",
   },
   {
     icon: GraduationCap,
@@ -139,7 +139,7 @@ const DenverWhoAttends = () => {
             Who Attends
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            We gather four distinct groups — each with something your brand needs.
+            We gather four distinct groups - each with something your brand needs.
           </p>
         </motion.div>
 
@@ -152,11 +152,11 @@ const DenverWhoAttends = () => {
         >
           <button
             onClick={() => setWidgetOpen(!widgetOpen)}
-            className="group inline-flex items-center gap-3 bg-black hover:bg-[#19363B] border border-[#E1B624]/40 text-[#F5E6D3] px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
+            className="group inline-flex items-center gap-3 bg-[#E1B624] hover:bg-[#E1B624]/90 border border-[#E1B624] text-black px-6 py-3.5 rounded-xl font-display font-bold transition-all duration-300 shadow-lg"
           >
-            <BarChart3 className="w-5 h-5 text-[#E1B624]" />
+            <BarChart3 className="w-5 h-5 text-black" />
             <span>Recruiter or Data Nerd? See who comes</span>
-            <ChevronDown className={`w-4 h-4 text-[#E1B624] transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-6 h-6 text-black transition-transform duration-300 ${widgetOpen ? 'rotate-180' : ''}`} />
           </button>
         </motion.div>
 
@@ -237,35 +237,7 @@ const DenverWhoAttends = () => {
           )}
         </AnimatePresence>
 
-        {/* "We gather" stacked list with + signs — now below widget */}
-        <div className="mb-20 max-w-3xl mx-auto">
-          {weGather.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-            >
-              <div className="flex items-start gap-4 py-4">
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <item.icon className="w-4.5 h-4.5 text-primary" />
-                </div>
-                <p className="text-foreground font-body text-base md:text-lg leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
-              {i < weGather.length - 1 && (
-                <div className="flex items-center gap-3 pl-3">
-                  <span className="text-primary font-display font-extrabold text-2xl leading-none">+</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Experience-based segments — horizontal bar visualization */}
+        {/* Experience-based segments - horizontal bar visualization */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -342,6 +314,34 @@ const DenverWhoAttends = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* "We gather" stacked list with + signs */}
+        <div className="mb-20 max-w-3xl mx-auto">
+          {weGather.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+            >
+              <div className="flex items-start gap-4 py-4">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <item.icon className="w-4.5 h-4.5 text-primary" />
+                </div>
+                <p className="text-foreground font-body text-base md:text-lg leading-relaxed">
+                  {item.text}
+                </p>
+              </div>
+              {i < weGather.length - 1 && (
+                <div className="flex items-center gap-3 pl-3">
+                  <span className="text-primary font-display font-extrabold text-2xl leading-none">+</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
