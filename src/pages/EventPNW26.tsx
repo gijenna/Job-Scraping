@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
 import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
+import uoDuckLogo from "@/assets/uo-duck-logo.svg";
 import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
@@ -159,6 +160,91 @@ const EventPNW26 = () => {
         </div>
       </section>
 
+      {/* UO Sports Product Management Section */}
+      <section className="py-20 md:py-28 px-6 bg-events-cream">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row gap-12 items-center"
+          >
+            {/* Left: Logo + Sco Ducks */}
+            <div className="flex flex-col items-center md:items-start gap-6 md:w-1/3 shrink-0">
+              <img
+                src={uoDuckLogo}
+                alt="University of Oregon"
+                className="w-40 md:w-52 h-auto"
+              />
+              <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>
+                #ScoDucks 🦆
+              </p>
+            </div>
+
+            {/* Right: Program Details */}
+            <div className="md:w-2/3">
+              <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">
+                Our Host Program
+              </p>
+              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">
+                MS Sports Product Management
+              </h2>
+              <p className="font-body text-events-teal/70 leading-relaxed mb-4">
+                The University of Oregon partnered with the sports and outdoor product industry's best to create this one-of-a-kind master's program. Experience the entire product creation lifecycle through the lenses of innovation, sustainability, diversity and inclusion, and global business.
+              </p>
+              <p className="font-body text-events-teal/70 leading-relaxed mb-6">
+                <strong className="text-events-teal">90% of alumni</strong> work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus — the heart of the PNW outdoor industry.
+              </p>
+
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                  <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>90%</p>
+                  <p className="font-body text-xs text-events-teal/60">Alumni placement</p>
+                </div>
+                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                  <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>3,000+</p>
+                  <p className="font-body text-xs text-events-teal/60">OR outdoor companies</p>
+                </div>
+                <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                  <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>$29B</p>
+                  <p className="font-body text-xs text-events-teal/60">Industry output</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <a
+                  href="https://business.uoregon.edu/programs/spm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105"
+                  style={{ backgroundColor: "#154733", color: "#FEE123" }}
+                >
+                  Learn More
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://business.uoregon.edu/programs/spm/apply"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"
+                  style={{ borderColor: "#154733", color: "#154733" }}
+                >
+                  Apply Now
+                </a>
+                <a
+                  href="https://www.youtube.com/watch?v=o7HcNEwDW14"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"
+                  style={{ borderColor: "#154733", color: "#154733" }}
+                >
+                  Watch Video
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       <RegistrantVenue
         venueName="UO Portland Campus"
