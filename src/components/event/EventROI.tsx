@@ -17,7 +17,7 @@ const defaultPoints: ROIPoint[] = [
     icon: Users,
     headline: "Quality Over Volume",
     detail:
-      "You're meeting 1 of 50, not 1 of 1,200. Every conversation is meaningful. Attendees are pre-qualified industry professionals — not a mass career fair crowd.",
+      "You're meeting 1 of 50, not 1 of 1,200. Every conversation is meaningful. Attendees are pre-qualified industry professionals - not a mass career fair crowd.",
   },
   {
     icon: Shield,
