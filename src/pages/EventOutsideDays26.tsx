@@ -53,48 +53,7 @@ const EventOutsideDays26 = () => {
 
       <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" />
 
-      {/* What to Expect */}
-      <section className="py-16 md:py-24 px-6 bg-events-teal">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
-              What to Expect
-            </p>
-            <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream leading-tight">
-              Not just a career fair.{" "}
-              <span className="text-events-yellow">A discovery zone.</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              { num: "500–800", label: "Professionals Expected", desc: "The outdoor industry's largest gathering of career-minded talent in one room." },
-              { num: "20+", label: "Brands & Activations", desc: "Product demos, swag, and face-to-face conversations with hiring teams." },
-              { num: "3 Days", label: "Outside Days Festival", desc: "Your registration gives you access to the full festival — music, food, outdoor activities." },
-              { num: "FREE", label: "Always Free to Attend", desc: "Basecamp believes the outdoor industry should be accessible to everyone." },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="rounded-xl p-6 border border-white/10"
-                style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-              >
-                <p className="font-headline font-bold text-3xl mb-1 text-events-yellow">{stat.num}</p>
-                <p className="font-display font-bold text-base text-events-cream mb-2">{stat.label}</p>
-                <p className="font-body text-sm text-events-cream/60">{stat.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <RegistrantDenverStats />
 
       <RegistrantHowToTapIn
         registrationUrl={TYPEFORM_DENVER}
