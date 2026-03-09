@@ -3,8 +3,9 @@ import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 
 import outsideDaysMusic from "@/assets/outside-days-music.png";
-import eventCrowd from "@/assets/event-crowd.jpg";
-import eventCrowdBooth from "@/assets/event-crowd-booth.jpg";
+import eventReiConvo from "@/assets/event-rei-convo.jpg";
+import eventAlterraChat from "@/assets/event-alterra-chat.jpg";
+import eventYetiBestday from "@/assets/event-yeti-bestday.jpg";
 
 interface TierAccordion {
   id: string;
