@@ -41,6 +41,8 @@ const testimonials: Testimonial[] = [
   { quote: "Very friendly and energetic vibe to the whole event!", avatarId: 15 },
   { quote: "The career coaching helped me work up courage to talk to Outside.", avatarId: 67 },
   { quote: "Thank you for providing this space for under-represented communities.", avatarId: 23 },
+  { quote: "The layout and overall vibe of the event was great.", avatarId: 51 },
+  { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
 // Scattered placements — no pattern, no touching, evenly distributed, avoiding center column (25%-75%)
