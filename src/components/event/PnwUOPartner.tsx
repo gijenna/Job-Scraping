@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import eventPnwCrowd from "@/assets/event-pnw-crowd.jpg";
 
 const PnwUOPartner = () => {
   return (
@@ -20,9 +22,9 @@ const PnwUOPartner = () => {
               className="font-headline font-bold text-events-cream leading-[1.1]"
               style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}
             >
-              Basecamp Outdoor ×{" "}
-              <span style={{ color: "#FEE123" }}>University of Oregon</span>'s
-              Sports Product Management program.
+              Gather is an outdoor industry discovery zone merging a{" "}
+              <span style={{ color: "#FEE123" }}>career fair</span> &{" "}
+              <span style={{ color: "#FEE123" }}>field marketing.</span>
             </h2>
 
             <p className="text-events-cream/70 font-body text-lg md:text-xl leading-relaxed">
@@ -31,43 +33,34 @@ const PnwUOPartner = () => {
               professionals, career-changers, and the next generation of outdoor talent.
             </p>
 
-            <p className="font-body text-sm italic" style={{ color: "#FEE123", opacity: 0.8 }}>
-              Located at UO's new Portland Campus — 2800 NE Liberty St
-            </p>
-
             <a
-              href="https://business.uoregon.edu/spm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-body text-sm tracking-widest uppercase hover:opacity-80 transition-opacity"
-              style={{ color: "#FEE123" }}
+              href="mailto:jenna@wearetheoutdoorindustry.com?subject=I want to get in on Gather PNW"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-display font-bold text-lg shadow-lg transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: "#FEE123", color: "#154733" }}
             >
-              UO Sports Product Management →
+              Get in on this
+              <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>
 
-          {/* Right — UO Logo / Imagery */}
+          {/* Right — Last year's photo */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative flex items-center justify-center"
+            className="relative"
           >
-            <div className="rounded-2xl overflow-hidden shadow-2xl p-12 flex flex-col items-center gap-6" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
+            <div className="rounded-xl overflow-hidden shadow-2xl">
               <img
-                src="https://www.google.com/s2/favicons?domain=uoregon.edu&sz=128"
-                alt="University of Oregon"
-                className="w-20 h-20 object-contain"
+                src={eventPnwCrowd}
+                alt="Gather PNW last year"
+                className="w-full h-auto object-cover"
               />
-              <div className="text-center">
-                <p className="font-display font-bold text-xl text-events-cream">University of Oregon</p>
-                <p className="font-body text-sm text-events-cream/60 mt-1">Sports Product Management</p>
-                <p className="font-body text-xs text-events-cream/40 mt-3">
-                  The program that feeds footwear, apparel, and outdoor product teams at Nike, Adidas, Columbia, and beyond.
-                </p>
-              </div>
             </div>
+            <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
+              Gather PNW 2025
+            </p>
           </motion.div>
         </div>
       </div>

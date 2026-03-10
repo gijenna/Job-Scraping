@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import headlinersImg from "@/assets/outside-days-headliners.png";
 
 const DenverFestivalPartner = () => {
@@ -36,12 +37,12 @@ const DenverFestivalPartner = () => {
             </p>
 
             <a
-              href="https://bit.ly/outside-days"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-events-yellow font-body text-sm tracking-widest uppercase hover:opacity-80 transition-opacity"
+              href="mailto:jenna@wearetheoutdoorindustry.com?subject=I want to get in on Gather Denver"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-display font-bold text-lg shadow-lg transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: "#E1B624", color: "#19363B" }}
             >
-              outsidedays.outsideonline.com →
+              Get in on this
+              <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>
 

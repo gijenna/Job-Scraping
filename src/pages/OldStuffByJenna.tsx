@@ -176,12 +176,12 @@ const OldStuffByJenna = () => {
 
         <EventTiers
           tiers={denverTiers}
-          ctaEmail="Austin@basecampjobs.com"
+          ctaEmail="jenna@wearetheoutdoorindustry.com"
           eventName="Gather Denver 2026"
         />
 
         <EventCTA
-          ctaEmail="Austin@basecampjobs.com"
+          ctaEmail="jenna@wearetheoutdoorindustry.com"
           eventName="Gather Denver 2026"
           subtitle="Spots are limited. Secure your presence at the outdoor industry's biggest career event - embedded inside the 40,000-person Outside Days Festival in Denver."
         />

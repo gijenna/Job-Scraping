@@ -4,7 +4,6 @@ import PnwHero from "@/components/event/PnwHero";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import PnwPowerfulPremium from "@/components/event/PnwPowerfulPremium";
 import PnwByTheNumbers from "@/components/event/PnwByTheNumbers";
-import PnwGallery from "@/components/event/PnwGallery";
 import PnwHowItWorks from "@/components/event/PnwHowItWorks";
 import PnwUOPartner from "@/components/event/PnwUOPartner";
 import PnwWhoAttends from "@/components/event/PnwWhoAttends";
@@ -47,7 +46,6 @@ const GatherPNW = () => {
       <PnwByTheNumbers />
       <MobileTestimonialCarousel />
       <PnwHowItWorks />
-      <PnwGallery />
 
       <PnwWhoAttends />
 
@@ -63,11 +61,11 @@ const GatherPNW = () => {
               Be Part of This
             </h2>
             <a
-              href="mailto:Austin@basecampjobs.com"
+              href="mailto:jenna@wearetheoutdoorindustry.com"
               className="inline-block font-display font-bold text-lg px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 mb-6"
               style={{ backgroundColor: "#FEE123", color: "#154733" }}
             >
-              Austin will take care of you
+              Jenna will take care of you
             </a>
             <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
               Basecamp works with every budget, because every brand deserves to Gather.

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
+import gatherPnwLogo from "@/assets/gather-pnw-logo-white-uo.png";
 import heroPnw from "@/assets/hero-pnw.mp4";
 
 const phrases = ["talent pipeline", "customer base", "community"];

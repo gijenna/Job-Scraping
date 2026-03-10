@@ -312,7 +312,7 @@ const GatherDenverExport = () => {
         <p className="text-white/70 text-sm max-w-xl mx-auto mb-6">
           Spots are limited. Secure your presence at the outdoor industry's biggest career event — embedded inside the 40,000-person Outside Days Festival in Denver.
         </p>
-        <p className="text-[#ED7660] font-bold text-lg">Austin@basecampjobs.com</p>
+        <p className="text-[#ED7660] font-bold text-lg">jenna@wearetheoutdoorindustry.com</p>
       </section>
     </div>
   );

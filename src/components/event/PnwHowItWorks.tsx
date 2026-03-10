@@ -5,6 +5,8 @@ import { ChevronDown, Check } from "lucide-react";
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventCrowdConvo from "@/assets/event-crowd-convo.png";
 import eventCareerCoaching from "@/assets/event-career-coaching.jpg";
+import eventPnwNetworking from "@/assets/event-pnw-networking.jpg";
+import eventPnwPanel from "@/assets/event-pnw-panel.jpg";
 
 interface TierAccordion {
   id: string;
@@ -31,7 +33,7 @@ const tiers: TierAccordion[] = [
   },
   {
     id: "deluxe",
-    title: "Deluxe Hiring + Branding",
+    title: "Deluxe Branding Space",
     subtitle: "Larger space, product demos, stage spotlight — combine HR & marketing budgets",
     spots: "4 available",
     backgroundImage: eventCrowdConvo,
@@ -116,7 +118,7 @@ const PnwHowItWorks = () => {
               className="font-display font-bold text-2xl md:text-3xl"
               style={{ color: "#F5E6D3" }}
             >
-              Choose your sponsorship tier
+              Choose your discovery zone
             </h3>
           </div>
 
@@ -216,7 +218,7 @@ const PnwHowItWorks = () => {
             >
               2
             </span>
-            <div>
+            <div className="flex-1">
               <h3
                 className="font-display font-bold text-2xl md:text-3xl mb-3"
                 style={{ color: "#F5E6D3" }}
@@ -224,11 +226,19 @@ const PnwHowItWorks = () => {
                 Select your storytelling team
               </h3>
               <p
-                className="font-body text-base md:text-lg leading-relaxed max-w-lg"
+                className="font-body text-base md:text-lg leading-relaxed max-w-lg mb-6"
                 style={{ color: "#F5E6D3", opacity: 0.8 }}
               >
                 A mix of HR, <strong style={{ color: "#ED7660" }}>Marketing</strong>, and Department leads ready to share what you build, how you build it, and what type of people would fit into or enrich your culture.
               </p>
+              <div className="rounded-xl overflow-hidden shadow-xl max-w-md">
+                <img
+                  src={eventPnwNetworking}
+                  alt="Networking at Gather PNW"
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                />
+              </div>
             </div>
           </div>
         </motion.div>
@@ -246,7 +256,7 @@ const PnwHowItWorks = () => {
             >
               3
             </span>
-            <div>
+            <div className="flex-1">
               <h3
                 className="font-display font-bold text-2xl md:text-3xl mb-3"
                 style={{ color: "#F5E6D3" }}
@@ -254,7 +264,7 @@ const PnwHowItWorks = () => {
                 Show up <span style={{ color: "#ED7660" }}>authentically</span>
               </h3>
               <p
-                className="font-body text-base md:text-lg leading-relaxed"
+                className="font-body text-base md:text-lg leading-relaxed mb-6"
                 style={{ color: "#F5E6D3", opacity: 0.8 }}
               >
                 Product demos? Swag bags? A panel speaker? Portland's most engaged outdoor professionals 
@@ -263,6 +273,14 @@ const PnwHowItWorks = () => {
                 <strong style={{ color: "#FEE123" }}>BUY</strong> from you… they want to{" "}
                 <strong style={{ color: "#FEE123" }}>WORK</strong> for you.
               </p>
+              <div className="rounded-xl overflow-hidden shadow-xl max-w-md">
+                <img
+                  src={eventPnwPanel}
+                  alt="Panel at Gather PNW"
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                />
+              </div>
             </div>
           </div>
         </motion.div>

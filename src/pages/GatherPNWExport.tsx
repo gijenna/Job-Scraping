@@ -337,7 +337,7 @@ const GatherPNWExport = () => {
         <p className="text-white/70 text-sm max-w-xl mx-auto mb-6">
           Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event — where 250–500 highly relevant professionals gather in one room.
         </p>
-        <p className="text-[#ED7660] font-bold text-lg">Austin@basecampjobs.com</p>
+        <p className="text-[#ED7660] font-bold text-lg">jenna@wearetheoutdoorindustry.com</p>
       </section>
     </div>
   );

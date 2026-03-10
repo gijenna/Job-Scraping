@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BrandTestimonial {
   quote: string;
@@ -8,18 +9,36 @@ interface BrandTestimonial {
   domain: string;
 }
 
+interface BrandLogo {
+  name: string;
+  domain: string;
+}
+
+// Same testimonials as Denver
 const brandTestimonials: BrandTestimonial[] = [
   {
-    quote: "We love sponsoring an event that breeds genuine connections and brings together curious minds.",
-    firstName: "Miranda",
-    company: "On Running",
-    domain: "on-running.com",
+    quote: "We use Gather as a branding opportunity.",
+    firstName: "Liz",
+    company: "Cotopaxi",
+    domain: "cotopaxi.com",
   },
   {
-    quote: "The caliber of talent at Gather PNW was exceptional — we left with strong candidates.",
-    firstName: "Rachel",
-    company: "Columbia",
-    domain: "columbia.com",
+    quote: "We were so impressed by the depth of talent - AWESOMELY tenured individuals.",
+    firstName: "Hillary",
+    company: "Elevate Outdoor Collective",
+    domain: "elevateoc.com",
+  },
+  {
+    quote: "We had a GREAT time at Gather! I thought it was a very successful event.",
+    firstName: "Jessica",
+    company: "YETI",
+    domain: "yeti.com",
+  },
+  {
+    quote: "Basecamp has been my FAVORITE partner and the one that has generated the most goodwill and visibility for our program.",
+    firstName: "Chris",
+    company: "University of Denver",
+    domain: "du.edu",
   },
   {
     quote: "I will definitely seek out this event in the future!",
@@ -28,10 +47,10 @@ const brandTestimonials: BrandTestimonial[] = [
     domain: "elevenexperience.com",
   },
   {
-    quote: "Basecamp has been my FAVORITE partner and the one that has generated the most goodwill.",
-    firstName: "Chris",
-    company: "University of Oregon",
-    domain: "uoregon.edu",
+    quote: "We love sponsoring an event that breeds genuine connections and brings together curious minds.",
+    firstName: "Miranda",
+    company: "On Running",
+    domain: "on-running.com",
   },
   {
     quote: "We all met GREAT candidates. I am hopefully extending an offer to one today. Huge success.",
@@ -41,8 +60,58 @@ const brandTestimonials: BrandTestimonial[] = [
   },
 ];
 
+const brandLogos: BrandLogo[] = [
+  { name: "Nike", domain: "nike.com" },
+  { name: "Columbia", domain: "columbia.com" },
+  { name: "KEEN", domain: "keenfootwear.com" },
+  { name: "On Running", domain: "on-running.com" },
+  { name: "Rumpl", domain: "rumpl.com" },
+  { name: "Arc'teryx", domain: "arcteryx.com" },
+  { name: "Brooks", domain: "brooksrunning.com" },
+  { name: "Patagonia", domain: "patagonia.com" },
+  { name: "Specialized", domain: "specialized.com" },
+  { name: "Superfeet", domain: "superfeet.com" },
+  { name: "Lululemon", domain: "lululemon.com" },
+];
+
+const mobileRainLogos = brandLogos.map((logo, i) => ({
+  logo,
+  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2,
+  delay: 0.3 + i * 0.18,
+  rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg'][i] || '0deg',
+}));
+
+const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; leftPercent: number; delay: number; rotate: string }) => (
+  <motion.div
+    initial={{ y: "-100vh", opacity: 0 }}
+    whileInView={{ y: 0, opacity: 1 }}
+    viewport={{ once: true, margin: "200px" }}
+    transition={{
+      y: { duration: 3, delay, ease: [0.22, 1, 0.36, 1] },
+      opacity: { duration: 0.5, delay },
+    }}
+    className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
+    style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#e8f0d8' }}
+  >
+    <motion.div
+      initial={{ scale: 1 }}
+      whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: delay + 2.9, ease: "easeOut" }}
+    >
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
+        alt={logo.name}
+        className="w-5 h-5 object-contain"
+        style={{ mixBlendMode: 'multiply' }}
+      />
+    </motion.div>
+  </motion.div>
+);
+
 const PnwPowerfulPremium = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -112,6 +181,21 @@ const PnwPowerfulPremium = () => {
             <div className="absolute top-[50%] right-[15%] w-[280px] h-[110px] rounded-full opacity-25"
               style={{ background: "radial-gradient(ellipse, #4a8a5a 0%, transparent 70%)" }} />
           </div>
+
+          {/* Mobile: raining logos */}
+          {isMobile && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {mobileRainLogos.map((item, i) => (
+                <RainingLogo
+                  key={i}
+                  logo={item.logo}
+                  leftPercent={item.leftPercent}
+                  delay={item.delay}
+                  rotate={item.rotate}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Text on top of clouds */}
           <div className="relative z-10 container mx-auto px-6 text-center max-w-3xl">
