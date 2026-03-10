@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
-import gatherPnwLogo from "@/assets/gather-pnw-logo.png";
+import gatherPnwLogo from "@/assets/gather-pnw-logo-white-uo.png";
 import uoDuckLogo from "@/assets/uo-duck-logo.svg";
+import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
 import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
@@ -31,7 +32,21 @@ const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
   return (
-    <main className="bg-events-teal min-h-screen">
+    <main className="bg-events-teal min-h-screen relative">
+      {/* Basecamp Match logo top-left */}
+      <a
+        href="https://www.basecampjobs.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed top-4 left-4 z-50"
+      >
+        <img
+          src={basecampMatchLogo}
+          alt="Basecamp Match"
+          className="h-8 md:h-10 w-auto drop-shadow-lg"
+        />
+      </a>
+
       <RegistrantHero
         backgroundSrc={heroPnw}
         backgroundType="video"
@@ -39,7 +54,7 @@ const EventPNW26 = () => {
         logoAlt="Gather PNW logo"
         date="April 16, 2026"
         location="UO Portland Campus · Portland, OR"
-        time="5:30 – 8:30 PM PT · Doors at 4:30 PM"
+        time="5:30 – 8:30 PM PT"
         tagline="The Pacific Northwest's premier outdoor industry networking event. Free for all."
         registrationUrl={TYPEFORM_PNW}
         overlayColor="rgba(21, 71, 51, 0.65)"
@@ -251,7 +266,6 @@ const EventPNW26 = () => {
         address="2800 NE Liberty St, Portland, OR 97211"
         googleMapsUrl="https://maps.google.com/?q=2800+NE+Liberty+St+Portland+OR"
         date="April 16, 2026"
-        arrivalTime="4:30 PM PT"
         eventTime="5:30 – 8:30 PM PT"
         description="Basecamp Outdoor × University of Oregon's Sports Product Management program. Located at UO's new Portland campus — the heart of the PNW outdoor industry."
         accentColor="#FEE123"

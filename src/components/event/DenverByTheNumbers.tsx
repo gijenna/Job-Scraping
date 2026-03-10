@@ -35,6 +35,8 @@ const brandLogos: BrandLogo[] = [
   { name: "Ski Magazine", domain: "skimag.com" },
   { name: "YETI", domain: "yeti.com" },
   { name: "Alterra", domain: "alterramtnco.com" },
+  { name: "Outward Bound", domain: "outwardbound.org" },
+  { name: "The Wilderness Society", domain: "wilderness.org" },
 ];
 
 const testimonials: Testimonial[] = [
@@ -43,7 +45,7 @@ const testimonials: Testimonial[] = [
   { quote: "The companies were so generous with their time.", avatarId: 28 },
   { quote: "Very friendly and energetic vibe to the whole event!", avatarId: 15 },
   { quote: "The career coaching helped me work up courage to talk to Outside.", avatarId: 67 },
-  { quote: "Thank you for providing this space for under-represented communities.", avatarId: 23 },
+  { quote: "Thank you for providing this space for under-represented communities.", avatarId: 45 },
   { quote: "The layout and overall vibe of the event was great.", avatarId: 51 },
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
@@ -57,8 +59,6 @@ const mobileScatteredElements: Array<{
   right?: string;
   rotate: string;
 }> = [
-  // The 3 stats sit at roughly 15%, 45%, 75% vertically
-  // Place logos in gaps: 0-10%, 25-38%, 55-65%, 85-95%
   { type: 'logo', index: 0, top: '1%', left: '1%', rotate: '-6deg' },
   { type: 'logo', index: 1, top: '3%', right: '1%', rotate: '8deg' },
   { type: 'logo', index: 2, top: '25%', left: '0%', rotate: '10deg' },
@@ -70,9 +70,11 @@ const mobileScatteredElements: Array<{
   { type: 'logo', index: 8, top: '40%', left: '1%', rotate: '12deg' },
   { type: 'logo', index: 9, top: '70%', right: '0%', rotate: '-4deg' },
   { type: 'logo', index: 10, top: '96%', left: '1%', rotate: '6deg' },
+  { type: 'logo', index: 11, top: '15%', left: '0%', rotate: '3deg' },
+  { type: 'logo', index: 12, top: '65%', right: '1%', rotate: '-7deg' },
 ];
 
-// Desktop scattered placements — use full width including closer to center, evenly distributed
+// Desktop scattered placements
 const scatteredElements: Array<{
   type: 'logo' | 'testimonial';
   index: number;
@@ -81,45 +83,35 @@ const scatteredElements: Array<{
   right?: string;
   rotate: string;
 }> = [
-  // Top band (0-15%)
   { type: 'logo', index: 0, top: '1%', left: '8%', rotate: '-5deg' },
   { type: 'testimonial', index: 0, top: '3%', right: '3%', rotate: '3deg' },
   { type: 'logo', index: 1, top: '8%', left: '22%', rotate: '9deg' },
   { type: 'testimonial', index: 6, top: '10%', right: '18%', rotate: '-4deg' },
-
-  // Upper band (18-32%)
   { type: 'logo', index: 2, top: '20%', right: '6%', rotate: '-8deg' },
   { type: 'testimonial', index: 1, top: '24%', left: '2%', rotate: '2deg' },
   { type: 'logo', index: 3, top: '30%', left: '18%', rotate: '12deg' },
-
-  // Middle band (35-50%)
   { type: 'testimonial', index: 2, top: '37%', right: '2%', rotate: '-3deg' },
   { type: 'logo', index: 4, top: '42%', left: '5%', rotate: '7deg' },
   { type: 'logo', index: 5, top: '48%', right: '16%', rotate: '-11deg' },
-
-  // Lower-mid band (52-68%)
   { type: 'testimonial', index: 3, top: '55%', left: '1%', rotate: '4deg' },
   { type: 'logo', index: 6, top: '58%', right: '4%', rotate: '6deg' },
   { type: 'testimonial', index: 7, top: '64%', left: '16%', rotate: '-5deg' },
-
-  // Lower band (70-85%)
   { type: 'testimonial', index: 4, top: '72%', right: '2%', rotate: '3deg' },
   { type: 'logo', index: 7, top: '76%', left: '4%', rotate: '-9deg' },
-
-  // Bottom band (85-95%)
   { type: 'testimonial', index: 5, top: '86%', right: '14%', rotate: '-2deg' },
   { type: 'logo', index: 8, top: '90%', left: '10%', rotate: '8deg' },
   { type: 'logo', index: 9, top: '32%', right: '22%', rotate: '-6deg' },
   { type: 'logo', index: 10, top: '70%', left: '22%', rotate: '10deg' },
+  { type: 'logo', index: 11, top: '15%', left: '3%', rotate: '4deg' },
+  { type: 'logo', index: 12, top: '80%', right: '20%', rotate: '-3deg' },
 ];
 
-// Rain landing positions for mobile — logos fall to bottom and settle in a row
+// Rain landing positions for mobile
 const mobileRainLogos = brandLogos.map((logo, i) => ({
   logo,
-  // Spread across the bottom evenly
-  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2, // 2% to 87%
+  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2,
   delay: 0.3 + i * 0.18,
-  rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg'][i] || '0deg',
+  rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg', '4deg', '-8deg'][i] || '0deg',
 }));
 
 const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => (
@@ -167,8 +159,6 @@ const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; le
     </motion.div>
   </motion.div>
 );
-
-
 
 const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: Testimonial; style: React.CSSProperties; rotate: string; delay: number }) => (
   <motion.div

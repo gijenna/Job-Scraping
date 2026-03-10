@@ -30,6 +30,8 @@ const denverBrands = [
   { name: "onX", domain: "onxmaps.com" },
   { name: "lululemon", domain: "lululemon.com" },
   { name: "AllTrails", domain: "alltrails.com" },
+  { name: "Outward Bound", domain: "outwardbound.org" },
+  { name: "The Wilderness Society", domain: "wilderness.org" },
 ];
 
 const GatherDenver = () => {
@@ -53,7 +55,7 @@ const GatherDenver = () => {
       <DenverWhoAttends />
 
       {/* Be Part of This CTA */}
-      <section className="py-24 px-6">
+      <section className="py-12 px-6">
         <div className="container mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

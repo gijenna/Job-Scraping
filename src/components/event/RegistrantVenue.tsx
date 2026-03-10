@@ -1,16 +1,18 @@
 import { motion } from "framer-motion";
-import { MapPin, Clock, CalendarDays } from "lucide-react";
+import { MapPin, Clock, CalendarDays, ArrowRight } from "lucide-react";
 
 interface RegistrantVenueProps {
   venueName: string;
   address: string;
   googleMapsUrl: string;
   date: string;
-  arrivalTime: string;
+  arrivalTime?: string;
   eventTime: string;
   description?: string;
   accentColor?: string;
   bgColor?: string;
+  ticketUrl?: string;
+  ticketLabel?: string;
 }
 
 const RegistrantVenue = ({
@@ -23,6 +25,8 @@ const RegistrantVenue = ({
   description,
   accentColor = "#E1B624",
   bgColor = "#F5E6D3",
+  ticketUrl,
+  ticketLabel = "Get Tickets",
 }: RegistrantVenueProps) => {
   const textColor = bgColor === "#F5E6D3" ? "#19363B" : "#F5E6D3";
   const mutedTextColor = bgColor === "#F5E6D3" ? "#19363B99" : "#F5E6D399";
@@ -98,8 +102,13 @@ const RegistrantVenue = ({
             <div>
               <p className="font-display font-bold text-sm" style={{ color: textColor }}>Time</p>
               <p className="font-body text-sm" style={{ color: mutedTextColor }}>
-                {eventTime}<br />
-                <span className="text-xs">Doors: {arrivalTime}</span>
+                {eventTime}
+                {arrivalTime && (
+                  <>
+                    <br />
+                    <span className="text-xs">Doors: {arrivalTime}</span>
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -115,6 +124,26 @@ const RegistrantVenue = ({
           >
             {description}
           </motion.p>
+        )}
+
+        {ticketUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 text-center"
+          >
+            <a
+              href={ticketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-display font-bold text-base shadow-lg transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: accentColor, color: "#19363B" }}
+            >
+              {ticketLabel}
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
         )}
       </div>
     </section>

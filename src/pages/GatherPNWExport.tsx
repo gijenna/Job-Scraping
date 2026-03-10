@@ -111,7 +111,7 @@ const GatherPNWExport = () => {
           300+ registrants & up to 20 brands. Intimate, high-quality networking at U of O's new Portland Campus.
         </p>
         <p className="text-white font-bold text-xl">April 16, 2026 · Portland, OR · 5:30–8:30 PM</p>
-        <p className="mt-4 text-white/60 text-sm">Austin@basecampjobs.com</p>
+        <p className="mt-4 text-white/60 text-sm">jenna@wearetheoutdoorindustry.com</p>
       </section>
 
       {/* Brand Logos */}
@@ -337,7 +337,7 @@ const GatherPNWExport = () => {
         <p className="text-white/70 text-sm max-w-xl mx-auto mb-6">
           Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event — where 250–500 highly relevant professionals gather in one room.
         </p>
-        <p className="text-[#ED7660] font-bold text-lg">Austin@basecampjobs.com</p>
+        <p className="text-[#ED7660] font-bold text-lg">jenna@wearetheoutdoorindustry.com</p>
       </section>
     </div>
   );

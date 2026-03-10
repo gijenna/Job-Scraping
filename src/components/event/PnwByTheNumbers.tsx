@@ -43,7 +43,7 @@ const testimonials: Testimonial[] = [
   { quote: "Intimate, genuine conversations — not the usual career fair chaos.", avatarId: 28 },
   { quote: "I met three hiring managers and got a follow-up the next day.", avatarId: 15 },
   { quote: "The panel gave me actionable steps to break into outdoor.", avatarId: 67 },
-  { quote: "Best networking event in the PNW, hands down.", avatarId: 23 },
+  { quote: "Best networking event in the PNW, hands down.", avatarId: 45 },
   { quote: "Portland is the heart of outdoor — and this event proves it.", avatarId: 51 },
   { quote: "I brought my whole team and we all made valuable connections.", avatarId: 38 },
 ];
