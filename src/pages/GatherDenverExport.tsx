@@ -105,7 +105,7 @@ const GatherDenverExport = () => {
         </p>
         <p className="text-white font-bold text-xl mt-4">May 29, 2026 · 1–4 PM · Denver, CO</p>
         <p className="text-white/50 text-xs mt-2 italic">Named one of two top activations from 2024 & 2025 by Outside, Inc</p>
-        <p className="mt-4 text-white/60 text-sm">Austin@basecampjobs.com</p>
+        <p className="mt-4 text-white/60 text-sm">jenna@wearetheoutdoorindustry.com</p>
       </section>
 
       {/* Brand Logos */}
