@@ -209,7 +209,9 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
             <div className="relative z-10 border-b border-white/10">
               <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-                <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+                <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
+                  <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+                </a>
                 <span className="text-white/40 text-xs font-display uppercase tracking-widest">{eventTitle}</span>
               </div>
             </div>

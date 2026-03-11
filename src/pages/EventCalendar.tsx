@@ -9,8 +9,6 @@ import { ArrowLeft } from "lucide-react";
 
 const EventCalendar = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const fetchEvents = async () => {
     const { data } = await supabase
       .from("events")
@@ -21,9 +19,6 @@ const EventCalendar = () => {
 
   useEffect(() => {
     fetchEvents();
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session);
-    });
   }, []);
 
   return (
@@ -42,7 +37,7 @@ const EventCalendar = () => {
             <h1 className="font-display text-events-cream text-3xl md:text-4xl font-bold">
               Event Calendar
             </h1>
-            {isAdmin && <AddEventDialog onEventAdded={fetchEvents} />}
+            <AddEventDialog onEventAdded={fetchEvents} />
           </div>
         </div>
         <CalendarGrid events={events} />

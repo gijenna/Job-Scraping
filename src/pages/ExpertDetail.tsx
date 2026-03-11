@@ -61,7 +61,9 @@ const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
       {/* Header */}
       <div className="border-b border-events-cream/10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+          <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
+            <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+          </a>
           <Link
             to={`/${cityPrefix}experts/browse`}
             className="text-events-cream/50 hover:text-events-cream text-sm flex items-center gap-1 transition-colors"

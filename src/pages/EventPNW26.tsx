@@ -9,6 +9,8 @@ import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import PnwWhosComing from "@/components/event/PnwWhosComing";
+import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
+import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com", url: undefined as string | undefined },
@@ -67,15 +69,19 @@ const EventPNW26 = () => {
         headline="Brands & professionals in the room"
       />
 
+      {/* Industry Experts — moved below ticker */}
+      <PnwWhosComing accentColor="#FEE123" bgColor="#154733" />
+
       <RegistrantHowToTapIn
         registrationUrl={TYPEFORM_PNW}
         sponsorPageUrl="/gather-pnw"
         expertsPageUrl="/Portlandexperts"
         accentColor="#FEE123"
         bgColor="#0d2b1f"
+        attendeeCount="300+"
       />
 
-      {/* Brand Showcase */}
+      {/* Brand Showcase — Who's in the room */}
       <section className="py-16 md:py-24 px-6 bg-events-cream">
         <div className="container mx-auto max-w-5xl">
           <motion.div
@@ -130,7 +136,11 @@ const EventPNW26 = () => {
         </div>
       </section>
 
-      <PnwWhosComing accentColor="#FEE123" bgColor="#154733" />
+      {/* Job Seeker Testimonials */}
+      <JobSeekerTestimonials accentColor="#FEE123" bgColor="#154733" />
+
+      {/* Gallery — Check out other Basecamp Events */}
+      <BasecampEventsGallery />
 
       {/* What to Expect */}
       <section className="py-16 md:py-24 px-6 bg-events-teal">

@@ -41,7 +41,7 @@ const DenverFestivalPartner = () => {
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-display font-bold text-lg shadow-lg transition-all duration-300 hover:scale-105"
               style={{ backgroundColor: "#E1B624", color: "#19363B" }}
             >
-              Get in on this
+              Involve your brand
               <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>

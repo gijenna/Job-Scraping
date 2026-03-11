@@ -55,7 +55,7 @@ const PnwUOPartner = () => {
               <img
                 src={eventPnwCrowd}
                 alt="Gather PNW last year"
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover md:aspect-[3/4] md:object-cover"
               />
             </div>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">

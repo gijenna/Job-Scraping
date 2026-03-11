@@ -15,7 +15,6 @@ const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const eventsRef = useRef<HTMLDivElement>(null);
   const partnerRef = useRef<HTMLDivElement>(null);
 
@@ -31,13 +30,6 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
-    });
-    return () => subscription.unsubscribe();
   }, []);
 
   const handleFilterSelect = (f: string) => {
@@ -73,7 +65,7 @@ const Events = () => {
               View all upcoming events
             </h2>
             <div className="flex items-center gap-4">
-              {isAdmin && <AddEventDialog onEventAdded={fetchEvents} />}
+              <AddEventDialog onEventAdded={fetchEvents} />
               <Link
                 to="/calendar"
                 className="flex items-center gap-2 text-events-teal hover:text-events-coral transition-colors font-medium"
@@ -104,7 +96,7 @@ const Events = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} isAdmin={isAdmin} onDelete={fetchEvents} />
+                <EventCard key={event.id} event={event} isAdmin={true} onDelete={fetchEvents} />
               ))}
             </div>
           )}

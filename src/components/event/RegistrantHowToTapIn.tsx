@@ -16,6 +16,7 @@ interface RegistrantHowToTapInProps {
   accentColor?: string;
   bgColor?: string;
   images?: [string, string, string];
+  attendeeCount?: string;
 }
 
 const DEFAULT_IMAGES: [string, string, string] = [
@@ -29,6 +30,7 @@ const RegistrantHowToTapIn = ({
   sponsorPageUrl,
   expertsPageUrl,
   images,
+  attendeeCount = "500+",
 }: RegistrantHowToTapInProps) => {
   const imgs = images || DEFAULT_IMAGES;
 
@@ -42,7 +44,7 @@ const RegistrantHowToTapIn = ({
     },
     {
       title: "SHOW UP AS A BRAND",
-      description: "Create a discovery zone for your brand. Engage with 500+ leaders, athletes, and influencers in the outdoor industry",
+      description: `Create a discovery zone for your brand. Engage with ${attendeeCount} leaders, athletes, and influencers in the outdoor industry`,
       linkUrl: sponsorPageUrl,
       linkLabel: "MORE INFO",
       imageSrc: imgs[1],
