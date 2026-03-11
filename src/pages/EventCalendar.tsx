@@ -46,7 +46,7 @@ const EventCalendar = () => {
             <h1 className="font-display text-events-cream text-3xl md:text-4xl font-bold">
               Event Calendar
             </h1>
-            <AddEventDialog onEventAdded={fetchEvents} />
+            {isAdmin && <AddEventDialog onEventAdded={fetchEvents} />}
           </div>
         </div>
         <CalendarGrid events={events} />
