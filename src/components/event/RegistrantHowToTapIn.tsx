@@ -16,6 +16,7 @@ interface RegistrantHowToTapInProps {
   accentColor?: string;
   bgColor?: string;
   images?: [string, string, string];
+  attendeeCount?: string;
 }
 
 const DEFAULT_IMAGES: [string, string, string] = [
