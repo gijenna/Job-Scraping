@@ -126,7 +126,7 @@ const RegistrantVenue = ({
           </motion.p>
         )}
 
-        {ticketUrl && (
+        {ticketUrl && ticketLabel && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -142,6 +142,25 @@ const RegistrantVenue = ({
             >
               {ticketLabel}
               <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
+        )}
+
+        {!ticketUrl && description && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-4 text-center"
+          >
+            <a
+              href="https://bit.ly/outside-days"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-sm underline hover:opacity-80 transition-opacity"
+              style={{ color: accentColor }}
+            >
+              get festival tickets
             </a>
           </motion.div>
         )}

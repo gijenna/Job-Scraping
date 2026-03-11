@@ -44,7 +44,7 @@ const RegistrantHowToTapIn = ({
     },
     {
       title: "SHOW UP AS A BRAND",
-      description: "Create a discovery zone for your brand. Engage with 500+ leaders, athletes, and influencers in the outdoor industry",
+      description: `Create a discovery zone for your brand. Engage with ${attendeeCount} leaders, athletes, and influencers in the outdoor industry`,
       linkUrl: sponsorPageUrl,
       linkLabel: "MORE INFO",
       imageSrc: imgs[1],

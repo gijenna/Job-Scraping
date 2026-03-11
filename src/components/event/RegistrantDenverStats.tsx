@@ -46,7 +46,7 @@ const testimonials: Testimonial[] = [
   { quote: "The companies were so generous with their time.", avatarId: 28 },
   { quote: "Very friendly and energetic vibe to the whole event!", avatarId: 15 },
   { quote: "The career coaching helped me work up courage to talk to Outside.", avatarId: 67 },
-  { quote: "Thank you for providing this space for under-represented communities.", avatarId: 45 },
+  { quote: "Thank you for providing this space for under-represented communities.", avatarId: 20 },
   { quote: "The layout and overall vibe of the event was great.", avatarId: 51 },
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
