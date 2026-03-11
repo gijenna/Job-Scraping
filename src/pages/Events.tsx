@@ -30,13 +30,6 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
-    });
-    return () => subscription.unsubscribe();
   }, []);
 
   const handleFilterSelect = (f: string) => {
