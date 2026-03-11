@@ -15,6 +15,7 @@ const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const eventsRef = useRef<HTMLDivElement>(null);
   const partnerRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +31,13 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAdmin(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleFilterSelect = (f: string) => {
