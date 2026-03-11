@@ -9,8 +9,6 @@ import { ArrowLeft } from "lucide-react";
 
 const EventCalendar = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const fetchEvents = async () => {
     const { data } = await supabase
       .from("events")
@@ -21,9 +19,6 @@ const EventCalendar = () => {
 
   useEffect(() => {
     fetchEvents();
-    supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session);
-    });
   }, []);
 
   return (
