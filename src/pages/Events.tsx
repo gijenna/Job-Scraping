@@ -65,7 +65,7 @@ const Events = () => {
               View all upcoming events
             </h2>
             <div className="flex items-center gap-4">
-              {isAdmin && <AddEventDialog onEventAdded={fetchEvents} />}
+              <AddEventDialog onEventAdded={fetchEvents} />
               <Link
                 to="/calendar"
                 className="flex items-center gap-2 text-events-teal hover:text-events-coral transition-colors font-medium"
