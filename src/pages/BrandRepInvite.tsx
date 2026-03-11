@@ -371,10 +371,10 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                       <div className="bg-white rounded-xl p-5 shadow-sm border border-events-teal/10 text-center">
                         <CalendarDays className="w-6 h-6 text-events-coral mx-auto" />
                         <p className="text-events-teal font-display font-bold mt-3 text-lg">
-                          {new Date(city.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(city.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
                         </p>
                         <p className="text-events-teal/50 text-xs mt-1">
-                          {new Date(city.event_date).getFullYear()}
+                          {new Date(city.event_date).toLocaleDateString('en-US', { year: 'numeric', timeZone: 'UTC' })}
                         </p>
                       </div>
                     )}
