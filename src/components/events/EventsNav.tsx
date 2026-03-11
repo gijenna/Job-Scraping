@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, Shield } from "lucide-react";
+import { Menu, X, LogOut, Shield, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
@@ -10,9 +10,22 @@ interface EventsNavProps {
   onScrollToPartner?: () => void;
 }
 
+const OFFICE_HOURS_BRANDS = [
+  { name: "Cotopaxi", url: "https://www.wearetheoutdoorindustry.com/officehours/cotopaxi" },
+  { name: "Backbone", url: "https://www.wearetheoutdoorindustry.com/officehours/backbone" },
+  { name: "Arc'teryx", url: "https://www.wearetheoutdoorindustry.com/officehours/arcteryx" },
+  { name: "Outward Bound", url: "https://www.wearetheoutdoorindustry.com/officehours/outwardbound" },
+  { name: "Outside PR", url: "https://www.wearetheoutdoorindustry.com/officehours/outsidepr" },
+  { name: "CU Boulder", url: "https://www.wearetheoutdoorindustry.com/officehours/cuboulder" },
+  { name: "Vail Resorts", url: "https://www.wearetheoutdoorindustry.com/officehours/vailresorts" },
+  { name: "Autocamp", url: "https://www.wearetheoutdoorindustry.com/officehours/autocamp" },
+  { name: "Title Nine", url: "https://www.wearetheoutdoorindustry.com/officehours/titlenine" },
+];
+
 const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [officeHoursOpen, setOfficeHoursOpen] = useState(false);
   const navigate = useNavigate();
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -110,6 +123,40 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
                 <button onClick={() => handleHappeningsClick("digital")} className="block text-events-cream hover:text-events-coral transition-colors">
                   Digital Events
                 </button>
+                
+                {/* Office Hours with expandable brand list */}
+                <div>
+                  <button
+                    onClick={() => setOfficeHoursOpen(!officeHoursOpen)}
+                    className="flex items-center gap-1 text-events-cream hover:text-events-coral transition-colors"
+                  >
+                    Office Hours
+                    {officeHoursOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  </button>
+                  {officeHoursOpen && (
+                    <div className="pl-4 mt-1 space-y-1 border-l border-events-cream/10 ml-1">
+                      <a
+                        href="https://www.wearetheoutdoorindustry.com/officehours"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-events-cream/70 hover:text-events-coral transition-colors text-sm"
+                      >
+                        All Office Hours →
+                      </a>
+                      {OFFICE_HOURS_BRANDS.map((brand) => (
+                        <a
+                          key={brand.name}
+                          href={brand.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-events-cream/60 hover:text-events-coral transition-colors text-sm"
+                        >
+                          {brand.name}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -93,21 +93,8 @@ const EventOutsideDays26 = () => {
         description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
       />
 
-      {/* Discovery Zone section moved to bottom */}
+      {/* Discovery Zone section */}
       <DenverFestivalPartner />
-
-      {/* Involve your brand CTA */}
-      <section className="py-12 px-6 bg-events-teal">
-        <div className="container mx-auto max-w-2xl text-center">
-          <Link
-            to="/gather-denver"
-            className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal"
-          >
-            Involve your brand
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
-      </section>
 
       {/* Bottom CTA */}
       <section className="py-20 px-6 bg-events-teal">
