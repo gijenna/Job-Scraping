@@ -1,57 +1,77 @@
 
 
-# Plan: Denver Registration Link Update + Admin-Only Event Management with Edit
+# Main Page Updates: Logo, Content, and Denver Time Change
 
-## 1. Update Denver Registration Link
-
-Change `TYPEFORM_DENVER` in `EventOutsideDays26.tsx` from `denver2026` to `outsidedays`:
-```
-const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
-```
-
-This single change propagates to all 3 usages on that page (hero, how-to-tap-in, bottom CTA). No other files reference this URL for Denver registration.
-
-**Files**: `src/pages/EventOutsideDays26.tsx`
+## Overview
+Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
 
 ---
 
-## 2. Admin-Only Event Add/Delete + Edit Functionality
+## Changes
 
-Currently `Events.tsx` passes `isAdmin={true}` to every EventCard unconditionally. We need to:
+### 1. Swap Logo on Main Page
+- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
+- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
+- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
 
-### a) Add auth check in Events.tsx
-- Import `useEffect` + `supabase` auth session check
-- Track `isAdmin` state (boolean) based on whether there's an authenticated session
-- Only show `<AddEventDialog>` when `isAdmin` is true
-- Pass `isAdmin` to `<EventCard>`
+### 2. Ensure "GATHER" Uses Josefin Sans
+- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
 
-### b) Add Edit functionality
-Create an `EditEventDialog` component (similar to `AddEventDialog`) that:
-- Receives the existing event data as props
-- Pre-fills all form fields (title, date, end_date, cost, registration_link, type, location)
-- On submit, calls `supabase.from("events").update(...)` instead of insert
-- Shows a pencil/edit icon button on the EventCard (next to delete) when `isAdmin`
+### 3. Update Denver Event Time to 1-4 PM
+Files to update:
+- `src/components/EventOverview.tsx`: Update the Denver event format/description references
+- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
+- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
 
-### c) Update EventCard
-- Add an edit button (Pencil icon) next to the delete button, both gated by `isAdmin`
-- Add `onEdit` callback prop that opens the edit dialog
-- The edit dialog can either be embedded in EventCard or lifted to Events.tsx
+### 4. Reduce Spacing Below Hero Buttons
+- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
 
-**Implementation approach**: Add the `EditEventDialog` as a sibling dialog in `EventCard` itself (self-contained), triggered by the pencil button. This keeps it simple — each card manages its own edit state.
+### 5. Replace StatsSection with New Audience Content
+Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
 
-**Files**: 
-- `src/pages/Events.tsx` — add auth check, conditionally show AddEventDialog
-- `src/components/events/EventCard.tsx` — add edit button + inline EditEventDialog
-- `src/pages/EventCalendar.tsx` — add same auth check for its AddEventDialog
+**a) Companies of Note Represented**
+A section listing the brands organized by category:
+- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
+- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
+- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
+
+**b) Event Audience Executive Summary**
+Three highlight cards:
+- "The Industry Tastemakers" -- 50% Marketing and Communications
+- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
+- "The Ultimate Career Pivot Point" -- 17% Transitioners
+
+**c) Attendee Persona Snapshot**
+Three stat highlights:
+- 30% Creative Leaders
+- 22% Emerging Talent
+- 18% Strategic Decision Makers
+
+### 6. Remove Old StatsSection from Index
+- Remove the `StatsSection` import and usage from `Index.tsx`
+- Add the new `AudienceSection` component in its place
 
 ---
 
-## Summary of Changes
+## Technical Details
 
+### Files Created
+| File | Description |
+|------|-------------|
+| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
+| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
+
+### Files Modified
 | File | Change |
 |------|--------|
-| `EventOutsideDays26.tsx` | Update TYPEFORM_DENVER URL |
-| `Events.tsx` | Add auth session check, gate AddEventDialog behind isAdmin |
-| `EventCalendar.tsx` | Same auth gating |
-| `EventCard.tsx` | Add edit button + inline edit dialog, keep delete/edit admin-only |
+| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
+| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
+| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
+| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
+| `src/components/EventOverview.tsx` | Update any Denver time references |
+| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
 
+### No Changes To
+- PNW pages (no time changes requested)
+- Export PNW page
+- Individual event components (EventHero, EventTiers, etc.)

@@ -32,7 +32,7 @@ const denverBrands = [
   { name: "The Wilderness Society", domain: "wilderness.org" },
 ];
 
-const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/denver2026";
+const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
 const EventOutsideDays26 = () => {
   return (
