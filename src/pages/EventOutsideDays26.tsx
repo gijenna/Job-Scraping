@@ -90,8 +90,7 @@ const EventOutsideDays26 = () => {
         date="May 29, 2026"
         eventTime="1:00 – 4:00 PM MT"
         accentColor="#E1B624"
-        ticketUrl="https://bit.ly/outside-days"
-        ticketLabel="Get Tickets"
+        description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
       />
 
       {/* Discovery Zone section moved to bottom */}
