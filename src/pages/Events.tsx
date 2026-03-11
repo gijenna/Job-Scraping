@@ -15,7 +15,6 @@ const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const eventsRef = useRef<HTMLDivElement>(null);
   const partnerRef = useRef<HTMLDivElement>(null);
 
