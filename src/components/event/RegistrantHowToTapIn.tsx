@@ -30,6 +30,7 @@ const RegistrantHowToTapIn = ({
   sponsorPageUrl,
   expertsPageUrl,
   images,
+  attendeeCount = "500+",
 }: RegistrantHowToTapInProps) => {
   const imgs = images || DEFAULT_IMAGES;
 
