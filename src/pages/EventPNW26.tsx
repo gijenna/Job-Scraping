@@ -239,7 +239,7 @@ const EventPNW26 = () => {
 
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="https://business.uoregon.edu/programs/spm"
+                  href="https://bit.ly/47veqAL"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105"
