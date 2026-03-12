@@ -82,7 +82,7 @@ const CITY_EVENT_DATA: Record<string, {
     companies: [
       'Rumpl', 'On Running', 'Arc\'teryx', 'Cotopaxi', 'Brooks',
       'Specialized', 'Superfeet', 'Rivian', 'Columbia', 'Nike',
-      'Adidas', 'REI', 'KEEN', 'Popfly', 'Oregon Outdoor Alliance',
+      'Adidas', 'REI', 'KEEN', 'Popfly', 'Oregon Outdoor Alliance', 'Peak Design',
     ],
   },
 };
