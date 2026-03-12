@@ -375,8 +375,16 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
           {(() => {
             const eventData = CITY_EVENT_DATA[citySlug] || CITY_EVENT_DATA.denver;
             return (
-              <section className="bg-events-cream py-16 md:py-24">
-                <div className="max-w-4xl mx-auto px-4">
+              <section className="relative py-16 md:py-24 overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                  {heroMedia?.video ? (
+                    <video autoPlay muted loop playsInline className="w-full h-full object-cover" src={heroMedia.video} />
+                  ) : heroMedia?.image ? (
+                    <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
+                  ) : null}
+                  <div className="absolute inset-0 bg-events-cream/90" />
+                </div>
+                <div className="relative z-10 max-w-4xl mx-auto px-4">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-sm uppercase tracking-widest">{eventData.tagline}</p>
                     <h2 className="font-display text-3xl md:text-5xl font-bold text-events-teal mt-3">
