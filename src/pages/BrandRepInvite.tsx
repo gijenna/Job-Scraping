@@ -225,13 +225,17 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                         <>
                           <span className="text-events-yellow">{brandName}</span> is
                           <br />
-                          confirmed at our
-                          <br />
-                          {cityName} event &{' '}
+                          confirmed at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Gather PNW</Link>
+                          )}
+                          {' '}&{' '}
                           {hasKnownRep ? (
                             <><span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{repFirstName}</span> would love</>
                           ) : (
-                            <>they'd love</>
+                            <>Jen would love</>
                           )}
                           <br />
                           you to attend!
@@ -240,9 +244,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                         <>
                           Your company is
                           <br />
-                          <span className="text-events-coral">confirmed</span> at our
-                          <br />
-                          {cityName} event.
+                          <span className="text-events-coral">confirmed</span> at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4">Gather PNW</Link>
+                          )}.
                         </>
                       )}
                     </h1>
