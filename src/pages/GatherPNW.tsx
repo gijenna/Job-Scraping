@@ -28,6 +28,7 @@ const pnwBrands = [
   { name: "Snow Peak", domain: "snowpeak.com" },
   { name: "AllTrails", domain: "alltrails.com" },
   { name: "Microsoft", domain: "microsoft.com" },
+  { name: "Peak Design", domain: "peakdesign.com" },
 ];
 
 const GatherPNW = () => {

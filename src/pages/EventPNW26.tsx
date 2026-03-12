@@ -249,7 +249,7 @@ const EventPNW26 = () => {
                   <ExternalLink className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://business.uoregon.edu/programs/spm/apply"
+                  href="https://bit.ly/47veqAL"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"

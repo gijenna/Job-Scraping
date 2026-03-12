@@ -32,6 +32,7 @@ const denverBrands = [
   { name: "AllTrails", domain: "alltrails.com" },
   { name: "Outward Bound", domain: "outwardbound.org" },
   { name: "The Wilderness Society", domain: "wilderness.org" },
+  { name: "Peak Design", domain: "peakdesign.com" },
 ];
 
 const GatherDenver = () => {
