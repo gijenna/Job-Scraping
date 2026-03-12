@@ -536,6 +536,20 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                   <HelpCircle className="w-4 h-4 mr-2" /> I have questions
                 </Button>
               </div>
+              <Link
+                to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'}
+                className="text-events-cream/50 hover:text-events-cream/80 text-sm mt-6 inline-block transition-colors underline underline-offset-2"
+              >
+                Just want to register and attend for free? We'd love to see you
+              </Link>
+                <Button
+                  onClick={() => setShowQuestions(true)}
+                  variant="outline"
+                  className="border-events-cream/20 text-events-cream hover:bg-events-card font-display px-8 py-6"
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" /> I have questions
+                </Button>
+              </div>
 
               {/* Return visitor */}
               {!expert && !returning && (
