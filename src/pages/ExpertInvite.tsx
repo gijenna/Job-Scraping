@@ -266,7 +266,12 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
 
                     <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
                       We're looking for respected voices in the outdoor industry to serve as{' '}
-                      <strong className="text-white">Industry Experts</strong> at our upcoming {cityName} event.
+                      <strong className="text-white">Industry Experts</strong> at{' '}
+                      {citySlug === 'denver' ? (
+                        <Link to="/OutsideDays26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Outside Days Career Fair</Link>
+                      ) : (
+                        <Link to="/PNW26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Gather: PNW</Link>
+                      )}.
                       You're exactly who our community wants to meet.
                     </p>
 
