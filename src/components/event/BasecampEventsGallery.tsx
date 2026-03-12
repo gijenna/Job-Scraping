@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import eventBoothTent from "@/assets/event-booth-tent.jpg";
 import eventAttendeeSmile from "@/assets/event-attendee-smile.jpg";
@@ -28,14 +29,9 @@ const galleryImages = [
 const BasecampEventsGallery = () => {
   const [current, setCurrent] = useState(0);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % galleryImages.length);
-    }, 3500);
-    return () => clearInterval(timer);
-  }, []);
+  const goNext = () => setCurrent((prev) => (prev + 1) % galleryImages.length);
+  const goPrev = () => setCurrent((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
 
-  // Show 3 images at a time on desktop, 1 on mobile
   const getVisibleImages = () => {
     const indices = [];
     for (let i = 0; i < 3; i++) {
@@ -61,7 +57,7 @@ const BasecampEventsGallery = () => {
           </h2>
         </motion.div>
 
-        {/* Mobile: single image carousel */}
+        {/* Mobile: single image with arrows */}
         <div className="block md:hidden">
           <div className="relative h-64 rounded-xl overflow-hidden">
             <AnimatePresence mode="wait">
@@ -76,6 +72,18 @@ const BasecampEventsGallery = () => {
                 className="w-full h-full object-cover absolute inset-0 rounded-xl"
               />
             </AnimatePresence>
+            <button
+              onClick={goPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={goNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
           <div className="flex justify-center gap-1.5 mt-4">
             {galleryImages.map((_, i) => (
@@ -92,23 +100,37 @@ const BasecampEventsGallery = () => {
           </div>
         </div>
 
-        {/* Desktop: 3-image grid that rotates */}
-        <div className="hidden md:grid grid-cols-3 gap-4">
-          {getVisibleImages().map((idx, i) => (
-            <motion.div
-              key={`${idx}-${i}`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg"
-            >
-              <img
-                src={galleryImages[idx].src}
-                alt={galleryImages[idx].alt}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </motion.div>
-          ))}
+        {/* Desktop: 3-image grid with arrows */}
+        <div className="hidden md:block relative">
+          <div className="grid grid-cols-3 gap-4">
+            {getVisibleImages().map((idx, i) => (
+              <motion.div
+                key={`${idx}-${i}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg"
+              >
+                <img
+                  src={galleryImages[idx].src}
+                  alt={galleryImages[idx].alt}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </motion.div>
+            ))}
+          </div>
+          <button
+            onClick={goPrev}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-events-teal/80 hover:bg-events-teal text-events-cream rounded-full p-3 shadow-lg transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={goNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-events-teal/80 hover:bg-events-teal text-events-cream rounded-full p-3 shadow-lg transition-colors"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </section>

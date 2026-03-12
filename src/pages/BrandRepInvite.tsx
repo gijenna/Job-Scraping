@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert, ExpertCity } from "@/lib/expert-types";
 import ExpertIntakeForm from "@/components/experts/ExpertIntakeForm";
@@ -56,7 +56,7 @@ const CITY_EVENT_DATA: Record<string, {
     companies: [
       'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
       'Vail Resorts', 'Smartwool', 'Nike', 'Google', 'Apple', 'KPMG',
-      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti',
+      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti', 'Peak Design',
     ],
   },
   portland: {
@@ -82,7 +82,7 @@ const CITY_EVENT_DATA: Record<string, {
     companies: [
       'Rumpl', 'On Running', 'Arc\'teryx', 'Cotopaxi', 'Brooks',
       'Specialized', 'Superfeet', 'Rivian', 'Columbia', 'Nike',
-      'Adidas', 'REI', 'KEEN', 'Popfly', 'Oregon Outdoor Alliance',
+      'Adidas', 'REI', 'KEEN', 'Popfly', 'Oregon Outdoor Alliance', 'Peak Design',
     ],
   },
 };
@@ -212,7 +212,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                 <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                   <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
                 </a>
-                <span className="text-white/40 text-xs font-display uppercase tracking-widest">{eventTitle}</span>
+                <Link to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
 
@@ -225,13 +225,17 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                         <>
                           <span className="text-events-yellow">{brandName}</span> is
                           <br />
-                          confirmed at our
-                          <br />
-                          {cityName} event &{' '}
+                          confirmed at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Gather PNW</Link>
+                          )}
+                          {' '}&{' '}
                           {hasKnownRep ? (
                             <><span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{repFirstName}</span> would love</>
                           ) : (
-                            <>they'd love</>
+                            <>Jen would love</>
                           )}
                           <br />
                           you to attend!
@@ -240,9 +244,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                         <>
                           Your company is
                           <br />
-                          <span className="text-events-coral">confirmed</span> at our
-                          <br />
-                          {cityName} event.
+                          <span className="text-events-coral">confirmed</span> at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4">Gather PNW</Link>
+                          )}.
                         </>
                       )}
                     </h1>
@@ -250,12 +257,22 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
                       {expert ? (
                         <>
-                          {brandName} would love for you to represent the brand at our upcoming {cityName} event.
-                          You'll chat with our community, tell your story, and help attendees get to know who's behind the brand.
+                          {brandName} would love for you to represent the brand at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Gather: PNW</Link>
+                          )}.
+                          You'll chat with our community, tell your story, and help attendees get intel beyond the careers page.
                         </>
                       ) : (
                         <>
-                          Your company would love for you to attend and represent the brand at our upcoming {cityName} event.
+                          Your company would love for you to attend and represent the brand at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Gather: PNW</Link>
+                          )}.
                           Chat with our community, share your story, and help attendees connect with your brand.
                         </>
                       )}
@@ -358,8 +375,16 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
           {(() => {
             const eventData = CITY_EVENT_DATA[citySlug] || CITY_EVENT_DATA.denver;
             return (
-              <section className="bg-events-cream py-16 md:py-24">
-                <div className="max-w-4xl mx-auto px-4">
+              <section className="relative py-16 md:py-24 overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                  {heroMedia?.video ? (
+                    <video autoPlay muted loop playsInline className="w-full h-full object-cover" src={heroMedia.video} />
+                  ) : heroMedia?.image ? (
+                    <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
+                  ) : null}
+                  <div className="absolute inset-0 bg-events-cream/90" />
+                </div>
+                <div className="relative z-10 max-w-4xl mx-auto px-4">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-sm uppercase tracking-widest">{eventData.tagline}</p>
                     <h2 className="font-display text-3xl md:text-5xl font-bold text-events-teal mt-3">
@@ -502,6 +527,12 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                   <HelpCircle className="w-4 h-4 mr-2" /> I have questions
                 </Button>
               </div>
+              <Link
+                to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'}
+                className="text-events-cream/50 hover:text-events-cream/80 text-sm mt-6 inline-block transition-colors underline underline-offset-2"
+              >
+                Just want to register and attend for free? We'd love to see you
+              </Link>
 
               {!expert && !returning && (
                 <button

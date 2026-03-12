@@ -30,6 +30,7 @@ const denverBrands = [
   { name: "Outside Inc", domain: "outsideonline.com" },
   { name: "Outward Bound", domain: "outwardbound.org" },
   { name: "The Wilderness Society", domain: "wilderness.org" },
+  { name: "Peak Design", domain: "peakdesign.com" },
 ];
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
