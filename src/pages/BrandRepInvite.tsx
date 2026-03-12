@@ -56,7 +56,7 @@ const CITY_EVENT_DATA: Record<string, {
     companies: [
       'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
       'Vail Resorts', 'Smartwool', 'Nike', 'Google', 'Apple', 'KPMG',
-      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti',
+      'Amazon', 'Backbone Media', 'Outside Inc', 'Yeti', 'Peak Design',
     ],
   },
   portland: {
