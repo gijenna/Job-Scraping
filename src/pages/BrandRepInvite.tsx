@@ -257,12 +257,22 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
                       {expert ? (
                         <>
-                          {brandName} would love for you to represent the brand at our upcoming {cityName} event.
-                          You'll chat with our community, tell your story, and help attendees get to know who's behind the brand.
+                          {brandName} would love for you to represent the brand at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Gather: PNW</Link>
+                          )}.
+                          You'll chat with our community, tell your story, and help attendees get intel beyond the careers page.
                         </>
                       ) : (
                         <>
-                          Your company would love for you to attend and represent the brand at our upcoming {cityName} event.
+                          Your company would love for you to attend and represent the brand at{' '}
+                          {citySlug === 'denver' ? (
+                            <Link to="/OutsideDays26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Outside Days Career Fair</Link>
+                          ) : (
+                            <Link to="/PNW26" className="text-events-coral underline underline-offset-2 hover:text-events-coral/80">Gather: PNW</Link>
+                          )}.
                           Chat with our community, share your story, and help attendees connect with your brand.
                         </>
                       )}
