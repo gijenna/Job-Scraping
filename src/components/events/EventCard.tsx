@@ -101,6 +101,7 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
   const [editLink, setEditLink] = useState(event.registration_link);
   const [editType, setEditType] = useState<"in-person" | "digital" | "workshop">(event.type as any);
   const [editLocation, setEditLocation] = useState(event.location ?? "");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
