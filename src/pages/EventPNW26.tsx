@@ -37,8 +37,21 @@ const pnwBrands = [
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
+  const [dbLogos, setDbLogos] = useState<EventLogo[]>([]);
+
+  const allBrands = [
+    ...pnwBrands,
+    ...dbLogos.map((l) => ({
+      name: l.name,
+      domain: l.domain || "",
+      url: l.url || undefined,
+      logo_url: l.logo_url || undefined,
+    })),
+  ];
+
   return (
     <main className="bg-events-teal min-h-screen relative">
+      <AdminLogoManager eventSlug="pnw26" onLogosChange={setDbLogos} />
       {/* Basecamp Match logo top-left */}
       <a
         href="https://www.basecampjobs.com"
