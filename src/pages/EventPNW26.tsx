@@ -82,7 +82,7 @@ const EventPNW26 = () => {
       />
 
       <EventLogoTicker
-        brands={pnwBrands}
+        brands={allBrands}
         headline="Brands & professionals in the room"
       />
 
