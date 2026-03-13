@@ -132,6 +132,19 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
     }
     setEditLoading(true);
     try {
+      let photoUrl = event.photo_url;
+
+      if (photoFile) {
+        const ext = photoFile.name.split(".").pop();
+        const path = `events/${event.id}/${Date.now()}.${ext}`;
+        const { error: uploadErr } = await supabase.storage
+          .from("event-photos")
+          .upload(path, photoFile);
+        if (uploadErr) throw uploadErr;
+        const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
+        photoUrl = urlData.publicUrl;
+      }
+
       const startUTC = pacificToUTC(editDate);
       const endUTC = editEndDate ? pacificToUTC(editEndDate) : null;
       const { error } = await supabase.from("events").update({
@@ -142,10 +155,12 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
         registration_link: editLink.trim(),
         type: editType,
         location: editType === "digital" ? "Digital" : editLocation.trim() || null,
+        photo_url: photoUrl,
       }).eq("id", event.id);
       if (error) throw error;
       toast({ title: "Event updated!" });
       setEditOpen(false);
+      setPhotoFile(null);
       onDelete?.(); // reuse callback to refetch
     } catch (err: any) {
       toast({ title: "Error updating event", description: err.message, variant: "destructive" });
