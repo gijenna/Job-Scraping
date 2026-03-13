@@ -257,15 +257,6 @@ const EventPNW26 = () => {
                 >
                   Apply Now
                 </a>
-                <a
-                  href="https://www.youtube.com/watch?v=o7HcNEwDW14"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"
-                  style={{ borderColor: "#154733", color: "#154733" }}
-                >
-                  Watch Video
-                </a>
               </div>
             </div>
           </motion.div>

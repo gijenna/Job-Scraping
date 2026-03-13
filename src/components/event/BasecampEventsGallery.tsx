@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -29,8 +29,8 @@ const galleryImages = [
 const BasecampEventsGallery = () => {
   const [current, setCurrent] = useState(0);
 
-  const goNext = () => setCurrent((prev) => (prev + 1) % galleryImages.length);
-  const goPrev = () => setCurrent((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  const goNext = useCallback(() => setCurrent((prev) => (prev + 1) % galleryImages.length), []);
+  const goPrev = useCallback(() => setCurrent((prev) => (prev - 1 + galleryImages.length) % galleryImages.length), []);
 
   const getVisibleImages = () => {
     const indices = [];
@@ -60,15 +60,15 @@ const BasecampEventsGallery = () => {
         {/* Mobile: single image with arrows */}
         <div className="block md:hidden">
           <div className="relative h-64 rounded-xl overflow-hidden">
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false} mode="wait">
               <motion.img
                 key={current}
                 src={galleryImages[current].src}
                 alt={galleryImages[current].alt}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.4 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="w-full h-full object-cover absolute inset-0 rounded-xl"
               />
             </AnimatePresence>
@@ -100,23 +100,27 @@ const BasecampEventsGallery = () => {
           </div>
         </div>
 
-        {/* Desktop: 3-image grid with arrows */}
+        {/* Desktop: 3-image grid with arrows — crossfade only */}
         <div className="hidden md:block relative">
           <div className="grid grid-cols-3 gap-4">
             {getVisibleImages().map((idx, i) => (
-              <motion.div
-                key={`${idx}-${i}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg"
+              <div
+                key={i}
+                className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg relative"
               >
-                <img
-                  src={galleryImages[idx].src}
-                  alt={galleryImages[idx].alt}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </motion.div>
+                <AnimatePresence initial={false} mode="wait">
+                  <motion.img
+                    key={idx}
+                    src={galleryImages[idx].src}
+                    alt={galleryImages[idx].alt}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="w-full h-full object-cover absolute inset-0 hover:scale-105 transition-transform duration-500"
+                  />
+                </AnimatePresence>
+              </div>
             ))}
           </div>
           <button

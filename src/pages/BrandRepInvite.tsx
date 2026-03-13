@@ -233,12 +233,10 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                           )}
                           {' '}&{' '}
                           {hasKnownRep ? (
-                            <><span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{repFirstName}</span> would love</>
+                            <><span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{repFirstName}</span> would love you to attend!</>
                           ) : (
-                            <>Jen would love</>
+                            <>Jen would love you to attend!</>
                           )}
-                          <br />
-                          you to attend!
                         </>
                       ) : (
                         <>
