@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -14,6 +15,8 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
+import AdminLogoManager from "@/components/event/AdminLogoManager";
+import { EventLogo } from "@/hooks/useEventLogos";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
