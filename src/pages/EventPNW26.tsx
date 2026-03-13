@@ -121,7 +121,8 @@ const EventPNW26 = () => {
             viewport={{ once: true }}
             className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
           >
-            {pnwBrands.map((brand) => {
+            {allBrands.map((brand) => {
+              const imgSrc = (brand as any).logo_url || `https://logo.clearbit.com/${brand.domain}`;
               const inner = (
                 <div className="flex flex-col items-center gap-2 group">
                   <img
