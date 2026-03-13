@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import eventBoothTent from "@/assets/event-booth-tent.jpg";
@@ -32,7 +31,7 @@ const BasecampEventsGallery = () => {
   const goNext = useCallback(() => setCurrent((prev) => (prev + 1) % galleryImages.length), []);
   const goPrev = useCallback(() => setCurrent((prev) => (prev - 1 + galleryImages.length) % galleryImages.length), []);
 
-  const getVisibleImages = () => {
+  const getVisibleIndices = () => {
     const indices = [];
     for (let i = 0; i < 3; i++) {
       indices.push((current + i) % galleryImages.length);
@@ -40,38 +39,32 @@ const BasecampEventsGallery = () => {
     return indices;
   };
 
+  const visibleIndices = getVisibleIndices();
+
   return (
     <section className="py-16 md:py-24 px-6 bg-events-cream">
       <div className="container mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10"
-        >
+        <div className="text-center mb-10">
           <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
             See It In Action
           </p>
           <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
             Check out other Basecamp Events
           </h2>
-        </motion.div>
+        </div>
 
-        {/* Mobile: single image with arrows */}
+        {/* Mobile: single image with crossfade */}
         <div className="block md:hidden">
           <div className="relative h-64 rounded-xl overflow-hidden">
-            <AnimatePresence initial={false} mode="wait">
-              <motion.img
-                key={current}
-                src={galleryImages[current].src}
-                alt={galleryImages[current].alt}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="w-full h-full object-cover absolute inset-0 rounded-xl"
+            {galleryImages.map((img, i) => (
+              <img
+                key={i}
+                src={img.src}
+                alt={img.alt}
+                className="absolute inset-0 w-full h-full object-cover rounded-xl transition-opacity duration-500 ease-in-out"
+                style={{ opacity: i === current ? 1 : 0 }}
               />
-            </AnimatePresence>
+            ))}
             <button
               onClick={goPrev}
               className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition-colors"
@@ -100,26 +93,23 @@ const BasecampEventsGallery = () => {
           </div>
         </div>
 
-        {/* Desktop: 3-image grid with arrows — crossfade only */}
+        {/* Desktop: 3-image grid with smooth crossfade */}
         <div className="hidden md:block relative">
           <div className="grid grid-cols-3 gap-4">
-            {getVisibleImages().map((idx, i) => (
+            {[0, 1, 2].map((slot) => (
               <div
-                key={i}
+                key={slot}
                 className="aspect-[4/3] rounded-xl overflow-hidden shadow-lg relative"
               >
-                <AnimatePresence initial={false} mode="wait">
-                  <motion.img
-                    key={idx}
-                    src={galleryImages[idx].src}
-                    alt={galleryImages[idx].alt}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35, ease: "easeInOut" }}
-                    className="w-full h-full object-cover absolute inset-0 hover:scale-105 transition-transform duration-500"
+                {galleryImages.map((img, imgIdx) => (
+                  <img
+                    key={imgIdx}
+                    src={img.src}
+                    alt={img.alt}
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+                    style={{ opacity: visibleIndices[slot] === imgIdx ? 1 : 0 }}
                   />
-                </AnimatePresence>
+                ))}
               </div>
             ))}
           </div>

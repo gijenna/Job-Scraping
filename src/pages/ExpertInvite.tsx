@@ -246,10 +246,7 @@ const ExpertInvite = ({ citySlug }: ExpertInviteProps) => {
                       {expert ? (
                         <>
                           Hey <span className="text-events-coral underline decoration-events-coral/40 underline-offset-4">{firstName}</span>,
-                          <br />
-                          we'd love for you
-                          <br />
-                          to be an Industry
+                          {' '}we'd love for you to be an Industry
                           <br />
                           Expert.
                         </>

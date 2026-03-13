@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      event_logos: {
+        Row: {
+          created_at: string
+          display_order: number
+          domain: string | null
+          event_slug: string
+          id: string
+          logo_url: string | null
+          name: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          domain?: string | null
+          event_slug: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          domain?: string | null
+          event_slug?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           cost: number | null
