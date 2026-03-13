@@ -82,7 +82,7 @@ const EventOutsideDays26 = () => {
       />
 
       <EventLogoTicker
-        brands={denverBrands}
+        brands={allBrands}
         headline="Brands & professionals in the room"
       />
 
