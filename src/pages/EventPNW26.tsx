@@ -19,6 +19,7 @@ const pnwBrands = [
   { name: "Cotopaxi", domain: "cotopaxi.com", url: undefined as string | undefined },
   { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org", url: "https://www.oregonoutdooralliance.org" },
   { name: "Superfeet", domain: "superfeet.com", url: "https://www.superfeet.com" },
+  { name: "Peak Design", domain: "peakdesign.com", url: "https://www.peakdesign.com/pages/careers" },
   { name: "Popfly", domain: "popfly.com", url: undefined as string | undefined },
   { name: "Brooks", domain: "brooksrunning.com", url: undefined as string | undefined },
   { name: "Specialized", domain: "specialized.com", url: undefined as string | undefined },
