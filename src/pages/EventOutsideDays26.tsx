@@ -39,8 +39,20 @@ const denverBrands = [
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
 const EventOutsideDays26 = () => {
+  const [dbLogos, setDbLogos] = useState<EventLogo[]>([]);
+
+  const allBrands = [
+    ...denverBrands,
+    ...dbLogos.map((l) => ({
+      name: l.name,
+      domain: l.domain || "",
+      url: l.url || undefined,
+    })),
+  ];
+
   return (
     <main className="bg-events-teal min-h-screen relative">
+      <AdminLogoManager eventSlug="denver26" onLogosChange={setDbLogos} />
       {/* Basecamp Match logo top-left */}
       <a
         href="https://www.basecampjobs.com"
