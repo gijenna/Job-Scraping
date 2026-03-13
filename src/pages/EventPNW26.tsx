@@ -29,7 +29,6 @@ const pnwBrands = [
   { name: "KEEN", domain: "keenfootwear.com", url: undefined as string | undefined },
   { name: "Lululemon", domain: "lululemon.com", url: undefined as string | undefined },
   { name: "Dovetail Workwear", domain: "dovetailworkwear.com", url: undefined as string | undefined },
-  { name: "Peak Design", domain: "peakdesign.com", url: undefined as string | undefined },
 ];
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
