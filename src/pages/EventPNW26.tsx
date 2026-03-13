@@ -19,6 +19,7 @@ const pnwBrands = [
   { name: "Cotopaxi", domain: "cotopaxi.com", url: undefined as string | undefined },
   { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org", url: "https://www.oregonoutdooralliance.org" },
   { name: "Superfeet", domain: "superfeet.com", url: "https://www.superfeet.com" },
+  { name: "Peak Design", domain: "peakdesign.com", url: "https://www.peakdesign.com/pages/careers" },
   { name: "Popfly", domain: "popfly.com", url: undefined as string | undefined },
   { name: "Brooks", domain: "brooksrunning.com", url: undefined as string | undefined },
   { name: "Specialized", domain: "specialized.com", url: undefined as string | undefined },
@@ -28,7 +29,6 @@ const pnwBrands = [
   { name: "KEEN", domain: "keenfootwear.com", url: undefined as string | undefined },
   { name: "Lululemon", domain: "lululemon.com", url: undefined as string | undefined },
   { name: "Dovetail Workwear", domain: "dovetailworkwear.com", url: undefined as string | undefined },
-  { name: "Peak Design", domain: "peakdesign.com", url: undefined as string | undefined },
 ];
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
@@ -256,15 +256,6 @@ const EventPNW26 = () => {
                   style={{ borderColor: "#154733", color: "#154733" }}
                 >
                   Apply Now
-                </a>
-                <a
-                  href="https://www.youtube.com/watch?v=o7HcNEwDW14"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"
-                  style={{ borderColor: "#154733", color: "#154733" }}
-                >
-                  Watch Video
                 </a>
               </div>
             </div>
