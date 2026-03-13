@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -14,6 +15,8 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
+import AdminLogoManager from "@/components/event/AdminLogoManager";
+import { EventLogo } from "@/hooks/useEventLogos";
 
 const denverBrands = [
   { name: "REI", domain: "rei.com" },
@@ -36,8 +39,20 @@ const denverBrands = [
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
 const EventOutsideDays26 = () => {
+  const [dbLogos, setDbLogos] = useState<EventLogo[]>([]);
+
+  const allBrands = [
+    ...denverBrands,
+    ...dbLogos.map((l) => ({
+      name: l.name,
+      domain: l.domain || "",
+      url: l.url || undefined,
+    })),
+  ];
+
   return (
     <main className="bg-events-teal min-h-screen relative">
+      <AdminLogoManager eventSlug="denver26" onLogosChange={setDbLogos} />
       {/* Basecamp Match logo top-left */}
       <a
         href="https://www.basecampjobs.com"
@@ -67,7 +82,7 @@ const EventOutsideDays26 = () => {
       />
 
       <EventLogoTicker
-        brands={denverBrands}
+        brands={allBrands}
         headline="Brands & professionals in the room"
       />
 

@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
@@ -11,15 +12,17 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import PnwWhosComing from "@/components/event/PnwWhosComing";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
+import AdminLogoManager from "@/components/event/AdminLogoManager";
+import { EventLogo } from "@/hooks/useEventLogos";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com", url: undefined as string | undefined },
   { name: "On Running", domain: "on-running.com", url: undefined as string | undefined },
   { name: "Arc'teryx", domain: "arcteryx.com", url: undefined as string | undefined },
   { name: "Cotopaxi", domain: "cotopaxi.com", url: undefined as string | undefined },
+  { name: "Peak Design", domain: "peakdesign.com", url: "https://www.peakdesign.com/pages/careers" },
   { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org", url: "https://www.oregonoutdooralliance.org" },
   { name: "Superfeet", domain: "superfeet.com", url: "https://www.superfeet.com" },
-  { name: "Peak Design", domain: "peakdesign.com", url: "https://www.peakdesign.com/pages/careers" },
   { name: "Popfly", domain: "popfly.com", url: undefined as string | undefined },
   { name: "Brooks", domain: "brooksrunning.com", url: undefined as string | undefined },
   { name: "Specialized", domain: "specialized.com", url: undefined as string | undefined },
@@ -34,8 +37,21 @@ const pnwBrands = [
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
+  const [dbLogos, setDbLogos] = useState<EventLogo[]>([]);
+
+  const allBrands = [
+    ...pnwBrands,
+    ...dbLogos.map((l) => ({
+      name: l.name,
+      domain: l.domain || "",
+      url: l.url || undefined,
+      logo_url: l.logo_url || undefined,
+    })),
+  ];
+
   return (
     <main className="bg-events-teal min-h-screen relative">
+      <AdminLogoManager eventSlug="pnw26" onLogosChange={setDbLogos} />
       {/* Basecamp Match logo top-left */}
       <a
         href="https://www.basecampjobs.com"
@@ -66,7 +82,7 @@ const EventPNW26 = () => {
       />
 
       <EventLogoTicker
-        brands={pnwBrands}
+        brands={allBrands}
         headline="Brands & professionals in the room"
       />
 
@@ -105,11 +121,12 @@ const EventPNW26 = () => {
             viewport={{ once: true }}
             className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
           >
-            {pnwBrands.map((brand) => {
+            {allBrands.map((brand) => {
+              const imgSrc = (brand as any).logo_url || `https://logo.clearbit.com/${brand.domain}`;
               const inner = (
                 <div className="flex flex-col items-center gap-2 group">
                   <img
-                    src={`https://logo.clearbit.com/${brand.domain}`}
+                    src={imgSrc}
                     alt={brand.name}
                     className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                     loading="lazy"

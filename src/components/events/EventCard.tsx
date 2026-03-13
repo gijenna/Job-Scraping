@@ -101,6 +101,7 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
   const [editLink, setEditLink] = useState(event.registration_link);
   const [editType, setEditType] = useState<"in-person" | "digital" | "workshop">(event.type as any);
   const [editLocation, setEditLocation] = useState(event.location ?? "");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -131,6 +132,19 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
     }
     setEditLoading(true);
     try {
+      let photoUrl = event.photo_url;
+
+      if (photoFile) {
+        const ext = photoFile.name.split(".").pop();
+        const path = `events/${event.id}/${Date.now()}.${ext}`;
+        const { error: uploadErr } = await supabase.storage
+          .from("event-photos")
+          .upload(path, photoFile);
+        if (uploadErr) throw uploadErr;
+        const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
+        photoUrl = urlData.publicUrl;
+      }
+
       const startUTC = pacificToUTC(editDate);
       const endUTC = editEndDate ? pacificToUTC(editEndDate) : null;
       const { error } = await supabase.from("events").update({
@@ -141,10 +155,12 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
         registration_link: editLink.trim(),
         type: editType,
         location: editType === "digital" ? "Digital" : editLocation.trim() || null,
+        photo_url: photoUrl,
       }).eq("id", event.id);
       if (error) throw error;
       toast({ title: "Event updated!" });
       setEditOpen(false);
+      setPhotoFile(null);
       onDelete?.(); // reuse callback to refetch
     } catch (err: any) {
       toast({ title: "Error updating event", description: err.message, variant: "destructive" });
@@ -266,6 +282,18 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
                 <Input value={editLocation} onChange={(e) => setEditLocation(e.target.value)} className="bg-events-card border-events-cream/20 text-events-cream" />
               </div>
             )}
+            <div>
+              <Label className="text-events-cream/80">Event Photo</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+                className="bg-events-card border-events-cream/20 text-events-cream"
+              />
+              {event.photo_url && !photoFile && (
+                <img src={event.photo_url} alt="Current" className="mt-2 h-20 rounded-lg object-cover" />
+              )}
+            </div>
             <Button type="submit" disabled={editLoading} className="w-full bg-events-coral text-events-teal font-bold hover:brightness-110 rounded-full">
               {editLoading ? "Saving..." : "Save Changes"}
             </Button>

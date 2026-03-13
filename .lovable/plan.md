@@ -1,102 +1,77 @@
 
 
-# Plan: Fix Issues + Admin Logo Management
+# Main Page Updates: Logo, Content, and Denver Time Change
 
-## 1. Move Peak Design to top row in /PNW26
-
-In `EventPNW26.tsx`, reorder `pnwBrands` array so Peak Design is at index 4 (5th item), putting it in the first row of the 5-column grid alongside OOA and Superfeet:
-
-```
-0: Rumpl, 1: On Running, 2: Arc'teryx, 3: Cotopaxi, 
-4: Peak Design, 5: Oregon Outdoor Alliance, 6: Superfeet, ...
-```
-
-**File**: `src/pages/EventPNW26.tsx`
+## Overview
+Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
 
 ---
 
-## 2. Fix gallery transitions (no disappearing)
+## Changes
 
-The current `AnimatePresence mode="wait"` removes the old image before showing the new one, causing a flash. Fix: remove AnimatePresence entirely. Instead, render all images stacked absolutely and toggle opacity via CSS transitions. Each slot always has an `<img>` rendered — only the `src` changes, and the transition is pure CSS `opacity` with `transition-opacity duration-500`. No framer-motion exit animations at all.
+### 1. Swap Logo on Main Page
+- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
+- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
+- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
 
-**File**: `src/components/event/BasecampEventsGallery.tsx`
+### 2. Ensure "GATHER" Uses Josefin Sans
+- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
 
----
+### 3. Update Denver Event Time to 1-4 PM
+Files to update:
+- `src/components/EventOverview.tsx`: Update the Denver event format/description references
+- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
+- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
 
-## 3. Fix "would love" line break in ExpertInvite
+### 4. Reduce Spacing Below Hero Buttons
+- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
 
-In `ExpertInvite.tsx` lines 249-254, the hero has explicit `<br />` tags forcing "we'd love for you" and "to be an Industry" onto separate lines. Remove the `<br />` between "we'd love for you" and "to be an Industry" so "we'd love for you to be an" flows naturally. Keep the final `<br />` before "Expert." to emphasize it.
+### 5. Replace StatsSection with New Audience Content
+Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
 
-**File**: `src/pages/ExpertInvite.tsx`
+**a) Companies of Note Represented**
+A section listing the brands organized by category:
+- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
+- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
+- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
 
----
+**b) Event Audience Executive Summary**
+Three highlight cards:
+- "The Industry Tastemakers" -- 50% Marketing and Communications
+- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
+- "The Ultimate Career Pivot Point" -- 17% Transitioners
 
-## 4. Add photo upload to event edit dialog
+**c) Attendee Persona Snapshot**
+Three stat highlights:
+- 30% Creative Leaders
+- 22% Emerging Talent
+- 18% Strategic Decision Makers
 
-In `EventCard.tsx`, add a file input for photo upload in the edit form (matching the AddEventDialog pattern). On submit, upload to `event-photos` storage bucket and update `photo_url`.
-
-**File**: `src/components/events/EventCard.tsx`
-
----
-
-## 5. Admin logo management on public pages (no credits)
-
-This is the big feature. Create a database-driven logo system with an admin overlay on the public event pages.
-
-### Database
-
-New table `event_logos`:
-- `id` (uuid, PK)
-- `event_slug` (text, e.g. "pnw26" or "denver26")
-- `name` (text)
-- `domain` (text, nullable — for favicon fallback)
-- `logo_url` (text, nullable — for uploaded logos)
-- `url` (text, nullable — link when clicked)
-- `display_order` (integer)
-- `created_at` (timestamptz)
-
-RLS: public SELECT, authenticated INSERT/UPDATE/DELETE.
-
-### Storage
-
-Use existing `event-photos` bucket (already public) for logo uploads.
-
-### Components
-
-**a) `useEventLogos` hook** — fetches logos from `event_logos` table filtered by `event_slug`.
-
-**b) `AdminLogoManager` component** — a floating admin panel (only visible when authenticated) that appears on the relevant sections. Includes:
-- "Add Logo" button that opens a dialog with: name, domain (optional), logo file upload (optional), URL (optional)
-- Each logo gets a delete (X) button visible in admin mode
-- Drag-to-reorder or simple up/down arrows for ordering
-
-**c) Integration into pages:**
-
-- **`EventPNW26.tsx`**: In the "Chat with hiring managers" brand grid section, merge hardcoded `pnwBrands` with DB logos. Show AdminLogoManager when admin. Also merge into ticker.
-- **`EventOutsideDays26.tsx`**: In `DenverByTheNumbers` component, merge DB logos into `brandLogos` array for the circle bubbles. Also merge into ticker.
-
-The admin sees small edit controls (add/delete) directly on the page sections — no credits used, just direct database operations.
-
-### How it works for the admin:
-1. Navigate to `/PNW26` or `/OutsideDays26` while logged in
-2. See a small floating "Manage Logos" button on relevant sections
-3. Click to add logos (upload image or enter domain for favicon), set name, optional link
-4. Delete logos with an X button
-5. Changes appear immediately on the public page
+### 6. Remove Old StatsSection from Index
+- Remove the `StatsSection` import and usage from `Index.tsx`
+- Add the new `AudienceSection` component in its place
 
 ---
 
-## Files Modified/Created
+## Technical Details
 
-| File | Changes |
-|------|---------|
-| `EventPNW26.tsx` | Reorder brands, integrate DB logos into grid + ticker |
-| `BasecampEventsGallery.tsx` | Replace AnimatePresence with CSS opacity transitions |
-| `ExpertInvite.tsx` | Fix "would love" line break |
-| `EventCard.tsx` | Add photo upload to edit dialog |
-| `src/hooks/useEventLogos.ts` | New hook to fetch/manage logos from DB |
-| `src/components/event/AdminLogoManager.tsx` | New admin overlay for logo CRUD |
-| `EventOutsideDays26.tsx` | Integrate DB logos into ticker |
-| `DenverByTheNumbers.tsx` | Integrate DB logos into bubble circles |
-| **Migration** | Create `event_logos` table with RLS |
+### Files Created
+| File | Description |
+|------|-------------|
+| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
+| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
 
+### Files Modified
+| File | Change |
+|------|--------|
+| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
+| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
+| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
+| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
+| `src/components/EventOverview.tsx` | Update any Denver time references |
+| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
+
+### No Changes To
+- PNW pages (no time changes requested)
+- Export PNW page
+- Individual event components (EventHero, EventTiers, etc.)

@@ -182,7 +182,12 @@ const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: T
   </motion.div>
 );
 
-const DenverByTheNumbers = () => {
+interface DenverByTheNumbersProps {
+  extraLogos?: Array<{ name: string; domain: string; logo_url?: string }>;
+}
+
+const DenverByTheNumbers = ({ extraLogos = [] }: DenverByTheNumbersProps) => {
+  const allLogos = [...brandLogos, ...extraLogos.map(l => ({ name: l.name, domain: l.domain }))];
   const isMobile = useIsMobile();
   const elements = isMobile ? mobileScatteredElements : scatteredElements;
 
