@@ -126,7 +126,7 @@ const EventPNW26 = () => {
               const inner = (
                 <div className="flex flex-col items-center gap-2 group">
                   <img
-                    src={`https://logo.clearbit.com/${brand.domain}`}
+                    src={imgSrc}
                     alt={brand.name}
                     className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                     loading="lazy"
