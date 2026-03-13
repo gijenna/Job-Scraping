@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import heroPnw from "@/assets/hero-pnw.mp4";
@@ -11,6 +12,8 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import PnwWhosComing from "@/components/event/PnwWhosComing";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
+import AdminLogoManager from "@/components/event/AdminLogoManager";
+import { EventLogo } from "@/hooks/useEventLogos";
 
 const pnwBrands = [
   { name: "Rumpl", domain: "rumpl.com", url: undefined as string | undefined },
