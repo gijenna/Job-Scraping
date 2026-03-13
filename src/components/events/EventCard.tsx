@@ -282,6 +282,18 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
                 <Input value={editLocation} onChange={(e) => setEditLocation(e.target.value)} className="bg-events-card border-events-cream/20 text-events-cream" />
               </div>
             )}
+            <div>
+              <Label className="text-events-cream/80">Event Photo</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+                className="bg-events-card border-events-cream/20 text-events-cream"
+              />
+              {event.photo_url && !photoFile && (
+                <img src={event.photo_url} alt="Current" className="mt-2 h-20 rounded-lg object-cover" />
+              )}
+            </div>
             <Button type="submit" disabled={editLoading} className="w-full bg-events-coral text-events-teal font-bold hover:brightness-110 rounded-full">
               {editLoading ? "Saving..." : "Save Changes"}
             </Button>
