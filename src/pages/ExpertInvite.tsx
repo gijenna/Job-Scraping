@@ -104,7 +104,7 @@ const ExpertInvite = ({ citySlug: _citySlug }: ExpertInviteProps = {}) => {
         photoUrl = data.publicUrl;
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("expert_invites")
         .update({
           expert_title: expertTitle,
