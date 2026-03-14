@@ -1,92 +1,77 @@
 
 
-# Plan: Admin Logo Management, Expert Card Styles, Copy Fixes
+# Main Page Updates: Logo, Content, and Denver Time Change
 
-## 1. Make ALL logos admin-manageable (add/delete/hyperlink/reorder) without credits
-
-Currently the pages have hardcoded brand arrays plus DB logos merged in. The approach: **move all hardcoded logos into the `event_logos` DB table** via a seed migration, then render purely from DB. This way every logo is manageable through the existing `AdminLogoManager` panel.
-
-### Database seed migration
-Insert all hardcoded brands from:
-- `EventPNW26.tsx` pnwBrands (16 items) → event_slug `pnw26`
-- `EventOutsideDays26.tsx` denverBrands (15 items) → event_slug `denver26`
-- `GatherPNW.tsx` pnwBrands (19 items) → event_slug `gather-pnw`
-- `GatherDenver.tsx` denverBrands (22 items) → event_slug `gather-denver`
-
-Each with `name`, `domain`, `display_order`, and `url` where applicable (e.g. Peak Design careers link).
-
-### Remove hardcoded arrays
-In all 4 pages, remove the `const xxxBrands = [...]` arrays. Instead, use `useEventLogos(slug)` directly. The pages become purely DB-driven.
-
-### Enhance AdminLogoManager
-- Add an **inline URL edit** field — click a logo in the admin panel to set/edit its hyperlink
-- The existing add/delete/reorder already works
-
-### Pass DB logos to sub-components
-- **`EventOutsideDays26.tsx`**: Pass DB logos to `RegistrantDenverStats` and `DenverByTheNumbers` (via `EventLogoTicker` already gets `allBrands`). Both `DenverByTheNumbers` and `RegistrantDenverStats` have hardcoded `brandLogos` arrays — replace these with a prop that receives the DB logos.
-- **`DenverByTheNumbers.tsx`**: Change `brandLogos` from hardcoded to a required prop `logos`. The `LogoBubble` component will use `logo_url` if available, falling back to favicon. Wrap in `<a>` if `url` is set.
-- **`RegistrantDenverStats.tsx`**: Same — accept logos as prop, remove hardcoded array.
-- **`EventLogoTicker.tsx`**: Already accepts brands as prop. Add support for `logo_url` and `url` fields — wrap logo in `<a>` if url exists, use `logo_url` if provided instead of favicon.
-
-### Drag-to-reorder for /PNW26
-Replace the up/down arrows in `AdminLogoManager` with drag-and-drop using `@dnd-kit/core` and `@dnd-kit/sortable`. This gives smooth drag reordering on all pages.
-
-**Files**: `EventPNW26.tsx`, `EventOutsideDays26.tsx`, `GatherPNW.tsx`, `GatherDenver.tsx`, `DenverByTheNumbers.tsx`, `RegistrantDenverStats.tsx`, `EventLogoTicker.tsx`, `AdminLogoManager.tsx`, `useEventLogos.ts`, migration SQL
+## Overview
+Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
 
 ---
 
-## 2. Fix "Industry Expert" on one line in ExpertInvite hero
+## Changes
 
-In `ExpertInvite.tsx` lines 253-259, the non-personalized hero has:
-```
-Become an<br />
-<span>Industry Expert</span><br />
-at {eventTitle}.
-```
-Remove the `<br />` before "Industry Expert" so "Become an Industry Expert" flows on one line, with "at {eventTitle}." below.
+### 1. Swap Logo on Main Page
+- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
+- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
+- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
 
-**File**: `src/pages/ExpertInvite.tsx`
+### 2. Ensure "GATHER" Uses Josefin Sans
+- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
+
+### 3. Update Denver Event Time to 1-4 PM
+Files to update:
+- `src/components/EventOverview.tsx`: Update the Denver event format/description references
+- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
+- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
+
+### 4. Reduce Spacing Below Hero Buttons
+- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
+
+### 5. Replace StatsSection with New Audience Content
+Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
+
+**a) Companies of Note Represented**
+A section listing the brands organized by category:
+- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
+- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
+- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
+
+**b) Event Audience Executive Summary**
+Three highlight cards:
+- "The Industry Tastemakers" -- 50% Marketing and Communications
+- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
+- "The Ultimate Career Pivot Point" -- 17% Transitioners
+
+**c) Attendee Persona Snapshot**
+Three stat highlights:
+- 30% Creative Leaders
+- 22% Emerging Talent
+- 18% Strategic Decision Makers
+
+### 6. Remove Old StatsSection from Index
+- Remove the `StatsSection` import and usage from `Index.tsx`
+- Add the new `AudienceSection` component in its place
 
 ---
 
-## 3. Card display style switcher (A/B/C) for expert & brand cards
+## Technical Details
 
-Add an admin-only toggle on `/PNW26` and `/OutsideDays26` that lets you pick between 3 card styles for the expert/brand rep sections. Store the selection in a new DB table `event_settings` (key-value per event_slug) so it persists without credits.
+### Files Created
+| File | Description |
+|------|-------------|
+| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
+| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
 
-### Card styles:
-- **A (Polaroid)**: Current `ExpertCard` — photo with Polaroid frame, expandable details
-- **B (Compact)**: Horizontal card — small round photo left, name + title + company right, no expand
-- **C (Minimal)**: Grid of circular photos with name underneath, company logo badge
+### Files Modified
+| File | Change |
+|------|--------|
+| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
+| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
+| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
+| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
+| `src/components/EventOverview.tsx` | Update any Denver time references |
+| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
 
-### Implementation:
-- New table `event_settings`: `id`, `event_slug`, `setting_key` (text), `setting_value` (text)
-- RLS: public SELECT, authenticated INSERT/UPDATE/DELETE
-- New `ExpertCardCompact` and `ExpertCardMinimal` components
-- In `PnwWhosComing` and `DenverAttendeeSections`, read `card_style` from `event_settings` for the slug, and render the matching card component
-- Admin-only floating style picker (A/B/C buttons) appears on those sections when authenticated
-
-**Files**: `ExpertCardCompact.tsx`, `ExpertCardMinimal.tsx`, `PnwWhosComing.tsx`, `DenverAttendeeSections.tsx`, `CardStylePicker.tsx`, migration SQL
-
----
-
-## Summary
-
-| File | Changes |
-|------|---------|
-| Migration | Seed `event_logos` with all hardcoded brands; create `event_settings` table |
-| `EventPNW26.tsx` | Remove hardcoded brands, use DB logos only |
-| `EventOutsideDays26.tsx` | Remove hardcoded brands, pass DB logos to stats components |
-| `GatherPNW.tsx` | Remove hardcoded brands, add `AdminLogoManager` + `useEventLogos` |
-| `GatherDenver.tsx` | Remove hardcoded brands, add `AdminLogoManager` + `useEventLogos` |
-| `DenverByTheNumbers.tsx` | Accept logos prop, support `logo_url` and `url` |
-| `RegistrantDenverStats.tsx` | Accept logos prop, support `logo_url` and `url` |
-| `EventLogoTicker.tsx` | Support `logo_url` and `url` fields |
-| `AdminLogoManager.tsx` | Add inline URL edit, drag-and-drop reorder |
-| `useEventLogos.ts` | Add `updateLogo` method for URL editing |
-| `ExpertInvite.tsx` | Fix "Industry Expert" line break |
-| `ExpertCardCompact.tsx` | New compact card variant |
-| `ExpertCardMinimal.tsx` | New minimal card variant |
-| `CardStylePicker.tsx` | Admin-only A/B/C style toggle |
-| `PnwWhosComing.tsx` | Read card style from DB, render matching component |
-| `DenverAttendeeSections.tsx` | Read card style from DB, render matching component |
-
+### No Changes To
+- PNW pages (no time changes requested)
+- Export PNW page
+- Individual event components (EventHero, EventTiers, etc.)

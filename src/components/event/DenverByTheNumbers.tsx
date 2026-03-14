@@ -7,9 +7,11 @@ interface StatItem {
   label: string;
 }
 
-interface BrandLogo {
+interface LogoItem {
   name: string;
-  domain: string;
+  domain: string | null;
+  logo_url?: string | null;
+  url?: string | null;
 }
 
 interface Testimonial {
@@ -23,7 +25,7 @@ const stats: StatItem[] = [
   { number: "40K", suffix: "+", label: "Festival Attendees Surrounding Our Activation" },
 ];
 
-const brandLogos: BrandLogo[] = [
+const defaultLogos: LogoItem[] = [
   { name: "The North Face", domain: "thenorthface.com" },
   { name: "REI", domain: "rei.com" },
   { name: "Cotopaxi", domain: "cotopaxi.com" },
@@ -50,14 +52,8 @@ const testimonials: Testimonial[] = [
   { quote: "I've met some of my closest friends from these events.", avatarId: 38 },
 ];
 
-// Mobile-safe scattered positions — logos only, pushed to edges, no overlap with center stats
 const mobileScatteredElements: Array<{
-  type: 'logo';
-  index: number;
-  top: string;
-  left?: string;
-  right?: string;
-  rotate: string;
+  type: 'logo'; index: number; top: string; left?: string; right?: string; rotate: string;
 }> = [
   { type: 'logo', index: 0, top: '1%', left: '1%', rotate: '-6deg' },
   { type: 'logo', index: 1, top: '3%', right: '1%', rotate: '8deg' },
@@ -74,14 +70,8 @@ const mobileScatteredElements: Array<{
   { type: 'logo', index: 12, top: '65%', right: '1%', rotate: '-7deg' },
 ];
 
-// Desktop scattered placements
 const scatteredElements: Array<{
-  type: 'logo' | 'testimonial';
-  index: number;
-  top: string;
-  left?: string;
-  right?: string;
-  rotate: string;
+  type: 'logo' | 'testimonial'; index: number; top: string; left?: string; right?: string; rotate: string;
 }> = [
   { type: 'logo', index: 0, top: '1%', left: '8%', rotate: '-5deg' },
   { type: 'testimonial', index: 0, top: '3%', right: '3%', rotate: '3deg' },
@@ -106,59 +96,62 @@ const scatteredElements: Array<{
   { type: 'logo', index: 12, top: '80%', right: '20%', rotate: '-3deg' },
 ];
 
-// Rain landing positions for mobile
-const mobileRainLogos = brandLogos.map((logo, i) => ({
-  logo,
-  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2,
-  delay: 0.3 + i * 0.18,
-  rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg', '4deg', '-8deg'][i] || '0deg',
-}));
-
-const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: BrandLogo; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.7 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, delay }}
-    className={`absolute ${small ? 'w-8 h-8' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
-    style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
-  >
-    <img
-      src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
-      alt={logo.name}
-      className={`${small ? 'w-5 h-5' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
-      style={{ mixBlendMode: 'multiply' }}
-    />
-  </motion.div>
-);
-
-const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: BrandLogo; leftPercent: number; delay: number; rotate: string }) => (
-  <motion.div
-    initial={{ y: "-100vh", opacity: 0 }}
-    whileInView={{ y: 0, opacity: 1 }}
-    viewport={{ once: true, margin: "200px" }}
-    transition={{
-      y: { duration: 3, delay, ease: [0.22, 1, 0.36, 1] },
-      opacity: { duration: 0.5, delay },
-    }}
-    className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
-    style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
-  >
+const LogoBubble = ({ logo, style, rotate, delay, small }: { logo: LogoItem; style: React.CSSProperties; rotate: string; delay: number; small?: boolean }) => {
+  const imgSrc = logo.logo_url || `https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`;
+  const inner = (
     <motion.div
-      initial={{ scale: 1 }}
-      whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
+      initial={{ opacity: 0, scale: 0.7 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: delay + 2.9, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay }}
+      className={`absolute ${small ? 'w-8 h-8' : 'w-16 h-16 md:w-20 md:h-20'} rounded-full flex items-center justify-center shadow-lg`}
+      style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
     >
       <img
-        src={`https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`}
+        src={imgSrc}
         alt={logo.name}
-        className="w-5 h-5 object-contain"
+        className={`${small ? 'w-5 h-5' : 'w-10 h-10 md:w-12 md:h-12'} object-contain`}
         style={{ mixBlendMode: 'multiply' }}
       />
     </motion.div>
-  </motion.div>
-);
+  );
+
+  if (logo.url) {
+    return <a href={logo.url} target="_blank" rel="noopener noreferrer" className="absolute" style={style}>{inner}</a>;
+  }
+  return inner;
+};
+
+const RainingLogo = ({ logo, leftPercent, delay, rotate }: { logo: LogoItem; leftPercent: number; delay: number; rotate: string }) => {
+  const imgSrc = logo.logo_url || `https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`;
+  const inner = (
+    <motion.div
+      initial={{ y: "-100vh", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, margin: "200px" }}
+      transition={{
+        y: { duration: 3, delay, ease: [0.22, 1, 0.36, 1] },
+        opacity: { duration: 0.5, delay },
+      }}
+      className="absolute bottom-3 w-9 h-9 rounded-full flex items-center justify-center shadow-lg"
+      style={{ left: `${leftPercent}%`, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
+    >
+      <motion.div
+        initial={{ scale: 1 }}
+        whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: delay + 2.9, ease: "easeOut" }}
+      >
+        <img src={imgSrc} alt={logo.name} className="w-5 h-5 object-contain" style={{ mixBlendMode: 'multiply' }} />
+      </motion.div>
+    </motion.div>
+  );
+
+  if (logo.url) {
+    return <a href={logo.url} target="_blank" rel="noopener noreferrer" className="absolute bottom-3" style={{ left: `${leftPercent}%` }}>{inner}</a>;
+  }
+  return inner;
+};
 
 const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: Testimonial; style: React.CSSProperties; rotate: string; delay: number }) => (
   <motion.div
@@ -170,31 +163,31 @@ const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: T
     style={{ ...style, transform: `rotate(${rotate})`, backgroundColor: '#F5E6D3' }}
   >
     <div className="flex gap-2 items-start">
-      <img
-        src={`https://i.pravatar.cc/80?img=${testimonial.avatarId}`}
-        alt="Attendee"
-        className="w-7 h-7 rounded-full object-cover shrink-0 mt-0.5"
-      />
-      <p className="text-[10px] md:text-[11px] leading-snug font-body" style={{ color: '#19363B' }}>
-        "{testimonial.quote}"
-      </p>
+      <img src={`https://i.pravatar.cc/80?img=${testimonial.avatarId}`} alt="Attendee" className="w-7 h-7 rounded-full object-cover shrink-0 mt-0.5" />
+      <p className="text-[10px] md:text-[11px] leading-snug font-body" style={{ color: '#19363B' }}>"{testimonial.quote}"</p>
     </div>
   </motion.div>
 );
 
 interface DenverByTheNumbersProps {
-  extraLogos?: Array<{ name: string; domain: string; logo_url?: string }>;
+  logos?: LogoItem[];
 }
 
-const DenverByTheNumbers = ({ extraLogos = [] }: DenverByTheNumbersProps) => {
-  const allLogos = [...brandLogos, ...extraLogos.map(l => ({ name: l.name, domain: l.domain }))];
+const DenverByTheNumbers = ({ logos }: DenverByTheNumbersProps) => {
+  const allLogos = logos && logos.length > 0 ? logos : defaultLogos;
   const isMobile = useIsMobile();
   const elements = isMobile ? mobileScatteredElements : scatteredElements;
+
+  const mobileRainLogos = allLogos.map((logo, i) => ({
+    logo,
+    leftPercent: (i / Math.max(allLogos.length - 1, 1)) * 85 + 2,
+    delay: 0.3 + i * 0.18,
+    rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg', '4deg', '-8deg'][i % 13] || '0deg',
+  }));
 
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
-        {/* Desktop: scattered logos + testimonials */}
         {!isMobile && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {elements.map((item, i) => {
@@ -203,45 +196,22 @@ const DenverByTheNumbers = ({ extraLogos = [] }: DenverByTheNumbersProps) => {
               if (item.right !== undefined) posStyle.right = item.right;
 
               if (item.type === 'logo') {
-                return (
-                  <LogoBubble
-                    key={i}
-                    logo={brandLogos[item.index]}
-                    style={posStyle}
-                    rotate={item.rotate}
-                    delay={0.08 + i * 0.04}
-                  />
-                );
+                const logo = allLogos[item.index % allLogos.length];
+                return <LogoBubble key={i} logo={logo} style={posStyle} rotate={item.rotate} delay={0.08 + i * 0.04} />;
               }
-              return (
-                <TestimonialCard
-                  key={i}
-                  testimonial={testimonials[item.index]}
-                  style={posStyle}
-                  rotate={item.rotate}
-                  delay={0.08 + i * 0.04}
-                />
-              );
+              return <TestimonialCard key={i} testimonial={testimonials[item.index]} style={posStyle} rotate={item.rotate} delay={0.08 + i * 0.04} />;
             })}
           </div>
         )}
 
-        {/* Mobile: logos rain down and land at bottom */}
         {isMobile && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {mobileRainLogos.map((item, i) => (
-              <RainingLogo
-                key={i}
-                logo={item.logo}
-                leftPercent={item.leftPercent}
-                delay={item.delay}
-                rotate={item.rotate}
-              />
+              <RainingLogo key={i} logo={item.logo} leftPercent={item.leftPercent} delay={item.delay} rotate={item.rotate} />
             ))}
           </div>
         )}
 
-        {/* Center stats — protected from overlap */}
         <div className="relative z-10 container mx-auto px-6">
           <div className="flex flex-col items-center gap-20 md:gap-28 max-w-md mx-auto">
             {stats.map((stat, i) => (
@@ -254,30 +224,10 @@ const DenverByTheNumbers = ({ extraLogos = [] }: DenverByTheNumbersProps) => {
                 className="text-center"
               >
                 <div className="flex items-baseline justify-center gap-1">
-                  <span
-                    className="font-display font-extrabold leading-none"
-                    style={{
-                      fontSize: "clamp(4rem, 12vw, 9rem)",
-                      color: "#E1B624",
-                    }}
-                  >
-                    {stat.number}
-                  </span>
-                  {stat.suffix && (
-                    <span
-                      className="font-display font-bold"
-                      style={{
-                        fontSize: "clamp(2rem, 5vw, 4rem)",
-                        color: "#E1B624",
-                      }}
-                    >
-                      {stat.suffix}
-                    </span>
-                  )}
+                  <span className="font-display font-extrabold leading-none" style={{ fontSize: "clamp(4rem, 12vw, 9rem)", color: "#E1B624" }}>{stat.number}</span>
+                  {stat.suffix && <span className="font-display font-bold" style={{ fontSize: "clamp(2rem, 5vw, 4rem)", color: "#E1B624" }}>{stat.suffix}</span>}
                 </div>
-                <p className="text-events-cream/60 font-body text-sm md:text-base tracking-wide uppercase mt-2 max-w-xs mx-auto">
-                  {stat.label}
-                </p>
+                <p className="text-events-cream/60 font-body text-sm md:text-base tracking-wide uppercase mt-2 max-w-xs mx-auto">{stat.label}</p>
               </motion.div>
             ))}
           </div>

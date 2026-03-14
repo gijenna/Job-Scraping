@@ -47,6 +47,30 @@ export type Database = {
         }
         Relationships: []
       }
+      event_settings: {
+        Row: {
+          created_at: string
+          event_slug: string
+          id: string
+          setting_key: string
+          setting_value: string
+        }
+        Insert: {
+          created_at?: string
+          event_slug: string
+          id?: string
+          setting_key: string
+          setting_value: string
+        }
+        Update: {
+          created_at?: string
+          event_slug?: string
+          id?: string
+          setting_key?: string
+          setting_value?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           cost: number | null

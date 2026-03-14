@@ -3,6 +3,8 @@ import creamTexture from "@/assets/cream-fabric-texture.jpg";
 interface Brand {
   name: string;
   domain: string;
+  logo_url?: string | null;
+  url?: string | null;
 }
 
 interface EventLogoTickerProps {
@@ -36,26 +38,34 @@ const EventLogoTicker = ({
             width: 'max-content',
           }}
         >
-          {tripled.map((brand, i) => (
-            <div
-              key={i}
-              className="inline-flex items-center justify-center mx-6 md:mx-10 shrink-0"
-            >
-              <img
-                src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
-                alt={brand.name}
-                className="h-6 md:h-8 w-auto object-contain transition-transform hover:scale-110 mix-blend-multiply"
-                loading="lazy"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  const parent = target.parentElement;
-                  if (parent) {
-                    parent.innerHTML = `<span class="font-display font-semibold text-sm md:text-base whitespace-nowrap" style="color: #9A8B76">${brand.name}</span>`;
-                  }
-                }}
-              />
-            </div>
-          ))}
+          {tripled.map((brand, i) => {
+            const imgSrc = brand.logo_url || `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
+            const inner = (
+              <div className="inline-flex items-center justify-center mx-6 md:mx-10 shrink-0">
+                <img
+                  src={imgSrc}
+                  alt={brand.name}
+                  className="h-6 md:h-8 w-auto object-contain transition-transform hover:scale-110 mix-blend-multiply"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `<span class="font-display font-semibold text-sm md:text-base whitespace-nowrap" style="color: #9A8B76">${brand.name}</span>`;
+                    }
+                  }}
+                />
+              </div>
+            );
+
+            return brand.url ? (
+              <a key={i} href={brand.url} target="_blank" rel="noopener noreferrer">
+                {inner}
+              </a>
+            ) : (
+              <div key={i}>{inner}</div>
+            );
+          })}
         </div>
 
         <style>{`
