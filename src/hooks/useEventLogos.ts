@@ -54,6 +54,20 @@ export const useEventLogos = (eventSlug: string) => {
     return error;
   };
 
+  const updateLogo = async (id: string, updates: { url?: string | null; name?: string; domain?: string | null }) => {
+    const { error } = await supabase.from("event_logos").update(updates as any).eq("id", id);
+    if (!error) await fetchLogos();
+    return error;
+  };
+
+  const reorderLogos = async (orderedIds: string[]) => {
+    const updates = orderedIds.map((id, i) =>
+      supabase.from("event_logos").update({ display_order: i } as any).eq("id", id)
+    );
+    await Promise.all(updates);
+    await fetchLogos();
+  };
+
   const reorderLogo = async (id: string, direction: "up" | "down") => {
     const idx = logos.findIndex((l) => l.id === id);
     if (idx === -1) return;
@@ -69,5 +83,5 @@ export const useEventLogos = (eventSlug: string) => {
     await fetchLogos();
   };
 
-  return { logos, loading, addLogo, deleteLogo, reorderLogo, refetch: fetchLogos };
+  return { logos, loading, addLogo, deleteLogo, updateLogo, reorderLogo, reorderLogos, refetch: fetchLogos };
 };
