@@ -40,7 +40,7 @@ const ExpertInvite = ({ citySlug: _citySlug }: ExpertInviteProps = {}) => {
     const verifyToken = async () => {
       setLoading(true);
       try {
-        const { data: invite, error } = await supabase
+        const { data: invite, error } = await (supabase as any)
           .from("expert_invites")
           .select("event_slug, expert_name, expert_title, expert_company, expert_photo, claimed_at")
           .eq("event_slug", eventSlug)
