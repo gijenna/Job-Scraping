@@ -1,20 +1,32 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import ExpertCard from "@/components/experts/ExpertCard";
+import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
+import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
+import CardStylePicker from "@/components/event/CardStylePicker";
 import { Expert } from "@/lib/expert-types";
+import { useEventSettings } from "@/hooks/useEventSettings";
 
 interface PnwWhosComingProps {
   accentColor?: string;
   bgColor?: string;
+  eventSlug?: string;
 }
 
 const PnwWhosComing = ({
   accentColor = "#FEE123",
   bgColor = "#154733",
+  eventSlug = "pnw26",
 }: PnwWhosComingProps) => {
   const [attendees, setAttendees] = useState<Expert[]>([]);
   const [loading, setLoading] = useState(true);
+  const { settings } = useEventSettings(eventSlug);
+  const [cardStyle, setCardStyle] = useState("polaroid");
+
+  useEffect(() => {
+    if (settings["card_style"]) setCardStyle(settings["card_style"]);
+  }, [settings]);
 
   useEffect(() => {
     const fetchAttendees = async () => {
@@ -39,7 +51,6 @@ const PnwWhosComing = ({
       }
       setLoading(false);
     };
-
     fetchAttendees();
   }, []);
 
@@ -55,6 +66,20 @@ const PnwWhosComing = ({
 
   if (attendees.length === 0) return null;
 
+  const renderCard = (expert: Expert) => {
+    switch (cardStyle) {
+      case "compact": return <ExpertCardCompact expert={expert} />;
+      case "minimal": return <ExpertCardMinimal expert={expert} />;
+      default: return <ExpertCard expert={expert} />;
+    }
+  };
+
+  const gridClass = cardStyle === "minimal"
+    ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6"
+    : cardStyle === "compact"
+    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
+
   return (
     <section className="py-16 md:py-24 px-6" style={{ backgroundColor: bgColor }}>
       <div className="container mx-auto max-w-6xl">
@@ -62,20 +87,17 @@ const PnwWhosComing = ({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-6"
         >
-          <p
-            className="text-xs tracking-[0.3em] uppercase mb-4 font-body"
-            style={{ color: accentColor }}
-          >
-            Who's Coming
-          </p>
-          <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">
-            Industry pros you'll meet in person
-          </h2>
+          <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: accentColor }}>Who's Coming</p>
+          <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">Industry pros you'll meet in person</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="flex justify-center mb-8">
+          <CardStylePicker eventSlug={eventSlug} onStyleChange={setCardStyle} />
+        </div>
+
+        <div className={gridClass}>
           {attendees.map((expert, i) => (
             <motion.div
               key={expert.id}
@@ -84,7 +106,7 @@ const PnwWhosComing = ({
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
             >
-              <ExpertCard expert={expert} />
+              {renderCard(expert)}
             </motion.div>
           ))}
         </div>

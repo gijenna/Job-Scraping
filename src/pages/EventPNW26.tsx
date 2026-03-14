@@ -13,45 +13,23 @@ import PnwWhosComing from "@/components/event/PnwWhosComing";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
-import { EventLogo } from "@/hooks/useEventLogos";
-
-const pnwBrands = [
-  { name: "Rumpl", domain: "rumpl.com", url: undefined as string | undefined },
-  { name: "On Running", domain: "on-running.com", url: undefined as string | undefined },
-  { name: "Arc'teryx", domain: "arcteryx.com", url: undefined as string | undefined },
-  { name: "Cotopaxi", domain: "cotopaxi.com", url: undefined as string | undefined },
-  { name: "Peak Design", domain: "peakdesign.com", url: "https://www.peakdesign.com/pages/careers" },
-  { name: "Oregon Outdoor Alliance", domain: "oregonoutdooralliance.org", url: "https://www.oregonoutdooralliance.org" },
-  { name: "Superfeet", domain: "superfeet.com", url: "https://www.superfeet.com" },
-  { name: "Popfly", domain: "popfly.com", url: undefined as string | undefined },
-  { name: "Brooks", domain: "brooksrunning.com", url: undefined as string | undefined },
-  { name: "Specialized", domain: "specialized.com", url: undefined as string | undefined },
-  { name: "Nike", domain: "nike.com", url: undefined as string | undefined },
-  { name: "Columbia", domain: "columbia.com", url: undefined as string | undefined },
-  { name: "Patagonia", domain: "patagonia.com", url: undefined as string | undefined },
-  { name: "KEEN", domain: "keenfootwear.com", url: undefined as string | undefined },
-  { name: "Lululemon", domain: "lululemon.com", url: undefined as string | undefined },
-  { name: "Dovetail Workwear", domain: "dovetailworkwear.com", url: undefined as string | undefined },
-];
+import { useEventLogos, EventLogo } from "@/hooks/useEventLogos";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
-  const [dbLogos, setDbLogos] = useState<EventLogo[]>([]);
+  const { logos: dbLogos, loading: logosLoading } = useEventLogos("pnw26");
 
-  const allBrands = [
-    ...pnwBrands,
-    ...dbLogos.map((l) => ({
-      name: l.name,
-      domain: l.domain || "",
-      url: l.url || undefined,
-      logo_url: l.logo_url || undefined,
-    })),
-  ];
+  const allBrands = dbLogos.map((l) => ({
+    name: l.name,
+    domain: l.domain || "",
+    url: l.url || undefined,
+    logo_url: l.logo_url || undefined,
+  }));
 
   return (
     <main className="bg-events-teal min-h-screen relative">
-      <AdminLogoManager eventSlug="pnw26" onLogosChange={setDbLogos} />
+      <AdminLogoManager eventSlug="pnw26" />
       {/* Basecamp Match logo top-left */}
       <a
         href="https://www.basecampjobs.com"
@@ -86,8 +64,8 @@ const EventPNW26 = () => {
         headline="Brands & professionals in the room"
       />
 
-      {/* Industry Experts — moved below ticker */}
-      <PnwWhosComing accentColor="#FEE123" bgColor="#154733" />
+      {/* Industry Experts */}
+      <PnwWhosComing accentColor="#FEE123" bgColor="#154733" eventSlug="pnw26" />
 
       <RegistrantHowToTapIn
         registrationUrl={TYPEFORM_PNW}
@@ -122,7 +100,7 @@ const EventPNW26 = () => {
             className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
           >
             {allBrands.map((brand) => {
-              const imgSrc = (brand as any).logo_url || `https://logo.clearbit.com/${brand.domain}`;
+              const imgSrc = brand.logo_url || `https://logo.clearbit.com/${brand.domain}`;
               const inner = (
                 <div className="flex flex-col items-center gap-2 group">
                   <img
@@ -157,7 +135,7 @@ const EventPNW26 = () => {
       {/* Job Seeker Testimonials */}
       <JobSeekerTestimonials accentColor="#FEE123" bgColor="#154733" />
 
-      {/* Gallery — Check out other Basecamp Events */}
+      {/* Gallery */}
       <BasecampEventsGallery />
 
       {/* What to Expect */}
@@ -212,33 +190,19 @@ const EventPNW26 = () => {
             viewport={{ once: true }}
             className="flex flex-col md:flex-row gap-12 items-center"
           >
-            {/* Left: Logo + Sco Ducks */}
             <div className="flex flex-col items-center md:items-start gap-6 md:w-1/3 shrink-0">
-              <img
-                src={uoDuckLogo}
-                alt="University of Oregon"
-                className="w-40 md:w-52 h-auto"
-              />
-              <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>
-                #ScoDucks 🦆
-              </p>
+              <img src={uoDuckLogo} alt="University of Oregon" className="w-40 md:w-52 h-auto" />
+              <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>#ScoDucks 🦆</p>
             </div>
-
-            {/* Right: Program Details */}
             <div className="md:w-2/3">
-              <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">
-                Our Host Program
-              </p>
-              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">
-                MS Sports Product Management
-              </h2>
+              <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">Our Host Program</p>
+              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">MS Sports Product Management</h2>
               <p className="font-body text-events-teal/70 leading-relaxed mb-4">
                 The University of Oregon partnered with the sports and outdoor product industry's best to create this one-of-a-kind master's program. Experience the entire product creation lifecycle through the lenses of innovation, sustainability, diversity and inclusion, and global business.
               </p>
               <p className="font-body text-events-teal/70 leading-relaxed mb-6">
                 <strong className="text-events-teal">90% of alumni</strong> work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus — the heart of the PNW outdoor industry.
               </p>
-
               <div className="grid grid-cols-3 gap-4 mb-8">
                 <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
                   <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>90%</p>
@@ -253,25 +217,11 @@ const EventPNW26 = () => {
                   <p className="font-body text-xs text-events-teal/60">Industry output</p>
                 </div>
               </div>
-
               <div className="flex flex-wrap gap-4">
-                <a
-                  href="https://bit.ly/47veqAL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105"
-                  style={{ backgroundColor: "#154733", color: "#FEE123" }}
-                >
-                  Learn More
-                  <ExternalLink className="w-4 h-4" />
+                <a href="https://bit.ly/47veqAL" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#154733", color: "#FEE123" }}>
+                  Learn More <ExternalLink className="w-4 h-4" />
                 </a>
-                <a
-                  href="https://bit.ly/47veqAL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105"
-                  style={{ borderColor: "#154733", color: "#154733" }}
-                >
+                <a href="https://bit.ly/47veqAL" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105" style={{ borderColor: "#154733", color: "#154733" }}>
                   Apply Now
                 </a>
               </div>
@@ -293,26 +243,11 @@ const EventPNW26 = () => {
       {/* Bottom CTA */}
       <section className="py-20 px-6 bg-events-teal">
         <div className="container mx-auto max-w-2xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
-              Ready to Gather?
-            </h2>
-            <p className="font-body text-events-cream/60 mb-8">
-              Free registration. Limited capacity. Don't miss the PNW's best outdoor industry event.
-            </p>
-            <a
-              href={TYPEFORM_PNW}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105"
-              style={{ backgroundColor: "#FEE123", color: "#154733" }}
-            >
-              Register Free
-              <ArrowRight className="w-5 h-5" />
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">Ready to Gather?</h2>
+            <p className="font-body text-events-cream/60 mb-8">Free registration. Limited capacity. Don't miss the PNW's best outdoor industry event.</p>
+            <a href={TYPEFORM_PNW} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#FEE123", color: "#154733" }}>
+              Register Free <ArrowRight className="w-5 h-5" />
             </a>
           </motion.div>
         </div>
