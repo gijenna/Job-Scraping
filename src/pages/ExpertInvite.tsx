@@ -62,7 +62,7 @@ const ExpertInvite = ({ citySlug: _citySlug }: ExpertInviteProps = {}) => {
         setExpertCompany(invite.expert_company || "");
         setIsClaimed(!!invite.claimed_at);
 
-        const { data: event } = await supabase
+        const { data: event } = await (supabase as any)
           .from("events")
           .select("title")
           .eq("slug", eventSlug)
