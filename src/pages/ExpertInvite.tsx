@@ -9,7 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
-const ExpertInvite = () => {
+interface ExpertInviteProps {
+  citySlug?: string;
+}
+
+const ExpertInvite = ({ citySlug: _citySlug }: ExpertInviteProps = {}) => {
   const { eventSlug, token } = useParams<{ eventSlug: string; token: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
