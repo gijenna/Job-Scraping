@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2 } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
 
