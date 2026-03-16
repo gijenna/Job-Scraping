@@ -122,6 +122,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                 <th className="text-left p-3 text-events-cream/60 font-medium">City/Event</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Status</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Company</th>
+                <th className="text-left p-3 text-events-cream/60 font-medium">Share Link</th>
                 <th className="text-right p-3 text-events-cream/60 font-medium">Actions</th>
               </tr>
             </thead>
