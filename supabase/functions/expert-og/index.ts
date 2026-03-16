@@ -23,30 +23,20 @@ async function getOrGenerateOgCard(
   slug: string,
   siteBase: string
 ): Promise<string> {
-  const cardPath = `og-cards/${slug}-og-card.png`;
-
-  // Check cache
-  const { data: existing } = await supabase.storage
+  // Check cache - look for any existing card for this slug
+  const { data: existingFiles } = await supabase.storage
     .from("event-photos")
-    .createSignedUrl(cardPath, 60);
+    .list("og-cards", { search: `${slug}-og-card` });
 
-  if (existing?.signedUrl) {
-    // Verify file actually exists by checking list
-    const { data: files } = await supabase.storage
+  if (existingFiles && existingFiles.length > 0) {
+    const file = existingFiles[0];
+    const filePath = `og-cards/${file.name}`;
+    const { data: publicUrl } = supabase.storage
       .from("event-photos")
-      .list("og-cards", { search: `${slug}-og-card.png` });
-
-    if (files && files.length > 0) {
-      const fileSize = files[0]?.metadata?.size || files[0]?.size || 0;
-      if (fileSize > 1024) {
-        const { data: publicUrl } = supabase.storage
-          .from("event-photos")
-          .getPublicUrl(cardPath);
-        if (publicUrl?.publicUrl) return publicUrl.publicUrl;
-      } else {
-        console.log(`Stale/blank cached image for ${slug} (${fileSize} bytes), regenerating...`);
-        await supabase.storage.from("event-photos").remove([cardPath]);
-      }
+      .getPublicUrl(filePath);
+    if (publicUrl?.publicUrl) {
+      console.log(`Cache hit for ${slug}`);
+      return publicUrl.publicUrl;
     }
   }
 
@@ -116,14 +106,21 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     }
 
     const data = await response.json();
-    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images);
-    const imageDataUrl =
-      data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const firstImage = data.choices?.[0]?.message?.images?.[0];
+    const imageDataUrl = firstImage?.image_url?.url;
+    console.log("AI image response - has image:", !!imageDataUrl, "prefix:", imageDataUrl?.substring(0, 40));
 
     if (!imageDataUrl) {
-      console.error("No image in AI response");
+      console.error("No image in AI response. Full message keys:", JSON.stringify(Object.keys(data.choices?.[0]?.message || {})));
       return expert.photo_url || `${siteBase}/og-basecamp.png`;
     }
+
+    // Detect MIME type from data URL
+    const mimeMatch = imageDataUrl.match(/^data:(image\/\w+);base64,/);
+    const mimeType = mimeMatch?.[1] || "image/png";
+    const ext = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/webp" ? "webp" : "png";
+    const cardPath = `og-cards/${slug}-og-card.${ext}`;
+    console.log(`Detected MIME: ${mimeType}, saving as ${cardPath}`);
 
     // Convert base64 to binary and upload
     const base64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
@@ -132,7 +129,7 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     const { error: uploadError } = await supabase.storage
       .from("event-photos")
       .upload(cardPath, binary, {
-        contentType: "image/png",
+        contentType: mimeType,
         upsert: true,
       });
 
@@ -236,7 +233,7 @@ Deno.serve(async (req) => {
   <meta property="og:image" content="${esc(ogImage)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:url" content="${esc(redirectUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
