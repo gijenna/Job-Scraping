@@ -198,11 +198,14 @@ Deno.serve(async (req) => {
   const isCrawler = CRAWLER_UA.test(ua);
 
   if (!isCrawler) {
+    console.log(`Non-crawler UA, redirecting: ${ua.slice(0, 120)}`);
     return new Response(null, {
       status: 302,
       headers: { ...corsHeaders, Location: redirectUrl },
     });
   }
+
+  console.log(`Crawler UA detected: ${ua.slice(0, 120)}`);
 
   // Generate or retrieve cached branded card image
   const ogImage = await getOrGenerateOgCard(
