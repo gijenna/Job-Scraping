@@ -10,6 +10,7 @@ import EventsTicker from "@/components/events/EventsTicker";
 import PartnerSection from "@/components/events/PartnerSection";
 import AddEventDialog from "@/components/events/AddEventDialog";
 import { CalendarDays } from "lucide-react";
+import SiteFooter from "@/components/SiteFooter";
 
 const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
