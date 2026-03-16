@@ -259,7 +259,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                         <div className="space-y-1">
                           {expertAssigns.map((a) => {
                             const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-                            const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og?slug=${encodeURIComponent(expert.slug)}&city=${encodeURIComponent(a.city_slug)}`;
+                            const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}`;
                             return (
                               <Button
                                 key={a.id}

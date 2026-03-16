@@ -22,7 +22,7 @@ const ShareCardButtons = ({ expertSlug, expertName, citySlug, eventTitle, compac
   const [copied, setCopied] = useState(false);
 
   const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-  const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og?slug=${encodeURIComponent(expertSlug)}&city=${encodeURIComponent(citySlug)}`;
+  const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expertSlug)}/${encodeURIComponent(citySlug)}`;
   
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPage = `${siteBase}${CITY_EVENT_PAGE[citySlug] || "/events"}`;

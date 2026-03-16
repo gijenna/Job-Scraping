@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const CRAWLER_UA =
-  /facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Baiduspider/i;
+  /facebookexternalhit|Facebot|meta-externalagent|meta-externalfetcher|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Baiduspider/i;
 
 const EVENT_PAGE: Record<string, string> = {
   portland: "/PNW26",
@@ -155,8 +155,13 @@ Deno.serve(async (req) => {
   }
 
   const url = new URL(req.url);
-  const slug = url.searchParams.get("slug");
-  const city = url.searchParams.get("city") || "portland";
+  const parts = url.pathname.split("/").filter(Boolean);
+  const fnIndex = parts.lastIndexOf("expert-og");
+  const slugFromPath = fnIndex >= 0 ? decodeURIComponent(parts[fnIndex + 1] || "") : "";
+  const cityFromPath = fnIndex >= 0 ? decodeURIComponent(parts[fnIndex + 2] || "") : "";
+
+  const slug = url.searchParams.get("slug") || slugFromPath;
+  const city = url.searchParams.get("city") || cityFromPath || "portland";
 
   if (!slug) {
     return new Response("Missing slug", { status: 400, headers: corsHeaders });
@@ -192,16 +197,21 @@ Deno.serve(async (req) => {
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPath = EVENT_PAGE[city] || "/events";
   const redirectUrl = `${siteBase}${eventPath}`;
+  const shareOrigin = url.origin.replace("http://", "https://");
+  const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(slug)}/${encodeURIComponent(city)}`;
 
   const ua = req.headers.get("user-agent") || "";
   const isCrawler = CRAWLER_UA.test(ua);
 
   if (!isCrawler) {
+    console.log(`Non-crawler UA, redirecting: ${ua.slice(0, 120)}`);
     return new Response(null, {
       status: 302,
       headers: { ...corsHeaders, Location: redirectUrl },
     });
   }
+
+  console.log(`Crawler UA detected: ${ua.slice(0, 120)}`);
 
   // Generate or retrieve cached branded card image
   const ogImage = await getOrGenerateOgCard(
@@ -221,20 +231,22 @@ Deno.serve(async (req) => {
   ]
     .filter(Boolean)
     .join(" ");
+  const ogImageType = getImageMimeType(ogImage);
 
   const html = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
   <title>${esc(title)}</title>
+  <link rel="canonical" href="${esc(shareUrl)}" />
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(description)}" />
   <meta property="og:image" content="${esc(ogImage)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:url" content="${esc(redirectUrl)}" />
+  <meta property="og:image:type" content="${esc(ogImageType)}" />
+  <meta property="og:url" content="${esc(shareUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(description)}" />
@@ -251,6 +263,17 @@ Deno.serve(async (req) => {
   headers.set("Cache-Control", "public, max-age=3600");
   return new Response(html, { headers });
 });
+
+function getImageMimeType(url: string): string {
+  const normalized = url.split("?")[0].toLowerCase();
+  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) {
+    return "image/jpeg";
+  }
+  if (normalized.endsWith(".webp")) {
+    return "image/webp";
+  }
+  return "image/png";
+}
 
 function esc(s: string): string {
   return s
