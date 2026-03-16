@@ -23,15 +23,21 @@ async function getOrGenerateOgCard(
   slug: string,
   siteBase: string
 ): Promise<string> {
-  // Always regenerate - delete any existing card first
+  // Check cache - look for any existing card for this slug
   const { data: existingFiles } = await supabase.storage
     .from("event-photos")
     .list("og-cards", { search: `${slug}-og-card` });
 
   if (existingFiles && existingFiles.length > 0) {
-    const paths = existingFiles.map((f: any) => `og-cards/${f.name}`);
-    await supabase.storage.from("event-photos").remove(paths);
-    console.log(`Cleared ${paths.length} old cached cards for ${slug}`);
+    const file = existingFiles[0];
+    const filePath = `og-cards/${file.name}`;
+    const { data: publicUrl } = supabase.storage
+      .from("event-photos")
+      .getPublicUrl(filePath);
+    if (publicUrl?.publicUrl) {
+      console.log(`Cache hit for ${slug}`);
+      return publicUrl.publicUrl;
+    }
   }
 
   // Generate with AI
