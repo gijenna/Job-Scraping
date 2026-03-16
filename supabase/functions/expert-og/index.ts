@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const CRAWLER_UA =
-  /facebookexternalhit|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Baiduspider/i;
+  /facebookexternalhit|Facebot|meta-externalagent|meta-externalfetcher|Twitterbot|LinkedInBot|Slackbot|WhatsApp|Discordbot|TelegramBot|Googlebot|bingbot|Baiduspider/i;
 
 const EVENT_PAGE: Record<string, string> = {
   portland: "/PNW26",
