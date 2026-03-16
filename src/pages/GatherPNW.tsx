@@ -9,6 +9,7 @@ import PnwWhoAttends from "@/components/event/PnwWhoAttends";
 import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarousel";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
+import SiteFooter from "@/components/SiteFooter";
 
 const GatherPNW = () => {
   const { logos: dbLogos } = useEventLogos("gather-pnw");
