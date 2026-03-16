@@ -258,6 +258,17 @@ Deno.serve(async (req) => {
   return new Response(html, { headers });
 });
 
+function getImageMimeType(url: string): string {
+  const normalized = url.split("?")[0].toLowerCase();
+  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) {
+    return "image/jpeg";
+  }
+  if (normalized.endsWith(".webp")) {
+    return "image/webp";
+  }
+  return "image/png";
+}
+
 function esc(s: string): string {
   return s
     .replace(/&/g, "&amp;")
