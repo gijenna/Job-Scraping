@@ -416,6 +416,23 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               <CalendarPlus className="w-4 h-4" />
               Add to Google Calendar
             </a>
+            <div className="mt-2 pt-3 border-t border-events-cream/10">
+              <ShareCardButtons
+                expertSlug={form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}
+                expertName={form.full_name}
+                citySlug={citySlug}
+              />
+            </div>
+                ? 'https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=NXU2MThhdWc1a2E4OWZlbG4xajZzNWpwYzIgamVubmFAd2VhcmV0aGVvdXRkb29yaW5kdXN0cnkuY29t&tmsrc=jenna%40wearetheoutdoorindustry.com'
+                : 'https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=M2RydTZsMHY0cmhqOTBoczNoN3ZnZmM2YWsgamVubmFAd2VhcmV0aGVvdXRkb29yaW5kdXN0cnkuY29t&tmsrc=jenna%40wearetheoutdoorindustry.com'
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-events-coral/30 text-events-coral hover:bg-events-coral/10 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+            >
+              <CalendarPlus className="w-4 h-4" />
+              Add to Google Calendar
+            </a>
           </div>
         )}
         <p className="text-events-cream/50 text-sm">

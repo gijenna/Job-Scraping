@@ -229,6 +229,16 @@ const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
                 </p>
               </div>
             )}
+
+            {/* Share */}
+            <div className="mt-2">
+              <ShareCardButtons
+                expertSlug={expert.slug}
+                expertName={expert.full_name}
+                citySlug={citySlug}
+                eventTitle={city?.event_title}
+              />
+            </div>
           </div>
         </div>
       </div>
