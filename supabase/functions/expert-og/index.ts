@@ -100,15 +100,21 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     }
 
     const data = await response.json();
-    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images, "images count:", data.choices?.[0]?.message?.images?.length);
     const firstImage = data.choices?.[0]?.message?.images?.[0];
-    console.log("First image type:", firstImage?.type, "has url:", !!firstImage?.image_url?.url, "url prefix:", firstImage?.image_url?.url?.substring(0, 30));
     const imageDataUrl = firstImage?.image_url?.url;
+    console.log("AI image response - has image:", !!imageDataUrl, "prefix:", imageDataUrl?.substring(0, 40));
 
     if (!imageDataUrl) {
-      console.error("No image in AI response");
+      console.error("No image in AI response. Full message keys:", JSON.stringify(Object.keys(data.choices?.[0]?.message || {})));
       return expert.photo_url || `${siteBase}/og-basecamp.png`;
     }
+
+    // Detect MIME type from data URL
+    const mimeMatch = imageDataUrl.match(/^data:(image\/\w+);base64,/);
+    const mimeType = mimeMatch?.[1] || "image/png";
+    const ext = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/webp" ? "webp" : "png";
+    const cardPath = `og-cards/${slug}-og-card.${ext}`;
+    console.log(`Detected MIME: ${mimeType}, saving as ${cardPath}`);
 
     // Convert base64 to binary and upload
     const base64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
@@ -117,7 +123,7 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     const { error: uploadError } = await supabase.storage
       .from("event-photos")
       .upload(cardPath, binary, {
-        contentType: "image/png",
+        contentType: mimeType,
         upsert: true,
       });
 
