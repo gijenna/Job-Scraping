@@ -37,10 +37,16 @@ async function getOrGenerateOgCard(
       .list("og-cards", { search: `${slug}-og-card.png` });
 
     if (files && files.length > 0) {
-      const { data: publicUrl } = supabase.storage
-        .from("event-photos")
-        .getPublicUrl(cardPath);
-      if (publicUrl?.publicUrl) return publicUrl.publicUrl;
+      const fileSize = files[0]?.metadata?.size || files[0]?.size || 0;
+      if (fileSize > 1024) {
+        const { data: publicUrl } = supabase.storage
+          .from("event-photos")
+          .getPublicUrl(cardPath);
+        if (publicUrl?.publicUrl) return publicUrl.publicUrl;
+      } else {
+        console.log(`Stale/blank cached image for ${slug} (${fileSize} bytes), regenerating...`);
+        await supabase.storage.from("event-photos").remove([cardPath]);
+      }
     }
   }
 
