@@ -10,6 +10,7 @@ import DenverWhoAttends from "@/components/event/DenverWhoAttends";
 import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarousel";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
+import SiteFooter from "@/components/SiteFooter";
 
 const GatherDenver = () => {
   const { logos: dbLogos } = useEventLogos("gather-denver");
