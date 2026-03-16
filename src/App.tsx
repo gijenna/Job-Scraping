@@ -21,6 +21,8 @@ import CityExperts from "./pages/CityExperts";
 import ExpertDetail from "./pages/ExpertDetail";
 import EventOR26 from "./pages/EventOR26";
 import CardStylePreview from "./pages/CardStylePreview";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +71,8 @@ const App = () => (
           <Route path="/MNexperts" element={<ExpertInvite citySlug="minneapolis" />} />
           <Route path="/MNexperts/:name" element={<ExpertInvite citySlug="minneapolis" />} />
           <Route path="/card-preview" element={<CardStylePreview />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/T&C" element={<TermsConditions />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

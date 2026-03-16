@@ -5,6 +5,7 @@ import { Expert, ExpertCity, ExpertCityAssignment, getCompanyLogoUrl } from "@/l
 import { Badge } from "@/components/ui/badge";
 import { Linkedin, ArrowLeft } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
+import SiteFooter from "@/components/SiteFooter";
 
 const CityExperts = ({ citySlug }: { citySlug: string }) => {
   const [city, setCity] = useState<ExpertCity | null>(null);
@@ -104,6 +105,8 @@ const CityExperts = ({ citySlug }: { citySlug: string }) => {
           </div>
         )}
       </div>
+
+      <SiteFooter />
     </div>
   );
 };

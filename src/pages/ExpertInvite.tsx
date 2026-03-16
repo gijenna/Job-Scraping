@@ -8,6 +8,7 @@ import QuestionDialog from "@/components/experts/QuestionDialog";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, Star, ChevronDown, Briefcase, BookOpen, Coffee } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
+import SiteFooter from "@/components/SiteFooter";
 import heroDenver from "@/assets/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 
@@ -617,6 +618,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
         citySlug={citySlug}
         expertId={expert?.id}
       />
+      <SiteFooter />
     </div>
   );
 };

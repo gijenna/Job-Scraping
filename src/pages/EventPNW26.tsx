@@ -14,6 +14,7 @@ import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos, EventLogo } from "@/hooks/useEventLogos";
+import SiteFooter from "@/components/SiteFooter";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
@@ -252,6 +253,8 @@ const EventPNW26 = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };

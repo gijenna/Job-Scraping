@@ -15,6 +15,7 @@ import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
+import SiteFooter from "@/components/SiteFooter";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
@@ -94,6 +95,8 @@ const EventOutsideDays26 = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };
