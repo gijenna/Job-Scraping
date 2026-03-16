@@ -116,6 +116,7 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     }
 
     const data = await response.json();
+    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images);
     const imageDataUrl =
       data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
