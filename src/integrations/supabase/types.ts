@@ -167,6 +167,7 @@ export type Database = {
           expert_type: string
           id: string
           published: boolean | null
+          share_reminder_sent: boolean | null
         }
         Insert: {
           card_version?: Json | null
@@ -176,6 +177,7 @@ export type Database = {
           expert_type?: string
           id?: string
           published?: boolean | null
+          share_reminder_sent?: boolean | null
         }
         Update: {
           card_version?: Json | null
@@ -185,6 +187,7 @@ export type Database = {
           expert_type?: string
           id?: string
           published?: boolean | null
+          share_reminder_sent?: boolean | null
         }
         Relationships: [
           {

@@ -1,78 +1,77 @@
 
 
-# Plan: Expert Card Social Sharing
+# Main Page Updates: Logo, Content, and Denver Time Change
 
 ## Overview
+Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
 
-Enable experts to share their cards on social media with rich preview images after completing their profile. This requires solving the core SPA problem: social media crawlers don't execute JavaScript, so they can't see React-rendered content.
+---
 
-## Architecture
+## Changes
 
-```text
-Expert completes card
-       ↓
-Success screen shows "Share your card" buttons
-(LinkedIn, Twitter/X, Facebook, Copy Link)
-       ↓
-Share URL: /Portlandexperts/view/{slug}
-       ↓
-When a social crawler hits that URL:
-  Edge function serves HTML with OG meta tags
-  (expert name, title, company, photo as OG image)
-       ↓
-When a real browser hits that URL:
-  Edge function redirects to /pnw26 (event page)
-       ↓
-Pre-filled share message includes card link
-```
+### 1. Swap Logo on Main Page
+- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
+- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
+- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
 
-## Implementation
+### 2. Ensure "GATHER" Uses Josefin Sans
+- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
 
-### 1. Edge function: `expert-og` — serves OG meta tags for crawlers
+### 3. Update Denver Event Time to 1-4 PM
+Files to update:
+- `src/components/EventOverview.tsx`: Update the Denver event format/description references
+- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
+- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
 
-An edge function that:
-- Accepts `?slug=expert-slug&city=portland` query params
-- Fetches expert data from the database
-- For **crawler user agents** (facebookexternalhit, Twitterbot, LinkedInBot, etc.): returns an HTML page with proper OG meta tags using the expert's photo as `og:image`, their name/title as `og:title`, and a description like "Meet [Name] at Gather PNW — [Title] at [Company]"
-- For **real browsers**: redirects to the event page (`/pnw26` for portland, `/OutsideDays26` for denver)
-- The share URL format: `https://sponsor-attract-hub.lovable.app/share/expert?slug=hannah-harrick&city=portland`
+### 4. Reduce Spacing Below Hero Buttons
+- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
 
-Add a route in `App.tsx` and also configure the edge function URL so crawlers hit it directly.
+### 5. Replace StatsSection with New Audience Content
+Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
 
-**Important**: Since this is a Lovable SPA, crawlers won't hit edge functions via client-side routing. We'll use the edge function URL directly as the share link: `https://qpnzjcbdtybwazceggmv.supabase.co/functions/v1/expert-og?slug=...&city=...`. This is the URL that gets shared on social media. When real users click it, they get redirected to the event page.
+**a) Companies of Note Represented**
+A section listing the brands organized by category:
+- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
+- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
+- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
 
-### 2. Share buttons in ExpertIntakeForm success screen
+**b) Event Audience Executive Summary**
+Three highlight cards:
+- "The Industry Tastemakers" -- 50% Marketing and Communications
+- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
+- "The Ultimate Career Pivot Point" -- 17% Transitioners
 
-After "Card saved!", add a share section with:
-- **Share on LinkedIn** — opens LinkedIn share dialog with pre-filled URL + message
-- **Share on X/Twitter** — opens Twitter intent with pre-filled tweet
-- **Copy share link** — copies the edge function share URL
-- Pre-filled message: "I'm an Industry Expert at Gather PNW by @BasecampOutdoor! Come meet me and other outdoor industry professionals. Register free → [event link]"
+**c) Attendee Persona Snapshot**
+Three stat highlights:
+- 30% Creative Leaders
+- 22% Emerging Talent
+- 18% Strategic Decision Makers
 
-### 3. Share button on ExpertDetail page
+### 6. Remove Old StatsSection from Index
+- Remove the `StatsSection` import and usage from `Index.tsx`
+- Add the new `AudienceSection` component in its place
 
-Add a small share icon on the `/Portlandexperts/view/:name` detail page so experts who revisit can share again.
-
-### 4. Reminder capability (optional/future)
-
-Add a `share_reminder_sent` boolean column to `expert_city_assignments`. A scheduled edge function (via pg_cron) could query experts who haven't shared yet as the event approaches, but the actual reminder delivery (email) requires email infrastructure. For now, we'll add the DB column and note this as a future enhancement once email is configured.
-
-## Files
-
-| File | Changes |
-|------|---------|
-| `supabase/functions/expert-og/index.ts` | New edge function for OG meta + redirect |
-| `supabase/config.toml` | Add `verify_jwt = false` for expert-og |
-| `src/components/experts/ExpertIntakeForm.tsx` | Add share buttons to success screen |
-| `src/components/experts/ShareCardButtons.tsx` | New reusable share button component |
-| `src/pages/ExpertDetail.tsx` | Add share button |
+---
 
 ## Technical Details
 
-- The OG image will be the expert's `photo_url` directly — this works well since social platforms crop to card format anyway
-- `og:title` = "{Name} — Industry Expert at {Event Title}"
-- `og:description` = "{Title} at {Company} · Meet me at {Event} in {City}"
-- The share URL uses the edge function directly so crawlers get server-rendered HTML
-- Real browsers get a 302 redirect to the event page (e.g. `/pnw26`)
-- No database migration needed beyond the optional reminder column
+### Files Created
+| File | Description |
+|------|-------------|
+| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
+| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
 
+### Files Modified
+| File | Change |
+|------|--------|
+| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
+| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
+| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
+| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
+| `src/components/EventOverview.tsx` | Update any Denver time references |
+| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
+
+### No Changes To
+- PNW pages (no time changes requested)
+- Export PNW page
+- Individual event components (EventHero, EventTiers, etc.)

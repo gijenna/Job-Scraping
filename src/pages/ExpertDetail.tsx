@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Linkedin, ArrowLeft, MapPin, Briefcase, Clock, BookOpen, Sparkles } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
+import ShareCardButtons from "@/components/experts/ShareCardButtons";
 
 const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
   const { name } = useParams();
@@ -228,6 +229,16 @@ const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
                 </p>
               </div>
             )}
+
+            {/* Share */}
+            <div className="mt-2">
+              <ShareCardButtons
+                expertSlug={expert.slug}
+                expertName={expert.full_name}
+                citySlug={citySlug}
+                eventTitle={city?.event_title}
+              />
+            </div>
           </div>
         </div>
       </div>

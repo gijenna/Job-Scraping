@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
 import ExpertLivePreview from "./ExpertLivePreview";
+import ShareCardButtons from "./ShareCardButtons";
 
 interface ExpertIntakeFormProps {
   expertId?: string;
@@ -415,6 +416,13 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               <CalendarPlus className="w-4 h-4" />
               Add to Google Calendar
             </a>
+            <div className="mt-2 pt-3 border-t border-events-cream/10">
+              <ShareCardButtons
+                expertSlug={form.full_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}
+                expertName={form.full_name}
+                citySlug={citySlug}
+              />
+            </div>
           </div>
         )}
         <p className="text-events-cream/50 text-sm">
