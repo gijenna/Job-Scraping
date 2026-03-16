@@ -116,9 +116,10 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     }
 
     const data = await response.json();
-    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images);
-    const imageDataUrl =
-      data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images, "images count:", data.choices?.[0]?.message?.images?.length);
+    const firstImage = data.choices?.[0]?.message?.images?.[0];
+    console.log("First image type:", firstImage?.type, "has url:", !!firstImage?.image_url?.url, "url prefix:", firstImage?.image_url?.url?.substring(0, 30));
+    const imageDataUrl = firstImage?.image_url?.url;
 
     if (!imageDataUrl) {
       console.error("No image in AI response");
