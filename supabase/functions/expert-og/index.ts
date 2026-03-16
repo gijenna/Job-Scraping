@@ -23,31 +23,15 @@ async function getOrGenerateOgCard(
   slug: string,
   siteBase: string
 ): Promise<string> {
-  const cardPath = `og-cards/${slug}-og-card.png`;
-
-  // Check cache
-  const { data: existing } = await supabase.storage
+  // Always regenerate - delete any existing card first
+  const { data: existingFiles } = await supabase.storage
     .from("event-photos")
-    .createSignedUrl(cardPath, 60);
+    .list("og-cards", { search: `${slug}-og-card` });
 
-  if (existing?.signedUrl) {
-    // Verify file actually exists by checking list
-    const { data: files } = await supabase.storage
-      .from("event-photos")
-      .list("og-cards", { search: `${slug}-og-card.png` });
-
-    if (files && files.length > 0) {
-      const fileSize = files[0]?.metadata?.size || files[0]?.size || 0;
-      if (fileSize > 1024) {
-        const { data: publicUrl } = supabase.storage
-          .from("event-photos")
-          .getPublicUrl(cardPath);
-        if (publicUrl?.publicUrl) return publicUrl.publicUrl;
-      } else {
-        console.log(`Stale/blank cached image for ${slug} (${fileSize} bytes), regenerating...`);
-        await supabase.storage.from("event-photos").remove([cardPath]);
-      }
-    }
+  if (existingFiles && existingFiles.length > 0) {
+    const paths = existingFiles.map((f: any) => `og-cards/${f.name}`);
+    await supabase.storage.from("event-photos").remove(paths);
+    console.log(`Cleared ${paths.length} old cached cards for ${slug}`);
   }
 
   // Generate with AI
