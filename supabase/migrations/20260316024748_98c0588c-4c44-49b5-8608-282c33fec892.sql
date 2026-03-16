@@ -1,0 +1,1 @@
+ALTER TABLE public.expert_city_assignments ADD COLUMN IF NOT EXISTS share_reminder_sent boolean DEFAULT false;
