@@ -37,10 +37,16 @@ async function getOrGenerateOgCard(
       .list("og-cards", { search: `${slug}-og-card.png` });
 
     if (files && files.length > 0) {
-      const { data: publicUrl } = supabase.storage
-        .from("event-photos")
-        .getPublicUrl(cardPath);
-      if (publicUrl?.publicUrl) return publicUrl.publicUrl;
+      const fileSize = files[0]?.metadata?.size || files[0]?.size || 0;
+      if (fileSize > 1024) {
+        const { data: publicUrl } = supabase.storage
+          .from("event-photos")
+          .getPublicUrl(cardPath);
+        if (publicUrl?.publicUrl) return publicUrl.publicUrl;
+      } else {
+        console.log(`Stale/blank cached image for ${slug} (${fileSize} bytes), regenerating...`);
+        await supabase.storage.from("event-photos").remove([cardPath]);
+      }
     }
   }
 
@@ -97,7 +103,7 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash-image",
+          model: "google/gemini-3.1-flash-image-preview",
           messages,
           modalities: ["image", "text"],
         }),
@@ -110,6 +116,7 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     }
 
     const data = await response.json();
+    console.log("AI response structure:", JSON.stringify(Object.keys(data)), "choices:", data.choices?.length, "has images:", !!data.choices?.[0]?.message?.images);
     const imageDataUrl =
       data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
@@ -242,13 +249,10 @@ Deno.serve(async (req) => {
 </body>
 </html>`;
 
-  return new Response(html, {
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+  const headers = new Headers(corsHeaders);
+  headers.set("Content-Type", "text/html; charset=utf-8");
+  headers.set("Cache-Control", "public, max-age=3600");
+  return new Response(html, { headers });
 });
 
 function esc(s: string): string {
