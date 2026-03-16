@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Linkedin, ArrowLeft, MapPin, Briefcase, Clock, BookOpen, Sparkles } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import ShareCardButtons from "@/components/experts/ShareCardButtons";
+import SiteFooter from "@/components/SiteFooter";
 
 const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
   const { name } = useParams();
