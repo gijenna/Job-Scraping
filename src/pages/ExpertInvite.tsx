@@ -618,6 +618,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
         citySlug={citySlug}
         expertId={expert?.id}
       />
+      <SiteFooter />
     </div>
   );
 };

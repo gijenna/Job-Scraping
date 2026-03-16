@@ -95,6 +95,8 @@ const EventOutsideDays26 = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };

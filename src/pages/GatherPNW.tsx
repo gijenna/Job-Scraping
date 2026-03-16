@@ -49,6 +49,8 @@ const GatherPNW = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };

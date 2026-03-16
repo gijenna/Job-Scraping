@@ -117,6 +117,8 @@ const Events = () => {
       <div ref={partnerRef}>
         <PartnerSection />
       </div>
+
+      <SiteFooter />
     </div>
   );
 };

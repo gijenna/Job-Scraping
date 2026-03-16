@@ -240,9 +240,11 @@ const ExpertDetail = ({ citySlug }: { citySlug: string }) => {
                 eventTitle={city?.event_title}
               />
             </div>
-          </div>
         </div>
       </div>
+
+      <SiteFooter />
+    </div>
     </div>
   );
 };

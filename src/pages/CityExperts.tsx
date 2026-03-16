@@ -105,6 +105,8 @@ const CityExperts = ({ citySlug }: { citySlug: string }) => {
           </div>
         )}
       </div>
+
+      <SiteFooter />
     </div>
   );
 };

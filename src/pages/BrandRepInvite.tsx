@@ -612,6 +612,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
         citySlug={citySlug}
         expertId={expert?.id}
       />
+      <SiteFooter />
     </div>
   );
 };

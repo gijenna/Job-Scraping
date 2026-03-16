@@ -58,6 +58,8 @@ const GatherDenver = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };

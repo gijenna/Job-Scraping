@@ -253,6 +253,8 @@ const EventPNW26 = () => {
           </motion.div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 };
