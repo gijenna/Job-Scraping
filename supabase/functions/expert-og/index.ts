@@ -225,20 +225,22 @@ Deno.serve(async (req) => {
   ]
     .filter(Boolean)
     .join(" ");
+  const ogImageType = getImageMimeType(ogImage);
 
   const html = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
   <title>${esc(title)}</title>
+  <link rel="canonical" href="${esc(shareUrl)}" />
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(description)}" />
   <meta property="og:image" content="${esc(ogImage)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:url" content="${esc(redirectUrl)}" />
+  <meta property="og:image:type" content="${esc(ogImageType)}" />
+  <meta property="og:url" content="${esc(shareUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(description)}" />
