@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2 } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
 
@@ -122,6 +122,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                 <th className="text-left p-3 text-events-cream/60 font-medium">City/Event</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Status</th>
                 <th className="text-left p-3 text-events-cream/60 font-medium">Company</th>
+                <th className="text-left p-3 text-events-cream/60 font-medium">Share Link</th>
                 <th className="text-right p-3 text-events-cream/60 font-medium">Actions</th>
               </tr>
             </thead>
@@ -253,6 +254,34 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                       </Badge>
                     </td>
                     <td className="p-3 text-events-cream/60">{expert.current_company || '—'}</td>
+                    <td className="p-3">
+                      {expert.status === 'confirmed' && expertAssigns.length > 0 ? (
+                        <div className="space-y-1">
+                          {expertAssigns.map((a) => {
+                            const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+                            const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og?slug=${encodeURIComponent(expert.slug)}&city=${encodeURIComponent(a.city_slug)}`;
+                            return (
+                              <Button
+                                key={a.id}
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(shareUrl);
+                                  toast({ title: "Share link copied!", description: `${expert.full_name} — ${cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}` });
+                                }}
+                                className="text-events-cream/60 hover:text-events-cream h-6 px-2 gap-1 text-xs"
+                                title={shareUrl}
+                              >
+                                <Share2 className="w-3 h-3" />
+                                {cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}
+                              </Button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span className="text-events-cream/30 text-xs">—</span>
+                      )}
+                    </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
                         {expertAssigns.map((a) => (
