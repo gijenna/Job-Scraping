@@ -30,7 +30,7 @@ const AdminExperts = () => {
       const cityNames = expertAssigns.map(a => a.city_slug).join('; ');
       const types = [...new Set(expertAssigns.map(a => a.expert_type))].join('; ');
       const shareLinks = e.status === 'confirmed'
-        ? expertAssigns.map(a => `https://${projectId}.supabase.co/functions/v1/expert-og?slug=${encodeURIComponent(e.slug)}&city=${encodeURIComponent(a.city_slug)}`).join('; ')
+        ? expertAssigns.map(a => `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(e.slug)}/${encodeURIComponent(a.city_slug)}`).join('; ')
         : '';
       return [
         e.full_name, e.email || '', e.job_title || '', e.current_company || '',

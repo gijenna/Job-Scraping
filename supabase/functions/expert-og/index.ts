@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPath = EVENT_PAGE[city] || "/events";
   const redirectUrl = `${siteBase}${eventPath}`;
-  const shareUrl = req.url;
+  const shareUrl = `${url.origin}/functions/v1/expert-og/${encodeURIComponent(slug)}/${encodeURIComponent(city)}`;
 
   const ua = req.headers.get("user-agent") || "";
   const isCrawler = CRAWLER_UA.test(ua);
