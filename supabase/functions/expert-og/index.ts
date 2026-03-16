@@ -15,6 +15,136 @@ const EVENT_PAGE: Record<string, string> = {
   minneapolis: "/events",
 };
 
+async function getOrGenerateOgCard(
+  supabase: any,
+  expert: any,
+  eventTitle: string,
+  cityName: string,
+  slug: string,
+  siteBase: string
+): Promise<string> {
+  const cardPath = `og-cards/${slug}-og-card.png`;
+
+  // Check cache
+  const { data: existing } = await supabase.storage
+    .from("event-photos")
+    .createSignedUrl(cardPath, 60);
+
+  if (existing?.signedUrl) {
+    // Verify file actually exists by checking list
+    const { data: files } = await supabase.storage
+      .from("event-photos")
+      .list("og-cards", { search: `${slug}-og-card.png` });
+
+    if (files && files.length > 0) {
+      const { data: publicUrl } = supabase.storage
+        .from("event-photos")
+        .getPublicUrl(cardPath);
+      if (publicUrl?.publicUrl) return publicUrl.publicUrl;
+    }
+  }
+
+  // Generate with AI
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  if (!LOVABLE_API_KEY) {
+    console.error("LOVABLE_API_KEY not configured");
+    return expert.photo_url || `${siteBase}/og-basecamp.png`;
+  }
+
+  const titleLine = expert.job_title || "";
+  const companyLine = expert.current_company ? `at ${expert.current_company}` : "";
+  const fieldBadge = expert.field_of_work || "";
+  const askAbout = expert.ask_me_about || "";
+
+  const prompt = `Create a professional social media preview card image at exactly 1200x630 pixels with this layout:
+
+BACKGROUND: Deep teal color (#1a3a3a) filling the entire card.
+
+LEFT SIDE (40% of width): 
+- A cream/off-white (#F5F0E8) Polaroid-style photo frame with slight rotation (-2 degrees)
+- Inside the frame: the provided photo converted to black and white/grayscale
+- Small shadow under the Polaroid
+
+RIGHT SIDE (60% of width), vertically centered text:
+- Name "${expert.full_name}" in large bold coral/salmon color (#ED7660) font
+- Below: "${titleLine} ${companyLine}" in warm yellow (#E8C547) medium font
+${fieldBadge ? `- Below: A small rounded badge with text "${fieldBadge}" in coral on a darker teal background` : ""}
+${askAbout ? `- Below: "Ask me about: ${askAbout}" in small cream (#F5F0E8) italic text` : ""}
+
+BOTTOM: A subtle horizontal line, then "${eventTitle} · ${cityName}" in small cream text, and "BASECAMP OUTDOOR" in slightly larger cream text on the right.
+
+Style: Clean, modern, editorial. The text should be crisp and readable. No decorative elements beyond what's described. Professional networking event feel.`;
+
+  try {
+    const messages: any[] = [
+      {
+        role: "user",
+        content: expert.photo_url
+          ? [
+              { type: "text", text: prompt },
+              { type: "image_url", image_url: { url: expert.photo_url } },
+            ]
+          : prompt,
+      },
+    ];
+
+    const response = await fetch(
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-image",
+          messages,
+          modalities: ["image", "text"],
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("AI gateway error:", response.status, await response.text());
+      return expert.photo_url || `${siteBase}/og-basecamp.png`;
+    }
+
+    const data = await response.json();
+    const imageDataUrl =
+      data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+
+    if (!imageDataUrl) {
+      console.error("No image in AI response");
+      return expert.photo_url || `${siteBase}/og-basecamp.png`;
+    }
+
+    // Convert base64 to binary and upload
+    const base64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
+    const binary = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+
+    const { error: uploadError } = await supabase.storage
+      .from("event-photos")
+      .upload(cardPath, binary, {
+        contentType: "image/png",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      return expert.photo_url || `${siteBase}/og-basecamp.png`;
+    }
+
+    const { data: publicUrl } = supabase.storage
+      .from("event-photos")
+      .getPublicUrl(cardPath);
+
+    return publicUrl?.publicUrl || expert.photo_url || `${siteBase}/og-basecamp.png`;
+  } catch (err) {
+    console.error("OG card generation failed:", err);
+    return expert.photo_url || `${siteBase}/og-basecamp.png`;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -33,18 +163,19 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  // Fetch expert
   const { data: expert } = await supabase
     .from("industry_experts")
-    .select("full_name, job_title, current_company, photo_url, field_of_work")
+    .select("full_name, job_title, current_company, photo_url, field_of_work, ask_me_about")
     .eq("slug", slug)
     .single();
 
   if (!expert) {
-    return new Response("Expert not found", { status: 404, headers: corsHeaders });
+    return new Response("Expert not found", {
+      status: 404,
+      headers: corsHeaders,
+    });
   }
 
-  // Fetch city info
   const { data: cityData } = await supabase
     .from("expert_cities")
     .select("event_title, name")
@@ -68,7 +199,16 @@ Deno.serve(async (req) => {
     });
   }
 
-  // Build OG HTML for crawlers
+  // Generate or retrieve cached branded card image
+  const ogImage = await getOrGenerateOgCard(
+    supabase,
+    expert,
+    eventTitle,
+    cityName,
+    slug,
+    siteBase
+  );
+
   const title = `${expert.full_name} — Industry Expert at ${eventTitle}`;
   const description = [
     expert.job_title,
@@ -77,8 +217,6 @@ Deno.serve(async (req) => {
   ]
     .filter(Boolean)
     .join(" ");
-
-  const ogImage = expert.photo_url || `${siteBase}/og-basecamp.png`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -89,6 +227,9 @@ Deno.serve(async (req) => {
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(description)}" />
   <meta property="og:image" content="${esc(ogImage)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:url" content="${esc(redirectUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
@@ -102,7 +243,11 @@ Deno.serve(async (req) => {
 </html>`;
 
   return new Response(html, {
-    headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+    },
   });
 });
 
