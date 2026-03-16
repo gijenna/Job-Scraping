@@ -155,8 +155,13 @@ Deno.serve(async (req) => {
   }
 
   const url = new URL(req.url);
-  const slug = url.searchParams.get("slug");
-  const city = url.searchParams.get("city") || "portland";
+  const parts = url.pathname.split("/").filter(Boolean);
+  const fnIndex = parts.lastIndexOf("expert-og");
+  const slugFromPath = fnIndex >= 0 ? decodeURIComponent(parts[fnIndex + 1] || "") : "";
+  const cityFromPath = fnIndex >= 0 ? decodeURIComponent(parts[fnIndex + 2] || "") : "";
+
+  const slug = url.searchParams.get("slug") || slugFromPath;
+  const city = url.searchParams.get("city") || cityFromPath || "portland";
 
   if (!slug) {
     return new Response("Missing slug", { status: 400, headers: corsHeaders });
