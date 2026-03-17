@@ -11,6 +11,8 @@ import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarou
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
+import EventNotHiringCallout from "@/components/event/EventNotHiringCallout";
+import SponsorPageNav from "@/components/event/SponsorPageNav";
 
 const GatherDenver = () => {
   const { logos: dbLogos } = useEventLogos("gather-denver");
@@ -31,6 +33,7 @@ const GatherDenver = () => {
 
   return (
     <main className="bg-background min-h-screen">
+      <SponsorPageNav otherEvent={{ label: "Gather PNW", path: "/gather-pnw" }} />
       <AdminLogoManager eventSlug="gather-denver" />
       <DenverHero />
 
@@ -40,6 +43,7 @@ const GatherDenver = () => {
       />
 
       <DenverFestivalPartner />
+      <EventNotHiringCallout />
       <DenverPowerfulPremium />
       <DenverByTheNumbers logos={statsLogos} />
       <MobileTestimonialCarousel />

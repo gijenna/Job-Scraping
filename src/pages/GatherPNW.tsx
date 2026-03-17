@@ -10,6 +10,8 @@ import MobileTestimonialCarousel from "@/components/event/MobileTestimonialCarou
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
+import EventNotHiringCallout from "@/components/event/EventNotHiringCallout";
+import SponsorPageNav from "@/components/event/SponsorPageNav";
 
 const GatherPNW = () => {
   const { logos: dbLogos } = useEventLogos("gather-pnw");
@@ -23,6 +25,7 @@ const GatherPNW = () => {
 
   return (
     <main className="bg-background min-h-screen">
+      <SponsorPageNav otherEvent={{ label: "Outside Days Denver", path: "/gather-denver" }} />
       <AdminLogoManager eventSlug="gather-pnw" />
       <PnwHero />
 
@@ -32,6 +35,7 @@ const GatherPNW = () => {
       />
 
       <PnwUOPartner />
+      <EventNotHiringCallout />
       <PnwPowerfulPremium />
       <PnwByTheNumbers />
       <MobileTestimonialCarousel />
