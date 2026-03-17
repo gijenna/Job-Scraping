@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import heroPnw from "@/assets/hero-pnw.mp4";
+const heroPnw = "/hero-pnw.mp4";
 import gatherPnwLogo from "@/assets/gather-pnw-logo-white-uo.png";
 import uoDuckLogo from "@/assets/uo-duck-logo.svg";
 import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";

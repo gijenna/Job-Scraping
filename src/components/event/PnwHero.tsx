@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import gatherPnwLogo from "@/assets/gather-pnw-logo-white-uo.png";
-import heroPnw from "@/assets/hero-pnw.mp4";
 
 const phrases = ["talent pipeline", "customer base", "community"];
 
@@ -25,7 +24,7 @@ const PnwHero = () => {
       {/* Video background */}
       <div className="absolute inset-0">
         <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-          <source src={heroPnw} type="video/mp4" />
+          <source src="/hero-pnw.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-background/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/40" />
