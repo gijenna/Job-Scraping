@@ -162,10 +162,11 @@ const PnwByTheNumbers = ({ logos }: PnwByTheNumbersProps = {}) => {
     ? logos.map((l) => ({ name: l.name, domain: l.domain || "" }))
     : brandLogos;
 
+  const mobileRainLogos = getMobileRainLogos(displayLogos);
+
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
       <div className="relative py-28 md:py-40">
-        {/* Desktop: scattered logos + testimonials */}
         {!isMobile && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {scatteredElements.map((item, i) => {
@@ -174,10 +175,11 @@ const PnwByTheNumbers = ({ logos }: PnwByTheNumbersProps = {}) => {
               if (item.right !== undefined) posStyle.right = item.right;
 
               if (item.type === 'logo') {
+                const logo = displayLogos[item.index % displayLogos.length];
                 return (
                   <LogoBubble
                     key={i}
-                    logo={brandLogos[item.index]}
+                    logo={logo}
                     style={posStyle}
                     rotate={item.rotate}
                     delay={0.08 + i * 0.04}
