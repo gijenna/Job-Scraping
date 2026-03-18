@@ -27,6 +27,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 interface AdminLogoManagerProps {
   eventSlug: string;
+  label?: string;
   onLogosChange?: (logos: EventLogo[]) => void;
 }
 
