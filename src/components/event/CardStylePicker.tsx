@@ -34,7 +34,7 @@ const CardStylePicker = ({ eventSlug, settingKey = "card_style", label, onStyleC
   if (!isAdmin) return null;
 
   const handleChange = async (style: string) => {
-    await setSetting("card_style", style);
+    await setSetting(settingKey, style);
     onStyleChange?.(style);
   };
 
