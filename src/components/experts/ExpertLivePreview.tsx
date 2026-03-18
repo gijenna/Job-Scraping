@@ -48,7 +48,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               </p>
               {data.current_company && (
                 <img
-                  src={getCompanyLogoUrl(data.current_company)}
+                  src={getCompanyLogoUrl(data.current_company, data.company_domains)}
                   alt=""
                   className="w-5 h-5 rounded-sm bg-white object-contain"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
