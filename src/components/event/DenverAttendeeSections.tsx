@@ -23,10 +23,12 @@ const DenverAttendeeSections = ({
   const [industryExperts, setIndustryExperts] = useState<Expert[]>([]);
   const [loading, setLoading] = useState(true);
   const { settings } = useEventSettings(eventSlug);
-  const [cardStyle, setCardStyle] = useState("polaroid");
+  const [brandRepStyle, setBrandRepStyle] = useState("polaroid");
+  const [expertStyle, setExpertStyle] = useState("polaroid");
 
   useEffect(() => {
-    if (settings["card_style"]) setCardStyle(settings["card_style"]);
+    if (settings["card_style_brand_reps"]) setBrandRepStyle(settings["card_style_brand_reps"]);
+    if (settings["card_style_experts"]) setExpertStyle(settings["card_style_experts"]);
   }, [settings]);
 
   useEffect(() => {
@@ -75,19 +77,20 @@ const DenverAttendeeSections = ({
   const hasContent = brandReps.length > 0 || industryExperts.length > 0;
   if (!hasContent) return null;
 
-  const renderCard = (expert: Expert) => {
-    switch (cardStyle) {
+  const renderCard = (expert: Expert, style: string) => {
+    switch (style) {
       case "compact": return <ExpertCardCompact expert={expert} />;
       case "minimal": return <ExpertCardMinimal expert={expert} />;
       default: return <ExpertCard expert={expert} />;
     }
   };
 
-  const gridClass = cardStyle === "minimal"
-    ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6"
-    : cardStyle === "compact"
-    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
+  const getGridClass = (style: string) =>
+    style === "minimal"
+      ? "grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6"
+      : style === "compact"
+      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+      : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
 
   return (
     <>
@@ -100,13 +103,13 @@ const DenverAttendeeSections = ({
             </motion.div>
 
             <div className="flex justify-center mb-8">
-              <CardStylePicker eventSlug={eventSlug} onStyleChange={setCardStyle} />
+              <CardStylePicker eventSlug={eventSlug} settingKey="card_style_brand_reps" label="Brand Reps" onStyleChange={setBrandRepStyle} />
             </div>
 
-            <div className={gridClass}>
+            <div className={getGridClass(brandRepStyle)}>
               {brandReps.map((expert, i) => (
                 <motion.div key={expert.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                  {renderCard(expert)}
+                  {renderCard(expert, brandRepStyle)}
                 </motion.div>
               ))}
             </div>
@@ -122,16 +125,14 @@ const DenverAttendeeSections = ({
               <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">Veterans ready to share their stories</h2>
             </motion.div>
 
-            {brandReps.length === 0 && (
-              <div className="flex justify-center mb-8">
-                <CardStylePicker eventSlug={eventSlug} onStyleChange={setCardStyle} />
-              </div>
-            )}
+            <div className="flex justify-center mb-8">
+              <CardStylePicker eventSlug={eventSlug} settingKey="card_style_experts" label="Experts" onStyleChange={setExpertStyle} />
+            </div>
 
-            <div className={gridClass}>
+            <div className={getGridClass(expertStyle)}>
               {industryExperts.map((expert, i) => (
                 <motion.div key={expert.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
-                  {renderCard(expert)}
+                  {renderCard(expert, expertStyle)}
                 </motion.div>
               ))}
             </div>
