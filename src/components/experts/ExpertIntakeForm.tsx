@@ -621,7 +621,6 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               </div>
             ))}
           </div>
-          </div>
 
           <div className="space-y-2">
             <Label className="text-events-cream">Favorite Media / Conversation Starter</Label>
