@@ -152,8 +152,15 @@ const TestimonialCard = ({ testimonial, style, rotate, delay }: { testimonial: T
   </motion.div>
 );
 
-const PnwByTheNumbers = () => {
+interface PnwByTheNumbersProps {
+  logos?: { name: string; domain: string | null; logo_url: string | null; url: string | null }[];
+}
+
+const PnwByTheNumbers = ({ logos }: PnwByTheNumbersProps = {}) => {
   const isMobile = useIsMobile();
+  const displayLogos = logos && logos.length > 0
+    ? logos.map((l) => ({ name: l.name, domain: l.domain || "" }))
+    : brandLogos;
 
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#0d1f22" }}>
