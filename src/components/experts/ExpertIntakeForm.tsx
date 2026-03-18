@@ -105,6 +105,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         favorite_media: existingData.favorite_media || prev.favorite_media,
         previous_companies: existingData.previous_companies || prev.previous_companies,
         niche_interests: existingData.niche_interests || prev.niche_interests,
+        company_domains: (existingData as any)?.company_domains || prev.company_domains,
       }));
     }
   }, [existingData]);
