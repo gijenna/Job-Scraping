@@ -11,15 +11,15 @@ interface EventsNavProps {
 }
 
 const OFFICE_HOURS_BRANDS = [
-  { name: "Cotopaxi", url: "https://www.wearetheoutdoorindustry.com/officehours/cotopaxi" },
-  { name: "Backbone", url: "https://www.wearetheoutdoorindustry.com/officehours/backbone" },
-  { name: "Arc'teryx", url: "https://www.wearetheoutdoorindustry.com/officehours/arcteryx" },
-  { name: "Outward Bound", url: "https://www.wearetheoutdoorindustry.com/officehours/outwardbound" },
-  { name: "Outside PR", url: "https://www.wearetheoutdoorindustry.com/officehours/outsidepr" },
-  { name: "CU Boulder", url: "https://www.wearetheoutdoorindustry.com/officehours/cuboulder" },
-  { name: "Vail Resorts", url: "https://www.wearetheoutdoorindustry.com/officehours/vailresorts" },
-  { name: "Autocamp", url: "https://www.wearetheoutdoorindustry.com/officehours/autocamp" },
-  { name: "Title Nine", url: "https://www.wearetheoutdoorindustry.com/officehours/titlenine" },
+  { name: "Cotopaxi", url: "https://www.wearetheoutdoorindustry.com/cotopaxi" },
+  { name: "Backbone", url: "https://www.wearetheoutdoorindustry.com/backbonemedia" },
+  { name: "Arc'teryx", url: "https://www.wearetheoutdoorindustry.com/arcteryx" },
+  { name: "Outward Bound", url: "https://www.wearetheoutdoorindustry.com/outwardbound" },
+  { name: "Outside PR", url: "https://www.wearetheoutdoorindustry.com/outsidepr" },
+  { name: "CU Boulder", url: "https://www.wearetheoutdoorindustry.com/cuboulder" },
+  { name: "Vail Resorts", url: "https://www.wearetheoutdoorindustry.com/vailresorts" },
+  { name: "Autocamp", url: "https://www.wearetheoutdoorindustry.com/autocamp" },
+  { name: "Title Nine", url: "https://www.wearetheoutdoorindustry.com/titlenine" },
 ];
 
 const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
