@@ -66,7 +66,7 @@ const SortableLogoItem = ({
   );
 };
 
-const AdminLogoManager = ({ eventSlug, onLogosChange }: AdminLogoManagerProps) => {
+const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
