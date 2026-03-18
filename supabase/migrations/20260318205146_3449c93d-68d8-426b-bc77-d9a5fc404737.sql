@@ -1,0 +1,1 @@
+ALTER TABLE public.industry_experts ADD COLUMN company_domains jsonb DEFAULT '{}'::jsonb;

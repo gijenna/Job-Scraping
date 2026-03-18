@@ -85,6 +85,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     favorite_media: existingData?.favorite_media || '',
     previous_companies: existingData?.previous_companies || '',
     niche_interests: existingData?.niche_interests || [] as string[],
+    company_domains: (existingData as any)?.company_domains || {} as Record<string, string>,
   });
 
   useEffect(() => {
@@ -104,6 +105,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         favorite_media: existingData.favorite_media || prev.favorite_media,
         previous_companies: existingData.previous_companies || prev.previous_companies,
         niche_interests: existingData.niche_interests || prev.niche_interests,
+        company_domains: (existingData as any)?.company_domains || prev.company_domains,
       }));
     }
   }, [existingData]);
@@ -149,6 +151,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         favorite_media: ex.favorite_media || prev.favorite_media,
         previous_companies: ex.previous_companies || prev.previous_companies,
         niche_interests: ex.niche_interests?.length ? ex.niche_interests : prev.niche_interests,
+        company_domains: ex.company_domains && Object.keys(ex.company_domains).length ? { ...prev.company_domains, ...ex.company_domains } : prev.company_domains,
       }));
       // Notify parent so expertId gets set — pass found expert but DON'T trigger full reload
       onComplete(ex);
@@ -222,6 +225,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         favorite_media: form.favorite_media.trim() || null,
         previous_companies: form.previous_companies.trim() || null,
         niche_interests: form.niche_interests,
+        company_domains: form.company_domains,
         status: 'confirmed' as const,
         updated_at: new Date().toISOString(),
       };
@@ -449,6 +453,24 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
             <Label className="text-events-cream">Current Company *</Label>
             <Input value={form.current_company} onChange={e => update('current_company', e.target.value)} required
               className="bg-events-card border-events-cream/20 text-events-cream" />
+            <div className="flex items-center gap-2">
+              <img
+                src={getCompanyLogoUrl(form.current_company, form.company_domains)}
+                alt=""
+                className="w-5 h-5 rounded-sm bg-white object-contain shrink-0"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
+              />
+              <Input
+                value={form.company_domains[form.current_company] || ''}
+                onChange={e => {
+                  const domains = { ...form.company_domains, [form.current_company]: e.target.value };
+                  update('company_domains', domains);
+                }}
+                className="bg-events-card border-events-cream/20 text-events-cream text-xs h-8"
+                placeholder="Website domain for logo (e.g. rab.equipment)"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -575,9 +597,30 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
 
           <div className="space-y-2">
             <Label className="text-events-cream">Previous Companies</Label>
-            <p className="text-events-cream/40 text-xs">Comma separated — we'll show their logos</p>
+            <p className="text-events-cream/40 text-xs">Comma separated — we'll show their logos. Add a domain below if the logo doesn't load.</p>
             <Input value={form.previous_companies} onChange={e => update('previous_companies', e.target.value)}
               className="bg-events-card border-events-cream/20 text-events-cream" placeholder="Nike, REI, Patagonia" />
+            {form.previous_companies && form.previous_companies.split(',').map(c => c.trim()).filter(Boolean).map(company => (
+              <div key={company} className="flex items-center gap-2">
+                <img
+                  src={getCompanyLogoUrl(company, form.company_domains)}
+                  alt=""
+                  className="w-5 h-5 rounded-sm bg-white object-contain shrink-0"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
+                />
+                <span className="text-events-cream/60 text-xs shrink-0 w-20 truncate">{company}</span>
+                <Input
+                  value={form.company_domains[company] || ''}
+                  onChange={e => {
+                    const domains = { ...form.company_domains, [company]: e.target.value };
+                    update('company_domains', domains);
+                  }}
+                  className="bg-events-card border-events-cream/20 text-events-cream text-xs h-8"
+                  placeholder={`Domain (e.g. ${company.toLowerCase().replace(/\s/g, '')}.com)`}
+                />
+              </div>
+            ))}
           </div>
 
           <div className="space-y-2">

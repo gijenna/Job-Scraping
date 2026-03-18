@@ -62,7 +62,7 @@ const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" 
             </p>
             {expert.current_company && (
               <img
-                src={getCompanyLogoUrl(expert.current_company)}
+                src={getCompanyLogoUrl(expert.current_company, expert.company_domains)}
                 alt=""
                 className="w-5 h-5 rounded-sm bg-white object-contain"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -78,7 +78,7 @@ const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" 
             {previousCompanies.map((company) => (
               <img
                 key={company}
-                src={getCompanyLogoUrl(company)}
+                src={getCompanyLogoUrl(company, expert.company_domains)}
                 alt={company}
                 title={company}
                 className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"

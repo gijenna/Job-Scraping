@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Linkedin } from "lucide-react";
 
 interface ExpertLivePreviewProps {
-  data: Partial<Expert>;
+  data: Partial<Expert> & { company_domains?: Record<string, string> };
 }
 
 const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
@@ -48,7 +48,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               </p>
               {data.current_company && (
                 <img
-                  src={getCompanyLogoUrl(data.current_company)}
+                  src={getCompanyLogoUrl(data.current_company, data.company_domains)}
                   alt=""
                   className="w-5 h-5 rounded-sm bg-white object-contain"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -63,7 +63,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               {previousCompanies.map((company) => (
                 <span key={company} className="inline-flex items-center gap-1">
                   <img
-                    src={getCompanyLogoUrl(company)}
+                    src={getCompanyLogoUrl(company, data.company_domains)}
                     alt={company}
                     title={company}
                     className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
