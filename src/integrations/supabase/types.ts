@@ -250,6 +250,7 @@ export type Database = {
       industry_experts: {
         Row: {
           ask_me_about: string | null
+          company_domains: Json | null
           created_at: string | null
           created_by: string | null
           current_company: string | null
@@ -271,6 +272,7 @@ export type Database = {
         }
         Insert: {
           ask_me_about?: string | null
+          company_domains?: Json | null
           created_at?: string | null
           created_by?: string | null
           current_company?: string | null
@@ -292,6 +294,7 @@ export type Database = {
         }
         Update: {
           ask_me_about?: string | null
+          company_domains?: Json | null
           created_at?: string | null
           created_by?: string | null
           current_company?: string | null
