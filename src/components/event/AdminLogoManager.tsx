@@ -25,10 +25,13 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-interface AdminLogoManagerProps {
+interface LogoList {
   eventSlug: string;
-  label?: string;
-  onLogosChange?: (logos: EventLogo[]) => void;
+  label: string;
+}
+
+interface AdminLogoManagerProps {
+  lists: LogoList[];
 }
 
 const SortableLogoItem = ({
@@ -66,9 +69,7 @@ const SortableLogoItem = ({
   );
 };
 
-const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerProps) => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
+const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string }) => {
   const [addOpen, setAddOpen] = useState(false);
   const [urlEditOpen, setUrlEditOpen] = useState(false);
   const [editingLogo, setEditingLogo] = useState<EventLogo | null>(null);
@@ -85,18 +86,6 @@ const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerP
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    onLogosChange?.(logos);
-  }, [logos, onLogosChange]);
-
-  if (!isAdmin) return null;
 
   const handleAdd = async () => {
     if (!name.trim()) { toast({ title: "Name is required", variant: "destructive" }); return; }
@@ -146,6 +135,70 @@ const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerP
   };
 
   return (
+    <div className="mb-4">
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="font-display font-bold text-events-cream text-xs uppercase tracking-wider">{label}</h4>
+        <Button size="sm" onClick={() => setAddOpen(true)} className="bg-events-coral text-events-teal h-6 text-[10px] px-2">
+          <Plus className="w-3 h-3 mr-1" /> Add
+        </Button>
+      </div>
+
+      {logos.length === 0 && <p className="text-events-cream/40 text-xs mb-2">No logos yet.</p>}
+
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={logos.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+          <div className="space-y-1.5">
+            {logos.map((logo) => (
+              <SortableLogoItem
+                key={logo.id}
+                logo={logo}
+                onDelete={() => handleDelete(logo.id, logo.name)}
+                onEditUrl={() => openUrlEdit(logo)}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
+          <DialogHeader><DialogTitle className="font-display text-events-cream">Add Logo — {label}</DialogTitle></DialogHeader>
+          <div className="space-y-3 mt-2">
+            <div><Label className="text-events-cream/80 text-xs">Brand Name *</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
+            <div><Label className="text-events-cream/80 text-xs">Domain (for auto-logo)</Label><Input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="e.g. rei.com" className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
+            <div><Label className="text-events-cream/80 text-xs">Upload Logo (optional)</Label><Input type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] || null)} className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
+            <div><Label className="text-events-cream/80 text-xs">Link URL (optional)</Label><Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
+            <Button onClick={handleAdd} disabled={saving} className="w-full bg-events-coral text-events-teal font-bold text-sm">{saving ? "Saving..." : "Add Logo"}</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={urlEditOpen} onOpenChange={setUrlEditOpen}>
+        <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
+          <DialogHeader><DialogTitle className="font-display text-events-cream">Edit URL — {editingLogo?.name}</DialogTitle></DialogHeader>
+          <div className="space-y-3 mt-2">
+            <div><Label className="text-events-cream/80 text-xs">Link URL</Label><Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} placeholder="https://..." className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
+            <Button onClick={handleUrlSave} className="w-full bg-events-coral text-events-teal font-bold text-sm">Save URL</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!isAdmin) return null;
+
+  return (
     <>
       <button
         onClick={() => setShowPanel(!showPanel)}
@@ -157,56 +210,11 @@ const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerP
 
       {showPanel && (
         <div className="fixed bottom-16 right-4 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display font-bold text-events-cream text-sm">{label || `Logos — ${eventSlug}`}</h3>
-            <Button size="sm" onClick={() => setAddOpen(true)} className="bg-events-coral text-events-teal h-7 text-xs">
-              <Plus className="w-3 h-3 mr-1" /> Add
-            </Button>
-          </div>
-
-          {logos.length === 0 && <p className="text-events-cream/40 text-xs">No logos yet.</p>}
-
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={logos.map((l) => l.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-1.5">
-                {logos.map((logo) => (
-                  <SortableLogoItem
-                    key={logo.id}
-                    logo={logo}
-                    onDelete={() => handleDelete(logo.id, logo.name)}
-                    onEditUrl={() => openUrlEdit(logo)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+          {lists.map((list) => (
+            <LogoListPanel key={list.eventSlug} eventSlug={list.eventSlug} label={list.label} />
+          ))}
         </div>
       )}
-
-      {/* Add Logo Dialog */}
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
-          <DialogHeader><DialogTitle className="font-display text-events-cream">Add Logo</DialogTitle></DialogHeader>
-          <div className="space-y-3 mt-2">
-            <div><Label className="text-events-cream/80 text-xs">Brand Name *</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
-            <div><Label className="text-events-cream/80 text-xs">Domain (for auto-logo)</Label><Input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="e.g. rei.com" className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
-            <div><Label className="text-events-cream/80 text-xs">Upload Logo (optional)</Label><Input type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] || null)} className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
-            <div><Label className="text-events-cream/80 text-xs">Link URL (optional)</Label><Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
-            <Button onClick={handleAdd} disabled={saving} className="w-full bg-events-coral text-events-teal font-bold text-sm">{saving ? "Saving..." : "Add Logo"}</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit URL Dialog */}
-      <Dialog open={urlEditOpen} onOpenChange={setUrlEditOpen}>
-        <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
-          <DialogHeader><DialogTitle className="font-display text-events-cream">Edit URL — {editingLogo?.name}</DialogTitle></DialogHeader>
-          <div className="space-y-3 mt-2">
-            <div><Label className="text-events-cream/80 text-xs">Link URL</Label><Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} placeholder="https://..." className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
-            <Button onClick={handleUrlSave} className="w-full bg-events-coral text-events-teal font-bold text-sm">Save URL</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
