@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Linkedin } from "lucide-react";
 
 interface ExpertLivePreviewProps {
-  data: Partial<Expert>;
+  data: Partial<Expert> & { company_domains?: Record<string, string> };
 }
 
 const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
