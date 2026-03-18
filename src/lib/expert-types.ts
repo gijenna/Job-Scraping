@@ -16,6 +16,7 @@ export interface Expert {
   favorite_media: string | null;
   previous_companies: string | null;
   niche_interests: string[];
+  company_domains: Record<string, string>;
   status: 'invited' | 'viewed' | 'started' | 'confirmed';
   created_by: string | null;
   created_at: string;
