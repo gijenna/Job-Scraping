@@ -16,10 +16,10 @@ const styles = [
   { key: "minimal", label: "C", icon: Circle, description: "Minimal" },
 ];
 
-const CardStylePicker = ({ eventSlug, onStyleChange }: CardStylePickerProps) => {
+const CardStylePicker = ({ eventSlug, settingKey = "card_style", label, onStyleChange }: CardStylePickerProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const { settings, setSetting } = useEventSettings(eventSlug);
-  const currentStyle = settings["card_style"] || "polaroid";
+  const currentStyle = settings[settingKey] || "polaroid";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
