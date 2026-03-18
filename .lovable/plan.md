@@ -1,77 +1,46 @@
 
 
-# Main Page Updates: Logo, Content, and Denver Time Change
+# Add Company Domain/URL Field for Expert Logo Resolution
 
-## Overview
-Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
+## Problem
+The `getCompanyLogoUrl` function uses a hardcoded domain map + a naive guess for unknown companies. Many company logos fail to load because the guessed domain is wrong. You want to add a domain/URL field per company (like the event logos system) so logos always resolve.
 
----
+## Solution
 
-## Changes
+### 1. Database: Add `company_domains` column to `industry_experts`
 
-### 1. Swap Logo on Main Page
-- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
-- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
-- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
+Add a `jsonb` column `company_domains` that stores a map of company name → domain, e.g.:
+```json
+{"Rab": "rab.equipment", "Mystery Ranch": "mysteryranch.com"}
+```
 
-### 2. Ensure "GATHER" Uses Josefin Sans
-- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
+This covers both `current_company` and `previous_companies` in one field.
 
-### 3. Update Denver Event Time to 1-4 PM
-Files to update:
-- `src/components/EventOverview.tsx`: Update the Denver event format/description references
-- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
-- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
+### 2. Update `getCompanyLogoUrl` to accept an optional domain override map
 
-### 4. Reduce Spacing Below Hero Buttons
-- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
+Modify the function signature to `getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string>)`. It checks overrides first, then the hardcoded map, then the guess fallback.
 
-### 5. Replace StatsSection with New Audience Content
-Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
+### 3. Update the intake form with domain fields
 
-**a) Companies of Note Represented**
-A section listing the brands organized by category:
-- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
-- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
-- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
+In `ExpertIntakeForm.tsx`, add a small domain input next to the "Current Company" field and beside each previous company entry. When a company name is typed, if the logo preview fails (using `onError`), show a subtle prompt: "Add domain for logo". Store results in `company_domains`.
 
-**b) Event Audience Executive Summary**
-Three highlight cards:
-- "The Industry Tastemakers" -- 50% Marketing and Communications
-- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
-- "The Ultimate Career Pivot Point" -- 17% Transitioners
+### 4. Pass domain overrides through card components
 
-**c) Attendee Persona Snapshot**
-Three stat highlights:
-- 30% Creative Leaders
-- 22% Emerging Talent
-- 18% Strategic Decision Makers
+Update `ExpertCard`, `ExpertCardMinimal`, `ExpertLivePreview`, and `ExpertCardCompact` to read `company_domains` from the expert data and pass it to `getCompanyLogoUrl`.
 
-### 6. Remove Old StatsSection from Index
-- Remove the `StatsSection` import and usage from `Index.tsx`
-- Add the new `AudienceSection` component in its place
+### 5. Update Expert type
 
----
+Add `company_domains` to the `Expert` interface in `expert-types.ts`.
 
-## Technical Details
+## Files changed
 
-### Files Created
-| File | Description |
-|------|-------------|
-| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
-| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
-
-### Files Modified
 | File | Change |
 |------|--------|
-| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
-| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
-| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
-| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
-| `src/components/EventOverview.tsx` | Update any Denver time references |
-| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
+| **Migration** | Add `company_domains jsonb default '{}'` to `industry_experts` |
+| `src/lib/expert-types.ts` | Add `company_domains` to `Expert` interface; update `getCompanyLogoUrl` signature |
+| `src/components/experts/ExpertIntakeForm.tsx` | Add domain input fields for current + previous companies |
+| `src/components/experts/ExpertCard.tsx` | Pass `company_domains` to `getCompanyLogoUrl` |
+| `src/components/experts/ExpertCardMinimal.tsx` | Same |
+| `src/components/experts/ExpertCardCompact.tsx` | Same |
+| `src/components/experts/ExpertLivePreview.tsx` | Same |
 
-### No Changes To
-- PNW pages (no time changes requested)
-- Export PNW page
-- Individual event components (EventHero, EventTiers, etc.)
