@@ -13,36 +13,31 @@ import PnwWhosComing from "@/components/event/PnwWhosComing";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
-import { useEventLogos, EventLogo } from "@/hooks/useEventLogos";
+import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
-  const { logos: dbLogos, loading: logosLoading } = useEventLogos("pnw26");
+  const { logos: tickerLogos } = useEventLogos("pnw26");
+  const { logos: partnerLogos } = useEventLogos("pnw26-partners");
 
-  const allBrands = dbLogos.map((l) => ({
-    name: l.name,
-    domain: l.domain || "",
-    url: l.url || undefined,
-    logo_url: l.logo_url || undefined,
+  const tickerBrands = tickerLogos.map((l) => ({
+    name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
   }));
+
+  const brandGridLogos = partnerLogos.length > 0
+    ? partnerLogos.map((l) => ({ name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined }))
+    : tickerBrands;
 
   return (
     <main className="bg-events-teal min-h-screen relative">
-      <AdminLogoManager eventSlug="pnw26" />
-      {/* Basecamp Match logo top-left */}
-      <a
-        href="https://www.basecampjobs.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed top-4 left-4 z-50"
-      >
-        <img
-          src={basecampMatchLogo}
-          alt="Basecamp Match"
-          className="h-8 md:h-10 w-auto drop-shadow-lg"
-        />
+      <AdminLogoManager lists={[
+        { eventSlug: "pnw26", label: "Ticker Logos (Attending)" },
+        { eventSlug: "pnw26-partners", label: "Brand Grid Logos" },
+      ]} />
+      <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 left-4 z-50">
+        <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
       </a>
 
       <RegistrantHero
@@ -60,12 +55,8 @@ const EventPNW26 = () => {
         sponsorPageUrl="/gather-pnw"
       />
 
-      <EventLogoTicker
-        brands={allBrands}
-        headline="Brands & professionals in the room"
-      />
+      <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
 
-      {/* Industry Experts */}
       <PnwWhosComing accentColor="#FEE123" bgColor="#154733" eventSlug="pnw26" />
 
       <RegistrantHowToTapIn
@@ -77,30 +68,17 @@ const EventPNW26 = () => {
         attendeeCount="300+"
       />
 
-      {/* Brand Showcase — Who's in the room */}
       <section className="py-16 md:py-24 px-6 bg-events-cream">
         <div className="container mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
-              Who's in the room
-            </p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">Who's in the room</p>
             <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
               Chat with hiring managers & industry leaders from brands like:
             </h2>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center"
-          >
-            {allBrands.map((brand) => {
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center">
+            {brandGridLogos.map((brand) => {
               const imgSrc = brand.logo_url || `https://logo.clearbit.com/${brand.domain}`;
               const inner = (
                 <div className="flex flex-col items-center gap-2 group">
@@ -115,16 +93,11 @@ const EventPNW26 = () => {
                       target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
                     }}
                   />
-                  <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">
-                    {brand.name}
-                  </span>
+                  <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">{brand.name}</span>
                 </div>
               );
-
               return brand.url ? (
-                <a key={brand.name} href={brand.url} target="_blank" rel="noopener noreferrer">
-                  {inner}
-                </a>
+                <a key={brand.name} href={brand.url} target="_blank" rel="noopener noreferrer">{inner}</a>
               ) : (
                 <div key={brand.name}>{inner}</div>
               );
@@ -133,30 +106,17 @@ const EventPNW26 = () => {
         </div>
       </section>
 
-      {/* Job Seeker Testimonials */}
       <JobSeekerTestimonials accentColor="#FEE123" bgColor="#154733" />
-
-      {/* Gallery */}
       <BasecampEventsGallery />
 
-      {/* What to Expect */}
       <section className="py-16 md:py-24 px-6 bg-events-teal">
         <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: "#FEE123" }}>
-              What to Expect
-            </p>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+            <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: "#FEE123" }}>What to Expect</p>
             <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream leading-tight">
-              This isn't a job fair. It's a{" "}
-              <span style={{ color: "#FEE123" }}>career accelerator.</span>
+              This isn't a job fair. It's a <span style={{ color: "#FEE123" }}>career accelerator.</span>
             </h2>
           </motion.div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               { num: "300+", label: "Professionals & Students", desc: "Marketing, product, design, ops, and career changers — all in one room." },
@@ -164,15 +124,7 @@ const EventPNW26 = () => {
               { num: "45min", label: "'How I Broke In' Panel", desc: "Hear real career stories from leaders who built their path in outdoor." },
               { num: "FREE", label: "Always Free to Attend", desc: "We believe access to opportunity shouldn't cost anything." },
             ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="rounded-xl p-6 border border-white/10"
-                style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-              >
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-xl p-6 border border-white/10" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
                 <p className="font-headline font-bold text-3xl mb-1" style={{ color: "#FEE123" }}>{stat.num}</p>
                 <p className="font-display font-bold text-base text-events-cream mb-2">{stat.label}</p>
                 <p className="font-body text-sm text-events-cream/60">{stat.desc}</p>
@@ -182,15 +134,9 @@ const EventPNW26 = () => {
         </div>
       </section>
 
-      {/* UO Sports Product Management Section */}
       <section className="py-20 md:py-28 px-6 bg-events-cream">
         <div className="container mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col md:flex-row gap-12 items-center"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row gap-12 items-center">
             <div className="flex flex-col items-center md:items-start gap-6 md:w-1/3 shrink-0">
               <img src={uoDuckLogo} alt="University of Oregon" className="w-40 md:w-52 h-auto" />
               <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>#ScoDucks 🦆</p>
@@ -241,7 +187,6 @@ const EventPNW26 = () => {
         accentColor="#FEE123"
       />
 
-      {/* Bottom CTA */}
       <section className="py-20 px-6 bg-events-teal">
         <div className="container mx-auto max-w-2xl text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>

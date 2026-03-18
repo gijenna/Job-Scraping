@@ -20,25 +20,23 @@ import SiteFooter from "@/components/SiteFooter";
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
 const EventOutsideDays26 = () => {
-  const { logos: dbLogos } = useEventLogos("denver26");
+  const { logos: tickerLogos } = useEventLogos("denver26");
+  const { logos: partnerLogos } = useEventLogos("denver26-partners");
 
-  const allBrands = dbLogos.map((l) => ({
-    name: l.name,
-    domain: l.domain || "",
-    url: l.url || undefined,
-    logo_url: l.logo_url || undefined,
+  const tickerBrands = tickerLogos.map((l) => ({
+    name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
   }));
 
-  const statsLogos = dbLogos.map((l) => ({
-    name: l.name,
-    domain: l.domain,
-    logo_url: l.logo_url,
-    url: l.url,
-  }));
+  const statsLogos = partnerLogos.length > 0
+    ? partnerLogos.map((l) => ({ name: l.name, domain: l.domain, logo_url: l.logo_url, url: l.url }))
+    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain, logo_url: l.logo_url, url: l.url }));
 
   return (
     <main className="bg-events-teal min-h-screen relative">
-      <AdminLogoManager eventSlug="denver26" />
+      <AdminLogoManager lists={[
+        { eventSlug: "denver26", label: "Ticker Logos (Attending)" },
+        { eventSlug: "denver26-partners", label: "Partner Logos (Stats)" },
+      ]} />
       <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 left-4 z-50">
         <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
       </a>
@@ -57,7 +55,7 @@ const EventOutsideDays26 = () => {
         sponsorPageUrl="/gather-denver"
       />
 
-      <EventLogoTicker brands={allBrands} headline="Brands & professionals in the room" />
+      <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
 
       <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
 
