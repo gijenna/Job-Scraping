@@ -85,6 +85,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     favorite_media: existingData?.favorite_media || '',
     previous_companies: existingData?.previous_companies || '',
     niche_interests: existingData?.niche_interests || [] as string[],
+    company_domains: (existingData as any)?.company_domains || {} as Record<string, string>,
   });
 
   useEffect(() => {
