@@ -34,8 +34,8 @@ const GatherPNW = () => {
         headline="Network alongside professionals from the industry's top brands"
       />
 
-      <PnwUOPartner />
       <EventNotHiringCallout />
+      <PnwUOPartner />
       <PnwPowerfulPremium />
       <PnwByTheNumbers />
       <MobileTestimonialCarousel />
