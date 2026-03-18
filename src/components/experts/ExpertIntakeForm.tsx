@@ -452,6 +452,24 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
             <Label className="text-events-cream">Current Company *</Label>
             <Input value={form.current_company} onChange={e => update('current_company', e.target.value)} required
               className="bg-events-card border-events-cream/20 text-events-cream" />
+            <div className="flex items-center gap-2">
+              <img
+                src={getCompanyLogoUrl(form.current_company, form.company_domains)}
+                alt=""
+                className="w-5 h-5 rounded-sm bg-white object-contain shrink-0"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
+              />
+              <Input
+                value={form.company_domains[form.current_company] || ''}
+                onChange={e => {
+                  const domains = { ...form.company_domains, [form.current_company]: e.target.value };
+                  update('company_domains', domains);
+                }}
+                className="bg-events-card border-events-cream/20 text-events-cream text-xs h-8"
+                placeholder="Website domain for logo (e.g. rab.equipment)"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
