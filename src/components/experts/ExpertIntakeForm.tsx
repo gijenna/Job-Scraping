@@ -151,6 +151,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         favorite_media: ex.favorite_media || prev.favorite_media,
         previous_companies: ex.previous_companies || prev.previous_companies,
         niche_interests: ex.niche_interests?.length ? ex.niche_interests : prev.niche_interests,
+        company_domains: ex.company_domains && Object.keys(ex.company_domains).length ? { ...prev.company_domains, ...ex.company_domains } : prev.company_domains,
       }));
       // Notify parent so expertId gets set — pass found expert but DON'T trigger full reload
       onComplete(ex);
