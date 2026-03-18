@@ -48,9 +48,9 @@ const testimonials: Testimonial[] = [
   { quote: "I brought my whole team and we all made valuable connections.", avatarId: 38 },
 ];
 
-const mobileRainLogos = brandLogos.map((logo, i) => ({
+const getMobileRainLogos = (logos: BrandLogo[]) => logos.map((logo, i) => ({
   logo,
-  leftPercent: (i / (brandLogos.length - 1)) * 85 + 2,
+  leftPercent: (i / Math.max(logos.length - 1, 1)) * 85 + 2,
   delay: 0.3 + i * 0.18,
   rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg'][i] || '0deg',
 }));
