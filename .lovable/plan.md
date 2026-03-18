@@ -1,61 +1,77 @@
 
 
-# Plan: Separate Card Styles & Logo Management Per Section
+# Main Page Updates: Logo, Content, and Denver Time Change
 
-## Problem
+## Overview
+Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
 
-1. **Card styles**: Brand reps and industry experts share one `card_style` setting per event. You want independent style control for each section.
-2. **Logo management**: The ticker (who's attending) and "by the numbers" (who's partnering) share the same logo list. These represent different groups and need separate management.
+---
 
-This applies across all 4 pages: `/pnw26`, `/outsidedays26`, `/gather-denver`, `/gather-pnw`.
+## Changes
 
-## Solution
+### 1. Swap Logo on Main Page
+- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
+- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
+- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
 
-### 1. Separate card style settings
+### 2. Ensure "GATHER" Uses Josefin Sans
+- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
 
-Change the setting key from a single `card_style` to two keys per event:
-- `card_style_brand_reps` 
-- `card_style_experts`
+### 3. Update Denver Event Time to 1-4 PM
+Files to update:
+- `src/components/EventOverview.tsx`: Update the Denver event format/description references
+- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
+- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
 
-**CardStylePicker** gets a new `settingKey` prop (defaults to `card_style` for backward compat). Each section renders its own picker with the appropriate key.
+### 4. Reduce Spacing Below Hero Buttons
+- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
 
-**Files changed:**
-- `CardStylePicker.tsx` — accept `settingKey` prop
-- `DenverAttendeeSections.tsx` — use separate settings for brand reps vs experts sections, each with its own `CardStylePicker`
-- `PnwWhosComing.tsx` — use `card_style_experts` key (PNW only shows experts, not brand reps, but keeps the pattern consistent)
+### 5. Replace StatsSection with New Audience Content
+Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
 
-### 2. Separate logo lists (ticker vs partners)
+**a) Companies of Note Represented**
+A section listing the brands organized by category:
+- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
+- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
+- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
 
-Use distinct event slugs to separate the two logo pools:
-- Ticker logos: keep existing slug (e.g. `gather-denver`, `pnw26`)
-- Partner/stats logos: new slug suffix `-partners` (e.g. `gather-denver-partners`, `pnw26-partners`)
+**b) Event Audience Executive Summary**
+Three highlight cards:
+- "The Industry Tastemakers" -- 50% Marketing and Communications
+- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
+- "The Ultimate Career Pivot Point" -- 17% Transitioners
 
-Each page gets two `useEventLogos` calls and two `AdminLogoManager` instances (labeled "Ticker Logos" and "Partner Logos").
+**c) Attendee Persona Snapshot**
+Three stat highlights:
+- 30% Creative Leaders
+- 22% Emerging Talent
+- 18% Strategic Decision Makers
 
-**AdminLogoManager** gets an optional `label` prop so the admin panel shows which list they're editing.
+### 6. Remove Old StatsSection from Index
+- Remove the `StatsSection` import and usage from `Index.tsx`
+- Add the new `AudienceSection` component in its place
 
-**Files changed:**
-- `AdminLogoManager.tsx` — add `label` prop for display
-- `GatherDenver.tsx` — two `useEventLogos` calls (`gather-denver` for ticker, `gather-denver-partners` for stats); two `AdminLogoManager` instances
-- `GatherPNW.tsx` — two calls (`gather-pnw` for ticker, `gather-pnw-partners` for stats/future use)
-- `EventPNW26.tsx` — two calls (`pnw26` for ticker, `pnw26-partners` for brand grid)
-- `EventOutsideDays26.tsx` — two calls (`denver26` for ticker, `denver26-partners` for stats)
-- `DenverByTheNumbers.tsx` — no change (already receives logos as prop)
-- `PnwByTheNumbers.tsx` — accept optional `logos` prop like Denver does, so it can receive partner logos from the page
+---
 
-### Summary of all file changes
+## Technical Details
 
+### Files Created
+| File | Description |
+|------|-------------|
+| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
+| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
+
+### Files Modified
 | File | Change |
 |------|--------|
-| `CardStylePicker.tsx` | Add `settingKey` prop |
-| `DenverAttendeeSections.tsx` | Separate card style per section |
-| `PnwWhosComing.tsx` | Use `card_style_experts` setting key |
-| `AdminLogoManager.tsx` | Add `label` prop for multi-instance clarity |
-| `GatherDenver.tsx` | Two logo hooks + two admin managers |
-| `GatherPNW.tsx` | Two logo hooks + two admin managers |
-| `EventPNW26.tsx` | Two logo hooks + two admin managers |
-| `EventOutsideDays26.tsx` | Two logo hooks + two admin managers |
-| `PnwByTheNumbers.tsx` | Accept optional `logos` prop |
+| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
+| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
+| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
+| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
+| `src/components/EventOverview.tsx` | Update any Denver time references |
+| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
 
-No database changes needed — the `event_logos` and `event_settings` tables already support arbitrary slugs and keys.
-
+### No Changes To
+- PNW pages (no time changes requested)
+- Export PNW page
+- Individual event components (EventHero, EventTiers, etc.)

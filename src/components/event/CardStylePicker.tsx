@@ -5,6 +5,8 @@ import { LayoutGrid, List, Circle } from "lucide-react";
 
 interface CardStylePickerProps {
   eventSlug: string;
+  settingKey?: string;
+  label?: string;
   onStyleChange?: (style: string) => void;
 }
 
@@ -14,10 +16,10 @@ const styles = [
   { key: "minimal", label: "C", icon: Circle, description: "Minimal" },
 ];
 
-const CardStylePicker = ({ eventSlug, onStyleChange }: CardStylePickerProps) => {
+const CardStylePicker = ({ eventSlug, settingKey = "card_style", label, onStyleChange }: CardStylePickerProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const { settings, setSetting } = useEventSettings(eventSlug);
-  const currentStyle = settings["card_style"] || "polaroid";
+  const currentStyle = settings[settingKey] || "polaroid";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
@@ -32,13 +34,13 @@ const CardStylePicker = ({ eventSlug, onStyleChange }: CardStylePickerProps) => 
   if (!isAdmin) return null;
 
   const handleChange = async (style: string) => {
-    await setSetting("card_style", style);
+    await setSetting(settingKey, style);
     onStyleChange?.(style);
   };
 
   return (
     <div className="flex items-center gap-2 bg-events-card/50 rounded-lg p-2 border border-events-cream/10">
-      <span className="text-events-cream/50 text-xs font-body mr-1">Card Style:</span>
+      <span className="text-events-cream/50 text-xs font-body mr-1">{label || "Card Style"}:</span>
       {styles.map((s) => {
         const Icon = s.icon;
         const isActive = currentStyle === s.key;

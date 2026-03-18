@@ -15,32 +15,27 @@ import EventNotHiringCallout from "@/components/event/EventNotHiringCallout";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 
 const GatherDenver = () => {
-  const { logos: dbLogos } = useEventLogos("gather-denver");
+  const { logos: tickerLogos } = useEventLogos("gather-denver");
+  const { logos: partnerLogos } = useEventLogos("gather-denver-partners");
 
-  const allBrands = dbLogos.map((l) => ({
-    name: l.name,
-    domain: l.domain || "",
-    url: l.url || undefined,
-    logo_url: l.logo_url || undefined,
+  const tickerBrands = tickerLogos.map((l) => ({
+    name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
   }));
 
-  const statsLogos = dbLogos.map((l) => ({
-    name: l.name,
-    domain: l.domain,
-    logo_url: l.logo_url,
-    url: l.url,
+  const statsLogos = partnerLogos.map((l) => ({
+    name: l.name, domain: l.domain, logo_url: l.logo_url, url: l.url,
   }));
 
   return (
     <main className="bg-background min-h-screen">
       <SponsorPageNav otherEvent={{ label: "Gather PNW", path: "/gather-pnw" }} />
-      <AdminLogoManager eventSlug="gather-denver" />
+      <AdminLogoManager lists={[
+        { eventSlug: "gather-denver", label: "Ticker Logos (Attending)" },
+        { eventSlug: "gather-denver-partners", label: "Partner Logos (By the Numbers)" },
+      ]} />
       <DenverHero />
 
-      <EventLogoTicker
-        brands={allBrands}
-        headline="Where leaders from the outdoor industry's most iconic brands gather"
-      />
+      <EventLogoTicker brands={tickerBrands} headline="Where leaders from the outdoor industry's most iconic brands gather" />
 
       <EventNotHiringCallout />
       <DenverFestivalPartner />
