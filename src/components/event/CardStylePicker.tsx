@@ -40,7 +40,7 @@ const CardStylePicker = ({ eventSlug, settingKey = "card_style", label, onStyleC
 
   return (
     <div className="flex items-center gap-2 bg-events-card/50 rounded-lg p-2 border border-events-cream/10">
-      <span className="text-events-cream/50 text-xs font-body mr-1">Card Style:</span>
+      <span className="text-events-cream/50 text-xs font-body mr-1">{label || "Card Style"}:</span>
       {styles.map((s) => {
         const Icon = s.icon;
         const isActive = currentStyle === s.key;
