@@ -5,6 +5,8 @@ import { LayoutGrid, List, Circle } from "lucide-react";
 
 interface CardStylePickerProps {
   eventSlug: string;
+  settingKey?: string;
+  label?: string;
   onStyleChange?: (style: string) => void;
 }
 
