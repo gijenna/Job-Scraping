@@ -30,7 +30,7 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
         {expert.job_title && <p className="font-body text-xs text-events-cream/60 truncate">{expert.job_title}</p>}
         {expert.current_company && (
           <div className="flex items-center gap-1.5 mt-1">
-            <img src={getCompanyLogoUrl(expert.current_company)} alt="" className="w-4 h-4 object-contain" />
+            <img src={getCompanyLogoUrl(expert.current_company, expert.company_domains)} alt="" className="w-4 h-4 object-contain" />
             <span className="font-body text-xs text-events-cream/50 truncate">{expert.current_company}</span>
           </div>
         )}

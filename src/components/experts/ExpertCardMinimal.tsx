@@ -19,7 +19,7 @@ const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) =
         )}
         {expert.current_company && (
           <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-events-cream flex items-center justify-center shadow-sm">
-            <img src={getCompanyLogoUrl(expert.current_company)} alt="" className="w-4 h-4 object-contain" />
+            <img src={getCompanyLogoUrl(expert.current_company, expert.company_domains)} alt="" className="w-4 h-4 object-contain" />
           </div>
         )}
         {expert.linkedin_url && (

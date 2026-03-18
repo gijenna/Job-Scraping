@@ -111,8 +111,16 @@ const COMPANY_DOMAINS: Record<string, string> = {
   'kpmg': 'kpmg.com',
 };
 
-export function getCompanyLogoUrl(company: string): string {
+export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string>): string {
   const key = company.toLowerCase().trim();
+  // Check overrides first
+  if (domainOverrides) {
+    const overrideKey = Object.keys(domainOverrides).find(k => k.toLowerCase().trim() === key);
+    if (overrideKey && domainOverrides[overrideKey]) {
+      const d = domainOverrides[overrideKey].replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+      return `https://www.google.com/s2/favicons?domain=${d}&sz=128`;
+    }
+  }
   const domain = COMPANY_DOMAINS[key];
   if (domain) {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;

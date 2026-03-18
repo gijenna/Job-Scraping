@@ -63,7 +63,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               {previousCompanies.map((company) => (
                 <span key={company} className="inline-flex items-center gap-1">
                   <img
-                    src={getCompanyLogoUrl(company)}
+                    src={getCompanyLogoUrl(company, data.company_domains)}
                     alt={company}
                     title={company}
                     className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
