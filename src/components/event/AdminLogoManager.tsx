@@ -158,7 +158,7 @@ const AdminLogoManager = ({ eventSlug, label, onLogosChange }: AdminLogoManagerP
       {showPanel && (
         <div className="fixed bottom-16 right-4 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display font-bold text-events-cream text-sm">Logos — {eventSlug}</h3>
+            <h3 className="font-display font-bold text-events-cream text-sm">{label || `Logos — ${eventSlug}`}</h3>
             <Button size="sm" onClick={() => setAddOpen(true)} className="bg-events-coral text-events-teal h-7 text-xs">
               <Plus className="w-3 h-3 mr-1" /> Add
             </Button>
