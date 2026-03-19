@@ -1,77 +1,56 @@
 
 
-# Main Page Updates: Logo, Content, and Denver Time Change
+# Three Changes: Newsletter CTAs, Clickable Event Links, and Registrant Page Navigation
 
-## Overview
-Multiple updates to the main landing page and Denver event pages: swap the logo, fix font usage, update Denver event time, reduce spacing, replace the stats section with new audience data, and add companies of note.
+## 1. Add newsletter/event signup CTAs on `/` and `/events`
 
----
+Both routes render `<Events />`. Add signup calls-to-action linking to `https://basecampoutdoor.typeform.com/Basecamp` in two places:
 
-## Changes
+**A) After the hero** — a slim banner with a "Sign up for events & our weekly newsletter" CTA button.
 
-### 1. Swap Logo on Main Page
-- Copy the uploaded `Untitled_design_13.png` to `src/assets/basecamp-outdoor-logo.png`
-- Update `HeroSection.tsx` to import and display this new logo instead of `Basecamp_Logo_MAIN_1.png`
-- Make it larger (increase from `h-16 md:h-20` to `h-24 md:h-32` or similar)
+**B) Before the footer** — replace or augment the existing `PartnerSection` bottom area with a newsletter signup row.
 
-### 2. Ensure "GATHER" Uses Josefin Sans
-- The `font-display` class should map to Josefin Sans. Verify in `tailwind.config.ts` and `index.css` that Josefin Sans is properly loaded and assigned. The `GATHER` text in the hero already uses `font-display`, so this should work -- but will confirm and fix if needed.
+**Files changed:**
+- `src/pages/Events.tsx` — add a new `<NewsletterBanner />` component inline (or import) after `<EventsHero />` and before `<SiteFooter />`
 
-### 3. Update Denver Event Time to 1-4 PM
-Files to update:
-- `src/components/EventOverview.tsx`: Update the Denver event format/description references
-- `src/pages/GatherDenver.tsx`: Change `date` prop from "2-5 PM" to "1-4 PM", update schedule times accordingly (VIP 1-1:30, Main Event 1-4 PM, Wrap Up 4-4:30 PM, Load-In adjusted)
-- `src/pages/GatherDenverExport.tsx`: Same schedule time updates
+The CTA will be a simple styled section: headline like "Stay in the loop" with a button linking to the Typeform.
 
-### 4. Reduce Spacing Below Hero Buttons
-- In `HeroSection.tsx`, reduce the bottom padding/margin of the hero section. The `min-h-screen` plus padding creates too much space before the LogoTicker. Will reduce or remove excess bottom spacing.
+## 2. Make event location badges clickable in the intake form
 
-### 5. Replace StatsSection with New Audience Content
-Replace the current `StatsSection` component (which references festival attendees and PNW-specific data) with two new sections on the main page:
+In `ExpertIntakeForm.tsx`, the "Event Location(s)" badges (e.g. "Denver", "Portland") are currently static. Make each badge a clickable link to the corresponding event page so invitees can learn more.
 
-**a) Companies of Note Represented**
-A section listing the brands organized by category:
-- Outdoor Brands: REI, Patagonia, The North Face, Cotopaxi, Alterra Mountain Company, Black Diamond, Vail Resorts, Smartwool
-- Tech and Corporate: Google, Nike, Apple, KPMG, Marriott, Amazon
-- Industry Agencies: Backbone Media, Outside Inc., Sustainable Apparel Coalition
+Map city slugs to event URLs:
+- `denver` → `/OutsideDays26`
+- `portland` → `/PNW26`
+- `minneapolis` → `/OR26` (or wherever applicable)
 
-**b) Event Audience Executive Summary**
-Three highlight cards:
-- "The Industry Tastemakers" -- 50% Marketing and Communications
-- "A Makers Hub" -- 16% Product Designers, Apparel Developers, Merchandisers
-- "The Ultimate Career Pivot Point" -- 17% Transitioners
+Each badge gets wrapped in a `<Link>` that opens in a new tab, with a small external-link icon.
 
-**c) Attendee Persona Snapshot**
-Three stat highlights:
-- 30% Creative Leaders
-- 22% Emerging Talent
-- 18% Strategic Decision Makers
+**Files changed:**
+- `src/components/experts/ExpertIntakeForm.tsx` — update the badge rendering in the "Event Location(s)" section to include clickable links
 
-### 6. Remove Old StatsSection from Index
-- Remove the `StatsSection` import and usage from `Index.tsx`
-- Add the new `AudienceSection` component in its place
+## 3. Add SponsorPageNav to `/pnw26` and `/outsidedays26`, move Basecamp Match logo to top-right
 
----
+Currently these registrant pages have a fixed Basecamp Match logo in the top-left linking to basecampjobs.com. Replace that with:
 
-## Technical Details
+**Top-left**: The same `<SponsorPageNav />` hamburger menu used on `/gather-denver` and `/gather-pnw`, configured with links to:
+- Basecamp Outdoor (external)
+- Basecamp Match (external)
+- Events Hub (`/events`)
+- The other event (Denver shows "Gather PNW → /PNW26", Portland shows "Outside Days Denver → /OutsideDays26")
 
-### Files Created
-| File | Description |
-|------|-------------|
-| `src/assets/basecamp-outdoor-logo.png` | New Basecamp Outdoor logo (copied from upload) |
-| `src/components/AudienceSection.tsx` | New component combining Companies of Note, Audience Executive Summary, and Persona Snapshot |
+**Top-right**: Move the Basecamp Match logo+link to `fixed top-4 right-4` instead of left.
 
-### Files Modified
+**Files changed:**
+- `src/pages/EventPNW26.tsx` — import `SponsorPageNav`, replace top-left logo with nav, add Basecamp Match logo to top-right
+- `src/pages/EventOutsideDays26.tsx` — same treatment
+
+## Summary
+
 | File | Change |
 |------|--------|
-| `src/components/HeroSection.tsx` | Swap logo import to new file, increase size, reduce bottom spacing |
-| `src/pages/Index.tsx` | Replace `StatsSection` with `AudienceSection` |
-| `src/pages/GatherDenver.tsx` | Update time from 2-5 PM to 1-4 PM, adjust schedule times |
-| `src/pages/GatherDenverExport.tsx` | Same Denver time updates |
-| `src/components/EventOverview.tsx` | Update any Denver time references |
-| `tailwind.config.ts` / `src/index.css` | Verify Josefin Sans is set as the display font (fix if needed) |
+| `src/pages/Events.tsx` | Add two newsletter/signup CTA sections with Typeform link |
+| `src/components/experts/ExpertIntakeForm.tsx` | Make event location badges clickable links to event pages |
+| `src/pages/EventPNW26.tsx` | Add SponsorPageNav, move Basecamp Match logo to top-right |
+| `src/pages/EventOutsideDays26.tsx` | Add SponsorPageNav, move Basecamp Match logo to top-right |
 
-### No Changes To
-- PNW pages (no time changes requested)
-- Export PNW page
-- Individual event components (EventHero, EventTiers, etc.)
