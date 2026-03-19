@@ -65,6 +65,23 @@ const Events = () => {
 
       <EventsHero />
 
+      {/* Newsletter CTA - after hero */}
+      <div className="bg-events-coral py-6 px-6">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-display text-events-teal font-bold text-lg md:text-xl text-center sm:text-left">
+            Stay in the loop — sign up for events & our weekly newsletter
+          </p>
+          <a
+            href="https://basecampoutdoor.typeform.com/Basecamp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-events-teal text-events-cream font-display font-bold text-sm hover:brightness-110 transition-all shadow-md"
+          >
+            Sign Up →
+          </a>
+        </div>
+      </div>
+
       {/* Events section */}
       <div ref={eventsRef} className="bg-events-cream py-16 px-6">
         <div className="max-w-7xl mx-auto">
@@ -116,6 +133,26 @@ const Events = () => {
 
       <div ref={partnerRef}>
         <PartnerSection />
+      </div>
+
+      {/* Newsletter CTA - before footer */}
+      <div className="bg-events-teal py-12 px-6 border-t border-events-cream/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h3 className="font-display text-events-cream text-2xl md:text-3xl font-bold mb-3">
+            Don't miss what's next
+          </h3>
+          <p className="text-events-cream/60 font-body mb-6">
+            Get event announcements, industry insights, and career tips delivered weekly.
+          </p>
+          <a
+            href="https://basecampoutdoor.typeform.com/Basecamp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-events-coral text-events-teal font-display font-bold text-base hover:brightness-110 transition-all shadow-lg"
+          >
+            Subscribe to the Newsletter →
+          </a>
+        </div>
       </div>
 
       <SiteFooter />
