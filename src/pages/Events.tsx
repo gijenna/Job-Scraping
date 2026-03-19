@@ -65,6 +65,23 @@ const Events = () => {
 
       <EventsHero />
 
+      {/* Newsletter CTA - after hero */}
+      <div className="bg-events-coral py-6 px-6">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-display text-events-teal font-bold text-lg md:text-xl text-center sm:text-left">
+            Stay in the loop — sign up for events & our weekly newsletter
+          </p>
+          <a
+            href="https://basecampoutdoor.typeform.com/Basecamp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-events-teal text-events-cream font-display font-bold text-sm hover:brightness-110 transition-all shadow-md"
+          >
+            Sign Up →
+          </a>
+        </div>
+      </div>
+
       {/* Events section */}
       <div ref={eventsRef} className="bg-events-cream py-16 px-6">
         <div className="max-w-7xl mx-auto">
