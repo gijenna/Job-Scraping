@@ -15,6 +15,7 @@ import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
+import SponsorPageNav from "@/components/event/SponsorPageNav";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
@@ -36,7 +37,8 @@ const EventPNW26 = () => {
         { eventSlug: "pnw26", label: "Ticker Logos (Attending)" },
         { eventSlug: "pnw26-partners", label: "Brand Grid Logos" },
       ]} />
-      <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 left-4 z-50">
+      <SponsorPageNav otherEvent={{ label: "Outside Days Denver", path: "/OutsideDays26" }} />
+      <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 right-4 z-50">
         <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
       </a>
 

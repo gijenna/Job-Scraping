@@ -135,6 +135,26 @@ const Events = () => {
         <PartnerSection />
       </div>
 
+      {/* Newsletter CTA - before footer */}
+      <div className="bg-events-teal py-12 px-6 border-t border-events-cream/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h3 className="font-display text-events-cream text-2xl md:text-3xl font-bold mb-3">
+            Don't miss what's next
+          </h3>
+          <p className="text-events-cream/60 font-body mb-6">
+            Get event announcements, industry insights, and career tips delivered weekly.
+          </p>
+          <a
+            href="https://basecampoutdoor.typeform.com/Basecamp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-events-coral text-events-teal font-display font-bold text-base hover:brightness-110 transition-all shadow-lg"
+          >
+            Subscribe to the Newsletter →
+          </a>
+        </div>
+      </div>
+
       <SiteFooter />
     </div>
   );

@@ -476,21 +476,35 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           <div className="space-y-2">
             <Label className="text-events-cream">Event Location(s)</Label>
             <div className="flex flex-wrap gap-2">
-              {myAssignments.map(a => (
-                <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs flex items-center gap-1">
-                  {a.city_name}
-                  {myAssignments.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setMyAssignments(prev => prev.filter(p => p.city_slug !== a.city_slug))}
-                      className="hover:text-white transition-colors ml-0.5"
-                      title={`Remove ${a.city_name}`}
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  )}
-                </Badge>
-              ))}
+              {myAssignments.map(a => {
+                const eventUrlMap: Record<string, string> = {
+                  denver: "/OutsideDays26",
+                  portland: "/PNW26",
+                  minneapolis: "/OR26",
+                };
+                const eventUrl = eventUrlMap[a.city_slug];
+                return (
+                  <Badge key={a.city_slug} className="bg-events-coral/20 text-events-coral border-events-coral/30 text-xs flex items-center gap-1">
+                    {eventUrl ? (
+                      <a href={eventUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                        {a.city_name} <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    ) : (
+                      a.city_name
+                    )}
+                    {myAssignments.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setMyAssignments(prev => prev.filter(p => p.city_slug !== a.city_slug))}
+                        className="hover:text-white transition-colors ml-0.5"
+                        title={`Remove ${a.city_name}`}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </Badge>
+                );
+              })}
             </div>
             {/* Show cities not yet assigned */}
             {allCities.filter(c => !myAssignments.some(a => a.city_slug === c.slug)).length > 0 && (
