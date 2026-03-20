@@ -1,51 +1,63 @@
 
 
-# Admin Edit for Brand Rep Cards + Logo Initials Fallback
+# Confluence of States Sponsor Spotlight Page
 
-## Two changes
+## What We're Building
 
-### 1. Admin edit button for brand rep cards
+A new page at `/outsidedays26-cos` — a copy of `/outsidedays26` with an added "Title Sponsor Spotlight" section featuring Confluence of States. The centerpiece is an interactive SVG map of the US showing all 20 member states, with hover interactions revealing state-level outdoor recreation data.
 
-Currently the BrandDashboard shows brand cards with copy/delete actions but no way to edit the underlying expert record (name, company, photo, etc.). Add an **Edit** button that opens a dialog with the `ExpertIntakeForm` pre-filled with the brand rep's data, allowing admins to modify any field.
+## Page Structure
 
-**Files changed:**
-- `src/components/experts/BrandDashboard.tsx` — add Edit (pencil) icon button per brand card that opens a Dialog containing `ExpertIntakeForm` pre-populated with the expert's data. On save, refresh the list.
+The page is a clone of `EventOutsideDays26` with these additions:
 
-Also add edit capability in the main ExpertCRM table — an Edit button per row that opens the same dialog.
+1. **"Presented by Confluence of States" badge** in the hero, beneath the existing tagline
+2. **Confluence of States Spotlight Section** — the main new content, placed after the logo ticker and before the attendee sections. Contains:
+   - A plain-language intro: "What is Confluence of States?" — 2-3 sentences explaining the bipartisan coalition in approachable language
+   - The interactive US map
+   - A CTA linking to confluenceofstates.com
 
-- `src/components/experts/ExpertCRM.tsx` — add Edit (pencil) button in the Actions column that opens a Dialog with `ExpertIntakeForm` for that expert.
+## Interactive US Map Component
 
-### 2. Company logo initials fallback
+**`src/components/event/ConfluenceMap.tsx`** — new component
 
-When a company logo fails to load (favicon not found), instead of hiding the element entirely, show a small circle with the company's initials using Basecamp brand colors.
+- Renders a simplified SVG map of all 50 US states (using standard US state path data)
+- **Member states** (20 total): filled with a gradient/vibrant color from the Basecamp palette (coral/yellow), with a subtle outdoor-themed icon or pattern overlay per state
+- **Non-member states**: plain gray/muted teal
+- **Hover behavior**: when hovering a member state, a tooltip/card appears showing:
+  - State name and office name (e.g. "Colorado Outdoor Recreation Industry Office")
+  - Year joined the Confluence
+  - Director name and photo (where available)
+  - Economic impact data and jobs figure (placeholder data initially, with a note that this can be populated from individual state sites)
+  - Link to the state office website
+- Uses Framer Motion for smooth hover transitions
 
-Replace the `onError` handler pattern across all card components. Instead of `style.display = 'none'`, replace the `<img>` with a colored initials badge (coral background `#ED7660`, cream text `#F5E6D3` — or teal background `#19363B` with yellow text `#E1B624` for variety).
+### Member States Data (from scraped content)
 
-Create a small reusable component `CompanyLogoWithFallback` that:
-- Renders the favicon `<img>` 
-- On error, swaps to a div with initials (first letter of each word, max 2 chars)
-- Uses Basecamp colors: `bg-events-coral` with `text-events-cream` for current company, `bg-events-teal` with `text-events-yellow` for previous companies
+Hardcoded data object with all 20 states organized by join year:
 
-**Files changed:**
-- `src/components/experts/CompanyLogoWithFallback.tsx` — **New** reusable component
-- `src/components/experts/ExpertCard.tsx` — replace `<img>` + `onError` with `CompanyLogoWithFallback`
-- `src/components/experts/ExpertCardMinimal.tsx` — same
-- `src/components/experts/ExpertCardCompact.tsx` — same  
-- `src/components/experts/ExpertLivePreview.tsx` — same
-- `src/components/event/RegistrantBrands.tsx` — same pattern for brand logos that fail
+**2018 (founding)**: Colorado, Montana, North Carolina, Oregon, Utah, Vermont, Washington, Wyoming
+**2019**: Maine, Michigan, New Mexico, Virginia
+**2022**: Arkansas, Maryland, New Hampshire
+**2024**: Massachusetts, Pennsylvania, Minnesota, North Dakota
+**2025**: Wisconsin
 
-## Summary
+Each entry includes: state abbreviation, office name, website URL, year joined, and placeholder fields for director name/photo and economic data.
+
+## Files
 
 | File | Change |
 |------|--------|
-| `src/components/experts/CompanyLogoWithFallback.tsx` | **New** — img with initials fallback |
-| `src/components/experts/BrandDashboard.tsx` | Add Edit button + Dialog with ExpertIntakeForm |
-| `src/components/experts/ExpertCRM.tsx` | Add Edit button + Dialog with ExpertIntakeForm |
-| `src/components/experts/ExpertCard.tsx` | Use CompanyLogoWithFallback |
-| `src/components/experts/ExpertCardMinimal.tsx` | Use CompanyLogoWithFallback |
-| `src/components/experts/ExpertCardCompact.tsx` | Use CompanyLogoWithFallback |
-| `src/components/experts/ExpertLivePreview.tsx` | Use CompanyLogoWithFallback |
-| `src/components/event/RegistrantBrands.tsx` | Use initials fallback for brand logos |
+| `src/components/event/ConfluenceMap.tsx` | **New** — interactive SVG US map with hover cards |
+| `src/components/event/ConfluenceSpotlight.tsx` | **New** — spotlight section wrapper (intro + map + CTA) |
+| `src/pages/EventOutsideDaysCOS.tsx` | **New** — clone of EventOutsideDays26 with sponsor spotlight inserted |
+| `src/App.tsx` | Add route `/outsidedays26-cos` |
 
-No database changes needed.
+## Technical Details
+
+- SVG state paths will be a standard simplified US map (inline SVG with path data for each state)
+- Hover card uses Radix Popover or a custom positioned div with Framer Motion
+- State data is a static TypeScript object — no database needed
+- Economic data fields will have placeholder values initially (e.g. "$X.XB economic impact") that can be filled in later
+- The map is responsive: on mobile, tapping a state opens the info card; on desktop it's hover-triggered
+- Color scheme: member states use `events-coral` (#ED7660) with `events-yellow` (#E1B624) accents; non-member states use muted `events-teal` (#19363B) with lower opacity
 
