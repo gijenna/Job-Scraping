@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Linkedin } from "lucide-react";
-import { Expert, getCompanyLogoUrl } from "@/lib/expert-types";
+import { Expert } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertCardProps {
   expert: Expert;
