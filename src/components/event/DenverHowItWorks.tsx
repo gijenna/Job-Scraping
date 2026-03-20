@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
+import EditableText from "@/components/EditableText";
 
 import eventCotopaxiConvo from "@/assets/event-cotopaxi-convo.png";
 import eventYetiDenver from "@/assets/event-yeti-denver.png";
