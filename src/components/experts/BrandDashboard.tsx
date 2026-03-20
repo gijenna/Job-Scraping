@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Expert, ExpertCityAssignment, ExpertCity, nameToSlug } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, ExternalLink, Trash2, Building2, Users } from "lucide-react";
+import { Copy, ExternalLink, Trash2, Building2, Users, Pencil } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
+import ExpertIntakeForm from "./ExpertIntakeForm";
 
 interface BrandDashboardProps {
   experts: Expert[];
@@ -23,6 +25,8 @@ interface BrandEntry {
 
 const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashboardProps) => {
   const { toast } = useToast();
+  const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
+  const [editCitySlug, setEditCitySlug] = useState<string>("");
 
   // Find brand entries: only brand SHELL records (admin-created), not individual people
   // Brand shells have a slug derived from the company/brand name
@@ -135,15 +139,30 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                     )}
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => deleteBrand(brand.expert.id)}
-                  className="text-red-400/40 hover:text-red-400 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Delete brand"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      const firstAssign = brand.assignments[0];
+                      setEditCitySlug(firstAssign?.city_slug || "");
+                      setEditingExpert(brand.expert);
+                    }}
+                    className="text-events-cream/40 hover:text-events-cream h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Edit brand"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteBrand(brand.expert.id)}
+                    className="text-red-400/40 hover:text-red-400 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Delete brand"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
 
               {/* City assignments with copy links */}
@@ -221,6 +240,28 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           );
         })}
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingExpert} onOpenChange={(open) => !open && setEditingExpert(null)}>
+        <DialogContent className="bg-events-bg border-events-cream/20 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-events-cream font-display">Edit Brand: {editingExpert?.current_company || editingExpert?.full_name}</DialogTitle>
+          </DialogHeader>
+          {editingExpert && (
+            <ExpertIntakeForm
+              expertId={editingExpert.id}
+              existingData={editingExpert}
+              citySlug={editCitySlug}
+              cityName={cities.find(c => c.slug === editCitySlug)?.name || editCitySlug}
+              expertType="brand_rep"
+              onComplete={() => {
+                setEditingExpert(null);
+                onRefresh();
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Expert, ExpertCityAssignment, ExpertCity } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2 } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
+import ExpertIntakeForm from "./ExpertIntakeForm";
 
 interface ExpertCRMProps {
   experts: Expert[];
@@ -28,6 +29,8 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   const [filterCity, setFilterCity] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
+  const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
+  const [editCitySlug, setEditCitySlug] = useState<string>("");
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
@@ -284,6 +287,19 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const firstAssign = expertAssigns[0];
+                            setEditCitySlug(firstAssign?.city_slug || "");
+                            setEditingExpert(expert);
+                          }}
+                          className="text-events-cream/60 hover:text-events-cream h-7 px-2"
+                          title="Edit"
+                        >
+                          <Pencil className="w-3 h-3" />
+                        </Button>
                         {expertAssigns.map((a) => (
                           <Button
                             key={a.id}
@@ -327,6 +343,28 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               <p className="text-events-cream/40 text-xs uppercase tracking-wider mb-3 text-center">Card Preview</p>
               <ExpertCard expert={previewExpert} expanded />
             </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Expert Dialog */}
+      <Dialog open={!!editingExpert} onOpenChange={(open) => !open && setEditingExpert(null)}>
+        <DialogContent className="bg-events-bg border-events-cream/20 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-events-cream font-display">Edit: {editingExpert?.full_name}</DialogTitle>
+          </DialogHeader>
+          {editingExpert && (
+            <ExpertIntakeForm
+              expertId={editingExpert.id}
+              existingData={editingExpert}
+              citySlug={editCitySlug}
+              cityName={cities.find(c => c.slug === editCitySlug)?.name || editCitySlug}
+              expertType={assignments.find(a => a.expert_id === editingExpert.id)?.expert_type || 'industry_expert'}
+              onComplete={() => {
+                setEditingExpert(null);
+                onRefresh();
+              }}
+            />
           )}
         </DialogContent>
       </Dialog>

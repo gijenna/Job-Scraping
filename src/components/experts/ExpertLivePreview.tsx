@@ -1,6 +1,7 @@
-import { Expert, getCompanyLogoUrl, NICHE_OPTIONS } from "@/lib/expert-types";
+import { Expert, NICHE_OPTIONS } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Linkedin } from "lucide-react";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertLivePreviewProps {
   data: Partial<Expert> & { company_domains?: Record<string, string> };
@@ -47,12 +48,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
                 {data.job_title}{data.job_title && data.current_company ? ' · ' : ''}{data.current_company}
               </p>
               {data.current_company && (
-                <img
-                  src={getCompanyLogoUrl(data.current_company, data.company_domains)}
-                  alt=""
-                  className="w-5 h-5 rounded-sm bg-white object-contain"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
+                <CompanyLogoWithFallback company={data.current_company} domainOverrides={data.company_domains} className="w-5 h-5 bg-white" />
               )}
             </div>
           )}
@@ -62,13 +58,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               <span className="text-events-cream/50 text-xs">Previously:</span>
               {previousCompanies.map((company) => (
                 <span key={company} className="inline-flex items-center gap-1">
-                  <img
-                    src={getCompanyLogoUrl(company, data.company_domains)}
-                    alt={company}
-                    title={company}
-                    className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
+                  <CompanyLogoWithFallback company={company} domainOverrides={data.company_domains} className="w-5 h-5 bg-white/90 p-0.5" variant="secondary" />
                   <span className="text-events-cream/60 text-xs">{company}</span>
                 </span>
               ))}

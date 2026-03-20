@@ -1,5 +1,6 @@
 import { Linkedin } from "lucide-react";
-import { Expert, getCompanyLogoUrl } from "@/lib/expert-types";
+import { Expert } from "@/lib/expert-types";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertCardCompactProps {
   expert: Expert;
@@ -30,7 +31,7 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
         {expert.job_title && <p className="font-body text-xs text-events-cream/60 truncate">{expert.job_title}</p>}
         {expert.current_company && (
           <div className="flex items-center gap-1.5 mt-1">
-            <img src={getCompanyLogoUrl(expert.current_company, expert.company_domains)} alt="" className="w-4 h-4 object-contain" />
+            <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
             <span className="font-body text-xs text-events-cream/50 truncate">{expert.current_company}</span>
           </div>
         )}

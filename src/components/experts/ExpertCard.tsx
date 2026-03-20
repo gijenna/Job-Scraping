@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Linkedin } from "lucide-react";
-import { Expert, getCompanyLogoUrl } from "@/lib/expert-types";
+import { Expert } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertCardProps {
   expert: Expert;
@@ -61,12 +62,7 @@ const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" 
               {expert.job_title}{expert.job_title && expert.current_company ? ' · ' : ''}{expert.current_company}
             </p>
             {expert.current_company && (
-              <img
-                src={getCompanyLogoUrl(expert.current_company, expert.company_domains)}
-                alt=""
-                className="w-5 h-5 rounded-sm bg-white object-contain"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
+              <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-5 h-5 bg-white" />
             )}
           </div>
         )}
@@ -76,17 +72,7 @@ const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" 
           <div className="flex items-center gap-1.5 mt-2 flex-wrap">
             <span className="text-events-cream/50 text-xs">Previously:</span>
             {previousCompanies.map((company) => (
-              <img
-                key={company}
-                src={getCompanyLogoUrl(company, expert.company_domains)}
-                alt={company}
-                title={company}
-                className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
-                onError={(e) => {
-                  const el = e.target as HTMLImageElement;
-                  el.style.display = 'none';
-                }}
-              />
+              <CompanyLogoWithFallback key={company} company={company} domainOverrides={expert.company_domains} className="w-5 h-5 bg-white/90 p-0.5" variant="secondary" />
             ))}
           </div>
         )}

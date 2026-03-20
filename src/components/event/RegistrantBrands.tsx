@@ -2,6 +2,27 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const BrandLogoWithFallback = ({ name, domain }: { name: string; domain: string }) => {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    const initials = name.split(/\s+/).map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    return (
+      <div className="h-8 md:h-10 w-8 md:w-10 rounded-sm bg-events-coral text-events-cream flex items-center justify-center font-display font-bold text-xs" title={name}>
+        {initials}
+      </div>
+    );
+  }
+  return (
+    <img
+      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+      alt={name}
+      className="h-8 md:h-10 w-auto object-contain"
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+};
+
 interface Brand {
   name: string;
   domain: string;
@@ -67,16 +88,7 @@ const RegistrantBrands = ({
               key={brand.name}
               className="flex flex-col items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
             >
-              <img
-                src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
-                alt={brand.name}
-                className="h-8 md:h-10 w-auto object-contain"
-                loading="lazy"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  target.style.display = "none";
-                }}
-              />
+              <BrandLogoWithFallback name={brand.name} domain={brand.domain} />
               <span className="font-body text-xs text-white/50">{brand.name}</span>
             </div>
           ))}
