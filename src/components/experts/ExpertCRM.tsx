@@ -346,6 +346,28 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Edit Expert Dialog */}
+      <Dialog open={!!editingExpert} onOpenChange={(open) => !open && setEditingExpert(null)}>
+        <DialogContent className="bg-events-bg border-events-cream/20 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-events-cream font-display">Edit: {editingExpert?.full_name}</DialogTitle>
+          </DialogHeader>
+          {editingExpert && (
+            <ExpertIntakeForm
+              expertId={editingExpert.id}
+              existingData={editingExpert}
+              citySlug={editCitySlug}
+              cityName={cities.find(c => c.slug === editCitySlug)?.name || editCitySlug}
+              expertType={assignments.find(a => a.expert_id === editingExpert.id)?.expert_type || 'industry_expert'}
+              onComplete={() => {
+                setEditingExpert(null);
+                onRefresh();
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
       </div>
     </div>
