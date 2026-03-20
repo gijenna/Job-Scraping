@@ -287,6 +287,19 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const firstAssign = expertAssigns[0];
+                            setEditCitySlug(firstAssign?.city_slug || "");
+                            setEditingExpert(expert);
+                          }}
+                          className="text-events-cream/60 hover:text-events-cream h-7 px-2"
+                          title="Edit"
+                        >
+                          <Pencil className="w-3 h-3" />
+                        </Button>
                         {expertAssigns.map((a) => (
                           <Button
                             key={a.id}
