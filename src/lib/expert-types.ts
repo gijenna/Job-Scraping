@@ -111,7 +111,7 @@ const COMPANY_DOMAINS: Record<string, string> = {
   'kpmg': 'kpmg.com',
 };
 
-export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string>): string {
+export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string> | null): string | null {
   const key = company.toLowerCase().trim();
   // Check overrides first
   if (domainOverrides) {
@@ -125,9 +125,8 @@ export function getCompanyLogoUrl(company: string, domainOverrides?: Record<stri
   if (domain) {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   }
-  // Fallback: guess domain from company name
-  const guess = key.replace(/[^a-z0-9]/g, '').replace(/inc$|llc$|corp$|co$/, '');
-  return `https://www.google.com/s2/favicons?domain=${guess}.com&sz=128`;
+  // No known domain — return null so the fallback initials show
+  return null;
 }
 
 export function nameToSlug(name: string): string {
