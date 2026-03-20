@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import EditableText from "@/components/EditableText";
 
 import eventBoothTent from "@/assets/event-booth-tent.jpg";
 import eventAttendeeSmile from "@/assets/event-attendee-smile.jpg";
