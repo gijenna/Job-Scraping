@@ -263,6 +263,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
         </DialogContent>
       </Dialog>
     </div>
+  );
 };
 
 export default BrandDashboard;
