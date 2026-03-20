@@ -24,9 +24,10 @@ const CompanyLogoWithFallback = ({
   className = "w-5 h-5",
   variant = "primary",
 }: CompanyLogoWithFallbackProps) => {
+  const logoUrl = getCompanyLogoUrl(company, domainOverrides);
   const [failed, setFailed] = useState(false);
 
-  if (failed) {
+  const renderInitials = () => {
     const initials = getInitials(company);
     return (
       <div
@@ -41,11 +42,15 @@ const CompanyLogoWithFallback = ({
         {initials}
       </div>
     );
+  };
+
+  if (!logoUrl || failed) {
+    return renderInitials();
   }
 
   return (
     <img
-      src={getCompanyLogoUrl(company, domainOverrides)}
+      src={logoUrl}
       alt={company}
       title={company}
       className={`${className} rounded-sm object-contain shrink-0`}
