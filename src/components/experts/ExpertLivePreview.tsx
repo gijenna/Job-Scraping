@@ -1,6 +1,7 @@
-import { Expert, getCompanyLogoUrl, NICHE_OPTIONS } from "@/lib/expert-types";
+import { Expert, NICHE_OPTIONS } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Linkedin } from "lucide-react";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertLivePreviewProps {
   data: Partial<Expert> & { company_domains?: Record<string, string> };
