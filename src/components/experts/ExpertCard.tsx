@@ -62,12 +62,7 @@ const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" 
               {expert.job_title}{expert.job_title && expert.current_company ? ' · ' : ''}{expert.current_company}
             </p>
             {expert.current_company && (
-              <img
-                src={getCompanyLogoUrl(expert.current_company, expert.company_domains)}
-                alt=""
-                className="w-5 h-5 rounded-sm bg-white object-contain"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
+              <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-5 h-5 bg-white" />
             )}
           </div>
         )}
