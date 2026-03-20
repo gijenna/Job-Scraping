@@ -38,7 +38,7 @@ const JobSeekerTestimonials = ({ accentColor = "#FEE123", bgColor = "#0d1f22" }:
           viewport={{ once: true }}
           className="text-center text-xs tracking-[0.3em] uppercase mb-10 font-body text-events-coral"
         >
-          What attendees are saying
+          <EditableText settingKey="testimonials_eyebrow" defaultText="What attendees are saying" as="span" />
         </motion.p>
 
         <div className="relative">

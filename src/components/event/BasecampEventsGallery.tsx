@@ -47,10 +47,10 @@ const BasecampEventsGallery = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-10">
           <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
-            See It In Action
+            <EditableText settingKey="gallery_eyebrow" defaultText="See It In Action" as="span" />
           </p>
           <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
-            Check out other Basecamp Events
+            <EditableText settingKey="gallery_headline" defaultText="Check out other Basecamp Events" as="span" />
           </h2>
         </div>
 
