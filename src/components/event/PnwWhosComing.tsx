@@ -40,7 +40,7 @@ const PnwWhosComing = ({
           industry_experts (
             id, full_name, slug, photo_url, job_title, current_company,
             previous_companies, field_of_work, ask_me_about, niche_interests,
-            years_in_industry, years_in_city, linkedin_url, favorite_media
+            years_in_industry, years_in_city, linkedin_url, favorite_media, company_domains
           )
         `)
         .eq("city_slug", "portland")
