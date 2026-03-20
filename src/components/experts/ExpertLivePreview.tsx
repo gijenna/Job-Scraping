@@ -58,13 +58,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
               <span className="text-events-cream/50 text-xs">Previously:</span>
               {previousCompanies.map((company) => (
                 <span key={company} className="inline-flex items-center gap-1">
-                  <img
-                    src={getCompanyLogoUrl(company, data.company_domains)}
-                    alt={company}
-                    title={company}
-                    className="w-5 h-5 rounded-sm bg-white/90 object-contain p-0.5"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
+                  <CompanyLogoWithFallback company={company} domainOverrides={data.company_domains} className="w-5 h-5 bg-white/90 p-0.5" variant="secondary" />
                   <span className="text-events-cream/60 text-xs">{company}</span>
                 </span>
               ))}

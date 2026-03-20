@@ -67,16 +67,7 @@ const RegistrantBrands = ({
               key={brand.name}
               className="flex flex-col items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
             >
-              <img
-                src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
-                alt={brand.name}
-                className="h-8 md:h-10 w-auto object-contain"
-                loading="lazy"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  target.style.display = "none";
-                }}
-              />
+              <BrandLogoWithFallback name={brand.name} domain={brand.domain} />
               <span className="font-body text-xs text-white/50">{brand.name}</span>
             </div>
           ))}
