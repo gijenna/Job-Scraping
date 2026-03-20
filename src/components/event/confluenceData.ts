@@ -11,6 +11,9 @@ export interface StateOffice {
   jobs?: string;
   instagram?: string;
   linkedin?: string;
+  nonprofitPartner?: string;
+  nonprofitPartnerUrl?: string;
+  nonprofitPartnerLogo?: string;
 }
 
 // Color palette for illustrated member states (TripSavvy-inspired pastels)
@@ -20,7 +23,7 @@ export const stateColors: Record<string, string> = {
   ME: "#1ABC9C", MI: "#E67E22", NM: "#E91E63", VA: "#00BCD4",
   AR: "#FF9800", MD: "#8BC34A", NH: "#673AB7",
   MA: "#009688", PA: "#FF5722", MN: "#2196F3", ND: "#CDDC39",
-  WI: "#795548",
+  WI: "#795548", NV: "#F06292",
 };
 
 // SVG icon descriptors per state (outdoor activities)
@@ -34,6 +37,7 @@ export const stateIcons: Record<string, IconType[]> = {
   VA: ["hiking", "kayak"], AR: ["fishing", "camping"], MD: ["kayak", "biking"],
   NH: ["skiing", "hiking"], MA: ["kayak", "hiking"], PA: ["camping", "biking"],
   MN: ["lake", "canoe"], ND: ["hiking", "wildlife"], WI: ["fishing", "snowboard"],
+  NV: ["desert", "climbing"],
 };
 
 export const memberStates: StateOffice[] = [
@@ -47,7 +51,7 @@ export const memberStates: StateOffice[] = [
   { name: "Washington", abbr: "WA", officeName: "Washington Recreation & Conservation Office", yearJoined: 2018, website: "https://rco.wa.gov/", director: "Megan Dunn", economicImpact: "$26.2B", jobs: "267,000" },
   { name: "Wyoming", abbr: "WY", officeName: "Wyoming Office of Outdoor Recreation", yearJoined: 2018, website: "https://www.wyoming.gov/outdoor-recreation", director: "Domenic Bravo", economicImpact: "$6.1B", jobs: "50,000" },
   // 2019
-  { name: "Maine", abbr: "ME", officeName: "Maine Office of Outdoor Recreation", yearJoined: 2019, website: "https://www.maine.gov/dacf/parks/outdoor_recreation_office/", director: "Carolann Ouellette", economicImpact: "$8.2B", jobs: "76,000" },
+  { name: "Maine", abbr: "ME", officeName: "Maine Office of Outdoor Recreation", yearJoined: 2019, website: "https://www.maine.gov/dacf/parks/outdoor_recreation_office/", director: "Carolann Ouellette", economicImpact: "$8.2B", jobs: "76,000", nonprofitPartner: "Maine Outdoor Brands", nonprofitPartnerUrl: "https://maineoutdoorbrands.com/", nonprofitPartnerLogo: "https://logo.clearbit.com/maineoutdoorbrands.com" },
   { name: "Michigan", abbr: "MI", officeName: "Michigan Office of Outdoor Recreation Industry", yearJoined: 2019, website: "https://www.michigan.gov/leo/bureaus-agencies/oori", director: "Brad Garmon", economicImpact: "$26.6B", jobs: "232,000" },
   { name: "New Mexico", abbr: "NM", officeName: "New Mexico Outdoor Recreation Division", yearJoined: 2019, website: "https://www.nmoutside.com/", director: "Axie Navas", economicImpact: "$9.9B", jobs: "99,000" },
   { name: "Virginia", abbr: "VA", officeName: "Virginia Office of Outdoor Recreation", yearJoined: 2019, website: "https://www.governor.virginia.gov/outdoor-recreation/", economicImpact: "$29.1B", jobs: "197,000" },
@@ -57,11 +61,12 @@ export const memberStates: StateOffice[] = [
   { name: "New Hampshire", abbr: "NH", officeName: "New Hampshire Office of Outdoor Recreation Industry Development", yearJoined: 2022, website: "https://www.nheconomy.com/outdoor-recreation", economicImpact: "$4.8B", jobs: "44,000" },
   // 2024
   { name: "Massachusetts", abbr: "MA", officeName: "Massachusetts Office of Outdoor Recreation", yearJoined: 2024, website: "https://www.mass.gov/outdoor-recreation", economicImpact: "$20.1B", jobs: "148,000" },
-  { name: "Pennsylvania", abbr: "PA", officeName: "Pennsylvania Office of Outdoor Recreation", yearJoined: 2024, website: "https://dced.pa.gov/outdoor-recreation/", economicImpact: "$29.1B", jobs: "251,000" },
+  { name: "Pennsylvania", abbr: "PA", officeName: "Pennsylvania Office of Outdoor Recreation", yearJoined: 2024, website: "https://dced.pa.gov/outdoor-recreation/", economicImpact: "$29.1B", jobs: "251,000", nonprofitPartner: "PORA", nonprofitPartnerUrl: "https://paoutdoors.org/", nonprofitPartnerLogo: "https://logo.clearbit.com/paoutdoors.org" },
   { name: "Minnesota", abbr: "MN", officeName: "Minnesota Office of Outdoor Recreation", yearJoined: 2024, website: "https://mn.gov/deed/outdoor-recreation/", director: "Dan McGowan", economicImpact: "$11.7B", jobs: "120,000" },
   { name: "North Dakota", abbr: "ND", officeName: "North Dakota Outdoor Recreation Office", yearJoined: 2024, website: "https://www.commerce.nd.gov/", economicImpact: "$2.2B", jobs: "23,000" },
   // 2025
   { name: "Wisconsin", abbr: "WI", officeName: "Wisconsin Office of Outdoor Recreation", yearJoined: 2025, website: "https://wedc.org/outdoor-recreation/", economicImpact: "$12.7B", jobs: "134,000" },
+  { name: "Nevada", abbr: "NV", officeName: "Nevada Division of Outdoor Recreation", yearJoined: 2025, website: "https://outdoor.nv.gov/", economicImpact: "$12.6B", jobs: "96,000" },
 ];
 
 export const memberAbbrs = new Set(memberStates.map(s => s.abbr));
