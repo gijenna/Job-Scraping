@@ -139,15 +139,30 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                     )}
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => deleteBrand(brand.expert.id)}
-                  className="text-red-400/40 hover:text-red-400 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Delete brand"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      const firstAssign = brand.assignments[0];
+                      setEditCitySlug(firstAssign?.city_slug || "");
+                      setEditingExpert(brand.expert);
+                    }}
+                    className="text-events-cream/40 hover:text-events-cream h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Edit brand"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteBrand(brand.expert.id)}
+                    className="text-red-400/40 hover:text-red-400 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Delete brand"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
 
               {/* City assignments with copy links */}
