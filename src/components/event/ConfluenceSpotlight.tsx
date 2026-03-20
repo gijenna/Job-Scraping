@@ -73,7 +73,7 @@ const ConfluenceSpotlight = () => {
           className="mb-8"
         >
           <p className="text-center font-body text-events-cream/50 text-sm mb-4">
-            Hover over a highlighted state to see its outdoor recreation office details
+            Click a colored state to explore its outdoor recreation office
           </p>
           <ConfluenceMap />
         </motion.div>
@@ -81,12 +81,8 @@ const ConfluenceSpotlight = () => {
         {/* Legend */}
         <div className="flex flex-wrap items-center justify-center gap-6 mb-12 text-sm font-body">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-events-coral" />
-            <span className="text-events-cream/70">Member state</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-events-yellow" />
-            <span className="text-events-cream/70">Hovered / selected</span>
+            <div className="w-4 h-4 rounded" style={{ background: "linear-gradient(135deg, #4ECDC4, #FF6B6B, #FFE66D, #2ECC71)" }} />
+            <span className="text-events-cream/70">Member state (click to explore)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-events-cream/10" />

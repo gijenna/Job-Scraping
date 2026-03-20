@@ -9,11 +9,36 @@ export interface StateOffice {
   directorLinkedin?: string;
   economicImpact?: string;
   jobs?: string;
+  instagram?: string;
+  linkedin?: string;
 }
+
+// Color palette for illustrated member states (TripSavvy-inspired pastels)
+export const stateColors: Record<string, string> = {
+  CO: "#4ECDC4", MT: "#FF6B6B", NC: "#FFE66D", OR: "#2ECC71",
+  UT: "#E74C3C", VT: "#F39C12", WA: "#3498DB", WY: "#9B59B6",
+  ME: "#1ABC9C", MI: "#E67E22", NM: "#E91E63", VA: "#00BCD4",
+  AR: "#FF9800", MD: "#8BC34A", NH: "#673AB7",
+  MA: "#009688", PA: "#FF5722", MN: "#2196F3", ND: "#CDDC39",
+  WI: "#795548",
+};
+
+// SVG icon descriptors per state (outdoor activities)
+export type IconType = "mountains" | "skiing" | "trees" | "fishing" | "kayak" | "hiking" | "wildlife" | "surfing" | "lighthouse" | "canoe" | "desert" | "lake" | "camping" | "biking" | "climbing" | "snowboard";
+
+export const stateIcons: Record<string, IconType[]> = {
+  CO: ["mountains", "skiing"], MT: ["hiking", "wildlife"], NC: ["surfing", "hiking"],
+  OR: ["trees", "fishing"], UT: ["climbing", "desert"], VT: ["skiing", "trees"],
+  WA: ["kayak", "mountains"], WY: ["camping", "wildlife"],
+  ME: ["lighthouse", "canoe"], MI: ["lake", "fishing"], NM: ["desert", "hiking"],
+  VA: ["hiking", "kayak"], AR: ["fishing", "camping"], MD: ["kayak", "biking"],
+  NH: ["skiing", "hiking"], MA: ["kayak", "hiking"], PA: ["camping", "biking"],
+  MN: ["lake", "canoe"], ND: ["hiking", "wildlife"], WI: ["fishing", "snowboard"],
+};
 
 export const memberStates: StateOffice[] = [
   // 2018 Founding
-  { name: "Colorado", abbr: "CO", officeName: "Colorado Outdoor Recreation Industry Office", yearJoined: 2018, website: "https://oedit.colorado.gov/outdoor-recreation-industry-office", director: "Nathan Fey", economicImpact: "$62.5B", jobs: "511,000" },
+  { name: "Colorado", abbr: "CO", officeName: "Colorado Outdoor Recreation Industry Office", yearJoined: 2018, website: "https://oedit.colorado.gov/outdoor-recreation-industry-office", director: "Nathan Fey", economicImpact: "$62.5B", jobs: "511,000", linkedin: "https://www.linkedin.com/company/colorado-outdoor-recreation-industry-office/" },
   { name: "Montana", abbr: "MT", officeName: "Montana Office of Outdoor Recreation", yearJoined: 2018, website: "https://commerce.mt.gov/Outdoor-Recreation", director: "Rachel VandeVoort", economicImpact: "$7.1B", jobs: "71,000" },
   { name: "North Carolina", abbr: "NC", officeName: "North Carolina Office of Outdoor Recreation", yearJoined: 2018, website: "https://www.commerce.nc.gov/outdoor-recreation", director: "Aaron Whitehead", economicImpact: "$28B", jobs: "260,000" },
   { name: "Oregon", abbr: "OR", officeName: "Oregon Office of Outdoor Recreation", yearJoined: 2018, website: "https://www.oregon.gov/orec", director: "Jeff Kish", economicImpact: "$15.6B", jobs: "172,000" },
