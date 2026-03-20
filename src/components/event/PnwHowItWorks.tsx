@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
+import EditableText from "@/components/EditableText";
 
 import eventReiConvo from "@/assets/event-rei-convo.jpg";
 import eventCrowdConvo from "@/assets/event-crowd-convo.png";
@@ -84,19 +85,19 @@ const PnwHowItWorks = () => {
             className="text-xs tracking-[0.3em] uppercase mb-4 font-body"
             style={{ color: "#ED7660" }}
           >
-            How Does It Work
+            <EditableText settingKey="hiw_eyebrow" defaultText="How Does It Work" as="span" />
           </p>
           <h2
             className="font-display font-extrabold text-4xl md:text-5xl mb-6"
             style={{ color: "#F5E6D3" }}
           >
-            Your people talk to our people.
+            <EditableText settingKey="hiw_headline" defaultText="Your people talk to our people." as="span" />
           </h2>
           <p
             className="font-body text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "#F5E6D3", opacity: 0.8 }}
           >
-            We invite 300+ people who work in the outdoor industry — or want to. They visit your brand discovery zone to learn your story through the people that make your company unique.
+            <EditableText settingKey="hiw_body" defaultText="We invite 300+ people who work in the outdoor industry — or want to. They visit your brand discovery zone to learn your story through the people that make your company unique." as="span" multiline />
           </p>
         </motion.div>
 

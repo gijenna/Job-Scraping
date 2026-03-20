@@ -5,18 +5,21 @@ import ValueProps from "@/components/ValueProps";
 import AudienceSection from "@/components/AudienceSection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
 
 const Index = () => {
   return (
-    <main className="bg-background min-h-screen">
-      <HeroSection />
-      <LogoTicker />
-      <ValueProps />
-      <EventOverview />
-      <AudienceSection />
-      <Testimonials />
-      <CTASection />
-    </main>
+    <EditableTextProvider pageSlug="index">
+      <main className="bg-background min-h-screen">
+        <HeroSection />
+        <LogoTicker />
+        <ValueProps />
+        <EventOverview />
+        <AudienceSection />
+        <Testimonials />
+        <CTASection />
+      </main>
+    </EditableTextProvider>
   );
 };
 
