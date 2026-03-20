@@ -1,20 +1,16 @@
 import { motion } from "framer-motion";
+import EditableText from "@/components/EditableText";
 
 const CTASection = () => {
   return (
     <section className="py-24 px-6">
       <div className="container mx-auto max-w-3xl text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="font-display font-extrabold text-4xl md:text-5xl text-foreground mb-6">
-            Ready to <span className="text-gradient-gold">Be Part of This</span>?
+            <EditableText settingKey="cta_headline" defaultText="Ready to Be Part of This?" as="span" />
           </h2>
           <p className="text-muted-foreground font-body max-w-xl mx-auto mb-10">
-            Spots are limited and filling fast. Reach out to secure your presence
-            at the outdoor industry's most talked-about career event.
+            <EditableText settingKey="cta_subtitle" defaultText="Spots are limited and filling fast. Reach out to secure your presence at the outdoor industry's most talked-about career event." as="span" multiline />
           </p>
           <a
             href="mailto:jenna@wearetheoutdoorindustry.com&subject=I'd like to sponsor GATHER Events 2026"
