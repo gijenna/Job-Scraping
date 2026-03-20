@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Expert, ExpertCityAssignment, ExpertCity } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2 } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
+import ExpertIntakeForm from "./ExpertIntakeForm";
 
 interface ExpertCRMProps {
   experts: Expert[];
