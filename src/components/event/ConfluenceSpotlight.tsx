@@ -20,7 +20,7 @@ const ConfluenceSpotlight = () => {
             Confluence of States
           </h2>
           <p className="font-body text-events-cream/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            A bipartisan coalition of 20 state outdoor recreation offices working together to grow the outdoor economy, create jobs, and make the outdoors more accessible to everyone. Think of them as your state's champion for outdoor industry careers.
+            A bipartisan coalition of 21 state outdoor recreation offices working together to grow the outdoor economy, create jobs, and make the outdoors more accessible to everyone. Think of them as your state's champion for outdoor industry careers.
           </p>
         </motion.div>
 
@@ -35,7 +35,7 @@ const ConfluenceSpotlight = () => {
           {[
             {
               icon: Landmark,
-              title: "20 State Offices",
+              title: "21 State Offices",
               desc: "Each state has a dedicated office focused on growing outdoor recreation as an economic engine.",
             },
             {
@@ -46,7 +46,7 @@ const ConfluenceSpotlight = () => {
             {
               icon: Globe,
               title: "2.5M+ Jobs",
-              desc: "Millions of people work in outdoor recreation across these 20 states — and they need talented people like you.",
+              desc: "Millions of people work in outdoor recreation across these 21 states — and they need talented people like you.",
             },
           ].map((item, i) => (
             <div
