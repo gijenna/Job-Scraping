@@ -11,6 +11,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminExperts from "./pages/AdminExperts";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
+import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
 import OldStuffByJenna from "./pages/OldStuffByJenna";
