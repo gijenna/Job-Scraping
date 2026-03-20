@@ -29,6 +29,8 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   const [filterCity, setFilterCity] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
+  const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
+  const [editCitySlug, setEditCitySlug] = useState<string>("");
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
