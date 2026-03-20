@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import eventPnwCrowd from "@/assets/event-pnw-crowd.jpg";
+import EditableText from "@/components/EditableText";
 
 const PnwUOPartner = () => {
   return (
     <section className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: "#154733" }}>
-      {/* Subtle texture overlay */}
       <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_50%_50%,_white_1px,_transparent_1px)] bg-[length:24px_24px]" />
 
       <div className="relative z-10 container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-          {/* Left — Text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -22,15 +21,11 @@ const PnwUOPartner = () => {
               className="font-headline font-bold text-events-cream leading-[1.1]"
               style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}
             >
-              Gather is an outdoor industry discovery zone merging a{" "}
-              <span style={{ color: "#FEE123" }}>career fair</span> &{" "}
-              <span style={{ color: "#FEE123" }}>field marketing.</span>
+              <EditableText settingKey="partner_headline" defaultText="Gather is an outdoor industry discovery zone merging a career fair & field marketing." as="span" multiline />
             </h2>
 
             <p className="text-events-cream/70 font-body text-lg md:text-xl leading-relaxed">
-              Portland is the <span className="font-semibold text-events-cream">beating heart</span> of the outdoor industry. 
-              We partner with UO's world-class SPM program to bring together the PNW's most engaged 
-              professionals, career-changers, and the next generation of outdoor talent.
+              <EditableText settingKey="partner_body" defaultText="Portland is the beating heart of the outdoor industry. We partner with UO's world-class SPM program to bring together the PNW's most engaged professionals, career-changers, and the next generation of outdoor talent." as="span" multiline />
             </p>
 
             <a
@@ -43,7 +38,6 @@ const PnwUOPartner = () => {
             </a>
           </motion.div>
 
-          {/* Right — Last year's photo */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -52,11 +46,7 @@ const PnwUOPartner = () => {
             className="relative"
           >
             <div className="rounded-xl overflow-hidden shadow-2xl">
-              <img
-                src={eventPnwCrowd}
-                alt="Gather PNW last year"
-                className="w-full h-auto object-cover md:aspect-[3/4] md:object-cover"
-              />
+              <img src={eventPnwCrowd} alt="Gather PNW last year" className="w-full h-auto object-cover md:aspect-[3/4] md:object-cover" />
             </div>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
               Gather PNW 2025
