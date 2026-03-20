@@ -1,5 +1,6 @@
 import { Linkedin } from "lucide-react";
-import { Expert, getCompanyLogoUrl } from "@/lib/expert-types";
+import { Expert } from "@/lib/expert-types";
+import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
 
 interface ExpertCardCompactProps {
   expert: Expert;
