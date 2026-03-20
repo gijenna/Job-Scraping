@@ -48,12 +48,7 @@ const ExpertLivePreview = ({ data }: ExpertLivePreviewProps) => {
                 {data.job_title}{data.job_title && data.current_company ? ' · ' : ''}{data.current_company}
               </p>
               {data.current_company && (
-                <img
-                  src={getCompanyLogoUrl(data.current_company, data.company_domains)}
-                  alt=""
-                  className="w-5 h-5 rounded-sm bg-white object-contain"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
+                <CompanyLogoWithFallback company={data.current_company} domainOverrides={data.company_domains} className="w-5 h-5 bg-white" />
               )}
             </div>
           )}
