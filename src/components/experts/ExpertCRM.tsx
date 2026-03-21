@@ -28,6 +28,7 @@ const statusColors: Record<string, string> = {
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
+  const [filterSaved, setFilterSaved] = useState<string>("active");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
@@ -36,11 +37,23 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   const getExpertAssignments = (expertId: string) =>
     assignments.filter(a => a.expert_id === expertId);
 
+  const toggleSaveForLater = async (expert: Expert) => {
+    const newVal = !expert.saved_for_later;
+    const { error } = await supabase.from('industry_experts').update({ saved_for_later: newVal } as any).eq('id', expert.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: newVal ? "Saved for later" : "Moved to active" });
+      onRefresh();
+    }
+  };
+
   const filteredExperts = experts.filter(e => {
     const expertAssigns = getExpertAssignments(e.id);
     const cityMatch = filterCity === "all" || expertAssigns.some(a => a.city_slug === filterCity);
     const typeMatch = filterType === "all" || expertAssigns.some(a => (a.expert_type || 'industry_expert') === filterType);
-    return cityMatch && typeMatch;
+    const savedMatch = filterSaved === "all" || (filterSaved === "saved" ? e.saved_for_later : !e.saved_for_later);
+    return cityMatch && typeMatch && savedMatch;
   });
 
   const togglePublish = async (assignmentId: string, currentlyPublished: boolean) => {
