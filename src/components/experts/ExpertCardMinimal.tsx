@@ -1,6 +1,9 @@
-import { Linkedin } from "lucide-react";
+import { useState } from "react";
+import { Linkedin, X } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
+import ExpertCard from "./ExpertCard";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ExpertCardMinimalProps {
   expert: Expert;
@@ -8,9 +11,28 @@ interface ExpertCardMinimalProps {
 }
 
 const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) => {
+  const [expanded, setExpanded] = useState(false);
+
+  if (expanded) {
+    return (
+      <div className="relative animate-in fade-in duration-200">
+        <button
+          onClick={() => setExpanded(false)}
+          className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+        <ExpertCard expert={expert} expanded />
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex flex-col items-center text-center gap-2 ${className}`}>
-      <div className="relative w-20 h-20 rounded-full overflow-hidden bg-events-cream/10 shadow-md">
+    <div
+      className={`flex flex-col items-center text-center gap-2 cursor-pointer group ${className}`}
+      onClick={() => setExpanded(true)}
+    >
+      <div className="relative w-20 h-20 rounded-full overflow-hidden bg-events-cream/10 shadow-md group-hover:ring-2 group-hover:ring-events-coral/40 transition-all">
         {expert.photo_url ? (
           <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
         ) : (
@@ -19,12 +41,19 @@ const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) =
           </div>
         )}
         {expert.current_company && (
-          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-events-cream flex items-center justify-center shadow-sm">
-            <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-events-cream flex items-center justify-center shadow-sm">
+                  <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent><p>{expert.current_company}</p></TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
         {expert.linkedin_url && (
-          <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">
+          <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm" onClick={(e) => e.stopPropagation()}>
             <Linkedin className="w-3 h-3 text-[#0077B5]" />
           </a>
         )}
