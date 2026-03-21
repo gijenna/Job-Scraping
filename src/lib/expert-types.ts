@@ -18,6 +18,7 @@ export interface Expert {
   niche_interests: string[];
   company_domains: Record<string, string>;
   status: 'invited' | 'viewed' | 'started' | 'confirmed';
+  saved_for_later?: boolean;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -44,6 +45,7 @@ export interface ExpertCityAssignment {
   card_version: Record<string, any>;
   published: boolean;
   expert_type: ExpertType;
+  display_order?: number;
   created_at: string;
 }
 
@@ -113,7 +115,6 @@ const COMPANY_DOMAINS: Record<string, string> = {
 
 export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string> | null): string | null {
   const key = company.toLowerCase().trim();
-  // Check overrides first
   if (domainOverrides) {
     const overrideKey = Object.keys(domainOverrides).find(k => k.toLowerCase().trim() === key);
     if (overrideKey && domainOverrides[overrideKey]) {
@@ -125,7 +126,6 @@ export function getCompanyLogoUrl(company: string, domainOverrides?: Record<stri
   if (domain) {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   }
-  // No known domain — return null so the fallback initials show
   return null;
 }
 
