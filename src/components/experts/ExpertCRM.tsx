@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil, Bookmark, BookmarkCheck } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertCard from "./ExpertCard";
 import ExpertIntakeForm from "./ExpertIntakeForm";
@@ -28,6 +28,7 @@ const statusColors: Record<string, string> = {
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
   const [filterCity, setFilterCity] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
+  const [filterSaved, setFilterSaved] = useState<string>("active");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
@@ -36,11 +37,23 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   const getExpertAssignments = (expertId: string) =>
     assignments.filter(a => a.expert_id === expertId);
 
+  const toggleSaveForLater = async (expert: Expert) => {
+    const newVal = !expert.saved_for_later;
+    const { error } = await supabase.from('industry_experts').update({ saved_for_later: newVal } as any).eq('id', expert.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: newVal ? "Saved for later" : "Moved to active" });
+      onRefresh();
+    }
+  };
+
   const filteredExperts = experts.filter(e => {
     const expertAssigns = getExpertAssignments(e.id);
     const cityMatch = filterCity === "all" || expertAssigns.some(a => a.city_slug === filterCity);
     const typeMatch = filterType === "all" || expertAssigns.some(a => (a.expert_type || 'industry_expert') === filterType);
-    return cityMatch && typeMatch;
+    const savedMatch = filterSaved === "all" || (filterSaved === "saved" ? e.saved_for_later : !e.saved_for_later);
+    return cityMatch && typeMatch && savedMatch;
   });
 
   const togglePublish = async (assignmentId: string, currentlyPublished: boolean) => {
@@ -108,6 +121,17 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             <SelectItem value="all" className="text-events-cream">All Types</SelectItem>
             <SelectItem value="industry_expert" className="text-events-cream">Industry Experts</SelectItem>
             <SelectItem value="brand_rep" className="text-events-cream">Brand Reps</SelectItem>
+          </SelectContent>
+        </Select>
+        <span className="text-events-cream/60 text-sm">Status:</span>
+        <Select value={filterSaved} onValueChange={setFilterSaved}>
+          <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-events-card border-events-cream/20">
+            <SelectItem value="active" className="text-events-cream">Active</SelectItem>
+            <SelectItem value="saved" className="text-events-cream">Saved for Later</SelectItem>
+            <SelectItem value="all" className="text-events-cream">All</SelectItem>
           </SelectContent>
         </Select>
         <span className="text-events-cream/40 text-sm ml-auto">{filteredExperts.length} experts</span>
@@ -287,6 +311,15 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => toggleSaveForLater(expert)}
+                          className={`h-7 px-2 ${expert.saved_for_later ? 'text-events-yellow' : 'text-events-cream/60 hover:text-events-cream'}`}
+                          title={expert.saved_for_later ? 'Move to active' : 'Save for later'}
+                        >
+                          {expert.saved_for_later ? <BookmarkCheck className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+                        </Button>
                         <Button
                           size="sm"
                           variant="ghost"

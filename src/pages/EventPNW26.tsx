@@ -18,6 +18,7 @@ import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
@@ -151,7 +152,9 @@ const EventPNW26 = () => {
                 <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>#ScoDucks 🦆</p>
               </div>
               <div className="md:w-2/3">
-                <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">Our Host Program</p>
+                <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">
+                  <EditableText settingKey="uo_eyebrow" defaultText="Our Host Program" as="span" />
+                </p>
                 <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">
                   <EditableText settingKey="uo_headline" defaultText="MS Sports Product Management" as="span" />
                 </h2>
@@ -176,12 +179,8 @@ const EventPNW26 = () => {
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-4">
-                  <a href="https://bit.ly/47veqAL" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#154733", color: "#FEE123" }}>
-                    Learn More <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://bit.ly/47veqAL" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105" style={{ borderColor: "#154733", color: "#154733" }}>
-                    Apply Now
-                  </a>
+                  <EditableLink textKey="uo_learn_more_text" urlKey="uo_learn_more_url" defaultText="Learn More" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#154733", color: "#FEE123" }} />
+                  <EditableLink textKey="uo_apply_text" urlKey="uo_apply_url" defaultText="Apply Now" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105" style={{ borderColor: "#154733", color: "#154733" }} />
                 </div>
               </div>
             </motion.div>
@@ -207,9 +206,14 @@ const EventPNW26 = () => {
               <p className="font-body text-events-cream/60 mb-8">
                 <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Limited capacity. Don't miss the PNW's best outdoor industry event." as="span" />
               </p>
-              <a href={TYPEFORM_PNW} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#FEE123", color: "#154733" }}>
-                Register Free <ArrowRight className="w-5 h-5" />
-              </a>
+              <EditableLink
+                textKey="final_cta_button_text"
+                urlKey="final_cta_button_url"
+                defaultText="Register Free"
+                defaultUrl={TYPEFORM_PNW}
+                className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105"
+                style={{ backgroundColor: "#FEE123", color: "#154733" }}
+              />
             </motion.div>
           </div>
         </section>

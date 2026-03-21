@@ -163,6 +163,7 @@ export type Database = {
           card_version: Json | null
           city_slug: string
           created_at: string | null
+          display_order: number | null
           expert_id: string
           expert_type: string
           id: string
@@ -173,6 +174,7 @@ export type Database = {
           card_version?: Json | null
           city_slug: string
           created_at?: string | null
+          display_order?: number | null
           expert_id: string
           expert_type?: string
           id?: string
@@ -183,6 +185,7 @@ export type Database = {
           card_version?: Json | null
           city_slug?: string
           created_at?: string | null
+          display_order?: number | null
           expert_id?: string
           expert_type?: string
           id?: string
@@ -264,6 +267,7 @@ export type Database = {
           niche_interests: string[] | null
           photo_url: string | null
           previous_companies: string | null
+          saved_for_later: boolean | null
           slug: string
           status: Database["public"]["Enums"]["expert_status"] | null
           updated_at: string | null
@@ -286,6 +290,7 @@ export type Database = {
           niche_interests?: string[] | null
           photo_url?: string | null
           previous_companies?: string | null
+          saved_for_later?: boolean | null
           slug: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null
@@ -308,6 +313,7 @@ export type Database = {
           niche_interests?: string[] | null
           photo_url?: string | null
           previous_companies?: string | null
+          saved_for_later?: boolean | null
           slug?: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null

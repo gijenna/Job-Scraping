@@ -1,6 +1,9 @@
-import { Linkedin } from "lucide-react";
+import { useState } from "react";
+import { Linkedin, Maximize2, X } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
+import ExpertCard from "./ExpertCard";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ExpertCardCompactProps {
   expert: Expert;
@@ -8,8 +11,28 @@ interface ExpertCardCompactProps {
 }
 
 const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) => {
+  const [expanded, setExpanded] = useState(false);
+
+  if (expanded) {
+    return (
+      <div className="relative animate-in fade-in duration-200">
+        <button
+          onClick={() => setExpanded(false)}
+          className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+        <ExpertCard expert={expert} expanded />
+      </div>
+    );
+  }
+
+  const previousCompanies = expert.previous_companies
+    ? expert.previous_companies.split(',').map(c => c.trim()).filter(Boolean)
+    : [];
+
   return (
-    <div className={`flex items-center gap-4 bg-events-teal rounded-lg p-4 shadow-card ${className}`}>
+    <div className={`flex items-center gap-4 bg-events-teal rounded-lg p-4 shadow-card group relative ${className}`}>
       <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden bg-events-cream/10">
         {expert.photo_url ? (
           <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
@@ -31,11 +54,39 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
         {expert.job_title && <p className="font-body text-xs text-events-cream/60 truncate">{expert.job_title}</p>}
         {expert.current_company && (
           <div className="flex items-center gap-1.5 mt-1">
-            <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span><CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" /></span>
+                </TooltipTrigger>
+                <TooltipContent><p>{expert.current_company}</p></TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <span className="font-body text-xs text-events-cream/50 truncate">{expert.current_company}</span>
           </div>
         )}
+        {previousCompanies.length > 0 && (
+          <div className="flex items-center gap-1 mt-1">
+            <TooltipProvider>
+              {previousCompanies.slice(0, 3).map((company) => (
+                <Tooltip key={company}>
+                  <TooltipTrigger asChild>
+                    <span><CompanyLogoWithFallback company={company} domainOverrides={expert.company_domains} className="w-3.5 h-3.5" variant="secondary" /></span>
+                  </TooltipTrigger>
+                  <TooltipContent><p>{company}</p></TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
+          </div>
+        )}
       </div>
+      <button
+        onClick={() => setExpanded(true)}
+        className="absolute top-2 right-2 opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity text-events-cream"
+        title="Expand"
+      >
+        <Maximize2 className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 };
