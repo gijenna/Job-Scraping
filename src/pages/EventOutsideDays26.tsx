@@ -17,10 +17,36 @@ import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
-import { EditableTextProvider } from "@/components/EditableTextProvider";
+import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
+import { useEventSettings } from "@/hooks/useEventSettings";
+import { Eye, EyeOff } from "lucide-react";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
+
+const HideableStats = ({ logos }: { logos: any[] }) => {
+  const { isAdmin } = useEditableTextContext();
+  const { settings, setSetting } = useEventSettings("outsidedays26");
+  const hidden = settings["hide_denver_stats"] === "true";
+
+  if (hidden && !isAdmin) return null;
+
+  return (
+    <div className={`relative ${hidden ? 'opacity-30' : ''}`}>
+      {isAdmin && (
+        <button
+          onClick={() => setSetting("hide_denver_stats", hidden ? "false" : "true")}
+          className="absolute top-4 right-4 z-20 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-events-coral/80 text-white text-xs font-bold hover:bg-events-coral transition-colors"
+        >
+          {hidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+          {hidden ? 'Show Section' : 'Hide Section'}
+        </button>
+      )}
+      <RegistrantDenverStats logos={logos} />
+    </div>
+  );
+};
 
 const EventOutsideDays26 = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
@@ -64,7 +90,7 @@ const EventOutsideDays26 = () => {
 
         <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
 
-        <RegistrantDenverStats logos={statsLogos} />
+        <HideableStats logos={statsLogos} />
 
         <RegistrantHowToTapIn
           registrationUrl={TYPEFORM_DENVER}
@@ -96,9 +122,13 @@ const EventOutsideDays26 = () => {
               <p className="font-body text-events-cream/60 mb-8">
                 <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Part of Outside Days. The outdoor industry's career event of the year." as="span" />
               </p>
-              <a href={TYPEFORM_DENVER} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal">
-                Register Free <ArrowRight className="w-5 h-5" />
-              </a>
+              <EditableLink
+                textKey="final_cta_button_text"
+                urlKey="final_cta_button_url"
+                defaultText="Register Free"
+                defaultUrl={TYPEFORM_DENVER}
+                className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal"
+              />
             </motion.div>
           </div>
         </section>
