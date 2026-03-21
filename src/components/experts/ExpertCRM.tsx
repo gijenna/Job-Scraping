@@ -123,6 +123,17 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
             <SelectItem value="brand_rep" className="text-events-cream">Brand Reps</SelectItem>
           </SelectContent>
         </Select>
+        <span className="text-events-cream/60 text-sm">Status:</span>
+        <Select value={filterSaved} onValueChange={setFilterSaved}>
+          <SelectTrigger className="w-48 bg-events-card border-events-cream/20 text-events-cream">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-events-card border-events-cream/20">
+            <SelectItem value="active" className="text-events-cream">Active</SelectItem>
+            <SelectItem value="saved" className="text-events-cream">Saved for Later</SelectItem>
+            <SelectItem value="all" className="text-events-cream">All</SelectItem>
+          </SelectContent>
+        </Select>
         <span className="text-events-cream/40 text-sm ml-auto">{filteredExperts.length} experts</span>
       </div>
 
