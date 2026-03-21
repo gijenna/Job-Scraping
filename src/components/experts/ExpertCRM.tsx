@@ -314,6 +314,15 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                         <Button
                           size="sm"
                           variant="ghost"
+                          onClick={() => toggleSaveForLater(expert)}
+                          className={`h-7 px-2 ${expert.saved_for_later ? 'text-events-yellow' : 'text-events-cream/60 hover:text-events-cream'}`}
+                          title={expert.saved_for_later ? 'Move to active' : 'Save for later'}
+                        >
+                          {expert.saved_for_later ? <BookmarkCheck className="w-3 h-3" /> : <Bookmark className="w-3 h-3" />}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           onClick={() => {
                             const firstAssign = expertAssigns[0];
                             setEditCitySlug(firstAssign?.city_slug || "");
