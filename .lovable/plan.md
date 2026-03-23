@@ -1,136 +1,69 @@
 
 
-# Comprehensive Enhancement Plan
+# Per-Page Favicon & OG Preview Image — Admin-Editable
 
-## Summary
-This plan covers 10 distinct features across public event pages (/PNW26, /OutsideDays26), expert cards, and the admin CRM.
+## What This Delivers
 
----
+An admin panel on each page where you can upload or set a custom favicon and Open Graph preview image (the image that shows when someone shares a link on social media/Slack/etc). These are stored in the database via the existing `event_settings` system and applied dynamically — no Lovable credits burned.
 
-## 1. Editable Text on All Pages (PNW26 + OutsideDays26)
+## Important Limitation
 
-Both pages already use `EditableTextProvider` and `EditableText` for some strings. Wrap ALL remaining hardcoded text — section headings, subheadings, button labels, and hyperlink URLs — with `EditableText`. For links/buttons, create a new `EditableLink` component that lets admins edit both the display text and the URL.
-
-**Files:** `EventPNW26.tsx`, `EventOutsideDays26.tsx`, `RegistrantHero.tsx`, `RegistrantHowToTapIn.tsx`, `RegistrantVenue.tsx`, `DenverFestivalPartner.tsx`, `JobSeekerTestimonials.tsx`, `BasecampEventsGallery.tsx`. New file: `EditableLink.tsx`.
+Since this is a single-page app (SPA), dynamically setting OG meta tags via JavaScript works for **some** social crawlers (Twitter/X executes JS) but **not all** (Facebook, LinkedIn, iMessage often do not). To fully solve OG previews for all platforms, we will also create an **edge function** that serves correct meta tags to bot crawlers before they hit the SPA. This is the industry-standard approach for SPAs.
 
 ---
 
-## 2. Logo Hover Tooltips on Expert Cards
+## Implementation
 
-Add a tooltip (using existing `Tooltip` UI component) on previous-company logos across all three card types showing the brand name on hover.
+### 1. Admin UI Component: `PageMetaEditor`
 
-**Files:** `ExpertCard.tsx`, `ExpertCardCompact.tsx`, `ExpertCardMinimal.tsx`
+A small floating admin widget (similar to the existing admin gear panel) that appears on each page when authenticated. It provides:
+- **Favicon**: Upload an image or paste a URL. Stored as `event_settings` key `page_favicon`.
+- **OG Image**: Upload an image or paste a URL. Stored as key `page_og_image`.
+- **OG Title / OG Description**: Editable text fields. Stored as `page_og_title` and `page_og_description`.
 
----
+Uploads go to a new `page-meta` storage bucket.
 
-## 3. Drag-and-Drop Card Reordering
+**New file:** `src/components/event/PageMetaEditor.tsx`
 
-Add admin drag-and-drop to reorder expert cards on public pages. Store `display_order` on `expert_city_assignments`. Use a lightweight drag library (e.g. `@dnd-kit/core`). Only show drag handles when admin is authenticated.
+### 2. Client-Side Meta Tag Hook: `usePageMeta`
 
-**DB migration:** Add `display_order integer default 0` to `expert_city_assignments`.
-**Files:** `DenverAttendeeSections.tsx`, `PnwWhosComing.tsx` — fetch with `.order('display_order')`, wrap cards in a sortable container for admins.
+A hook consumed by each page that:
+- Reads `page_favicon`, `page_og_image`, `page_og_title`, `page_og_description` from `event_settings` for the current page slug.
+- Dynamically updates `document.title` and the favicon `<link>` element.
+- Dynamically updates/creates OG and Twitter meta tags in `<head>`.
 
----
+**New file:** `src/hooks/usePageMeta.ts`
 
-## 4. Card Type A: Full Color Photos on Hover
+### 3. Edge Function for Bot Crawlers: `og-meta`
 
-Change the `grayscale` class on ExpertCard photos to `grayscale hover:grayscale-0 transition-all duration-300`.
+An edge function at `/functions/v1/og-meta?path=/PNW26` that:
+- Reads the `event_settings` for the given page slug.
+- Returns an HTML document with correct `<meta>` tags for crawlers.
+- This can be pointed to via a redirect rule or used with a lightweight proxy for social sharing links.
 
-**File:** `ExpertCard.tsx`
+**New file:** `supabase/functions/og-meta/index.ts`
 
----
+### 4. Storage Bucket
 
-## 5. Card Types B & C: Expandable to Full Card A
+Create a `page-meta` public bucket for uploaded favicon and OG images.
 
-Add an expand button to `ExpertCardCompact` and `ExpertCardMinimal` that, when clicked, renders the full `ExpertCard` content inline (with a close button to collapse back). Use animation for smooth transition.
+**DB migration:** `INSERT INTO storage.buckets (id, name, public) VALUES ('page-meta', 'page-meta', true);` with appropriate RLS policies allowing authenticated users to upload.
 
-**Files:** `ExpertCardCompact.tsx`, `ExpertCardMinimal.tsx`
+### 5. Wire Into Pages
 
----
+Add `<PageMetaEditor />` and the `usePageMeta` hook to each page that uses `EditableTextProvider`:
+- `EventPNW26.tsx` (slug: `pnw26`)
+- `EventOutsideDays26.tsx` (slug: `outsidedays26`)
+- `EventOutsideDaysCOS.tsx` (slug: `outsidedays26-cos`)
+- `GatherDenver.tsx`, `GatherPNW.tsx`, `Events.tsx`, etc.
 
-## 6. PNW26: "Brand Representatives" → "Featured Brands" + Cascading Logo Bubbles
+### Files Changed/Created
 
-- Change the label from "Brand Representatives" to "Featured Brands" in `PnwWhosComing.tsx`
-- Add the cascading bubble logo feature (from `PnwByTheNumbers`) as a standalone reusable component (`CascadingLogoBubbles.tsx`) placed between the "Meet the Teams" heading and the cards
-- Make this bubble area separately editable by admins (its own `EditableText` keys)
-
-**Files:** `PnwWhosComing.tsx`, new `CascadingLogoBubbles.tsx`
-
----
-
-## 7. OutsideDays26: Bubble Logos Below "Meet the Teams" + Same Brand Showcase
-
-- Move/add the cascading bubble feature below the "Meet the hiring teams" heading (rename to "Meet the Teams") and above the cards
-- Make the area separately admin-editable
-- Heading text changed from "Meet the hiring teams" to "Meet the Teams"
-
-**Files:** `DenverAttendeeSections.tsx`, `EventOutsideDays26.tsx`
-
----
-
-## 8. Brand Umbrella Showcase (Both Pages)
-
-Under "Meet the Teams", group brand reps by `current_company`. Each brand group shows:
-- Company logo (large)
-- Admin-editable careers page link
-- Admin-editable "currently hiring for" text
-- Expandable: collapsed shows logo + info, expanded reveals Card Type C cards below, with further expand to Card A per card
-- Multiple brands can be expanded simultaneously
-
-Store per-brand metadata (careers URL, hiring blurb) in `event_settings` using keys like `brand_{slug}_careers_url` and `brand_{slug}_hiring_blurb`.
-
-**Files:** `PnwWhosComing.tsx`, `DenverAttendeeSections.tsx`, new `BrandUmbrellaSection.tsx`
-
----
-
-## 9. Denver By The Numbers: Admin-Hideable
-
-Add an admin toggle (via `event_settings` key `hide_denver_stats`) that lets the admin hide/show the `RegistrantDenverStats` section on `/OutsideDays26`. When hidden, non-admins don't see it; admins see it dimmed with a "Show" button.
-
-**Files:** `EventOutsideDays26.tsx`, `RegistrantDenverStats.tsx`
-
----
-
-## 10. Admin CRM: "Save for Later" Status
-
-Add a new `saved_for_later` boolean column to `industry_experts` (default false). In the CRM, add a bookmark/archive button per expert and a filter option to show/hide "Saved for Later" experts. These experts are hidden from the default active view but accessible via filter.
-
-**DB migration:** `ALTER TABLE industry_experts ADD COLUMN saved_for_later boolean DEFAULT false;`
-**Files:** `ExpertCRM.tsx`, `AdminExperts.tsx`, `expert-types.ts`
-
----
-
-## Technical Details
-
-### Database Migrations
-1. `ALTER TABLE expert_city_assignments ADD COLUMN display_order integer DEFAULT 0;`
-2. `ALTER TABLE industry_experts ADD COLUMN saved_for_later boolean DEFAULT false;`
-
-### New Dependencies
-- `@dnd-kit/core` and `@dnd-kit/sortable` for drag-and-drop card reordering
-
-### New Components
-| Component | Purpose |
-|-----------|---------|
-| `EditableLink.tsx` | Admin-editable hyperlink (text + URL) |
-| `CascadingLogoBubbles.tsx` | Reusable falling/scattered logo bubbles |
-| `BrandUmbrellaSection.tsx` | Brand grouping with expandable cards |
-
-### Files Modified
-| File | Changes |
-|------|---------|
-| `ExpertCard.tsx` | Hover → full color photo; tooltip on logos |
-| `ExpertCardCompact.tsx` | Expand to Card A; tooltip on logos |
-| `ExpertCardMinimal.tsx` | Expand to Card A; tooltip on logos |
-| `PnwWhosComing.tsx` | "Featured Brands" label; bubble logos; brand umbrella; drag-and-drop; order by display_order |
-| `DenverAttendeeSections.tsx` | "Meet the Teams" label; bubble logos; brand umbrella; drag-and-drop; order by display_order |
-| `EventOutsideDays26.tsx` | Editable text everywhere; hideable stats section |
-| `EventPNW26.tsx` | Editable text everywhere |
-| `RegistrantDenverStats.tsx` | Admin hide/show toggle |
-| `RegistrantHero.tsx` | Editable text for all strings |
-| `RegistrantHowToTapIn.tsx` | Editable text for all strings |
-| `RegistrantVenue.tsx` | Editable text for all strings |
-| `ExpertCRM.tsx` | "Save for Later" button + filter |
-| `AdminExperts.tsx` | Filter UI for saved-for-later |
-| `expert-types.ts` | Add `saved_for_later` field |
+| File | Action |
+|------|--------|
+| `src/components/event/PageMetaEditor.tsx` | New — admin UI for favicon + OG image |
+| `src/hooks/usePageMeta.ts` | New — dynamic meta tag updates |
+| `supabase/functions/og-meta/index.ts` | New — serves meta tags to bot crawlers |
+| Migration for `page-meta` bucket | New |
+| `EventPNW26.tsx`, `EventOutsideDays26.tsx`, + other pages | Add `PageMetaEditor` + `usePageMeta` |
 
