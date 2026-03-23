@@ -13,6 +13,8 @@ import { CalendarDays } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);

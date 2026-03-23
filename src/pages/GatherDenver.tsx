@@ -15,6 +15,8 @@ import EventNotHiringCallout from "@/components/event/EventNotHiringCallout";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const GatherDenver = () => {
   const { logos: tickerLogos } = useEventLogos("gather-denver");

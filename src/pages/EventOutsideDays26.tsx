@@ -20,6 +20,8 @@ import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { Eye, EyeOff } from "lucide-react";
 
