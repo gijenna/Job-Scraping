@@ -19,6 +19,9 @@ import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
@@ -36,7 +39,9 @@ const EventPNW26 = () => {
 
   return (
     <EditableTextProvider pageSlug="pnw26">
+      <PageMetaApplier title="Gather PNW 2026" />
       <main className="bg-events-teal min-h-screen relative">
+        <PageMetaEditor />
         <AdminLogoManager lists={[
           { eventSlug: "pnw26", label: "Ticker Logos (Attending)" },
           { eventSlug: "pnw26-partners", label: "Brand Grid Logos" },

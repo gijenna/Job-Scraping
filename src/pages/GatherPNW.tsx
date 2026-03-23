@@ -14,6 +14,9 @@ import EventNotHiringCallout from "@/components/event/EventNotHiringCallout";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const GatherPNW = () => {
   const { logos: tickerLogos } = useEventLogos("gather-pnw");
@@ -29,7 +32,9 @@ const GatherPNW = () => {
 
   return (
     <EditableTextProvider pageSlug="gather-pnw">
+      <PageMetaApplier title="Gather PNW — Sponsors" />
       <main className="bg-background min-h-screen">
+        <PageMetaEditor />
         <SponsorPageNav otherEvent={{ label: "Outside Days Denver", path: "/gather-denver" }} />
         <AdminLogoManager lists={[
           { eventSlug: "gather-pnw", label: "Ticker Logos (Attending)" },

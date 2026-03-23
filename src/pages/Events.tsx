@@ -13,6 +13,9 @@ import { CalendarDays } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);
@@ -60,7 +63,9 @@ const Events = () => {
 
   return (
     <EditableTextProvider pageSlug="events">
+      <PageMetaApplier title="Basecamp Events" />
       <div className="min-h-screen bg-events-cream">
+        <PageMetaEditor />
         <EventsNav
           onFilterSelect={handleFilterSelect}
           onScrollToPartner={handleScrollToPartner}

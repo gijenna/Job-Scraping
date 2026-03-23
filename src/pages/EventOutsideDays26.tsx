@@ -20,6 +20,9 @@ import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
+import PageMetaEditor from "@/components/event/PageMetaEditor";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -62,7 +65,9 @@ const EventOutsideDays26 = () => {
 
   return (
     <EditableTextProvider pageSlug="outsidedays26">
+      <PageMetaApplier title="Outside Days Denver 2026" />
       <main className="bg-events-teal min-h-screen relative">
+        <PageMetaEditor />
         <AdminLogoManager lists={[
           { eventSlug: "denver26", label: "Ticker Logos (Attending)" },
           { eventSlug: "denver26-partners", label: "Partner Logos (Stats)" },
