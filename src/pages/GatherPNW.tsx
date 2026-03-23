@@ -32,7 +32,9 @@ const GatherPNW = () => {
 
   return (
     <EditableTextProvider pageSlug="gather-pnw">
+      <PageMetaApplier title="Gather PNW — Sponsors" />
       <main className="bg-background min-h-screen">
+        <PageMetaEditor />
         <SponsorPageNav otherEvent={{ label: "Outside Days Denver", path: "/gather-denver" }} />
         <AdminLogoManager lists={[
           { eventSlug: "gather-pnw", label: "Ticker Logos (Attending)" },
