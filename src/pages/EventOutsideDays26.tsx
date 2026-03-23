@@ -64,7 +64,9 @@ const EventOutsideDays26 = () => {
 
   return (
     <EditableTextProvider pageSlug="outsidedays26">
+      <PageMetaApplier title="Outside Days Denver 2026" />
       <main className="bg-events-teal min-h-screen relative">
+        <PageMetaEditor />
         <AdminLogoManager lists={[
           { eventSlug: "denver26", label: "Ticker Logos (Attending)" },
           { eventSlug: "denver26-partners", label: "Partner Logos (Stats)" },

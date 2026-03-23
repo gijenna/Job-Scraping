@@ -62,7 +62,9 @@ const Events = () => {
 
   return (
     <EditableTextProvider pageSlug="events">
+      <PageMetaApplier title="Basecamp Events" />
       <div className="min-h-screen bg-events-cream">
+        <PageMetaEditor />
         <EventsNav
           onFilterSelect={handleFilterSelect}
           onScrollToPartner={handleScrollToPartner}
