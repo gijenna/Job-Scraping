@@ -15,6 +15,7 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const Events = () => {
   const [events, setEvents] = useState<Tables<"events">[]>([]);

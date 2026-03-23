@@ -21,6 +21,7 @@ import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 

@@ -22,6 +22,7 @@ import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { Eye, EyeOff } from "lucide-react";
 
