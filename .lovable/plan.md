@@ -1,54 +1,57 @@
 
 
-# Admin-Hideable Sections + Editable Bubble Logos
+# Split Sections, Fix Bubbles, Responsive Brand Grid
 
-## 1. Reusable `HideableSection` wrapper component
+## Changes
 
-Create a single reusable component `src/components/event/HideableSection.tsx` that:
-- Takes a `sectionKey` (string), `pageSlug` (string), and `children`
-- Uses `useEventSettings` to check if `hide_{sectionKey}` is `"true"`
-- If hidden and not admin: renders nothing
-- If hidden and admin: renders at 30% opacity with a "Show Section" button
-- If visible and admin: shows a small "Hide Section" button in the top-right corner
-- Replaces the existing one-off `HideableStats` pattern in `EventOutsideDays26.tsx`
+### 1. Split "Meet the Teams" into 3 independently hideable sections
 
-## 2. Wrap every section on every page
+Currently `PnwWhosComing` and `DenverAttendeeSections` each render one big section containing bubbles + brand umbrellas + brand rep cards + industry expert cards. Split into 3 separate returned sections so each can be wrapped in its own `HideableSection` on the page:
 
-Apply `HideableSection` around each distinct section on all pages:
+**PnwWhosComing** becomes 3 exported components (or returns fragments that the page wraps):
+- **Featured Teams header + bubble logos + BrandUmbrellaSection** → wrapped in `HideableSection sectionKey="pnw_featured_teams"`
+- **Brand rep cards** → wrapped in `HideableSection sectionKey="pnw_brand_reps"`
+- **Industry expert cards** → wrapped in `HideableSection sectionKey="pnw_industry_experts"`
 
-**EventOutsideDays26.tsx** (~6 sections): Hero, LogoTicker, AttendeeSections, Stats, HowToTapIn, Venue, FestivalPartner, Final CTA
+Same for **DenverAttendeeSections** → `denver_featured_teams`, `denver_brand_reps`, `denver_industry_experts`
 
-**EventPNW26.tsx** (~8 sections): Hero, LogoTicker, WhosComing, HowToTapIn, Brands grid, Testimonials, Gallery, What to Expect, UO Partner, Venue, Final CTA
+Approach: Refactor each component to return 3 separate `<section>` elements (no wrapping fragment needed since HideableSection wraps from the page level). The page files will import and render the data via a shared hook, then render 3 HideableSection wrappers.
 
-**EventOutsideDaysCOS.tsx**: Same as Denver plus Confluence Spotlight
+Actually, simpler: keep the components but have them accept a `section` prop (`"featured_teams" | "brand_reps" | "industry_experts"`) and render only that part. Then the page calls the component 3 times, each in its own HideableSection. They share data via the same fetch (lift data fetching to the page or use a shared hook).
 
-**GatherDenver.tsx** (~8 sections): Hero, LogoTicker, NotHiringCallout, FestivalPartner, PowerfulPremium, ByTheNumbers, Testimonials, HowItWorks, Gallery, WhoAttends, CTA
+**Cleanest approach**: Extract a shared hook `useEventAttendees(citySlug)` that fetches brandReps, industryExperts, assignmentMap. Then create 3 small section components:
+- `FeaturedTeamsSection` — header + bubbles + BrandUmbrellaSection
+- `BrandRepCardsSection` — card style picker + draggable brand rep cards
+- `IndustryExpertCardsSection` — card style picker + draggable expert cards
 
-**GatherPNW.tsx** (~8 sections): Hero, LogoTicker, NotHiringCallout, UOPartner, PowerfulPremium, ByTheNumbers, Testimonials, HowItWorks, WhoAttends, CTA
+Each page renders all 3 in separate HideableSections.
 
-Each section gets a unique key like `denver_hero`, `denver_ticker`, `pnw_venue`, etc.
+### 2. CascadingLogoBubbles: less gap, center when few logos
 
-## 3. Editable bubble logos (CascadingLogoBubbles)
+- Reduce `py-8 md:py-12` to `py-4 md:py-6` (less room between heading and bubbles)
+- When logo count <= 6, center them more tightly instead of spreading across 85% width. Calculate `leftPercent` based on count: for 4 logos, spread across ~40% centered (30% to 70% range). Formula: `spreadPercent = Math.min(85, logos.length * 15)`, center offset = `(100 - spreadPercent) / 2`.
 
-Currently the bubbles pull from `tickerLogos` (the same `event_logos` list used for the ticker). To make the bubble logos independently editable:
+### 3. BrandUmbrellaSection: responsive grid (3 across for 3, 4 across for 4)
 
-- Add a new logo list slug for each page's bubbles: `denver26-bubbles` and `pnw26-bubbles`
-- Add these to the `AdminLogoManager` `lists` prop on both pages
-- Update `DenverAttendeeSections` and `PnwWhosComing` to accept a `bubbleLogos` prop (from `useEventLogos`) instead of deriving from `tickerLogos`
-- If the dedicated bubble logo list is empty, fall back to ticker logos (backward compatible)
+Currently brand groups are stacked vertically in `space-y-4`. Change to a responsive grid:
+- 3 brands → `grid-cols-3`
+- 4 brands → `grid-cols-4`
+- 5+ → `grid-cols-3` or `grid-cols-4` wrapping
+- Each brand card shows logo, name, careers link, hiring blurb, expand chevron
+- On expand, cards below shift down to show the people grid spanning full width
 
-## Files Changed
+### Files Changed
 
 | File | Change |
 |------|--------|
-| `src/components/event/HideableSection.tsx` | **New** — reusable hide/show wrapper |
-| `src/pages/EventOutsideDays26.tsx` | Wrap all sections with `HideableSection`; remove one-off `HideableStats`; add `denver26-bubbles` to AdminLogoManager; pass bubble logos |
-| `src/pages/EventPNW26.tsx` | Wrap all sections; add `pnw26-bubbles` to AdminLogoManager; pass bubble logos |
-| `src/pages/EventOutsideDaysCOS.tsx` | Wrap all sections |
-| `src/pages/GatherDenver.tsx` | Wrap all sections |
-| `src/pages/GatherPNW.tsx` | Wrap all sections |
-| `src/components/event/DenverAttendeeSections.tsx` | Accept optional `bubbleLogos` prop |
-| `src/components/event/PnwWhosComing.tsx` | Accept optional `bubbleLogos` prop |
-
-No database changes needed — uses existing `event_settings` table.
+| `src/hooks/useEventAttendees.ts` | **New** — shared hook extracting fetch logic from both attendee components |
+| `src/components/event/FeaturedTeamsSection.tsx` | **New** — header + bubbles + brand umbrella grid |
+| `src/components/event/BrandRepCardsSection.tsx` | **New** — draggable brand rep cards with style picker |
+| `src/components/event/IndustryExpertCardsSection.tsx` | **New** — draggable expert cards with style picker |
+| `src/components/event/CascadingLogoBubbles.tsx` | Reduce vertical padding; center logos when count is small |
+| `src/components/event/BrandUmbrellaSection.tsx` | Change from vertical stack to responsive grid; expand shows cards below spanning full width |
+| `src/pages/EventPNW26.tsx` | Replace single `pnw_whos_coming` HideableSection with 3 separate ones |
+| `src/pages/EventOutsideDays26.tsx` | Replace single `denver_attendees` HideableSection with 3 separate ones |
+| `src/components/event/PnwWhosComing.tsx` | Remove (replaced by new components) |
+| `src/components/event/DenverAttendeeSections.tsx` | Remove (replaced by new components) |
 
