@@ -202,7 +202,7 @@ const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
     <>
       <button
         onClick={() => setShowPanel(!showPanel)}
-        className="fixed bottom-4 right-4 z-50 bg-events-coral text-events-teal p-3 rounded-full shadow-xl hover:scale-110 transition-transform"
+        className="fixed bottom-4 right-16 z-50 bg-events-coral text-events-teal p-3 rounded-full shadow-xl hover:scale-110 transition-transform"
         title="Manage Logos"
       >
         <Settings className="w-5 h-5" />
