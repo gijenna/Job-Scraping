@@ -43,6 +43,7 @@ const DenverAttendeeSections = ({
   accentColor = "#E1B624",
   bgColor = "#0d1f22",
   eventSlug = "denver26",
+  bubbleLogos: bubbleLogosProp,
 }: DenverAttendeeSectionsProps) => {
   const [brandReps, setBrandReps] = useState<Expert[]>([]);
   const [industryExperts, setIndustryExperts] = useState<Expert[]>([]);
