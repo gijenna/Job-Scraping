@@ -9,12 +9,15 @@ import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
-import PnwWhosComing from "@/components/event/PnwWhosComing";
+import FeaturedTeamsSection from "@/components/event/FeaturedTeamsSection";
+import BrandRepCardsSection from "@/components/event/BrandRepCardsSection";
+import IndustryExpertCardsSection from "@/components/event/IndustryExpertCardsSection";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import HideableSection from "@/components/event/HideableSection";
 import { useEventLogos } from "@/hooks/useEventLogos";
+import { useEventAttendees } from "@/hooks/useEventAttendees";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
@@ -29,6 +32,7 @@ const EventPNW26 = () => {
   const { logos: tickerLogos } = useEventLogos("pnw26");
   const { logos: partnerLogos } = useEventLogos("pnw26-partners");
   const { logos: bubbleLogos } = useEventLogos("pnw26-bubbles");
+  const { brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd } = useEventAttendees("portland");
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -40,7 +44,7 @@ const EventPNW26 = () => {
 
   const bubbleBrands = bubbleLogos.length > 0
     ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
-    : undefined;
+    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
 
   return (
     <EditableTextProvider pageSlug="pnw26">
@@ -78,8 +82,44 @@ const EventPNW26 = () => {
           <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
         </HideableSection>
 
-        <HideableSection sectionKey="pnw_whos_coming">
-          <PnwWhosComing accentColor="#FEE123" bgColor="#154733" eventSlug="pnw26" bubbleLogos={bubbleBrands} />
+        <HideableSection sectionKey="pnw_featured_teams">
+          <FeaturedTeamsSection
+            brandReps={brandReps}
+            bubbleLogos={bubbleBrands}
+            accentColor="#FEE123"
+            bgColor="#154733"
+            bubbleColor="#e8f0d8"
+            editKeyPrefix="pnw_bubbles"
+            eyebrowKey="pnw_brand_reps_eyebrow"
+            headlineKey="pnw_brand_reps_headline"
+            eventSlug="pnw26"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_brand_reps">
+          <BrandRepCardsSection
+            brandReps={brandReps}
+            setBrandReps={setBrandReps}
+            handleDragEnd={handleDragEnd}
+            accentColor="#FEE123"
+            bgColor="#154733"
+            eventSlug="pnw26"
+            eyebrowKey="pnw_brand_rep_cards_eyebrow"
+            headlineKey="pnw_brand_rep_cards_headline"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_industry_experts">
+          <IndustryExpertCardsSection
+            experts={industryExperts}
+            setExperts={setIndustryExperts}
+            handleDragEnd={handleDragEnd}
+            accentColor="#FEE123"
+            bgColor="#0d2b1f"
+            eventSlug="pnw26"
+            eyebrowKey="pnw_experts_eyebrow"
+            headlineKey="pnw_experts_headline"
+          />
         </HideableSection>
 
         <HideableSection sectionKey="pnw_how_to_tap_in">
