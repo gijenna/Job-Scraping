@@ -99,8 +99,40 @@ const EventOutsideDaysCOS = () => {
           <ConfluenceSpotlight />
         </HideableSection>
 
-        <HideableSection sectionKey="cos_attendees">
-          <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
+        <HideableSection sectionKey="cos_featured_teams">
+          <FeaturedTeamsSection
+            brandReps={brandReps}
+            bubbleLogos={bubbleBrands}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            bubbleColor="#F5E6D3"
+            editKeyPrefix="cos_bubbles"
+            eyebrowKey="cos_brand_reps_eyebrow"
+            headlineKey="cos_brand_reps_headline"
+            eventSlug="denver26"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_brand_reps">
+          <BrandRepCardsSection
+            brandReps={brandReps}
+            setBrandReps={setBrandReps}
+            handleDragEnd={handleDragEnd}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            eventSlug="denver26"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_industry_experts">
+          <IndustryExpertCardsSection
+            experts={industryExperts}
+            setExperts={setIndustryExperts}
+            handleDragEnd={handleDragEnd}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            eventSlug="denver26"
+          />
         </HideableSection>
 
         <HideableSection sectionKey="cos_stats">
