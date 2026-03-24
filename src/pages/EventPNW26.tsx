@@ -13,6 +13,7 @@ import PnwWhosComing from "@/components/event/PnwWhosComing";
 import JobSeekerTestimonials from "@/components/event/JobSeekerTestimonials";
 import BasecampEventsGallery from "@/components/event/BasecampEventsGallery";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
+import HideableSection from "@/components/event/HideableSection";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
@@ -20,7 +21,6 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
@@ -28,6 +28,7 @@ const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 const EventPNW26 = () => {
   const { logos: tickerLogos } = useEventLogos("pnw26");
   const { logos: partnerLogos } = useEventLogos("pnw26-partners");
+  const { logos: bubbleLogos } = useEventLogos("pnw26-bubbles");
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -37,6 +38,10 @@ const EventPNW26 = () => {
     ? partnerLogos.map((l) => ({ name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined }))
     : tickerBrands;
 
+  const bubbleBrands = bubbleLogos.length > 0
+    ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
+    : undefined;
+
   return (
     <EditableTextProvider pageSlug="pnw26">
       <PageMetaApplier title="Gather PNW 2026" />
@@ -45,183 +50,207 @@ const EventPNW26 = () => {
         <AdminLogoManager lists={[
           { eventSlug: "pnw26", label: "Ticker Logos (Attending)" },
           { eventSlug: "pnw26-partners", label: "Brand Grid Logos" },
+          { eventSlug: "pnw26-bubbles", label: "Bubble Logos (Featured Brands)" },
         ]} />
         <SponsorPageNav otherEvent={{ label: "Outside Days Denver", path: "/OutsideDays26" }} />
         <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 right-4 z-50">
           <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
         </a>
 
-        <RegistrantHero
-          backgroundSrc={heroPnw}
-          backgroundType="video"
-          logoSrc={gatherPnwLogo}
-          logoAlt="Gather PNW logo"
-          date="April 16, 2026"
-          location="UO Portland Campus · Portland, OR"
-          time="5:30 – 8:30 PM PT"
-          tagline="The Pacific Northwest's premier outdoor industry networking event. Free for all."
-          registrationUrl={TYPEFORM_PNW}
-          overlayColor="rgba(21, 71, 51, 0.65)"
-          accentColor="#FEE123"
-          sponsorPageUrl="/gather-pnw"
-        />
+        <HideableSection sectionKey="pnw_hero">
+          <RegistrantHero
+            backgroundSrc={heroPnw}
+            backgroundType="video"
+            logoSrc={gatherPnwLogo}
+            logoAlt="Gather PNW logo"
+            date="April 16, 2026"
+            location="UO Portland Campus · Portland, OR"
+            time="5:30 – 8:30 PM PT"
+            tagline="The Pacific Northwest's premier outdoor industry networking event. Free for all."
+            registrationUrl={TYPEFORM_PNW}
+            overlayColor="rgba(21, 71, 51, 0.65)"
+            accentColor="#FEE123"
+            sponsorPageUrl="/gather-pnw"
+          />
+        </HideableSection>
 
-        <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
+        <HideableSection sectionKey="pnw_ticker">
+          <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
+        </HideableSection>
 
-        <PnwWhosComing accentColor="#FEE123" bgColor="#154733" eventSlug="pnw26" />
+        <HideableSection sectionKey="pnw_whos_coming">
+          <PnwWhosComing accentColor="#FEE123" bgColor="#154733" eventSlug="pnw26" bubbleLogos={bubbleBrands} />
+        </HideableSection>
 
-        <RegistrantHowToTapIn
-          registrationUrl={TYPEFORM_PNW}
-          sponsorPageUrl="/gather-pnw"
-          expertsPageUrl="/Portlandexperts"
-          accentColor="#FEE123"
-          bgColor="#0d2b1f"
-          attendeeCount="300+"
-        />
+        <HideableSection sectionKey="pnw_how_to_tap_in">
+          <RegistrantHowToTapIn
+            registrationUrl={TYPEFORM_PNW}
+            sponsorPageUrl="/gather-pnw"
+            expertsPageUrl="/Portlandexperts"
+            accentColor="#FEE123"
+            bgColor="#0d2b1f"
+            attendeeCount="300+"
+          />
+        </HideableSection>
 
-        <section className="py-16 md:py-24 px-6 bg-events-cream">
-          <div className="container mx-auto max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-              <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
-                <EditableText settingKey="brands_eyebrow" defaultText="Who's in the room" as="span" />
-              </p>
-              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
-                <EditableText settingKey="brands_headline" defaultText="Chat with hiring managers & industry leaders from brands like:" as="span" />
-              </h2>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center">
-              {brandGridLogos.map((brand) => {
-                const imgSrc = brand.logo_url || `https://logo.clearbit.com/${brand.domain}`;
-                const inner = (
-                  <div className="flex flex-col items-center gap-2 group">
-                    <img
-                      src={imgSrc}
-                      alt={brand.name}
-                      className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                      loading="lazy"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        target.src = `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
-                        target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
-                      }}
-                    />
-                    <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">{brand.name}</span>
-                  </div>
-                );
-                return brand.url ? (
-                  <a key={brand.name} href={brand.url} target="_blank" rel="noopener noreferrer">{inner}</a>
-                ) : (
-                  <div key={brand.name}>{inner}</div>
-                );
-              })}
-            </motion.div>
-          </div>
-        </section>
-
-        <JobSeekerTestimonials accentColor="#FEE123" bgColor="#154733" />
-        <BasecampEventsGallery />
-
-        <section className="py-16 md:py-24 px-6 bg-events-teal">
-          <div className="container mx-auto max-w-4xl">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-              <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: "#FEE123" }}>
-                <EditableText settingKey="expect_eyebrow" defaultText="What to Expect" as="span" />
-              </p>
-              <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream leading-tight">
-                <EditableText settingKey="expect_headline" defaultText="This isn't a job fair. It's a career accelerator." as="span" />
-              </h2>
-            </motion.div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                { num: "300+", label: "Professionals & Students", desc: "Marketing, product, design, ops, and career changers — all in one room." },
-                { num: "15+", label: "Brands Represented", desc: "Talk directly with hiring managers and team leads at top outdoor brands." },
-                { num: "45min", label: "'How I Broke In' Panel", desc: "Hear real career stories from leaders who built their path in outdoor." },
-                { num: "FREE", label: "Always Free to Attend", desc: "We believe access to opportunity shouldn't cost anything." },
-              ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-xl p-6 border border-white/10" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                  <p className="font-headline font-bold text-3xl mb-1" style={{ color: "#FEE123" }}>{stat.num}</p>
-                  <p className="font-display font-bold text-base text-events-cream mb-2">{stat.label}</p>
-                  <p className="font-body text-sm text-events-cream/60">{stat.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20 md:py-28 px-6 bg-events-cream">
-          <div className="container mx-auto max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row gap-12 items-center">
-              <div className="flex flex-col items-center md:items-start gap-6 md:w-1/3 shrink-0">
-                <img src={uoDuckLogo} alt="University of Oregon" className="w-40 md:w-52 h-auto" />
-                <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>#ScoDucks 🦆</p>
-              </div>
-              <div className="md:w-2/3">
-                <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">
-                  <EditableText settingKey="uo_eyebrow" defaultText="Our Host Program" as="span" />
+        <HideableSection sectionKey="pnw_brands_grid">
+          <section className="py-16 md:py-24 px-6 bg-events-cream">
+            <div className="container mx-auto max-w-5xl">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+                <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-coral">
+                  <EditableText settingKey="brands_eyebrow" defaultText="Who's in the room" as="span" />
                 </p>
-                <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">
-                  <EditableText settingKey="uo_headline" defaultText="MS Sports Product Management" as="span" />
+                <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal leading-tight">
+                  <EditableText settingKey="brands_headline" defaultText="Chat with hiring managers & industry leaders from brands like:" as="span" />
                 </h2>
-                <p className="font-body text-events-teal/70 leading-relaxed mb-4">
-                  <EditableText settingKey="uo_body1" defaultText="The University of Oregon partnered with the sports and outdoor product industry's best to create this one-of-a-kind master's program. Experience the entire product creation lifecycle through the lenses of innovation, sustainability, diversity and inclusion, and global business." as="span" multiline />
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center">
+                {brandGridLogos.map((brand) => {
+                  const imgSrc = brand.logo_url || `https://logo.clearbit.com/${brand.domain}`;
+                  const inner = (
+                    <div className="flex flex-col items-center gap-2 group">
+                      <img
+                        src={imgSrc}
+                        alt={brand.name}
+                        className="h-10 md:h-14 w-auto object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.src = `https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`;
+                          target.className = "h-8 md:h-10 w-auto object-contain opacity-70 group-hover:opacity-100 transition-all duration-300";
+                        }}
+                      />
+                      <span className="font-body text-xs text-events-teal/50 group-hover:text-events-teal/80 transition-colors">{brand.name}</span>
+                    </div>
+                  );
+                  return brand.url ? (
+                    <a key={brand.name} href={brand.url} target="_blank" rel="noopener noreferrer">{inner}</a>
+                  ) : (
+                    <div key={brand.name}>{inner}</div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </section>
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_testimonials">
+          <JobSeekerTestimonials accentColor="#FEE123" bgColor="#154733" />
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_gallery">
+          <BasecampEventsGallery />
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_what_to_expect">
+          <section className="py-16 md:py-24 px-6 bg-events-teal">
+            <div className="container mx-auto max-w-4xl">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+                <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: "#FEE123" }}>
+                  <EditableText settingKey="expect_eyebrow" defaultText="What to Expect" as="span" />
                 </p>
-                <p className="font-body text-events-teal/70 leading-relaxed mb-6">
-                  <EditableText settingKey="uo_body2" defaultText="90% of alumni work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus — the heart of the PNW outdoor industry." as="span" multiline />
-                </p>
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
-                    <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>90%</p>
-                    <p className="font-body text-xs text-events-teal/60">Alumni placement</p>
-                  </div>
-                  <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
-                    <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>3,000+</p>
-                    <p className="font-body text-xs text-events-teal/60">OR outdoor companies</p>
-                  </div>
-                  <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
-                    <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>$29B</p>
-                    <p className="font-body text-xs text-events-teal/60">Industry output</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  <EditableLink textKey="uo_learn_more_text" urlKey="uo_learn_more_url" defaultText="Learn More" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#154733", color: "#FEE123" }} />
-                  <EditableLink textKey="uo_apply_text" urlKey="uo_apply_url" defaultText="Apply Now" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105" style={{ borderColor: "#154733", color: "#154733" }} />
-                </div>
+                <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream leading-tight">
+                  <EditableText settingKey="expect_headline" defaultText="This isn't a job fair. It's a career accelerator." as="span" />
+                </h2>
+              </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {[
+                  { num: "300+", label: "Professionals & Students", desc: "Marketing, product, design, ops, and career changers — all in one room." },
+                  { num: "15+", label: "Brands Represented", desc: "Talk directly with hiring managers and team leads at top outdoor brands." },
+                  { num: "45min", label: "'How I Broke In' Panel", desc: "Hear real career stories from leaders who built their path in outdoor." },
+                  { num: "FREE", label: "Always Free to Attend", desc: "We believe access to opportunity shouldn't cost anything." },
+                ].map((stat, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="rounded-xl p-6 border border-white/10" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                    <p className="font-headline font-bold text-3xl mb-1" style={{ color: "#FEE123" }}>{stat.num}</p>
+                    <p className="font-display font-bold text-base text-events-cream mb-2">{stat.label}</p>
+                    <p className="font-body text-sm text-events-cream/60">{stat.desc}</p>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
-          </div>
-        </section>
+            </div>
+          </section>
+        </HideableSection>
 
-        <RegistrantVenue
-          venueName="UO Portland Campus"
-          address="2800 NE Liberty St, Portland, OR 97211"
-          googleMapsUrl="https://maps.google.com/?q=2800+NE+Liberty+St+Portland+OR"
-          date="April 16, 2026"
-          eventTime="5:30 – 8:30 PM PT"
-          description="Basecamp Outdoor × University of Oregon's Sports Product Management program. Located at UO's new Portland campus — the heart of the PNW outdoor industry."
-          accentColor="#FEE123"
-        />
+        <HideableSection sectionKey="pnw_uo_partner">
+          <section className="py-20 md:py-28 px-6 bg-events-cream">
+            <div className="container mx-auto max-w-5xl">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row gap-12 items-center">
+                <div className="flex flex-col items-center md:items-start gap-6 md:w-1/3 shrink-0">
+                  <img src={uoDuckLogo} alt="University of Oregon" className="w-40 md:w-52 h-auto" />
+                  <p className="font-headline font-bold text-2xl md:text-3xl" style={{ color: "#154733" }}>#ScoDucks 🦆</p>
+                </div>
+                <div className="md:w-2/3">
+                  <p className="text-xs tracking-[0.3em] uppercase mb-3 font-body text-events-coral">
+                    <EditableText settingKey="uo_eyebrow" defaultText="Our Host Program" as="span" />
+                  </p>
+                  <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-teal mb-4 leading-tight">
+                    <EditableText settingKey="uo_headline" defaultText="MS Sports Product Management" as="span" />
+                  </h2>
+                  <p className="font-body text-events-teal/70 leading-relaxed mb-4">
+                    <EditableText settingKey="uo_body1" defaultText="The University of Oregon partnered with the sports and outdoor product industry's best to create this one-of-a-kind master's program. Experience the entire product creation lifecycle through the lenses of innovation, sustainability, diversity and inclusion, and global business." as="span" multiline />
+                  </p>
+                  <p className="font-body text-events-teal/70 leading-relaxed mb-6">
+                    <EditableText settingKey="uo_body2" defaultText="90% of alumni work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus — the heart of the PNW outdoor industry." as="span" multiline />
+                  </p>
+                  <div className="grid grid-cols-3 gap-4 mb-8">
+                    <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                      <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>90%</p>
+                      <p className="font-body text-xs text-events-teal/60">Alumni placement</p>
+                    </div>
+                    <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                      <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>3,000+</p>
+                      <p className="font-body text-xs text-events-teal/60">OR outdoor companies</p>
+                    </div>
+                    <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
+                      <p className="font-headline font-bold text-xl" style={{ color: "#154733" }}>$29B</p>
+                      <p className="font-body text-xs text-events-teal/60">Industry output</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-4">
+                    <EditableLink textKey="uo_learn_more_text" urlKey="uo_learn_more_url" defaultText="Learn More" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm transition-all duration-300 hover:scale-105" style={{ backgroundColor: "#154733", color: "#FEE123" }} />
+                    <EditableLink textKey="uo_apply_text" urlKey="uo_apply_url" defaultText="Apply Now" defaultUrl="https://bit.ly/47veqAL" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-display font-bold text-sm border-2 transition-all duration-300 hover:scale-105" style={{ borderColor: "#154733", color: "#154733" }} />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        </HideableSection>
 
-        <section className="py-20 px-6 bg-events-teal">
-          <div className="container mx-auto max-w-2xl text-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
-                <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
-              </h2>
-              <p className="font-body text-events-cream/60 mb-8">
-                <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Limited capacity. Don't miss the PNW's best outdoor industry event." as="span" />
-              </p>
-              <EditableLink
-                textKey="final_cta_button_text"
-                urlKey="final_cta_button_url"
-                defaultText="Register Free"
-                defaultUrl={TYPEFORM_PNW}
-                className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105"
-                style={{ backgroundColor: "#FEE123", color: "#154733" }}
-              />
-            </motion.div>
-          </div>
-        </section>
+        <HideableSection sectionKey="pnw_venue">
+          <RegistrantVenue
+            venueName="UO Portland Campus"
+            address="2800 NE Liberty St, Portland, OR 97211"
+            googleMapsUrl="https://maps.google.com/?q=2800+NE+Liberty+St+Portland+OR"
+            date="April 16, 2026"
+            eventTime="5:30 – 8:30 PM PT"
+            description="Basecamp Outdoor × University of Oregon's Sports Product Management program. Located at UO's new Portland campus — the heart of the PNW outdoor industry."
+            accentColor="#FEE123"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="pnw_final_cta">
+          <section className="py-20 px-6 bg-events-teal">
+            <div className="container mx-auto max-w-2xl text-center">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
+                  <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
+                </h2>
+                <p className="font-body text-events-cream/60 mb-8">
+                  <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Limited capacity. Don't miss the PNW's best outdoor industry event." as="span" />
+                </p>
+                <EditableLink
+                  textKey="final_cta_button_text"
+                  urlKey="final_cta_button_url"
+                  defaultText="Register Free"
+                  defaultUrl={TYPEFORM_PNW}
+                  className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105"
+                  style={{ backgroundColor: "#FEE123", color: "#154733" }}
+                />
+              </motion.div>
+            </div>
+          </section>
+        </HideableSection>
 
         <SiteFooter />
       </main>
