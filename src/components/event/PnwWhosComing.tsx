@@ -21,6 +21,7 @@ interface PnwWhosComingProps {
   accentColor?: string;
   bgColor?: string;
   eventSlug?: string;
+  bubbleLogos?: { name: string; domain: string; logo_url: string | null }[];
 }
 
 const SortableCard = ({ expert, renderCard, isAdmin }: { expert: Expert; renderCard: (e: Expert) => React.ReactNode; isAdmin: boolean }) => {
