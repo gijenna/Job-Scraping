@@ -143,7 +143,7 @@ const DenverAttendeeSections = ({
       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
       : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
 
-  const bubbleLogos = tickerLogos.map(l => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
+  const bubbleLogos = bubbleLogosProp || tickerLogos.map(l => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
 
   return (
     <>
