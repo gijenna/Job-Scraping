@@ -58,7 +58,9 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
   };
 
   return (
-    <div className="space-y-4">
+    const gridCols = groups.length <= 2 ? "md:grid-cols-2" : groups.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4";
+
+    <div className={`grid grid-cols-1 ${gridCols} gap-4`}>
       {groups.map((group) => {
         const slug = slugify(group.company);
         const isExpanded = expandedBrands.has(group.company);

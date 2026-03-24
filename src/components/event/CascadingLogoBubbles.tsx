@@ -38,7 +38,7 @@ const CascadingLogoBubbles = ({
   }));
 
   return (
-    <div className="relative overflow-hidden py-8 md:py-12">
+    <div className="relative overflow-hidden py-4 md:py-6">
       {/* Admin editable subtitle area */}
       {isAdmin && (
         <div className="text-center mb-4 relative z-10">
