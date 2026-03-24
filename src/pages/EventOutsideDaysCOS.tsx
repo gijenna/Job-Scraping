@@ -15,13 +15,13 @@ import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import ConfluenceSpotlight from "@/components/event/ConfluenceSpotlight";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
+import HideableSection from "@/components/event/HideableSection";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
@@ -52,78 +52,96 @@ const EventOutsideDaysCOS = () => {
           <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
         </a>
 
-        <RegistrantHero
-          backgroundSrc={heroMountains}
-          backgroundType="image"
-          logoSrc={denverLogo}
-          logoAlt="Gather Denver logo"
-          date="May 29, 2026"
-          location="Auraria Campus Wellness Center · Denver, CO"
-          time="1:00 – 4:00 PM MT"
-          tagline="The outdoor industry's biggest career discovery event inside the Outside Days festival."
-          registrationUrl={TYPEFORM_DENVER}
-          accentColor="#E1B624"
-          sponsorPageUrl="/gather-denver"
-        />
+        <HideableSection sectionKey="cos_hero">
+          <RegistrantHero
+            backgroundSrc={heroMountains}
+            backgroundType="image"
+            logoSrc={denverLogo}
+            logoAlt="Gather Denver logo"
+            date="May 29, 2026"
+            location="Auraria Campus Wellness Center · Denver, CO"
+            time="1:00 – 4:00 PM MT"
+            tagline="The outdoor industry's biggest career discovery event inside the Outside Days festival."
+            registrationUrl={TYPEFORM_DENVER}
+            accentColor="#E1B624"
+            sponsorPageUrl="/gather-denver"
+          />
+        </HideableSection>
 
-        {/* Presented by badge */}
-        <div className="bg-events-teal py-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-events-yellow/30 bg-events-card/50"
-          >
-            <span className="text-events-cream/60 text-sm font-body">Presented by</span>
-            <span className="text-events-yellow font-headline font-bold text-lg">Confluence of States</span>
-          </motion.div>
-        </div>
-
-        <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
-
-        {/* Confluence Spotlight — the main new section */}
-        <ConfluenceSpotlight />
-
-        <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
-
-        <RegistrantDenverStats logos={statsLogos} />
-
-        <RegistrantHowToTapIn
-          registrationUrl={TYPEFORM_DENVER}
-          sponsorPageUrl="/gather-denver"
-          expertsPageUrl="/Denverexperts"
-          accentColor="#E1B624"
-          bgColor="#0d1f22"
-          images={[eventCrowd, eventBoa, eventGroupPhoto]}
-        />
-
-        <RegistrantVenue
-          venueName="Auraria Campus Wellness Center"
-          address="Auraria Campus, Denver, CO"
-          googleMapsUrl="https://maps.google.com/?q=Auraria+Campus+Wellness+Center+Denver+CO"
-          date="May 29, 2026"
-          eventTime="1:00 – 4:00 PM MT"
-          accentColor="#E1B624"
-          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
-        />
-
-        <DenverFestivalPartner />
-
-        <section className="py-20 px-6 bg-events-teal">
-          <div className="container mx-auto max-w-2xl text-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
-                <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
-              </h2>
-              <p className="font-body text-events-cream/60 mb-8">
-                <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Part of Outside Days. The outdoor industry's career event of the year." as="span" />
-              </p>
-              <a href={TYPEFORM_DENVER} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal">
-                Register Free <ArrowRight className="w-5 h-5" />
-              </a>
+        <HideableSection sectionKey="cos_presented_by">
+          <div className="bg-events-teal py-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-events-yellow/30 bg-events-card/50"
+            >
+              <span className="text-events-cream/60 text-sm font-body">Presented by</span>
+              <span className="text-events-yellow font-headline font-bold text-lg">Confluence of States</span>
             </motion.div>
           </div>
-        </section>
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_ticker">
+          <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_confluence">
+          <ConfluenceSpotlight />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_attendees">
+          <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_stats">
+          <RegistrantDenverStats logos={statsLogos} />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_how_to_tap_in">
+          <RegistrantHowToTapIn
+            registrationUrl={TYPEFORM_DENVER}
+            sponsorPageUrl="/gather-denver"
+            expertsPageUrl="/Denverexperts"
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            images={[eventCrowd, eventBoa, eventGroupPhoto]}
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_venue">
+          <RegistrantVenue
+            venueName="Auraria Campus Wellness Center"
+            address="Auraria Campus, Denver, CO"
+            googleMapsUrl="https://maps.google.com/?q=Auraria+Campus+Wellness+Center+Denver+CO"
+            date="May 29, 2026"
+            eventTime="1:00 – 4:00 PM MT"
+            accentColor="#E1B624"
+            description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_festival_partner">
+          <DenverFestivalPartner />
+        </HideableSection>
+
+        <HideableSection sectionKey="cos_final_cta">
+          <section className="py-20 px-6 bg-events-teal">
+            <div className="container mx-auto max-w-2xl text-center">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
+                  <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
+                </h2>
+                <p className="font-body text-events-cream/60 mb-8">
+                  <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Part of Outside Days. The outdoor industry's career event of the year." as="span" />
+                </p>
+                <a href={TYPEFORM_DENVER} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal">
+                  Register Free <ArrowRight className="w-5 h-5" />
+                </a>
+              </motion.div>
+            </div>
+          </section>
+        </HideableSection>
 
         <SiteFooter />
       </main>

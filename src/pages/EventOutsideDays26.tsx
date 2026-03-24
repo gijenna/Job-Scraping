@@ -14,46 +14,22 @@ import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
+import HideableSection from "@/components/event/HideableSection";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
-import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
 import PageMetaEditor from "@/components/event/PageMetaEditor";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
-import { useEventSettings } from "@/hooks/useEventSettings";
-import { Eye, EyeOff } from "lucide-react";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
-
-const HideableStats = ({ logos }: { logos: any[] }) => {
-  const { isAdmin } = useEditableTextContext();
-  const { settings, setSetting } = useEventSettings("outsidedays26");
-  const hidden = settings["hide_denver_stats"] === "true";
-
-  if (hidden && !isAdmin) return null;
-
-  return (
-    <div className={`relative ${hidden ? 'opacity-30' : ''}`}>
-      {isAdmin && (
-        <button
-          onClick={() => setSetting("hide_denver_stats", hidden ? "false" : "true")}
-          className="absolute top-4 right-4 z-20 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-events-coral/80 text-white text-xs font-bold hover:bg-events-coral transition-colors"
-        >
-          {hidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-          {hidden ? 'Show Section' : 'Hide Section'}
-        </button>
-      )}
-      <RegistrantDenverStats logos={logos} />
-    </div>
-  );
-};
 
 const EventOutsideDays26 = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
+  const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -63,6 +39,10 @@ const EventOutsideDays26 = () => {
     ? partnerLogos.map((l) => ({ name: l.name, domain: l.domain, logo_url: l.logo_url, url: l.url }))
     : tickerLogos.map((l) => ({ name: l.name, domain: l.domain, logo_url: l.logo_url, url: l.url }));
 
+  const bubbleBrands = bubbleLogos.length > 0
+    ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
+    : undefined;
+
   return (
     <EditableTextProvider pageSlug="outsidedays26">
       <PageMetaApplier title="Outside Days Denver 2026" />
@@ -71,72 +51,89 @@ const EventOutsideDays26 = () => {
         <AdminLogoManager lists={[
           { eventSlug: "denver26", label: "Ticker Logos (Attending)" },
           { eventSlug: "denver26-partners", label: "Partner Logos (Stats)" },
+          { eventSlug: "denver26-bubbles", label: "Bubble Logos (Meet the Teams)" },
         ]} />
         <SponsorPageNav otherEvent={{ label: "Gather PNW", path: "/PNW26" }} />
         <a href="https://www.basecampjobs.com" target="_blank" rel="noopener noreferrer" className="fixed top-4 right-4 z-50">
           <img src={basecampMatchLogo} alt="Basecamp Match" className="h-8 md:h-10 w-auto drop-shadow-lg" />
         </a>
 
-        <RegistrantHero
-          backgroundSrc={heroMountains}
-          backgroundType="image"
-          logoSrc={denverLogo}
-          logoAlt="Gather Denver logo"
-          date="May 29, 2026"
-          location="Auraria Campus Wellness Center · Denver, CO"
-          time="1:00 – 4:00 PM MT"
-          tagline="The outdoor industry's biggest career discovery event inside the Outside Days festival."
-          registrationUrl={TYPEFORM_DENVER}
-          accentColor="#E1B624"
-          sponsorPageUrl="/gather-denver"
-        />
+        <HideableSection sectionKey="denver_hero">
+          <RegistrantHero
+            backgroundSrc={heroMountains}
+            backgroundType="image"
+            logoSrc={denverLogo}
+            logoAlt="Gather Denver logo"
+            date="May 29, 2026"
+            location="Auraria Campus Wellness Center · Denver, CO"
+            time="1:00 – 4:00 PM MT"
+            tagline="The outdoor industry's biggest career discovery event inside the Outside Days festival."
+            registrationUrl={TYPEFORM_DENVER}
+            accentColor="#E1B624"
+            sponsorPageUrl="/gather-denver"
+          />
+        </HideableSection>
 
-        <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
+        <HideableSection sectionKey="denver_ticker">
+          <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
+        </HideableSection>
 
-        <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" />
+        <HideableSection sectionKey="denver_attendees">
+          <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" bubbleLogos={bubbleBrands} />
+        </HideableSection>
 
-        <HideableStats logos={statsLogos} />
+        <HideableSection sectionKey="denver_stats">
+          <RegistrantDenverStats logos={statsLogos} />
+        </HideableSection>
 
-        <RegistrantHowToTapIn
-          registrationUrl={TYPEFORM_DENVER}
-          sponsorPageUrl="/gather-denver"
-          expertsPageUrl="/Denverexperts"
-          accentColor="#E1B624"
-          bgColor="#0d1f22"
-          images={[eventCrowd, eventBoa, eventGroupPhoto]}
-        />
+        <HideableSection sectionKey="denver_how_to_tap_in">
+          <RegistrantHowToTapIn
+            registrationUrl={TYPEFORM_DENVER}
+            sponsorPageUrl="/gather-denver"
+            expertsPageUrl="/Denverexperts"
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            images={[eventCrowd, eventBoa, eventGroupPhoto]}
+          />
+        </HideableSection>
 
-        <RegistrantVenue
-          venueName="Auraria Campus Wellness Center"
-          address="Auraria Campus, Denver, CO"
-          googleMapsUrl="https://maps.google.com/?q=Auraria+Campus+Wellness+Center+Denver+CO"
-          date="May 29, 2026"
-          eventTime="1:00 – 4:00 PM MT"
-          accentColor="#E1B624"
-          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
-        />
+        <HideableSection sectionKey="denver_venue">
+          <RegistrantVenue
+            venueName="Auraria Campus Wellness Center"
+            address="Auraria Campus, Denver, CO"
+            googleMapsUrl="https://maps.google.com/?q=Auraria+Campus+Wellness+Center+Denver+CO"
+            date="May 29, 2026"
+            eventTime="1:00 – 4:00 PM MT"
+            accentColor="#E1B624"
+            description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
+          />
+        </HideableSection>
 
-        <DenverFestivalPartner />
+        <HideableSection sectionKey="denver_festival_partner">
+          <DenverFestivalPartner />
+        </HideableSection>
 
-        <section className="py-20 px-6 bg-events-teal">
-          <div className="container mx-auto max-w-2xl text-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
-                <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
-              </h2>
-              <p className="font-body text-events-cream/60 mb-8">
-                <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Part of Outside Days. The outdoor industry's career event of the year." as="span" />
-              </p>
-              <EditableLink
-                textKey="final_cta_button_text"
-                urlKey="final_cta_button_url"
-                defaultText="Register Free"
-                defaultUrl={TYPEFORM_DENVER}
-                className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal"
-              />
-            </motion.div>
-          </div>
-        </section>
+        <HideableSection sectionKey="denver_final_cta">
+          <section className="py-20 px-6 bg-events-teal">
+            <div className="container mx-auto max-w-2xl text-center">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream mb-6">
+                  <EditableText settingKey="final_cta_headline" defaultText="Ready to Gather?" as="span" />
+                </h2>
+                <p className="font-body text-events-cream/60 mb-8">
+                  <EditableText settingKey="final_cta_subtitle" defaultText="Free registration. Part of Outside Days. The outdoor industry's career event of the year." as="span" />
+                </p>
+                <EditableLink
+                  textKey="final_cta_button_text"
+                  urlKey="final_cta_button_url"
+                  defaultText="Register Free"
+                  defaultUrl={TYPEFORM_DENVER}
+                  className="inline-flex items-center gap-3 px-10 py-4 rounded-xl font-display font-bold text-lg shadow-xl transition-all duration-300 hover:scale-105 bg-events-yellow text-events-teal"
+                />
+              </motion.div>
+            </div>
+          </section>
+        </HideableSection>
 
         <SiteFooter />
       </main>

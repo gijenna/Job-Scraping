@@ -21,6 +21,7 @@ interface DenverAttendeeSectionsProps {
   accentColor?: string;
   bgColor?: string;
   eventSlug?: string;
+  bubbleLogos?: { name: string; domain: string; logo_url: string | null }[];
 }
 
 const SortableCard = ({ expert, renderCard, isAdmin }: { expert: Expert; renderCard: (e: Expert) => React.ReactNode; isAdmin: boolean }) => {
@@ -42,6 +43,7 @@ const DenverAttendeeSections = ({
   accentColor = "#E1B624",
   bgColor = "#0d1f22",
   eventSlug = "denver26",
+  bubbleLogos: bubbleLogosProp,
 }: DenverAttendeeSectionsProps) => {
   const [brandReps, setBrandReps] = useState<Expert[]>([]);
   const [industryExperts, setIndustryExperts] = useState<Expert[]>([]);
@@ -141,7 +143,7 @@ const DenverAttendeeSections = ({
       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
       : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6";
 
-  const bubbleLogos = tickerLogos.map(l => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
+  const bubbleLogos = bubbleLogosProp || tickerLogos.map(l => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
 
   return (
     <>
