@@ -5,6 +5,7 @@ interface EditableTextContextValue {
   settings: Record<string, string>;
   isAdmin: boolean;
   loading: boolean;
+  pageSlug: string;
   setSetting: (key: string, value: string) => Promise<any>;
 }
 
@@ -12,6 +13,7 @@ const EditableTextContext = createContext<EditableTextContextValue>({
   settings: {},
   isAdmin: false,
   loading: true,
+  pageSlug: "",
   setSetting: async () => null,
 });
 
