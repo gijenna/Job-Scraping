@@ -43,6 +43,7 @@ const PnwWhosComing = ({
   accentColor = "#FEE123",
   bgColor = "#154733",
   eventSlug = "pnw26",
+  bubbleLogos: bubbleLogosProp,
 }: PnwWhosComingProps) => {
   const [brandReps, setBrandReps] = useState<Expert[]>([]);
   const [industryExperts, setIndustryExperts] = useState<Expert[]>([]);
