@@ -10,12 +10,15 @@ import RegistrantHero from "@/components/event/RegistrantHero";
 import RegistrantHowToTapIn from "@/components/event/RegistrantHowToTapIn";
 import RegistrantVenue from "@/components/event/RegistrantVenue";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
+import FeaturedTeamsSection from "@/components/event/FeaturedTeamsSection";
+import BrandRepCardsSection from "@/components/event/BrandRepCardsSection";
+import IndustryExpertCardsSection from "@/components/event/IndustryExpertCardsSection";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
-import DenverAttendeeSections from "@/components/event/DenverAttendeeSections";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import HideableSection from "@/components/event/HideableSection";
 import { useEventLogos } from "@/hooks/useEventLogos";
+import { useEventAttendees } from "@/hooks/useEventAttendees";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
@@ -30,6 +33,7 @@ const EventOutsideDays26 = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
+  const { brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd } = useEventAttendees("denver");
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -41,7 +45,7 @@ const EventOutsideDays26 = () => {
 
   const bubbleBrands = bubbleLogos.length > 0
     ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
-    : undefined;
+    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
 
   return (
     <EditableTextProvider pageSlug="outsidedays26">
@@ -78,8 +82,44 @@ const EventOutsideDays26 = () => {
           <EventLogoTicker brands={tickerBrands} headline="Brands & professionals in the room" />
         </HideableSection>
 
-        <HideableSection sectionKey="denver_attendees">
-          <DenverAttendeeSections accentColor="#E1B624" bgColor="#0d1f22" eventSlug="denver26" bubbleLogos={bubbleBrands} />
+        <HideableSection sectionKey="denver_featured_teams">
+          <FeaturedTeamsSection
+            brandReps={brandReps}
+            bubbleLogos={bubbleBrands}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            bubbleColor="#F5E6D3"
+            editKeyPrefix="denver_bubbles"
+            eyebrowKey="denver_brand_reps_eyebrow"
+            headlineKey="denver_brand_reps_headline"
+            eventSlug="denver26"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="denver_brand_reps">
+          <BrandRepCardsSection
+            brandReps={brandReps}
+            setBrandReps={setBrandReps}
+            handleDragEnd={handleDragEnd}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            eventSlug="denver26"
+            eyebrowKey="denver_brand_rep_cards_eyebrow"
+            headlineKey="denver_brand_rep_cards_headline"
+          />
+        </HideableSection>
+
+        <HideableSection sectionKey="denver_industry_experts">
+          <IndustryExpertCardsSection
+            experts={industryExperts}
+            setExperts={setIndustryExperts}
+            handleDragEnd={handleDragEnd}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            eventSlug="denver26"
+            eyebrowKey="denver_experts_eyebrow"
+            headlineKey="denver_experts_headline"
+          />
         </HideableSection>
 
         <HideableSection sectionKey="denver_stats">

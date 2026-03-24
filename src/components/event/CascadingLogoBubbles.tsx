@@ -25,15 +25,20 @@ const CascadingLogoBubbles = ({
 
   if (logos.length === 0) return null;
 
+  const spreadPercent = Math.min(85, logos.length * 15);
+  const centerOffset = (100 - spreadPercent) / 2;
+
   const rainLogos = logos.map((logo, i) => ({
     logo,
-    leftPercent: (i / Math.max(logos.length - 1, 1)) * 85 + 2,
+    leftPercent: logos.length === 1
+      ? 50
+      : centerOffset + (i / (logos.length - 1)) * spreadPercent,
     delay: 0.3 + i * 0.18,
     rotate: ['-5deg', '7deg', '-8deg', '6deg', '-4deg', '9deg', '-7deg', '5deg', '-3deg', '11deg', '-6deg', '4deg', '-8deg'][i % 13],
   }));
 
   return (
-    <div className="relative overflow-hidden py-8 md:py-12">
+    <div className="relative overflow-hidden py-4 md:py-6">
       {/* Admin editable subtitle area */}
       {isAdmin && (
         <div className="text-center mb-4 relative z-10">
