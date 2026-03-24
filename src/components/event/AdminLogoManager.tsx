@@ -202,14 +202,14 @@ const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
     <>
       <button
         onClick={() => setShowPanel(!showPanel)}
-        className="fixed bottom-4 right-4 z-50 bg-events-coral text-events-teal p-3 rounded-full shadow-xl hover:scale-110 transition-transform"
+        className="fixed bottom-4 right-16 z-50 bg-events-coral text-events-teal p-3 rounded-full shadow-xl hover:scale-110 transition-transform"
         title="Manage Logos"
       >
         <Settings className="w-5 h-5" />
       </button>
 
       {showPanel && (
-        <div className="fixed bottom-16 right-4 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
+        <div className="fixed bottom-16 right-16 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
           {lists.map((list) => (
             <LogoListPanel key={list.eventSlug} eventSlug={list.eventSlug} label={list.label} />
           ))}
