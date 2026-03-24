@@ -209,7 +209,7 @@ const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
       </button>
 
       {showPanel && (
-        <div className="fixed bottom-16 right-4 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
+        <div className="fixed bottom-16 right-16 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
           {lists.map((list) => (
             <LogoListPanel key={list.eventSlug} eventSlug={list.eventSlug} label={list.label} />
           ))}
