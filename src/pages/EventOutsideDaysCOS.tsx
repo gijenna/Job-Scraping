@@ -32,6 +32,12 @@ const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 const EventOutsideDaysCOS = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
+  const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
+  const { brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd } = useEventAttendees("denver");
+
+  const bubbleBrands = bubbleLogos.length > 0
+    ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
+    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
