@@ -69,7 +69,7 @@ export const EditableTextProvider = ({ pageSlug, children }: EditableTextProvide
   }, [pageSlug]);
 
   return (
-    <EditableTextContext.Provider value={{ settings, isAdmin, loading, setSetting }}>
+    <EditableTextContext.Provider value={{ settings, isAdmin, loading, pageSlug, setSetting }}>
       {children}
     </EditableTextContext.Provider>
   );
