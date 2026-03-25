@@ -15,15 +15,20 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
 
   if (expanded) {
     return (
-      <div className="relative animate-in fade-in duration-200">
-        <button
-          onClick={() => setExpanded(false)}
-          className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
-        <ExpertCard expert={expert} expanded />
-      </div>
+      <>
+        <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setExpanded(false)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setExpanded(false)}>
+          <div className="relative w-full max-w-xs animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+            <button
+              onClick={() => setExpanded(false)}
+              className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <ExpertCard expert={expert} expanded />
+          </div>
+        </div>
+      </>
     );
   }
 
