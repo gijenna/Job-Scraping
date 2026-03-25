@@ -43,8 +43,8 @@ const EventPNW26 = () => {
     : tickerBrands;
 
   const bubbleBrands = bubbleLogos.length > 0
-    ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }))
-    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url }));
+    ? bubbleLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url, url: l.url || null }))
+    : tickerLogos.map((l) => ({ name: l.name, domain: l.domain || "", logo_url: l.logo_url, url: l.url || null }));
 
   return (
     <EditableTextProvider pageSlug="pnw26">

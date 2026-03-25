@@ -4,7 +4,6 @@ import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import { getCompanyLogoUrl } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
-import ExpertCard from "@/components/experts/ExpertCard";
 import EditableText from "@/components/EditableText";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
 
@@ -23,9 +22,15 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
+function normalizeUrl(url: string | undefined | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+  return trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+}
+
 const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "pnw26" }: BrandUmbrellaSectionProps) => {
   const [expandedBrands, setExpandedBrands] = useState<Set<string>>(new Set());
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const { isAdmin, settings } = useEditableTextContext();
 
   // Group by company
@@ -48,14 +53,6 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
     });
   };
 
-  const toggleCard = (id: string) => {
-    setExpandedCards((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
   const gridCols = groups.length <= 2 ? "md:grid-cols-2" : groups.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4";
 
   return (
@@ -68,6 +65,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
         const hiringKey = `brand_${slug}_hiring_blurb`;
         const careersUrl = settings[careersKey] || "";
         const hiringBlurb = settings[hiringKey] || "";
+        const normalizedCareersUrl = normalizeUrl(careersUrl);
 
         return (
           <div key={group.company} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
@@ -89,9 +87,9 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                 <h4 className="font-display font-bold text-lg text-events-cream">{group.company}</h4>
                 <div className="flex items-center gap-3 mt-0.5">
                   <span className="text-events-cream/40 text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
-                  {careersUrl && !isAdmin && (
-                    <a href={careersUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-xs flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
-                      Careers <ExternalLink className="w-3 h-3" />
+                  {normalizedCareersUrl && !isAdmin && (
+                    <a href={normalizedCareersUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-xs flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
+                      Visit our site <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
@@ -121,28 +119,9 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {group.experts.map((expert) => {
-                      const isCardExpanded = expandedCards.has(expert.id);
-                      return (
-                        <div key={expert.id}>
-                          {isCardExpanded ? (
-                            <div className="relative">
-                              <button
-                                onClick={() => toggleCard(expert.id)}
-                                className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center text-xs hover:bg-black/70"
-                              >
-                                ✕
-                              </button>
-                              <ExpertCard expert={expert} expanded />
-                            </div>
-                          ) : (
-                            <div className="cursor-pointer" onClick={() => toggleCard(expert.id)}>
-                              <ExpertCardMinimal expert={expert} />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                    {group.experts.map((expert) => (
+                      <ExpertCardMinimal key={expert.id} expert={expert} />
+                    ))}
                   </div>
                 </motion.div>
               )}
