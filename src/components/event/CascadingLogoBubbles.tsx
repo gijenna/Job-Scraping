@@ -75,8 +75,12 @@ const CascadingLogoBubbles = ({
             </motion.div>
           );
 
-          return item.logo.url ? (
-            <a key={i} href={item.logo.url} target="_blank" rel="noopener noreferrer">
+          const normalizedUrl = item.logo.url?.trim()
+            ? (item.logo.url.trim().startsWith("http") ? item.logo.url.trim() : `https://${item.logo.url.trim()}`)
+            : null;
+
+          return normalizedUrl ? (
+            <a key={i} href={normalizedUrl} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
               {bubble}
             </a>
           ) : (
