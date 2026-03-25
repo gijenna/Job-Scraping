@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import EditableText from "@/components/EditableText";
@@ -7,6 +8,7 @@ interface LogoItem {
   name: string;
   domain: string;
   logo_url?: string | null;
+  url?: string | null;
 }
 
 interface CascadingLogoBubblesProps {
@@ -50,9 +52,8 @@ const CascadingLogoBubbles = ({
       <div className="relative h-24 md:h-32 overflow-hidden">
         {rainLogos.map((item, i) => {
           const imgSrc = item.logo.logo_url || `https://www.google.com/s2/favicons?domain=${item.logo.domain}&sz=128`;
-          return (
+          const bubble = (
             <motion.div
-              key={i}
               initial={{ y: "-100%", opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: "200px" }}
@@ -72,6 +73,14 @@ const CascadingLogoBubbles = ({
                 <img src={imgSrc} alt={item.logo.name} className="w-5 h-5 md:w-8 md:h-8 object-contain" style={{ mixBlendMode: 'multiply' }} />
               </motion.div>
             </motion.div>
+          );
+
+          return item.logo.url ? (
+            <a key={i} href={item.logo.url} target="_blank" rel="noopener noreferrer">
+              {bubble}
+            </a>
+          ) : (
+            <React.Fragment key={i}>{bubble}</React.Fragment>
           );
         })}
       </div>
