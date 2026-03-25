@@ -7,6 +7,7 @@ interface LogoItem {
   name: string;
   domain: string;
   logo_url?: string | null;
+  url?: string | null;
 }
 
 interface CascadingLogoBubblesProps {
