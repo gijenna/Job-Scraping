@@ -37,26 +37,26 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
     : [];
 
   return (
-    <div className={`flex items-center gap-4 bg-events-teal rounded-lg p-4 shadow-card group relative ${className}`}>
-      <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden bg-events-cream/10">
+    <div className={`flex items-center gap-4 bg-events-cream rounded-lg p-4 shadow-sm hover:shadow-md transition-all group relative ${className}`}>
+      <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden bg-gray-200">
         {expert.photo_url ? (
           <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-events-cream/40 font-display font-bold text-lg">
+          <div className="w-full h-full flex items-center justify-center text-events-teal/40 font-display font-bold text-lg">
             {expert.full_name.split(' ').map(n => n[0]).join('')}
           </div>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <p className="font-display font-bold text-sm text-events-cream truncate">{expert.full_name}</p>
+          <p className="font-display font-bold text-sm text-events-teal truncate">{expert.full_name}</p>
           {expert.linkedin_url && (
             <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="shrink-0">
               <Linkedin className="w-3.5 h-3.5 text-[#0077B5]" />
             </a>
           )}
         </div>
-        {expert.job_title && <p className="font-body text-xs text-events-cream/60 truncate">{expert.job_title}</p>}
+        {expert.job_title && <p className="font-body text-xs text-gray-600 truncate">{expert.job_title}</p>}
         {expert.current_company && (
           <div className="flex items-center gap-1.5 mt-1">
             <TooltipProvider>
@@ -67,7 +67,7 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
                 <TooltipContent><p>{expert.current_company}</p></TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <span className="font-body text-xs text-events-cream/50 truncate">{expert.current_company}</span>
+            <span className="font-body text-xs text-gray-500 truncate">{expert.current_company}</span>
           </div>
         )}
         {previousCompanies.length > 0 && (
@@ -87,7 +87,7 @@ const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) =
       </div>
       <button
         onClick={() => setExpanded(true)}
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity text-events-cream"
+        className="absolute top-2 right-2 opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity text-events-teal"
         title="Expand"
       >
         <Maximize2 className="w-3.5 h-3.5" />
