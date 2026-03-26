@@ -34,14 +34,14 @@ const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) =
 
   return (
     <div
-      className={`flex flex-col items-center text-center gap-2 cursor-pointer group bg-events-cream rounded-xl p-3 shadow-sm hover:shadow-md transition-all ${className}`}
+      className={`flex flex-col items-center text-center gap-2 cursor-pointer group ${className}`}
       onClick={() => setExpanded(true)}
     >
       <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 shadow-md group-hover:ring-2 group-hover:ring-events-coral/40 transition-all">
         {expert.photo_url ? (
           <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-events-teal/40 font-display font-bold text-2xl">
+          <div className="w-full h-full flex items-center justify-center bg-events-teal/20 text-events-teal/40 font-display font-bold text-2xl">
             {expert.full_name.split(' ').map(n => n[0]).join('')}
           </div>
         )}
@@ -49,7 +49,7 @@ const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) =
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-200">
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100">
                   <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
                 </div>
               </TooltipTrigger>
@@ -58,14 +58,14 @@ const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) =
           </TooltipProvider>
         )}
         {expert.linkedin_url && (
-          <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-200" onClick={(e) => e.stopPropagation()}>
+          <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100" onClick={(e) => e.stopPropagation()}>
             <Linkedin className="w-3 h-3 text-[#0077B5]" />
           </a>
         )}
       </div>
-      <p className="font-display font-bold text-xs text-events-teal leading-tight">{expert.full_name}</p>
+      <p className="font-display font-bold text-xs text-events-cream leading-tight">{expert.full_name}</p>
       {expert.current_company && (
-        <p className="font-body text-[10px] text-gray-500">{expert.current_company}</p>
+        <p className="font-body text-[10px] text-events-cream/60">{expert.current_company}</p>
       )}
     </div>
   );
