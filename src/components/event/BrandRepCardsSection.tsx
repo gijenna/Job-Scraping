@@ -37,7 +37,6 @@ interface BrandRepCardsSectionProps {
   eventSlug?: string;
   eyebrowKey?: string;
   headlineKey?: string;
-  highlightExpert?: string;
 }
 
 const BrandRepCardsSection = ({
