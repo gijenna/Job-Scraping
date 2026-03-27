@@ -63,11 +63,10 @@ const BrandRepCardsSection = ({
   if (brandReps.length === 0) return null;
 
   const renderCard = (expert: Expert) => {
-    const isHighlighted = highlightExpert === expert.slug;
     switch (cardStyle) {
-      case "compact": return <ExpertCardCompact expert={expert} autoExpand={isHighlighted} />;
-      case "minimal": return <ExpertCardMinimal expert={expert} autoExpand={isHighlighted} />;
-      default: return <ExpertCard expert={expert} autoExpand={isHighlighted} />;
+      case "compact": return <ExpertCardCompact expert={expert} />;
+      case "minimal": return <ExpertCardMinimal expert={expert} />;
+      default: return <ExpertCard expert={expert} />;
     }
   };
 
