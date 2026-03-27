@@ -290,30 +290,17 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                             const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}`;
                             const downloadOgCard = async () => {
                               try {
-                                // First check if cached file exists
-                                // Always trigger generation (will use cache if exists)
-                                const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-                                const genUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}?generate=1`;
-                                toast({ title: "Generating card...", description: "This may take a few seconds" });
+                                const pid = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+                                const genUrl = `https://${pid}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}?generate=1`;
+                                toast({ title: "Generating card…", description: "This may take a few seconds" });
                                 const resp = await fetch(genUrl);
                                 if (!resp.ok) throw new Error("Generation failed");
                                 const data = await resp.json();
-                                const downloadUrl = data.image_url;
-                                if (!downloadUrl) throw new Error("No image URL returned");
-
-                                // Download as blob
-                                const imgResp = await fetch(downloadUrl);
-                                const blob = await imgResp.blob();
-                                const ext = downloadUrl.endsWith('.svg') ? 'svg' : 'png';
-                                const blobUrl = URL.createObjectURL(blob);
-                                const link = document.createElement('a');
-                                link.href = blobUrl;
-                                link.download = `${expert.slug}-${a.city_slug}-card.${ext}`;
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                                URL.revokeObjectURL(blobUrl);
-                                toast({ title: "Card downloaded!" });
+                                const imageUrl = data.image_url;
+                                if (!imageUrl) throw new Error("No image URL returned");
+                                // Open in new tab — user can right-click save; avoids CORS issues
+                                window.open(imageUrl, "_blank");
+                                toast({ title: "Card opened — right-click to save!" });
                               } catch (err) {
                                 console.error("Download error:", err);
                                 toast({ title: "Download failed", description: String(err), variant: "destructive" });
