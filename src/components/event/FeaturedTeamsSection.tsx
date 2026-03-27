@@ -27,6 +27,7 @@ const FeaturedTeamsSection = ({
   eyebrowKey = "pnw_brand_reps_eyebrow",
   headlineKey = "pnw_brand_reps_headline",
   eventSlug = "pnw26",
+  highlightBrandRep,
 }: FeaturedTeamsSectionProps) => {
   if (brandReps.length === 0 && bubbleLogos.length === 0) return null;
 
