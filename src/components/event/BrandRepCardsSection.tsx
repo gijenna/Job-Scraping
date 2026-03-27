@@ -53,7 +53,6 @@ const BrandRepCardsSection = ({
   const { isAdmin } = useEditableTextContext();
   const [cardStyle, setCardStyle] = useState("polaroid");
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
-  const highlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (settings["card_style_brand_reps"]) setCardStyle(settings["card_style_brand_reps"]);
