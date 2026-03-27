@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
@@ -30,6 +31,8 @@ import PageMetaApplier from "@/components/event/PageMetaApplier";
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
 const EventOutsideDays26 = () => {
+  const [searchParams] = useSearchParams();
+  const highlightExpert = searchParams.get("expert") || undefined;
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
@@ -106,6 +109,7 @@ const EventOutsideDays26 = () => {
             eventSlug="denver26"
             eyebrowKey="denver_brand_rep_cards_eyebrow"
             headlineKey="denver_brand_rep_cards_headline"
+            highlightExpert={highlightExpert}
           />
         </HideableSection>
 
@@ -119,6 +123,8 @@ const EventOutsideDays26 = () => {
             eventSlug="denver26"
             eyebrowKey="denver_experts_eyebrow"
             headlineKey="denver_experts_headline"
+            highlightExpert={highlightExpert}
+            registrationUrl={TYPEFORM_DENVER}
           />
         </HideableSection>
 

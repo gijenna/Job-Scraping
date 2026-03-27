@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 const heroPnw = "/hero-pnw.mp4";
 import gatherPnwLogo from "@/assets/gather-pnw-logo-white-uo.png";
 import uoDuckLogo from "@/assets/uo-duck-logo.svg";
@@ -29,6 +30,8 @@ import PageMetaApplier from "@/components/event/PageMetaApplier";
 const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 
 const EventPNW26 = () => {
+  const [searchParams] = useSearchParams();
+  const highlightExpert = searchParams.get("expert") || undefined;
   const { logos: tickerLogos } = useEventLogos("pnw26");
   const { logos: partnerLogos } = useEventLogos("pnw26-partners");
   const { logos: bubbleLogos } = useEventLogos("pnw26-bubbles");
@@ -106,6 +109,7 @@ const EventPNW26 = () => {
             eventSlug="pnw26"
             eyebrowKey="pnw_brand_rep_cards_eyebrow"
             headlineKey="pnw_brand_rep_cards_headline"
+            highlightExpert={highlightExpert}
           />
         </HideableSection>
 
@@ -119,6 +123,8 @@ const EventPNW26 = () => {
             eventSlug="pnw26"
             eyebrowKey="pnw_experts_eyebrow"
             headlineKey="pnw_experts_headline"
+            highlightExpert={highlightExpert}
+            registrationUrl={TYPEFORM_PNW}
           />
         </HideableSection>
 
