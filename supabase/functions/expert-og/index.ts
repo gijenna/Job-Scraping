@@ -107,6 +107,24 @@ interface LogoData {
   base64: string;
 }
 
+// Split long text into lines that fit within maxChars
+function wrapText(text: string, maxChars: number): string[] {
+  if (text.length <= maxChars) return [text];
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    if (current && (current + " " + word).length > maxChars) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? current + " " + word : word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines.slice(0, 2); // max 2 lines
+}
+
 async function buildSvgCard(
   expert: any,
   eventTitle: string,
@@ -114,133 +132,192 @@ async function buildSvgCard(
   citySlug: string,
   expertType: string,
   photoBase64: string | null,
-  logos: LogoData[]
+  logos: LogoData[],
+  basecampLogoBase64: string | null
 ): Promise<string> {
   const eventLabel = EVENT_LABEL[citySlug] || eventTitle;
-  const ctaText =
-    expertType === "brand_rep"
-      ? `Connect with me @ ${eventLabel}`
-      : `Network with me @ ${eventLabel}`;
+  const ctaLine1 = expertType === "brand_rep" ? "CONNECT WITH ME AT" : "NETWORK WITH ME AT";
+  const ctaLine2 = eventLabel.toUpperCase();
 
   const name = expert.full_name || "";
   const title = expert.job_title || "";
   const company = expert.current_company || "";
   const yearsText = expert.years_in_industry
-    ? `${expert.years_in_industry} years in the outdoor industry`
+    ? `${expert.years_in_industry} yrs in outdoor`
     : "";
-  const askAbout = expert.ask_me_about
-    ? `Ask me about: ${expert.ask_me_about}`
-    : "";
+  const askAbout = expert.ask_me_about || "";
   const initials = name
     .split(" ")
     .map((w: string) => w[0])
     .join("")
     .slice(0, 2);
 
-  // Photo section (left side) - larger, more prominent
-  const photoSection = photoBase64
+  // === PHOTO SECTION (left panel) ===
+  const photoX = 50;
+  const photoY = 50;
+  const photoW = 380;
+  const photoH = 440;
+  const photoR = 16;
+
+  const photoArea = photoBase64
     ? `<defs>
-        <clipPath id="photoClip"><rect x="0" y="0" width="360" height="530" rx="0"/></clipPath>
+        <clipPath id="photoClip">
+          <rect x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" rx="${photoR}"/>
+        </clipPath>
       </defs>
-      <rect x="0" y="0" width="360" height="530" fill="#19363B"/>
-      <image href="${photoBase64}" x="0" y="0" width="360" height="530" clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice"/>
-      <rect x="0" y="400" width="360" height="130" fill="url(#fadeGrad)"/>`
-    : `<rect x="0" y="0" width="360" height="530" fill="#19363B"/>
-       <circle cx="180" cy="220" r="120" fill="#E8D5C4"/>
-       <text x="180" y="240" text-anchor="middle" font-size="72" font-weight="bold" fill="#19363B" font-family="Georgia,serif">${esc(initials)}</text>`;
+      <image href="${photoBase64}" x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" 
+             clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice"/>`
+    : `<rect x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" rx="${photoR}" fill="#2A4F56"/>
+       <circle cx="${photoX + photoW / 2}" cy="${photoY + photoH / 2 - 20}" r="100" fill="#E8D5C4"/>
+       <text x="${photoX + photoW / 2}" y="${photoY + photoH / 2}" text-anchor="middle" 
+             font-size="80" font-weight="900" fill="#19363B" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(initials)}</text>`;
 
-  // Right side content
-  let rightY = 80;
-  const lines: string[] = [];
+  // === RIGHT CONTENT ===
+  const rX = 490; // right column start
+  let rY = 72;
+  const rightContent: string[] = [];
 
-  // CTA
-  lines.push(
-    `<text x="400" y="${rightY}" font-size="16" font-style="italic" fill="#19363B" font-family="Georgia,serif">${esc(ctaText)}</text>`
+  // CTA line 1 - smaller, yellow, tracking
+  rightContent.push(
+    `<text x="${rX}" y="${rY}" font-size="18" font-weight="700" fill="#FEE123" 
+           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="4">${esc(ctaLine1)}</text>`
   );
-  rightY += 50;
+  rY += 42;
 
-  // Name - big and bold
-  lines.push(
-    `<text x="400" y="${rightY}" font-size="48" font-weight="bold" fill="#ED7660" font-family="Georgia,serif">${esc(name)}</text>`
+  // CTA line 2 - event name, large, yellow, bold
+  rightContent.push(
+    `<text x="${rX}" y="${rY}" font-size="36" font-weight="900" fill="#FEE123" 
+           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="1">${esc(ctaLine2)}</text>`
   );
-  rightY += 38;
+  rY += 18;
 
-  // Title & company
+  // Divider line
+  rightContent.push(
+    `<rect x="${rX}" y="${rY}" width="120" height="3" rx="1.5" fill="#ED7660"/>`
+  );
+  rY += 36;
+
+  // Expert name - large coral, bold
+  const nameLines = wrapText(name, 20);
+  for (const line of nameLines) {
+    rightContent.push(
+      `<text x="${rX}" y="${rY}" font-size="48" font-weight="900" fill="#ED7660" 
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(line)}</text>`
+    );
+    rY += 54;
+  }
+  rY -= 10;
+
+  // Job title
   if (title) {
-    lines.push(
-      `<text x="400" y="${rightY}" font-size="20" fill="#19363B" font-family="Arial,sans-serif">${esc(title)}</text>`
-    );
-    rightY += 28;
-  }
-  if (company) {
-    lines.push(
-      `<text x="400" y="${rightY}" font-size="18" font-weight="bold" fill="#19363B" font-family="Arial,sans-serif">${esc(company)}</text>`
-    );
-    rightY += 36;
-  }
-
-  // Years
-  if (yearsText) {
-    lines.push(
-      `<text x="400" y="${rightY}" font-size="15" fill="#666" font-family="Arial,sans-serif">${esc(yearsText)}</text>`
-    );
-    rightY += 32;
-  }
-
-  // Previous company logos
-  if (logos.length > 0) {
-    lines.push(
-      `<text x="400" y="${rightY}" font-size="13" fill="#888" font-family="Arial,sans-serif">Previous brands:</text>`
-    );
-    rightY += 22;
-    let logoX = 400;
-    for (const logo of logos.slice(0, 6)) {
-      lines.push(
-        `<image href="${logo.base64}" x="${logoX}" y="${rightY - 4}" width="36" height="36" />`
+    const titleLines = wrapText(title, 32);
+    for (const tl of titleLines) {
+      rightContent.push(
+        `<text x="${rX}" y="${rY}" font-size="22" font-weight="400" fill="#F5E6D3" 
+               font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(tl)}</text>`
       );
-      logoX += 46;
+      rY += 28;
     }
-    rightY += 48;
+  }
+
+  // Company - bold cream
+  if (company) {
+    rightContent.push(
+      `<text x="${rX}" y="${rY}" font-size="22" font-weight="700" fill="#F5E6D3" 
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(company)}</text>`
+    );
+    rY += 34;
+  }
+
+  // Years badge
+  if (yearsText) {
+    const badgeW = yearsText.length * 9 + 24;
+    rightContent.push(
+      `<rect x="${rX}" y="${rY - 16}" width="${badgeW}" height="26" rx="13" fill="#ED7660" opacity="0.2"/>
+       <text x="${rX + 12}" y="${rY + 3}" font-size="14" font-weight="600" fill="#ED7660" 
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(yearsText)}</text>`
+    );
+    rY += 32;
   }
 
   // Ask me about
   if (askAbout) {
-    const truncated =
-      askAbout.length > 65 ? askAbout.slice(0, 62) + "..." : askAbout;
-    lines.push(
-      `<text x="400" y="${rightY}" font-size="15" font-style="italic" fill="#19363B" font-family="Georgia,serif">${esc(truncated)}</text>`
+    const truncated = askAbout.length > 55 ? askAbout.slice(0, 52) + "…" : askAbout;
+    rightContent.push(
+      `<text x="${rX}" y="${rY}" font-size="17" font-style="italic" fill="#F5E6D3" opacity="0.75"
+             font-family="Georgia,'Times New Roman',serif">"${esc(truncated)}"</text>`
     );
-    rightY += 28;
+    rY += 28;
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="fadeGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#19363B" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#19363B" stop-opacity="0.85"/>
-    </linearGradient>
-    ${photoBase64 ? '<clipPath id="photoClip"><rect x="0" y="0" width="360" height="530" rx="0"/></clipPath>' : ''}
-  </defs>
-  <!-- Cream background -->
-  <rect width="1200" height="630" fill="#F5E6D3"/>
-  
-  <!-- Photo area -->
-  ${photoBase64
-    ? `<rect x="0" y="0" width="360" height="530" fill="#19363B"/>
-       <image href="${photoBase64}" x="0" y="0" width="360" height="530" clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice"/>
-       <rect x="0" y="400" width="360" height="130" fill="url(#fadeGrad)"/>`
-    : `<rect x="0" y="0" width="360" height="530" fill="#19363B"/>
-       <circle cx="180" cy="220" r="120" fill="#E8D5C4"/>
-       <text x="180" y="240" text-anchor="middle" font-size="72" font-weight="bold" fill="#19363B" font-family="Georgia,serif">${esc(initials)}</text>`}
+  // === BRAND LOGOS (bottom-left, below photo) ===
+  const logoSection: string[] = [];
+  if (logos.length > 0) {
+    const logoStartX = 50;
+    const logoY = 510;
+    const logoSize = 36;
+    const logoGap = 48;
 
-  <!-- Right side content -->
-  ${lines.join("\n  ")}
+    // Label
+    logoSection.push(
+      `<text x="${logoStartX}" y="${logoY - 8}" font-size="11" font-weight="600" fill="#F5E6D3" opacity="0.5"
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="2">PREVIOUS BRANDS</text>`
+    );
+
+    for (let i = 0; i < Math.min(logos.length, 6); i++) {
+      const lx = logoStartX + i * logoGap;
+      // White circle background
+      logoSection.push(
+        `<circle cx="${lx + logoSize / 2}" cy="${logoY + logoSize / 2 + 6}" r="${logoSize / 2 + 4}" fill="#F5E6D3"/>`
+      );
+      logoSection.push(
+        `<image href="${logos[i].base64}" x="${lx}" y="${logoY + 6}" width="${logoSize}" height="${logoSize}" />`
+      );
+    }
+  }
+
+  // === BOTTOM BAR ===
+  const barY = 560;
+  const barH = 70;
+
+  const basecampLogoEl = basecampLogoBase64
+    ? `<image href="${basecampLogoBase64}" x="50" y="${barY + 15}" height="40" width="180" preserveAspectRatio="xMinYMid meet"/>`
+    : `<text x="50" y="${barY + 42}" font-size="20" font-weight="900" fill="#F5E6D3" 
+           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="2">BASECAMP OUTDOOR</text>`;
+
+  const bottomBar = `
+    <rect x="0" y="${barY}" width="1200" height="${barH}" fill="#122A2E"/>
+    ${basecampLogoEl}
+    <text x="1150" y="${barY + 36}" text-anchor="end" font-size="16" font-weight="600" fill="#FEE123" 
+          font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">Register → basecampoutdoorevents.com</text>
+    <text x="1150" y="${barY + 54}" text-anchor="end" font-size="12" fill="#F5E6D3" opacity="0.5"
+          font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(eventTitle)} · ${esc(cityName)}</text>
+  `;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Dark teal background -->
+  <rect width="1200" height="630" fill="#19363B"/>
+  
+  <!-- Subtle gradient overlay for depth -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1E4147" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#19363B" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Photo -->
+  ${photoArea}
+
+  <!-- Right content -->
+  ${rightContent.join("\n  ")}
+
+  <!-- Brand logos -->
+  ${logoSection.join("\n  ")}
 
   <!-- Bottom bar -->
-  <rect x="0" y="530" width="1200" height="100" fill="#19363B"/>
-  <text x="40" y="580" font-size="18" font-weight="bold" fill="#F5E6D3" font-family="Arial,sans-serif">BASECAMP OUTDOOR</text>
-  <text x="600" y="580" text-anchor="middle" font-size="16" fill="#FEE123" font-family="Arial,sans-serif">${esc(eventTitle)} · ${esc(cityName)}</text>
-  <text x="1160" y="580" text-anchor="end" font-size="14" fill="#F5E6D3" font-family="Arial,sans-serif">Register: www.basecampoutdoorevents.com</text>
+  ${bottomBar}
 </svg>`;
 }
 
@@ -294,6 +371,9 @@ async function getOrGenerateOgCard(
     }
   }
 
+  // Fetch Basecamp logo
+  const basecampLogoBase64 = await fetchAsBase64("https://sponsor-attract-hub.lovable.app/og-basecamp.png");
+
   // Build SVG
   const svg = await buildSvgCard(
     expert,
@@ -302,7 +382,8 @@ async function getOrGenerateOgCard(
     citySlug,
     expertType,
     photoBase64,
-    logos
+    logos,
+    basecampLogoBase64
   );
 
   // Convert SVG to PNG using resvg-wasm
@@ -312,7 +393,7 @@ async function getOrGenerateOgCard(
     console.log(`PNG rendered: ${pngBytes.length} bytes`);
   } catch (err) {
     console.error("resvg render error:", err);
-    // Fall back to uploading SVG
+    // Fall back to SVG upload
     const svgBytes = new TextEncoder().encode(svg);
     const { error: uploadError } = await supabase.storage
       .from("event-photos")
