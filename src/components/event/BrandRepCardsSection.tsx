@@ -48,7 +48,6 @@ const BrandRepCardsSection = ({
   eventSlug = "pnw26",
   eyebrowKey = "brand_rep_cards_eyebrow",
   headlineKey = "brand_rep_cards_headline",
-  highlightExpert,
 }: BrandRepCardsSectionProps) => {
   const { settings } = useEventSettings(eventSlug);
   const { isAdmin } = useEditableTextContext();
