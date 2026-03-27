@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
@@ -16,6 +16,7 @@ interface BrandUmbrellaSectionProps {
   experts: Expert[];
   accentColor?: string;
   eventSlug?: string;
+  highlightBrandRep?: string;
 }
 
 function slugify(s: string) {
@@ -29,9 +30,10 @@ function normalizeUrl(url: string | undefined | null): string | null {
   return trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
 }
 
-const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "pnw26" }: BrandUmbrellaSectionProps) => {
+const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "pnw26", highlightBrandRep }: BrandUmbrellaSectionProps) => {
   const [expandedBrands, setExpandedBrands] = useState<Set<string>>(new Set());
   const { isAdmin, settings } = useEditableTextContext();
+  const highlightRef = useRef<HTMLDivElement>(null);
 
   // Group by company
   const groups: BrandGroup[] = [];
@@ -43,6 +45,18 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
   });
   companyMap.forEach((members, company) => groups.push({ company, experts: members }));
   groups.sort((a, b) => b.experts.length - a.experts.length);
+
+  // Auto-expand the group containing the highlighted brand rep
+  useEffect(() => {
+    if (!highlightBrandRep) return;
+    const matchingGroup = groups.find(g => g.experts.some(e => e.slug === highlightBrandRep));
+    if (matchingGroup) {
+      setExpandedBrands(prev => new Set(prev).add(matchingGroup.company));
+      setTimeout(() => {
+        highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 600);
+    }
+  }, [highlightBrandRep, experts]);
 
   const toggleBrand = (company: string) => {
     setExpandedBrands((prev) => {
@@ -66,9 +80,10 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
         const careersUrl = settings[careersKey] || "";
         const hiringBlurb = settings[hiringKey] || "";
         const normalizedCareersUrl = normalizeUrl(careersUrl);
+        const hasHighlightedExpert = highlightBrandRep && group.experts.some(e => e.slug === highlightBrandRep);
 
         return (
-          <div key={group.company} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+          <div key={group.company} ref={hasHighlightedExpert ? highlightRef : undefined} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
             {/* Brand header */}
             <button
               onClick={() => toggleBrand(group.company)}
@@ -120,7 +135,11 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                 >
                   <div className="px-4 pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {group.experts.map((expert) => (
-                      <ExpertCardMinimal key={expert.id} expert={expert} />
+                      <ExpertCardMinimal
+                        key={expert.id}
+                        expert={expert}
+                        autoExpand={highlightBrandRep === expert.slug}
+                      />
                     ))}
                   </div>
                 </motion.div>

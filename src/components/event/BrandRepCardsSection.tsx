@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import EditableText from "@/components/EditableText";
 import CardStylePicker from "@/components/event/CardStylePicker";
@@ -37,7 +37,6 @@ interface BrandRepCardsSectionProps {
   eventSlug?: string;
   eyebrowKey?: string;
   headlineKey?: string;
-  highlightExpert?: string;
 }
 
 const BrandRepCardsSection = ({
@@ -49,34 +48,25 @@ const BrandRepCardsSection = ({
   eventSlug = "pnw26",
   eyebrowKey = "brand_rep_cards_eyebrow",
   headlineKey = "brand_rep_cards_headline",
-  highlightExpert,
 }: BrandRepCardsSectionProps) => {
   const { settings } = useEventSettings(eventSlug);
   const { isAdmin } = useEditableTextContext();
   const [cardStyle, setCardStyle] = useState("polaroid");
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
-  const highlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (settings["card_style_brand_reps"]) setCardStyle(settings["card_style_brand_reps"]);
   }, [settings]);
 
-  useEffect(() => {
-    if (highlightExpert && highlightRef.current) {
-      setTimeout(() => {
-        highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 500);
-    }
-  }, [highlightExpert, brandReps]);
+
 
   if (brandReps.length === 0) return null;
 
   const renderCard = (expert: Expert) => {
-    const isHighlighted = highlightExpert === expert.slug;
     switch (cardStyle) {
-      case "compact": return <ExpertCardCompact expert={expert} autoExpand={isHighlighted} />;
-      case "minimal": return <ExpertCardMinimal expert={expert} autoExpand={isHighlighted} />;
-      default: return <ExpertCard expert={expert} autoExpand={isHighlighted} />;
+      case "compact": return <ExpertCardCompact expert={expert} />;
+      case "minimal": return <ExpertCardMinimal expert={expert} />;
+      default: return <ExpertCard expert={expert} />;
     }
   };
 
@@ -107,7 +97,7 @@ const BrandRepCardsSection = ({
           <SortableContext items={brandReps.map(e => e.id)} strategy={rectSortingStrategy}>
             <div className={getGridClass()}>
               {brandReps.map((expert) => (
-                <div key={expert.id} ref={highlightExpert === expert.slug ? highlightRef : undefined}>
+                <div key={expert.id}>
                   <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
                 </div>
               ))}

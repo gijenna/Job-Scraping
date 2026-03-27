@@ -14,6 +14,7 @@ interface FeaturedTeamsSectionProps {
   eyebrowKey?: string;
   headlineKey?: string;
   eventSlug?: string;
+  highlightBrandRep?: string;
 }
 
 const FeaturedTeamsSection = ({
@@ -26,6 +27,7 @@ const FeaturedTeamsSection = ({
   eyebrowKey = "pnw_brand_reps_eyebrow",
   headlineKey = "pnw_brand_reps_headline",
   eventSlug = "pnw26",
+  highlightBrandRep,
 }: FeaturedTeamsSectionProps) => {
   if (brandReps.length === 0 && bubbleLogos.length === 0) return null;
 
@@ -44,7 +46,7 @@ const FeaturedTeamsSection = ({
         <CascadingLogoBubbles logos={bubbleLogos} bubbleColor={bubbleColor} editKeyPrefix={editKeyPrefix} />
 
         {brandReps.length > 0 && (
-          <BrandUmbrellaSection experts={brandReps} accentColor={accentColor} eventSlug={eventSlug} />
+          <BrandUmbrellaSection experts={brandReps} accentColor={accentColor} eventSlug={eventSlug} highlightBrandRep={highlightBrandRep} />
         )}
       </div>
     </section>

@@ -33,6 +33,7 @@ const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 const EventOutsideDays26 = () => {
   const [searchParams] = useSearchParams();
   const highlightExpert = searchParams.get("expert") || undefined;
+  const highlightBrandRep = searchParams.get("brand") || undefined;
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
@@ -96,6 +97,7 @@ const EventOutsideDays26 = () => {
             eyebrowKey="denver_brand_reps_eyebrow"
             headlineKey="denver_brand_reps_headline"
             eventSlug="denver26"
+            highlightBrandRep={highlightBrandRep}
           />
         </HideableSection>
 
@@ -109,7 +111,6 @@ const EventOutsideDays26 = () => {
             eventSlug="denver26"
             eyebrowKey="denver_brand_rep_cards_eyebrow"
             headlineKey="denver_brand_rep_cards_headline"
-            highlightExpert={highlightExpert}
           />
         </HideableSection>
 
