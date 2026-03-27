@@ -289,25 +289,52 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                             const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
                             const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}`;
                             const downloadOgCard = async () => {
-                              const { data: files } = await supabaseClient.storage
-                                .from("event-photos")
-                                .list("og-cards", { search: `${expert.slug}-${a.city_slug}-og-card` });
-                              if (files && files.length > 0) {
-                                const { data: publicUrl } = supabaseClient.storage
+                              try {
+                                // First check if cached file exists
+                                const { data: files } = await supabaseClient.storage
                                   .from("event-photos")
-                                  .getPublicUrl(`og-cards/${files[0].name}`);
-                                if (publicUrl?.publicUrl) {
+                                  .list("og-cards", { search: `${expert.slug}-${a.city_slug}-og-card` });
+                                
+                                let downloadUrl: string | null = null;
+                                
+                                if (files && files.length > 0) {
+                                  const { data: publicUrl } = supabaseClient.storage
+                                    .from("event-photos")
+                                    .getPublicUrl(`og-cards/${files[0].name}`);
+                                  downloadUrl = publicUrl?.publicUrl || null;
+                                }
+                                
+                                // If no cached file, trigger generation via edge function
+                                if (!downloadUrl) {
+                                  const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+                                  const genUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}?generate=1`;
+                                  const resp = await fetch(genUrl);
+                                  if (resp.ok) {
+                                    const data = await resp.json();
+                                    downloadUrl = data.image_url || null;
+                                  }
+                                }
+
+                                if (downloadUrl) {
+                                  // Fetch the image and download as blob
+                                  const imgResp = await fetch(downloadUrl);
+                                  const blob = await imgResp.blob();
+                                  const blobUrl = URL.createObjectURL(blob);
                                   const link = document.createElement('a');
-                                  link.href = publicUrl.publicUrl;
-                                  link.download = `${expert.slug}-${a.city_slug}-card.png`;
-                                  link.target = '_blank';
+                                  link.href = blobUrl;
+                                  link.download = `${expert.slug}-${a.city_slug}-card.svg`;
                                   document.body.appendChild(link);
                                   link.click();
                                   document.body.removeChild(link);
-                                  return;
+                                  URL.revokeObjectURL(blobUrl);
+                                  toast({ title: "Card downloaded!" });
+                                } else {
+                                  toast({ title: "Failed to generate card", variant: "destructive" });
                                 }
+                              } catch (err) {
+                                console.error("Download error:", err);
+                                toast({ title: "Download failed", description: String(err), variant: "destructive" });
                               }
-                              toast({ title: "No card image found", description: "Share the link first to generate the preview card, then try downloading.", variant: "destructive" });
                             };
                             return (
                               <div key={a.id} className="flex items-center gap-1">

@@ -111,7 +111,6 @@ const EventOutsideDays26 = () => {
             eventSlug="denver26"
             eyebrowKey="denver_brand_rep_cards_eyebrow"
             headlineKey="denver_brand_rep_cards_headline"
-            highlightExpert={highlightExpert}
           />
         </HideableSection>
 

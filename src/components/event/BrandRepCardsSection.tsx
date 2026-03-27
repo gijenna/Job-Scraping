@@ -97,7 +97,7 @@ const BrandRepCardsSection = ({
           <SortableContext items={brandReps.map(e => e.id)} strategy={rectSortingStrategy}>
             <div className={getGridClass()}>
               {brandReps.map((expert) => (
-                <div key={expert.id} ref={highlightExpert === expert.slug ? highlightRef : undefined}>
+                <div key={expert.id}>
                   <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
                 </div>
               ))}

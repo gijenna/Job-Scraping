@@ -111,7 +111,6 @@ const EventPNW26 = () => {
             eventSlug="pnw26"
             eyebrowKey="pnw_brand_rep_cards_eyebrow"
             headlineKey="pnw_brand_rep_cards_headline"
-            highlightExpert={highlightExpert}
           />
         </HideableSection>
 
