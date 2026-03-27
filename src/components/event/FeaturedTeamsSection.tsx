@@ -14,6 +14,7 @@ interface FeaturedTeamsSectionProps {
   eyebrowKey?: string;
   headlineKey?: string;
   eventSlug?: string;
+  highlightBrandRep?: string;
 }
 
 const FeaturedTeamsSection = ({
