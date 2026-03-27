@@ -288,27 +288,58 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                           {expertAssigns.map((a) => {
                             const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
                             const shareUrl = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(a.city_slug)}`;
+                            const downloadOgCard = async () => {
+                              const { data: files } = await supabaseClient.storage
+                                .from("event-photos")
+                                .list("og-cards", { search: `${expert.slug}-${a.city_slug}-og-card` });
+                              if (files && files.length > 0) {
+                                const { data: publicUrl } = supabaseClient.storage
+                                  .from("event-photos")
+                                  .getPublicUrl(`og-cards/${files[0].name}`);
+                                if (publicUrl?.publicUrl) {
+                                  const link = document.createElement('a');
+                                  link.href = publicUrl.publicUrl;
+                                  link.download = `${expert.slug}-${a.city_slug}-card.png`;
+                                  link.target = '_blank';
+                                  document.body.appendChild(link);
+                                  link.click();
+                                  document.body.removeChild(link);
+                                  return;
+                                }
+                              }
+                              toast({ title: "No card image found", description: "Share the link first to generate the preview card, then try downloading.", variant: "destructive" });
+                            };
                             return (
-                              <Button
-                                key={a.id}
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(shareUrl);
-                                  toast({ title: "Share link copied!", description: `${expert.full_name} — ${cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}` });
-                                }}
-                                className="text-events-cream/60 hover:text-events-cream h-6 px-2 gap-1 text-xs"
-                                title={shareUrl}
-                              >
-                                <Share2 className="w-3 h-3" />
-                                {cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}
-                              </Button>
+                              <div key={a.id} className="flex items-center gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(shareUrl);
+                                    toast({ title: "Share link copied!", description: `${expert.full_name} — ${cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}` });
+                                  }}
+                                  className="text-events-cream/60 hover:text-events-cream h-6 px-2 gap-1 text-xs"
+                                  title={shareUrl}
+                                >
+                                  <Share2 className="w-3 h-3" />
+                                  {cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={downloadOgCard}
+                                  className="text-events-cream/60 hover:text-events-yellow h-6 w-6 p-0"
+                                  title="Download card image"
+                                >
+                                  <Download className="w-3 h-3" />
+                                </Button>
+                              </div>
                             );
                           })}
                         </div>
                       ) : (
                         <span className="text-events-cream/30 text-xs">—</span>
-                      )}
+                      )
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
