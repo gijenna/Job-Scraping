@@ -58,13 +58,7 @@ const BrandRepCardsSection = ({
     if (settings["card_style_brand_reps"]) setCardStyle(settings["card_style_brand_reps"]);
   }, [settings]);
 
-  useEffect(() => {
-    if (highlightExpert && highlightRef.current) {
-      setTimeout(() => {
-        highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 500);
-    }
-  }, [highlightExpert, brandReps]);
+
 
   if (brandReps.length === 0) return null;
 
