@@ -32,6 +32,7 @@ const TYPEFORM_PNW = "https://basecampoutdoor.typeform.com/pnw2026";
 const EventPNW26 = () => {
   const [searchParams] = useSearchParams();
   const highlightExpert = searchParams.get("expert") || undefined;
+  const highlightBrandRep = searchParams.get("brand") || undefined;
   const { logos: tickerLogos } = useEventLogos("pnw26");
   const { logos: partnerLogos } = useEventLogos("pnw26-partners");
   const { logos: bubbleLogos } = useEventLogos("pnw26-bubbles");

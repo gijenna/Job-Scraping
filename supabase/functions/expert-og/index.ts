@@ -21,6 +21,105 @@ const EVENT_LABEL: Record<string, string> = {
   minneapolis: "Basecamp Outdoor",
 };
 
+function buildSvgCard(
+  expert: any,
+  eventTitle: string,
+  cityName: string,
+  citySlug: string,
+  expertType: string,
+  photoBase64: string | null
+): string {
+  const eventLabel = EVENT_LABEL[citySlug] || eventTitle;
+  const ctaText = expertType === "brand_rep"
+    ? `Connect with me @ ${eventLabel}`
+    : `Network with me @ ${eventLabel}`;
+
+  const name = esc(expert.full_name || "");
+  const title = esc(expert.job_title || "");
+  const company = expert.current_company ? esc(`at ${expert.current_company}`) : "";
+  const yearsText = expert.years_in_industry ? esc(`${expert.years_in_industry} years in the outdoor industry`) : "";
+  const askAbout = expert.ask_me_about ? esc(`Ask me about: ${expert.ask_me_about}`) : "";
+  const prevBrands = expert.previous_companies ? esc(`Previous: ${expert.previous_companies}`) : "";
+
+  const photoClip = photoBase64
+    ? `<clipPath id="circleClip"><circle cx="180" cy="240" r="110"/></clipPath>
+       <circle cx="180" cy="240" r="114" fill="#19363B" />
+       <image href="${photoBase64}" x="70" y="130" width="220" height="220" clip-path="url(#circleClip)" preserveAspectRatio="xMidYMid slice" />`
+    : `<circle cx="180" cy="240" r="114" fill="#19363B" />
+       <circle cx="180" cy="240" r="110" fill="#E8D5C4" />
+       <text x="180" y="255" text-anchor="middle" font-size="60" font-weight="bold" fill="#19363B" font-family="Georgia,serif">${name.split(" ").map(w => w[0]).join("").slice(0, 2)}</text>`;
+
+  // Build right-side text lines
+  let rightY = 160;
+  const rightLines: string[] = [];
+
+  rightLines.push(`<text x="420" y="${rightY}" font-size="18" font-style="italic" fill="#19363B" font-family="Georgia,serif">${esc(ctaText)}</text>`);
+  rightY += 50;
+
+  rightLines.push(`<text x="420" y="${rightY}" font-size="42" font-weight="bold" fill="#ED7660" font-family="Georgia,serif">${name}</text>`);
+  rightY += 40;
+
+  if (title || company) {
+    rightLines.push(`<text x="420" y="${rightY}" font-size="20" fill="#19363B" font-family="Arial,sans-serif">${title}${title && company ? " " : ""}${company}</text>`);
+    rightY += 32;
+  }
+
+  if (yearsText) {
+    rightLines.push(`<text x="420" y="${rightY}" font-size="16" fill="#666" font-family="Arial,sans-serif">${yearsText}</text>`);
+    rightY += 28;
+  }
+
+  if (prevBrands) {
+    // Truncate to fit
+    const truncated = prevBrands.length > 70 ? prevBrands.slice(0, 67) + "..." : prevBrands;
+    rightLines.push(`<text x="420" y="${rightY}" font-size="14" fill="#888" font-family="Arial,sans-serif">${truncated}</text>`);
+    rightY += 28;
+  }
+
+  if (askAbout) {
+    // Truncate and wrap
+    const truncated = askAbout.length > 80 ? askAbout.slice(0, 77) + "..." : askAbout;
+    rightLines.push(`<text x="420" y="${rightY}" font-size="16" font-style="italic" fill="#19363B" font-family="Georgia,serif">${truncated}</text>`);
+    rightY += 28;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>${photoBase64 ? '<clipPath id="circleClip"><circle cx="180" cy="240" r="110"/></clipPath>' : ''}</defs>
+  <!-- Cream background -->
+  <rect width="1200" height="630" fill="#F5E6D3" rx="0"/>
+  
+  <!-- Photo area -->
+  ${photoBase64
+    ? `<circle cx="180" cy="240" r="114" fill="#19363B"/>
+       <image href="${photoBase64}" x="70" y="130" width="220" height="220" clip-path="url(#circleClip)" preserveAspectRatio="xMidYMid slice"/>`
+    : `<circle cx="180" cy="240" r="114" fill="#19363B"/>
+       <circle cx="180" cy="240" r="110" fill="#E8D5C4"/>
+       <text x="180" y="255" text-anchor="middle" font-size="60" font-weight="bold" fill="#19363B" font-family="Georgia,serif">${name.split(" ").map(w => w[0]).join("").slice(0, 2)}</text>`}
+
+  <!-- Right side text -->
+  ${rightLines.join("\n  ")}
+
+  <!-- Bottom bar -->
+  <rect x="0" y="530" width="1200" height="100" fill="#19363B"/>
+  <text x="40" y="575" font-size="16" font-weight="bold" fill="#F5E6D3" font-family="Arial,sans-serif">BASECAMP OUTDOOR</text>
+  <text x="600" y="575" text-anchor="middle" font-size="16" fill="#FEE123" font-family="Arial,sans-serif">${esc(eventTitle)} · ${esc(cityName)}</text>
+  <text x="1160" y="575" text-anchor="end" font-size="14" fill="#F5E6D3" font-family="Arial,sans-serif">Register: www.basecampoutdoorevents.com</text>
+</svg>`;
+}
+
+async function fetchPhotoAsBase64(photoUrl: string): Promise<string | null> {
+  try {
+    const resp = await fetch(photoUrl);
+    if (!resp.ok) return null;
+    const buf = await resp.arrayBuffer();
+    const contentType = resp.headers.get("content-type") || "image/jpeg";
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+    return `data:${contentType};base64,${base64}`;
+  } catch {
+    return null;
+  }
+}
+
 async function getOrGenerateOgCard(
   supabase: any,
   expert: any,
@@ -31,6 +130,8 @@ async function getOrGenerateOgCard(
   siteBase: string,
   expertType: string
 ): Promise<string> {
+  const cardPath = `og-cards/${slug}-${citySlug}-og-card.svg`;
+
   // Check cache
   const { data: existingFiles } = await supabase.storage
     .from("event-photos")
@@ -48,118 +149,28 @@ async function getOrGenerateOgCard(
     }
   }
 
-  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  if (!LOVABLE_API_KEY) {
-    console.error("LOVABLE_API_KEY not configured");
+  // Generate SVG
+  const photoBase64 = expert.photo_url ? await fetchPhotoAsBase64(expert.photo_url) : null;
+  const svg = buildSvgCard(expert, eventTitle, cityName, citySlug, expertType, photoBase64);
+  const svgBytes = new TextEncoder().encode(svg);
+
+  const { error: uploadError } = await supabase.storage
+    .from("event-photos")
+    .upload(cardPath, svgBytes, {
+      contentType: "image/svg+xml",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    console.error("Upload error:", uploadError);
     return expert.photo_url || `${siteBase}/og-basecamp.png`;
   }
 
-  const titleLine = expert.job_title || "";
-  const companyLine = expert.current_company ? `at ${expert.current_company}` : "";
-  const previousBrands = expert.previous_companies || "";
-  const yearsIndustry = expert.years_in_industry ? `${expert.years_in_industry} years in the industry` : "";
-  const askAbout = expert.ask_me_about || "";
-  const eventLabel = EVENT_LABEL[citySlug] || eventTitle;
-  const ctaText = expertType === "brand_rep"
-    ? `Connect with me @ ${eventLabel}`
-    : `Network with me @ ${eventLabel}`;
+  const { data: publicUrl } = supabase.storage
+    .from("event-photos")
+    .getPublicUrl(cardPath);
 
-  const prompt = `Create a professional social media preview card image at exactly 1200x630 pixels with this layout:
-
-BACKGROUND: Warm cream/off-white (#F5E6D3) filling the entire card.
-
-LEFT SIDE (35% of width):
-- A circular photo (about 200px diameter) with the person's provided photo
-- Photo should have a thin dark teal (#19363B) border ring
-- Below the photo circle, small gray text showing previous brands: "${previousBrands}"
-
-RIGHT SIDE (65% of width), vertically centered:
-- Top: "${ctaText}" in medium dark teal (#19363B) italic text
-- Name "${expert.full_name}" in large bold coral/salmon (#ED7660) font, prominent
-- Below: "${titleLine} ${companyLine}" in dark teal (#19363B) medium font
-${yearsIndustry ? `- Below: "${yearsIndustry}" in small gray text` : ""}
-${askAbout ? `- Below: "Ask me about: ${askAbout}" in small dark teal italic text` : ""}
-
-BOTTOM BAR: A dark teal (#19363B) strip across the bottom ~50px high containing:
-- Left: "BASECAMP OUTDOOR" in cream text, small bold
-- Center: "${eventTitle} · ${cityName}" in cream/yellow (#FEE123) text
-- Right: "Register: www.basecampoutdoorevents.com" in cream text
-
-Style: Clean, warm, editorial card. Cream background feels inviting. Text must be crisp and readable. Professional networking feel.`;
-
-  try {
-    const messages: any[] = [
-      {
-        role: "user",
-        content: expert.photo_url
-          ? [
-              { type: "text", text: prompt },
-              { type: "image_url", image_url: { url: expert.photo_url } },
-            ]
-          : prompt,
-      },
-    ];
-
-    const response = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-3.1-flash-image-preview",
-          messages,
-          modalities: ["image", "text"],
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      console.error("AI gateway error:", response.status, await response.text());
-      return expert.photo_url || `${siteBase}/og-basecamp.png`;
-    }
-
-    const data = await response.json();
-    const firstImage = data.choices?.[0]?.message?.images?.[0];
-    const imageDataUrl = firstImage?.image_url?.url;
-    console.log("AI image response - has image:", !!imageDataUrl);
-
-    if (!imageDataUrl) {
-      console.error("No image in AI response");
-      return expert.photo_url || `${siteBase}/og-basecamp.png`;
-    }
-
-    const mimeMatch = imageDataUrl.match(/^data:(image\/\w+);base64,/);
-    const mimeType = mimeMatch?.[1] || "image/png";
-    const ext = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/webp" ? "webp" : "png";
-    const cardPath = `og-cards/${slug}-${citySlug}-og-card.${ext}`;
-
-    const base64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
-    const binary = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
-
-    const { error: uploadError } = await supabase.storage
-      .from("event-photos")
-      .upload(cardPath, binary, {
-        contentType: mimeType,
-        upsert: true,
-      });
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      return expert.photo_url || `${siteBase}/og-basecamp.png`;
-    }
-
-    const { data: publicUrl } = supabase.storage
-      .from("event-photos")
-      .getPublicUrl(cardPath);
-
-    return publicUrl?.publicUrl || expert.photo_url || `${siteBase}/og-basecamp.png`;
-  } catch (err) {
-    console.error("OG card generation failed:", err);
-    return expert.photo_url || `${siteBase}/og-basecamp.png`;
-  }
+  return publicUrl?.publicUrl || expert.photo_url || `${siteBase}/og-basecamp.png`;
 }
 
 Deno.serve(async (req) => {
@@ -175,6 +186,7 @@ Deno.serve(async (req) => {
 
   const slug = url.searchParams.get("slug") || slugFromPath;
   const city = url.searchParams.get("city") || cityFromPath || "portland";
+  const forceGenerate = url.searchParams.get("generate") === "1";
 
   if (!slug) {
     return new Response("Missing slug", { status: 400, headers: corsHeaders });
@@ -187,7 +199,7 @@ Deno.serve(async (req) => {
 
   const { data: expert } = await supabase
     .from("industry_experts")
-    .select("full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug")
+    .select("id, full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug")
     .eq("slug", slug)
     .single();
 
@@ -203,7 +215,7 @@ Deno.serve(async (req) => {
     .from("expert_city_assignments")
     .select("expert_type")
     .eq("city_slug", city)
-    .eq("expert_id", (await supabase.from("industry_experts").select("id").eq("slug", slug).single()).data?.id)
+    .eq("expert_id", expert.id)
     .single();
 
   const expertType = assignment?.expert_type || "industry_expert";
@@ -219,10 +231,29 @@ Deno.serve(async (req) => {
 
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPath = EVENT_PAGE[city] || "/events";
-  // Deep-link with UTM params
-  const redirectUrl = `${siteBase}${eventPath}?expert=${encodeURIComponent(slug)}&utm_source=expert_share&utm_medium=social&utm_campaign=${encodeURIComponent(city)}`;
+
+  // Use ?brand= for brand reps, ?expert= for industry experts
+  const paramName = expertType === "brand_rep" ? "brand" : "expert";
+  const redirectUrl = `${siteBase}${eventPath}?${paramName}=${encodeURIComponent(slug)}&utm_source=expert_share&utm_medium=social&utm_campaign=${encodeURIComponent(city)}`;
+
   const shareOrigin = url.origin.replace("http://", "https://");
   const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(slug)}/${encodeURIComponent(city)}`;
+
+  // If ?generate=1, force regenerate and return the image URL
+  if (forceGenerate) {
+    // Delete cached file first
+    await supabase.storage.from("event-photos").remove([`og-cards/${slug}-${city}-og-card.svg`]);
+    // Also remove old png/jpg/webp files
+    const { data: oldFiles } = await supabase.storage.from("event-photos").list("og-cards", { search: `${slug}-${city}-og-card` });
+    if (oldFiles && oldFiles.length > 0) {
+      await supabase.storage.from("event-photos").remove(oldFiles.map(f => `og-cards/${f.name}`));
+    }
+
+    const ogImage = await getOrGenerateOgCard(supabase, expert, eventTitle, cityName, city, slug, siteBase, expertType);
+    return new Response(JSON.stringify({ image_url: ogImage }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 
   const ua = req.headers.get("user-agent") || "";
   const isCrawler = CRAWLER_UA.test(ua);
@@ -256,7 +287,6 @@ Deno.serve(async (req) => {
   ]
     .filter(Boolean)
     .join(" ");
-  const ogImageType = getImageMimeType(ogImage);
 
   const html = `<!DOCTYPE html>
 <html>
@@ -270,7 +300,7 @@ Deno.serve(async (req) => {
   <meta property="og:image" content="${esc(ogImage)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="${esc(ogImageType)}" />
+  <meta property="og:image:type" content="image/svg+xml" />
   <meta property="og:url" content="${esc(shareUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
@@ -288,13 +318,6 @@ Deno.serve(async (req) => {
   headers.set("Cache-Control", "public, max-age=3600");
   return new Response(html, { headers });
 });
-
-function getImageMimeType(url: string): string {
-  const normalized = url.split("?")[0].toLowerCase();
-  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) return "image/jpeg";
-  if (normalized.endsWith(".webp")) return "image/webp";
-  return "image/png";
-}
 
 function esc(s: string): string {
   return s

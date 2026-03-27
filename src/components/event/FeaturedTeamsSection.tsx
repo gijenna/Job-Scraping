@@ -46,7 +46,7 @@ const FeaturedTeamsSection = ({
         <CascadingLogoBubbles logos={bubbleLogos} bubbleColor={bubbleColor} editKeyPrefix={editKeyPrefix} />
 
         {brandReps.length > 0 && (
-          <BrandUmbrellaSection experts={brandReps} accentColor={accentColor} eventSlug={eventSlug} />
+          <BrandUmbrellaSection experts={brandReps} accentColor={accentColor} eventSlug={eventSlug} highlightBrandRep={highlightBrandRep} />
         )}
       </div>
     </section>
