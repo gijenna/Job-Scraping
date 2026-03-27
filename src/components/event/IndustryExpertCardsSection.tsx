@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import EditableText from "@/components/EditableText";
 import CardStylePicker from "@/components/event/CardStylePicker";
 import ExpertCard from "@/components/experts/ExpertCard";
@@ -37,6 +38,8 @@ interface IndustryExpertCardsSectionProps {
   eventSlug?: string;
   eyebrowKey?: string;
   headlineKey?: string;
+  highlightExpert?: string;
+  registrationUrl?: string;
 }
 
 const IndustryExpertCardsSection = ({
@@ -48,23 +51,35 @@ const IndustryExpertCardsSection = ({
   eventSlug = "pnw26",
   eyebrowKey = "experts_cards_eyebrow",
   headlineKey = "experts_cards_headline",
+  highlightExpert,
+  registrationUrl,
 }: IndustryExpertCardsSectionProps) => {
   const { settings } = useEventSettings(eventSlug);
   const { isAdmin } = useEditableTextContext();
   const [cardStyle, setCardStyle] = useState("polaroid");
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const highlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (settings["card_style_experts"]) setCardStyle(settings["card_style_experts"]);
   }, [settings]);
 
+  useEffect(() => {
+    if (highlightExpert && highlightRef.current) {
+      setTimeout(() => {
+        highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
+  }, [highlightExpert, experts]);
+
   if (experts.length === 0) return null;
 
   const renderCard = (expert: Expert) => {
+    const isHighlighted = highlightExpert === expert.slug;
     switch (cardStyle) {
-      case "compact": return <ExpertCardCompact expert={expert} />;
-      case "minimal": return <ExpertCardMinimal expert={expert} />;
-      default: return <ExpertCard expert={expert} />;
+      case "compact": return <ExpertCardCompact expert={expert} autoExpand={isHighlighted} />;
+      case "minimal": return <ExpertCardMinimal expert={expert} autoExpand={isHighlighted} />;
+      default: return <ExpertCard expert={expert} autoExpand={isHighlighted} />;
     }
   };
 
@@ -95,11 +110,28 @@ const IndustryExpertCardsSection = ({
           <SortableContext items={experts.map(e => e.id)} strategy={rectSortingStrategy}>
             <div className={getGridClass()}>
               {experts.map((expert) => (
-                <SortableCard key={expert.id} expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
+                <div key={expert.id} ref={highlightExpert === expert.slug ? highlightRef : undefined}>
+                  <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
+                </div>
               ))}
             </div>
           </SortableContext>
         </DndContext>
+
+        {registrationUrl && (
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mt-12">
+            <a
+              href={registrationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-display font-bold text-base shadow-lg transition-all duration-300 hover:scale-105"
+              style={{ backgroundColor: accentColor, color: bgColor }}
+            >
+              Register to Network!
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
+        )}
       </div>
     </section>
   );

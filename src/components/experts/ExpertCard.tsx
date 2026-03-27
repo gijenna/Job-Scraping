@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Linkedin } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import { Badge } from "@/components/ui/badge";
@@ -8,11 +8,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 interface ExpertCardProps {
   expert: Expert;
   expanded?: boolean;
+  autoExpand?: boolean;
   className?: string;
 }
 
-const ExpertCard = ({ expert, expanded: initialExpanded = false, className = "" }: ExpertCardProps) => {
-  const [expanded, setExpanded] = useState(initialExpanded);
+const ExpertCard = ({ expert, expanded: initialExpanded = false, autoExpand = false, className = "" }: ExpertCardProps) => {
+  const [expanded, setExpanded] = useState(initialExpanded || autoExpand);
+
+  useEffect(() => {
+    if (autoExpand) setExpanded(true);
+  }, [autoExpand]);
 
   const previousCompanies = expert.previous_companies
     ? expert.previous_companies.split(',').map(c => c.trim()).filter(Boolean)
