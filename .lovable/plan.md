@@ -1,74 +1,69 @@
 
 
-## Plan: Fix Deep-Links, OG Image Generation & Download
+## Plan: Redesign OG Share Cards — Agency-Quality Design
 
-### Problems identified
-1. **Industry expert deep-links scroll to wrong section** — both `BrandRepCardsSection` and `IndustryExpertCardsSection` receive the same `highlightExpert` param, so the brand rep section scrolls first (it's higher on the page)
-2. **Brand rep deep-links go to BrandRepCardsSection** instead of FeaturedTeamsSection's BrandUmbrellaSection (the accordion cards)
-3. **Download fails** because no OG images exist — the AI image generation hits 429 rate limits consistently
-4. **Social previews don't work** — same root cause: AI generation fails, so og:image falls back to default
+### Problem
+Current SVG cards use boring system fonts (Georgia, Arial), cram content into the middle, have tiny text, and lack visual punch. The Basecamp logo is just typed text. Photos are embedded but the layout doesn't use the 1200x630 space effectively. They don't stand out in a social feed.
 
-### Root cause for issues 3 & 4
-The edge function uses AI image generation (`gemini-3.1-flash-image-preview`) which is unreliable (429 errors in logs). We need to replace this with deterministic SVG-to-PNG rendering.
+### Design Direction
 
----
+**Layout concept: Bold split-panel with editorial energy**
+
+The card uses the full 1200x630 canvas with a confident, magazine-editorial feel:
+
+```text
+┌─────────────────────────────────────────────────────┐
+│  ┌──────────┐                                       │
+│  │          │   NETWORK WITH ME AT                  │
+│  │  PHOTO   │   GATHER PNW ←(large, bold)           │
+│  │  (large  │                                       │
+│  │  rect,   │   JANE DOE ←(48px+ coral, bold)       │
+│  │  rounded │   VP of Marketing · Patagonia          │
+│  │  corners)│   12 years in the outdoor industry     │
+│  │          │                                       │
+│  └──────────┘   Ask me about: trail running...       │
+│                                                     │
+│  [logo][logo][logo][logo]  ← previous brand logos   │
+│                                                     │
+│  ████████ BASECAMP OUTDOOR [logo]  ·  Register ████ │
+│  ████████ www.basecampoutdoorevents.com         ████ │
+└─────────────────────────────────────────────────────┘
+```
+
+**Key design decisions:**
+- **Dark teal (#19363B) background** — stands out in light-colored social feeds (LinkedIn/Facebook are white/light gray), creates drama
+- **Photo: large rectangle** (~380x420) with subtle rounded corners, left-aligned, color (not grayscale) — the person IS the hook
+- **Name in coral (#ED7660)** at 52px+ — immediately readable
+- **CTA "Network with me @" in yellow (#FEE123)** — bright accent that pops against dark teal
+- **Title/company in cream (#F5E6D3)** — clean hierarchy
+- **Previous brand logos** rendered at 40px with cream circle backgrounds for legibility
+- **Bottom bar** slightly lighter teal with the actual Basecamp Outdoor logo (fetched from the published site's `/og-basecamp.png` or the stored asset) plus "Register: www.basecampoutdoorevents.com" in yellow
+- **Years in industry** shown as a small accent badge
+- **Ask me about** in italic cream, truncated elegantly
+
+**Font strategy:** Use the system fonts that render best in resvg-wasm but with much bolder weights and larger sizes. The current issue is tiny font sizes (13-20px on a 1200px canvas). Bumping to 24-52px range with proper weight hierarchy makes all the difference.
 
 ### Implementation
 
-**1. Replace AI image gen with SVG-based OG cards (edge function)**
+**1. Rewrite `buildSvgCard()` in `supabase/functions/expert-og/index.ts`**
 
-Rewrite `supabase/functions/expert-og/index.ts`:
-- Remove AI gateway call entirely
-- Build a 1200x630 SVG string directly using expert data (name, title, company, ask_me_about, years_in_industry, previous brands)
-- Use cream background, coral name, teal text — matching the Card B style
-- Include "Network with me @ Gather PNW" / "@ Outside Days" CTA
-- Include "Register: www.basecampoutdoorevents.com" footer bar
-- Embed the expert's photo as a base64 circle-clipped image (fetch and encode)
-- Return the SVG as a PNG by converting via `resvg-wasm`, OR serve the SVG directly with `content-type: image/svg+xml` (SVG works for og:image on LinkedIn/Facebook)
-- Cache the result in storage as before
-- Keep crawler detection, OG HTML response, and redirect logic
+- Dark teal full-bleed background instead of cream
+- Photo: large rectangle (left side, ~380x440), rounded corners via clipPath, preserveAspectRatio slice
+- Right side: yellow CTA text (28px bold), coral name (52px bold), cream title/company (24px), cream years badge, cream ask-me-about italic
+- Previous brand logos: row of 40px circles with white bg at bottom-left area
+- Bottom strip: fetch Basecamp logo from published URL (`https://sponsor-attract-hub.lovable.app/og-basecamp.png`) as base64, embed it; add "Register: www.basecampoutdoorevents.com" in yellow
+- Proper text wrapping for long names (split into two lines if > ~18 chars)
+- Clear old cached cards so regeneration happens
 
-**2. Fix deep-link targeting for industry experts vs brand reps**
+**2. Fix the CRM download flow**
 
-In `EventPNW26.tsx` and `EventOutsideDays26.tsx`:
-- Add a second query param: use `?expert=slug` for industry experts and `?brand=slug` for brand reps
-- Pass `highlightExpert` only to `IndustryExpertCardsSection`
-- Pass a new `highlightBrandRep` only to `FeaturedTeamsSection`
+The download currently fails. Update `ExpertCRM.tsx`:
+- When downloading, call the edge function with `?generate=1` to force-regenerate with the new design
+- Parse the returned `image_url`, then use `window.open()` or create an anchor download — the current fetch-blob approach may be blocked by CORS on storage URLs
 
-Update `supabase/functions/expert-og/index.ts`:
-- Use `?brand=slug` in the redirect URL for brand_rep type, `?expert=slug` for industry_expert
-
-**3. Brand rep deep-link goes to FeaturedTeamsSection with auto-expand**
-
-Update `FeaturedTeamsSection`:
-- Accept `highlightBrandRep` prop (slug)
-- Pass it to `BrandUmbrellaSection`
-
-Update `BrandUmbrellaSection`:
-- Accept `highlightBrandRep` prop
-- On mount, find which company group contains the matching expert, auto-expand that group
-- Scroll to the section
-- Pass `autoExpand` to the matching `ExpertCardMinimal`
-
-Remove highlight logic from `BrandRepCardsSection` (brand reps should deep-link to FeaturedTeams instead).
-
-**4. Fix download in CRM**
-
-The download currently looks for cached files that never got created. After switching to deterministic SVG rendering:
-- The CRM download button should call the edge function directly to trigger generation if no cached file exists
-- Update `downloadOgCard` in `ExpertCRM.tsx` to first check storage, and if not found, call the edge function URL (which will generate and cache), then retry the download
-
-**5. Keep "Register to Network!" button** — already implemented, no changes needed.
-
----
-
-### Files to edit
-- `supabase/functions/expert-og/index.ts` — replace AI gen with SVG rendering, fix redirect params
-- `src/pages/EventPNW26.tsx` — split `?expert` and `?brand` params, route to correct sections
-- `src/pages/EventOutsideDays26.tsx` — same
-- `src/components/event/FeaturedTeamsSection.tsx` — accept `highlightBrandRep`, pass down
-- `src/components/event/BrandUmbrellaSection.tsx` — auto-expand matching company, scroll into view
-- `src/components/experts/ExpertCRM.tsx` — fix download to trigger generation if needed
+### Files to change
+- `supabase/functions/expert-og/index.ts` — complete rewrite of `buildSvgCard()` for the new design, fetch Basecamp logo
+- `src/components/experts/ExpertCRM.tsx` — fix download to use window.open on the returned URL
 
 ### No database changes needed
 
