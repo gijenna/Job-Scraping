@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Linkedin, X } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
@@ -7,11 +7,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 interface ExpertCardMinimalProps {
   expert: Expert;
+  autoExpand?: boolean;
   className?: string;
 }
 
-const ExpertCardMinimal = ({ expert, className = "" }: ExpertCardMinimalProps) => {
+const ExpertCardMinimal = ({ expert, autoExpand = false, className = "" }: ExpertCardMinimalProps) => {
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (autoExpand) setExpanded(true);
+  }, [autoExpand]);
 
   if (expanded) {
     return (

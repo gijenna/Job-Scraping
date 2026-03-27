@@ -15,18 +15,26 @@ const EVENT_PAGE: Record<string, string> = {
   minneapolis: "/events",
 };
 
+const EVENT_LABEL: Record<string, string> = {
+  portland: "Gather PNW",
+  denver: "Outside Days",
+  minneapolis: "Basecamp Outdoor",
+};
+
 async function getOrGenerateOgCard(
   supabase: any,
   expert: any,
   eventTitle: string,
   cityName: string,
+  citySlug: string,
   slug: string,
-  siteBase: string
+  siteBase: string,
+  expertType: string
 ): Promise<string> {
-  // Check cache - look for any existing card for this slug
+  // Check cache
   const { data: existingFiles } = await supabase.storage
     .from("event-photos")
-    .list("og-cards", { search: `${slug}-og-card` });
+    .list("og-cards", { search: `${slug}-${citySlug}-og-card` });
 
   if (existingFiles && existingFiles.length > 0) {
     const file = existingFiles[0];
@@ -35,12 +43,11 @@ async function getOrGenerateOgCard(
       .from("event-photos")
       .getPublicUrl(filePath);
     if (publicUrl?.publicUrl) {
-      console.log(`Cache hit for ${slug}`);
+      console.log(`Cache hit for ${slug}-${citySlug}`);
       return publicUrl.publicUrl;
     }
   }
 
-  // Generate with AI
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   if (!LOVABLE_API_KEY) {
     console.error("LOVABLE_API_KEY not configured");
@@ -49,27 +56,36 @@ async function getOrGenerateOgCard(
 
   const titleLine = expert.job_title || "";
   const companyLine = expert.current_company ? `at ${expert.current_company}` : "";
-  const fieldBadge = expert.field_of_work || "";
+  const previousBrands = expert.previous_companies || "";
+  const yearsIndustry = expert.years_in_industry ? `${expert.years_in_industry} years in the industry` : "";
   const askAbout = expert.ask_me_about || "";
+  const eventLabel = EVENT_LABEL[citySlug] || eventTitle;
+  const ctaText = expertType === "brand_rep"
+    ? `Connect with me @ ${eventLabel}`
+    : `Network with me @ ${eventLabel}`;
 
   const prompt = `Create a professional social media preview card image at exactly 1200x630 pixels with this layout:
 
-BACKGROUND: Deep teal color (#1a3a3a) filling the entire card.
+BACKGROUND: Warm cream/off-white (#F5E6D3) filling the entire card.
 
-LEFT SIDE (40% of width): 
-- A cream/off-white (#F5F0E8) Polaroid-style photo frame with slight rotation (-2 degrees)
-- Inside the frame: the provided photo converted to black and white/grayscale
-- Small shadow under the Polaroid
+LEFT SIDE (35% of width):
+- A circular photo (about 200px diameter) with the person's provided photo
+- Photo should have a thin dark teal (#19363B) border ring
+- Below the photo circle, small gray text showing previous brands: "${previousBrands}"
 
-RIGHT SIDE (60% of width), vertically centered text:
-- Name "${expert.full_name}" in large bold coral/salmon color (#ED7660) font
-- Below: "${titleLine} ${companyLine}" in warm yellow (#E8C547) medium font
-${fieldBadge ? `- Below: A small rounded badge with text "${fieldBadge}" in coral on a darker teal background` : ""}
-${askAbout ? `- Below: "Ask me about: ${askAbout}" in small cream (#F5F0E8) italic text` : ""}
+RIGHT SIDE (65% of width), vertically centered:
+- Top: "${ctaText}" in medium dark teal (#19363B) italic text
+- Name "${expert.full_name}" in large bold coral/salmon (#ED7660) font, prominent
+- Below: "${titleLine} ${companyLine}" in dark teal (#19363B) medium font
+${yearsIndustry ? `- Below: "${yearsIndustry}" in small gray text` : ""}
+${askAbout ? `- Below: "Ask me about: ${askAbout}" in small dark teal italic text` : ""}
 
-BOTTOM: A subtle horizontal line, then "${eventTitle} · ${cityName}" in small cream text, and "BASECAMP OUTDOOR" in slightly larger cream text on the right.
+BOTTOM BAR: A dark teal (#19363B) strip across the bottom ~50px high containing:
+- Left: "BASECAMP OUTDOOR" in cream text, small bold
+- Center: "${eventTitle} · ${cityName}" in cream/yellow (#FEE123) text
+- Right: "Register: www.basecampoutdoorevents.com" in cream text
 
-Style: Clean, modern, editorial. The text should be crisp and readable. No decorative elements beyond what's described. Professional networking event feel.`;
+Style: Clean, warm, editorial card. Cream background feels inviting. Text must be crisp and readable. Professional networking feel.`;
 
   try {
     const messages: any[] = [
@@ -108,21 +124,18 @@ Style: Clean, modern, editorial. The text should be crisp and readable. No decor
     const data = await response.json();
     const firstImage = data.choices?.[0]?.message?.images?.[0];
     const imageDataUrl = firstImage?.image_url?.url;
-    console.log("AI image response - has image:", !!imageDataUrl, "prefix:", imageDataUrl?.substring(0, 40));
+    console.log("AI image response - has image:", !!imageDataUrl);
 
     if (!imageDataUrl) {
-      console.error("No image in AI response. Full message keys:", JSON.stringify(Object.keys(data.choices?.[0]?.message || {})));
+      console.error("No image in AI response");
       return expert.photo_url || `${siteBase}/og-basecamp.png`;
     }
 
-    // Detect MIME type from data URL
     const mimeMatch = imageDataUrl.match(/^data:(image\/\w+);base64,/);
     const mimeType = mimeMatch?.[1] || "image/png";
     const ext = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/webp" ? "webp" : "png";
-    const cardPath = `og-cards/${slug}-og-card.${ext}`;
-    console.log(`Detected MIME: ${mimeType}, saving as ${cardPath}`);
+    const cardPath = `og-cards/${slug}-${citySlug}-og-card.${ext}`;
 
-    // Convert base64 to binary and upload
     const base64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
     const binary = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 
@@ -174,7 +187,7 @@ Deno.serve(async (req) => {
 
   const { data: expert } = await supabase
     .from("industry_experts")
-    .select("full_name, job_title, current_company, photo_url, field_of_work, ask_me_about")
+    .select("full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug")
     .eq("slug", slug)
     .single();
 
@@ -184,6 +197,16 @@ Deno.serve(async (req) => {
       headers: corsHeaders,
     });
   }
+
+  // Get expert type from assignment
+  const { data: assignment } = await supabase
+    .from("expert_city_assignments")
+    .select("expert_type")
+    .eq("city_slug", city)
+    .eq("expert_id", (await supabase.from("industry_experts").select("id").eq("slug", slug).single()).data?.id)
+    .single();
+
+  const expertType = assignment?.expert_type || "industry_expert";
 
   const { data: cityData } = await supabase
     .from("expert_cities")
@@ -196,7 +219,8 @@ Deno.serve(async (req) => {
 
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPath = EVENT_PAGE[city] || "/events";
-  const redirectUrl = `${siteBase}${eventPath}`;
+  // Deep-link with UTM params
+  const redirectUrl = `${siteBase}${eventPath}?expert=${encodeURIComponent(slug)}&utm_source=expert_share&utm_medium=social&utm_campaign=${encodeURIComponent(city)}`;
   const shareOrigin = url.origin.replace("http://", "https://");
   const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(slug)}/${encodeURIComponent(city)}`;
 
@@ -213,17 +237,18 @@ Deno.serve(async (req) => {
 
   console.log(`Crawler UA detected: ${ua.slice(0, 120)}`);
 
-  // Generate or retrieve cached branded card image
   const ogImage = await getOrGenerateOgCard(
     supabase,
     expert,
     eventTitle,
     cityName,
+    city,
     slug,
-    siteBase
+    siteBase,
+    expertType
   );
 
-  const title = `${expert.full_name} — Industry Expert at ${eventTitle}`;
+  const title = `${expert.full_name} — ${expertType === "brand_rep" ? "Brand Rep" : "Industry Expert"} at ${eventTitle}`;
   const description = [
     expert.job_title,
     expert.current_company ? `at ${expert.current_company}` : null,
@@ -266,12 +291,8 @@ Deno.serve(async (req) => {
 
 function getImageMimeType(url: string): string {
   const normalized = url.split("?")[0].toLowerCase();
-  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) {
-    return "image/jpeg";
-  }
-  if (normalized.endsWith(".webp")) {
-    return "image/webp";
-  }
+  if (normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) return "image/jpeg";
+  if (normalized.endsWith(".webp")) return "image/webp";
   return "image/png";
 }
 

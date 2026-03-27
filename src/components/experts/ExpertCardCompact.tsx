@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Linkedin, Maximize2, X } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
@@ -7,11 +7,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 interface ExpertCardCompactProps {
   expert: Expert;
+  autoExpand?: boolean;
   className?: string;
 }
 
-const ExpertCardCompact = ({ expert, className = "" }: ExpertCardCompactProps) => {
+const ExpertCardCompact = ({ expert, autoExpand = false, className = "" }: ExpertCardCompactProps) => {
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (autoExpand) setExpanded(true);
+  }, [autoExpand]);
 
   if (expanded) {
     return (
