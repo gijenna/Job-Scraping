@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import EditableText from "@/components/EditableText";
 import CardStylePicker from "@/components/event/CardStylePicker";
