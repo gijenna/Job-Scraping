@@ -339,7 +339,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                         </div>
                       ) : (
                         <span className="text-events-cream/30 text-xs">—</span>
-                      )
+                      )}
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-end gap-1">
