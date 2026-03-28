@@ -1,40 +1,37 @@
 
 
-## Plan: Generate 10 More OG Card Mockups (Refined Directions)
+## Plan: Generate 3 Real Expert Cards in Round 2 #9 Style (with tweaks)
 
-### Favorites to build from
-- **#5** (Photo Frame Border) — outdoor photo background element, but classier
-- **#7** (Two-Tone Block) — best info presentation, clear cream logos
-- **#8** (Polaroid Stack) — closest overall, use white border for name in handwriting font
-- **#10** (Bold Stripe) — modern geometric energy
+### Design modifications from round2_09 (Gradient Sunset)
 
-### Feedback to incorporate in ALL 10
-- **CTA**: "Network with me in Portland" (not "at Gather PNW")
-- **Years**: Make clear it's "12 years in the outdoor industry" (not ambiguous)
-- **Logos**: Show "Working at [logo] [logo] [logo]" below ask-me-about area
-- **Basecamp logo**: Use the actual uploaded campfire circle logo (not text)
-- **Background photo** (#5 influence): Use a tasteful, editorial-quality PNW landscape (misty forest, mountain ridge) — subtle/desaturated, not cheesy stock photo
-- **Polaroid** (#8 influence): White border space for handwritten-style name + title
-- **Info hierarchy**: Clean, well-spaced, all elements readable
+1. **Replace fire icon with actual Basecamp campfire logo** (uploaded `Untitled_design_1-3.png`)
+2. **Bottom text**: "Register free · basecampoutdoorevents.com"
+3. **Brand polaroids**: Mini tilted polaroid frames for each previous company, arranged left-to-right as a career journey (earliest job on left, current company on right). More companies = slightly smaller polaroids. Each polaroid contains the company logo.
+4. **Current company logo**: Small logo next to name/title area in the main polaroid
+5. **One card in dark emerald green** (`#19363B`) instead of black background so you can compare
 
-### The 10 new designs
+### 3 Real Experts to render
 
-1. **Polaroid on Forest** — Misty PNW forest background (desaturated), tilted polaroid B&W photo with handwritten name below, info right-aligned in cream, campfire logo bottom-left
-2. **Polaroid Clean Black** — Black bg, centered polaroid with handwritten name, info stacked below in coral/cream, "Working at" logos in cream circles, campfire logo corner
-3. **Two-Tone with Forest Strip** — Top: black with name + photo. Bottom: coral. Thin PNW forest photo strip as divider between zones. Logos in cream on coral section
-4. **Two-Tone Teal/Cream** — Top 60% dark teal with B&W photo + bold name. Bottom 40% cream with title, ask-me-about, "Working at" logos dark. Campfire logo bottom-right
-5. **Magazine + Polaroid Hybrid** — Full-bleed misty mountain bg, dark overlay, polaroid floating center-left with handwritten name, info right in large white/yellow type
-6. **Stripe + Polaroid** — Black bg, thick coral vertical stripe left edge, polaroid overlapping the stripe, info right-aligned, campfire logo top-right, "Working at" logos bottom
-7. **Forest Frame Editorial** — Subtle PNW treeline framing top and bottom edges (dark, moody), black center, B&W photo left, bold stacked info right, very editorial
-8. **Two-Tone Diagonal** — Diagonal split: top-left black, bottom-right coral. B&W photo straddling the divide. Name huge in cream, details on coral side, logos cream circles
-9. **Polaroid Grid** — Black bg, main large polaroid (B&W photo + handwritten name), smaller "logo polaroids" for previous brands arranged beside it, campfire logo bottom
-10. **Minimal Forest Fade** — PNW forest bg fading to black on right side. Photo in rounded rect left. Info on dark right half. Bottom bar with campfire logo + "Working at" logos
+| Expert | Title | Company | Previous | Years | Ask Me About |
+|--------|-------|---------|----------|-------|-------------|
+| Emmy Negrin | Head of Community Impact | Columbia Sportswear | adidas, Discord, Yahoo, Outward Bound | 15 | Community Impact, Leadership Coaching, Wilderness Guiding |
+| Michael Chamberlain-Torres | Sr. Recruiter | Patagonia | Patagonia, Marriott | 5 | Purposeful Business |
+| Ellie Rivkin | Material Developer | Columbia | Gap, Wool&, Freelance | 16 | All things textiles. Size inclusive, sustainable apparel design. |
 
-### Implementation
-1. Copy AI gateway script to /tmp
-2. Generate all 10 cards with sample expert data (e.g., "Sholeh Johnston, Director of Product, YETI, 12 years, ask me about trail running gear")
-3. Each prompt will specify: the uploaded campfire logo, "Network with me in Portland", "12 years in the outdoor industry", "Working at [REI] [Patagonia] [Columbia]" with logo circles, handwriting font on polaroid
-4. Save to /mnt/documents/ as `round2_01.png` through `round2_10.png`
+### Implementation steps
+
+1. Copy the AI image generation script to /tmp
+2. Generate 3 cards — Emmy (black bg), Michael (dark emerald `#19363B` bg), Ellie (black bg)
+3. Each prompt will specify:
+   - Round 2 #9 gradient sunset style as base
+   - Actual Basecamp campfire circle logo (from uploaded image) instead of fire icon
+   - "Register free · basecampoutdoorevents.com" at bottom
+   - Career journey polaroids (left = first job, right = current) with real company logos
+   - Small current company logo near name/title in main polaroid
+   - Real expert data (name, title, company, years, ask-me-about)
+   - "Network with me in Portland"
+   - "[X] years in the outdoor industry" clearly labeled
+4. Save to `/mnt/documents/` as `expert_emmy.png`, `expert_michael.png`, `expert_ellie.png`
 
 ### No code changes — mockup generation only
 
