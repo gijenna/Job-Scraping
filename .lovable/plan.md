@@ -1,69 +1,44 @@
 
 
-## Plan: Redesign OG Share Cards — Agency-Quality Design
+## Plan: Generate 10 OG Card Design Options
 
-### Problem
-Current SVG cards use boring system fonts (Georgia, Arial), cram content into the middle, have tiny text, and lack visual punch. The Basecamp logo is just typed text. Photos are embedded but the layout doesn't use the 1200x630 space effectively. They don't stand out in a social feed.
+### Approach
+Use the AI image generation skill to create 10 distinct card mockups (1200x630px) as downloadable PNGs. Each will use a sample expert's data and follow the visual language from your uploaded "Expert Sessions" references: bold black background, B&W photo, large modern typography, campfire logo, and the cream/coral/yellow brand palette.
 
-### Design Direction
+Once you pick your favorite(s), I'll implement the winning design as a deterministic SVG template in the edge function.
 
-**Layout concept: Bold split-panel with editorial energy**
+### What each card will include (your required elements)
+- Expert's photo (B&W treatment like your references)
+- Full name (large, bold)
+- Job title and current company
+- Previous brand logos (as actual images)
+- Years in industry
+- "Ask me about" answer
+- Event CTA ("Network with me @ Gather PNW")
+- Basecamp Outdoor logo (actual logo image)
+- Registration URL
 
-The card uses the full 1200x630 canvas with a confident, magazine-editorial feel:
+### The 10 design directions
 
-```text
-┌─────────────────────────────────────────────────────┐
-│  ┌──────────┐                                       │
-│  │          │   NETWORK WITH ME AT                  │
-│  │  PHOTO   │   GATHER PNW ←(large, bold)           │
-│  │  (large  │                                       │
-│  │  rect,   │   JANE DOE ←(48px+ coral, bold)       │
-│  │  rounded │   VP of Marketing · Patagonia          │
-│  │  corners)│   12 years in the outdoor industry     │
-│  │          │                                       │
-│  └──────────┘   Ask me about: trail running...       │
-│                                                     │
-│  [logo][logo][logo][logo]  ← previous brand logos   │
-│                                                     │
-│  ████████ BASECAMP OUTDOOR [logo]  ·  Register ████ │
-│  ████████ www.basecampoutdoorevents.com         ████ │
-└─────────────────────────────────────────────────────┘
-```
+1. **Expert Sessions Clone** — Direct adaptation of your uploaded style: black bg, huge cream "NETWORK WITH ME" text, B&W photo right-aligned, campfire logo in the O, yellow title, first name large
+2. **Split Panel Bold** — Left half: full-bleed B&W photo. Right half: black bg with stacked cream/coral/yellow type. Logos in a row at bottom
+3. **Diagonal Slice** — Black bg with photo in a diagonal parallelogram shape. Info left-aligned with massive name in cream. Yellow accent bar
+4. **Cream Clean** — Cream (#F5E6D3) background, photo in rounded rectangle, dark teal text, coral name, minimal and airy like the "organic business card" reference
+5. **Photo Frame Border** — Outdoor/forest border frame (like the fitness QR card reference), B&W photo centered, info overlaid at bottom with semi-transparent dark bar
+6. **Magazine Cover** — Full-bleed photo with dark gradient overlay from bottom. Large white name, yellow subtitle, logos at bottom. Editorial feel
+7. **Two-Tone Block** — Top 60% black with photo and name. Bottom 40% coral with job details and logos in cream. Bold geometric divide
+8. **Polaroid Stack** — Tilted polaroid-style photo frame on dark teal bg. Info beside it in cream/yellow. Playful, matches your existing card style
+9. **Gradient Sunset** — Dark teal fading to coral gradient bg. B&W photo with coral tint. White name, yellow details. Warm, outdoor feel
+10. **Bold Stripe** — Black bg. Thick vertical coral stripe on left edge. Photo in circle. Horizontal info layout with large tracking on name. Ultra-modern
 
-**Key design decisions:**
-- **Dark teal (#19363B) background** — stands out in light-colored social feeds (LinkedIn/Facebook are white/light gray), creates drama
-- **Photo: large rectangle** (~380x420) with subtle rounded corners, left-aligned, color (not grayscale) — the person IS the hook
-- **Name in coral (#ED7660)** at 52px+ — immediately readable
-- **CTA "Network with me @" in yellow (#FEE123)** — bright accent that pops against dark teal
-- **Title/company in cream (#F5E6D3)** — clean hierarchy
-- **Previous brand logos** rendered at 40px with cream circle backgrounds for legibility
-- **Bottom bar** slightly lighter teal with the actual Basecamp Outdoor logo (fetched from the published site's `/og-basecamp.png` or the stored asset) plus "Register: www.basecampoutdoorevents.com" in yellow
-- **Years in industry** shown as a small accent badge
-- **Ask me about** in italic cream, truncated elegantly
+### Implementation steps
 
-**Font strategy:** Use the system fonts that render best in resvg-wasm but with much bolder weights and larger sizes. The current issue is tiny font sizes (13-20px on a 1200px canvas). Bumping to 24-52px range with proper weight hierarchy makes all the difference.
+1. Copy the AI image generation script to /tmp
+2. Generate all 10 cards using a representative expert profile (e.g., "Sholeh — Director of Product @ YETI" from your reference images)
+3. Save all 10 to /mnt/documents/ for your review
+4. You pick your favorite(s)
+5. I implement the chosen design as an SVG template in the edge function
 
-### Implementation
-
-**1. Rewrite `buildSvgCard()` in `supabase/functions/expert-og/index.ts`**
-
-- Dark teal full-bleed background instead of cream
-- Photo: large rectangle (left side, ~380x440), rounded corners via clipPath, preserveAspectRatio slice
-- Right side: yellow CTA text (28px bold), coral name (52px bold), cream title/company (24px), cream years badge, cream ask-me-about italic
-- Previous brand logos: row of 40px circles with white bg at bottom-left area
-- Bottom strip: fetch Basecamp logo from published URL (`https://sponsor-attract-hub.lovable.app/og-basecamp.png`) as base64, embed it; add "Register: www.basecampoutdoorevents.com" in yellow
-- Proper text wrapping for long names (split into two lines if > ~18 chars)
-- Clear old cached cards so regeneration happens
-
-**2. Fix the CRM download flow**
-
-The download currently fails. Update `ExpertCRM.tsx`:
-- When downloading, call the edge function with `?generate=1` to force-regenerate with the new design
-- Parse the returned `image_url`, then use `window.open()` or create an anchor download — the current fetch-blob approach may be blocked by CORS on storage URLs
-
-### Files to change
-- `supabase/functions/expert-og/index.ts` — complete rewrite of `buildSvgCard()` for the new design, fetch Basecamp logo
-- `src/components/experts/ExpertCRM.tsx` — fix download to use window.open on the returned URL
-
-### No database changes needed
+### Files involved (later, after selection)
+- `supabase/functions/expert-og/index.ts` — rewrite `buildSvgCard()` with chosen design
 
