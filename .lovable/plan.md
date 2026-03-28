@@ -1,44 +1,40 @@
 
 
-## Plan: Generate 10 OG Card Design Options
+## Plan: Generate 10 More OG Card Mockups (Refined Directions)
 
-### Approach
-Use the AI image generation skill to create 10 distinct card mockups (1200x630px) as downloadable PNGs. Each will use a sample expert's data and follow the visual language from your uploaded "Expert Sessions" references: bold black background, B&W photo, large modern typography, campfire logo, and the cream/coral/yellow brand palette.
+### Favorites to build from
+- **#5** (Photo Frame Border) — outdoor photo background element, but classier
+- **#7** (Two-Tone Block) — best info presentation, clear cream logos
+- **#8** (Polaroid Stack) — closest overall, use white border for name in handwriting font
+- **#10** (Bold Stripe) — modern geometric energy
 
-Once you pick your favorite(s), I'll implement the winning design as a deterministic SVG template in the edge function.
+### Feedback to incorporate in ALL 10
+- **CTA**: "Network with me in Portland" (not "at Gather PNW")
+- **Years**: Make clear it's "12 years in the outdoor industry" (not ambiguous)
+- **Logos**: Show "Working at [logo] [logo] [logo]" below ask-me-about area
+- **Basecamp logo**: Use the actual uploaded campfire circle logo (not text)
+- **Background photo** (#5 influence): Use a tasteful, editorial-quality PNW landscape (misty forest, mountain ridge) — subtle/desaturated, not cheesy stock photo
+- **Polaroid** (#8 influence): White border space for handwritten-style name + title
+- **Info hierarchy**: Clean, well-spaced, all elements readable
 
-### What each card will include (your required elements)
-- Expert's photo (B&W treatment like your references)
-- Full name (large, bold)
-- Job title and current company
-- Previous brand logos (as actual images)
-- Years in industry
-- "Ask me about" answer
-- Event CTA ("Network with me @ Gather PNW")
-- Basecamp Outdoor logo (actual logo image)
-- Registration URL
+### The 10 new designs
 
-### The 10 design directions
+1. **Polaroid on Forest** — Misty PNW forest background (desaturated), tilted polaroid B&W photo with handwritten name below, info right-aligned in cream, campfire logo bottom-left
+2. **Polaroid Clean Black** — Black bg, centered polaroid with handwritten name, info stacked below in coral/cream, "Working at" logos in cream circles, campfire logo corner
+3. **Two-Tone with Forest Strip** — Top: black with name + photo. Bottom: coral. Thin PNW forest photo strip as divider between zones. Logos in cream on coral section
+4. **Two-Tone Teal/Cream** — Top 60% dark teal with B&W photo + bold name. Bottom 40% cream with title, ask-me-about, "Working at" logos dark. Campfire logo bottom-right
+5. **Magazine + Polaroid Hybrid** — Full-bleed misty mountain bg, dark overlay, polaroid floating center-left with handwritten name, info right in large white/yellow type
+6. **Stripe + Polaroid** — Black bg, thick coral vertical stripe left edge, polaroid overlapping the stripe, info right-aligned, campfire logo top-right, "Working at" logos bottom
+7. **Forest Frame Editorial** — Subtle PNW treeline framing top and bottom edges (dark, moody), black center, B&W photo left, bold stacked info right, very editorial
+8. **Two-Tone Diagonal** — Diagonal split: top-left black, bottom-right coral. B&W photo straddling the divide. Name huge in cream, details on coral side, logos cream circles
+9. **Polaroid Grid** — Black bg, main large polaroid (B&W photo + handwritten name), smaller "logo polaroids" for previous brands arranged beside it, campfire logo bottom
+10. **Minimal Forest Fade** — PNW forest bg fading to black on right side. Photo in rounded rect left. Info on dark right half. Bottom bar with campfire logo + "Working at" logos
 
-1. **Expert Sessions Clone** — Direct adaptation of your uploaded style: black bg, huge cream "NETWORK WITH ME" text, B&W photo right-aligned, campfire logo in the O, yellow title, first name large
-2. **Split Panel Bold** — Left half: full-bleed B&W photo. Right half: black bg with stacked cream/coral/yellow type. Logos in a row at bottom
-3. **Diagonal Slice** — Black bg with photo in a diagonal parallelogram shape. Info left-aligned with massive name in cream. Yellow accent bar
-4. **Cream Clean** — Cream (#F5E6D3) background, photo in rounded rectangle, dark teal text, coral name, minimal and airy like the "organic business card" reference
-5. **Photo Frame Border** — Outdoor/forest border frame (like the fitness QR card reference), B&W photo centered, info overlaid at bottom with semi-transparent dark bar
-6. **Magazine Cover** — Full-bleed photo with dark gradient overlay from bottom. Large white name, yellow subtitle, logos at bottom. Editorial feel
-7. **Two-Tone Block** — Top 60% black with photo and name. Bottom 40% coral with job details and logos in cream. Bold geometric divide
-8. **Polaroid Stack** — Tilted polaroid-style photo frame on dark teal bg. Info beside it in cream/yellow. Playful, matches your existing card style
-9. **Gradient Sunset** — Dark teal fading to coral gradient bg. B&W photo with coral tint. White name, yellow details. Warm, outdoor feel
-10. **Bold Stripe** — Black bg. Thick vertical coral stripe on left edge. Photo in circle. Horizontal info layout with large tracking on name. Ultra-modern
+### Implementation
+1. Copy AI gateway script to /tmp
+2. Generate all 10 cards with sample expert data (e.g., "Sholeh Johnston, Director of Product, YETI, 12 years, ask me about trail running gear")
+3. Each prompt will specify: the uploaded campfire logo, "Network with me in Portland", "12 years in the outdoor industry", "Working at [REI] [Patagonia] [Columbia]" with logo circles, handwriting font on polaroid
+4. Save to /mnt/documents/ as `round2_01.png` through `round2_10.png`
 
-### Implementation steps
-
-1. Copy the AI image generation script to /tmp
-2. Generate all 10 cards using a representative expert profile (e.g., "Sholeh — Director of Product @ YETI" from your reference images)
-3. Save all 10 to /mnt/documents/ for your review
-4. You pick your favorite(s)
-5. I implement the chosen design as an SVG template in the edge function
-
-### Files involved (later, after selection)
-- `supabase/functions/expert-og/index.ts` — rewrite `buildSvgCard()` with chosen design
+### No code changes — mockup generation only
 
