@@ -1,37 +1,31 @@
 
 
-## Plan: Generate 3 Real Expert Cards in Round 2 #9 Style (with tweaks)
+## Plan: Generate 2 Precise Card Mockups
 
-### Design modifications from round2_09 (Gradient Sunset)
+### Card 1 — round2_09 with specific tweaks
+Start from the exact round2_09 design (gradient sunset with doodle/illustrated background). Changes ONLY:
+- Swap fire icon → uploaded campfire circle logo
+- Footer: "Register free · basecampoutdoorevents.com"
+- Add career journey mini-polaroids (brand logos, left=earliest, right=current)
+- Small current company logo next to name/title in main polaroid
+- Change base color beneath the doodle background from black → dark emerald green `#19363B`
+- Keep everything else identical (background style, fonts, layout, spacing)
 
-1. **Replace fire icon with actual Basecamp campfire logo** (uploaded `Untitled_design_1-3.png`)
-2. **Bottom text**: "Register free · basecampoutdoorevents.com"
-3. **Brand polaroids**: Mini tilted polaroid frames for each previous company, arranged left-to-right as a career journey (earliest job on left, current company on right). More companies = slightly smaller polaroids. Each polaroid contains the company logo.
-4. **Current company logo**: Small logo next to name/title area in the main polaroid
-5. **One card in dark emerald green** (`#19363B`) instead of black background so you can compare
+Use Emmy Negrin's data as sample expert.
 
-### 3 Real Experts to render
+### Card 2 — expert_michael cleaned up
+Start from the expert_michael layout (clean polaroid + logo arrow journey). Changes ONLY:
+- Remove the large coral name text
+- Replace it with "Network with me in Portland" in same font/size as round2_09's CTA
+- Remove the separate title + company text (already shown on polaroid)
+- Use Michael's actual photo (or realistic likeness if AI-generated)
+- Keep the polaroid name/title/logo treatment, the career logo polaroids with arrow, and overall clean layout
 
-| Expert | Title | Company | Previous | Years | Ask Me About |
-|--------|-------|---------|----------|-------|-------------|
-| Emmy Negrin | Head of Community Impact | Columbia Sportswear | adidas, Discord, Yahoo, Outward Bound | 15 | Community Impact, Leadership Coaching, Wilderness Guiding |
-| Michael Chamberlain-Torres | Sr. Recruiter | Patagonia | Patagonia, Marriott | 5 | Purposeful Business |
-| Ellie Rivkin | Material Developer | Columbia | Gap, Wool&, Freelance | 16 | All things textiles. Size inclusive, sustainable apparel design. |
-
-### Implementation steps
-
-1. Copy the AI image generation script to /tmp
-2. Generate 3 cards — Emmy (black bg), Michael (dark emerald `#19363B` bg), Ellie (black bg)
-3. Each prompt will specify:
-   - Round 2 #9 gradient sunset style as base
-   - Actual Basecamp campfire circle logo (from uploaded image) instead of fire icon
-   - "Register free · basecampoutdoorevents.com" at bottom
-   - Career journey polaroids (left = first job, right = current) with real company logos
-   - Small current company logo near name/title in main polaroid
-   - Real expert data (name, title, company, years, ask-me-about)
-   - "Network with me in Portland"
-   - "[X] years in the outdoor industry" clearly labeled
-4. Save to `/mnt/documents/` as `expert_emmy.png`, `expert_michael.png`, `expert_ellie.png`
+### Implementation
+1. Copy AI gateway script to /tmp
+2. Write extremely detailed prompts referencing the exact original designs, specifying ONLY the listed changes
+3. Save to `/mnt/documents/` as `card_v3_01.png` and `card_v3_02.png`
+4. QA both images before delivering
 
 ### No code changes — mockup generation only
 
