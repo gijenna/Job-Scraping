@@ -55,6 +55,7 @@ const App = () => (
           <Route path="/calendar" element={<EventCalendar />} />
           <Route path="/OR26" element={<EventOR26 />} />
           <Route path="/bestday" element={<BestDayPitch />} />
+          <Route path="/bestdayexample" element={<BestDayExample />} />
           {/* Brand Rep invite pages */}
           <Route path="/denverreps" element={<BrandRepInvite citySlug="denver" />} />
           <Route path="/denverreps/:name" element={<BrandRepInvite citySlug="denver" />} />
