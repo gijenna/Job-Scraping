@@ -101,7 +101,7 @@ const BestDayRegistrantSpotlight = () => {
             <img
               src={bestDayPitchImage}
               alt="Best Day Brewing Variety Packs"
-              className="block h-auto w-full max-w-[360px] self-end object-contain md:h-full md:w-auto md:max-w-[420px]"
+              className="block h-auto w-full max-w-[720px] self-end object-contain md:h-full md:w-auto md:max-w-[840px]"
             />
           </motion.div>
         </div>
