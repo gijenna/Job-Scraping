@@ -1,58 +1,40 @@
 
 
-## Best Day Brewing Sponsor Pitch Page — `/bestday`
+## Create `/bestdayexample` — Best Day Version of Outside Days Registration Page
 
-A custom sponsor pitch page targeting Best Day Brewing as the beverage sponsor for Outside Days Denver 2026. Modeled after the `/outsidedays26-cos` (Confluence of States) page structure but reframed for a non-alcoholic beverage brand.
+Keep the existing `/bestday` pitch page untouched. Create a new page at `/bestdayexample` that mirrors `/outsidedays26-cos` exactly, swapping the Confluence of States spotlight for a compact, agency-quality Best Day Brewing section.
 
-### Page Structure
+### New Component: `BestDayRegistrantSpotlight.tsx`
 
-1. **Hero** — Reuse `RegistrantHero` with Denver event details. Add a "Presented by Best Day Brewing" badge below (same pattern as COS page).
+A single, tight section placed where `ConfluenceSpotlight` sits. Contains:
 
-2. **Logo Ticker** — Reuse `EventLogoTicker` with the existing Denver 26 ticker logos to show the caliber of brands attending.
+1. **Best Day Brewing logo** (sun wordmark from their site)
+2. **"Proudly Sober" vibe line** — reuse the opening line from the current `/bestday` SoberEventSection: *"Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible."*
+3. **North Face recruiter quote** — styled as a compact pull quote (not a full section)
+4. **4-photo strip** — the `bestday-event-*.jpg` assets in a horizontal grid
+5. Brief CTA link to bestdaybrewing.com
 
-3. **"Proudly Sober" Section** — New custom section explaining:
-   - "We're a proudly sober event" messaging
-   - Why it matters: shifted to sober events last year to incredible reception from both job seekers and brands
-   - Benefits for attendees and brands (clear-headed networking, inclusive environment, professional atmosphere)
+No value prop cards, no beer descriptions, no filler. One polished section.
 
-4. **The North Face Quote** — Reuse `EventQuote` component (restyled for events-teal theme) with the full recruiter quote about sobriety and the attribution "Recruiter, The North Face".
+### New Page: `src/pages/BestDayExample.tsx`
 
-5. **Best Day Brewing Spotlight** — New component modeled on `ConfluenceSpotlight`, replacing the map with a Best Day Brewing product feature:
-   - Header: "Title Sponsor Spotlight — Best Day Brewing"
-   - Description of Best Day: craft non-alcoholic beer, premium ingredients, unique brewing process
-   - 3 value prop cards (e.g., "Award-Winning NA Beer", "Premium Craft Process", "Full Lineup of Styles")
-   - Product imagery from their site (West Coast IPA, Hazy IPA, Kolsch, Electro-Lime)
-   - CTA: "Explore Best Day Brewing" linking to bestdaybrewing.com
+Clone of `EventOutsideDaysCOS.tsx` with these changes:
+- "Presented by" badge shows Best Day Brewing logo instead of "Confluence of States" text
+- `ConfluenceSpotlight` replaced with `BestDayRegistrantSpotlight`
+- `EditableTextProvider` pageSlug set to `"bestday-example"`
+- Page meta title updated
 
-6. **Event Photo Gallery** — New simple gallery section using the 4 Google Drive photos from last year's event (downloaded and saved as local assets).
+Everything else stays identical: hero, ticker, featured teams, brand reps, experts, stats, how to tap in, venue, festival partner, CTA, footer.
 
-7. **Beverage Sponsor Tiers** — Reuse `EventTiers` component with custom beverage-focused tiers:
-   - **Sampling Partner** ($5,000): Branded sampling table, logo on event materials, product in attendee welcome bags, social media mention
-   - **Official Beverage Sponsor** ($10,000, marked popular): Everything in Sampling + exclusive bar branding, branded cups/koozies, dedicated social post, logo on all event signage, "Proudly Sober — Powered by Best Day" callout
-   - **Title Beverage Presenter** ($20,000): Everything in Official + "Outside Days, refreshed by Best Day Brewing" naming, keynote introduction, custom activation space, post-event engagement report, co-branded content series
+### Modified: `src/App.tsx`
 
-8. **Final CTA** — "Let's make it the Best Day yet" with mailto link to jenna@wearetheoutdoorindustry.com.
+Add route: `/bestdayexample` → `BestDayExample`
 
-9. **Footer** — Reuse `SiteFooter`.
+### Files
 
-### New Files
-
-- `src/pages/BestDayPitch.tsx` — Main page component
-- `src/components/event/BestDaySpotlight.tsx` — Product spotlight (adapted from ConfluenceSpotlight, no map)
-- `src/components/event/SoberEventSection.tsx` — "Proudly Sober" messaging section
-- `src/components/event/EventPhotoGallery.tsx` — Simple photo gallery for the 4 event photos
-
-### Modified Files
-
-- `src/App.tsx` — Add route `/bestday` pointing to `BestDayPitch`
-
-### Google Drive Photos
-
-The 4 photos will be downloaded and saved as assets in `src/assets/` (e.g., `bestday-event-1.jpg` through `bestday-event-4.jpg`). If Google Drive direct download fails, placeholder images will be used with a note to replace them.
-
-### Design
-
-- Uses the `bg-events-teal` dark theme consistent with other registrant/sponsor pages
-- Best Day Brewing's brand colors (dusty blue `#6B8E9B`, cream `#F5F0E8`) incorporated as accents alongside the existing events-yellow
-- Best Day logo pulled from their site: `https://bestdaybrewing.com/cdn/shop/files/916_IG_Feed_Ads_1200_x_1200_px_3.png`
+| Action | File |
+|--------|------|
+| Create | `src/components/event/BestDayRegistrantSpotlight.tsx` |
+| Create | `src/pages/BestDayExample.tsx` |
+| Edit | `src/App.tsx` — add route |
 
