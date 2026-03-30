@@ -28,7 +28,7 @@ import PageMetaEditor from "@/components/event/PageMetaEditor";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
-const BEST_DAY_LOGO = "https://bestdaybrewing.com/cdn/shop/files/916_IG_Feed_Ads_1200_x_1200_px_3.png?v=1739926696&width=200";
+const BEST_DAY_LOGO = "https://logo.clearbit.com/bestdaybrewing.com";
 
 const BestDayExample = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
@@ -87,7 +87,9 @@ const BestDayExample = () => {
               className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-events-yellow/30 bg-events-card/50"
             >
               <span className="text-events-cream/60 text-sm font-body">Presented by</span>
-              <img src={BEST_DAY_LOGO} alt="Best Day Brewing" className="h-6 w-auto rounded" />
+              <a href="https://bestdaybrewing.com" target="_blank" rel="noopener noreferrer">
+                <img src={BEST_DAY_LOGO} alt="Best Day Brewing" className="h-6 w-auto rounded" />
+              </a>
             </motion.div>
           </div>
         </HideableSection>
