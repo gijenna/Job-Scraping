@@ -96,7 +96,7 @@ const BestDayRegistrantSpotlight = () => {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 hidden items-end md:flex"
+            className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 hidden items-end md:flex md:-right-24"
           >
             <img
               src={bestDayPitchImage}
