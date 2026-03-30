@@ -52,7 +52,7 @@ const beverageTiers: Tier[] = [
       "Branded cups, koozies & drinkware",
       "Dedicated social media post + story feature",
       "Logo on <strong>all</strong> event signage & printed materials",
-      "<strong>"Proudly Sober — Powered by Best Day"</strong> callout in all communications",
+      '<strong>&ldquo;Proudly Sober &mdash; Powered by Best Day&rdquo;</strong> callout in all communications',
       "Product integration into networking activations",
     ],
   },
