@@ -87,7 +87,9 @@ const BestDayExample = () => {
               className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-events-yellow/30 bg-events-card/50"
             >
               <span className="text-events-cream/60 text-sm font-body">Presented by</span>
-              <img src={BEST_DAY_LOGO} alt="Best Day Brewing" className="h-6 w-auto rounded" />
+              <a href="https://bestdaybrewing.com" target="_blank" rel="noopener noreferrer">
+                <img src={BEST_DAY_LOGO} alt="Best Day Brewing" className="h-6 w-auto rounded" />
+              </a>
             </motion.div>
           </div>
         </HideableSection>
