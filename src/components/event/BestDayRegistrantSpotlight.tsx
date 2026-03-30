@@ -1,68 +1,95 @@
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sun } from "lucide-react";
 import bestdayEvent1 from "@/assets/bestday-event-1.jpg";
-import bestdayEvent2 from "@/assets/bestday-event-2.jpg";
-import bestdayEvent3 from "@/assets/bestday-event-3.jpg";
 import bestdayEvent4 from "@/assets/bestday-event-4.jpg";
 
-const BEST_DAY_LOGO = "https://bestdaybrewing.com/cdn/shop/files/916_IG_Feed_Ads_1200_x_1200_px_3.png?v=1739926696&width=400";
-
-const photos = [bestdayEvent1, bestdayEvent2, bestdayEvent3, bestdayEvent4];
+const BEST_DAY_LOGO = "https://logo.clearbit.com/bestdaybrewing.com";
 
 const BestDayRegistrantSpotlight = () => {
   return (
-    <section className="py-16 md:py-20 px-6 bg-gradient-to-b from-events-teal to-[#0d1f22]">
+    <section className="py-12 md:py-16 px-6 bg-gradient-to-b from-[#0d1f22] to-events-teal">
       <div className="container mx-auto max-w-5xl">
-        {/* Logo + tagline */}
+        {/* Logo + Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <img
-            src={BEST_DAY_LOGO}
-            alt="Best Day Brewing"
-            className="h-20 md:h-24 w-auto mx-auto mb-6 rounded-xl"
-          />
-          <p className="font-body text-events-cream/70 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible.
-          </p>
+          <div className="inline-flex items-center gap-3 mb-5">
+            <img
+              src={BEST_DAY_LOGO}
+              alt="Best Day Brewing"
+              className="h-12 w-12 rounded-full border-2 border-events-yellow/40 shadow-lg"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+            <span className="font-headline font-bold text-2xl md:text-3xl tracking-tight text-events-cream">
+              Best Day Brewing
+            </span>
+          </div>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Sun className="w-4 h-4 text-events-yellow" />
+            <span className="text-xs font-display font-bold tracking-[0.2em] uppercase text-events-yellow">
+              Title Sponsor
+            </span>
+            <Sun className="w-4 h-4 text-events-yellow" />
+          </div>
+          <h2 className="font-headline font-bold text-3xl md:text-4xl text-events-cream">
+            A Proudly Sober Event
+          </h2>
         </motion.div>
 
-        {/* North Face quote */}
-        <motion.blockquote
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="relative max-w-3xl mx-auto mb-12 px-8 py-6 border-l-4 border-events-yellow bg-events-card/30 rounded-r-xl"
-        >
-          <p className="font-body text-events-cream/80 text-sm md:text-base italic leading-relaxed">
-            "Last year, we made the decision to remove alcohol from our events. We weren't sure how it'd go, but the feedback was overwhelmingly positive. Conversations were more genuine, people stayed longer, and both recruiters and candidates told us it felt more professional and welcoming."
-          </p>
-          <footer className="mt-3 font-display text-events-cream/50 text-xs tracking-wide uppercase">
-            — Recruiter, The North Face
-          </footer>
-        </motion.blockquote>
-
-        {/* Photo strip */}
+        {/* Two-column: Photo + Quote */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.15 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-8"
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
         >
-          {photos.map((src, i) => (
-            <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden">
-              <img
-                src={src}
-                alt={`Gather event photo ${i + 1}`}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          ))}
+          {/* Photo 1 */}
+          <div className="aspect-[3/4] md:aspect-auto rounded-2xl overflow-hidden">
+            <img
+              src={bestdayEvent1}
+              alt="Gather event — sober networking"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Quote + Copy */}
+          <div className="flex flex-col justify-center py-4 md:py-8">
+            <p className="font-body text-events-cream/80 text-base md:text-lg leading-relaxed mb-6">
+              Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine.
+            </p>
+
+            <blockquote className="border-l-3 border-events-yellow pl-5 mb-6">
+              <p className="font-body text-events-cream/70 text-sm md:text-base italic leading-relaxed">
+                "Last year, we made the decision to remove alcohol from our events. We weren't sure how it'd go, but the feedback was overwhelmingly positive. Conversations were more genuine, people stayed longer, and both recruiters and candidates told us it felt more professional and welcoming."
+              </p>
+              <footer className="mt-2 font-display text-events-cream/50 text-xs tracking-wide uppercase">
+                — Recruiter, The North Face
+              </footer>
+            </blockquote>
+
+            <p className="font-body text-events-cream/50 text-sm leading-relaxed">
+              Born in Northern California, Best Day Brewing crafts the world's best-tasting non-alcoholic beer for the adventure-seeking, fun-loving outdoor community.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Full-width cinematic photo */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15 }}
+          className="aspect-[21/9] rounded-2xl overflow-hidden mb-6"
+        >
+          <img
+            src={bestdayEvent4}
+            alt="Gather event crowd"
+            className="w-full h-full object-cover"
+          />
         </motion.div>
 
         {/* CTA */}
