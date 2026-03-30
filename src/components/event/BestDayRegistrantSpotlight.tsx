@@ -30,12 +30,12 @@ const BestDayRegistrantSpotlight = () => {
           </p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-stretch md:gap-12">
+        <div className="relative">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col gap-6"
+            className="relative z-10 flex max-w-xl flex-col gap-6"
           >
             <div className="rounded-2xl border-l-4 border-bestday-yellow bg-bestday-blue/10 p-5 md:p-6">
               <div className="flex gap-4">
@@ -96,14 +96,23 @@ const BestDayRegistrantSpotlight = () => {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex items-stretch justify-center self-stretch md:justify-end"
+            className="pointer-events-none absolute bottom-0 right-0 top-0 z-0 hidden items-end md:flex"
           >
             <img
               src={bestDayPitchImage}
               alt="Best Day Brewing Variety Packs"
-              className="block h-auto w-full max-w-[720px] self-end object-contain md:h-full md:w-auto md:max-w-[840px]"
+              className="block h-full w-auto max-w-[840px] object-contain object-bottom"
             />
           </motion.div>
+
+          {/* Mobile: show image below text */}
+          <div className="mt-8 flex justify-center md:hidden">
+            <img
+              src={bestDayPitchImage}
+              alt="Best Day Brewing Variety Packs"
+              className="block h-auto w-full max-w-[400px] object-contain"
+            />
+          </div>
         </div>
       </div>
     </section>
