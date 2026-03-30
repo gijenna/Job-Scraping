@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import heroMountains from "@/assets/hero-denver-mountains.jpg";
 import denverLogo from "@/assets/denver-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
+import bestDayLogo from "@/assets/best-day-logo.webp";
 import eventCrowd from "@/assets/event-crowd.jpg";
 import eventBoa from "@/assets/event-boa.jpg";
 import eventGroupPhoto from "@/assets/event-group-photo.jpg";
@@ -28,8 +29,6 @@ import PageMetaEditor from "@/components/event/PageMetaEditor";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
-const BEST_DAY_LOGO = "https://bestdaybrewing.com/cdn/shop/files/HeaderImageBestDay.png?v=1734646175&width=300";
-
 const BestDayExample = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
@@ -88,7 +87,7 @@ const BestDayExample = () => {
             >
               <span className="text-events-cream/60 text-sm font-body">Presented by</span>
               <a href="https://bestdaybrewing.com" target="_blank" rel="noopener noreferrer">
-                <img src={BEST_DAY_LOGO} alt="Best Day Brewing" className="h-6 w-auto rounded" />
+                <img src={bestDayLogo} alt="Best Day Brewing" className="h-8 w-auto" />
               </a>
             </motion.div>
           </div>
