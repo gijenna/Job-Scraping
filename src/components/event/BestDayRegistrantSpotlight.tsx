@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import EditableText from "@/components/EditableText";
 
-const VARIETY_PACK_IMAGE = "https://bestdaybrewing.com/cdn/shop/files/Variety_Pack_Press_2.png?v=1774462461&width=1445";
+import bestDayPitchImage from "@/assets/best-day-pitch.png";
+
 const RECRUITER_PHOTO = "https://media.licdn.com/dms/image/v2/C4E03AQEO2snBn5gdhg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1568924201436?e=2147483647&v=beta&t=aBM335GS2SxOlbM9sN9jHytzYy30EPsD8xVlvndQTLk";
 
 const BestDayRegistrantSpotlight = () => {
@@ -29,16 +30,13 @@ const BestDayRegistrantSpotlight = () => {
           </p>
         </motion.div>
 
-        {/* Two-column: text left, image right — like bestdaybrewing.com hero */}
-        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
-          {/* Left column: testimonial + description + tagline */}
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-stretch md:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="flex flex-col gap-6"
           >
-            {/* Testimonial card */}
             <div className="rounded-2xl border-l-4 border-bestday-yellow bg-bestday-blue/10 p-5 md:p-6">
               <div className="flex gap-4">
                 <img
@@ -75,9 +73,8 @@ const BestDayRegistrantSpotlight = () => {
               />
             </p>
 
-            {/* Tagline + CTA on same line */}
-            <div className="flex flex-wrap items-center gap-3 md:gap-4">
-              <p className="font-headline text-xl italic text-bestday-yellow md:text-2xl">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 md:flex-nowrap md:gap-4">
+              <p className="shrink-0 font-headline text-xl italic text-bestday-yellow md:text-2xl">
                 <EditableText
                   settingKey="bd_spot_tagline"
                   defaultText="Let's have the best day yet."
@@ -95,17 +92,16 @@ const BestDayRegistrantSpotlight = () => {
             </div>
           </motion.div>
 
-          {/* Right column: product image, no box, just floating on cream */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center md:justify-end"
+            className="flex items-stretch justify-center self-stretch md:justify-end"
           >
             <img
-              src={VARIETY_PACK_IMAGE}
+              src={bestDayPitchImage}
               alt="Best Day Brewing Variety Packs"
-              className="w-full max-w-md object-contain md:max-w-lg"
+              className="block h-auto w-full max-w-[360px] self-end object-contain md:h-full md:w-auto md:max-w-[420px]"
             />
           </motion.div>
         </div>
