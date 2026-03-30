@@ -21,6 +21,7 @@ import BrandRepInvite from "./pages/BrandRepInvite";
 import CityExperts from "./pages/CityExperts";
 import ExpertDetail from "./pages/ExpertDetail";
 import EventOR26 from "./pages/EventOR26";
+import BestDayPitch from "./pages/BestDayPitch";
 import CardStylePreview from "./pages/CardStylePreview";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
