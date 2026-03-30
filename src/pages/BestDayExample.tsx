@@ -28,7 +28,7 @@ import PageMetaEditor from "@/components/event/PageMetaEditor";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
-const BEST_DAY_LOGO = "https://logo.clearbit.com/bestdaybrewing.com";
+const BEST_DAY_LOGO = "https://bestdaybrewing.com/cdn/shop/files/HeaderImageBestDay.png?v=1734646175&width=300";
 
 const BestDayExample = () => {
   const { logos: tickerLogos } = useEventLogos("denver26");

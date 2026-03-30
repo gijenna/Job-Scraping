@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sun } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import EditableText from "@/components/EditableText";
 
 const BEST_DAY_LOGO = "https://logo.clearbit.com/bestdaybrewing.com";
@@ -8,58 +8,50 @@ const RECRUITER_PHOTO = "https://media.licdn.com/dms/image/v2/C4E03AQEO2snBn5gdh
 
 const BestDayRegistrantSpotlight = () => {
   return (
-    <section className="py-12 md:py-16 px-6" style={{ backgroundColor: "#f6efe7" }}>
+    <section
+      className="py-10 md:py-14 px-6"
+      style={{ backgroundColor: "#4d6d7e" }}
+    >
       <div className="container mx-auto max-w-6xl">
-        {/* Two-column: Text left, Product image right */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Left column — Text content */}
+        {/* Centered title + description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8"
+        >
+          <h2
+            className="font-headline font-bold text-3xl md:text-4xl mb-4"
+            style={{ color: "#f1bd26" }}
+          >
+            <EditableText settingKey="bd_spot_title" defaultText="A Proudly Sober Event" as="span" />
+          </h2>
+          <p
+            className="font-body text-base md:text-lg leading-relaxed max-w-4xl mx-auto"
+            style={{ color: "#f6efe7", opacity: 0.85 }}
+          >
+            <EditableText
+              settingKey="bd_spot_vibe"
+              defaultText="Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine."
+              as="span"
+              multiline
+            />
+          </p>
+        </motion.div>
+
+        {/* Two-column: Testimonial left, Product image right */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-stretch">
+          {/* Left column — Testimonial + brand info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="order-2 md:order-1"
+            className="order-2 md:order-1 flex flex-col justify-center"
           >
-            {/* Eyebrow */}
-            <div className="flex items-center gap-2 mb-3">
-              <img
-                src={BEST_DAY_LOGO}
-                alt="Best Day Brewing"
-                className="h-8 w-8 rounded-full"
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-              <span
-                className="text-xs font-display font-bold tracking-[0.2em] uppercase"
-                style={{ color: "#f1bd26" }}
-              >
-                <EditableText settingKey="bd_spot_eyebrow" defaultText="Title Sponsor" as="span" />
-              </span>
-            </div>
-
-            {/* Title */}
-            <h2
-              className="font-headline font-bold text-3xl md:text-4xl mb-5"
-              style={{ color: "#4d6d7e" }}
-            >
-              <EditableText settingKey="bd_spot_title" defaultText="A Proudly Sober Event" as="span" />
-            </h2>
-
-            {/* Vibe line */}
-            <p
-              className="font-body text-base md:text-lg leading-relaxed mb-8"
-              style={{ color: "#4d6d7e", opacity: 0.8 }}
-            >
-              <EditableText
-                settingKey="bd_spot_vibe"
-                defaultText="Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine."
-                as="span"
-                multiline
-              />
-            </p>
-
             {/* Testimonial bubble */}
             <div
-              className="rounded-2xl p-5 mb-8"
-              style={{ backgroundColor: "rgba(77, 109, 126, 0.08)", borderLeft: "3px solid #f1bd26" }}
+              className="rounded-2xl p-5 mb-6"
+              style={{ backgroundColor: "rgba(246, 239, 231, 0.12)", borderLeft: "3px solid #f1bd26" }}
             >
               <div className="flex gap-4">
                 <img
@@ -70,7 +62,7 @@ const BestDayRegistrantSpotlight = () => {
                 <div>
                   <p
                     className="font-body text-sm md:text-base italic leading-relaxed mb-2"
-                    style={{ color: "#4d6d7e" }}
+                    style={{ color: "#f6efe7" }}
                   >
                     <EditableText
                       settingKey="bd_spot_quote"
@@ -81,7 +73,7 @@ const BestDayRegistrantSpotlight = () => {
                   </p>
                   <p
                     className="font-display text-xs tracking-wide uppercase font-bold"
-                    style={{ color: "#4d6d7e", opacity: 0.5 }}
+                    style={{ color: "#f6efe7", opacity: 0.5 }}
                   >
                     <EditableText settingKey="bd_spot_attribution" defaultText="— Recruiter, The North Face" as="span" />
                   </p>
@@ -92,7 +84,7 @@ const BestDayRegistrantSpotlight = () => {
             {/* Brand description */}
             <p
               className="font-body text-sm leading-relaxed mb-6"
-              style={{ color: "#4d6d7e", opacity: 0.6 }}
+              style={{ color: "#f6efe7", opacity: 0.6 }}
             >
               <EditableText
                 settingKey="bd_spot_brand_desc"
@@ -101,37 +93,37 @@ const BestDayRegistrantSpotlight = () => {
               />
             </p>
 
-            {/* Tagline */}
-            <p
-              className="font-headline text-xl md:text-2xl italic mb-6"
-              style={{ color: "#f1bd26" }}
-            >
-              <EditableText settingKey="bd_spot_tagline" defaultText="Let's have the best day yet." as="span" />
-            </p>
-
-            {/* CTA */}
-            <a
-              href="https://bestdaybrewing.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-display font-bold transition-colors hover:opacity-70"
-              style={{ color: "#4d6d7e" }}
-            >
-              Explore Best Day Brewing <ArrowRight className="w-4 h-4" />
-            </a>
+            {/* Tagline + CTA side by side */}
+            <div className="flex flex-wrap items-center gap-4">
+              <p
+                className="font-headline text-xl md:text-2xl italic"
+                style={{ color: "#f1bd26" }}
+              >
+                <EditableText settingKey="bd_spot_tagline" defaultText="Let's have the best day yet." as="span" />
+              </p>
+              <a
+                href="https://bestdaybrewing.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-display font-bold transition-colors hover:opacity-70"
+                style={{ color: "#f6efe7" }}
+              >
+                Explore Best Day Brewing <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
           </motion.div>
 
-          {/* Right column — Product image */}
+          {/* Right column — Product image, full height */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="order-1 md:order-2 flex justify-center"
+            className="order-1 md:order-2 flex justify-center items-stretch"
           >
             <img
               src={VARIETY_PACK_IMAGE}
               alt="Best Day Brewing Variety Packs"
-              className="w-full max-w-md md:max-w-lg object-contain drop-shadow-2xl"
+              className="w-full h-full object-contain drop-shadow-2xl"
             />
           </motion.div>
         </div>
