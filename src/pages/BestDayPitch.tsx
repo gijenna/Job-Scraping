@@ -65,7 +65,7 @@ const beverageTiers: Tier[] = [
     bestFor: "The brand that wants naming rights and full integration into the event's identity and marketing.",
     perks: [
       "Everything in Official Beverage Sponsor",
-      "<strong>"Outside Days, refreshed by Best Day Brewing"</strong> naming rights",
+      '<strong>&ldquo;Outside Days, refreshed by Best Day Brewing&rdquo;</strong> naming rights',
       "Keynote introduction & welcome remarks",
       "Custom activation space (branded lounge, photo moment, etc.)",
       "Co-branded content series (pre & post-event)",
