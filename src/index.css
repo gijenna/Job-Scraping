@@ -51,6 +51,9 @@
     --gradient-card: linear-gradient(145deg, hsl(180 28% 17%), hsl(180 28% 13%));
     --shadow-gold: 0 0 40px -10px hsl(5 65% 65% / 0.35);
     --shadow-card: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
+    --bestday-cream: 30 43% 94%;
+    --bestday-blue: 202 24% 40%;
+    --bestday-yellow: 45 88% 55%;
 
     --font-display: 'Josefin Sans', sans-serif;
     --font-body: 'Space Grotesk', sans-serif;

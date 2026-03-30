@@ -61,6 +61,11 @@ export default {
           cream: "#F5E6D3",
           card: "#1E3A3F",
         },
+        bestday: {
+          cream: "hsl(var(--bestday-cream))",
+          blue: "hsl(var(--bestday-blue))",
+          yellow: "hsl(var(--bestday-yellow))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
