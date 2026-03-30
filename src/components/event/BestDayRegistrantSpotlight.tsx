@@ -30,12 +30,12 @@ const BestDayRegistrantSpotlight = () => {
               </p>
             </motion.div>
 
-            <div className="grid items-stretch gap-8 md:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] md:gap-10">
+            <div className="grid items-stretch gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:gap-8">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="order-2 flex h-full flex-col justify-between md:order-1"
+                className="order-2 flex h-full min-h-full flex-col justify-between md:order-1"
               >
                 <div>
                   <div className="rounded-[1.75rem] border-l-4 border-bestday-yellow bg-bestday-blue/10 p-5 md:p-6">
@@ -74,8 +74,8 @@ const BestDayRegistrantSpotlight = () => {
                   </p>
                 </div>
 
-                <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-                  <p className="font-headline text-xl italic text-bestday-yellow md:text-2xl">
+                <div className="mt-6 flex items-center gap-3 md:flex-nowrap md:gap-4">
+                  <p className="shrink-0 font-headline text-xl italic text-bestday-yellow md:text-2xl">
                     <EditableText
                       settingKey="bd_spot_tagline"
                       defaultText="Let's have the best day yet."
@@ -86,7 +86,7 @@ const BestDayRegistrantSpotlight = () => {
                     href="https://bestdaybrewing.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-display font-bold text-bestday-blue transition-opacity hover:opacity-70"
+                    className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-display font-bold text-bestday-blue transition-opacity hover:opacity-70"
                   >
                     Explore Best Day Brewing <ArrowRight className="h-4 w-4" />
                   </a>
@@ -97,12 +97,12 @@ const BestDayRegistrantSpotlight = () => {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="order-1 flex min-h-[20rem] self-stretch md:order-2 md:-mt-5 md:-mb-1 md:min-h-0 md:items-stretch md:justify-center"
+                className="order-1 flex min-h-[20rem] items-start justify-center self-stretch overflow-visible md:order-2 md:-mt-8 md:-mb-2 md:min-h-0 md:justify-end"
               >
                 <img
                   src={VARIETY_PACK_IMAGE}
                   alt="Best Day Brewing Variety Packs"
-                  className="h-full w-full object-contain object-center md:max-w-[38rem]"
+                  className="block h-full w-auto max-w-none self-stretch object-contain object-center"
                 />
               </motion.div>
             </div>
