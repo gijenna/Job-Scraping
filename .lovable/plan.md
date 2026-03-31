@@ -1,58 +1,36 @@
 
 
-## Redesign BestDayRegistrantSpotlight + Fix "Presented by" Pill
+# Preview a Single V1 "Sunset Doodle" Card Before Full Rollout
 
-### What's changing
+## What I'll do
 
-**1. `src/components/event/BestDayRegistrantSpotlight.tsx` — Full rewrite**
+Generate **one preview card** for a single confirmed expert so you can approve the exact design before I update all cards.
 
-Clone Best Day Brewing's homepage aesthetic for this section:
-- **Background**: Warm cream `#f6efe7` (their site bg) instead of dark teal gradient
-- **Text color**: Dusty blue `#4d6d7e` (their brand primary) instead of cream
-- **Yellow accent**: `#f1bd26` (their heading color)
-- **Font**: Keep existing fonts but style to match their clean, editorial feel
+## Design: V1 Sunset Doodle (matching your approved reference)
 
-Layout — two-column, mirroring their homepage:
+- **Background**: Warm sunset gradient (`#F4A261` → `#E76F51` → `#264653`) with hand-drawn doodle overlay elements (mountain silhouettes, tree shapes, campfire as SVG paths)
+- **Left side**: Large B&W expert photo in a polaroid-style frame (white border, slight tilt)
+- **Below photo**: "CAREER JOURNEY" row — mini tilted polaroid circles with company logos (earliest → current, left to right)
+- **Right side**: 
+  - "NETWORK WITH ME IN PORTLAND" (or city) — bold yellow display font
+  - Expert name — large coral
+  - Job title + company
+  - Years badge: "[X] years in the outdoor industry"
+  - Italic "ask me about" quote
+- **Bottom bar**: Campfire circle logo + "Register free · basecampoutdoorevents.com"
 
-```text
-┌──────────────────────────────────────────────────────┐
-│  bg: #f6efe7 (Best Day cream)                        │
-│                                                      │
-│  ☀ TITLE SPONSOR          [Variety Pack image,       │
-│  A Proudly Sober Event     right-aligned, large,     │
-│                            from their CDN]           │
-│  Vibe line (editable)                                │
-│                                                      │
-│  ┌─────────────────────┐                             │
-│  │ 🟤 photo  "quote    │                             │
-│  │          text..."   │                             │
-│  │   — Recruiter, TNF  │                             │
-│  └─────────────────────┘                             │
-│                                                      │
-│  Let's have the best day yet.                        │
-│                                                      │
-│  Explore Best Day Brewing →                          │
-└──────────────────────────────────────────────────────┘
-```
+## Approach
 
-Key elements:
-- **Right side**: Large product image from their CDN: `https://bestdaybrewing.com/cdn/shop/files/Variety_Pack_Press_2.png?v=1774462461&width=1445` (the two variety packs stacked)
-- **Left side**: "Title Sponsor" eyebrow in yellow, "A Proudly Sober Event" as h2 in dusty blue, editable vibe line, then testimonial bubble
-- **Testimonial bubble**: Rounded card with circular photo (the LinkedIn headshot URL provided), quote text, and "Recruiter, The North Face" attribution — styled like existing testimonials
-- **"Let's have the best day yet"**: Tagline in yellow italic, centered below
-- **CTA**: "Explore Best Day Brewing →" linking to bestdaybrewing.com
-- **No event photos** (user said "don't add my photos")
-- All text wrapped in `EditableText` components with `settingKey`s
+1. **Rewrite `buildSvgCard()` in `supabase/functions/expert-og/index.ts`** with the V1 Sunset Doodle design (sunset gradient background, doodle SVG paths, polaroid photo frame, career journey logos, yellow CTA)
+2. **Deploy the updated edge function**
+3. **Trigger a single card generation** for one confirmed expert (e.g., Emmy or another confirmed expert with a real photo) using the `?generate=1` parameter to clear the old cache and produce a fresh PNG
+4. **Share the generated card URL** with you for review before proceeding to regenerate all cards
 
-**2. `src/pages/BestDayExample.tsx` — Fix "Presented by" pill**
+## Files to modify
 
-- Change `BEST_DAY_LOGO` from the square can image to `https://logo.clearbit.com/bestdaybrewing.com` (their actual logo)
-- Wrap the logo in the pill inside an `<a>` tag linking to `https://bestdaybrewing.com`
+| File | Change |
+|------|--------|
+| `supabase/functions/expert-og/index.ts` | Rewrite `buildSvgCard()` to V1 Sunset Doodle design |
 
-### Files
-
-| Action | File |
-|--------|------|
-| Rewrite | `src/components/event/BestDayRegistrantSpotlight.tsx` |
-| Edit | `src/pages/BestDayExample.tsx` — fix logo URL + add hyperlink on pill |
+No other files change at this stage — this is preview only. Once you approve the design, I'll add the "Regenerate All" button and run all cards.
 
