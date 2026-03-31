@@ -135,15 +135,14 @@ async function buildSvgCard(
   logos: LogoData[],
   basecampLogoBase64: string | null
 ): Promise<string> {
-  const eventLabel = EVENT_LABEL[citySlug] || eventTitle;
-  const ctaLine1 = expertType === "brand_rep" ? "CONNECT WITH ME AT" : "NETWORK WITH ME AT";
-  const ctaLine2 = eventLabel.toUpperCase();
+  const ctaLine1 = expertType === "brand_rep" ? "CONNECT WITH ME IN" : "NETWORK WITH ME IN";
+  const ctaLine2 = cityName.toUpperCase();
 
   const name = expert.full_name || "";
   const title = expert.job_title || "";
   const company = expert.current_company || "";
   const yearsText = expert.years_in_industry
-    ? `${expert.years_in_industry} yrs in outdoor`
+    ? `${expert.years_in_industry} years in the outdoor industry`
     : "";
   const askAbout = expert.ask_me_about || "";
   const initials = name
@@ -152,78 +151,120 @@ async function buildSvgCard(
     .join("")
     .slice(0, 2);
 
-  // === PHOTO SECTION (left panel) ===
-  const photoX = 50;
-  const photoY = 50;
-  const photoW = 380;
-  const photoH = 440;
-  const photoR = 16;
+  // === PHOTO (polaroid frame, slight tilt, B&W) ===
+  const frameX = 40;
+  const frameY = 40;
+  const frameW = 360;
+  const frameH = 420;
+  const border = 14;
+  const photoClipW = frameW - border * 2;
+  const photoClipH = frameH - border * 2;
 
   const photoArea = photoBase64
     ? `<defs>
         <clipPath id="photoClip">
-          <rect x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" rx="${photoR}"/>
+          <rect x="${frameX + border}" y="${frameY + border}" width="${photoClipW}" height="${photoClipH}" rx="6"/>
         </clipPath>
+        <filter id="bw">
+          <feColorMatrix type="saturate" values="0"/>
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="1.1" intercept="0.05"/>
+            <feFuncG type="linear" slope="1.1" intercept="0.05"/>
+            <feFuncB type="linear" slope="1.1" intercept="0.05"/>
+          </feComponentTransfer>
+        </filter>
       </defs>
-      <image href="${photoBase64}" x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" 
-             clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice"/>`
-    : `<rect x="${photoX}" y="${photoY}" width="${photoW}" height="${photoH}" rx="${photoR}" fill="#2A4F56"/>
-       <circle cx="${photoX + photoW / 2}" cy="${photoY + photoH / 2 - 20}" r="100" fill="#E8D5C4"/>
-       <text x="${photoX + photoW / 2}" y="${photoY + photoH / 2}" text-anchor="middle" 
-             font-size="80" font-weight="900" fill="#19363B" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(initials)}</text>`;
+      <g transform="rotate(-3, ${frameX + frameW / 2}, ${frameY + frameH / 2})">
+        <rect x="${frameX}" y="${frameY}" width="${frameW}" height="${frameH}" rx="8" fill="white" opacity="0.95"/>
+        <rect x="${frameX}" y="${frameY}" width="${frameW}" height="${frameH}" rx="8" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+        <image href="${photoBase64}" x="${frameX + border}" y="${frameY + border}" width="${photoClipW}" height="${photoClipH}" 
+               clip-path="url(#photoClip)" preserveAspectRatio="xMidYMid slice" filter="url(#bw)"/>
+      </g>`
+    : `<g transform="rotate(-3, ${frameX + frameW / 2}, ${frameY + frameH / 2})">
+        <rect x="${frameX}" y="${frameY}" width="${frameW}" height="${frameH}" rx="8" fill="white" opacity="0.95"/>
+        <rect x="${frameX + border}" y="${frameY + border}" width="${photoClipW}" height="${photoClipH}" rx="6" fill="#264653"/>
+        <text x="${frameX + frameW / 2}" y="${frameY + frameH / 2 + 20}" text-anchor="middle" 
+              font-size="80" font-weight="900" fill="white" opacity="0.4" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(initials)}</text>
+      </g>`;
 
-  // === RIGHT CONTENT ===
-  const rX = 490; // right column start
-  let rY = 72;
-  const rightContent: string[] = [];
+  // === CAREER JOURNEY LOGOS (below photo, mini tilted polaroids) ===
+  const journeySection: string[] = [];
+  if (logos.length > 0) {
+    const jStartX = 60;
+    const jY = 485;
+    const polaroidSize = 52;
+    const polaroidGap = 62;
 
-  // CTA line 1 - smaller, yellow, tracking
-  rightContent.push(
-    `<text x="${rX}" y="${rY}" font-size="18" font-weight="700" fill="#FEE123" 
-           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="4">${esc(ctaLine1)}</text>`
-  );
-  rY += 42;
-
-  // CTA line 2 - event name, large, yellow, bold
-  rightContent.push(
-    `<text x="${rX}" y="${rY}" font-size="36" font-weight="900" fill="#FEE123" 
-           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="1">${esc(ctaLine2)}</text>`
-  );
-  rY += 18;
-
-  // Divider line
-  rightContent.push(
-    `<rect x="${rX}" y="${rY}" width="120" height="3" rx="1.5" fill="#ED7660"/>`
-  );
-  rY += 36;
-
-  // Expert name - large coral, bold
-  const nameLines = wrapText(name, 20);
-  for (const line of nameLines) {
-    rightContent.push(
-      `<text x="${rX}" y="${rY}" font-size="48" font-weight="900" fill="#ED7660" 
-             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(line)}</text>`
+    journeySection.push(
+      `<text x="${jStartX}" y="${jY - 12}" font-size="10" font-weight="700" fill="#264653" opacity="0.6"
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="3">CAREER JOURNEY</text>`
     );
-    rY += 54;
-  }
-  rY -= 10;
 
-  // Job title
-  if (title) {
-    const titleLines = wrapText(title, 32);
-    for (const tl of titleLines) {
-      rightContent.push(
-        `<text x="${rX}" y="${rY}" font-size="22" font-weight="400" fill="#F5E6D3" 
-               font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(tl)}</text>`
+    for (let i = 0; i < Math.min(logos.length, 5); i++) {
+      const lx = jStartX + i * polaroidGap;
+      const tilt = (i - 2) * 4; // spread tilts: -8, -4, 0, 4, 8
+      journeySection.push(
+        `<g transform="rotate(${tilt}, ${lx + polaroidSize / 2}, ${jY + polaroidSize / 2 + 4})">
+          <rect x="${lx - 4}" y="${jY - 4}" width="${polaroidSize + 8}" height="${polaroidSize + 12}" rx="3" fill="white" opacity="0.9"/>
+          <rect x="${lx - 4}" y="${jY - 4}" width="${polaroidSize + 8}" height="${polaroidSize + 12}" rx="3" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <image href="${logos[i].base64}" x="${lx}" y="${jY}" width="${polaroidSize}" height="${polaroidSize}" />
+        </g>`
       );
-      rY += 28;
     }
   }
 
-  // Company - bold cream
+  // === RIGHT CONTENT ===
+  const rX = 460;
+  let rY = 75;
+  const rightContent: string[] = [];
+
+  // CTA line 1
+  rightContent.push(
+    `<text x="${rX}" y="${rY}" font-size="16" font-weight="800" fill="#FEE123" 
+           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="4">${esc(ctaLine1)}</text>`
+  );
+  rY += 48;
+
+  // CTA line 2 - city name, big yellow
+  rightContent.push(
+    `<text x="${rX}" y="${rY}" font-size="44" font-weight="900" fill="#FEE123" 
+           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="2">${esc(ctaLine2)}</text>`
+  );
+  rY += 16;
+
+  // Coral divider
+  rightContent.push(
+    `<rect x="${rX}" y="${rY}" width="100" height="3" rx="1.5" fill="#ED7660"/>`
+  );
+  rY += 36;
+
+  // Expert name
+  const nameLines = wrapText(name, 18);
+  for (const line of nameLines) {
+    rightContent.push(
+      `<text x="${rX}" y="${rY}" font-size="46" font-weight="900" fill="#ED7660" 
+             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(line)}</text>`
+    );
+    rY += 52;
+  }
+  rY -= 6;
+
+  // Job title
+  if (title) {
+    const titleLines = wrapText(title, 30);
+    for (const tl of titleLines) {
+      rightContent.push(
+        `<text x="${rX}" y="${rY}" font-size="21" font-weight="400" fill="#264653" 
+               font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(tl)}</text>`
+      );
+      rY += 26;
+    }
+  }
+
+  // Company
   if (company) {
     rightContent.push(
-      `<text x="${rX}" y="${rY}" font-size="22" font-weight="700" fill="#F5E6D3" 
+      `<text x="${rX}" y="${rY}" font-size="21" font-weight="700" fill="#264653" 
              font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(company)}</text>`
     );
     rY += 34;
@@ -231,48 +272,25 @@ async function buildSvgCard(
 
   // Years badge
   if (yearsText) {
-    const badgeW = yearsText.length * 9 + 24;
+    const badgeW = yearsText.length * 8.5 + 28;
     rightContent.push(
-      `<rect x="${rX}" y="${rY - 16}" width="${badgeW}" height="26" rx="13" fill="#ED7660" opacity="0.2"/>
-       <text x="${rX + 12}" y="${rY + 3}" font-size="14" font-weight="600" fill="#ED7660" 
+      `<rect x="${rX}" y="${rY - 17}" width="${badgeW}" height="28" rx="14" fill="#264653" opacity="0.12"/>
+       <text x="${rX + 14}" y="${rY + 3}" font-size="13" font-weight="700" fill="#264653" 
              font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(yearsText)}</text>`
     );
-    rY += 32;
+    rY += 36;
   }
 
-  // Ask me about
+  // Ask me about (italic)
   if (askAbout) {
-    const truncated = askAbout.length > 55 ? askAbout.slice(0, 52) + "…" : askAbout;
-    rightContent.push(
-      `<text x="${rX}" y="${rY}" font-size="17" font-style="italic" fill="#F5E6D3" opacity="0.75"
-             font-family="Georgia,'Times New Roman',serif">"${esc(truncated)}"</text>`
-    );
-    rY += 28;
-  }
-
-  // === BRAND LOGOS (bottom-left, below photo) ===
-  const logoSection: string[] = [];
-  if (logos.length > 0) {
-    const logoStartX = 50;
-    const logoY = 510;
-    const logoSize = 36;
-    const logoGap = 48;
-
-    // Label
-    logoSection.push(
-      `<text x="${logoStartX}" y="${logoY - 8}" font-size="11" font-weight="600" fill="#F5E6D3" opacity="0.5"
-             font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="2">PREVIOUS BRANDS</text>`
-    );
-
-    for (let i = 0; i < Math.min(logos.length, 6); i++) {
-      const lx = logoStartX + i * logoGap;
-      // White circle background
-      logoSection.push(
-        `<circle cx="${lx + logoSize / 2}" cy="${logoY + logoSize / 2 + 6}" r="${logoSize / 2 + 4}" fill="#F5E6D3"/>`
+    const truncated = askAbout.length > 60 ? askAbout.slice(0, 57) + "…" : askAbout;
+    const askLines = wrapText(`"${truncated}"`, 38);
+    for (const al of askLines) {
+      rightContent.push(
+        `<text x="${rX}" y="${rY}" font-size="16" font-style="italic" fill="#264653" opacity="0.7"
+               font-family="Georgia,'Times New Roman',serif">${esc(al)}</text>`
       );
-      logoSection.push(
-        `<image href="${logos[i].base64}" x="${lx}" y="${logoY + 6}" width="${logoSize}" height="${logoSize}" />`
-      );
+      rY += 22;
     }
   }
 
@@ -282,30 +300,68 @@ async function buildSvgCard(
 
   const basecampLogoEl = basecampLogoBase64
     ? `<image href="${basecampLogoBase64}" x="50" y="${barY + 15}" height="40" width="180" preserveAspectRatio="xMinYMid meet"/>`
-    : `<text x="50" y="${barY + 42}" font-size="20" font-weight="900" fill="#F5E6D3" 
+    : `<text x="50" y="${barY + 42}" font-size="18" font-weight="900" fill="#F5E6D3" 
            font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" letter-spacing="2">BASECAMP OUTDOOR</text>`;
 
   const bottomBar = `
-    <rect x="0" y="${barY}" width="1200" height="${barH}" fill="#122A2E"/>
+    <rect x="0" y="${barY}" width="1200" height="${barH}" fill="#19363B"/>
     ${basecampLogoEl}
-    <text x="1150" y="${barY + 36}" text-anchor="end" font-size="16" font-weight="600" fill="#FEE123" 
-          font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">Register → basecampoutdoorevents.com</text>
+    <text x="1150" y="${barY + 34}" text-anchor="end" font-size="16" font-weight="700" fill="#FEE123" 
+          font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">Register free · basecampoutdoorevents.com</text>
     <text x="1150" y="${barY + 54}" text-anchor="end" font-size="12" fill="#F5E6D3" opacity="0.5"
           font-family="'Helvetica Neue',Helvetica,Arial,sans-serif">${esc(eventTitle)} · ${esc(cityName)}</text>
   `;
 
+  // === DOODLE OVERLAY ELEMENTS (mountains, trees, campfire) ===
+  const doodles = `
+    <!-- Mountain doodle top-right -->
+    <g opacity="0.08" transform="translate(850, 20)">
+      <path d="M0 180 L60 40 L90 90 L130 10 L200 180 Z" fill="none" stroke="#264653" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M30 180 L80 80 L100 110 L140 50 L180 180" fill="none" stroke="#264653" stroke-width="2" stroke-dasharray="6,4"/>
+    </g>
+    <!-- Pine trees right side -->
+    <g opacity="0.06" transform="translate(1080, 280)">
+      <path d="M30 0 L0 80 L15 70 L-10 130 L70 130 L45 70 L60 80 Z" fill="#264653"/>
+      <path d="M70 30 L45 100 L58 92 L40 140 L100 140 L82 92 L95 100 Z" fill="#264653"/>
+    </g>
+    <!-- Campfire doodle bottom-right -->
+    <g opacity="0.07" transform="translate(1020, 440)">
+      <path d="M30 60 Q35 30 25 10 Q20 30 15 5 Q10 25 20 60" fill="none" stroke="#E76F51" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M40 60 Q45 35 38 15 Q32 35 35 60" fill="none" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="62" x2="50" y2="62" stroke="#264653" stroke-width="2" stroke-linecap="round"/>
+      <line x1="5" y1="65" x2="15" y2="58" stroke="#264653" stroke-width="2" stroke-linecap="round"/>
+      <line x1="45" y1="58" x2="55" y2="65" stroke="#264653" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <!-- Sun rays top-right corner -->
+    <g opacity="0.06" transform="translate(1100, 30)">
+      <circle cx="40" cy="40" r="20" fill="none" stroke="#F4A261" stroke-width="2"/>
+      <line x1="40" y1="10" x2="40" y2="0" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="40" y1="70" x2="40" y2="80" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="10" y1="40" x2="0" y2="40" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="70" y1="40" x2="80" y2="40" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="19" y1="19" x2="12" y2="12" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+      <line x1="61" y1="19" x2="68" y2="12" stroke="#F4A261" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  `;
+
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
-  <!-- Dark teal background -->
-  <rect width="1200" height="630" fill="#19363B"/>
-  
-  <!-- Subtle gradient overlay for depth -->
+  <!-- Sunset gradient background -->
   <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1E4147" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#19363B" stop-opacity="0"/>
+    <linearGradient id="sunsetBg" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#F4A261"/>
+      <stop offset="45%" stop-color="#E9906A"/>
+      <stop offset="100%" stop-color="#E76F51"/>
+    </linearGradient>
+    <linearGradient id="warmOverlay" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#264653" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#F4A261" stop-opacity="0.05"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <rect width="1200" height="630" fill="url(#sunsetBg)"/>
+  <rect width="1200" height="630" fill="url(#warmOverlay)"/>
+
+  <!-- Doodle overlays -->
+  ${doodles}
 
   <!-- Photo -->
   ${photoArea}
@@ -313,8 +369,8 @@ async function buildSvgCard(
   <!-- Right content -->
   ${rightContent.join("\n  ")}
 
-  <!-- Brand logos -->
-  ${logoSection.join("\n  ")}
+  <!-- Career journey logos -->
+  ${journeySection.join("\n  ")}
 
   <!-- Bottom bar -->
   ${bottomBar}
