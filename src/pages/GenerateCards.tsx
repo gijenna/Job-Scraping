@@ -229,27 +229,42 @@ async function generateCard(
       }
       
       if (found) {
-        // Convert back to canvas coordinates
-        const gx = scanX + minGX;
-        const gy = scanY + minGY;
-        const gw = maxGX - minGX;
-        const gh = maxGY - minGY;
+        // Convert bounding box back to canvas coordinates
+        const bbx = scanX + minGX;
+        const bby = scanY + minGY;
+        const bbw = maxGX - minGX;
+        const bbh = maxGY - minGY;
+        
+        // The bounding box is axis-aligned but the green rect is rotated -5°.
+        // The center of the bounding box IS the center of the rotated rect.
+        const gcx = bbx + bbw / 2;
+        const gcy = bby + bbh / 2;
+        
+        // Shrink dimensions to compensate for rotation inflation of the bounding box.
+        // For a rectangle rotated by θ, the axis-aligned BB is inflated by:
+        //   bbW = w*cos(θ) + h*sin(θ),  bbH = w*sin(θ) + h*cos(θ)
+        // Solving for w,h given bbW,bbH:
+        const cosA = Math.cos(Math.abs(rotRad));
+        const sinA = Math.sin(Math.abs(rotRad));
+        const det = cosA * cosA - sinA * sinA; // cos(2θ), always positive for small θ
+        const rectW = (bbw * cosA - bbh * sinA) / det;
+        const rectH = (bbh * cosA - bbw * sinA) / det;
         
         ctx.save();
+        // Translate to center of green area, rotate to match polaroid tilt
+        ctx.translate(gcx, gcy);
+        ctx.rotate(rotRad);
         
-        // Clip directly to the detected green bounding box (no rotation needed — 
-        // the scan already captured the rotated green area's pixel footprint)
+        // Clip to the actual rotated rectangle
         ctx.beginPath();
-        ctx.rect(gx, gy, gw, gh);
+        ctx.rect(-rectW / 2, -rectH / 2, rectW, rectH);
         ctx.clip();
         
         // Cover-fit the photo into this region
-        const gcx = gx + gw / 2;
-        const gcy = gy + gh / 2;
-        const scale = Math.max(gw / photoImg.width, gh / photoImg.height);
+        const scale = Math.max(rectW / photoImg.width, rectH / photoImg.height);
         const dw = photoImg.width * scale;
         const dh = photoImg.height * scale;
-        ctx.drawImage(photoImg, gcx - dw / 2, gcy - dh / 2, dw, dh);
+        ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
         
         ctx.restore();
       } else {
