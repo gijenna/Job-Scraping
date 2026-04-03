@@ -293,6 +293,76 @@ async function generateCard(
     }
   }
   
+  // === RIGHT SIDE TEXT OVERLAYS (no rotation, drawn on teal area) ===
+  const rightX = 880;
+  
+  // 1. "NETWORK WITH ME IN [CITY]" — yellow bold uppercase
+  {
+    ctx.save();
+    ctx.fillStyle = "#E6C742";
+    const headSize1 = fitText(ctx, "NETWORK WITH ME", 700, 48, true);
+    ctx.font = `bold ${headSize1}px 'Inter', sans-serif`;
+    ctx.textAlign = "left";
+    ctx.fillText("NETWORK WITH ME", rightX, 260);
+    
+    const cityUpper = cityName.toUpperCase();
+    const headSize2 = fitText(ctx, `IN ${cityUpper}`, 700, 48, true);
+    ctx.font = `bold ${headSize2}px 'Inter', sans-serif`;
+    ctx.fillText(`IN ${cityUpper}`, rightX, 260 + headSize1 + 10);
+    ctx.restore();
+  }
+  
+  // 2. Orange pill: "[X] YEARS IN THE OUTDOOR INDUSTRY"
+  if (expert.years_in_industry) {
+    ctx.save();
+    const pillText = `${expert.years_in_industry} YEARS IN THE OUTDOOR INDUSTRY`;
+    const pillFontSize = 22;
+    ctx.font = `bold ${pillFontSize}px 'Inter', sans-serif`;
+    const pillTextWidth = ctx.measureText(pillText).width;
+    const pillPadX = 28;
+    const pillPadY = 14;
+    const pillW = pillTextWidth + pillPadX * 2;
+    const pillH = pillFontSize + pillPadY * 2;
+    const pillY = 380;
+    
+    // Draw rounded pill
+    const pillRadius = pillH / 2;
+    ctx.fillStyle = "#ED7660";
+    ctx.beginPath();
+    ctx.moveTo(rightX + pillRadius, pillY);
+    ctx.lineTo(rightX + pillW - pillRadius, pillY);
+    ctx.arc(rightX + pillW - pillRadius, pillY + pillRadius, pillRadius, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(rightX + pillRadius, pillY + pillH);
+    ctx.arc(rightX + pillRadius, pillY + pillRadius, pillRadius, Math.PI / 2, -Math.PI / 2);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Pill text
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = `bold ${pillFontSize}px 'Inter', sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(pillText, rightX + pillPadX, pillY + pillH / 2);
+    ctx.restore();
+  }
+  
+  // 3. "Ask me about: [topics]" — cream italic
+  if (expert.ask_me_about) {
+    ctx.save();
+    ctx.fillStyle = "#F5E6D3";
+    ctx.font = `italic 24px 'Inter', sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    const askText = `Ask me about: ${expert.ask_me_about}`;
+    const lines = wrapText(ctx, askText, 500, 32);
+    let askY = 450;
+    for (const line of lines) {
+      ctx.fillText(line, rightX, askY);
+      askY += 32;
+    }
+    ctx.restore();
+  }
+  
   return canvas;
 }
 
