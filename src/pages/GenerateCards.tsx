@@ -187,7 +187,6 @@ async function generateCard(
   if (expert.photo_url) {
     try {
       const photoImg = await loadImage(expert.photo_url);
-      const processedPhoto = removeWhiteBackground(photoImg);
       const { cx, cy, w, h } = layout.photo;
       ctx.save();
       ctx.translate(cx, cy);
@@ -198,11 +197,13 @@ async function generateCard(
       ctx.rect(-w / 2, -h / 2, w, h);
       ctx.clip();
       
-      // Cover-fit the photo
-      const scale = Math.max(w / processedPhoto.width, h / processedPhoto.height);
-      const dw = processedPhoto.width * scale;
-      const dh = processedPhoto.height * scale;
-      ctx.drawImage(processedPhoto, -dw / 2, -dh / 2, dw, dh);
+      // Cover-fit the photo, anchored to bottom so torso sits at base
+      const scale = Math.max(w / photoImg.width, h / photoImg.height);
+      const dw = photoImg.width * scale;
+      const dh = photoImg.height * scale;
+      const dx = -dw / 2;
+      const dy = h / 2 - dh; // align bottom of photo to bottom of clip area
+      ctx.drawImage(photoImg, dx, dy, dw, dh);
       
       ctx.restore();
     } catch (e) {
