@@ -24,6 +24,7 @@ import EventOR26 from "./pages/EventOR26";
 import BestDayPitch from "./pages/BestDayPitch";
 import BestDayExample from "./pages/BestDayExample";
 import CardStylePreview from "./pages/CardStylePreview";
+import GenerateCards from "./pages/GenerateCards";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
