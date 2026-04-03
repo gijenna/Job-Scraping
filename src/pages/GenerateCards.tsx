@@ -30,14 +30,12 @@ interface TemplateLayout {
   smallPolaroids: SmallPolaroid[];
 }
 
-// Layouts derived from pixel analysis of 1920x1002 templates
-// Large polaroid photo area: inner edges at ~(156,130)-(733,680), center ~(445,400)
-// Name/title in white area below photo at y~720
-// Small polaroids: tilted frames at bottom, ~170px wide each
+// Layouts calibrated via PIL scan of template green-area inner boundaries
+// Photo area values (cx, cy, w, h) measured from white frame inner edges + 8px bleed
 const LAYOUTS: TemplateLayout[] = [
   // solid_green_2: 2 small polaroids
   {
-    photo: { cx: 445, cy: 390, w: 540, h: 560 },
+    photo: { cx: 443, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 420, cy: 740, w: 480 },
     logoCorner: { cx: 680, cy: 720 },
     smallPolaroids: [
@@ -47,7 +45,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_3: 3 small polaroids
   {
-    photo: { cx: 445, cy: 390, w: 540, h: 560 },
+    photo: { cx: 441, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 425, cy: 740, w: 480 },
     logoCorner: { cx: 685, cy: 720 },
     smallPolaroids: [
@@ -58,7 +56,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_4: 4 small polaroids
   {
-    photo: { cx: 440, cy: 390, w: 530, h: 560 },
+    photo: { cx: 441, cy: 384, w: 530, h: 565 },
     nameArea: { cx: 415, cy: 740, w: 460 },
     logoCorner: { cx: 670, cy: 720 },
     smallPolaroids: [
@@ -70,7 +68,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_5: 5 small polaroids
   {
-    photo: { cx: 435, cy: 390, w: 510, h: 560 },
+    photo: { cx: 441, cy: 384, w: 530, h: 565 },
     nameArea: { cx: 405, cy: 740, w: 440 },
     logoCorner: { cx: 660, cy: 720 },
     smallPolaroids: [
