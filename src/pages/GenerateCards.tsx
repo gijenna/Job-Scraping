@@ -35,7 +35,7 @@ interface TemplateLayout {
 const LAYOUTS: TemplateLayout[] = [
   // solid_green_2: 2 small polaroids
   {
-    photo: { cx: 443, cy: 392, w: 530, h: 565 },
+    photo: { cx: 436, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 420, cy: 740, w: 480 },
     logoCorner: { cx: 680, cy: 720 },
     smallPolaroids: [
