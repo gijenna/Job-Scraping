@@ -1,33 +1,53 @@
 
 
-# Fix Photo Centering: Pixel-Perfect Calibration via Script
+# Update Denver Event Date & Time: May 29 → May 28, 1–4 PM → 3–6 PM
 
-## Problem
-The hardcoded `cx`/`cy` values in `LAYOUTS` are approximate guesses that don't match the true center of the green photo area in each template. This causes uneven white borders (wider on one side than the other) and in some cases green bleeding through.
+## Summary
+Change all Denver event references from **May 29, 1–4 PM** to **May 28, 3–6 PM** across 10 files. The schedule times will shift accordingly (+2 hours).
 
-## Solution
-Run a **one-time Python calibration script** against the 4 template PNGs to measure the exact green area bounding box in each. Then update the `LAYOUTS` array with the precise `cx`, `cy`, `w`, `h` values. Additionally, add a small bleed (4px) to `w`/`h` to prevent any green slivers at edges due to anti-aliasing.
+## Files & Changes
 
-## Steps
+### 1. `src/components/event/DenverHero.tsx` (line 51)
+- `May 29, 2026` → `May 28, 2026`
 
-1. **Run calibration script** — A Python/PIL script that:
-   - Loads each `solid_green_N.png` template
-   - Scans the left 60% of pixels for green (G > 100, G > 1.5×R, G > 1.5×B)
-   - Computes the bounding box (minX, minY, maxX, maxY) of those green pixels
-   - Outputs the center and dimensions for each template
-   - This runs once at build-time, not at render-time
+### 2. `src/components/HeroSection.tsx` (line 34)
+- `Denver — May 29` → `Denver — May 28`
 
-2. **Update LAYOUTS** — Replace the current approximate values with the measured ones plus a 4px bleed on each side
+### 3. `src/components/EventOverview.tsx` (line 30)
+- `May 29, 2026` → `May 28, 2026`
 
-3. **No render-time scanning** — Keep the current deterministic pipeline (translate → rotate → rect → clip → cover-fit draw)
+### 4. `src/components/event/DenverFestivalPartner.tsx` (line 56)
+- `May 29–31` → `May 28–31`
 
-## Files
-- `src/pages/GenerateCards.tsx` — update `LAYOUTS` photo values only (4 objects)
+### 5. `src/pages/EventOutsideDays26.tsx` (lines 64, 66, 151, 152)
+- `May 29, 2026` → `May 28, 2026` (×2)
+- `1:00 – 4:00 PM MT` → `3:00 – 6:00 PM MT` (×2)
 
-## Why this works
-The templates are static PNGs that never change. A one-time measurement gives us ground-truth pixel coordinates. The previous attempts failed because:
-- Hardcoded values were eyeballed
-- Runtime scanning was noisy (background green contaminated the centroid)
+### 6. `src/pages/EventOutsideDaysCOS.tsx` (lines 70, 72, 158, 159)
+- Same changes as above
 
-A controlled Python scan with PIL on the raw template files will give exact bounds without browser canvas anti-aliasing issues.
+### 7. `src/pages/BestDayExample.tsx` (lines 70, 72, 160, 161)
+- Same changes as above
+
+### 8. `src/pages/BestDayPitch.tsx` (lines 104, 106)
+- `May 29, 2026` → `May 28, 2026`
+- `1:00 – 4:00 PM MT` → `3:00 – 6:00 PM MT`
+
+### 9. `src/pages/GatherDenverExport.tsx`
+- Line 106: `May 29, 2026 · 1–4 PM` → `May 28, 2026 · 3–6 PM`
+- Schedule (lines 51–55): shift all times +2 hours:
+  - `11 AM–12:30 PM` → `1–2:30 PM`
+  - `1–1:30 PM` → `3–3:30 PM`
+  - `1–4 PM` → `3–6 PM`
+  - `4–4:30 PM` → `6–6:30 PM`
+  - `5 PM+` → `7 PM+`
+
+### 10. `src/pages/OldStuffByJenna.tsx` (lines 13–18)
+- Same schedule shift as GatherDenverExport
+
+### 11. `src/pages/ExpertInvite.tsx` (line 44)
+- `1–4 PM MT` → `3–6 PM MT`
+
+### 12. `src/pages/BrandRepInvite.tsx` (line 44)
+- `1–4 PM MT` → `3–6 PM MT`
 
