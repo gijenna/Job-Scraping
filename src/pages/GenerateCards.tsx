@@ -384,11 +384,22 @@ export default function GenerateCards() {
   const [generating, setGenerating] = useState<Record<string, boolean>>({});
   const [generated, setGenerated] = useState<Record<string, string>>({});
   const [selectedCity, setSelectedCity] = useState<string>("all");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchExperts();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAdmin(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) fetchExperts();
+  }, [isAdmin]);
 
   async function fetchExperts() {
     setLoading(true);
@@ -470,6 +481,22 @@ export default function GenerateCards() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#2D4A47]">
         <Loader2 className="w-8 h-8 animate-spin text-[#E6C742]" />
+      </div>
+    );
+  }
+
+  if (isAdmin === null) {
+    return <div className="min-h-screen bg-[#2D4A47] flex items-center justify-center"><Loader2 className="animate-spin text-[#F5F0E8] w-8 h-8" /></div>;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#2D4A47] flex items-center justify-center p-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#F5F0E8] mb-4">Admin Access Required</h1>
+          <p className="text-[#F5F0E8]/60 mb-6">Please sign in to access the card generator.</p>
+          <a href="/admin" className="inline-block px-6 py-2 bg-[#ED7660] text-[#F5F0E8] rounded-lg font-semibold hover:bg-[#ED7660]/90 transition-colors">Sign In</a>
+        </div>
       </div>
     );
   }
