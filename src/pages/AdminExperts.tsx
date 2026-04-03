@@ -10,7 +10,7 @@ import AddExpertDialog from "@/components/experts/AddExpertDialog";
 import FAQManager from "@/components/experts/FAQManager";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, Download } from "lucide-react";
+import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
 
 const AdminExperts = () => {
   const navigate = useNavigate();
