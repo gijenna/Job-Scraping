@@ -30,10 +30,8 @@ interface TemplateLayout {
   smallPolaroids: SmallPolaroid[];
 }
 
-// Layouts derived from pixel analysis of 1920x1002 templates
-// Large polaroid photo area: inner edges at ~(156,130)-(733,680), center ~(445,400)
-// Name/title in white area below photo at y~720
-// Small polaroids: tilted frames at bottom, ~170px wide each
+// Layouts calibrated via PIL scan of template green-area inner boundaries
+// Photo area values (cx, cy, w, h) measured from white frame inner edges + 8px bleed
 const LAYOUTS: TemplateLayout[] = [
   // solid_green_2: 2 small polaroids
   {
