@@ -1,31 +1,47 @@
 
+Fix the large-polaroid photo placement by removing the current centroid detection and returning to a fully deterministic frame definition per template.
 
-# Fix Photo Centering Within Polaroid
+## What to change
+1. In `src/pages/GenerateCards.tsx`, remove the green-pixel centroid scan from the large photo drawing block.
+2. Calibrate `layout.photo` so it represents the actual inner green window of each template:
+   - `cx/cy` = true visual center of the green opening
+   - `w/h` = true visible opening size, not an expanded value
+3. Draw the expert photo into that fixed rotated frame using centered cover-fit cropping.
+4. Reduce or eliminate the extra clip “bleed” that is currently making the visible border uneven.
+5. Keep the rest of the generator logic unchanged.
 
-## Problem
-The `cx` values in the `LAYOUTS` array don't precisely match the true center of the green area on each template. This causes the photo to be drawn slightly off-center — visible as uneven white margins on the left vs. right side of photos with light backgrounds.
+## Why this should fix it
+The current centering is drifting because the scan is averaging green pixels from more than just the photo opening. That makes the translate point inconsistent. On top of that, the clip area is slightly oversized, so the white/green border can look different on each side. A fixed inner-frame per template is more reliable because the templates themselves are fixed.
 
-## Solution
-Use the green-pixel detection approach **only to find the center point** (`gcx`, `gcy`) of the green area — not the dimensions. Keep the fixed `w`/`h` values from `LAYOUTS` for the clip size, which already work well. This gives us:
-- **Reliable centering** — auto-detected from the actual template pixels
-- **Reliable dimensions** — kept as fixed values that we've already tuned
+## Implementation approach
+- Keep the rotated clip pipeline: `translate -> rotate -> rect -> clip`
+- Use `layout.photo` directly for centering
+- Use a source-side centered crop:
+  - compare source aspect ratio vs target aspect ratio
+  - crop from the center of the uploaded image
+  - draw that crop into the exact frame
+- If needed, support tiny per-template nudges (`offsetX`, `offsetY`) rather than scanning pixels dynamically
 
-The detection for center point is much more robust than for edges, since even if we pick up a few extra green pixels the average/center is barely affected.
+## Files
+- `src/pages/GenerateCards.tsx`
 
-## Changes
+## Technical details
+- Remove this logic entirely:
+  - temporary scan canvas
+  - green pixel centroid calculation
+  - `gcx/gcy` fallback flow
+- Replace with:
+  - `const { cx, cy, w, h } = layout.photo`
+  - clip exactly to `w/h` or with only a very small overscan
+  - compute `sx/sy/sw/sh` from the source image for a true centered cover crop
+- Likely also tighten the `LAYOUTS` photo values slightly so the frame matches the visible green opening more precisely across the 2/3/4/5-logo templates
 
-| File | Change |
-|------|--------|
-| `src/pages/GenerateCards.tsx` | In the photo drawing block (~lines 203-232): after drawing the template, scan the left half for green pixels and compute their centroid (`sumX/count`, `sumY/count`). Use that as the translate point instead of `layout.photo.cx/cy`. Keep `layout.photo.w/h` for clip dimensions. |
-
-## Logic
-```text
-1. After ctx.drawImage(templateImg, ...) — scan left-half region
-2. For each green-ish pixel, accumulate sumX, sumY, count
-3. gcx = sumX/count, gcy = sumY/count  (centroid of green mass)
-4. Use gcx/gcy instead of cx/cy for translate
-5. Keep w/h from LAYOUTS for clip rect + bleed
-```
-
-Falls back to hardcoded `cx/cy` if no green pixels found.
-
+## QA
+Validate with at least:
+- a portrait with lots of white space near the edges
+- a tightly framed headshot
+- a landscape-ish photo
+Check that:
+- no green shows inside the large polaroid
+- left/right visible margins look equal
+- the photo stays centered consistently across all template variants
