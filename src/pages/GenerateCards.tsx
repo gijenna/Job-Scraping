@@ -145,9 +145,26 @@ function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, 
   return size;
 }
 
+async function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, lineHeight: number): string[] {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let currentLine = words[0] || '';
+  for (let i = 1; i < words.length; i++) {
+    const testLine = currentLine + ' ' + words[i];
+    if (ctx.measureText(testLine).width > maxWidth) {
+      lines.push(currentLine);
+      currentLine = words[i];
+    } else {
+      currentLine = testLine;
+    }
+  }
+  lines.push(currentLine);
+  return lines;
+}
+
 async function generateCard(
   expert: ExpertData,
-  _cityName: string,
+  cityName: string,
 ): Promise<HTMLCanvasElement> {
   const previous = parsePreviousCompanies(expert.previous_companies);
   const current = expert.current_company || "";
