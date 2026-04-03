@@ -22,32 +22,8 @@ const AdminExperts = () => {
   const [questions, setQuestions] = useState<ExpertQuestion[]>([]);
   const [previewMode, setPreviewMode] = useState<'carousel' | 'grid'>('carousel');
 
-  const downloadCSV = () => {
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-    const headers = ['Name', 'Email', 'Job Title', 'Company', 'Field', 'Status', 'LinkedIn', 'Cities', 'Type', 'Years in Industry', 'Years in City', 'Ask Me About', 'Niche Interests', 'Share Links'];
-    const rows = experts.map(e => {
-      const expertAssigns = assignments.filter(a => a.expert_id === e.id);
-      const cityNames = expertAssigns.map(a => a.city_slug).join('; ');
-      const types = [...new Set(expertAssigns.map(a => a.expert_type))].join('; ');
-      const shareLinks = e.status === 'confirmed'
-        ? expertAssigns.map(a => `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(e.slug)}/${encodeURIComponent(a.city_slug)}`).join('; ')
-        : '';
-      return [
-        e.full_name, e.email || '', e.job_title || '', e.current_company || '',
-        e.field_of_work || '', e.status || '', e.linkedin_url || '',
-        cityNames, types, e.years_in_industry ?? '', e.years_in_city ?? '',
-        e.ask_me_about || '', (e.niche_interests || []).join('; '), shareLinks
-      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
-    });
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `basecamp-experts-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+
+
 
   useEffect(() => {
     checkAuth();
