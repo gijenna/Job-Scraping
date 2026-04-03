@@ -48,11 +48,11 @@ const showUpOptions = [
 ];
 
 const schedule = [
-  { time: "11 AM–12:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
-  { time: "1–1:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
-  { time: "1–4 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
-  { time: "4–4:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
-  { time: "5 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
+  { time: "1–2:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
+  { time: "3–3:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
+  { time: "3–6 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
+  { time: "6–6:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
+  { time: "7 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
 ];
 
 const tiers = [
