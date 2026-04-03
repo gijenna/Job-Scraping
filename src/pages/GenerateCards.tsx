@@ -188,21 +188,25 @@ async function generateCard(
     try {
       const photoImg = await loadImage(expert.photo_url);
       const { cx, cy, w, h } = layout.photo;
+      const frameInset = 18;
+      const availableW = w - frameInset * 2;
+      const availableH = h - frameInset * 2;
+
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(rotRad);
       
-      // Clip to photo area
+      // Clip to the full green photo area
       ctx.beginPath();
       ctx.rect(-w / 2, -h / 2, w, h);
       ctx.clip();
       
-      // Cover-fit the photo, anchored to bottom so torso sits at base
-      const scale = Math.max(w / photoImg.width, h / photoImg.height);
+      // Fit the uploaded image inside the green area with even padding
+      const scale = Math.min(availableW / photoImg.width, availableH / photoImg.height);
       const dw = photoImg.width * scale;
       const dh = photoImg.height * scale;
       const dx = -dw / 2;
-      const dy = h / 2 - dh; // align bottom of photo to bottom of clip area
+      const dy = -dh / 2;
       ctx.drawImage(photoImg, dx, dy, dw, dh);
       
       ctx.restore();
