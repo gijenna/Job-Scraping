@@ -61,9 +61,9 @@ const EventOutsideDays26 = () => {
           backgroundType="image"
           logoSrc={denverLogo}
           logoAlt="Gather Denver logo"
-          date="May 29, 2026"
-          location="Auraria Campus Wellness Center · Denver, CO"
-          time="1:00 – 4:00 PM MT"
+            date="May 28, 2026"
+            location="Auraria Campus Wellness Center · Denver, CO"
+            time="3:00 – 6:00 PM MT"
           tagline="The outdoor industry's biggest career discovery event inside the Outside Days festival."
           registrationUrl={TYPEFORM_DENVER}
           accentColor="#E1B624"
