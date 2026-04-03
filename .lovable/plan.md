@@ -1,22 +1,53 @@
 
 
-# Filtered CSV Export
+# /generate Page — Social Media Card Generator (Public During Dev)
 
-## Problem
-The "Export CSV" button in the header exports **all** experts regardless of the filters set in the CRM table (city, type, saved status). The filters live inside `ExpertCRM` but the download function lives in `AdminExperts`.
+## Overview
 
-## Solution
-Move the Export CSV button into the `ExpertCRM` component, right next to the existing filter controls. It will use the already-computed `filteredExperts` array plus filtered assignments, so whatever you see in the table is exactly what gets exported.
+A page at `/generate` that creates social media preview cards for each expert using the 4 solid green templates. Auto-selects the correct template based on company count. **No auth check initially** — will be restricted to admin after editing is complete.
 
-## Changes
+## Template Selection
 
-| File | What |
-|------|------|
-| `src/components/experts/ExpertCRM.tsx` | Add an "Export CSV" button next to the filter row that builds the CSV from `filteredExperts` using the same logic currently in `AdminExperts.downloadCSV`. Include the current filter values in the filename (e.g. `basecamp-experts-portland-brand_rep-2026-04-03.csv`). |
-| `src/pages/AdminExperts.tsx` | Remove the header-level "Export CSV" button since it now lives inside the CRM tab where the filters are. |
+| Total companies | Template | Small polaroids |
+|---|---|---|
+| 0–1 (current only) | solid_green_2, 1 glowing polaroid only | 1 |
+| 2 | solid_green_2 | 2 |
+| 3 | solid_green_3 | 3 |
+| 4 | solid_green_4 | 4 |
+| 5+ | solid_green_5 (cap at 5, use 4 most recent previous + current) | 5 |
 
-## Details
-- The CSV columns and format stay identical (Name, Email, Job Title, Company, Field, Status, LinkedIn, Cities, Type, Years in Industry, Years in City, Ask Me About, Niche Interests, Share Links).
-- The button label shows the count: "Export CSV (12)" matching the existing filtered count display.
-- Filename includes active filters for clarity: `basecamp-experts-portland-brand_rep-active-2026-04-03.csv`. When filter is "all", that segment is omitted.
+## Data Mapping
+
+**Large polaroid:**
+- Expert photo fills green area
+- Line 1: `[Full Name]` — bold, left-aligned with image edge
+- Line 2: `[Job Title, Current Company]` — regular, left-aligned
+- Upper-right of white area: current company logo
+
+**Right side (drawn over template):**
+- "NETWORK WITH ME IN [CITY]" — yellow bold uppercase
+- "[X] YEARS IN THE OUTDOOR INDUSTRY" — coral pill
+- "Ask me about: [text]" — cream italic
+
+**Small polaroids (bottom row):**
+- Company logos oldest → current, left to right
+- Rightmost (current) has orange glow
+- `previous_companies` parsed from comma-separated string
+
+## UI
+
+- List all confirmed experts with "Generate" button per expert + "Generate All"
+- City selector for multi-city experts
+- Download as PNG per card
+- **No login required** — page is publicly accessible during development
+
+## Files
+
+| File | Action |
+|---|---|
+| `src/assets/solid_green_*.png` | Upload 4 template PNGs as assets |
+| `src/pages/GenerateCards.tsx` | New page — canvas-based card generator, no auth gate |
+| `src/App.tsx` | Add public route `/generate` |
+
+No database changes needed.
 
