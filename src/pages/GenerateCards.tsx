@@ -70,7 +70,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_5: 5 small polaroids
   {
-    photo: { cx: 435, cy: 390, w: 510, h: 560 },
+    photo: { cx: 441, cy: 384, w: 530, h: 565 },
     nameArea: { cx: 405, cy: 740, w: 440 },
     logoCorner: { cx: 660, cy: 720 },
     smallPolaroids: [
