@@ -35,7 +35,7 @@ interface TemplateLayout {
 const LAYOUTS: TemplateLayout[] = [
   // solid_green_2: 2 small polaroids
   {
-    photo: { cx: 443, cy: 392, w: 530, h: 565 },
+    photo: { cx: 436, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 420, cy: 740, w: 480 },
     logoCorner: { cx: 680, cy: 720 },
     smallPolaroids: [
@@ -45,7 +45,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_3: 3 small polaroids
   {
-    photo: { cx: 441, cy: 392, w: 530, h: 565 },
+    photo: { cx: 436, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 425, cy: 740, w: 480 },
     logoCorner: { cx: 685, cy: 720 },
     smallPolaroids: [
@@ -56,7 +56,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_4: 4 small polaroids
   {
-    photo: { cx: 441, cy: 384, w: 530, h: 565 },
+    photo: { cx: 436, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 415, cy: 740, w: 460 },
     logoCorner: { cx: 670, cy: 720 },
     smallPolaroids: [
@@ -68,7 +68,7 @@ const LAYOUTS: TemplateLayout[] = [
   },
   // solid_green_5: 5 small polaroids
   {
-    photo: { cx: 441, cy: 384, w: 530, h: 565 },
+    photo: { cx: 436, cy: 392, w: 530, h: 565 },
     nameArea: { cx: 405, cy: 740, w: 440 },
     logoCorner: { cx: 660, cy: 720 },
     smallPolaroids: [
