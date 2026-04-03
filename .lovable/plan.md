@@ -1,28 +1,24 @@
 
 
-# Replace Template Images with Clean "No Words" Versions
+# Fix Photo Centering in Large Polaroid
 
 ## Problem
-The current templates (`solid_green_2.png` through `solid_green_5.png`) have pre-baked text on them (name, title, city, etc.), which conflicts with the programmatic text overlays the code now generates — resulting in doubled/overlapping text.
+The last coordinate adjustment moved the photo center (`cx`) too far left, making the photo visibly off-center within the green polaroid area. The photo needs to be centered properly.
 
-## Solution
-Replace the 4 template assets with the uploaded clean versions that have empty polaroids and no pre-rendered text:
+## Fix
+Revert the `cx` values back closer to the original (~445) across all 4 layouts while keeping the expanded `w`/`h` dimensions that successfully fill the green area. The photo rendering logic (cover-fit with clip) is correct — only the center point coordinates need adjustment.
 
-| Upload | Replaces | Small polaroids |
-|--------|----------|-----------------|
-| `2_no_words.png` | `src/assets/solid_green_2.png` | 2 |
-| `3_no_words.png` | `src/assets/solid_green_3.png` | 3 |
-| `4_no_words.png` | `src/assets/solid_green_4.png` | 4 |
-| `5_no_words_v2.png` | `src/assets/solid_green_5.png` | 5 |
+## Changes
 
-## What changes
-- Copy the 4 uploaded images to `src/assets/`, overwriting the existing template files
-- No code changes needed — the imports and filenames remain identical
+| File | Change |
+|------|--------|
+| `src/pages/GenerateCards.tsx` | Restore `photo.cx` to ~445 and `photo.cy` to ~390 across all 4 LAYOUTS entries, keeping `w: 540, h: 560` dimensions |
 
-## What stays the same
-- All canvas rendering logic (photo placement, text overlays, logo compositing)
-- Template selection based on company count
-- Layout coordinates in `LAYOUTS` array
+Specific coordinate updates:
+- Layout 0 (2 polaroids): `cx: 445, cy: 390`
+- Layout 1 (3 polaroids): `cx: 445, cy: 390`
+- Layout 2 (4 polaroids): `cx: 440, cy: 390`
+- Layout 3 (5 polaroids): `cx: 435, cy: 390`
 
-**Note:** The layout pixel coordinates (`LAYOUTS`) may need minor tweaks if the new templates have slightly different polaroid positions. If so, that will be a follow-up adjustment after visual testing.
+No other files or logic changes needed.
 
