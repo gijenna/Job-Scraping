@@ -485,6 +485,22 @@ export default function GenerateCards() {
     );
   }
 
+  if (isAdmin === null) {
+    return <div className="min-h-screen bg-[#2D4A47] flex items-center justify-center"><Loader2 className="animate-spin text-[#F5F0E8] w-8 h-8" /></div>;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#2D4A47] flex items-center justify-center p-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#F5F0E8] mb-4">Admin Access Required</h1>
+          <p className="text-[#F5F0E8]/60 mb-6">Please sign in to access the card generator.</p>
+          <a href="/admin" className="inline-block px-6 py-2 bg-[#ED7660] text-[#F5F0E8] rounded-lg font-semibold hover:bg-[#ED7660]/90 transition-colors">Sign In</a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#2D4A47] p-6">
       <div className="max-w-7xl mx-auto">
