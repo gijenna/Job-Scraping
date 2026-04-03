@@ -293,72 +293,74 @@ async function generateCard(
     }
   }
   
-  // === RIGHT SIDE TEXT OVERLAYS (no rotation, drawn on teal area) ===
-  const rightX = 880;
+  // === RIGHT SIDE TEXT OVERLAYS (no rotation, centered on teal area) ===
+  const rightCenterX = 1350; // center of the right-side teal area
+  const rightMaxW = 800;
   
-  // 1. "NETWORK WITH ME IN [CITY]" — yellow bold uppercase
+  // 1. "NETWORK WITH ME IN [CITY]" — yellow bold uppercase, centered
   {
     ctx.save();
     ctx.fillStyle = "#E6C742";
-    const headSize1 = fitText(ctx, "NETWORK WITH ME", 700, 48, true);
+    ctx.textAlign = "center";
+    const headSize1 = fitText(ctx, "NETWORK WITH ME", rightMaxW, 62, true);
     ctx.font = `bold ${headSize1}px 'Inter', sans-serif`;
-    ctx.textAlign = "left";
-    ctx.fillText("NETWORK WITH ME", rightX, 260);
+    ctx.fillText("NETWORK WITH ME", rightCenterX, 250);
     
     const cityUpper = cityName.toUpperCase();
-    const headSize2 = fitText(ctx, `IN ${cityUpper}`, 700, 48, true);
+    const headSize2 = fitText(ctx, `IN ${cityUpper}`, rightMaxW, 62, true);
     ctx.font = `bold ${headSize2}px 'Inter', sans-serif`;
-    ctx.fillText(`IN ${cityUpper}`, rightX, 260 + headSize1 + 10);
+    ctx.fillText(`IN ${cityUpper}`, rightCenterX, 250 + headSize1 + 14);
     ctx.restore();
   }
   
-  // 2. Orange pill: "[X] YEARS IN THE OUTDOOR INDUSTRY"
+  // 2. Orange pill: "[X] YEARS IN THE OUTDOOR INDUSTRY", centered
   if (expert.years_in_industry) {
     ctx.save();
     const pillText = `${expert.years_in_industry} YEARS IN THE OUTDOOR INDUSTRY`;
-    const pillFontSize = 22;
+    const pillFontSize = 26;
     ctx.font = `bold ${pillFontSize}px 'Inter', sans-serif`;
     const pillTextWidth = ctx.measureText(pillText).width;
-    const pillPadX = 28;
-    const pillPadY = 14;
+    const pillPadX = 32;
+    const pillPadY = 16;
     const pillW = pillTextWidth + pillPadX * 2;
     const pillH = pillFontSize + pillPadY * 2;
-    const pillY = 380;
+    const pillY = 400;
+    const pillX = rightCenterX - pillW / 2;
     
     // Draw rounded pill
     const pillRadius = pillH / 2;
     ctx.fillStyle = "#ED7660";
     ctx.beginPath();
-    ctx.moveTo(rightX + pillRadius, pillY);
-    ctx.lineTo(rightX + pillW - pillRadius, pillY);
-    ctx.arc(rightX + pillW - pillRadius, pillY + pillRadius, pillRadius, -Math.PI / 2, Math.PI / 2);
-    ctx.lineTo(rightX + pillRadius, pillY + pillH);
-    ctx.arc(rightX + pillRadius, pillY + pillRadius, pillRadius, Math.PI / 2, -Math.PI / 2);
+    ctx.moveTo(pillX + pillRadius, pillY);
+    ctx.lineTo(pillX + pillW - pillRadius, pillY);
+    ctx.arc(pillX + pillW - pillRadius, pillY + pillRadius, pillRadius, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(pillX + pillRadius, pillY + pillH);
+    ctx.arc(pillX + pillRadius, pillY + pillRadius, pillRadius, Math.PI / 2, -Math.PI / 2);
     ctx.closePath();
     ctx.fill();
     
-    // Pill text
+    // Pill text centered
     ctx.fillStyle = "#FFFFFF";
     ctx.font = `bold ${pillFontSize}px 'Inter', sans-serif`;
-    ctx.textAlign = "left";
+    ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(pillText, rightX + pillPadX, pillY + pillH / 2);
+    ctx.fillText(pillText, rightCenterX, pillY + pillH / 2);
     ctx.restore();
   }
   
-  // 3. "Ask me about: [topics]" — cream italic
+  // 3. "Ask me about: [topics]" — cream italic, centered
   if (expert.ask_me_about) {
     ctx.save();
     ctx.fillStyle = "#F5E6D3";
-    ctx.font = `italic 24px 'Inter', sans-serif`;
-    ctx.textAlign = "left";
+    ctx.font = `italic 28px 'Inter', sans-serif`;
+    ctx.textAlign = "center";
     ctx.textBaseline = "top";
     const askText = `Ask me about: ${expert.ask_me_about}`;
-    const lines = wrapText(ctx, askText, 500, 32);
-    let askY = 450;
+    const lines = wrapText(ctx, askText, 600, 38);
+    let askY = 480;
     for (const line of lines) {
-      ctx.fillText(line, rightX, askY);
-      askY += 32;
+      ctx.fillText(line, rightCenterX, askY);
+      askY += 38;
     }
     ctx.restore();
   }
