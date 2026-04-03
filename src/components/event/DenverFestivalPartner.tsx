@@ -53,7 +53,7 @@ const DenverFestivalPartner = () => {
               <img src={headlinersImg} alt="Outside Days 2026 headliners - Death Cab for Cutie, My Morning Jacket, Cage the Elephant" className="w-full h-auto object-cover" />
             </a>
             <p className="mt-3 text-events-cream/40 text-xs font-body text-center italic">
-              2026 Outside Days headliners - May 29–31, Denver CO
+              2026 Outside Days headliners - 2026 Outside Days headliners - May 28–31, Denver CO, Denver CO
             </p>
           </motion.div>
         </div>

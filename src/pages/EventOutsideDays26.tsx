@@ -148,8 +148,8 @@ const EventOutsideDays26 = () => {
           venueName="Auraria Campus Wellness Center"
           address="Auraria Campus, Denver, CO"
           googleMapsUrl="https://maps.google.com/?q=Auraria+Campus+Wellness+Center+Denver+CO"
-          date="May 29, 2026"
-          eventTime="1:00 – 4:00 PM MT"
+           date="May 28, 2026"
+          eventTime="3:00 – 6:00 PM MT"
           accentColor="#E1B624"
           description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
         />

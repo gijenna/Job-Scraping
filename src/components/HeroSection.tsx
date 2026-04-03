@@ -31,7 +31,7 @@ const HeroSection = () => {
             Portland — April 16
           </Link>
           <Link to="/gather-denver" className="inline-flex items-center justify-center px-8 py-4 bg-gradient-gold text-primary-foreground font-display font-bold text-lg rounded-lg hover:opacity-90 transition-opacity shadow-gold">
-            Denver — May 29
+            Denver — May 28
           </Link>
         </motion.div>
       </div>

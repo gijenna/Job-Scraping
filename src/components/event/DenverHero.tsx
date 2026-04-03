@@ -48,7 +48,7 @@ const DenverHero = () => {
               className="w-48 md:w-64 h-auto drop-shadow-lg mb-5"
             />
             <p className="text-foreground/60 font-body text-sm tracking-widest uppercase">
-              May 29, 2026 · Denver, CO
+              May 28, 2026 · Denver, CO
             </p>
           </motion.div>
 
