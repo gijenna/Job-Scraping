@@ -200,63 +200,40 @@ async function generateCard(
   
   const rotRad = (ROTATION_DEG * Math.PI) / 180;
   
-  // === DRAW EXPERT PHOTO (centroid-detected center, fixed dimensions) ===
+  // === DRAW EXPERT PHOTO (deterministic fixed frame) ===
   if (expert.photo_url) {
     try {
       const photoImg = await loadImage(expert.photo_url);
       const { cx, cy, w, h } = layout.photo;
 
-      // Detect green centroid from the template to find true center
-      let gcx = cx;
-      let gcy = cy;
-      {
-        const scanCanvas = document.createElement("canvas");
-        scanCanvas.width = 1920;
-        scanCanvas.height = 1002;
-        const scanCtx = scanCanvas.getContext("2d")!;
-        scanCtx.drawImage(templateImg, 0, 0, 1920, 1002);
-        // Scan left half only (photo is always on the left side)
-        const scanW = Math.floor(1920 * 0.6);
-        const imgData = scanCtx.getImageData(0, 0, scanW, 1002);
-        const d = imgData.data;
-        let sumX = 0, sumY = 0, count = 0;
-        for (let py = 0; py < 1002; py++) {
-          for (let px = 0; px < scanW; px++) {
-            const i = (py * scanW + px) * 4;
-            const r = d[i], g = d[i + 1], b = d[i + 2];
-            // Green-ish: G is dominant, R and B are low
-            if (g > 100 && g > r * 1.5 && g > b * 1.5) {
-              sumX += px;
-              sumY += py;
-              count++;
-            }
-          }
-        }
-        if (count > 100) {
-          gcx = sumX / count;
-          gcy = sumY / count;
-        }
-      }
-
-      // Add small bleed so no green edge is visible
-      const bleed = 8;
-      const clipW = w + bleed * 2;
-      const clipH = h + bleed * 2;
-      
       ctx.save();
-      ctx.translate(gcx, gcy);
+      ctx.translate(cx, cy);
       ctx.rotate(rotRad);
       
-      // Clip to the rotated photo frame
+      // Clip exactly to the photo frame dimensions
       ctx.beginPath();
-      ctx.rect(-clipW / 2, -clipH / 2, clipW, clipH);
+      ctx.rect(-w / 2, -h / 2, w, h);
       ctx.clip();
       
-      // Cover-fit: scale so photo fully covers the clip area, then center
-      const scale = Math.max(clipW / photoImg.width, clipH / photoImg.height);
-      const dw = photoImg.width * scale;
-      const dh = photoImg.height * scale;
-      ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
+      // Source-side centered cover crop
+      const frameAspect = w / h;
+      const imgAspect = photoImg.width / photoImg.height;
+      let sx: number, sy: number, sw: number, sh: number;
+      if (imgAspect > frameAspect) {
+        // Image is wider — crop sides
+        sh = photoImg.height;
+        sw = sh * frameAspect;
+        sx = (photoImg.width - sw) / 2;
+        sy = 0;
+      } else {
+        // Image is taller — crop top/bottom
+        sw = photoImg.width;
+        sh = sw / frameAspect;
+        sx = 0;
+        sy = (photoImg.height - sh) / 2;
+      }
+      
+      ctx.drawImage(photoImg, sx, sy, sw, sh, -w / 2, -h / 2, w, h);
       
       ctx.restore();
     } catch (e) {
