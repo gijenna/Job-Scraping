@@ -27,7 +27,7 @@ const events = [
   },
   {
     label: "Gather Denver @ Outside Days",
-    date: "May 29, 2026",
+    date: "May 28, 2026",
     location: "Denver, CO — part of Outside Days Festival",
     scale: "600+",
     scaleNote: "career event · 40,000+ at full festival",

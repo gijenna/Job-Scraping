@@ -41,7 +41,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendanceNote: 'career event · 40,000+ at full festival',
     venue: 'Auraria Campus Wellness Center, Denver, CO',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Auraria+Campus+Wellness+Center+Denver+CO',
-    time: '1–4 PM MT',
+    time: '3–6 PM MT',
     whoAttends: [
       'Strong presence of passive candidates — not actively searching but networking',
       'Outdoor-oriented talent applying skills at mission-aligned companies',

@@ -48,11 +48,11 @@ const showUpOptions = [
 ];
 
 const schedule = [
-  { time: "11 AM–12:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
-  { time: "1–1:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
-  { time: "1–4 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
-  { time: "4–4:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
-  { time: "5 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
+  { time: "1–2:30 PM", label: "Brand Load-In", desc: "Set up your booth and settle in" },
+  { time: "3–3:30 PM", label: "VIP Access", desc: "Select candidates get exclusive early access" },
+  { time: "3–6 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
+  { time: "6–6:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
+  { time: "7 PM+", label: "Festival Music Starts", desc: "Head to the main stage!" },
 ];
 
 const tiers = [
@@ -103,7 +103,7 @@ const GatherDenverExport = () => {
           500+ candidates, 25+ brands.<br />
           Right before Friday night music at the 40,000 person Outside Days Festival.
         </p>
-        <p className="text-white font-bold text-xl mt-4">May 29, 2026 · 1–4 PM · Denver, CO</p>
+        <p className="text-white font-bold text-xl mt-4"><p className="text-white font-bold text-xl mt-4">May 28, 2026 · 3–6 PM · Denver, CO</p></p>
         <p className="text-white/50 text-xs mt-2 italic">Named one of two top activations from 2024 & 2025 by Outside, Inc</p>
         <p className="mt-4 text-white/60 text-sm">jenna@wearetheoutdoorindustry.com</p>
       </section>

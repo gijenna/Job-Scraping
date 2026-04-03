@@ -101,9 +101,9 @@ const BestDayPitch = () => {
         backgroundType="image"
         logoSrc={denverLogo}
         logoAlt="Outside Days Denver logo"
-        date="May 29, 2026"
+        date="May 28, 2026"
         location="Auraria Campus Wellness Center · Denver, CO"
-        time="1:00 – 4:00 PM MT"
+        time="3:00 – 6:00 PM MT"
         tagline="The outdoor industry's biggest career discovery event — proudly alcohol-free."
         registrationUrl={`mailto:${CTA_EMAIL}?subject=Best Day Brewing x Outside Days Partnership`}
         accentColor="#E1B624"
