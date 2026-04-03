@@ -200,88 +200,32 @@ async function generateCard(
   
   const rotRad = (ROTATION_DEG * Math.PI) / 180;
   
-  // === DETECT GREEN AREA & DRAW EXPERT PHOTO ===
+  // === DRAW EXPERT PHOTO (deterministic fixed coordinates) ===
   if (expert.photo_url) {
     try {
       const photoImg = await loadImage(expert.photo_url);
+      const { cx, cy, w, h } = layout.photo;
+      // Add small bleed so no green edge is visible
+      const bleed = 8;
+      const clipW = w + bleed * 2;
+      const clipH = h + bleed * 2;
       
-      // Scan the left half of the template to find the green rectangle
-      const scanX = 80, scanY = 50, scanW = 750, scanH = 700;
-      const imageData = ctx.getImageData(scanX, scanY, scanW, scanH);
-      const pixels = imageData.data;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rotRad);
       
-      let minGX = scanW, minGY = scanH, maxGX = 0, maxGY = 0;
-      let found = false;
+      // Clip to the rotated photo frame
+      ctx.beginPath();
+      ctx.rect(-clipW / 2, -clipH / 2, clipW, clipH);
+      ctx.clip();
       
-      for (let py = 0; py < scanH; py++) {
-        for (let px = 0; px < scanW; px++) {
-          const i = (py * scanW + px) * 4;
-          const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
-          // Detect green-ish pixels: G channel dominant, not too bright/dark
-          if (g > 60 && g > r * 1.3 && g > b * 1.2 && r < 150 && b < 150) {
-            if (px < minGX) minGX = px;
-            if (px > maxGX) maxGX = px;
-            if (py < minGY) minGY = py;
-            if (py > maxGY) maxGY = py;
-            found = true;
-          }
-        }
-      }
+      // Cover-fit: scale so photo fully covers the clip area, then center
+      const scale = Math.max(clipW / photoImg.width, clipH / photoImg.height);
+      const dw = photoImg.width * scale;
+      const dh = photoImg.height * scale;
+      ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
       
-      if (found) {
-        // Convert bounding box back to canvas coordinates
-        const bbx = scanX + minGX;
-        const bby = scanY + minGY;
-        const bbw = maxGX - minGX;
-        const bbh = maxGY - minGY;
-        
-        // The bounding box is axis-aligned but the green rect is rotated -5°.
-        // The center of the bounding box IS the center of the rotated rect.
-        const gcx = bbx + bbw / 2;
-        const gcy = bby + bbh / 2;
-        
-        // Shrink dimensions to compensate for rotation inflation of the bounding box.
-        // For a rectangle rotated by θ, the axis-aligned BB is inflated by:
-        //   bbW = w*cos(θ) + h*sin(θ),  bbH = w*sin(θ) + h*cos(θ)
-        // Solving for w,h given bbW,bbH:
-        const cosA = Math.cos(Math.abs(rotRad));
-        const sinA = Math.sin(Math.abs(rotRad));
-        const det = cosA * cosA - sinA * sinA; // cos(2θ), always positive for small θ
-        const rectW = (bbw * cosA - bbh * sinA) / det;
-        const rectH = (bbh * cosA - bbw * sinA) / det;
-        
-        ctx.save();
-        // Translate to center of green area, rotate to match polaroid tilt
-        ctx.translate(gcx, gcy);
-        ctx.rotate(rotRad);
-        
-        // Clip to the actual rotated rectangle
-        ctx.beginPath();
-        ctx.rect(-rectW / 2, -rectH / 2, rectW, rectH);
-        ctx.clip();
-        
-        // Cover-fit the photo into this region
-        const scale = Math.max(rectW / photoImg.width, rectH / photoImg.height);
-        const dw = photoImg.width * scale;
-        const dh = photoImg.height * scale;
-        ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
-        
-        ctx.restore();
-      } else {
-        // Fallback to hardcoded layout if detection fails
-        const { cx, cy, w, h } = layout.photo;
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rotRad);
-        ctx.beginPath();
-        ctx.rect(-w / 2, -h / 2, w, h);
-        ctx.clip();
-        const scale = Math.max(w / photoImg.width, h / photoImg.height);
-        const dw = photoImg.width * scale;
-        const dh = photoImg.height * scale;
-        ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
-        ctx.restore();
-      }
+      ctx.restore();
     } catch (e) {
       console.error("Failed to load expert photo:", e);
     }
