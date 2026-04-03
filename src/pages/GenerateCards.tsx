@@ -123,6 +123,24 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+// Remove white/near-white background pixels from an image
+function removeWhiteBackground(img: HTMLImageElement, threshold = 230): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = img.width;
+  c.height = img.height;
+  const ctx = c.getContext("2d")!;
+  ctx.drawImage(img, 0, 0);
+  const imageData = ctx.getImageData(0, 0, c.width, c.height);
+  const d = imageData.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] >= threshold && d[i + 1] >= threshold && d[i + 2] >= threshold) {
+      d[i + 3] = 0; // make transparent
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return c;
+}
+
 async function fetchLogoImage(company: string, domains: Record<string, string> | null): Promise<HTMLImageElement | null> {
   const url = getCompanyLogoUrl(company, domains);
   if (!url) return null;
