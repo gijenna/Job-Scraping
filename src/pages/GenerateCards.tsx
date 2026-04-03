@@ -188,9 +188,6 @@ async function generateCard(
     try {
       const photoImg = await loadImage(expert.photo_url);
       const { cx, cy, w, h } = layout.photo;
-      const frameInset = 18;
-      const availableW = w - frameInset * 2;
-      const availableH = h - frameInset * 2;
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -201,8 +198,8 @@ async function generateCard(
       ctx.rect(-w / 2, -h / 2, w, h);
       ctx.clip();
       
-      // Fit the uploaded image inside the green area with even padding
-      const scale = Math.min(availableW / photoImg.width, availableH / photoImg.height);
+      // Cover-fit: fill the entire green area, cropping excess
+      const scale = Math.max(w / photoImg.width, h / photoImg.height);
       const dw = photoImg.width * scale;
       const dh = photoImg.height * scale;
       const dx = -dw / 2;
