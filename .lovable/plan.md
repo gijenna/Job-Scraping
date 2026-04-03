@@ -1,47 +1,33 @@
 
-Fix the large-polaroid photo placement by removing the current centroid detection and returning to a fully deterministic frame definition per template.
 
-## What to change
-1. In `src/pages/GenerateCards.tsx`, remove the green-pixel centroid scan from the large photo drawing block.
-2. Calibrate `layout.photo` so it represents the actual inner green window of each template:
-   - `cx/cy` = true visual center of the green opening
-   - `w/h` = true visible opening size, not an expanded value
-3. Draw the expert photo into that fixed rotated frame using centered cover-fit cropping.
-4. Reduce or eliminate the extra clip “bleed” that is currently making the visible border uneven.
-5. Keep the rest of the generator logic unchanged.
+# Fix Photo Centering: Pixel-Perfect Calibration via Script
 
-## Why this should fix it
-The current centering is drifting because the scan is averaging green pixels from more than just the photo opening. That makes the translate point inconsistent. On top of that, the clip area is slightly oversized, so the white/green border can look different on each side. A fixed inner-frame per template is more reliable because the templates themselves are fixed.
+## Problem
+The hardcoded `cx`/`cy` values in `LAYOUTS` are approximate guesses that don't match the true center of the green photo area in each template. This causes uneven white borders (wider on one side than the other) and in some cases green bleeding through.
 
-## Implementation approach
-- Keep the rotated clip pipeline: `translate -> rotate -> rect -> clip`
-- Use `layout.photo` directly for centering
-- Use a source-side centered crop:
-  - compare source aspect ratio vs target aspect ratio
-  - crop from the center of the uploaded image
-  - draw that crop into the exact frame
-- If needed, support tiny per-template nudges (`offsetX`, `offsetY`) rather than scanning pixels dynamically
+## Solution
+Run a **one-time Python calibration script** against the 4 template PNGs to measure the exact green area bounding box in each. Then update the `LAYOUTS` array with the precise `cx`, `cy`, `w`, `h` values. Additionally, add a small bleed (4px) to `w`/`h` to prevent any green slivers at edges due to anti-aliasing.
+
+## Steps
+
+1. **Run calibration script** — A Python/PIL script that:
+   - Loads each `solid_green_N.png` template
+   - Scans the left 60% of pixels for green (G > 100, G > 1.5×R, G > 1.5×B)
+   - Computes the bounding box (minX, minY, maxX, maxY) of those green pixels
+   - Outputs the center and dimensions for each template
+   - This runs once at build-time, not at render-time
+
+2. **Update LAYOUTS** — Replace the current approximate values with the measured ones plus a 4px bleed on each side
+
+3. **No render-time scanning** — Keep the current deterministic pipeline (translate → rotate → rect → clip → cover-fit draw)
 
 ## Files
-- `src/pages/GenerateCards.tsx`
+- `src/pages/GenerateCards.tsx` — update `LAYOUTS` photo values only (4 objects)
 
-## Technical details
-- Remove this logic entirely:
-  - temporary scan canvas
-  - green pixel centroid calculation
-  - `gcx/gcy` fallback flow
-- Replace with:
-  - `const { cx, cy, w, h } = layout.photo`
-  - clip exactly to `w/h` or with only a very small overscan
-  - compute `sx/sy/sw/sh` from the source image for a true centered cover crop
-- Likely also tighten the `LAYOUTS` photo values slightly so the frame matches the visible green opening more precisely across the 2/3/4/5-logo templates
+## Why this works
+The templates are static PNGs that never change. A one-time measurement gives us ground-truth pixel coordinates. The previous attempts failed because:
+- Hardcoded values were eyeballed
+- Runtime scanning was noisy (background green contaminated the centroid)
 
-## QA
-Validate with at least:
-- a portrait with lots of white space near the edges
-- a tightly framed headshot
-- a landscape-ish photo
-Check that:
-- no green shows inside the large polaroid
-- left/right visible margins look equal
-- the photo stays centered consistently across all template variants
+A controlled Python scan with PIL on the raw template files will give exact bounds without browser canvas anti-aliasing issues.
+
