@@ -384,11 +384,22 @@ export default function GenerateCards() {
   const [generating, setGenerating] = useState<Record<string, boolean>>({});
   const [generated, setGenerated] = useState<Record<string, string>>({});
   const [selectedCity, setSelectedCity] = useState<string>("all");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchExperts();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAdmin(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session);
+    });
+    return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) fetchExperts();
+  }, [isAdmin]);
 
   async function fetchExperts() {
     setLoading(true);
