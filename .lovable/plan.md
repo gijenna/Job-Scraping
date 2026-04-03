@@ -1,39 +1,27 @@
 
 
-# Fix Photo Centering: Detect Green Area From Template
+# Fix Photo Placement: Rotation-Aware Clipping
 
 ## Problem
-The photo placement uses hardcoded `cx`/`cy` coordinates that were guessed from visual inspection. Every adjustment moves the photo in one direction but misaligns it in another. The templates have slight variations, making manual pixel-picking unreliable.
+The green-detection approach finds an axis-aligned bounding box around a **rotated** green rectangle. This mismatch means the clip region is the wrong shape — it's wider and shorter than the actual tilted polaroid photo area, causing photos to either show green gaps or get cropped incorrectly.
 
 ## Solution
-Instead of guessing coordinates, **sample the template image at render time** to find the actual green rectangle, then place the photo precisely within it.
-
-## How It Works
-
-In `generateCard()`, after drawing the template onto the canvas:
-
-1. **Scan the canvas pixel data** in the large polaroid region (roughly left half, `x: 100-800, y: 80-720`) to find all pixels matching the green fill color (`#2D5A3D` or similar — sample it from the template).
-2. Compute the **bounding box** (minX, minY, maxX, maxY) of those green pixels — this gives the exact green rectangle on this specific template.
-3. Use that bounding box as the clip region and center point for the photo, instead of the hardcoded `cx/cy/w/h`.
-
-This means the photo will always be centered and sized to exactly fill the green area, regardless of which template is used or minor pixel shifts between templates.
+Use green detection only to find the **center point and dimensions** of the green area, then apply the clip as a **rotated rectangle** matching the polaroid's -5° tilt. This gives us automatic coordinate detection AND correct clipping.
 
 ## Changes
 
 | File | Change |
 |------|--------|
-| `src/pages/GenerateCards.tsx` | Replace hardcoded `layout.photo` usage with a green-detection function that scans the rendered template to find the exact green rectangle, then clips and cover-fits the photo into that detected region. The `photo` field in `LAYOUTS` can be removed or kept as fallback. |
+| `src/pages/GenerateCards.tsx` | Update the photo drawing block (~lines 203-269) |
 
-## Detection approach (pseudocode)
-```text
-1. Draw template to canvas
-2. getImageData() over the left-half region
-3. For each pixel, check if it's "green enough" (high G, low R/B)
-4. Track min/max x/y of green pixels → bounding box
-5. Use bounding box center + dimensions for clip + cover-fit
-```
+## New logic (replacing current green detection + clip):
 
-The rotation (`-5°`) is already applied — the scan happens on the already-drawn (rotated) template, so the detected region naturally accounts for the tilt.
+1. Scan for green pixels the same way (to find the center of the green area)
+2. From the bounding box, calculate the **center point** (`gcx`, `gcy`)
+3. Instead of clipping to the axis-aligned bounding box, **translate to the center, rotate by -5°**, then clip a rectangle sized to the polaroid's inner photo area (use slightly reduced bounding box dimensions to account for the rotation expansion)
+4. Cover-fit the photo into that rotated clip region
 
-No database changes needed.
+The key difference: `ctx.rotate(rotRad)` is applied before the `ctx.rect()` clip, so the clipping rectangle is tilted to match the actual polaroid frame. The detected center ensures we're positioned correctly regardless of template.
+
+Dimensions are shrunk by `cos(5°)` factor (~0.996 for width, adjusted for height) from the detected bounding box to compensate for the bounding box being inflated by the rotation.
 
