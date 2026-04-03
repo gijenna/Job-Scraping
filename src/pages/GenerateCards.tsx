@@ -13,7 +13,7 @@ import solidGreen5 from "@/assets/solid_green_5.png";
 
 const TEMPLATES = [solidGreen2, solidGreen3, solidGreen4, solidGreen5];
 
-const ROTATION_DEG = -6;
+const ROTATION_DEG = -5;
 
 interface PhotoArea {
   cx: number; cy: number; w: number; h: number;
@@ -25,59 +25,61 @@ interface SmallPolaroid {
 
 interface TemplateLayout {
   photo: PhotoArea;
-  textY: number;
-  textX: number;
-  logoX: number;
-  logoY: number;
+  nameArea: { cx: number; cy: number; w: number; };
+  logoCorner: { cx: number; cy: number; };
   smallPolaroids: SmallPolaroid[];
-  networkY: number;
-  networkX: number;
-  yearsY: number;
-  askY: number;
 }
 
+// Layouts derived from pixel analysis of 1920x1002 templates
+// Large polaroid photo area: inner edges at ~(156,130)-(733,680), center ~(445,400)
+// Name/title in white area below photo at y~720
+// Small polaroids: tilted frames at bottom, ~170px wide each
 const LAYOUTS: TemplateLayout[] = [
+  // solid_green_2: 2 small polaroids
   {
-    photo: { cx: 430, cy: 390, w: 530, h: 560 },
-    textY: 730, textX: 190, logoX: 680, logoY: 720,
+    photo: { cx: 445, cy: 400, w: 535, h: 555 },
+    nameArea: { cx: 420, cy: 740, w: 480 },
+    logoCorner: { cx: 680, cy: 720 },
     smallPolaroids: [
-      { cx: 1220, cy: 920, w: 120, h: 100 },
-      { cx: 1510, cy: 920, w: 120, h: 100 },
+      { cx: 1221, cy: 816, w: 140, h: 120 },
+      { cx: 1509, cy: 816, w: 140, h: 120 },
     ],
-    networkY: 220, networkX: 900, yearsY: 380, askY: 500,
   },
+  // solid_green_3: 3 small polaroids
   {
-    photo: { cx: 435, cy: 390, w: 530, h: 560 },
-    textY: 730, textX: 190, logoX: 680, logoY: 720,
+    photo: { cx: 450, cy: 400, w: 535, h: 555 },
+    nameArea: { cx: 425, cy: 740, w: 480 },
+    logoCorner: { cx: 685, cy: 720 },
     smallPolaroids: [
-      { cx: 1080, cy: 920, w: 120, h: 100 },
-      { cx: 1360, cy: 920, w: 120, h: 100 },
-      { cx: 1660, cy: 920, w: 120, h: 100 },
+      { cx: 1081, cy: 816, w: 140, h: 120 },
+      { cx: 1360, cy: 816, w: 140, h: 120 },
+      { cx: 1659, cy: 816, w: 140, h: 120 },
     ],
-    networkY: 220, networkX: 900, yearsY: 380, askY: 500,
   },
+  // solid_green_4: 4 small polaroids
   {
-    photo: { cx: 420, cy: 390, w: 510, h: 560 },
-    textY: 730, textX: 185, logoX: 670, logoY: 720,
+    photo: { cx: 440, cy: 400, w: 520, h: 555 },
+    nameArea: { cx: 415, cy: 740, w: 460 },
+    logoCorner: { cx: 670, cy: 720 },
     smallPolaroids: [
-      { cx: 955, cy: 920, w: 110, h: 95 },
-      { cx: 1210, cy: 920, w: 110, h: 95 },
-      { cx: 1495, cy: 920, w: 110, h: 95 },
-      { cx: 1770, cy: 920, w: 110, h: 95 },
+      { cx: 957, cy: 810, w: 120, h: 110 },
+      { cx: 1212, cy: 810, w: 120, h: 110 },
+      { cx: 1494, cy: 810, w: 120, h: 110 },
+      { cx: 1769, cy: 810, w: 120, h: 110 },
     ],
-    networkY: 220, networkX: 900, yearsY: 380, askY: 500,
   },
+  // solid_green_5: 5 small polaroids
   {
-    photo: { cx: 410, cy: 390, w: 490, h: 560 },
-    textY: 730, textX: 180, logoX: 660, logoY: 720,
+    photo: { cx: 430, cy: 400, w: 500, h: 555 },
+    nameArea: { cx: 405, cy: 740, w: 440 },
+    logoCorner: { cx: 660, cy: 720 },
     smallPolaroids: [
-      { cx: 940, cy: 920, w: 105, h: 90 },
-      { cx: 1125, cy: 920, w: 105, h: 90 },
-      { cx: 1355, cy: 920, w: 105, h: 90 },
-      { cx: 1550, cy: 920, w: 105, h: 90 },
-      { cx: 1760, cy: 920, w: 105, h: 90 },
+      { cx: 943, cy: 808, w: 110, h: 105 },
+      { cx: 1129, cy: 808, w: 110, h: 105 },
+      { cx: 1356, cy: 808, w: 110, h: 105 },
+      { cx: 1548, cy: 808, w: 110, h: 105 },
+      { cx: 1760, cy: 808, w: 110, h: 105 },
     ],
-    networkY: 220, networkX: 900, yearsY: 380, askY: 500,
   },
 ];
 
@@ -105,8 +107,7 @@ function parsePreviousCompanies(prev: string | null): string[] {
 }
 
 function getTemplateIndex(totalCompanies: number): number {
-  if (totalCompanies <= 1) return 0;
-  if (totalCompanies === 2) return 0;
+  if (totalCompanies <= 2) return 0;
   if (totalCompanies === 3) return 1;
   if (totalCompanies === 4) return 2;
   return 3;
@@ -132,13 +133,25 @@ async function fetchLogoImage(company: string, domains: Record<string, string> |
   }
 }
 
+// Fit text within a max width by reducing font size
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, baseFontSize: number, bold: boolean): number {
+  let size = baseFontSize;
+  while (size > 14) {
+    ctx.font = `${bold ? 'bold ' : ''}${size}px 'Inter', sans-serif`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 2;
+  }
+  return size;
+}
+
 async function generateCard(
   expert: ExpertData,
-  cityName: string,
+  _cityName: string,
 ): Promise<HTMLCanvasElement> {
   const previous = parsePreviousCompanies(expert.previous_companies);
   const current = expert.current_company || "";
   
+  // Build company list: previous (oldest first) + current
   let allCompanies = [...previous];
   if (current) allCompanies.push(current);
   
@@ -146,34 +159,44 @@ async function generateCard(
   const templateIdx = getTemplateIndex(totalCompanies);
   const layout = LAYOUTS[templateIdx];
   
+  // Cap at template capacity
   const maxSmall = layout.smallPolaroids.length;
   if (allCompanies.length > maxSmall) {
     allCompanies = allCompanies.slice(allCompanies.length - maxSmall);
   }
   
+  // If only current company (no previous), use only the last (glowing) polaroid
   const useOnlyGlowing = totalCompanies <= 1;
   
+  // Load template
   const templateImg = await loadImage(TEMPLATES[templateIdx]);
   
+  // Create canvas
   const canvas = document.createElement("canvas");
   canvas.width = 1920;
   canvas.height = 1002;
   const ctx = canvas.getContext("2d")!;
   
+  // Draw template background
   ctx.drawImage(templateImg, 0, 0, 1920, 1002);
   
+  const rotRad = (ROTATION_DEG * Math.PI) / 180;
+  
+  // === EXPERT PHOTO in the large polaroid ===
   if (expert.photo_url) {
     try {
       const photoImg = await loadImage(expert.photo_url);
       const { cx, cy, w, h } = layout.photo;
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate((ROTATION_DEG * Math.PI) / 180);
+      ctx.rotate(rotRad);
       
+      // Clip to photo area
       ctx.beginPath();
       ctx.rect(-w / 2, -h / 2, w, h);
       ctx.clip();
       
+      // Cover-fit the photo
       const scale = Math.max(w / photoImg.width, h / photoImg.height);
       const dw = photoImg.width * scale;
       const dh = photoImg.height * scale;
@@ -185,85 +208,52 @@ async function generateCard(
     }
   }
   
-  ctx.save();
-  ctx.translate(layout.photo.cx, layout.textY);
-  ctx.rotate((ROTATION_DEG * Math.PI) / 180);
+  // === NAME & TITLE in the polaroid white area ===
+  {
+    const { cx, cy, w } = layout.nameArea;
+    const maxTextW = w - 60; // leave room for logo
+    
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotRad);
+    
+    // Cover existing template text with white
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(-w / 2, -30, w, 70);
+    
+    // Full Name — bold, left-aligned
+    const nameSize = fitText(ctx, expert.full_name, maxTextW, 30, true);
+    ctx.font = `bold ${nameSize}px 'Inter', sans-serif`;
+    ctx.fillStyle = "#1a1a1a";
+    ctx.textAlign = "left";
+    ctx.fillText(expert.full_name, -w / 2 + 10, 0, maxTextW);
+    
+    // Job Title, Company — regular, left-aligned
+    const titleLine = [expert.job_title, expert.current_company].filter(Boolean).join(", ");
+    if (titleLine) {
+      const titleSize = fitText(ctx, titleLine, maxTextW, 22, false);
+      ctx.font = `${titleSize}px 'Inter', sans-serif`;
+      ctx.fillStyle = "#555555";
+      ctx.fillText(titleLine, -w / 2 + 10, 30, maxTextW);
+    }
+    
+    ctx.restore();
+  }
   
-  ctx.font = "bold 32px 'Inter', sans-serif";
-  ctx.fillStyle = "#1a1a1a";
-  ctx.textAlign = "left";
-  ctx.fillText(expert.full_name, -layout.photo.w / 2 + 10, 0);
-  
-  const titleLine = [expert.job_title, expert.current_company].filter(Boolean).join(", ");
-  ctx.font = "22px 'Inter', sans-serif";
-  ctx.fillStyle = "#444444";
-  ctx.fillText(titleLine, -layout.photo.w / 2 + 10, 35);
-  
-  ctx.restore();
-  
+  // === CURRENT COMPANY LOGO in upper-right of white area ===
   if (current) {
     const logoImg = await fetchLogoImage(current, expert.company_domains as Record<string, string>);
     if (logoImg) {
+      const { cx, cy } = layout.logoCorner;
       ctx.save();
-      ctx.translate(layout.logoX, layout.logoY);
-      ctx.rotate((ROTATION_DEG * Math.PI) / 180);
-      ctx.drawImage(logoImg, -20, -20, 40, 40);
+      ctx.translate(cx, cy);
+      ctx.rotate(rotRad);
+      ctx.drawImage(logoImg, -18, -18, 36, 36);
       ctx.restore();
     }
   }
   
-  ctx.font = "bold 36px 'Inter', sans-serif";
-  ctx.fillStyle = "#E6C742";
-  ctx.textAlign = "left";
-  const networkText = `NETWORK WITH ME IN ${cityName.toUpperCase()}`;
-  ctx.fillText(networkText, layout.networkX, layout.networkY);
-  
-  if (expert.years_in_industry) {
-    const yearsText = `${expert.years_in_industry} YEARS IN THE OUTDOOR INDUSTRY`;
-    ctx.font = "bold 24px 'Inter', sans-serif";
-    const tm = ctx.measureText(yearsText);
-    const pillW = tm.width + 40;
-    const pillH = 44;
-    const pillX = layout.networkX;
-    const pillY = layout.yearsY;
-    
-    ctx.fillStyle = "#ED7660";
-    ctx.beginPath();
-    ctx.roundRect(pillX, pillY - pillH / 2, pillW, pillH, pillH / 2);
-    ctx.fill();
-    
-    ctx.fillStyle = "#FFFFFF";
-    ctx.textAlign = "left";
-    ctx.fillText(yearsText, pillX + 20, pillY + 8);
-  }
-  
-  if (expert.ask_me_about) {
-    ctx.font = "italic 22px 'Inter', sans-serif";
-    ctx.fillStyle = "#F5F0E8";
-    ctx.textAlign = "left";
-    
-    const askPrefix = "Ask me about: ";
-    const maxWidth = 800;
-    const fullText = askPrefix + expert.ask_me_about;
-    
-    const words = fullText.split(" ");
-    let line = "";
-    let lineY = layout.askY;
-    for (const word of words) {
-      const testLine = line + (line ? " " : "") + word;
-      if (ctx.measureText(testLine).width > maxWidth && line) {
-        ctx.fillText(line, layout.networkX, lineY);
-        line = word;
-        lineY += 30;
-      } else {
-        line = testLine;
-      }
-    }
-    if (line) {
-      ctx.fillText(line, layout.networkX, lineY);
-    }
-  }
-  
+  // === COMPANY LOGOS in small polaroids ===
   const companiesToDraw = useOnlyGlowing
     ? [{ company: current, idx: layout.smallPolaroids.length - 1 }]
     : allCompanies.map((company, i) => ({ company, idx: i }));
@@ -273,8 +263,12 @@ async function generateCard(
     const sp = layout.smallPolaroids[idx];
     const logoImg = await fetchLogoImage(company, expert.company_domains as Record<string, string>);
     if (logoImg) {
-      const logoSize = Math.min(sp.w, sp.h) * 0.6;
-      ctx.drawImage(logoImg, sp.cx - logoSize / 2, sp.cy - logoSize / 2, logoSize, logoSize);
+      ctx.save();
+      ctx.translate(sp.cx, sp.cy);
+      ctx.rotate(rotRad);
+      const logoSize = Math.min(sp.w, sp.h) * 0.45;
+      ctx.drawImage(logoImg, -logoSize / 2, -logoSize / 2, logoSize, logoSize);
+      ctx.restore();
     }
   }
   
