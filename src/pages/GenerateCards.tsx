@@ -200,30 +200,73 @@ async function generateCard(
   
   const rotRad = (ROTATION_DEG * Math.PI) / 180;
   
-  // === EXPERT PHOTO in the large polaroid ===
+  // === DETECT GREEN AREA & DRAW EXPERT PHOTO ===
   if (expert.photo_url) {
     try {
       const photoImg = await loadImage(expert.photo_url);
-      const { cx, cy, w, h } = layout.photo;
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(rotRad);
       
-      // Clip to the full green photo area
-      ctx.beginPath();
-      ctx.rect(-w / 2, -h / 2, w, h);
-      ctx.clip();
+      // Scan the left half of the template to find the green rectangle
+      const scanX = 80, scanY = 50, scanW = 750, scanH = 700;
+      const imageData = ctx.getImageData(scanX, scanY, scanW, scanH);
+      const pixels = imageData.data;
       
-      // Cover-fit: fill the entire green area, cropping excess
-      const scale = Math.max(w / photoImg.width, h / photoImg.height);
-      const dw = photoImg.width * scale;
-      const dh = photoImg.height * scale;
-      const dx = -dw / 2;
-      const dy = -dh / 2;
-      ctx.drawImage(photoImg, dx, dy, dw, dh);
+      let minGX = scanW, minGY = scanH, maxGX = 0, maxGY = 0;
+      let found = false;
       
-      ctx.restore();
+      for (let py = 0; py < scanH; py++) {
+        for (let px = 0; px < scanW; px++) {
+          const i = (py * scanW + px) * 4;
+          const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+          // Detect green-ish pixels: G channel dominant, not too bright/dark
+          if (g > 60 && g > r * 1.3 && g > b * 1.2 && r < 150 && b < 150) {
+            if (px < minGX) minGX = px;
+            if (px > maxGX) maxGX = px;
+            if (py < minGY) minGY = py;
+            if (py > maxGY) maxGY = py;
+            found = true;
+          }
+        }
+      }
+      
+      if (found) {
+        // Convert back to canvas coordinates
+        const gx = scanX + minGX;
+        const gy = scanY + minGY;
+        const gw = maxGX - minGX;
+        const gh = maxGY - minGY;
+        
+        ctx.save();
+        
+        // Clip directly to the detected green bounding box (no rotation needed — 
+        // the scan already captured the rotated green area's pixel footprint)
+        ctx.beginPath();
+        ctx.rect(gx, gy, gw, gh);
+        ctx.clip();
+        
+        // Cover-fit the photo into this region
+        const gcx = gx + gw / 2;
+        const gcy = gy + gh / 2;
+        const scale = Math.max(gw / photoImg.width, gh / photoImg.height);
+        const dw = photoImg.width * scale;
+        const dh = photoImg.height * scale;
+        ctx.drawImage(photoImg, gcx - dw / 2, gcy - dh / 2, dw, dh);
+        
+        ctx.restore();
+      } else {
+        // Fallback to hardcoded layout if detection fails
+        const { cx, cy, w, h } = layout.photo;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rotRad);
+        ctx.beginPath();
+        ctx.rect(-w / 2, -h / 2, w, h);
+        ctx.clip();
+        const scale = Math.max(w / photoImg.width, h / photoImg.height);
+        const dw = photoImg.width * scale;
+        const dh = photoImg.height * scale;
+        ctx.drawImage(photoImg, -dw / 2, -dh / 2, dw, dh);
+        ctx.restore();
+      }
     } catch (e) {
       console.error("Failed to load expert photo:", e);
     }
