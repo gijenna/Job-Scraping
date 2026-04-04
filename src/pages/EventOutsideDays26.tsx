@@ -208,7 +208,7 @@ const EventOutsideDays26 = () => {
         </section>
       ),
     },
-  ], [tickerBrands, statsLogos, bubbleBrands, brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd, highlightExpert, highlightBrandRep]);
+  ], [tickerBrands, statsLogos, bubbleBrands, brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd, highlightExpert, highlightBrandRep, mapBrands, mapLayouts]);
 
   return (
     <EditableTextProvider pageSlug="outsidedays26">
