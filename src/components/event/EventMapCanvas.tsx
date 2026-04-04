@@ -17,6 +17,10 @@ interface EventMapCanvasProps {
   onRemoveFromCanvas?: (brandId: string) => void;
   onClick?: (brand: MapBrand) => void;
   printMode?: boolean;
+  /** Expert zone brand name convention */
+  expertZoneBrandName?: string;
+  /** Experts selected for the zone */
+  expertZoneExperts?: MapExpert[];
 }
 
 // Courts join side-by-side horizontally
