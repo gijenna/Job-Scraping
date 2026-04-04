@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,12 @@ import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapSidebar from "@/components/event/MapSidebar";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
-import MapExpertZone from "@/components/event/MapExpertZone";
+import MapExpertZone, { MapExpert } from "@/components/event/MapExpertZone";
 import MapSponsorAssigner from "@/components/event/MapSponsorAssigner";
 import { Trash2, Printer, Upload, Plus, Pencil, Check, X } from "lucide-react";
 
 const EVENT_SLUG = "denver26";
+const EXPERT_ZONE_NAME = "Industry Expert Zone";
 
 const EventMapAdmin = () => {
   const navigate = useNavigate();
@@ -36,7 +37,11 @@ const EventMapAdmin = () => {
   // Panel
   const [selectedBrand, setSelectedBrand] = useState<MapBrand | null>(null);
 
-  const { brands, addBrand, updateBrand, deleteBrand } = useEventMapBrands(EVENT_SLUG);
+  // Expert zone state
+  const [selectedExpertIds, setSelectedExpertIds] = useState<string[]>([]);
+  const [allExperts, setAllExperts] = useState<MapExpert[]>([]);
+
+  const { brands, addBrand, updateBrand, deleteBrand, refetch: refetchBrands } = useEventMapBrands(EVENT_SLUG);
   const { layouts, upsertLayout, removeLayout, publish } = useEventMapLayouts(EVENT_SLUG, "draft");
 
   useEffect(() => {
@@ -47,17 +52,64 @@ const EventMapAdmin = () => {
     });
   }, [navigate]);
 
+  // Fetch all Denver experts for the zone
+  useEffect(() => {
+    const fetchExperts = async () => {
+      const { data } = await supabase
+        .from("expert_city_assignments")
+        .select("expert_id, expert_type, industry_experts(id, full_name, photo_url, current_company, job_title)")
+        .eq("city_slug", "denver")
+        .eq("published", true);
+      if (data) {
+        const mapped = data
+          .filter((d: any) => d.industry_experts)
+          .map((d: any) => ({
+            id: d.industry_experts.id,
+            full_name: d.industry_experts.full_name,
+            photo_url: d.industry_experts.photo_url,
+            current_company: d.industry_experts.current_company,
+            job_title: d.industry_experts.job_title,
+          }));
+        setAllExperts(mapped);
+        // Default: all selected
+        setSelectedExpertIds(mapped.map((e: MapExpert) => e.id));
+      }
+    };
+    fetchExperts();
+  }, []);
+
+  // Auto-create expert zone brand if it doesn't exist
+  useEffect(() => {
+    if (!authed || brands.length === 0) return;
+    const exists = brands.find((b) => b.name === EXPERT_ZONE_NAME);
+    if (!exists) {
+      addBrand({
+        name: EXPERT_ZONE_NAME,
+        is_activation: true,
+        table_count: 4,
+        description: "Basecamp Match Industry Expert Zone",
+      });
+    }
+  }, [authed, brands.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleToggleExpert = (expertId: string) => {
+    setSelectedExpertIds((prev) =>
+      prev.includes(expertId) ? prev.filter((id) => id !== expertId) : [...prev, expertId]
+    );
+  };
+
+  const selectedExperts = allExperts.filter((e) => selectedExpertIds.includes(e.id));
+
   if (loading) return <div className="min-h-screen bg-events-teal flex items-center justify-center text-white">Loading...</div>;
   if (!authed) return null;
 
   const handleQuickAdd = async () => {
     if (!newName.trim()) return;
     let logoUrl: string | null = null;
-    let domain: string | null = null;
 
     if (newUrl.trim()) {
       try {
-        domain = new URL(newUrl.trim().startsWith("http") ? newUrl.trim() : `https://${newUrl.trim()}`).hostname;
+        const domain = new URL(newUrl.trim().startsWith("http") ? newUrl.trim() : `https://${newUrl.trim()}`).hostname;
         logoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
       } catch { /* ignore bad url */ }
     }
@@ -97,6 +149,12 @@ const EventMapAdmin = () => {
     removeLayout(brandId);
   };
 
+  const handleDeleteBrand = async (brandId: string) => {
+    // Remove layout first, then delete the brand
+    await removeLayout(brandId);
+    await deleteBrand(brandId);
+  };
+
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
     setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id });
@@ -123,7 +181,7 @@ const EventMapAdmin = () => {
         <button onClick={() => setPrintMode(false)} className="print:hidden mb-4 px-4 py-2 bg-events-teal text-white rounded font-display text-sm">
           Exit Print Mode
         </button>
-        <EventMapCanvas brands={brands} layouts={layouts} printMode />
+        <EventMapCanvas brands={brands} layouts={layouts} printMode expertZoneExperts={selectedExperts} />
       </div>
     );
   }
@@ -215,6 +273,7 @@ const EventMapAdmin = () => {
               onDropFromSidebar={handleDropFromSidebar}
               onRemoveFromCanvas={handleRemoveFromCanvas}
               onClick={(b) => setSelectedBrand(b)}
+              expertZoneExperts={selectedExperts}
             />
             <p className="text-[10px] text-white/30 font-body mt-1">
               Drag brands from sidebar. Double-click placed brand to remove. Click shape toggle (⟳) for multi-table layouts.
@@ -316,7 +375,7 @@ const EventMapAdmin = () => {
                               <button onClick={() => startEdit(brand)} className="w-6 h-6 rounded bg-white/10 text-white flex items-center justify-center hover:bg-white/20">
                                 <Pencil className="w-3 h-3" />
                               </button>
-                              <button onClick={() => deleteBrand(brand.id)} className="w-6 h-6 rounded bg-red-600/20 text-red-400 flex items-center justify-center hover:bg-red-600/40">
+                              <button onClick={() => handleDeleteBrand(brand.id)} className="w-6 h-6 rounded bg-red-600/20 text-red-400 flex items-center justify-center hover:bg-red-600/40">
                                 <Trash2 className="w-3 h-3" />
                               </button>
                             </>
@@ -335,6 +394,8 @@ const EventMapAdmin = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
+
           {/* Sponsor Assignment */}
           <div className="mt-6">
             <MapSponsorAssigner brands={brands} onAssignSponsor={handleAssignSponsor} />
@@ -342,10 +403,13 @@ const EventMapAdmin = () => {
 
           {/* Industry Expert Zone */}
           <div className="mt-6">
-            <MapExpertZone citySlug="denver" />
+            <MapExpertZone
+              citySlug="denver"
+              selectedExpertIds={selectedExpertIds}
+              onToggleExpert={handleToggleExpert}
+            />
           </div>
         </div>
-      </div>
       </div>
 
       {/* Brand detail panel */}
