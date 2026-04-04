@@ -10,6 +10,8 @@ import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapSidebar from "@/components/event/MapSidebar";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
+import MapExpertZone from "@/components/event/MapExpertZone";
+import MapSponsorAssigner from "@/components/event/MapSponsorAssigner";
 import { Trash2, Printer, Upload, Plus, Pencil, Check, X } from "lucide-react";
 
 const EVENT_SLUG = "denver26";
@@ -105,6 +107,10 @@ const EventMapAdmin = () => {
 
   const handlePublish = async () => {
     await publish();
+  };
+
+  const handleAssignSponsor = async (activationId: string, sponsorId: string | null) => {
+    await updateBrand(activationId, { sponsor_brand_id: sponsorId });
   };
 
   if (printMode) {
@@ -324,8 +330,17 @@ const EventMapAdmin = () => {
                 )}
               </TableBody>
             </Table>
+          {/* Sponsor Assignment */}
+          <div className="mt-6">
+            <MapSponsorAssigner brands={brands} onAssignSponsor={handleAssignSponsor} />
+          </div>
+
+          {/* Industry Expert Zone */}
+          <div className="mt-6">
+            <MapExpertZone citySlug="denver" />
           </div>
         </div>
+      </div>
       </div>
 
       {/* Brand detail panel */}
