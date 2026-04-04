@@ -10,15 +10,16 @@ interface EventMapCanvasProps {
   interactive?: boolean;
   onMove?: (brandId: string, x: number, y: number) => void;
   onShapeChange?: (brandId: string, shape: string) => void;
+  onRotate?: (brandId: string, rotation: number) => void;
   onDropFromSidebar?: (brandId: string, x: number, y: number) => void;
   onRemoveFromCanvas?: (brandId: string) => void;
   onClick?: (brand: MapBrand) => void;
   printMode?: boolean;
 }
 
-// Courts join on the 94' (long) side → stacked vertically
-const TOTAL_W = COURT_W;
-const TOTAL_H = COURT_H * COURTS;
+// Courts join side-by-side horizontally
+const TOTAL_W = COURT_W * COURTS;
+const TOTAL_H = COURT_H;
 const PADDING = 40;
 
 const EventMapCanvas = ({
@@ -27,6 +28,7 @@ const EventMapCanvas = ({
   interactive = false,
   onMove,
   onShapeChange,
+  onRotate,
   onDropFromSidebar,
   onRemoveFromCanvas,
   onClick,
@@ -97,14 +99,14 @@ const EventMapCanvas = ({
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {/* Court outlines — stacked vertically (courts join on 94' side) */}
+          {/* Court outlines — side by side horizontally */}
           {Array.from({ length: COURTS }).map((_, i) => (
             <div
               key={i}
               className="absolute border-2 border-dashed border-white/20 rounded"
               style={{
-                left: PADDING,
-                top: PADDING + i * COURT_H,
+                left: PADDING + i * COURT_W,
+                top: PADDING,
                 width: COURT_W,
                 height: COURT_H,
               }}
@@ -148,6 +150,7 @@ const EventMapCanvas = ({
                   interactive={interactive}
                   onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
                   onShapeChange={onShapeChange}
+                  onRotate={onRotate}
                   onClick={onClick}
                   sponsorBrand={sponsorBrand}
                 />

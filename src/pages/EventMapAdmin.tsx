@@ -89,6 +89,10 @@ const EventMapAdmin = () => {
     upsertLayout(brandId, { shape: shape as any });
   };
 
+  const handleRotate = (brandId: string, rotation: number) => {
+    upsertLayout(brandId, { rotation });
+  };
+
   const handleRemoveFromCanvas = (brandId: string) => {
     removeLayout(brandId);
   };
@@ -207,6 +211,7 @@ const EventMapAdmin = () => {
               interactive
               onMove={handleMove}
               onShapeChange={handleShapeChange}
+              onRotate={handleRotate}
               onDropFromSidebar={handleDropFromSidebar}
               onRemoveFromCanvas={handleRemoveFromCanvas}
               onClick={(b) => setSelectedBrand(b)}
