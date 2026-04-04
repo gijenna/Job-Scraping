@@ -56,7 +56,7 @@ const EventMapAdmin = () => {
     if (newUrl.trim()) {
       try {
         domain = new URL(newUrl.trim().startsWith("http") ? newUrl.trim() : `https://${newUrl.trim()}`).hostname;
-        logoUrl = `https://logo.clearbit.com/${domain}`;
+        logoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
       } catch { /* ignore bad url */ }
     }
 
