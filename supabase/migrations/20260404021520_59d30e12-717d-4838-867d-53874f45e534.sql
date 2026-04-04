@@ -1,0 +1,2 @@
+UPDATE event_map_brands SET logo_url = 'https://www.google.com/s2/favicons?domain=thenorthface.com&sz=128' WHERE id = '4aea401d-7765-4137-a25d-e1883e594c21';
+UPDATE event_map_brands SET logo_url = 'https://www.google.com/s2/favicons?domain=steamboat.com&sz=128' WHERE id = '5ee6dc62-98d4-47fd-9e99-c4863bffc4c6';
