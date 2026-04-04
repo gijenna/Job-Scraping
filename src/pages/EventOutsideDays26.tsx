@@ -43,6 +43,9 @@ const EventOutsideDays26 = () => {
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
   const { brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd } = useEventAttendees("denver");
+  const { brands: mapBrands } = useEventMapBrands("denver26");
+  const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
+  const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
