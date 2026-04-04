@@ -24,7 +24,7 @@ const MapSidebar = ({ brands, layouts }: MapSidebarProps) => {
         Drag onto map ({unplaced.length})
       </p>
       {unplaced.map((brand) => {
-        const logoSrc = brand.logo_url || (brand.website_url ? `https://logo.clearbit.com/${new URL(brand.website_url).hostname}` : null);
+        const logoSrc = brand.logo_url || (brand.website_url ? (() => { try { return `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128`; } catch { return null; } })() : null);
 
         return (
           <div
