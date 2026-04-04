@@ -28,6 +28,7 @@ const EventMapCanvas = ({
   interactive = false,
   onMove,
   onShapeChange,
+  onRotate,
   onDropFromSidebar,
   onRemoveFromCanvas,
   onClick,
