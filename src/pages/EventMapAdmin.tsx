@@ -10,6 +10,8 @@ import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapSidebar from "@/components/event/MapSidebar";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
+import MapExpertZone from "@/components/event/MapExpertZone";
+import MapSponsorAssigner from "@/components/event/MapSponsorAssigner";
 import { Trash2, Printer, Upload, Plus, Pencil, Check, X } from "lucide-react";
 
 const EVENT_SLUG = "denver26";
