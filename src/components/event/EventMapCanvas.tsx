@@ -16,9 +16,9 @@ interface EventMapCanvasProps {
   printMode?: boolean;
 }
 
-// Courts join on the 94' (long) side → stacked vertically
-const TOTAL_W = COURT_W;
-const TOTAL_H = COURT_H * COURTS;
+// Courts join side-by-side horizontally
+const TOTAL_W = COURT_W * COURTS;
+const TOTAL_H = COURT_H;
 const PADDING = 40;
 
 const EventMapCanvas = ({
