@@ -137,12 +137,6 @@ const EventMapCanvas = ({
             </div>
           ))}
 
-          {/* Basecamp Industry Expert zone label */}
-          <div className="absolute flex items-center gap-2" style={{ left: PADDING + 10, bottom: PADDING + 10 }}>
-            <img src={basecampMatchLogo} alt="Basecamp" className="h-5 w-auto opacity-60" />
-            <span className="text-[9px] text-white/40 font-body">Industry Expert Zone</span>
-          </div>
-
           {/* Placed brands */}
           {layouts.map((layout) => {
             const brand = brands.find((b) => b.id === layout.brand_id);
@@ -150,18 +144,34 @@ const EventMapCanvas = ({
             const sponsorBrand = brand.sponsor_brand_id
               ? brands.find((b) => b.id === brand.sponsor_brand_id) || null
               : null;
+            const isExpertZone = brand.name === expertZoneBrandName;
+
             return (
               <div key={layout.id} onDoubleClick={() => handleDoubleClick(brand.id)}>
-                <MapBrandGroup
-                  brand={brand}
-                  layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
-                  interactive={interactive}
-                  onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
-                  onShapeChange={onShapeChange}
-                  onRotate={onRotate}
-                  onClick={onClick}
-                  sponsorBrand={sponsorBrand}
-                />
+                {isExpertZone ? (
+                  <MapExpertZoneGroup
+                    brand={brand}
+                    layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
+                    experts={expertZoneExperts}
+                    interactive={interactive}
+                    onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
+                    onShapeChange={onShapeChange}
+                    onRotate={onRotate}
+                    onClick={onClick}
+                    sponsorBrand={sponsorBrand}
+                  />
+                ) : (
+                  <MapBrandGroup
+                    brand={brand}
+                    layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
+                    interactive={interactive}
+                    onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
+                    onShapeChange={onShapeChange}
+                    onRotate={onRotate}
+                    onClick={onClick}
+                    sponsorBrand={sponsorBrand}
+                  />
+                )}
               </div>
             );
           })}
