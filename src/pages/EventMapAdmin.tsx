@@ -109,6 +109,10 @@ const EventMapAdmin = () => {
     await publish();
   };
 
+  const handleAssignSponsor = async (activationId: string, sponsorId: string | null) => {
+    await updateBrand(activationId, { sponsor_brand_id: sponsorId });
+  };
+
   if (printMode) {
     return (
       <div className="bg-white min-h-screen p-4">
