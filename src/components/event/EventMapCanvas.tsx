@@ -39,6 +39,8 @@ const EventMapCanvas = ({
   onRemoveFromCanvas,
   onClick,
   printMode = false,
+  expertZoneBrandName = "Industry Expert Zone",
+  expertZoneExperts = [],
 }: EventMapCanvasProps) => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
