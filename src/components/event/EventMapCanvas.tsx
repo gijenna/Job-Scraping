@@ -99,14 +99,14 @@ const EventMapCanvas = ({
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {/* Court outlines — stacked vertically (courts join on 94' side) */}
+          {/* Court outlines — side by side horizontally */}
           {Array.from({ length: COURTS }).map((_, i) => (
             <div
               key={i}
               className="absolute border-2 border-dashed border-white/20 rounded"
               style={{
-                left: PADDING,
-                top: PADDING + i * COURT_H,
+                left: PADDING + i * COURT_W,
+                top: PADDING,
                 width: COURT_W,
                 height: COURT_H,
               }}
