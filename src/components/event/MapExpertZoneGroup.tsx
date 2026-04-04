@@ -1,53 +1,18 @@
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
+import { MapExpert } from "./MapExpertZone";
+import { getShapeCells, getShapeBounds } from "./MapBrandGroup";
 import { RotateCw } from "lucide-react";
+import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
-// Court: 94' × 50' → rotated 90° right so 50' wide × 94' tall
-const COURT_W = 500;
-const COURT_H = 940;
-const COURTS = 3;
-const TABLE_W = 80; // 8ft
-const TABLE_H = 30; // 3ft
+const TABLE_W = 80;
+const TABLE_H = 30;
 const GRID = 10;
 
-interface ShapeCell { col: number; row: number }
-
-export const SHAPE_PATTERNS: Record<string, ShapeCell[]> = {
-  line: [], // dynamic based on table_count: all in a row
-  square: [
-    { col: 0, row: 0 }, { col: 1, row: 0 },
-    { col: 0, row: 1 }, { col: 1, row: 1 },
-  ],
-  tshape: [
-    { col: 0, row: 0 }, { col: 1, row: 0 }, { col: 2, row: 0 },
-    { col: 1, row: 1 },
-  ],
-  xshape: [
-    { col: 1, row: 0 },
-    { col: 0, row: 1 }, { col: 1, row: 1 }, { col: 2, row: 1 },
-    { col: 1, row: 2 },
-  ],
-};
-
-export function getLineCells(count: number): ShapeCell[] {
-  return Array.from({ length: count }, (_, i) => ({ col: i, row: 0 }));
-}
-
-export function getShapeCells(shape: string, tableCount: number): ShapeCell[] {
-  if (shape === "line" || !SHAPE_PATTERNS[shape]) return getLineCells(tableCount);
-  const pattern = SHAPE_PATTERNS[shape];
-  return pattern.slice(0, tableCount);
-}
-
-export function getShapeBounds(cells: ShapeCell[]) {
-  const maxCol = Math.max(...cells.map((c) => c.col));
-  const maxRow = Math.max(...cells.map((c) => c.row));
-  return { width: (maxCol + 1) * TABLE_W, height: (maxRow + 1) * TABLE_H };
-}
-
-interface MapBrandGroupProps {
+interface MapExpertZoneGroupProps {
   brand: MapBrand;
   layout: MapLayout;
+  experts: MapExpert[];
   interactive?: boolean;
   onMove?: (brandId: string, x: number, y: number) => void;
   onShapeChange?: (brandId: string, shape: string) => void;
@@ -56,20 +21,19 @@ interface MapBrandGroupProps {
   sponsorBrand?: MapBrand | null;
 }
 
-const MapBrandGroup = ({
+const MapExpertZoneGroup = ({
   brand,
   layout,
+  experts,
   interactive = false,
   onMove,
   onShapeChange,
   onRotate,
   onClick,
   sponsorBrand,
-}: MapBrandGroupProps) => {
+}: MapExpertZoneGroupProps) => {
   const cells = getShapeCells(layout.shape, brand.table_count);
   const bounds = getShapeBounds(cells);
-
-  const logoSrc = brand.logo_url || (brand.website_url ? `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128` : null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!interactive || !onMove) return;
@@ -78,18 +42,15 @@ const MapBrandGroup = ({
     const startY = e.clientY;
     const origX = layout.x;
     const origY = layout.y;
-
     const handleMouseMove = (ev: MouseEvent) => {
       const dx = Math.round((ev.clientX - startX) / GRID) * GRID;
       const dy = Math.round((ev.clientY - startY) / GRID) * GRID;
       onMove(brand.id, origX + dx, origY + dy);
     };
-
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
   };
@@ -135,29 +96,40 @@ const MapBrandGroup = ({
               top: cell.row * TABLE_H,
               width: TABLE_W,
               height: TABLE_H,
-              backgroundColor: brand.is_activation ? "rgba(225, 182, 36, 0.3)" : "rgba(237, 118, 96, 0.3)",
+              backgroundColor: "rgba(225, 182, 36, 0.3)",
             }}
           />
         ))}
-      </div>
-
-      {/* Logo bubble + name — always upright (no rotation) */}
-      <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
-        <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white">
-          {logoSrc ? (
-            <img src={logoSrc} alt={brand.name} className="w-8 h-8 object-contain" />
-          ) : (
-            <span className="font-display font-bold text-[10px] text-events-teal">
-              {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-            </span>
+        {/* Expert photo bubbles inside the tables area */}
+        <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-0.5 p-1 pointer-events-none">
+          {experts.slice(0, 12).map((expert) => (
+            <div key={expert.id} className="w-5 h-5 rounded-full bg-white overflow-hidden flex items-center justify-center border border-white/50">
+              {expert.photo_url ? (
+                <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-[5px] font-bold text-events-teal">{expert.full_name.split(" ").map(w => w[0]).join("").slice(0, 2)}</span>
+              )}
+            </div>
+          ))}
+          {experts.length > 12 && (
+            <div className="w-5 h-5 rounded-full bg-events-gold/60 flex items-center justify-center">
+              <span className="text-[6px] font-bold text-white">+{experts.length - 12}</span>
+            </div>
           )}
         </div>
+      </div>
+
+      {/* Logo + name — always upright */}
+      <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
+        <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-events-gold">
+          <img src={basecampMatchLogo} alt="Expert Zone" className="w-7 h-7 object-contain" />
+        </div>
         <span className="text-[9px] font-display font-bold text-white text-center leading-tight mt-0.5 drop-shadow">
-          {brand.name}
+          Expert Zone
         </span>
       </div>
 
-      {/* Shape cycle button (admin) */}
+      {/* Shape cycle button */}
       {interactive && brand.table_count > 1 && (
         <button
           onClick={cycleShape}
@@ -168,7 +140,7 @@ const MapBrandGroup = ({
         </button>
       )}
 
-      {/* Rotation button (admin) */}
+      {/* Rotation button */}
       {interactive && (
         <button
           onClick={handleRotate}
@@ -179,8 +151,8 @@ const MapBrandGroup = ({
         </button>
       )}
 
-      {/* Sponsor label for activations */}
-      {brand.is_activation && sponsorBrand && (
+      {/* Sponsor label */}
+      {sponsorBrand && (
         <div className="absolute -bottom-5 left-0 right-0 flex items-center justify-center gap-1">
           <span className="text-[7px] text-white/70 font-body">Free thanks to</span>
           <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center overflow-hidden">
@@ -196,5 +168,4 @@ const MapBrandGroup = ({
   );
 };
 
-export { COURT_W, COURT_H, COURTS, TABLE_W, TABLE_H, GRID };
-export default MapBrandGroup;
+export default MapExpertZoneGroup;

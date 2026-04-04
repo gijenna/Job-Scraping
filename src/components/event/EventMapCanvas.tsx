@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
 import MapBrandGroup, { COURT_W, COURT_H, COURTS } from "./MapBrandGroup";
+import MapExpertZoneGroup from "./MapExpertZoneGroup";
+import { MapExpert } from "./MapExpertZone";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
 interface EventMapCanvasProps {
@@ -15,6 +17,10 @@ interface EventMapCanvasProps {
   onRemoveFromCanvas?: (brandId: string) => void;
   onClick?: (brand: MapBrand) => void;
   printMode?: boolean;
+  /** Expert zone brand name convention */
+  expertZoneBrandName?: string;
+  /** Experts selected for the zone */
+  expertZoneExperts?: MapExpert[];
 }
 
 // Courts join side-by-side horizontally
@@ -33,6 +39,8 @@ const EventMapCanvas = ({
   onRemoveFromCanvas,
   onClick,
   printMode = false,
+  expertZoneBrandName = "Industry Expert Zone",
+  expertZoneExperts = [],
 }: EventMapCanvasProps) => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -112,7 +120,7 @@ const EventMapCanvas = ({
               }}
             >
               <span className="absolute top-2 left-2 text-[10px] text-white/30 font-body">
-                Court {i + 1} (94' × 50')
+                Court {i + 1} (50' × 94')
               </span>
               {/* Center circle */}
               <div
@@ -124,16 +132,10 @@ const EventMapCanvas = ({
                   height: 120,
                 }}
               />
-              {/* Half court line */}
-              <div className="absolute left-0 right-0 border-t border-white/10" style={{ top: COURT_H / 2 }} />
+              {/* Half court line — vertical since courts are rotated */}
+              <div className="absolute top-0 bottom-0 border-l border-white/10" style={{ left: COURT_W / 2 }} />
             </div>
           ))}
-
-          {/* Basecamp Industry Expert zone label */}
-          <div className="absolute flex items-center gap-2" style={{ left: PADDING + 10, bottom: PADDING + 10 }}>
-            <img src={basecampMatchLogo} alt="Basecamp" className="h-5 w-auto opacity-60" />
-            <span className="text-[9px] text-white/40 font-body">Industry Expert Zone</span>
-          </div>
 
           {/* Placed brands */}
           {layouts.map((layout) => {
@@ -142,18 +144,34 @@ const EventMapCanvas = ({
             const sponsorBrand = brand.sponsor_brand_id
               ? brands.find((b) => b.id === brand.sponsor_brand_id) || null
               : null;
+            const isExpertZone = brand.name === expertZoneBrandName;
+
             return (
               <div key={layout.id} onDoubleClick={() => handleDoubleClick(brand.id)}>
-                <MapBrandGroup
-                  brand={brand}
-                  layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
-                  interactive={interactive}
-                  onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
-                  onShapeChange={onShapeChange}
-                  onRotate={onRotate}
-                  onClick={onClick}
-                  sponsorBrand={sponsorBrand}
-                />
+                {isExpertZone ? (
+                  <MapExpertZoneGroup
+                    brand={brand}
+                    layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
+                    experts={expertZoneExperts}
+                    interactive={interactive}
+                    onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
+                    onShapeChange={onShapeChange}
+                    onRotate={onRotate}
+                    onClick={onClick}
+                    sponsorBrand={sponsorBrand}
+                  />
+                ) : (
+                  <MapBrandGroup
+                    brand={brand}
+                    layout={{ ...layout, x: layout.x + PADDING, y: layout.y + PADDING }}
+                    interactive={interactive}
+                    onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
+                    onShapeChange={onShapeChange}
+                    onRotate={onRotate}
+                    onClick={onClick}
+                    sponsorBrand={sponsorBrand}
+                  />
+                )}
               </div>
             );
           })}
