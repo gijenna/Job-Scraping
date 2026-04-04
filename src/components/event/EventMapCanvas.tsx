@@ -10,6 +10,7 @@ interface EventMapCanvasProps {
   interactive?: boolean;
   onMove?: (brandId: string, x: number, y: number) => void;
   onShapeChange?: (brandId: string, shape: string) => void;
+  onRotate?: (brandId: string, rotation: number) => void;
   onDropFromSidebar?: (brandId: string, x: number, y: number) => void;
   onRemoveFromCanvas?: (brandId: string) => void;
   onClick?: (brand: MapBrand) => void;
