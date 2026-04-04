@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
 import MapBrandGroup, { COURT_W, COURT_H, COURTS } from "./MapBrandGroup";
+import MapExpertZoneGroup from "./MapExpertZoneGroup";
+import { MapExpert } from "./MapExpertZone";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
 interface EventMapCanvasProps {
