@@ -66,7 +66,7 @@ const MapBrandGroup = ({
   const cells = getShapeCells(layout.shape, brand.table_count);
   const bounds = getShapeBounds(cells);
 
-  const logoSrc = brand.logo_url || (brand.website_url ? `https://logo.clearbit.com/${new URL(brand.website_url).hostname}` : null);
+  const logoSrc = brand.logo_url || (brand.website_url ? `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128` : null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!interactive || !onMove) return;
