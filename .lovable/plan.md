@@ -1,59 +1,58 @@
 
 
-# Event Map Updates — Plan
+# Plan: Court Orientation, Expert Zone as Map Element, Delete Fix
 
-## 1. Flip Court Orientation to Horizontal
+## 1. Flip Court Orientation (rotate each court 90° right)
 
-**File: `EventMapCanvas.tsx`**
-- Change `TOTAL_W = COURT_W * COURTS` (2820px) and `TOTAL_H = COURT_H` (500px)
-- Update court outline rendering: `left: PADDING + i * COURT_W`, `top: PADDING` (side by side horizontally instead of stacked vertically)
-- Fit-all scaling already works against `fullW`/`fullH` — no change needed there
+**File: `MapBrandGroup.tsx`** — Swap the exported constants:
+- `COURT_W = 500` (was 940) — each court is now 50' wide
+- `COURT_H = 940` (was 500) — each court is now 94' tall
+- Three courts side by side = 1500px wide × 940px tall (connected on the 94'/940px long side)
 
-## 2. 360° Table Rotation
+**File: `EventMapCanvas.tsx`** — Update court markings:
+- Half-court line becomes vertical (left-right divider at `COURT_W / 2`) instead of horizontal
+- Center circle repositioned for new aspect ratio
+- Court labels updated to reflect rotated view
 
-**File: `MapBrandGroup.tsx`**
-- Apply `transform: rotate(${layout.rotation}deg)` to the tables container div only (not the logo/name below it)
-- The logo bubble + brand name stays unrotated (rendered outside the rotated container)
-- Add a rotation handle button (visible on hover in admin mode) that increments rotation by 15° per click (or hold-shift for 45°)
+Canvas total: 1500 + padding vs 940 + padding — much more landscape-friendly, fits viewport better.
 
-**File: `EventMapCanvas.tsx`**
-- Pass `onRotate` callback prop through to `MapBrandGroup`
+## 2. Industry Expert Zone as Draggable Map Activation
 
-**File: `EventMapAdmin.tsx`**
-- Add `handleRotate` function that calls `upsertLayout(brandId, { rotation: newRotation })`
+The Expert Zone becomes a real `event_map_brands` entry (special activation) that lives on the canvas:
 
-**File: `useEventMapLayouts.ts`**
-- Already stores `rotation` field — no schema change needed
+**File: `MapExpertZone.tsx`** — Rewrite into two parts:
+- **Admin panel version**: Shows all Denver-assigned experts with check/X toggle buttons. Checked = "attending this event map" (tracked via a local state list or a new field). Unchecked experts show a checkmark button; checked ones show an X button.
+- **Canvas element**: Rendered on the map like any other brand group but with expert photo bubbles inside. Size is dynamic based on admin-set table count.
 
-## 3. Replace MapBrandPanel with BrandUmbrellaSection-style Panel
+**File: `EventMapCanvas.tsx`** — Add special rendering for the Expert Zone brand:
+- When a brand is the Expert Zone (identified by a convention like name = "Industry Expert Zone" or `is_activation = true` with a flag), render it with the Basecamp logo and expert photo bubbles instead of a single brand logo
+- Include "Free thanks to [sponsor]" label using the same sponsor assignment system
 
-When a brand is clicked (public or admin), instead of the current simple side panel, render a modal/overlay that reuses the **exact `BrandUmbrellaSection` pattern**:
-- Company logo header with expand/collapse
-- Inside: grid of `ExpertCardMinimal` cards (typeC) for that brand's reps
-- Clicking a card triggers the existing typeC→typeA expansion (fixed overlay with full `ExpertCard`)
+**File: `EventMapAdmin.tsx`** — Add Expert Zone management:
+- Auto-create an "Industry Expert Zone" brand entry if it doesn't exist
+- Below the canvas, show the expert toggle panel (check/X for each Denver expert)
+- Admin can set table count for the zone (controls physical size on map)
+- Sponsor assignment works via existing `MapSponsorAssigner` since it's an activation
 
-**File: `MapBrandPanel.tsx`** — rewrite to:
-- Query `expert_city_assignments` + `industry_experts` for the brand's company name (matching `current_company`)
-- Render brand info header (logo, name, description, website link) 
-- Below: render matching brand reps using `ExpertCardMinimal` in a grid, same as `BrandUmbrellaSection` does
-- Full-screen overlay with close button, styled like the existing event pages
+**File: `MapBrandGroup.tsx`** — Add expert zone variant:
+- Accept optional `experts` prop
+- When present, render expert photo bubbles in a grid inside the tables area instead of a single logo bubble
 
-## 4. Auto-add Brand Reps When Adding a Brand
+## 3. Fix Activation Deletion
 
-**File: `EventMapAdmin.tsx`** (or `MapBrandPanel.tsx`)
-- When a brand is added or when the panel opens, query `expert_city_assignments` joined with `industry_experts` where `city_slug = 'denver'` and `current_company` matches the brand name
-- Display these reps automatically — no manual linking needed
-- This is read-only (pulls from existing expert data, same as Denver/Portland pages)
+**File: `EventMapAdmin.tsx`** — The delete button exists but needs to also remove associated layouts:
+- When `deleteBrand(id)` is called, also call `removeLayout(id)` first to clean up any canvas placement
+- Ensure the delete button is visible and functional for all brands including activations
 
-## Summary of File Changes
+## Summary
 
 | File | Change |
 |------|--------|
-| `EventMapCanvas.tsx` | Flip to horizontal layout (`W * 3`, `H * 1`) |
-| `MapBrandGroup.tsx` | Add rotation transform on table container; keep logo/name upright; add rotation button |
-| `MapBrandPanel.tsx` | Rewrite to match `BrandUmbrellaSection` style with `ExpertCardMinimal` cards |
-| `EventMapAdmin.tsx` | Add `handleRotate` callback, pass `onRotate` to canvas |
-| `useEventMapLayouts.ts` | No changes (rotation already supported) |
+| `MapBrandGroup.tsx` | Swap COURT_W/COURT_H (500/940), add expert zone variant rendering |
+| `EventMapCanvas.tsx` | Fix court markings for rotated orientation, render expert zone brand specially |
+| `MapExpertZone.tsx` | Rewrite as admin toggle panel (check/X per expert) + track selected experts |
+| `EventMapAdmin.tsx` | Auto-create expert zone brand, wire expert toggles, fix delete to also remove layouts |
+| `MapSponsorAssigner.tsx` | No changes (expert zone is just another activation) |
 
-No database changes required.
+No database changes needed — the Expert Zone is stored as a regular `event_map_brands` row with `is_activation = true`.
 
