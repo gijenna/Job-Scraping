@@ -330,8 +330,17 @@ const EventMapAdmin = () => {
                 )}
               </TableBody>
             </Table>
+          {/* Sponsor Assignment */}
+          <div className="mt-6">
+            <MapSponsorAssigner brands={brands} onAssignSponsor={handleAssignSponsor} />
+          </div>
+
+          {/* Industry Expert Zone */}
+          <div className="mt-6">
+            <MapExpertZone citySlug="denver" />
           </div>
         </div>
+      </div>
       </div>
 
       {/* Brand detail panel */}
