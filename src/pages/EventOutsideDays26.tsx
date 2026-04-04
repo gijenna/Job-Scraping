@@ -132,6 +132,24 @@ const EventOutsideDays26 = () => {
       ),
     },
     {
+      key: "denver_event_map",
+      content: mapLayouts.length > 0 ? (
+        <section className="py-16 md:py-24 px-6 bg-events-teal">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
+              <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-yellow">Venue Map</p>
+              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">Explore the Event Floor</h2>
+            </motion.div>
+            <EventMapCanvas
+              brands={mapBrands}
+              layouts={mapLayouts}
+              onClick={(b) => setSelectedMapBrand(b)}
+            />
+          </div>
+        </section>
+      ) : null,
+    },
+    {
       key: "denver_stats",
       content: <RegistrantDenverStats logos={statsLogos} />,
     },
