@@ -27,6 +27,7 @@ import CardStylePreview from "./pages/CardStylePreview";
 import GenerateCards from "./pages/GenerateCards";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
+import EventMapAdmin from "./pages/EventMapAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/gather-pnw" element={<GatherPNW />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/PNW26" element={<EventPNW26 />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />

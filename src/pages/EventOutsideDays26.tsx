@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -19,8 +19,12 @@ import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
 import OrderedSections, { SectionDef } from "@/components/event/OrderedSections";
+import EventMapCanvas from "@/components/event/EventMapCanvas";
+import MapBrandPanel from "@/components/event/MapBrandPanel";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import { useEventAttendees } from "@/hooks/useEventAttendees";
+import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
+import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import SiteFooter from "@/components/SiteFooter";
 import SponsorPageNav from "@/components/event/SponsorPageNav";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
@@ -39,6 +43,9 @@ const EventOutsideDays26 = () => {
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
   const { brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd } = useEventAttendees("denver");
+  const { brands: mapBrands } = useEventMapBrands("denver26");
+  const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
+  const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -125,6 +132,24 @@ const EventOutsideDays26 = () => {
       ),
     },
     {
+      key: "denver_event_map",
+      content: mapLayouts.length > 0 ? (
+        <section className="py-16 md:py-24 px-6 bg-events-teal">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
+              <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body text-events-yellow">Venue Map</p>
+              <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">Explore the Event Floor</h2>
+            </motion.div>
+            <EventMapCanvas
+              brands={mapBrands}
+              layouts={mapLayouts}
+              onClick={(b) => setSelectedMapBrand(b)}
+            />
+          </div>
+        </section>
+      ) : null,
+    },
+    {
       key: "denver_stats",
       content: <RegistrantDenverStats logos={statsLogos} />,
     },
@@ -183,7 +208,7 @@ const EventOutsideDays26 = () => {
         </section>
       ),
     },
-  ], [tickerBrands, statsLogos, bubbleBrands, brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd, highlightExpert, highlightBrandRep]);
+  ], [tickerBrands, statsLogos, bubbleBrands, brandReps, setBrandReps, industryExperts, setIndustryExperts, handleDragEnd, highlightExpert, highlightBrandRep, mapBrands, mapLayouts]);
 
   return (
     <EditableTextProvider pageSlug="outsidedays26">
@@ -203,6 +228,7 @@ const EventOutsideDays26 = () => {
         <OrderedSections sections={sections} />
 
         <SiteFooter />
+        <MapBrandPanel brand={selectedMapBrand} onClose={() => setSelectedMapBrand(null)} />
       </main>
     </EditableTextProvider>
   );

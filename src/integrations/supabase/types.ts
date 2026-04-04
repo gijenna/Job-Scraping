@@ -47,6 +47,97 @@ export type Database = {
         }
         Relationships: []
       }
+      event_map_brands: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_slug: string
+          id: string
+          is_activation: boolean
+          logo_url: string | null
+          name: string
+          sponsor_brand_id: string | null
+          table_count: number
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_slug?: string
+          id?: string
+          is_activation?: boolean
+          logo_url?: string | null
+          name: string
+          sponsor_brand_id?: string | null
+          table_count?: number
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_slug?: string
+          id?: string
+          is_activation?: boolean
+          logo_url?: string | null
+          name?: string
+          sponsor_brand_id?: string | null
+          table_count?: number
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_map_brands_sponsor_brand_id_fkey"
+            columns: ["sponsor_brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_map_layouts: {
+        Row: {
+          brand_id: string
+          event_slug: string
+          id: string
+          layout_type: string
+          rotation: number
+          shape: string
+          updated_at: string
+          x: number
+          y: number
+        }
+        Insert: {
+          brand_id: string
+          event_slug?: string
+          id?: string
+          layout_type?: string
+          rotation?: number
+          shape?: string
+          updated_at?: string
+          x?: number
+          y?: number
+        }
+        Update: {
+          brand_id?: string
+          event_slug?: string
+          id?: string
+          layout_type?: string
+          rotation?: number
+          shape?: string
+          updated_at?: string
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_map_layouts_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_settings: {
         Row: {
           created_at: string
