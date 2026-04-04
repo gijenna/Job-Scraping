@@ -2,9 +2,9 @@ import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
 import { RotateCw } from "lucide-react";
 
-// Court: 94' × 50' → 940px × 500px at 10px/ft
-const COURT_W = 940;
-const COURT_H = 500;
+// Court: 94' × 50' → rotated 90° right so 50' wide × 94' tall
+const COURT_W = 500;
+const COURT_H = 940;
 const COURTS = 3;
 const TABLE_W = 80; // 8ft
 const TABLE_H = 30; // 3ft

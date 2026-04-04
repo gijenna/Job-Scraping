@@ -112,7 +112,7 @@ const EventMapCanvas = ({
               }}
             >
               <span className="absolute top-2 left-2 text-[10px] text-white/30 font-body">
-                Court {i + 1} (94' × 50')
+                Court {i + 1} (50' × 94')
               </span>
               {/* Center circle */}
               <div
@@ -124,8 +124,8 @@ const EventMapCanvas = ({
                   height: 120,
                 }}
               />
-              {/* Half court line */}
-              <div className="absolute left-0 right-0 border-t border-white/10" style={{ top: COURT_H / 2 }} />
+              {/* Half court line — vertical since courts are rotated */}
+              <div className="absolute top-0 bottom-0 border-l border-white/10" style={{ left: COURT_W / 2 }} />
             </div>
           ))}
 
