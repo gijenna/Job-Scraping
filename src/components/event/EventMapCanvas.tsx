@@ -159,3 +159,5 @@ const EventMapCanvas = ({
     </div>
   );
 };
+
+export default EventMapCanvas;
