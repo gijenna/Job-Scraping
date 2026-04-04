@@ -150,6 +150,7 @@ const EventMapCanvas = ({
                   interactive={interactive}
                   onMove={(id, x, y) => onMove?.(id, x - PADDING, y - PADDING)}
                   onShapeChange={onShapeChange}
+                  onRotate={onRotate}
                   onClick={onClick}
                   sponsorBrand={sponsorBrand}
                 />

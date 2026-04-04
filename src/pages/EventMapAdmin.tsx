@@ -211,6 +211,7 @@ const EventMapAdmin = () => {
               interactive
               onMove={handleMove}
               onShapeChange={handleShapeChange}
+              onRotate={handleRotate}
               onDropFromSidebar={handleDropFromSidebar}
               onRemoveFromCanvas={handleRemoveFromCanvas}
               onClick={(b) => setSelectedBrand(b)}

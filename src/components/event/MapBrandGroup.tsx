@@ -1,5 +1,6 @@
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
+import { RotateCw } from "lucide-react";
 
 // Court: 94' × 50' → 940px × 500px at 10px/ft
 const COURT_W = 940;
@@ -50,6 +51,7 @@ interface MapBrandGroupProps {
   interactive?: boolean;
   onMove?: (brandId: string, x: number, y: number) => void;
   onShapeChange?: (brandId: string, shape: string) => void;
+  onRotate?: (brandId: string, rotation: number) => void;
   onClick?: (brand: MapBrand) => void;
   sponsorBrand?: MapBrand | null;
 }
@@ -60,6 +62,7 @@ const MapBrandGroup = ({
   interactive = false,
   onMove,
   onShapeChange,
+  onRotate,
   onClick,
   sponsorBrand,
 }: MapBrandGroupProps) => {
@@ -99,6 +102,13 @@ const MapBrandGroup = ({
     onShapeChange(brand.id, shapes[(idx + 1) % shapes.length]);
   };
 
+  const handleRotate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!onRotate) return;
+    const step = e.shiftKey ? 45 : 15;
+    onRotate(brand.id, (layout.rotation + step) % 360);
+  };
+
   return (
     <div
       className={`absolute group ${interactive ? "cursor-move" : "cursor-pointer"}`}
@@ -106,8 +116,16 @@ const MapBrandGroup = ({
       onMouseDown={interactive ? handleMouseDown : undefined}
       onClick={() => onClick?.(brand)}
     >
-      {/* Tables grid */}
-      <div className="relative" style={{ width: bounds.width, height: bounds.height }}>
+      {/* Tables grid — rotated */}
+      <div
+        className="relative"
+        style={{
+          width: bounds.width,
+          height: bounds.height,
+          transform: `rotate(${layout.rotation}deg)`,
+          transformOrigin: "center center",
+        }}
+      >
         {cells.map((cell, i) => (
           <div
             key={i}
@@ -123,7 +141,7 @@ const MapBrandGroup = ({
         ))}
       </div>
 
-      {/* Logo bubble + name */}
+      {/* Logo bubble + name — always upright (no rotation) */}
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
         <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white">
           {logoSrc ? (
@@ -147,6 +165,17 @@ const MapBrandGroup = ({
           title={`Shape: ${layout.shape}`}
         >
           ⟳
+        </button>
+      )}
+
+      {/* Rotation button (admin) */}
+      {interactive && (
+        <button
+          onClick={handleRotate}
+          className="absolute -top-3 -left-3 w-5 h-5 rounded-full bg-events-yellow text-events-teal flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          title={`Rotation: ${layout.rotation}° (shift+click for 45°)`}
+        >
+          <RotateCw className="w-3 h-3" />
         </button>
       )}
 
