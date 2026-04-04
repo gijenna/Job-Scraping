@@ -228,6 +228,7 @@ const EventOutsideDays26 = () => {
         <OrderedSections sections={sections} />
 
         <SiteFooter />
+        <MapBrandPanel brand={selectedMapBrand} onClose={() => setSelectedMapBrand(null)} />
       </main>
     </EditableTextProvider>
   );
