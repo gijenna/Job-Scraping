@@ -322,6 +322,7 @@ const EventMapAdmin = () => {
                 <TableRow className="border-white/10 hover:bg-white/5">
                   <TableHead className="text-white/60 font-body text-xs">Logo</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Name</TableHead>
+                  <TableHead className="text-white/60 font-body text-xs">URL</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Description</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Tables</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Type</TableHead>
@@ -350,6 +351,13 @@ const EventMapAdmin = () => {
                           <Input value={editFields.name || ""} onChange={(e) => setEditFields((p) => ({ ...p, name: e.target.value }))} className="bg-white/10 border-white/20 text-white h-7 text-xs" />
                         ) : (
                           <span className="text-sm text-white font-display">{brand.name}</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {isEditing ? (
+                          <Input value={editFields.website_url || ""} onChange={(e) => setEditFields((p) => ({ ...p, website_url: e.target.value }))} placeholder="https://..." className="bg-white/10 border-white/20 text-white h-7 text-xs" />
+                        ) : (
+                          <span className="text-xs text-white/60 font-body truncate max-w-[120px] block">{brand.website_url || "—"}</span>
                         )}
                       </TableCell>
                       <TableCell>
