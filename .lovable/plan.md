@@ -1,58 +1,61 @@
 
+Goal: make /admin/event-map reuse the Denver registration-page brand list, keep hyperlinks editable, stop rotation from turning into accidental drag/removal, and make the Industry Expert Zone table count stay consistent across draft/live/public views.
 
-# Plan: Court Orientation, Expert Zone as Map Element, Delete Fix
+1. Auto-populate map brands from Denver bubble logos
+- Use the same source as the Denver registration page: `event_logos` with `event_slug = "denver26-bubbles"`.
+- Add a sync/import action in `EventMapAdmin.tsx` that reads those logos and creates missing `event_map_brands` entries automatically.
+- Map fields as:
+  - `name` ← logo name
+  - `website_url` ← logo url
+  - `logo_url` ← logo logo_url, or favicon fallback from domain/url
+  - `event_slug` ← `denver26`
+  - sensible defaults for `table_count` and `is_activation = false`
+- Deduplicate by brand name so existing map brands are not recreated.
+- Keep manual add available for activations or one-off brands not in the bubble list.
 
-## 1. Flip Court Orientation (rotate each court 90° right)
+2. Make hyperlink editable in the admin table
+- Extend the existing edit row in `EventMapAdmin.tsx` to include `website_url`.
+- Save that field through `updateBrand`, so map panel links and logo fallbacks always reflect the edited URL.
+- Also include the URL in the quick-add/edit flow for clarity.
 
-**File: `MapBrandGroup.tsx`** — Swap the exported constants:
-- `COURT_W = 500` (was 940) — each court is now 50' wide
-- `COURT_H = 940` (was 500) — each court is now 94' tall
-- Three courts side by side = 1500px wide × 940px tall (connected on the 94'/940px long side)
+3. Fix rotation so it does not drag or jump off the map
+Current issue: rotation button clicks still interact with the draggable wrapper, and rotated bounds are not respected.
+- In `MapBrandGroup.tsx` and `MapExpertZoneGroup.tsx`, prevent drag logic from starting when the click originates from the rotate/shape controls.
+- Separate “drag handle area” from “action buttons” so rotate clicks do not trigger movement.
+- Re-anchor rotation around the visual center and compute a safe wrapper box for rotated content, so repeated rotations do not shift the placement unexpectedly.
+- Keep logo/title upright outside the rotated table layer.
 
-**File: `EventMapCanvas.tsx`** — Update court markings:
-- Half-court line becomes vertical (left-right divider at `COURT_W / 2`) instead of horizontal
-- Center circle repositioned for new aspect ratio
-- Court labels updated to reflect rotated view
+4. Keep the Industry Expert Zone size consistent everywhere
+Current issue: the zone is partly driven by selected experts in admin state, while views fall back to a different default.
+- Make all views derive the zone size from the persisted `event_map_brands.table_count` plus persisted layout shape/rotation.
+- Pass the same expert-zone brand record and selected experts consistently into admin, print, and public map canvases.
+- Update `MapExpertZoneGroup.tsx` so rendered table geometry always comes from the brand’s saved `table_count`, not a local/default fallback.
+- Verify draft publish copies the current expert-zone layout/rotation/shape exactly into live.
 
-Canvas total: 1500 + padding vs 940 + padding — much more landscape-friendly, fits viewport better.
+5. Align public/live map with the admin expert-zone behavior
+- The public Denver page currently uses live layouts and map brands, but does not appear to load expert-zone attendee selections from shared persisted state.
+- Refactor so the zone’s displayed experts and footprint are based on one consistent source used by both admin and public map rendering.
+- Preserve sponsor display for the expert zone in all views.
 
-## 2. Industry Expert Zone as Draggable Map Activation
+Files to update
+- `src/pages/EventMapAdmin.tsx`
+  - add bubble-logo sync/import action
+  - add editable URL column/field
+  - ensure expert-zone table count edits persist and reflect immediately
+- `src/components/event/MapBrandGroup.tsx`
+  - fix rotate vs drag interaction
+  - stabilize rotated positioning
+- `src/components/event/MapExpertZoneGroup.tsx`
+  - same rotate/drag fixes
+  - enforce saved table-count rendering
+- `src/components/event/EventMapCanvas.tsx`
+  - keep placement stable with rotated items
+  - ensure expert-zone rendering uses the same persisted brand/layout data
+- possibly `src/hooks/useEventLogos.ts`
+  - reuse for the import/sync action rather than duplicating fetch logic
 
-The Expert Zone becomes a real `event_map_brands` entry (special activation) that lives on the canvas:
-
-**File: `MapExpertZone.tsx`** — Rewrite into two parts:
-- **Admin panel version**: Shows all Denver-assigned experts with check/X toggle buttons. Checked = "attending this event map" (tracked via a local state list or a new field). Unchecked experts show a checkmark button; checked ones show an X button.
-- **Canvas element**: Rendered on the map like any other brand group but with expert photo bubbles inside. Size is dynamic based on admin-set table count.
-
-**File: `EventMapCanvas.tsx`** — Add special rendering for the Expert Zone brand:
-- When a brand is the Expert Zone (identified by a convention like name = "Industry Expert Zone" or `is_activation = true` with a flag), render it with the Basecamp logo and expert photo bubbles instead of a single brand logo
-- Include "Free thanks to [sponsor]" label using the same sponsor assignment system
-
-**File: `EventMapAdmin.tsx`** — Add Expert Zone management:
-- Auto-create an "Industry Expert Zone" brand entry if it doesn't exist
-- Below the canvas, show the expert toggle panel (check/X for each Denver expert)
-- Admin can set table count for the zone (controls physical size on map)
-- Sponsor assignment works via existing `MapSponsorAssigner` since it's an activation
-
-**File: `MapBrandGroup.tsx`** — Add expert zone variant:
-- Accept optional `experts` prop
-- When present, render expert photo bubbles in a grid inside the tables area instead of a single logo bubble
-
-## 3. Fix Activation Deletion
-
-**File: `EventMapAdmin.tsx`** — The delete button exists but needs to also remove associated layouts:
-- When `deleteBrand(id)` is called, also call `removeLayout(id)` first to clean up any canvas placement
-- Ensure the delete button is visible and functional for all brands including activations
-
-## Summary
-
-| File | Change |
-|------|--------|
-| `MapBrandGroup.tsx` | Swap COURT_W/COURT_H (500/940), add expert zone variant rendering |
-| `EventMapCanvas.tsx` | Fix court markings for rotated orientation, render expert zone brand specially |
-| `MapExpertZone.tsx` | Rewrite as admin toggle panel (check/X per expert) + track selected experts |
-| `EventMapAdmin.tsx` | Auto-create expert zone brand, wire expert toggles, fix delete to also remove layouts |
-| `MapSponsorAssigner.tsx` | No changes (expert zone is just another activation) |
-
-No database changes needed — the Expert Zone is stored as a regular `event_map_brands` row with `is_activation = true`.
-
+Technical notes
+- The Denver “bubble logos” already come from `useEventLogos("denver26-bubbles")` on the registration page, so that is the cleanest source to sync from.
+- `website_url` already exists on `event_map_brands`; it just is not editable in the current admin table.
+- Rotation bug likely comes from the absolute wrapper still receiving `onMouseDown` during button clicks plus lack of a rotated bounding box.
+- Expert zone inconsistency likely comes from admin-only `selectedExpertIds` state and/or public view not sharing the same expert-zone inputs as admin/live.
