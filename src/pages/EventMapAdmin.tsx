@@ -430,7 +430,7 @@ const EventMapAdmin = () => {
                 })}
                 {brands.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-white/30 text-sm py-8 font-body">
+                    <TableCell colSpan={8} className="text-center text-white/30 text-sm py-8 font-body">
                       No brands yet. Use Quick Add above.
                     </TableCell>
                   </TableRow>
