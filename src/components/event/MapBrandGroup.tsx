@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
 import { RotateCw } from "lucide-react";
@@ -71,15 +72,21 @@ const MapBrandGroup = ({
 
   const logoSrc = brand.logo_url || (brand.website_url ? `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128` : null);
 
+  const isDragging = useRef(false);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!interactive || !onMove) return;
+    // Don't start drag from buttons
+    if ((e.target as HTMLElement).closest("button")) return;
     e.preventDefault();
     const startX = e.clientX;
     const startY = e.clientY;
     const origX = layout.x;
     const origY = layout.y;
+    isDragging.current = false;
 
     const handleMouseMove = (ev: MouseEvent) => {
+      isDragging.current = true;
       const dx = Math.round((ev.clientX - startX) / GRID) * GRID;
       const dy = Math.round((ev.clientY - startY) / GRID) * GRID;
       onMove(brand.id, origX + dx, origY + dy);

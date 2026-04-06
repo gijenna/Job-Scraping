@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
 import { MapExpert } from "./MapExpertZone";
@@ -35,14 +36,19 @@ const MapExpertZoneGroup = ({
   const cells = getShapeCells(layout.shape, brand.table_count);
   const bounds = getShapeBounds(cells);
 
+  const isDragging = useRef(false);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!interactive || !onMove) return;
+    if ((e.target as HTMLElement).closest("button")) return;
     e.preventDefault();
     const startX = e.clientX;
     const startY = e.clientY;
     const origX = layout.x;
     const origY = layout.y;
+    isDragging.current = false;
     const handleMouseMove = (ev: MouseEvent) => {
+      isDragging.current = true;
       const dx = Math.round((ev.clientX - startX) / GRID) * GRID;
       const dy = Math.round((ev.clientY - startY) / GRID) * GRID;
       onMove(brand.id, origX + dx, origY + dy);
