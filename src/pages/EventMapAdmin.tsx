@@ -7,12 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
 import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
+import { useEventLogos } from "@/hooks/useEventLogos";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapSidebar from "@/components/event/MapSidebar";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
 import MapExpertZone, { MapExpert } from "@/components/event/MapExpertZone";
 import MapSponsorAssigner from "@/components/event/MapSponsorAssigner";
-import { Trash2, Printer, Upload, Plus, Pencil, Check, X } from "lucide-react";
+import { Trash2, Printer, Upload, Plus, Pencil, Check, X, RefreshCw } from "lucide-react";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -43,6 +44,7 @@ const EventMapAdmin = () => {
 
   const { brands, addBrand, updateBrand, deleteBrand, refetch: refetchBrands } = useEventMapBrands(EVENT_SLUG);
   const { layouts, upsertLayout, removeLayout, publish } = useEventMapLayouts(EVENT_SLUG, "draft");
+  const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -96,6 +98,36 @@ const EventMapAdmin = () => {
     setSelectedExpertIds((prev) =>
       prev.includes(expertId) ? prev.filter((id) => id !== expertId) : [...prev, expertId]
     );
+  };
+
+  const handleSyncFromBubbles = async () => {
+    if (bubbleLogos.length === 0) {
+      toast({ title: "No bubble logos found", description: "No logos in denver26-bubbles to sync." });
+      return;
+    }
+    let added = 0;
+    for (const logo of bubbleLogos) {
+      const exists = brands.find((b) => b.name.toLowerCase() === logo.name.toLowerCase());
+      if (exists) continue;
+      let logoUrl = logo.logo_url || null;
+      const websiteUrl = logo.url || null;
+      if (!logoUrl && (logo.domain || websiteUrl)) {
+        try {
+          const domain = logo.domain || new URL(websiteUrl!.startsWith("http") ? websiteUrl! : `https://${websiteUrl}`).hostname;
+          logoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+        } catch { /* ignore */ }
+      }
+      await addBrand({
+        name: logo.name,
+        website_url: websiteUrl,
+        logo_url: logoUrl,
+        table_count: 1,
+        is_activation: false,
+      });
+      added++;
+    }
+    toast({ title: `Synced ${added} brands`, description: added === 0 ? "All brands already exist." : `${added} new brands imported from bubble logos.` });
+    if (added > 0) refetchBrands();
   };
 
   const selectedExperts = allExperts.filter((e) => selectedExpertIds.includes(e.id));
@@ -157,7 +189,7 @@ const EventMapAdmin = () => {
 
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
-    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id });
+    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url });
   };
 
   const saveEdit = async () => {
@@ -195,6 +227,9 @@ const EventMapAdmin = () => {
           <p className="text-xs text-white/50 font-body">Denver Outside Days · Auraria Wellness Center</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleSyncFromBubbles} className="gap-1 text-events-teal">
+            <RefreshCw className="w-3.5 h-3.5" /> Sync Bubble Logos
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setPrintMode(true)} className="gap-1 text-events-teal">
             <Printer className="w-3.5 h-3.5" /> Print
           </Button>
@@ -287,6 +322,7 @@ const EventMapAdmin = () => {
                 <TableRow className="border-white/10 hover:bg-white/5">
                   <TableHead className="text-white/60 font-body text-xs">Logo</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Name</TableHead>
+                  <TableHead className="text-white/60 font-body text-xs">URL</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Description</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Tables</TableHead>
                   <TableHead className="text-white/60 font-body text-xs">Type</TableHead>
@@ -315,6 +351,13 @@ const EventMapAdmin = () => {
                           <Input value={editFields.name || ""} onChange={(e) => setEditFields((p) => ({ ...p, name: e.target.value }))} className="bg-white/10 border-white/20 text-white h-7 text-xs" />
                         ) : (
                           <span className="text-sm text-white font-display">{brand.name}</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {isEditing ? (
+                          <Input value={editFields.website_url || ""} onChange={(e) => setEditFields((p) => ({ ...p, website_url: e.target.value }))} placeholder="https://..." className="bg-white/10 border-white/20 text-white h-7 text-xs" />
+                        ) : (
+                          <span className="text-xs text-white/60 font-body truncate max-w-[120px] block">{brand.website_url || "—"}</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -387,7 +430,7 @@ const EventMapAdmin = () => {
                 })}
                 {brands.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-white/30 text-sm py-8 font-body">
+                    <TableCell colSpan={8} className="text-center text-white/30 text-sm py-8 font-body">
                       No brands yet. Use Quick Add above.
                     </TableCell>
                   </TableRow>
