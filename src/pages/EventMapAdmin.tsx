@@ -7,12 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
 import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
+import { useEventLogos } from "@/hooks/useEventLogos";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapSidebar from "@/components/event/MapSidebar";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
 import MapExpertZone, { MapExpert } from "@/components/event/MapExpertZone";
 import MapSponsorAssigner from "@/components/event/MapSponsorAssigner";
-import { Trash2, Printer, Upload, Plus, Pencil, Check, X } from "lucide-react";
+import { Trash2, Printer, Upload, Plus, Pencil, Check, X, RefreshCw } from "lucide-react";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -43,6 +44,7 @@ const EventMapAdmin = () => {
 
   const { brands, addBrand, updateBrand, deleteBrand, refetch: refetchBrands } = useEventMapBrands(EVENT_SLUG);
   const { layouts, upsertLayout, removeLayout, publish } = useEventMapLayouts(EVENT_SLUG, "draft");
+  const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
