@@ -189,7 +189,7 @@ const EventMapAdmin = () => {
 
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
-    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id });
+    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url });
   };
 
   const saveEdit = async () => {
@@ -227,6 +227,9 @@ const EventMapAdmin = () => {
           <p className="text-xs text-white/50 font-body">Denver Outside Days · Auraria Wellness Center</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleSyncFromBubbles} className="gap-1 text-events-teal">
+            <RefreshCw className="w-3.5 h-3.5" /> Sync Bubble Logos
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setPrintMode(true)} className="gap-1 text-events-teal">
             <Printer className="w-3.5 h-3.5" /> Print
           </Button>
