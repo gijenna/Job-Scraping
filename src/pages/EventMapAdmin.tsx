@@ -100,6 +100,36 @@ const EventMapAdmin = () => {
     );
   };
 
+  const handleSyncFromBubbles = async () => {
+    if (bubbleLogos.length === 0) {
+      toast({ title: "No bubble logos found", description: "No logos in denver26-bubbles to sync." });
+      return;
+    }
+    let added = 0;
+    for (const logo of bubbleLogos) {
+      const exists = brands.find((b) => b.name.toLowerCase() === logo.name.toLowerCase());
+      if (exists) continue;
+      let logoUrl = logo.logo_url || null;
+      const websiteUrl = logo.url || null;
+      if (!logoUrl && (logo.domain || websiteUrl)) {
+        try {
+          const domain = logo.domain || new URL(websiteUrl!.startsWith("http") ? websiteUrl! : `https://${websiteUrl}`).hostname;
+          logoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+        } catch { /* ignore */ }
+      }
+      await addBrand({
+        name: logo.name,
+        website_url: websiteUrl,
+        logo_url: logoUrl,
+        table_count: 1,
+        is_activation: false,
+      });
+      added++;
+    }
+    toast({ title: `Synced ${added} brands`, description: added === 0 ? "All brands already exist." : `${added} new brands imported from bubble logos.` });
+    if (added > 0) refetchBrands();
+  };
+
   const selectedExperts = allExperts.filter((e) => selectedExpertIds.includes(e.id));
 
   if (loading) return <div className="min-h-screen bg-events-teal flex items-center justify-center text-white">Loading...</div>;
