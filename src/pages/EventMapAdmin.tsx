@@ -441,7 +441,13 @@ const EventMapAdmin = () => {
 
           {/* Sponsor Assignment */}
           <div className="mt-6">
-            <MapSponsorAssigner brands={brands} onAssignSponsor={handleAssignSponsor} />
+            <MapSponsorAssigner
+              brands={brands}
+              onAssignSponsor={handleAssignSponsor}
+              onAddSponsorBrand={async (name) => {
+                return await addBrand({ name, table_count: 0, is_activation: false });
+              }}
+            />
           </div>
 
           {/* Industry Expert Zone */}
