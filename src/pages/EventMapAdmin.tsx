@@ -221,7 +221,7 @@ const EventMapAdmin = () => {
   return (
     <div className="min-h-screen bg-events-teal">
       {/* Header */}
-      <div className="bg-events-teal border-b border-white/10 px-6 py-4 flex items-center justify-between print:hidden">
+      <div className="bg-events-teal border-b border-white/10 px-6 py-4 flex flex-wrap items-center justify-between gap-2 print:hidden">
         <div>
           <h1 className="font-headline font-bold text-xl text-events-cream">Event Map Manager</h1>
           <p className="text-xs text-white/50 font-body">Denver Outside Days · Auraria Wellness Center</p>
