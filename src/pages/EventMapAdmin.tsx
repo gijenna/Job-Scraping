@@ -102,12 +102,22 @@ const EventMapAdmin = () => {
   };
 
   const handleSyncFromBubbles = async () => {
-    if (bubbleLogos.length === 0) {
-      toast({ title: "No bubble logos found", description: "No logos in denver26-bubbles to sync." });
+    // Combine both sources, deduplicate by name
+    const allLogos = [...bubbleLogos, ...partnerLogos];
+    const seen = new Set<string>();
+    const uniqueLogos = allLogos.filter((l) => {
+      const key = l.name.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    if (uniqueLogos.length === 0) {
+      toast({ title: "No logos found", description: "No logos in bubble or partner lists to sync." });
       return;
     }
     let added = 0;
-    for (const logo of bubbleLogos) {
+    for (const logo of uniqueLogos) {
       const exists = brands.find((b) => b.name.toLowerCase() === logo.name.toLowerCase());
       if (exists) continue;
       let logoUrl = logo.logo_url || null;
@@ -127,7 +137,7 @@ const EventMapAdmin = () => {
       });
       added++;
     }
-    toast({ title: `Synced ${added} brands`, description: added === 0 ? "All brands already exist." : `${added} new brands imported from bubble logos.` });
+    toast({ title: `Synced ${added} brands`, description: added === 0 ? "All brands already exist." : `${added} new brands imported.` });
     if (added > 0) refetchBrands();
   };
 
