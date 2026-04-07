@@ -45,6 +45,7 @@ const EventMapAdmin = () => {
   const { brands, addBrand, updateBrand, deleteBrand, refetch: refetchBrands } = useEventMapBrands(EVENT_SLUG);
   const { layouts, upsertLayout, removeLayout, publish } = useEventMapLayouts(EVENT_SLUG, "draft");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
+  const { logos: partnerLogos } = useEventLogos("denver26-partners");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
