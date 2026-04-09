@@ -111,6 +111,7 @@ const COMPANY_DOMAINS: Record<string, string> = {
   'arcteryx': 'arcteryx.com',
   'marriott': 'marriott.com',
   'kpmg': 'kpmg.com',
+  'six moon designs': 'sixmoondesigns.com',
 };
 
 export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string> | null): string | null {
