@@ -102,14 +102,14 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                 <h4 className="font-display font-bold text-lg text-events-cream">{group.company}</h4>
                 <div className="flex items-center gap-3 mt-0.5">
                   <span className="text-events-cream/40 text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
-                  {normalizedCareersUrl && !isAdmin && (
+                  {normalizedCareersUrl && (
                     <a href={normalizedCareersUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-xs flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
                       Visit our site <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
-                {hiringBlurb && !isAdmin && (
-                  <p className="text-events-cream/50 text-xs mt-1 line-clamp-1">{hiringBlurb}</p>
+                {hiringBlurb && (
+                  <p className="text-events-cream/50 text-xs mt-1">{hiringBlurb}</p>
                 )}
                 {isAdmin && (
                   <div className="flex flex-col gap-0.5 mt-1" onClick={(e) => e.stopPropagation()}>
