@@ -29,6 +29,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
 import NotFound from "./pages/NotFound";
+import LinkTracker from "./components/LinkTracker";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <LinkTracker>
         <Routes>
           {/* Primary routes */}
           <Route path="/" element={<Events />} />
