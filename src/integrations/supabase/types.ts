@@ -413,6 +413,33 @@ export type Database = {
         }
         Relationships: []
       }
+      link_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          link_text: string | null
+          link_url: string
+          page_path: string
+          session_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link_text?: string | null
+          link_url: string
+          page_path: string
+          session_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link_text?: string | null
+          link_url?: string
+          page_path?: string
+          session_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
