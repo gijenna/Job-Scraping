@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Settings, GripVertical, Link as LinkIcon } from "lucide-react";
+import { Plus, Trash2, Settings, GripVertical, Link as LinkIcon, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   DndContext,
@@ -24,6 +24,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface LogoList {
   eventSlug: string;
@@ -38,10 +44,14 @@ const SortableLogoItem = ({
   logo,
   onDelete,
   onEditUrl,
+  otherLists,
+  onCopyTo,
 }: {
   logo: EventLogo;
   onDelete: () => void;
   onEditUrl: () => void;
+  otherLists: LogoList[];
+  onCopyTo: (targetSlug: string) => void;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: logo.id });
   const style = { transform: CSS.Transform.toString(transform), transition };
@@ -59,6 +69,26 @@ const SortableLogoItem = ({
         <div className="w-6 h-6 bg-events-cream/10 rounded flex items-center justify-center text-[8px] text-events-cream/40">?</div>
       )}
       <span className="text-events-cream text-xs flex-1 truncate">{logo.name}</span>
+      {otherLists.length > 0 && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="text-events-cream/40 hover:text-events-cream" title="Copy to another section">
+              <Copy className="w-3.5 h-3.5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-events-teal border-events-cream/20 text-events-cream text-xs min-w-[160px]">
+            {otherLists.map((list) => (
+              <DropdownMenuItem
+                key={list.eventSlug}
+                onClick={() => onCopyTo(list.eventSlug)}
+                className="text-events-cream text-xs hover:bg-events-card cursor-pointer"
+              >
+                {list.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
       <button onClick={onEditUrl} className="text-events-cream/40 hover:text-events-cream" title="Edit URL">
         <LinkIcon className="w-3.5 h-3.5" />
       </button>
@@ -69,7 +99,17 @@ const SortableLogoItem = ({
   );
 };
 
-const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string }) => {
+const LogoListPanel = ({
+  eventSlug,
+  label,
+  allLists,
+  onLogoCopied,
+}: {
+  eventSlug: string;
+  label: string;
+  allLists: LogoList[];
+  onLogoCopied?: () => void;
+}) => {
   const [addOpen, setAddOpen] = useState(false);
   const [urlEditOpen, setUrlEditOpen] = useState(false);
   const [editingLogo, setEditingLogo] = useState<EventLogo | null>(null);
@@ -79,8 +119,10 @@ const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string 
   const [url, setUrl] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
-  const { logos, addLogo, deleteLogo, updateLogo, reorderLogos } = useEventLogos(eventSlug);
+  const { logos, addLogo, deleteLogo, updateLogo, reorderLogos, refetch } = useEventLogos(eventSlug);
   const { toast } = useToast();
+
+  const otherLists = allLists.filter((l) => l.eventSlug !== eventSlug);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -134,6 +176,30 @@ const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string 
     else { toast({ title: "URL updated!" }); setUrlEditOpen(false); }
   };
 
+  const handleCopyTo = async (logo: EventLogo, targetSlug: string) => {
+    const { error } = await supabase.from("event_logos").insert({
+      event_slug: targetSlug,
+      name: logo.name,
+      domain: logo.domain || null,
+      logo_url: logo.logo_url || null,
+      url: logo.url || null,
+      display_order: 999,
+    } as any);
+    if (error) {
+      toast({ title: "Copy failed", description: error.message, variant: "destructive" });
+    } else {
+      const targetLabel = allLists.find((l) => l.eventSlug === targetSlug)?.label || targetSlug;
+      toast({ title: `Copied "${logo.name}" to ${targetLabel}` });
+      onLogoCopied?.();
+    }
+  };
+
+  // Expose refetch so parent can trigger it
+  useEffect(() => {
+    (window as any)[`__refetchLogos_${eventSlug}`] = refetch;
+    return () => { delete (window as any)[`__refetchLogos_${eventSlug}`]; };
+  }, [eventSlug, refetch]);
+
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-2">
@@ -154,6 +220,8 @@ const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string 
                 logo={logo}
                 onDelete={() => handleDelete(logo.id, logo.name)}
                 onEditUrl={() => openUrlEdit(logo)}
+                otherLists={otherLists}
+                onCopyTo={(targetSlug) => handleCopyTo(logo, targetSlug)}
               />
             ))}
           </div>
@@ -189,12 +257,21 @@ const LogoListPanel = ({ eventSlug, label }: { eventSlug: string; label: string 
 const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
     return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogoCopied = () => {
+    // Trigger refetch on all panels
+    lists.forEach((list) => {
+      const refetchFn = (window as any)[`__refetchLogos_${list.eventSlug}`];
+      if (typeof refetchFn === "function") refetchFn();
+    });
+  };
 
   if (!isAdmin) return null;
 
@@ -211,7 +288,13 @@ const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
       {showPanel && (
         <div className="fixed bottom-16 right-16 z-50 w-80 max-h-[70vh] overflow-y-auto bg-events-teal border border-events-cream/20 rounded-xl shadow-2xl p-4">
           {lists.map((list) => (
-            <LogoListPanel key={list.eventSlug} eventSlug={list.eventSlug} label={list.label} />
+            <LogoListPanel
+              key={list.eventSlug}
+              eventSlug={list.eventSlug}
+              label={list.label}
+              allLists={lists}
+              onLogoCopied={handleLogoCopied}
+            />
           ))}
         </div>
       )}
