@@ -117,8 +117,7 @@ const EventOutsideDays26 = () => {
     {
       key: "denver_industry_experts",
       content: (
-        <div id="experts">
-          <IndustryExpertCardsSection
+        <IndustryExpertCardsSection
             experts={industryExperts}
             setExperts={setIndustryExperts}
             handleDragEnd={handleDragEnd}
@@ -130,7 +129,6 @@ const EventOutsideDays26 = () => {
             highlightExpert={highlightExpert}
             registrationUrl={TYPEFORM_DENVER}
           />
-        </div>
       ),
     },
     {

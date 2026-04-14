@@ -6,6 +6,7 @@ import { getCompanyLogoUrl } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import EditableText from "@/components/EditableText";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
+import AnchorCopyButton from "@/components/event/AnchorCopyButton";
 
 interface BrandGroup {
   company: string;
@@ -82,8 +83,9 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
         const normalizedCareersUrl = normalizeUrl(careersUrl);
         const hasHighlightedExpert = highlightBrandRep && group.experts.some(e => e.slug === highlightBrandRep);
 
+        const brandAnchor = `brand-${slug}`;
         return (
-          <div key={group.company} ref={hasHighlightedExpert ? highlightRef : undefined} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+          <div key={group.company} id={brandAnchor} ref={hasHighlightedExpert ? highlightRef : undefined} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
             {/* Brand header */}
             <button
               onClick={() => toggleBrand(group.company)}
@@ -107,6 +109,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                       Visit our site <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
+                  {isAdmin && <AnchorCopyButton anchor={brandAnchor} label={group.company} />}
                 </div>
                 {hiringBlurb && (
                   <p className="text-events-cream/50 text-xs mt-1">{hiringBlurb}</p>
