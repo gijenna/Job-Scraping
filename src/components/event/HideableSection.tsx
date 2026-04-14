@@ -1,6 +1,7 @@
 import { useEditableTextContext } from "@/components/EditableTextProvider";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { Eye, EyeOff, ChevronUp, ChevronDown } from "lucide-react";
+import AnchorCopyButton from "@/components/event/AnchorCopyButton";
 
 interface HideableSectionProps {
   sectionKey: string;
@@ -20,7 +21,7 @@ const HideableSection = ({ sectionKey, children, onMoveUp, onMoveDown, isFirst, 
   if (hidden && !isAdmin) return null;
 
   return (
-    <div className={`relative ${hidden ? 'opacity-30' : ''}`}>
+    <div id={sectionKey} className={`relative ${hidden ? 'opacity-30' : ''}`}>
       {isAdmin && (
         <div className="absolute top-2 right-2 z-20 flex items-center gap-1">
           {onMoveUp && !isFirst && (
@@ -41,6 +42,7 @@ const HideableSection = ({ sectionKey, children, onMoveUp, onMoveDown, isFirst, 
               <ChevronDown className="w-4 h-4" />
             </button>
           )}
+          <AnchorCopyButton anchor={sectionKey} label={sectionKey} />
           <button
             onClick={() => setSetting(settingKey, hidden ? "false" : "true")}
             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-events-coral/80 text-white text-[10px] font-bold hover:bg-events-coral transition-colors shadow-lg"
