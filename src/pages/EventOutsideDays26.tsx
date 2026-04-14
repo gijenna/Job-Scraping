@@ -117,18 +117,20 @@ const EventOutsideDays26 = () => {
     {
       key: "denver_industry_experts",
       content: (
-        <IndustryExpertCardsSection
-          experts={industryExperts}
-          setExperts={setIndustryExperts}
-          handleDragEnd={handleDragEnd}
-          accentColor="#E1B624"
-          bgColor="#0d1f22"
-          eventSlug="denver26"
-          eyebrowKey="denver_experts_eyebrow"
-          headlineKey="denver_experts_headline"
-          highlightExpert={highlightExpert}
-          registrationUrl={TYPEFORM_DENVER}
-        />
+        <div id="experts">
+          <IndustryExpertCardsSection
+            experts={industryExperts}
+            setExperts={setIndustryExperts}
+            handleDragEnd={handleDragEnd}
+            accentColor="#E1B624"
+            bgColor="#0d1f22"
+            eventSlug="denver26"
+            eyebrowKey="denver_experts_eyebrow"
+            headlineKey="denver_experts_headline"
+            highlightExpert={highlightExpert}
+            registrationUrl={TYPEFORM_DENVER}
+          />
+        </div>
       ),
     },
     {
