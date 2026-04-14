@@ -5,6 +5,7 @@ import CardStylePicker from "@/components/event/CardStylePicker";
 import ExpertCard from "@/components/experts/ExpertCard";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
+import AnchorCopyButton from "@/components/event/AnchorCopyButton";
 import { Expert } from "@/lib/expert-types";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
@@ -97,7 +98,12 @@ const BrandRepCardsSection = ({
           <SortableContext items={brandReps.map(e => e.id)} strategy={rectSortingStrategy}>
             <div className={getGridClass()}>
               {brandReps.map((expert) => (
-                <div key={expert.id}>
+                <div key={expert.id} id={`expert-${expert.slug}`} className="relative">
+                  {isAdmin && (
+                    <div className="absolute -top-1 right-0 z-10">
+                      <AnchorCopyButton anchor={`expert-${expert.slug}`} label={expert.full_name} />
+                    </div>
+                  )}
                   <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
                 </div>
               ))}
