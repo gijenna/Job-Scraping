@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNW from "./pages/GatherPNW";
 import AdminLogin from "./pages/AdminLogin";
+import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
