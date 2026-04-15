@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import GatherDenver from "./pages/GatherDenver";
 import GatherPNW from "./pages/GatherPNW";
 import AdminLogin from "./pages/AdminLogin";
+import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw" element={<GatherPNW />} />
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/PNW26" element={<EventPNW26 />} />
