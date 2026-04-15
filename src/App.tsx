@@ -88,6 +88,7 @@ const App = () => (
           <Route path="/generate" element={<GenerateCards />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
+          <Route path="/print-card" element={<PrintExpertCard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
