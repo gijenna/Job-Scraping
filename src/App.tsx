@@ -29,6 +29,7 @@ import GenerateCards from "./pages/GenerateCards";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
+import PrintExpertCard from "./pages/PrintExpertCard";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
 
