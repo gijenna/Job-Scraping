@@ -48,6 +48,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/gather-pnw" element={<GatherPNW />} />
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/PNW26" element={<EventPNW26 />} />
