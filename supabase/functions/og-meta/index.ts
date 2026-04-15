@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
   const title = settings["page_og_title"] || "Basecamp Outdoor";
   const description = settings["page_og_description"] || "";
   const image = settings["page_og_image"] || "";
-  const favicon = settings["page_favicon"] || "/favicon.ico";
+  const favicon = settings["page_favicon"] || "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/page-meta/basecamp-favicon.png";
 
   // Redirect real users, serve meta HTML to bots
   const ua = (req.headers.get("user-agent") || "").toLowerCase();
