@@ -29,6 +29,7 @@ import GenerateCards from "./pages/GenerateCards";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
+import PrintExpertCard from "./pages/PrintExpertCard";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
 
@@ -87,6 +88,7 @@ const App = () => (
           <Route path="/generate" element={<GenerateCards />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
+          <Route path="/print-card" element={<PrintExpertCard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
