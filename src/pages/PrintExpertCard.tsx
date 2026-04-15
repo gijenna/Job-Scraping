@@ -186,7 +186,7 @@ const PrintExpertCard = () => {
 
           {/* Bottom bar with logo */}
           <div className="px-8 pb-6 flex items-end justify-end gap-3">
-            <span className="text-[#F5E6D3]/40 text-xs font-medium tracking-wide">basecampmatch.com</span>
+            <span className="text-[#F5E6D3]/40 text-xs font-medium tracking-wide">basecampjobs.com</span>
             <img src={basecampLogo} alt="Basecamp Match" className="h-8 object-contain" crossOrigin="anonymous" />
           </div>
         </div>
