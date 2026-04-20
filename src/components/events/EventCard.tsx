@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Link2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
