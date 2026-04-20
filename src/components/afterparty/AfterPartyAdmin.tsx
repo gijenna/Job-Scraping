@@ -70,9 +70,18 @@ const AfterPartyAdmin = () => {
   };
 
   const sendEmails = async () => {
+    if (!confirm("Send match emails to every attendee with an email on file? This sends one email per person.")) return;
+    setWorking(true);
+    const { data, error } = await supabase.functions.invoke("send-afterparty-matches", { body: {} });
+    setWorking(false);
+    if (error) {
+      toast({ title: "Send failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    const r = data as any;
     toast({
-      title: "Email blast not yet wired",
-      description: "Email infrastructure needs domain setup. Ask Lovable to set up emails to enable this button.",
+      title: "Match emails queued",
+      description: `Sent: ${r?.sent ?? 0} · Skipped (no email/no matches): ${r?.skipped ?? 0}${r?.errors?.length ? ` · Errors: ${r.errors.length}` : ""}`,
     });
   };
 
