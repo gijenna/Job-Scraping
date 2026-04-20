@@ -14,6 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
+      afterparty_attendees: {
+        Row: {
+          attendee_number: number
+          audience_size: string | null
+          brand_fit_notes: string | null
+          brand_seeking: string[] | null
+          brands_wishlist: string | null
+          budget_range: string | null
+          company: string | null
+          company_role: string | null
+          created_at: string
+          creator_types: string[] | null
+          email: string | null
+          full_name: string
+          id: string
+          looking_for: string[] | null
+          mind_blowing_fact: string | null
+          niches: string[] | null
+          photo_url: string | null
+          platforms: string[] | null
+          role: string
+          slug: string
+          social_links: Json | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          attendee_number?: number
+          audience_size?: string | null
+          brand_fit_notes?: string | null
+          brand_seeking?: string[] | null
+          brands_wishlist?: string | null
+          budget_range?: string | null
+          company?: string | null
+          company_role?: string | null
+          created_at?: string
+          creator_types?: string[] | null
+          email?: string | null
+          full_name: string
+          id?: string
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          photo_url?: string | null
+          platforms?: string[] | null
+          role: string
+          slug: string
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attendee_number?: number
+          audience_size?: string | null
+          brand_fit_notes?: string | null
+          brand_seeking?: string[] | null
+          brands_wishlist?: string | null
+          budget_range?: string | null
+          company?: string | null
+          company_role?: string | null
+          created_at?: string
+          creator_types?: string[] | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          photo_url?: string | null
+          platforms?: string[] | null
+          role?: string
+          slug?: string
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      afterparty_matches: {
+        Row: {
+          attendee_id: string
+          generated_at: string
+          id: string
+          locked: boolean
+          match_attendee_id: string
+          rank: number | null
+          reasons: string[] | null
+          score: number
+        }
+        Insert: {
+          attendee_id: string
+          generated_at?: string
+          id?: string
+          locked?: boolean
+          match_attendee_id: string
+          rank?: number | null
+          reasons?: string[] | null
+          score?: number
+        }
+        Update: {
+          attendee_id?: string
+          generated_at?: string
+          id?: string
+          locked?: boolean
+          match_attendee_id?: string
+          rank?: number | null
+          reasons?: string[] | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "afterparty_matches_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterparty_matches_match_attendee_id_fkey"
+            columns: ["match_attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_logos: {
         Row: {
           created_at: string
