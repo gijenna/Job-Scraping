@@ -183,6 +183,19 @@ const EventCard = ({ event, isAdmin, onDelete }: EventCardProps) => {
         {isAdmin && (
           <div className="absolute top-3 right-3 z-10 flex gap-1.5">
             <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const shareUrl = `https://qpnzjcbdtybwazceggmv.supabase.co/functions/v1/og-meta?path=/e/${event.id}`;
+                navigator.clipboard.writeText(shareUrl);
+                toast({ title: "Share link copied!", description: "Use this link on social media for the event preview image." });
+              }}
+              className="bg-black/60 hover:bg-events-coral text-events-cream p-2 rounded-full transition-colors"
+              title="Copy social share link"
+            >
+              <Link2 size={16} />
+            </button>
+            <button
               onClick={handleEditOpen}
               className="bg-black/60 hover:bg-events-coral text-events-cream p-2 rounded-full transition-colors"
               title="Edit event"
