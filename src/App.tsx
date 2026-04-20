@@ -30,6 +30,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
 import PrintExpertCard from "./pages/PrintExpertCard";
+import AfterPartyInvite from "./pages/AfterPartyInvite";
+import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
 
@@ -89,6 +91,10 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
+          {/* Creator After Party */}
+          <Route path="/afterparty" element={<AfterPartyInvite />} />
+          <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
