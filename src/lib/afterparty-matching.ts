@@ -6,6 +6,7 @@ export interface AfterPartyAttendee {
   attendee_number: number;
   full_name: string;
   slug: string;
+  email: string | null;
   photo_url: string | null;
   role: "creator" | "brand";
   niches: string[] | null;

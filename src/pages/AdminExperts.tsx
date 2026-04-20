@@ -8,6 +8,7 @@ import ExpertCarousel from "@/components/experts/ExpertCarousel";
 import ExpertGrid from "@/components/experts/ExpertGrid";
 import AddExpertDialog from "@/components/experts/AddExpertDialog";
 import FAQManager from "@/components/experts/FAQManager";
+import AfterPartyAdmin from "@/components/afterparty/AfterPartyAdmin";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
@@ -94,6 +95,9 @@ const AdminExperts = () => {
             <TabsTrigger value="faq" className="data-[state=active]:bg-events-coral data-[state=active]:text-events-cream text-events-cream/60">
               FAQ ({questions.length})
             </TabsTrigger>
+            <TabsTrigger value="afterparty" className="data-[state=active]:bg-events-coral data-[state=active]:text-events-cream text-events-cream/60">
+              After Party
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="crm">
@@ -150,6 +154,10 @@ const AdminExperts = () => {
 
           <TabsContent value="faq">
             <FAQManager questions={questions} onRefresh={fetchAll} />
+          </TabsContent>
+
+          <TabsContent value="afterparty">
+            <AfterPartyAdmin />
           </TabsContent>
         </Tabs>
       </div>
