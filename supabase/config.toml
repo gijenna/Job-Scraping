@@ -11,3 +11,5 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.expert-og]
     verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
