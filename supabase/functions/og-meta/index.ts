@@ -25,15 +25,55 @@ Deno.serve(async (req) => {
 
   const url = new URL(req.url);
   const path = url.searchParams.get("path") || "/";
-  const slug = SLUG_MAP[path];
-
-  if (!slug) {
-    return new Response("Unknown path", { status: 404, headers: corsHeaders });
-  }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const ua = (req.headers.get("user-agent") || "").toLowerCase();
+  const isBot =
+    /facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|telegrambot|discordbot|googlebot|bingbot|pinterest|redditbot|embedly|quora|outbrain|vkshare|w3c_validator|skypeuripreview/i.test(
+      ua
+    );
+
+  const origin = url.origin.replace(/\/functions\/v1.*/, "");
+
+  // Per-event share URLs: /e/:eventId
+  const eventMatch = path.match(/^\/e\/([0-9a-f-]{36})$/i);
+  if (eventMatch) {
+    const eventId = eventMatch[1];
+    const { data: event } = await supabase
+      .from("events")
+      .select("title, photo_url, registration_link, location, date")
+      .eq("id", eventId)
+      .maybeSingle();
+
+    if (!event) {
+      return new Response("Event not found", { status: 404, headers: corsHeaders });
+    }
+
+    // Humans → go straight to registration link
+    if (!isBot) {
+      return new Response(null, {
+        status: 302,
+        headers: { ...corsHeaders, Location: event.registration_link },
+      });
+    }
+
+    const eventDate = event.date ? new Date(event.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "";
+    const description = [eventDate, event.location].filter(Boolean).join(" · ");
+    const image = event.photo_url || "";
+    const favicon = "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/page-meta/basecamp-favicon.png";
+
+    return new Response(buildHtml(event.title, description, image, favicon, event.registration_link), {
+      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
+
+  const slug = SLUG_MAP[path];
+  if (!slug) {
+    return new Response("Unknown path", { status: 404, headers: corsHeaders });
+  }
 
   const { data } = await supabase
     .from("event_settings")
@@ -56,28 +96,27 @@ Deno.serve(async (req) => {
   const image = settings["page_og_image"] || "";
   const favicon = settings["page_favicon"] || "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/page-meta/basecamp-favicon.png";
 
-  // Redirect real users, serve meta HTML to bots
-  const ua = (req.headers.get("user-agent") || "").toLowerCase();
-  const isBot =
-    /facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|telegrambot|discordbot|googlebot|bingbot/i.test(
-      ua
-    );
-
   if (!isBot) {
-    // Redirect to the actual SPA page
-    const spaUrl = `${url.origin.replace(/\/functions\/v1.*/, "")}${path}`;
+    const spaUrl = `${origin}${path}`;
     return new Response(null, {
       status: 302,
       headers: { ...corsHeaders, Location: spaUrl },
     });
   }
 
-  const html = `<!DOCTYPE html>
+  return new Response(buildHtml(title, description, image, favicon), {
+    headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+  });
+});
+
+function buildHtml(title: string, description: string, image: string, favicon: string, canonical?: string): string {
+  return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
   <title>${escapeHtml(title)}</title>
   <link rel="icon" href="${escapeHtml(favicon)}" />
+  ${canonical ? `<link rel="canonical" href="${escapeHtml(canonical)}" />` : ""}
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
   ${image ? `<meta property="og:image" content="${escapeHtml(image)}" />` : ""}
@@ -89,11 +128,7 @@ Deno.serve(async (req) => {
 </head>
 <body></body>
 </html>`;
-
-  return new Response(html, {
-    headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-  });
-});
+}
 
 function escapeHtml(str: string): string {
   return str
