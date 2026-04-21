@@ -199,6 +199,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             <button type="button" key={n} onClick={() => toggle("niches", n)} className={pill(form.niches.includes(n))}>{n}</button>
           ))}
         </div>
+        <Input
+          value={otherNiche}
+          onChange={(e) => setOtherNiche(e.target.value)}
+          placeholder="Other niche? Suggest one (we'll review)"
+          className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+        />
       </div>
 
       {form.role === "creator" ? (
