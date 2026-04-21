@@ -1,0 +1,1 @@
+ALTER TABLE public.afterparty_attendees ADD COLUMN IF NOT EXISTS cartoon_url text;

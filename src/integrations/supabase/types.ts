@@ -22,6 +22,7 @@ export type Database = {
           brand_seeking: string[] | null
           brands_wishlist: string | null
           budget_range: string | null
+          cartoon_url: string | null
           company: string | null
           company_role: string | null
           created_at: string
@@ -47,6 +48,7 @@ export type Database = {
           brand_seeking?: string[] | null
           brands_wishlist?: string | null
           budget_range?: string | null
+          cartoon_url?: string | null
           company?: string | null
           company_role?: string | null
           created_at?: string
@@ -72,6 +74,7 @@ export type Database = {
           brand_seeking?: string[] | null
           brands_wishlist?: string | null
           budget_range?: string | null
+          cartoon_url?: string | null
           company?: string | null
           company_role?: string | null
           created_at?: string
