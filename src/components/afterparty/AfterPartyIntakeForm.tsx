@@ -87,6 +87,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     setUploading(false);
   };
 
+  const triggerCartoon = async (id: string, photoUrl: string) => {
+    try {
+      await supabase.functions.invoke("generate-cartoon-avatar", {
+        body: { attendee_id: id, photo_url: photoUrl },
+      });
+    } catch (e) {
+      // Non-blocking — cartoon is a nice-to-have
+      console.warn("cartoon generation failed", e);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.full_name.trim()) {
