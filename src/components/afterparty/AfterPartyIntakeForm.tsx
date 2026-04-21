@@ -12,8 +12,15 @@ import { Loader2, Upload } from "lucide-react";
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
 const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Substack", "Twitch", "X / Twitter", "Podcast"];
-const CREATOR_LOOKING_FOR = ["Brand partnerships", "Paid work", "Friends", "Mentors", "Fellow creators"];
+const CREATOR_PRO_LOOKING_FOR = ["Brand partnerships", "Paid work", "Mentors"];
 const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
+// Shared social/intent chips (amber-tinted) — available to BOTH roles
+const SOCIAL_LOOKING_FOR = [
+  "Make friends in the industry",
+  "Find a creator to collab with",
+  "Find a travel partner",
+  "Just here to vibe",
+];
 const AUDIENCE_SIZES = ["< 1K", "1K – 10K", "10K – 50K", "50K – 250K", "250K – 1M", "1M+"];
 const BUDGET_RANGES = ["No budget yet", "< $1K / project", "$1K – $5K", "$5K – $25K", "$25K+"];
 
@@ -80,6 +87,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     setUploading(false);
   };
 
+  const triggerCartoon = async (id: string, photoUrl: string) => {
+    try {
+      await supabase.functions.invoke("generate-cartoon-avatar", {
+        body: { attendee_id: id, photo_url: photoUrl },
+      });
+    } catch (e) {
+      // Non-blocking — cartoon is a nice-to-have
+      console.warn("cartoon generation failed", e);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.full_name.trim()) {
@@ -136,12 +154,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Thanks!", description: "Your suggestion was sent for review." });
     }
 
-    if (id) onSaved(id);
+    if (id) {
+      onSaved(id);
+      // Trigger cartoon avatar generation in background (fire & forget)
+      if (form.photo_url) triggerCartoon(id, form.photo_url);
+    }
   };
 
   const pill = (active: boolean) =>
     `px-3 py-1.5 rounded-full text-sm border transition-colors cursor-pointer ${
       active ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent border-events-cream/30 text-events-cream/80 hover:border-events-coral/50"
+    }`;
+
+  // Amber-tinted social/intent pill (visually different from coral pro pills)
+  const socialPill = (active: boolean) =>
+    `px-3 py-1.5 rounded-full text-sm border transition-colors cursor-pointer ${
+      active
+        ? "bg-events-yellow/90 text-[#1a0d2e] border-events-yellow"
+        : "bg-events-yellow/5 border-events-yellow/40 text-events-yellow/90 hover:border-events-yellow"
     }`;
 
   return (
@@ -239,8 +269,13 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <div>
             <Label className="mb-2 block">I'm looking for…</Label>
             <div className="flex flex-wrap gap-2">
-              {CREATOR_LOOKING_FOR.map((l) => (
+              {CREATOR_PRO_LOOKING_FOR.map((l) => (
                 <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {SOCIAL_LOOKING_FOR.map((l) => (
+                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={socialPill(form.looking_for.includes(l))}>{l}</button>
               ))}
             </div>
             <Input
@@ -257,8 +292,14 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           </div>
 
           <div>
-            <Label>One mind-blowing thing about you</Label>
-            <Textarea value={form.mind_blowing_fact} onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+            <Label>What's something you've made that you're most proud of — and why did it work?</Label>
+            <Textarea
+              value={form.mind_blowing_fact}
+              onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value })}
+              placeholder="Link a video, campaign, or product launch. The 'why' is the part that matches you with the right people."
+              rows={4}
+              className="bg-black/20 border-events-cream/20 text-events-cream"
+            />
           </div>
         </>
       ) : (
@@ -286,8 +327,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <div>
             <Label className="mb-2 block">What we (also) want from the night</Label>
             <div className="flex flex-wrap gap-2">
-              {CREATOR_LOOKING_FOR.map((l) => (
-                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
+              {SOCIAL_LOOKING_FOR.map((l) => (
+                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={socialPill(form.looking_for.includes(l))}>{l}</button>
               ))}
             </div>
             <Input
@@ -309,6 +350,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <div>
             <Label>What makes a creator a great fit for you?</Label>
             <Textarea value={form.brand_fit_notes} onChange={(e) => setForm({ ...form, brand_fit_notes: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+          </div>
+
+          <div>
+            <Label>What's a campaign or launch you're most proud of — and why did it work?</Label>
+            <Textarea
+              value={form.mind_blowing_fact}
+              onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value })}
+              placeholder="Tell us about a collab, drop, or moment. The 'why' is the part that matches you with the right people."
+              rows={4}
+              className="bg-black/20 border-events-cream/20 text-events-cream"
+            />
           </div>
         </>
       )}

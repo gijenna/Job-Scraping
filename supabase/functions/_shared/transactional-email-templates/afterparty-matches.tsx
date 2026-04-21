@@ -36,7 +36,7 @@ const AfterPartyMatchesEmail = ({
 }: AfterPartyMatchesProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your top {matches.length} matches for the Creator After Party</Preview>
+    <Preview>Your 5 people are waiting — here are their numbers</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Hey {recipientName} 👋</Heading>
@@ -44,8 +44,7 @@ const AfterPartyMatchesEmail = ({
           <Text style={numberBadge}>You're attendee #{attendeeNumber}</Text>
         )}
         <Text style={text}>
-          Here are your top {matches.length} matches for the Creator After Party.
-          Look out for their numbers when you get there.
+          Your 5 people are waiting. Here are their numbers — look out for them tonight.
         </Text>
 
         <Hr style={hr} />
@@ -63,7 +62,7 @@ const AfterPartyMatchesEmail = ({
         <Hr style={hr} />
 
         <Button href={inviteUrl} style={button}>
-          See your card & live matches
+          See your card & live list
         </Button>
 
         <Text style={footer}>
@@ -76,7 +75,7 @@ const AfterPartyMatchesEmail = ({
 
 export const template = {
   component: AfterPartyMatchesEmail,
-  subject: 'Your top matches for the Creator After Party',
+  subject: 'Your 5 people are waiting',
   displayName: 'After Party — match blast',
   previewData: {
     recipientName: 'Jane',
