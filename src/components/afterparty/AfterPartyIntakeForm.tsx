@@ -11,7 +11,7 @@ import { Loader2, Upload } from "lucide-react";
 
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
-const PLATFORMS = ["Instagram", "TikTok", "YouTube", "Substack", "Twitch", "X / Twitter", "Podcast"];
+const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Substack", "Twitch", "X / Twitter", "Podcast"];
 const CREATOR_LOOKING_FOR = ["Brand partnerships", "Paid work", "Friends", "Mentors", "Fellow creators"];
 const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
 const AUDIENCE_SIZES = ["< 1K", "1K – 10K", "10K – 50K", "50K – 250K", "250K – 1M", "1M+"];
