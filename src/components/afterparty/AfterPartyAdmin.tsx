@@ -22,18 +22,21 @@ const slugify = (s: string) =>
 const AfterPartyAdmin = () => {
   const { toast } = useToast();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
 
   const fetchAll = async () => {
     setLoading(true);
-    const [{ data: a }, { data: m }] = await Promise.all([
+    const [{ data: a }, { data: m }, { data: s }] = await Promise.all([
       (supabase as any).from("afterparty_attendees").select("*").order("attendee_number"),
       (supabase as any).from("afterparty_matches").select("id").eq("locked", true),
+      (supabase as any).from("afterparty_suggestions").select("*").eq("status", "pending").order("created_at", { ascending: false }),
     ]);
     setAttendees((a as AfterPartyAttendee[]) || []);
     setLockedCount((m as any[])?.length || 0);
+    setSuggestions((s as Suggestion[]) || []);
     setLoading(false);
   };
 
