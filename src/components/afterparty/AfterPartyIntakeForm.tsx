@@ -30,6 +30,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [otherNiche, setOtherNiche] = useState("");
+  const [otherLookingFor, setOtherLookingFor] = useState("");
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
