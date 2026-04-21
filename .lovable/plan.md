@@ -1,80 +1,75 @@
 
 
-# Creator After Party — Brand, Question, & UX Overhaul
+# Delta: Claude prompt vs. what's currently built
 
-Based on your Claude framework, I'll restyle the After Party page as **Basecamp Match × Popfly**, swap the matching question, expand intent options, and add photo upload with a generated cartoon avatar.
+Here's what the Claude prompt asks for that **we don't currently have** (or have differently). Approve the ones you want and I'll build them.
 
-## What changes
+## 1. Cartoon avatar generation — **DIFFERENT PROVIDER**
+- **Claude says:** Use **Replicate** (needs your Replicate API key + iterative prompt tuning)
+- **We have:** Lovable AI (`google/gemini-2.5-flash-image`) — already working, no extra key needed, free tier available
+- **Recommendation:** Keep Lovable AI. It's the same "cabbage patch" output, no key to manage, no extra cost. Only switch to Replicate if you specifically want a model Replicate hosts that Gemini can't match.
+- **Action if you want Replicate:** Add `REPLICATE_API_KEY` secret, swap the edge function to call Replicate's image model.
 
-### 1. Co-branded animated logo header
-- New `BasecampMatchPopflyLogo` component at the top of `/afterparty`
-- Two logo marks slide in from opposite sides and meet at a glowing neon `×`
-- **Basecamp Match** (left): campfire mark in neon amber `#E1B624` with pulsing flame glow
-- **Popfly** (right): outdoor pin/play mark in neon teal `#3DDFD5` with pulsing glow
-- Animated neon divider line grows between them, then "Creator After Party" fades in below
-- Pure CSS/SVG animation (Framer Motion-free, runs on load)
-- Uploaded `Basecamp_match_logo-darkmode.png` saved to `src/assets/` and used as the left mark
+## 2. Matching as an Edge Function — **ARCHITECTURE DIFFERENCE**
+- **Claude says:** Matching should live in a Supabase Edge Function so you can test it server-side with fake records
+- **We have:** Pure TS in `src/lib/afterparty-matching.ts` — runs client-side on every page load AND inside `send-afterparty-matches` edge function for emails
+- **Recommendation:** Add a new `compute-afterparty-matches` edge function that wraps the same logic + a small **admin "Test matches with fake attendees" tool** in the admin tab where you paste/generate fake records and see the scores. The pure-TS lib stays for client-side preview.
 
-### 2. Better matching question (replaces "mind-blowing fact")
-- Field renamed in UI: **"What's something you've made that you're most proud of — and why did it work?"**
-- DB column `mind_blowing_fact` is reused (no migration); only the label/placeholder change
-- Placeholder hints: "Link a video, campaign, or product launch. The 'why' is the part that matches you with the right people."
-- Shown for both creators AND brands (brands describe a collab/launch)
-- Displayed prominently on each match card as the conversation starter
+## 3. Brand rep diversity cap — **NEW RULE, MISSING**
+- **Claude says:** Cap how many of one brand's reps can show up in a single creator's top 5 (so one brand doesn't dominate someone's matches)
+- **We have:** No cap — if a brand has 3 reps all matching a creator, all 3 could fill the top 5
+- **New rule to add:** Max **1 person per company** in any attendee's top 5. If the same company has multiple reps that would make top 5, pick the highest-scoring one and let other people fill the remaining slots.
 
-### 3. Expanded "I'm looking for" chips (both roles)
-New shared options for everyone:
-- Make friends in the industry
-- Find a creator to collab with
-- Find a travel partner
-- Just here to vibe
+## 4. "Just here to vibe" exclusion logic — **ALREADY DONE ✅**
+- **Claude says:** Vibers shouldn't appear in others' top 5 unless mutual; their own matches de-emphasized
+- **We have:** Exactly this in `computeMatchesFor` (lines 172–184). No change needed.
 
-Existing creator/brand-specific chips stay. The new chips are visually grouped with an **amber tint** to signal "social" vs the **coral** "professional" chips.
+## 5. Admin CSV seed flow — **NEW FEATURE, MISSING**
+This is the one Claude calls "your most important pre-event step."
+- **Upload a CSV** of invitees (name, email, role, optional company) into the admin After Party tab
+- For each row, create an `afterparty_attendees` record with `status='invited'`, auto-assigned attendee number, and a generated slug
+- Show a preview of parsed rows before commit
+- After import, a **"Send invite emails"** button blasts each invitee a personal link (`/afterparty/their-name`) with copy like *"You're #47. Fill in your profile so we can match you with your 5 people."*
+- New transactional email template: `afterparty-invite`
 
-### 4. Matching algorithm tweaks (`afterparty-matching.ts`)
-- **Same-role pairing now allowed when** both selected `Make friends`, `Find a creator to collab with`, or `Find a travel partner` AND share ≥1 niche → no 0.6× penalty in that case
-- **"Just here to vibe"** → attendee is excluded from being _ranked into_ others' top 5 unless mutual, and their own matches are de-emphasized (lower weights, friendly tone)
-- **Profile completeness tiebreaker**: when scores tie, attendee with more filled fields ranks higher
-- **Brand-first override**: if a brand seeks creator-type X and a creator IS X → that match jumps to top of brand's list before general ranking
-- Reasons rewritten with warmer copy ("You both want to find a travel buddy in fishing")
+## 6. Brand-first override scope — **MINOR TWEAK SUGGESTED**
+- **Currently:** Brand-first override (line 197) only fires when `me.role === 'brand'` (a brand viewing their own matches sees their wishlist matches first)
+- **Claude implies:** This should also affect ranking globally — i.e., when computing a creator's matches, brands actively seeking that creator's type should jump up too
+- **Recommendation:** Mirror the override for creators (when a brand specifically seeks them, that brand jumps to the top of the creator's list too). Small change in `scorePair`.
 
-### 5. Photo upload + dual avatar display
-- Existing photo upload stays (already wired to Supabase Storage)
-- New helper: after upload, store original in `photo_url` and a generated cartoon version in new column `cartoon_url`
-- Cartoon generated via **Lovable AI** (`google/gemini-2.5-flash-image`) with prompt: "Convert this portrait into a flat illustrated cabbage-patch style cartoon avatar, friendly outdoor vibe, transparent or simple solid background, head and shoulders only"
-- Edge function `generate-cartoon-avatar` handles the call (keeps API usage server-side)
-- Card preview + match list show **both side-by-side**: real photo left, cartoon right
-- Falls back gracefully if cartoon generation fails (just shows real photo)
+---
 
-### 6. Copy polish
-- Email reveal subject/preview reframed: **"Your 5 people are waiting"** (not "Your matches")
-- In-page header: "Your 5 people" instead of "Your top 5 matches"
-- All headings remain admin-editable via existing `event_settings` system
+## Summary table
 
-## Technical details
+| # | Item | Status | Recommended action |
+|---|------|--------|--------------------|
+| 1 | Cartoon via Replicate | We use Lovable AI instead | **Skip** unless you want Replicate specifically |
+| 2 | Matching edge function + test harness | Client-only | **Add** edge fn + admin "Test with fake data" panel |
+| 3 | Brand rep diversity cap (max 1/company in top 5) | Missing | **Add** to scoring sort step |
+| 4 | "Just here to vibe" exclusion | ✅ Done | Nothing |
+| 5 | Admin CSV seed + invite blast | Missing | **Add** — biggest pre-event win |
+| 6 | Brand-first override mirrored for creators | One-sided | **Add** small mirror in scoring |
 
-**DB migration:**
-- Add `cartoon_url text` to `afterparty_attendees`
-- No new tables; `mind_blowing_fact` reused with new UI label
+---
+
+## What I'll build if you approve all (default: 2, 3, 5, 6 — skip 1)
 
 **New files:**
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — animated co-branded header
-- `supabase/functions/generate-cartoon-avatar/index.ts` — Lovable AI image edit call
-- `src/assets/basecamp-match-logo.png` — copied from upload (already present per file list, will overwrite/use)
+- `supabase/functions/compute-afterparty-matches/index.ts` — server-side matching wrapper for testing
+- `supabase/functions/_shared/transactional-email-templates/afterparty-invite.tsx` — invite blast template
+- `src/components/afterparty/AfterPartyCsvSeed.tsx` — CSV upload + preview + commit panel (added to admin tab)
+- `src/components/afterparty/AfterPartyTestMatches.tsx` — paste-fake-attendees panel that calls the edge function and shows scores
 
 **Edited files:**
-- `src/components/afterparty/AfterPartyIntakeForm.tsx` — new chips, renamed question, cartoon trigger after upload
-- `src/components/afterparty/MatchesPanel.tsx` — dual avatar display, conversation-starter quote, role-color number badges
-- `src/lib/afterparty-matching.ts` — new pairing rules, completeness tiebreaker, brand-first override, friendlier reasons
-- `src/pages/AfterPartyInvite.tsx` — swap hero for new co-branded logo block, "Your 5 people" copy
-- `supabase/functions/_shared/transactional-email-templates/afterparty-matches.tsx` — subject + body recopy
+- `src/lib/afterparty-matching.ts` — add brand-rep diversity cap + mirror brand-first override for creators
+- `src/components/afterparty/AfterPartyAdmin.tsx` — wire in CSV panel, test panel, and "Send invite emails" button
+- `supabase/functions/_shared/transactional-email-templates/registry.ts` — register `afterparty-invite`
+- New edge function `send-afterparty-invites` — loops invited attendees, sends personal links
 
-**Color additions** (Tailwind config-safe inline values):
-- Neon amber glow: `#E1B624` with `box-shadow: 0 0 24px rgba(225,182,36,0.6)`
-- Neon teal (Popfly): `#3DDFD5` with `box-shadow: 0 0 24px rgba(61,223,213,0.55)`
+**Out of scope:**
+- Switching cartoon provider to Replicate (skipping per recommendation)
+- Live preview of cartoon before save
+- Per-attendee cartoon prompt customization
 
-## Out of scope
-- Re-running cartoon generation for already-saved attendees (only new uploads get cartoonified; admin can trigger backfill later if needed)
-- Live preview of the cartoon before save (it generates on save, shows on next page load)
-- Dragging/swapping which avatar is "primary"
+Tell me which numbered items to include (or "all except 1") and I'll build it.
 
