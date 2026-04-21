@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
             content: [
               {
                 type: "text",
-                text: "Convert this portrait into a flat illustrated cabbage-patch style cartoon avatar. Friendly outdoor vibe, warm colors, soft rounded features, big expressive eyes, simple flat shading, head and shoulders only, on a clean solid pastel background. Keep recognizable features (hair color, glasses, skin tone) accurate.",
+                text: "Turn this portrait into a flat vector sticker-style cartoon avatar, in the style of Bitmoji or modern flat illustration. Bold clean black outlines, fully flat solid colors with NO gradients and NO photorealistic shading, simple cel-shaded blocks only. Big friendly rounded features, slightly oversized head, expressive eyes. Head and shoulders crop, centered. Solid flat pastel background (single color, no texture). Keep these features recognizable and accurate: hair color and style, skin tone, glasses, facial hair, clothing color. Outdoor industry friendly vibe. Do NOT make it 3D, do NOT make it painterly, do NOT make it photorealistic.",
               },
               { type: "image_url", image_url: { url: photo_url } },
             ],
