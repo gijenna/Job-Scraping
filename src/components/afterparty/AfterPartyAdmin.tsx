@@ -97,6 +97,15 @@ const AfterPartyAdmin = () => {
     });
   };
 
+  const reviewSuggestion = async (id: string, status: "approved" | "rejected") => {
+    await (supabase as any)
+      .from("afterparty_suggestions")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    setSuggestions((prev) => prev.filter((s) => s.id !== id));
+    toast({ title: status === "approved" ? "Approved" : "Rejected" });
+  };
+
   if (loading) return <p className="text-events-cream/60 text-center py-12">Loading…</p>;
 
   return (
