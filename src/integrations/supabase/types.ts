@@ -140,6 +140,47 @@ export type Database = {
           },
         ]
       }
+      afterparty_suggestions: {
+        Row: {
+          attendee_id: string | null
+          attendee_name: string | null
+          created_at: string
+          id: string
+          kind: string
+          reviewed_at: string | null
+          status: string
+          value: string
+        }
+        Insert: {
+          attendee_id?: string | null
+          attendee_name?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          reviewed_at?: string | null
+          status?: string
+          value: string
+        }
+        Update: {
+          attendee_id?: string | null
+          attendee_name?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          reviewed_at?: string | null
+          status?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "afterparty_suggestions_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_send_log: {
         Row: {
           created_at: string
