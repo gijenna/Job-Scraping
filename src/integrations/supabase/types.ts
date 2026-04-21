@@ -14,10 +14,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_action_log: {
+        Row: {
+          action: string
+          actor_email: string
+          created_at: string
+          id: string
+          payload: Json | null
+        }
+        Insert: {
+          action: string
+          actor_email: string
+          created_at?: string
+          id?: string
+          payload?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string
+          created_at?: string
+          id?: string
+          payload?: Json | null
+        }
+        Relationships: []
+      }
       afterparty_attendees: {
         Row: {
           attendee_number: number
           audience_size: string | null
+          auth_user_id: string | null
           brand_fit_notes: string | null
           brand_seeking: string[] | null
           brands_wishlist: string | null
@@ -28,15 +53,21 @@ export type Database = {
           created_at: string
           creator_types: string[] | null
           email: string | null
+          email_verified: boolean
           full_name: string
           id: string
           looking_for: string[] | null
           mind_blowing_fact: string | null
           niches: string[] | null
           photo_url: string | null
+          pin_attempts: number
+          pin_expires_at: string | null
+          pin_hash: string | null
+          pin_locked_until: string | null
           platforms: string[] | null
           role: string
           slug: string
+          slug_opened_at: string | null
           social_links: Json | null
           status: string | null
           updated_at: string
@@ -44,6 +75,7 @@ export type Database = {
         Insert: {
           attendee_number?: number
           audience_size?: string | null
+          auth_user_id?: string | null
           brand_fit_notes?: string | null
           brand_seeking?: string[] | null
           brands_wishlist?: string | null
@@ -54,15 +86,21 @@ export type Database = {
           created_at?: string
           creator_types?: string[] | null
           email?: string | null
+          email_verified?: boolean
           full_name: string
           id?: string
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
           photo_url?: string | null
+          pin_attempts?: number
+          pin_expires_at?: string | null
+          pin_hash?: string | null
+          pin_locked_until?: string | null
           platforms?: string[] | null
           role: string
           slug: string
+          slug_opened_at?: string | null
           social_links?: Json | null
           status?: string | null
           updated_at?: string
@@ -70,6 +108,7 @@ export type Database = {
         Update: {
           attendee_number?: number
           audience_size?: string | null
+          auth_user_id?: string | null
           brand_fit_notes?: string | null
           brand_seeking?: string[] | null
           brands_wishlist?: string | null
@@ -80,15 +119,21 @@ export type Database = {
           created_at?: string
           creator_types?: string[] | null
           email?: string | null
+          email_verified?: boolean
           full_name?: string
           id?: string
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
           photo_url?: string | null
+          pin_attempts?: number
+          pin_expires_at?: string | null
+          pin_hash?: string | null
+          pin_locked_until?: string | null
           platforms?: string[] | null
           role?: string
           slug?: string
+          slug_opened_at?: string | null
           social_links?: Json | null
           status?: string | null
           updated_at?: string
@@ -135,10 +180,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "afterparty_matches_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "afterparty_matches_match_attendee_id_fkey"
             columns: ["match_attendee_id"]
             isOneToOne: false
             referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterparty_matches_match_attendee_id_fkey"
+            columns: ["match_attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees_public"
             referencedColumns: ["id"]
           },
         ]
@@ -180,6 +239,13 @@ export type Database = {
             columns: ["attendee_id"]
             isOneToOne: false
             referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterparty_suggestions_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees_public"
             referencedColumns: ["id"]
           },
         ]
@@ -723,7 +789,84 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      afterparty_attendees_public: {
+        Row: {
+          attendee_number: number | null
+          audience_size: string | null
+          brand_fit_notes: string | null
+          brand_seeking: string[] | null
+          brands_wishlist: string | null
+          budget_range: string | null
+          cartoon_url: string | null
+          company: string | null
+          company_role: string | null
+          created_at: string | null
+          creator_types: string[] | null
+          full_name: string | null
+          id: string | null
+          looking_for: string[] | null
+          mind_blowing_fact: string | null
+          niches: string[] | null
+          photo_url: string | null
+          platforms: string[] | null
+          role: string | null
+          slug: string | null
+          social_links: Json | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          attendee_number?: number | null
+          audience_size?: string | null
+          brand_fit_notes?: string | null
+          brand_seeking?: string[] | null
+          brands_wishlist?: string | null
+          budget_range?: string | null
+          cartoon_url?: string | null
+          company?: string | null
+          company_role?: string | null
+          created_at?: string | null
+          creator_types?: string[] | null
+          full_name?: string | null
+          id?: string | null
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          photo_url?: string | null
+          platforms?: string[] | null
+          role?: string | null
+          slug?: string | null
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          attendee_number?: number | null
+          audience_size?: string | null
+          brand_fit_notes?: string | null
+          brand_seeking?: string[] | null
+          brands_wishlist?: string | null
+          budget_range?: string | null
+          cartoon_url?: string | null
+          company?: string | null
+          company_role?: string | null
+          created_at?: string | null
+          creator_types?: string[] | null
+          full_name?: string | null
+          id?: string | null
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          photo_url?: string | null
+          platforms?: string[] | null
+          role?: string | null
+          slug?: string | null
+          social_links?: Json | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       delete_email: {
