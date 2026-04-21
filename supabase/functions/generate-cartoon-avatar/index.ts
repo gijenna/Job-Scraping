@@ -9,9 +9,9 @@ Deno.serve(async (req) => {
   try {
     const { attendee_id, photo_url } = await req.json();
 
-    if (!attendee_id || !photo_url) {
+    if (!photo_url) {
       return new Response(
-        JSON.stringify({ error: "attendee_id and photo_url required" }),
+        JSON.stringify({ error: "photo_url required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const path = `afterparty/cartoon-${attendee_id}-${Date.now()}.png`;
+    const path = `afterparty/cartoon-${attendee_id || "anon"}-${Date.now()}.png`;
     const { error: upErr } = await supabase.storage
       .from("event-photos")
       .upload(path, bytes, { contentType: "image/png", upsert: true });
@@ -85,12 +85,14 @@ Deno.serve(async (req) => {
     const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
     const cartoonUrl = urlData.publicUrl;
 
-    // Persist to attendee row
-    const { error: updErr } = await supabase
-      .from("afterparty_attendees")
-      .update({ cartoon_url: cartoonUrl })
-      .eq("id", attendee_id);
-    if (updErr) throw updErr;
+    // Persist to attendee row only if id provided
+    if (attendee_id) {
+      const { error: updErr } = await supabase
+        .from("afterparty_attendees")
+        .update({ cartoon_url: cartoonUrl })
+        .eq("id", attendee_id);
+      if (updErr) throw updErr;
+    }
 
     return new Response(JSON.stringify({ cartoon_url: cartoonUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
