@@ -3,7 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2 } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+
+interface Suggestion {
+  id: string;
+  kind: "niche" | "looking_for";
+  value: string;
+  attendee_name: string | null;
+  status: string;
+  created_at: string;
+}
 
 const PUBLISHED_BASE = "https://basecampoutdoorevents.com";
 
@@ -13,18 +22,21 @@ const slugify = (s: string) =>
 const AfterPartyAdmin = () => {
   const { toast } = useToast();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
 
   const fetchAll = async () => {
     setLoading(true);
-    const [{ data: a }, { data: m }] = await Promise.all([
+    const [{ data: a }, { data: m }, { data: s }] = await Promise.all([
       (supabase as any).from("afterparty_attendees").select("*").order("attendee_number"),
       (supabase as any).from("afterparty_matches").select("id").eq("locked", true),
+      (supabase as any).from("afterparty_suggestions").select("*").eq("status", "pending").order("created_at", { ascending: false }),
     ]);
     setAttendees((a as AfterPartyAttendee[]) || []);
     setLockedCount((m as any[])?.length || 0);
+    setSuggestions((s as Suggestion[]) || []);
     setLoading(false);
   };
 
@@ -85,6 +97,15 @@ const AfterPartyAdmin = () => {
     });
   };
 
+  const reviewSuggestion = async (id: string, status: "approved" | "rejected") => {
+    await (supabase as any)
+      .from("afterparty_suggestions")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    setSuggestions((prev) => prev.filter((s) => s.id !== id));
+    toast({ title: status === "approved" ? "Approved" : "Rejected" });
+  };
+
   if (loading) return <p className="text-events-cream/60 text-center py-12">Loading…</p>;
 
   return (
@@ -106,6 +127,35 @@ const AfterPartyAdmin = () => {
           {attendees.length} attendees · {lockedCount > 0 ? `${lockedCount} locked match rows` : "matches are live"}
         </span>
       </div>
+
+      {suggestions.length > 0 && (
+        <div className="rounded-xl border border-events-yellow/30 bg-events-yellow/5 p-4">
+          <h3 className="font-display font-bold text-events-cream mb-3">
+            Pending suggestions ({suggestions.length})
+          </h3>
+          <div className="space-y-2">
+            {suggestions.map((s) => (
+              <div key={s.id} className="flex items-center gap-3 text-sm text-events-cream">
+                <span className="px-2 py-0.5 rounded bg-events-cream/10 text-xs uppercase tracking-wider">
+                  {s.kind === "niche" ? "Niche" : "Looking for"}
+                </span>
+                <span className="font-bold">{s.value}</span>
+                <span className="text-events-cream/50 text-xs">
+                  by {s.attendee_name || "anonymous"}
+                </span>
+                <div className="ml-auto flex gap-1">
+                  <Button size="sm" variant="ghost" onClick={() => reviewSuggestion(s.id, "approved")} className="text-green-400 hover:text-green-300">
+                    <Check className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => reviewSuggestion(s.id, "rejected")} className="text-red-400 hover:text-red-300">
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="rounded-xl border border-events-cream/10 overflow-hidden">
         <table className="w-full text-sm text-events-cream">

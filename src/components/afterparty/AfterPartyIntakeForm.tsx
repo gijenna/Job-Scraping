@@ -11,7 +11,7 @@ import { Loader2, Upload } from "lucide-react";
 
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
-const PLATFORMS = ["Instagram", "TikTok", "YouTube", "Substack", "Twitch", "X / Twitter", "Podcast"];
+const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Substack", "Twitch", "X / Twitter", "Podcast"];
 const CREATOR_LOOKING_FOR = ["Brand partnerships", "Paid work", "Friends", "Mentors", "Fellow creators"];
 const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
 const AUDIENCE_SIZES = ["< 1K", "1K – 10K", "10K – 50K", "50K – 250K", "250K – 1M", "1M+"];
@@ -30,6 +30,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [otherNiche, setOtherNiche] = useState("");
+  const [otherLookingFor, setOtherLookingFor] = useState("");
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
@@ -120,6 +122,20 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
     setSaving(false);
     toast({ title: "Saved!", description: "Your card is live. Check your matches below." });
+
+    // Submit any "other" suggestions for admin approval
+    const suggestions: any[] = [];
+    const niche = otherNiche.trim();
+    const lf = otherLookingFor.trim();
+    if (niche) suggestions.push({ kind: "niche", value: niche, attendee_id: id, attendee_name: payload.full_name });
+    if (lf) suggestions.push({ kind: "looking_for", value: lf, attendee_id: id, attendee_name: payload.full_name });
+    if (suggestions.length) {
+      await (supabase as any).from("afterparty_suggestions").insert(suggestions);
+      setOtherNiche("");
+      setOtherLookingFor("");
+      toast({ title: "Thanks!", description: "Your suggestion was sent for review." });
+    }
+
     if (id) onSaved(id);
   };
 
@@ -183,6 +199,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             <button type="button" key={n} onClick={() => toggle("niches", n)} className={pill(form.niches.includes(n))}>{n}</button>
           ))}
         </div>
+        <Input
+          value={otherNiche}
+          onChange={(e) => setOtherNiche(e.target.value)}
+          placeholder="Other niche? Suggest one (we'll review)"
+          className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+        />
       </div>
 
       {form.role === "creator" ? (
@@ -221,6 +243,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
                 <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
               ))}
             </div>
+            <Input
+              value={otherLookingFor}
+              onChange={(e) => setOtherLookingFor(e.target.value)}
+              placeholder="Looking for something else? Suggest one (we'll review)"
+              className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+            />
           </div>
 
           <div>
@@ -262,6 +290,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
                 <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
               ))}
             </div>
+            <Input
+              value={otherLookingFor}
+              onChange={(e) => setOtherLookingFor(e.target.value)}
+              placeholder="Looking for something else? Suggest one (we'll review)"
+              className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+            />
           </div>
 
           <div>
