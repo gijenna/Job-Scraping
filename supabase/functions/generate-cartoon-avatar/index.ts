@@ -9,9 +9,9 @@ Deno.serve(async (req) => {
   try {
     const { attendee_id, photo_url } = await req.json();
 
-    if (!attendee_id || !photo_url) {
+    if (!photo_url) {
       return new Response(
-        JSON.stringify({ error: "attendee_id and photo_url required" }),
+        JSON.stringify({ error: "photo_url required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
