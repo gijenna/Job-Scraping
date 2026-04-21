@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
             content: [
               {
                 type: "text",
-                text: "Turn this portrait into a flat vector sticker-style cartoon avatar, in the style of Bitmoji or modern flat illustration. Bold clean black outlines, fully flat solid colors with NO gradients and NO photorealistic shading, simple cel-shaded blocks only. Big friendly rounded features, slightly oversized head, expressive eyes. Head and shoulders crop, centered. Solid flat pastel background (single color, no texture). Keep these features recognizable and accurate: hair color and style, skin tone, glasses, facial hair, clothing color. Outdoor industry friendly vibe. Do NOT make it 3D, do NOT make it painterly, do NOT make it photorealistic.",
+                text: "Convert this portrait into a bold modern flat-design portrait illustration in the style of editorial magazine spot illustrations. Limited color palette (3-4 colors max), geometric simplified shapes, NO outlines, confident flat color blocks with subtle shading planes. Head and shoulders, centered on a solid colored background (deep teal, mustard, terracotta, or dusty pink). Keep these features recognizable and accurate: hair color and style, skin tone, glasses, facial hair, clothing color. Sophisticated, designer-y, editorial. Do NOT add outlines, do NOT make it 3D, do NOT make it photorealistic, do NOT make it cute or cartoony.",
               },
               { type: "image_url", image_url: { url: photo_url } },
             ],
