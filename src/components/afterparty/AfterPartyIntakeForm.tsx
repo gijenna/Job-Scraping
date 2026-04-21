@@ -194,7 +194,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
     if (id) {
       onSaved(id);
-      if (form.photo_url && !form.cartoon_url) triggerCartoon(id, form.photo_url);
     }
   };
 
