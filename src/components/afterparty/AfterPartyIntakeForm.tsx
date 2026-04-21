@@ -114,34 +114,29 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     const { error } = await supabase.storage.from("event-photos").upload(path, file);
     if (error) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-    } else {
-      const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
-      setForm((f: any) => ({ ...f, photo_url: urlData.publicUrl, cartoon_url: "" }));
+      setUploading(false);
+      return;
     }
+    const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
+    const photoUrl = urlData.publicUrl;
+    setForm((f: any) => ({ ...f, photo_url: photoUrl, cartoon_url: "" }));
     setUploading(false);
-  };
 
-  const triggerCartoon = async (id: string, photoUrl: string) => {
+    // Kick off cartoon generation immediately (no attendee_id needed)
     setCartoonPolling(true);
     try {
-      await supabase.functions.invoke("generate-cartoon-avatar", {
-        body: { attendee_id: id, photo_url: photoUrl },
+      const { data, error: fnErr } = await supabase.functions.invoke("generate-cartoon-avatar", {
+        body: { photo_url: photoUrl, attendee_id: attendeeId || null },
       });
-      // poll for cartoon_url
-      for (let i = 0; i < 10; i++) {
-        await new Promise((r) => setTimeout(r, 2000));
-        const { data } = await (supabase as any)
-          .from("afterparty_attendees")
-          .select("cartoon_url")
-          .eq("id", id)
-          .single();
-        if (data?.cartoon_url) {
-          setForm((f: any) => ({ ...f, cartoon_url: data.cartoon_url }));
-          break;
-        }
+      if (fnErr) throw fnErr;
+      if (data?.cartoon_url) {
+        setForm((f: any) => ({ ...f, cartoon_url: data.cartoon_url }));
+      } else if (data?.error) {
+        toast({ title: "Avatar generation failed", description: data.error, variant: "destructive" });
       }
-    } catch (e) {
+    } catch (e: any) {
       console.warn("cartoon generation failed", e);
+      toast({ title: "Avatar generation failed", description: e?.message || "Try again", variant: "destructive" });
     }
     setCartoonPolling(false);
   };
