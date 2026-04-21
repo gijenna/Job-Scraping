@@ -3,7 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2 } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+
+interface Suggestion {
+  id: string;
+  kind: "niche" | "looking_for";
+  value: string;
+  attendee_name: string | null;
+  status: string;
+  created_at: string;
+}
 
 const PUBLISHED_BASE = "https://basecampoutdoorevents.com";
 
