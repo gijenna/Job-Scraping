@@ -12,8 +12,15 @@ import { Loader2, Upload } from "lucide-react";
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
 const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Substack", "Twitch", "X / Twitter", "Podcast"];
-const CREATOR_LOOKING_FOR = ["Brand partnerships", "Paid work", "Friends", "Mentors", "Fellow creators"];
+const CREATOR_PRO_LOOKING_FOR = ["Brand partnerships", "Paid work", "Mentors"];
 const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
+// Shared social/intent chips (amber-tinted) — available to BOTH roles
+const SOCIAL_LOOKING_FOR = [
+  "Make friends in the industry",
+  "Find a creator to collab with",
+  "Find a travel partner",
+  "Just here to vibe",
+];
 const AUDIENCE_SIZES = ["< 1K", "1K – 10K", "10K – 50K", "50K – 250K", "250K – 1M", "1M+"];
 const BUDGET_RANGES = ["No budget yet", "< $1K / project", "$1K – $5K", "$5K – $25K", "$25K+"];
 
