@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Users, PartyPopper, Search } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
+import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -107,12 +108,13 @@ const AfterPartyInvite = () => {
             <div className="absolute top-20 left-10 w-72 h-72 bg-events-coral rounded-full blur-3xl" />
             <div className="absolute bottom-10 right-10 w-96 h-96 bg-events-yellow/40 rounded-full blur-3xl" />
           </div>
-          <div className="relative max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-events-coral/20 border border-events-coral/40 text-sm mb-6">
+          <div className="relative max-w-4xl mx-auto px-6 pt-12 pb-12 text-center">
+            <BasecampMatchPopflyLogo />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-events-coral/20 border border-events-coral/40 text-sm mb-6 mt-4">
               <PartyPopper className="w-4 h-4" />
               <EditableText settingKey="hero.kicker" defaultText="INVITE ONLY" />
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-bold leading-tight mb-4">
+            <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight mb-4">
               {name ? (
                 <>
                   Hey {decodeURIComponent(name).replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())},
@@ -121,7 +123,7 @@ const AfterPartyInvite = () => {
               ) : null}
               <EditableText
                 settingKey="hero.title"
-                defaultText="You're invited to the Creator After Party"
+                defaultText="You're invited."
                 className="text-events-coral"
               />
             </h1>
@@ -205,7 +207,7 @@ const AfterPartyInvite = () => {
         {me && (
           <section id="matches" className="max-w-2xl mx-auto px-6 py-12">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-display text-3xl font-bold">Your top 5 matches</h2>
+              <h2 className="font-display text-3xl font-bold">Your 5 people</h2>
               <span className="text-xs text-events-cream/50">
                 {lockedMatches ? "Final" : "Live · updates as people sign up"}
               </span>
