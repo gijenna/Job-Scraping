@@ -1,85 +1,84 @@
 
-# Build all deltas except #4, #5, #13
 
-Skipping niche list swap, format chip swap, and route change. Building everything else.
+# Stage 1: PIN auth + RLS lockdown
+
+Replace name-as-password identity verification with a 4-digit PIN sent to the attendee's email on file. Lock down all writes through edge functions backed by a Supabase session. Decisions confirmed:
+
+- **PIN delivery**: Email (via existing Lovable Email infrastructure). One swap point later for Twilio.
+- **Session**: Real Supabase auth session (anonymous user linked to attendee), not custom JWT. RLS keys off `auth.uid()`.
+- **Admin**: Magic link to a single `ADMIN_EMAIL` env var, scoped to the afterparty admin route only. `/admin/login` and other admin routes untouched.
+- **Rate limiting**: Skipping for now — Lovable backend doesn't have rate-limit primitives yet. Will revisit in a later stage.
+- **Out of scope for Stage 1**: Photo upload hardening, phone number update flow, slug rotation/honeypot, security headers, sanitize-html, change-log table. Those land in Stage 2+.
 
 ## What gets built
 
-### Visual restyle (#1)
-- `AfterPartyInvite.tsx` background → `#080808`, cards → `#111111`, borders → `rgba(255,255,255,0.09)`
-- Inter font, weights 400/500 only, sentence case
-- Max content width 480px, mobile-first
-- Remove gradient hero, blurred blobs, glassmorphism
-- Role color tokens applied to chips, badges, pills:
-  - Creator coral `#D85A30` / `#4A1B0C` / `#F5C4B3`
-  - Brand rep purple `#7F77DD` / `#1a1830` / `#CECBF6`
-  - Industry expert teal `#1D9E75` / `#04342C` / `#9FE1CB`
-  - Social amber `#BA7517` / `#412402` / `#FAC775`
+### 1. Auth abstraction layer
+New file `src/services/auth.ts`. Exports exactly four functions: `requestPin(slug)`, `verifyPin(slug, pin)`, `getSession()`, `clearSession()`. All Supabase, JWT, and storage details live inside. Components only call these four.
 
-### Industry expert role (#2)
-- Add `industry_expert` to role chip selector
-- Teal styling on selection
-- Matching weights treat creator↔expert as 8 pts role complementarity
+### 2. Database changes (one migration)
+- Add columns to `afterparty_attendees`: `pin_hash text`, `pin_expires_at timestamptz`, `pin_attempts int default 0`, `pin_locked_until timestamptz`, `auth_user_id uuid` (links attendee to a Supabase auth user), `slug_opened_at timestamptz`, `email_verified bool default false`.
+- Tighten RLS on `afterparty_attendees`:
+  - `SELECT` for `anon` becomes a safe view that drops `pin_hash`, `email`, `pin_*`. Public can still read names, photos, niches, etc. for the matches grid.
+  - Drop `Public can insert/update attendees` policies.
+  - Add `Authenticated can update own attendee` (`auth.uid() = auth_user_id`) — this is the only client-side write path.
+- Tighten RLS on `afterparty_matches`: `SELECT` only (already correct), no public writes.
+- Tighten RLS on `afterparty_suggestions`: keep public insert (form submission), no public read.
+- New table `admin_action_log` (id, actor_email, action, payload jsonb, created_at) with service-role-only policies.
 
-### Number badge component (#3)
-- New `NumberBadge.tsx` — 46×46px, `border-radius: 11px`, role-colored fill/border
-- Used in: my-card header, every match row, email template
+### 3. New edge functions
+- **`request-pin`** (`verify_jwt = false`): input `{ slug }`. Looks up attendee by slug, generates 4-digit PIN with `crypto.getRandomValues`, bcrypt-hashes (cost 10), stores hash + 10-min expiry, resets `pin_attempts`. Sends PIN via existing transactional email path (`send-transactional-email` with a new `afterparty-pin` template). Returns `{ ok: true, masked_email }` (e.g. `j••••@gmail.com`). If attendee has no email on file: returns `{ ok: false, reason: "no_email" }`.
+- **`verify-pin`** (`verify_jwt = false`): input `{ slug, pin }`. Checks lock, expiry, bcrypt compare, attempt count. On failure: increments `pin_attempts`; after 5, sets `pin_locked_until = now() + 30 min`. Generic error message for wrong/expired/locked. On success: ensures an anonymous Supabase auth user exists for this attendee (creates one + stores `auth_user_id` if first time), issues a real Supabase session via the admin API, returns `{ access_token, refresh_token }`. Client calls `supabase.auth.setSession()`. RLS now lets that session update its own attendee row.
+- **`afterparty-admin`** (`verify_jwt = true`): single dispatcher for admin-only actions (`lock_matches`, `unlock_matches`, `delete_attendee`, `send_match_emails`, `review_suggestion`). Verifies caller email equals `ADMIN_EMAIL` env var; otherwise 403. Logs every call to `admin_action_log`.
 
-### Intent chips unified (#6)
-- Single shared group for all roles
-- Pro chips (coral/purple): Find brand deals · Find creators to work with · Collab with another creator · Hire talent
-- Visual divider
-- Social chips (amber): Make friends · Find a travel partner · Just here to vibe
+### 4. New transactional email template
+`afterparty-pin.tsx` in `_shared/transactional-email-templates/`. Subject: "Your Creator After Party code". Body: large 4-digit code, "Valid for 10 minutes." Registered in `registry.ts`.
 
-### 280-char question counter (#7)
-- `maxLength={280}` on textarea
-- Live `{n}/280` counter bottom-right
-- Single shared field (drop creator/brand split)
+### 5. Frontend changes
+- **`AfterPartyInvite.tsx`**:
+  - Remove the inline name-lookup form and `EditNameGate`.
+  - On mount, if URL has a slug: call `auth.getSession()`. If valid + tied to that slug, load card + edit mode is unlocked. Otherwise show new `<PinSheet>` modal.
+  - Stamp `slug_opened_at` once via a fire-and-forget edge function call (or inside `request-pin`).
+  - "Edit my card" → if no session, opens `<PinSheet>` instead of `EditNameGate`.
+- **New `PinSheet.tsx`**: bottom-sheet modal (mobile) / centered dialog (desktop). Two screens:
+  1. "Verify it's you. We'll send a 4-digit code to the email on file." → masked email shown after request → "Send code" button.
+  2. 4-box PIN entry, auto-advance/backspace, "Resend" disabled with 60s countdown. Generic error on failure.
+- **`AfterPartyIntakeForm.tsx`**: submit path no longer does direct `insert/update` from the client. Once a session exists, RLS allows the authenticated update. For brand-new attendees not yet in the table, signup is admin-seeded only (matches current "invite-only" model). New attendees self-creating still works only if the admin has pre-created the row with their email.
+- **`AfterPartyAdmin.tsx`**: every mutating action goes through `afterparty-admin` edge function via `supabase.functions.invoke()`. UI unchanged.
+- **Delete `EditNameGate.tsx`**.
 
-### Dual avatar preview + spinner + SVG fallback (#8)
-- Side-by-side preview boxes in form labeled "Your photo" / "Your avatar"
-- Spinner in avatar slot while cartoon generates
-- DiceBear-style deterministic SVG fallback when no photo (hash of name → hair/skin)
-- Stays on Lovable AI Gemini
+### 6. Environment variables
+- `ADMIN_EMAIL` — added via secret prompt at start of build.
+- Existing `SUPABASE_SERVICE_ROLE_KEY` already present.
+- No `VITE_` secrets added.
 
-### Edit-by-name gate (#9)
-- New `EditNameGate.tsx` — view mode by default; "Edit my card" prompts for name (case-insensitive match) before unlocking form
+## File map
 
-### Locked match preview (#10)
-- New `SkeletonMatches.tsx` — 5 blurred placeholder rows with overlay "Complete your profile to reveal your matches"
-- Shown pre-submission instead of hidden section
+```text
+NEW   src/services/auth.ts
+NEW   src/components/afterparty/PinSheet.tsx
+NEW   supabase/functions/request-pin/index.ts
+NEW   supabase/functions/verify-pin/index.ts
+NEW   supabase/functions/afterparty-admin/index.ts
+NEW   supabase/functions/_shared/transactional-email-templates/afterparty-pin.tsx
+EDIT  supabase/functions/_shared/transactional-email-templates/registry.ts
+EDIT  src/pages/AfterPartyInvite.tsx
+EDIT  src/components/afterparty/AfterPartyIntakeForm.tsx
+EDIT  src/components/afterparty/AfterPartyAdmin.tsx
+EDIT  supabase/config.toml      (register 3 new functions)
+DEL   src/components/afterparty/EditNameGate.tsx
+MIG   one migration: columns + RLS tightening + admin_action_log
+```
 
-### Tap-to-show answer popover (#11)
-- Move `mind_blowing_fact` from inline display into a popover triggered by row tap in `MatchesPanel.tsx`
-- Keeps list scannable
+## What's NOT in this stage (explicit)
+- Twilio SMS (PIN goes via email; swap inside `request-pin` later)
+- Phone number update flow + `attendee_changes` table
+- Photo upload hardening (magic-byte check, signed URLs, private bucket)
+- Honeypot field, sanitize-html, security headers, CSP
+- Rate limiting (platform doesn't support it yet)
+- Slug regeneration with nanoid (existing slugs stay)
 
-### Email copy (#12)
-- Subject → `Your 5 people for tonight, {firstName}`
-- Footer → `Presented by Popfly × Basecamp Match`
-- CTA → `View your card`
+## Trade-offs you should know
+- **Email PIN means anyone with inbox access to the attendee's email can edit the card.** Same trust model as a magic link. When Twilio gets wired in Stage 2, swap one function and add a phone column.
+- **Anonymous Supabase users** will accumulate one row in `auth.users` per attendee who verifies. Cheap, but visible in your auth dashboard.
+- **No rate limiting** means PIN-request abuse is possible. Acceptable for a 200-person invite-only event; revisit before broader use.
 
-### Weighted scoring refactor (#15)
-- Refactor `scorePair` in `afterparty-matching.ts` to 5-bucket 100-pt system:
-  - Intent 35 · Niche 27 · Format 19 · Role complementarity 14 · Completeness 5
-- Hardcoded niche adjacency map (uses existing niche values):
-  - `{fishing:[fly_fishing,waterfowl], hunting:[archery,waterfowl], hiking:[camping,overlanding], overlanding:[camping,hiking], camping:[hiking,overlanding], waterfowl:[hunting,fishing], archery:[hunting], fly_fishing:[fishing]}`
-- Keep existing brand-priority override, brand-rep diversity cap, and viber exclusion
-
-## Files
-
-**New**
-- `src/components/afterparty/NumberBadge.tsx`
-- `src/components/afterparty/EditNameGate.tsx`
-- `src/components/afterparty/SkeletonMatches.tsx`
-
-**Edited**
-- `src/pages/AfterPartyInvite.tsx` — flat dark theme, 480px, name-gate, skeleton, sentence case
-- `src/components/afterparty/AfterPartyIntakeForm.tsx` — industry_expert role, unified intent chips, 280-char counter, dual avatar preview, SVG fallback
-- `src/components/afterparty/MatchesPanel.tsx` — number-badge-first row, tap-to-show answer popover, role colors
-- `src/lib/afterparty-matching.ts` — 5-bucket weighted scoring + niche adjacency + industry_expert handling
-- `supabase/functions/_shared/transactional-email-templates/afterparty-matches.tsx` — exact subject/footer/CTA
-
-## Skipped (per your call)
-- #4 Outdoor niche list swap — keeping current 14-niche list
-- #5 7-format "What I create/offer" chip swap — keeping current creator_types options
-- #13 Route change to `/invite/:slug` — keeping `/afterparty/:name`
