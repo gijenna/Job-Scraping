@@ -122,6 +122,20 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
     setSaving(false);
     toast({ title: "Saved!", description: "Your card is live. Check your matches below." });
+
+    // Submit any "other" suggestions for admin approval
+    const suggestions: any[] = [];
+    const niche = otherNiche.trim();
+    const lf = otherLookingFor.trim();
+    if (niche) suggestions.push({ kind: "niche", value: niche, attendee_id: id, attendee_name: payload.full_name });
+    if (lf) suggestions.push({ kind: "looking_for", value: lf, attendee_id: id, attendee_name: payload.full_name });
+    if (suggestions.length) {
+      await (supabase as any).from("afterparty_suggestions").insert(suggestions);
+      setOtherNiche("");
+      setOtherLookingFor("");
+      toast({ title: "Thanks!", description: "Your suggestion was sent for review." });
+    }
+
     if (id) onSaved(id);
   };
 
