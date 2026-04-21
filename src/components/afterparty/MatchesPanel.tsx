@@ -1,102 +1,119 @@
 import { AfterPartyAttendee, MatchResult } from "@/lib/afterparty-matching";
-import { Sparkles, Quote } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import NumberBadge from "./NumberBadge";
 
 interface Props {
   matches: { match: MatchResult; attendee: AfterPartyAttendee }[];
   locked: boolean;
 }
 
-const roleColor = (role: string) =>
-  role === "brand"
-    ? "text-events-coral border-events-coral/40 bg-events-coral/10"
-    : "text-events-yellow border-events-yellow/40 bg-events-yellow/10";
+const ROLE_PILL: Record<string, { bg: string; border: string; text: string; label: string }> = {
+  creator: { bg: "#4A1B0C", border: "#D85A30", text: "#F5C4B3", label: "Creator" },
+  brand: { bg: "#1a1830", border: "#7F77DD", text: "#CECBF6", label: "Brand rep" },
+  industry_expert: { bg: "#04342C", border: "#1D9E75", text: "#9FE1CB", label: "Industry expert" },
+};
 
 const MatchesPanel = ({ matches, locked }: Props) => {
   if (!matches.length) {
     return (
-      <div className="text-center py-12 text-events-cream/60">
-        <Sparkles className="w-8 h-8 mx-auto mb-3 text-events-coral/60" />
-        <p>No people for you yet. Check back as more sign up!</p>
+      <div className="text-center py-12" style={{ color: "rgba(255,255,255,0.6)" }}>
+        <Sparkles className="w-8 h-8 mx-auto mb-3" style={{ color: "rgba(216,90,48,0.6)" }} />
+        <p>No people for you yet. Check back as more sign up.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {locked && (
-        <p className="text-xs uppercase tracking-wider text-events-yellow/80">
+        <p className="text-[11px] uppercase" style={{ letterSpacing: "0.08em", color: "#FAC775" }}>
           Final list — locked by host
         </p>
       )}
-      {matches.map(({ match, attendee }) => (
-        <div
-          key={attendee.id}
-          className="p-4 rounded-2xl bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/40 transition-colors"
-        >
-          <div className="flex items-start gap-4">
-            {/* Dual avatar */}
-            <div className="shrink-0 flex flex-col items-center">
-              <div className="flex -space-x-2">
-                {attendee.photo_url ? (
-                  <img
-                    src={attendee.photo_url}
-                    alt={attendee.full_name}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-events-cream/20"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-events-coral/30 flex items-center justify-center text-events-cream font-bold ring-2 ring-events-cream/20">
-                    {attendee.full_name.charAt(0)}
-                  </div>
-                )}
-                {attendee.cartoon_url && (
-                  <img
-                    src={attendee.cartoon_url}
-                    alt=""
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-events-yellow/40"
-                  />
-                )}
-              </div>
-              <span
-                className={`mt-2 text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${roleColor(attendee.role)}`}
+      {matches.map(({ match, attendee }) => {
+        const pill = ROLE_PILL[attendee.role] || ROLE_PILL.brand;
+        const avatarSrc = attendee.cartoon_url || attendee.photo_url;
+        return (
+          <Popover key={attendee.id}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="w-full text-left p-4 rounded-xl transition-colors"
+                style={{
+                  backgroundColor: "#111111",
+                  border: "1px solid rgba(255,255,255,0.09)",
+                }}
               >
-                #{attendee.attendee_number}
-              </span>
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <h4 className="font-display text-lg font-bold text-events-cream">
-                  {attendee.full_name}
-                </h4>
-                <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded ${roleColor(attendee.role)}`}>
-                  {attendee.role}
-                </span>
-                {attendee.role === "brand" && attendee.company && (
-                  <span className="text-sm text-events-cream/70">· {attendee.company}</span>
-                )}
-              </div>
-              {match.reasons.length > 0 && (
-                <p className="text-sm text-events-cream/80 mt-1">{match.reasons[0]}</p>
-              )}
-              {match.reasons.length > 1 && (
-                <p className="text-xs text-events-cream/50 mt-0.5">
-                  + {match.reasons.slice(1).join(" · ")}
+                <div className="flex items-center gap-3">
+                  <NumberBadge number={attendee.attendee_number} role={attendee.role} size={46} />
+                  {avatarSrc ? (
+                    <img
+                      src={avatarSrc}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                      style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+                    />
+                  ) : (
+                    <div
+                      className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-[11px] font-medium"
+                      style={{ backgroundColor: pill.bg, color: pill.text, border: `1px solid ${pill.border}` }}
+                    >
+                      {attendee.full_name.charAt(0)}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[15px] font-medium truncate" style={{ color: "#fff" }}>
+                        {attendee.full_name}
+                      </span>
+                      <span
+                        className="text-[10px] px-1.5 py-0.5 rounded"
+                        style={{
+                          backgroundColor: pill.bg,
+                          color: pill.text,
+                          border: `1px solid ${pill.border}`,
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        {pill.label}
+                      </span>
+                    </div>
+                    {match.reasons.length > 0 && (
+                      <p className="text-[12px] mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.65)" }}>
+                        {match.reasons[0]}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="start"
+              className="w-[320px] border-0 p-4"
+              style={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.12)", color: "#fff" }}
+            >
+              <p className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.08em", color: pill.text }}>
+                Why it worked
+              </p>
+              {attendee.mind_blowing_fact ? (
+                <p className="text-[13px] italic leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
+                  {attendee.mind_blowing_fact}
+                </p>
+              ) : (
+                <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  No answer yet — ask them in person.
                 </p>
               )}
-            </div>
-          </div>
-
-          {/* Conversation starter */}
-          {attendee.mind_blowing_fact && (
-            <div className="mt-3 pt-3 border-t border-events-cream/10 flex gap-2">
-              <Quote className="w-4 h-4 text-events-yellow/60 shrink-0 mt-0.5" />
-              <p className="text-sm italic text-events-cream/75 leading-snug">
-                {attendee.mind_blowing_fact}
-              </p>
-            </div>
-          )}
-        </div>
-      ))}
+              {match.reasons.length > 1 && (
+                <p className="text-[11px] mt-3 pt-3" style={{ color: "rgba(255,255,255,0.5)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  {match.reasons.slice(1).join(" · ")}
+                </p>
+              )}
+            </PopoverContent>
+          </Popover>
+        );
+      })}
     </div>
   );
 };

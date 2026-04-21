@@ -1,5 +1,5 @@
 // Matching engine for the Creator After Party.
-// Pure functions — easy to test and run live in the browser.
+// 100-point weighted system: Intent 35 · Niche 27 · Format 19 · Role 14 · Completeness 5
 
 export interface AfterPartyAttendee {
   id: string;
@@ -9,7 +9,7 @@ export interface AfterPartyAttendee {
   email: string | null;
   photo_url: string | null;
   cartoon_url?: string | null;
-  role: "creator" | "brand";
+  role: "creator" | "brand" | "industry_expert" | string;
   niches: string[] | null;
   looking_for: string[] | null;
   creator_types: string[] | null;
@@ -41,11 +41,31 @@ const CREATOR_TYPE_TO_BRAND_SEEKING: Record<string, string> = {
   athlete: "athletes",
 };
 
-// Social intents that allow same-role pairing when shared
+// Niche adjacency map (case/space insensitive lookup via norm)
+const NICHE_ADJACENCY: Record<string, string[]> = {
+  fishing: ["fly fishing", "waterfowl"],
+  "fly fishing": ["fishing"],
+  hunting: ["archery", "waterfowl"],
+  archery: ["hunting"],
+  waterfowl: ["hunting", "fishing"],
+  hiking: ["camping", "overlanding", "backpacking", "trail running"],
+  camping: ["hiking", "overlanding", "backpacking"],
+  overlanding: ["camping", "hiking"],
+  backpacking: ["hiking", "camping"],
+  "trail running": ["hiking"],
+  climbing: ["hiking"],
+  skiing: ["snowboarding"],
+  snowboarding: ["skiing"],
+  cycling: ["mountain biking"],
+  "mountain biking": ["cycling"],
+};
+
 const SOCIAL_INTENTS = new Set([
   "make friends in the industry",
   "find a creator to collab with",
   "find a travel partner",
+  "collab with another creator",
+  "make friends",
 ]);
 const VIBE_INTENT = "just here to vibe";
 
@@ -68,11 +88,14 @@ function profileCompleteness(a: AfterPartyAttendee): number {
     if (a.platforms?.length) n++;
     if (a.brands_wishlist) n++;
     if (a.audience_size) n++;
-  } else {
+  } else if (a.role === "brand") {
     if (a.company) n++;
     if (a.brand_seeking?.length) n++;
     if (a.brand_fit_notes) n++;
     if (a.budget_range) n++;
+  } else {
+    if (a.company) n++;
+    if (a.mind_blowing_fact) n++;
   }
   return n;
 }
@@ -87,87 +110,143 @@ function sharedSocialIntents(me: AfterPartyAttendee, them: AfterPartyAttendee): 
   return mine.filter((x) => theirs.has(x));
 }
 
-function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): { score: number; reasons: string[]; brandPriority: boolean } {
-  let score = 0;
+function nicheScore(me: AfterPartyAttendee, them: AfterPartyAttendee): { points: number; reason: string | null } {
+  const exact = intersect(me.niches, them.niches);
+  if (exact.length) {
+    return { points: 27, reason: `You're both into ${exact.slice(0, 2).join(" & ")}` };
+  }
+  // Adjacency check
+  const myNiches = (me.niches || []).map(norm);
+  const theirNiches = new Set((them.niches || []).map(norm));
+  for (const mine of myNiches) {
+    const adj = NICHE_ADJACENCY[mine] || [];
+    for (const a of adj) {
+      if (theirNiches.has(a)) {
+        return { points: 15, reason: `Adjacent niches: ${mine} & ${a}` };
+      }
+    }
+  }
+  return { points: 0, reason: null };
+}
+
+function intentScore(
+  me: AfterPartyAttendee,
+  them: AfterPartyAttendee,
+): { points: number; reasons: string[]; brandPriority: boolean } {
+  let points = 0;
   const reasons: string[] = [];
   let brandPriority = false;
 
-  const sharedNiches = intersect(me.niches, them.niches);
-  if (sharedNiches.length) {
-    score += 5 * sharedNiches.length;
-    reasons.push(`You're both into ${sharedNiches.slice(0, 2).join(" & ")}`);
-  }
-
-  // Social intents (warmer copy)
-  const sharedSocial = sharedSocialIntents(me, them);
-  if (sharedSocial.length) {
-    score += 6 * sharedSocial.length;
-    const intent = sharedSocial[0];
-    if (intent === "find a travel partner" && sharedNiches.length) {
-      reasons.push(`You both want to find a travel buddy in ${sharedNiches[0].toLowerCase()}`);
-    } else if (intent === "make friends in the industry") {
-      reasons.push(`Both here to make industry friends`);
-    } else if (intent === "find a creator to collab with") {
-      reasons.push(`Both open to creator collabs`);
-    }
-  }
-
-  const sharedLooking = intersect(me.looking_for, them.looking_for).filter(
-    (x) => !SOCIAL_INTENTS.has(norm(x)) && norm(x) !== VIBE_INTENT,
-  );
-  if (sharedLooking.length) {
-    score += 5 * sharedLooking.length;
-    reasons.push(`Both looking for ${sharedLooking[0]}`);
-  }
-
-  // Brand → Creator fit
+  // Brand → Creator strong fit
   if (me.role === "brand" && them.role === "creator") {
     const seeking = (me.brand_seeking || []).map(norm);
     const theirTypes = (them.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
-    const matchedTypes = theirTypes.filter((t) => seeking.includes(t));
-    if (matchedTypes.length) {
-      score += 10 * matchedTypes.length;
-      reasons.unshift(`You're looking for ${matchedTypes[0]} — they are one`);
+    const matched = theirTypes.filter((t) => seeking.includes(t));
+    if (matched.length) {
+      points = Math.max(points, 35);
+      reasons.unshift(`You're looking for ${matched[0]} — they are one`);
       brandPriority = true;
     }
     if (them.brands_wishlist && me.company && them.brands_wishlist.toLowerCase().includes(me.company.toLowerCase())) {
-      score += 8;
+      points = Math.max(points, 35);
       reasons.push(`They named ${me.company} as a dream brand`);
     }
   }
 
-  // Creator → Brand fit (mirror) — also flags brandPriority so the brand
-  // actively seeking this creator's type jumps to the top of THEIR list too
   if (me.role === "creator" && them.role === "brand") {
     const seeking = (them.brand_seeking || []).map(norm);
     const myTypes = (me.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
-    const matchedTypes = myTypes.filter((t) => seeking.includes(t));
-    if (matchedTypes.length) {
-      score += 10 * matchedTypes.length;
-      reasons.unshift(`They're looking for ${matchedTypes[0]} — that's you`);
+    const matched = myTypes.filter((t) => seeking.includes(t));
+    if (matched.length) {
+      points = Math.max(points, 35);
+      reasons.unshift(`They're looking for ${matched[0]} — that's you`);
       brandPriority = true;
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {
-      score += 8;
+      points = Math.max(points, 35);
       reasons.push(`You named ${them.company} as a dream brand`);
     }
   }
 
-  // Shared platforms (creators)
+  // Shared social intents
+  const sharedSocial = sharedSocialIntents(me, them);
+  if (sharedSocial.length && points < 35) {
+    points = Math.max(points, 20);
+    const intent = sharedSocial[0];
+    if (intent === "find a travel partner") reasons.push("Both want to find a travel partner");
+    else if (intent.includes("friend")) reasons.push("Both here to make industry friends");
+    else if (intent.includes("collab")) reasons.push("Both open to creator collabs");
+  }
+
+  // Generic shared looking_for
+  const sharedLooking = intersect(me.looking_for, them.looking_for).filter(
+    (x) => !SOCIAL_INTENTS.has(norm(x)) && norm(x) !== VIBE_INTENT,
+  );
+  if (sharedLooking.length && points < 20) {
+    points = Math.max(points, 15);
+    reasons.push(`Both looking for ${sharedLooking[0]}`);
+  }
+
+  return { points, reasons, brandPriority };
+}
+
+function formatScore(me: AfterPartyAttendee, them: AfterPartyAttendee): number {
+  // Brand seeks specific creator type that matches creator's type → 19
+  if (me.role === "brand" && them.role === "creator") {
+    const seeking = (me.brand_seeking || []).map(norm);
+    const types = (them.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
+    if (types.some((t) => seeking.includes(t))) return 19;
+  }
+  if (me.role === "creator" && them.role === "brand") {
+    const seeking = (them.brand_seeking || []).map(norm);
+    const types = (me.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
+    if (types.some((t) => seeking.includes(t))) return 19;
+  }
+  // General format alignment via shared platforms or shared creator_types
+  const sharedTypes = intersect(me.creator_types, them.creator_types);
   const sharedPlatforms = intersect(me.platforms, them.platforms);
-  if (sharedPlatforms.length) {
-    score += 2 * sharedPlatforms.length;
-  }
+  if (sharedTypes.length || sharedPlatforms.length) return 10;
+  return 0;
+}
 
-  // Same-role pairing: only penalize if NO shared social intent + niche
-  if (me.role === them.role) {
-    const sameRoleAllowed = sharedSocial.length > 0 && sharedNiches.length > 0;
-    if (!sameRoleAllowed) {
-      score = Math.floor(score * 0.6);
-    }
+function roleComplementarity(me: AfterPartyAttendee, them: AfterPartyAttendee): number {
+  const r1 = me.role, r2 = them.role;
+  if ((r1 === "brand" && r2 === "creator") || (r1 === "creator" && r2 === "brand")) return 14;
+  if ((r1 === "creator" && r2 === "industry_expert") || (r1 === "industry_expert" && r2 === "creator")) return 8;
+  if ((r1 === "brand" && r2 === "industry_expert") || (r1 === "industry_expert" && r2 === "brand")) return 8;
+  if (r1 === r2) {
+    // same-role baseline = 5, bumped to 14 if mutual social intent
+    const sharedSocial = sharedSocialIntents(me, them);
+    return sharedSocial.length > 0 ? 14 : 5;
   }
+  return 5;
+}
 
-  return { score, reasons, brandPriority };
+function completenessScore(them: AfterPartyAttendee): number {
+  const c = profileCompleteness(them);
+  if (c >= 7) return 5;
+  if (c >= 4) return 2;
+  return 0;
+}
+
+function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): {
+  score: number;
+  reasons: string[];
+  brandPriority: boolean;
+} {
+  const reasons: string[] = [];
+  const intent = intentScore(me, them);
+  reasons.push(...intent.reasons);
+
+  const niche = nicheScore(me, them);
+  if (niche.reason) reasons.push(niche.reason);
+
+  const fmt = formatScore(me, them);
+  const role = roleComplementarity(me, them);
+  const completeness = completenessScore(them);
+
+  const score = intent.points + niche.points + fmt + role + completeness;
+  return { score, reasons, brandPriority: intent.brandPriority };
 }
 
 export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttendee[], topN = 5): MatchResult[] {
@@ -176,13 +255,11 @@ export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttende
   const scored = all
     .filter((a) => a.id !== me.id)
     .filter((them) => {
-      // Vibers excluded from others' lists unless mutual
       if (isJustVibing(them) && !meVibing) return false;
       return true;
     })
     .map((them) => {
       const { score, reasons, brandPriority } = scorePair(me, them);
-      // De-emphasize matches for vibers
       const finalScore = meVibing ? Math.floor(score * 0.5) : score;
       return {
         attendee_id: me.id,
@@ -195,16 +272,12 @@ export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttende
     })
     .filter((r) => r.score > 0)
     .sort((a, b) => {
-      // Brand-first override applies for both directions now
-      if (a.brandPriority !== b.brandPriority) {
-        return a.brandPriority ? -1 : 1;
-      }
+      if (a.brandPriority !== b.brandPriority) return a.brandPriority ? -1 : 1;
       if (b.score !== a.score) return b.score - a.score;
-      // Tiebreaker: profile completeness
       return b.completeness - a.completeness;
     });
 
-  // Brand-rep diversity cap: at most 1 person per company in the top N
+  // Brand-rep diversity cap: max 1 per company
   const seenCompanies = new Set<string>();
   const capped: typeof scored = [];
   for (const r of scored) {
