@@ -136,7 +136,8 @@ function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): { score: n
     }
   }
 
-  // Creator → Brand fit (mirror)
+  // Creator → Brand fit (mirror) — also flags brandPriority so the brand
+  // actively seeking this creator's type jumps to the top of THEIR list too
   if (me.role === "creator" && them.role === "brand") {
     const seeking = (them.brand_seeking || []).map(norm);
     const myTypes = (me.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
@@ -144,6 +145,7 @@ function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): { score: n
     if (matchedTypes.length) {
       score += 10 * matchedTypes.length;
       reasons.unshift(`They're looking for ${matchedTypes[0]} — that's you`);
+      brandPriority = true;
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {
       score += 8;
@@ -193,24 +195,36 @@ export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttende
     })
     .filter((r) => r.score > 0)
     .sort((a, b) => {
-      // Brand-first override (only matters when "me" is a brand)
-      if (me.role === "brand" && a.brandPriority !== b.brandPriority) {
+      // Brand-first override applies for both directions now
+      if (a.brandPriority !== b.brandPriority) {
         return a.brandPriority ? -1 : 1;
       }
       if (b.score !== a.score) return b.score - a.score;
       // Tiebreaker: profile completeness
       return b.completeness - a.completeness;
-    })
-    .slice(0, topN)
-    .map((r, i) => ({
-      attendee_id: r.attendee_id,
-      match_attendee_id: r.match_attendee_id,
-      score: r.score,
-      reasons: r.reasons,
-      rank: i + 1,
-    }));
+    });
 
-  return scored;
+  // Brand-rep diversity cap: at most 1 person per company in the top N
+  const seenCompanies = new Set<string>();
+  const capped: typeof scored = [];
+  for (const r of scored) {
+    const them = all.find((a) => a.id === r.match_attendee_id);
+    const companyKey = them?.company ? norm(them.company) : null;
+    if (companyKey) {
+      if (seenCompanies.has(companyKey)) continue;
+      seenCompanies.add(companyKey);
+    }
+    capped.push(r);
+    if (capped.length >= topN) break;
+  }
+
+  return capped.map((r, i) => ({
+    attendee_id: r.attendee_id,
+    match_attendee_id: r.match_attendee_id,
+    score: r.score,
+    reasons: r.reasons,
+    rank: i + 1,
+  }));
 }
 
 export function computeAllMatches(all: AfterPartyAttendee[], topN = 5): MatchResult[] {
