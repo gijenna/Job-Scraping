@@ -243,6 +243,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
                 <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
               ))}
             </div>
+            <Input
+              value={otherLookingFor}
+              onChange={(e) => setOtherLookingFor(e.target.value)}
+              placeholder="Looking for something else? Suggest one (we'll review)"
+              className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+            />
           </div>
 
           <div>
