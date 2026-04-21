@@ -1,104 +1,80 @@
 
 
-# Creator After Party — Invite + Matching System
+# Creator After Party — Brand, Question, & UX Overhaul
 
-A new event invite page at **`/afterparty`** (and `/afterparty/:name` for personalized links) that doubles as a matching service connecting creators and brands by intent, niche, and what they're looking for.
+Based on your Claude framework, I'll restyle the After Party page as **Basecamp Match × Popfly**, swap the matching question, expand intent options, and add photo upload with a generated cartoon avatar.
 
-## What gets built
+## What changes
 
-### 1. New attendee types
-Two new roles alongside `industry_expert` and `brand_rep`:
-- **`creator`** — influencers, photographers, videographers, content creators
-- **`afterparty_brand`** — party-specific brand role (different intake from existing brand reps)
+### 1. Co-branded animated logo header
+- New `BasecampMatchPopflyLogo` component at the top of `/afterparty`
+- Two logo marks slide in from opposite sides and meet at a glowing neon `×`
+- **Basecamp Match** (left): campfire mark in neon amber `#E1B624` with pulsing flame glow
+- **Popfly** (right): outdoor pin/play mark in neon teal `#3DDFD5` with pulsing glow
+- Animated neon divider line grows between them, then "Creator After Party" fades in below
+- Pure CSS/SVG animation (Framer Motion-free, runs on load)
+- Uploaded `Basecamp_match_logo-darkmode.png` saved to `src/assets/` and used as the left mark
 
-### 2. New event "city" record
-- Slug: `afterparty`
-- Name: "Creator After Party"
-- Custom hero, color palette (admin-editable), date/venue/time
-- Distinct branding from Denver/PNW (no city tag in nav)
+### 2. Better matching question (replaces "mind-blowing fact")
+- Field renamed in UI: **"What's something you've made that you're most proud of — and why did it work?"**
+- DB column `mind_blowing_fact` is reused (no migration); only the label/placeholder change
+- Placeholder hints: "Link a video, campaign, or product launch. The 'why' is the part that matches you with the right people."
+- Shown for both creators AND brands (brands describe a collab/launch)
+- Displayed prominently on each match card as the conversation starter
 
-### 3. Invite page (`/afterparty` and `/afterparty/:name`)
-Completely different look/copy from existing invites. Sections:
-- **Hero** — "You're invited to the Creator After Party" with personalized name if `:name` matches
-- **Your attendee number** badge (shown after they save card) — assigned in signup order
-- **What this is** — short pitch about purposeful matching
-- **Intake form** — short, role-aware (creator vs brand questions differ)
-- **Card preview** — same edit-by-name flow as expert cards (just type your name to reload your saved card)
-- **Your matches** section — appears after they've completed intake, shows top 5 matches with attendee numbers
-- **FAQ + footer**
+### 3. Expanded "I'm looking for" chips (both roles)
+New shared options for everyone:
+- Make friends in the industry
+- Find a creator to collab with
+- Find a travel partner
+- Just here to vibe
 
-### 4. Intake form fields (new + reused)
+Existing creator/brand-specific chips stay. The new chips are visually grouped with an **amber tint** to signal "social" vs the **coral** "professional" chips.
 
-Shared:
-- Name, email, photo, LinkedIn/Instagram, niches (fishing, hunting, hiking, surfing, climbing, etc. + custom)
+### 4. Matching algorithm tweaks (`afterparty-matching.ts`)
+- **Same-role pairing now allowed when** both selected `Make friends`, `Find a creator to collab with`, or `Find a travel partner` AND share ≥1 niche → no 0.6× penalty in that case
+- **"Just here to vibe"** → attendee is excluded from being _ranked into_ others' top 5 unless mutual, and their own matches are de-emphasized (lower weights, friendly tone)
+- **Profile completeness tiebreaker**: when scores tie, attendee with more filled fields ranks higher
+- **Brand-first override**: if a brand seeks creator-type X and a creator IS X → that match jumps to top of brand's list before general ranking
+- Reasons rewritten with warmer copy ("You both want to find a travel buddy in fishing")
 
-**Creator-specific:**
-- Creator type (multi): videographer, photographer, influencer, writer, podcaster, athlete
-- Audience size range (dropdown)
-- Primary platform(s)
-- What they're looking for (multi): brand partnerships, paid work, friends, mentors, fellow creators
-- Brands they'd love to work with (free text)
-- One mind-blowing thing about them
+### 5. Photo upload + dual avatar display
+- Existing photo upload stays (already wired to Supabase Storage)
+- New helper: after upload, store original in `photo_url` and a generated cartoon version in new column `cartoon_url`
+- Cartoon generated via **Lovable AI** (`google/gemini-2.5-flash-image`) with prompt: "Convert this portrait into a flat illustrated cabbage-patch style cartoon avatar, friendly outdoor vibe, transparent or simple solid background, head and shoulders only"
+- Edge function `generate-cartoon-avatar` handles the call (keeps API usage server-side)
+- Card preview + match list show **both side-by-side**: real photo left, cartoon right
+- Falls back gracefully if cartoon generation fails (just shows real photo)
 
-**Brand-specific:**
-- Company, role, what they make
-- Looking for (multi): videographers, photographers, influencers, writers, athletes, ambassadors, friends/connections, talent pipeline
-- Niches that fit their brand
-- Budget range for creator work (optional dropdown)
-- What makes a creator a great fit for them (free text)
-
-### 5. Matching engine
-A scoring function that runs on demand. For each attendee, score every other attendee:
-- **+10** mutual fit: brand seeks creator-type X, creator IS X (or vice versa)
-- **+5** per shared niche
-- **+5** per overlap in "looking for" (e.g., both want friends)
-- **+3** if creator named the brand specifically
-- **+2** per shared platform
-- Cap mutual brand-vs-brand or creator-vs-creator scores lower so cross-pollination wins
-
-Returns top 5 with score, attendee number, name, photo, role, and a one-line "why you should talk" reason ("They're looking for videographers in fishing").
-
-**Triggers:**
-- Live: recalculated on every invite-page visit (cached briefly per-session)
-- Manual: admin button "Recalculate & Lock Matches" freezes results into a `creator_matches` snapshot table
-- After lock, page reads from snapshot instead of live calc
-
-### 6. Match email blast
-Admin button on `/admin/experts` (new "After Party" tab): "Email Top-5 Matches to Everyone"
-- Uses Lovable Cloud email infrastructure
-- One transactional email per attendee with their 5 matches, attendee numbers, and a link back to their invite page
-
-### 7. Admin panel additions
-New tab in `/admin/experts` called **"After Party"**:
-- List all afterparty attendees with attendee number, role, status
-- "Generate Matches" button (live preview of who matches whom)
-- "Lock Matches" button (snapshots results)
-- "Send Match Emails" button
-- Standard add/edit/delete + copy invite link
+### 6. Copy polish
+- Email reveal subject/preview reframed: **"Your 5 people are waiting"** (not "Your matches")
+- In-page header: "Your 5 people" instead of "Your top 5 matches"
+- All headings remain admin-editable via existing `event_settings` system
 
 ## Technical details
 
-**New tables:**
-- `afterparty_attendees` — id, attendee_number (auto serial), full_name, slug, email, photo_url, social_links jsonb, role ('creator' | 'brand'), creator_types text[], audience_size, platforms text[], niches text[], looking_for text[], brands_wishlist, mind_blowing_fact, company, company_role, brand_seeking text[], budget_range, brand_fit_notes, status, created_at, updated_at
-- `afterparty_matches` — id, attendee_id, match_attendee_id, score, reasons text[], generated_at, locked boolean
+**DB migration:**
+- Add `cartoon_url text` to `afterparty_attendees`
+- No new tables; `mind_blowing_fact` reused with new UI label
 
-**RLS:** public SELECT on attendees (for matching display) and matches; anon INSERT/UPDATE on attendees (same permissive pattern as `industry_experts`); auth-only on lock/admin operations.
+**New files:**
+- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — animated co-branded header
+- `supabase/functions/generate-cartoon-avatar/index.ts` — Lovable AI image edit call
+- `src/assets/basecamp-match-logo.png` — copied from upload (already present per file list, will overwrite/use)
 
-**Files:**
-- `src/pages/AfterPartyInvite.tsx` — main page
-- `src/components/afterparty/AfterPartyIntakeForm.tsx` — role-aware form
-- `src/components/afterparty/MatchesPanel.tsx` — top-5 display
-- `src/components/afterparty/AfterPartyAdmin.tsx` — admin tab
-- `src/lib/afterparty-matching.ts` — scoring logic
-- `supabase/functions/send-afterparty-matches/index.ts` — email blast (after Lovable Email setup)
-- Routes added to `src/App.tsx`: `/afterparty` and `/afterparty/:name`
+**Edited files:**
+- `src/components/afterparty/AfterPartyIntakeForm.tsx` — new chips, renamed question, cartoon trigger after upload
+- `src/components/afterparty/MatchesPanel.tsx` — dual avatar display, conversation-starter quote, role-color number badges
+- `src/lib/afterparty-matching.ts` — new pairing rules, completeness tiebreaker, brand-first override, friendlier reasons
+- `src/pages/AfterPartyInvite.tsx` — swap hero for new co-branded logo block, "Your 5 people" copy
+- `supabase/functions/_shared/transactional-email-templates/afterparty-matches.tsx` — subject + body recopy
 
-**Email infrastructure:** Will set up Lovable Cloud emails (domain + transactional templates) as part of the build, since match-email blast is in scope.
+**Color additions** (Tailwind config-safe inline values):
+- Neon amber glow: `#E1B624` with `box-shadow: 0 0 24px rgba(225,182,36,0.6)`
+- Neon teal (Popfly): `#3DDFD5` with `box-shadow: 0 0 24px rgba(61,223,213,0.55)`
 
-**Editable copy:** All headings, CTAs, and section text use the existing `event_settings` editable system with prefix `afterparty:*`.
-
-## Out of scope (for this build)
-- Two-way "I like this match" / approval workflow
-- In-app chat between matches
-- QR codes for in-person scanning (could be next iteration)
+## Out of scope
+- Re-running cartoon generation for already-saved attendees (only new uploads get cartoonified; admin can trigger backfill later if needed)
+- Live preview of the cartoon before save (it generates on save, shows on next page load)
+- Dragging/swapping which avatar is "primary"
 
