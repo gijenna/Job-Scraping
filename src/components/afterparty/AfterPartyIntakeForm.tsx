@@ -154,6 +154,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
       email: form.email || null,
       photo_url: form.photo_url || null,
+      cartoon_url: form.cartoon_url || null,
       social_links: form.social_links,
       role: form.role,
       niches: form.niches,
