@@ -23,3 +23,7 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.send-afterparty-matches]
     verify_jwt = true
+  [functions.send-afterparty-invites]
+    verify_jwt = true
+  [functions.compute-afterparty-matches]
+    verify_jwt = false

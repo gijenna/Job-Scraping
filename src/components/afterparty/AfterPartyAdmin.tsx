@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
 import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
+import AfterPartyTestMatches from "./AfterPartyTestMatches";
 
 interface Suggestion {
   id: string;
@@ -127,6 +129,10 @@ const AfterPartyAdmin = () => {
           {attendees.length} attendees · {lockedCount > 0 ? `${lockedCount} locked match rows` : "matches are live"}
         </span>
       </div>
+
+      <AfterPartyCsvSeed onImported={fetchAll} />
+
+      <AfterPartyTestMatches />
 
       {suggestions.length > 0 && (
         <div className="rounded-xl border border-events-yellow/30 bg-events-yellow/5 p-4">
