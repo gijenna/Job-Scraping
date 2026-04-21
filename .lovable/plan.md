@@ -1,75 +1,85 @@
 
+# Build all deltas except #4, #5, #13
 
-# Delta: Claude prompt vs. what's currently built
+Skipping niche list swap, format chip swap, and route change. Building everything else.
 
-Here's what the Claude prompt asks for that **we don't currently have** (or have differently). Approve the ones you want and I'll build them.
+## What gets built
 
-## 1. Cartoon avatar generation — **DIFFERENT PROVIDER**
-- **Claude says:** Use **Replicate** (needs your Replicate API key + iterative prompt tuning)
-- **We have:** Lovable AI (`google/gemini-2.5-flash-image`) — already working, no extra key needed, free tier available
-- **Recommendation:** Keep Lovable AI. It's the same "cabbage patch" output, no key to manage, no extra cost. Only switch to Replicate if you specifically want a model Replicate hosts that Gemini can't match.
-- **Action if you want Replicate:** Add `REPLICATE_API_KEY` secret, swap the edge function to call Replicate's image model.
+### Visual restyle (#1)
+- `AfterPartyInvite.tsx` background → `#080808`, cards → `#111111`, borders → `rgba(255,255,255,0.09)`
+- Inter font, weights 400/500 only, sentence case
+- Max content width 480px, mobile-first
+- Remove gradient hero, blurred blobs, glassmorphism
+- Role color tokens applied to chips, badges, pills:
+  - Creator coral `#D85A30` / `#4A1B0C` / `#F5C4B3`
+  - Brand rep purple `#7F77DD` / `#1a1830` / `#CECBF6`
+  - Industry expert teal `#1D9E75` / `#04342C` / `#9FE1CB`
+  - Social amber `#BA7517` / `#412402` / `#FAC775`
 
-## 2. Matching as an Edge Function — **ARCHITECTURE DIFFERENCE**
-- **Claude says:** Matching should live in a Supabase Edge Function so you can test it server-side with fake records
-- **We have:** Pure TS in `src/lib/afterparty-matching.ts` — runs client-side on every page load AND inside `send-afterparty-matches` edge function for emails
-- **Recommendation:** Add a new `compute-afterparty-matches` edge function that wraps the same logic + a small **admin "Test matches with fake attendees" tool** in the admin tab where you paste/generate fake records and see the scores. The pure-TS lib stays for client-side preview.
+### Industry expert role (#2)
+- Add `industry_expert` to role chip selector
+- Teal styling on selection
+- Matching weights treat creator↔expert as 8 pts role complementarity
 
-## 3. Brand rep diversity cap — **NEW RULE, MISSING**
-- **Claude says:** Cap how many of one brand's reps can show up in a single creator's top 5 (so one brand doesn't dominate someone's matches)
-- **We have:** No cap — if a brand has 3 reps all matching a creator, all 3 could fill the top 5
-- **New rule to add:** Max **1 person per company** in any attendee's top 5. If the same company has multiple reps that would make top 5, pick the highest-scoring one and let other people fill the remaining slots.
+### Number badge component (#3)
+- New `NumberBadge.tsx` — 46×46px, `border-radius: 11px`, role-colored fill/border
+- Used in: my-card header, every match row, email template
 
-## 4. "Just here to vibe" exclusion logic — **ALREADY DONE ✅**
-- **Claude says:** Vibers shouldn't appear in others' top 5 unless mutual; their own matches de-emphasized
-- **We have:** Exactly this in `computeMatchesFor` (lines 172–184). No change needed.
+### Intent chips unified (#6)
+- Single shared group for all roles
+- Pro chips (coral/purple): Find brand deals · Find creators to work with · Collab with another creator · Hire talent
+- Visual divider
+- Social chips (amber): Make friends · Find a travel partner · Just here to vibe
 
-## 5. Admin CSV seed flow — **NEW FEATURE, MISSING**
-This is the one Claude calls "your most important pre-event step."
-- **Upload a CSV** of invitees (name, email, role, optional company) into the admin After Party tab
-- For each row, create an `afterparty_attendees` record with `status='invited'`, auto-assigned attendee number, and a generated slug
-- Show a preview of parsed rows before commit
-- After import, a **"Send invite emails"** button blasts each invitee a personal link (`/afterparty/their-name`) with copy like *"You're #47. Fill in your profile so we can match you with your 5 people."*
-- New transactional email template: `afterparty-invite`
+### 280-char question counter (#7)
+- `maxLength={280}` on textarea
+- Live `{n}/280` counter bottom-right
+- Single shared field (drop creator/brand split)
 
-## 6. Brand-first override scope — **MINOR TWEAK SUGGESTED**
-- **Currently:** Brand-first override (line 197) only fires when `me.role === 'brand'` (a brand viewing their own matches sees their wishlist matches first)
-- **Claude implies:** This should also affect ranking globally — i.e., when computing a creator's matches, brands actively seeking that creator's type should jump up too
-- **Recommendation:** Mirror the override for creators (when a brand specifically seeks them, that brand jumps to the top of the creator's list too). Small change in `scorePair`.
+### Dual avatar preview + spinner + SVG fallback (#8)
+- Side-by-side preview boxes in form labeled "Your photo" / "Your avatar"
+- Spinner in avatar slot while cartoon generates
+- DiceBear-style deterministic SVG fallback when no photo (hash of name → hair/skin)
+- Stays on Lovable AI Gemini
 
----
+### Edit-by-name gate (#9)
+- New `EditNameGate.tsx` — view mode by default; "Edit my card" prompts for name (case-insensitive match) before unlocking form
 
-## Summary table
+### Locked match preview (#10)
+- New `SkeletonMatches.tsx` — 5 blurred placeholder rows with overlay "Complete your profile to reveal your matches"
+- Shown pre-submission instead of hidden section
 
-| # | Item | Status | Recommended action |
-|---|------|--------|--------------------|
-| 1 | Cartoon via Replicate | We use Lovable AI instead | **Skip** unless you want Replicate specifically |
-| 2 | Matching edge function + test harness | Client-only | **Add** edge fn + admin "Test with fake data" panel |
-| 3 | Brand rep diversity cap (max 1/company in top 5) | Missing | **Add** to scoring sort step |
-| 4 | "Just here to vibe" exclusion | ✅ Done | Nothing |
-| 5 | Admin CSV seed + invite blast | Missing | **Add** — biggest pre-event win |
-| 6 | Brand-first override mirrored for creators | One-sided | **Add** small mirror in scoring |
+### Tap-to-show answer popover (#11)
+- Move `mind_blowing_fact` from inline display into a popover triggered by row tap in `MatchesPanel.tsx`
+- Keeps list scannable
 
----
+### Email copy (#12)
+- Subject → `Your 5 people for tonight, {firstName}`
+- Footer → `Presented by Popfly × Basecamp Match`
+- CTA → `View your card`
 
-## What I'll build if you approve all (default: 2, 3, 5, 6 — skip 1)
+### Weighted scoring refactor (#15)
+- Refactor `scorePair` in `afterparty-matching.ts` to 5-bucket 100-pt system:
+  - Intent 35 · Niche 27 · Format 19 · Role complementarity 14 · Completeness 5
+- Hardcoded niche adjacency map (uses existing niche values):
+  - `{fishing:[fly_fishing,waterfowl], hunting:[archery,waterfowl], hiking:[camping,overlanding], overlanding:[camping,hiking], camping:[hiking,overlanding], waterfowl:[hunting,fishing], archery:[hunting], fly_fishing:[fishing]}`
+- Keep existing brand-priority override, brand-rep diversity cap, and viber exclusion
 
-**New files:**
-- `supabase/functions/compute-afterparty-matches/index.ts` — server-side matching wrapper for testing
-- `supabase/functions/_shared/transactional-email-templates/afterparty-invite.tsx` — invite blast template
-- `src/components/afterparty/AfterPartyCsvSeed.tsx` — CSV upload + preview + commit panel (added to admin tab)
-- `src/components/afterparty/AfterPartyTestMatches.tsx` — paste-fake-attendees panel that calls the edge function and shows scores
+## Files
 
-**Edited files:**
-- `src/lib/afterparty-matching.ts` — add brand-rep diversity cap + mirror brand-first override for creators
-- `src/components/afterparty/AfterPartyAdmin.tsx` — wire in CSV panel, test panel, and "Send invite emails" button
-- `supabase/functions/_shared/transactional-email-templates/registry.ts` — register `afterparty-invite`
-- New edge function `send-afterparty-invites` — loops invited attendees, sends personal links
+**New**
+- `src/components/afterparty/NumberBadge.tsx`
+- `src/components/afterparty/EditNameGate.tsx`
+- `src/components/afterparty/SkeletonMatches.tsx`
 
-**Out of scope:**
-- Switching cartoon provider to Replicate (skipping per recommendation)
-- Live preview of cartoon before save
-- Per-attendee cartoon prompt customization
+**Edited**
+- `src/pages/AfterPartyInvite.tsx` — flat dark theme, 480px, name-gate, skeleton, sentence case
+- `src/components/afterparty/AfterPartyIntakeForm.tsx` — industry_expert role, unified intent chips, 280-char counter, dual avatar preview, SVG fallback
+- `src/components/afterparty/MatchesPanel.tsx` — number-badge-first row, tap-to-show answer popover, role colors
+- `src/lib/afterparty-matching.ts` — 5-bucket weighted scoring + niche adjacency + industry_expert handling
+- `supabase/functions/_shared/transactional-email-templates/afterparty-matches.tsx` — exact subject/footer/CTA
 
-Tell me which numbered items to include (or "all except 1") and I'll build it.
-
+## Skipped (per your call)
+- #4 Outdoor niche list swap — keeping current 14-niche list
+- #5 7-format "What I create/offer" chip swap — keeping current creator_types options
+- #13 Route change to `/invite/:slug` — keeping `/afterparty/:name`
