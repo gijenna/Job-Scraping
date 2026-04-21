@@ -128,6 +128,35 @@ const AfterPartyAdmin = () => {
         </span>
       </div>
 
+      {suggestions.length > 0 && (
+        <div className="rounded-xl border border-events-yellow/30 bg-events-yellow/5 p-4">
+          <h3 className="font-display font-bold text-events-cream mb-3">
+            Pending suggestions ({suggestions.length})
+          </h3>
+          <div className="space-y-2">
+            {suggestions.map((s) => (
+              <div key={s.id} className="flex items-center gap-3 text-sm text-events-cream">
+                <span className="px-2 py-0.5 rounded bg-events-cream/10 text-xs uppercase tracking-wider">
+                  {s.kind === "niche" ? "Niche" : "Looking for"}
+                </span>
+                <span className="font-bold">{s.value}</span>
+                <span className="text-events-cream/50 text-xs">
+                  by {s.attendee_name || "anonymous"}
+                </span>
+                <div className="ml-auto flex gap-1">
+                  <Button size="sm" variant="ghost" onClick={() => reviewSuggestion(s.id, "approved")} className="text-green-400 hover:text-green-300">
+                    <Check className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => reviewSuggestion(s.id, "rejected")} className="text-red-400 hover:text-red-300">
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="rounded-xl border border-events-cream/10 overflow-hidden">
         <table className="w-full text-sm text-events-cream">
           <thead className="bg-events-cream/5">
