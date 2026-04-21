@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
@@ -12,15 +11,21 @@ import { Loader2, Upload } from "lucide-react";
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
 const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Substack", "Twitch", "X / Twitter", "Podcast"];
-const CREATOR_PRO_LOOKING_FOR = ["Brand partnerships", "Paid work", "Mentors"];
-const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
-// Shared social/intent chips (amber-tinted) — available to BOTH roles
-const SOCIAL_LOOKING_FOR = [
+
+// Unified intent chips for ALL roles
+const PRO_INTENTS = [
+  "Find brand deals",
+  "Find creators to work with",
+  "Collab with another creator",
+  "Hire talent",
+];
+const SOCIAL_INTENTS = [
   "Make friends in the industry",
-  "Find a creator to collab with",
   "Find a travel partner",
   "Just here to vibe",
 ];
+
+const BRAND_LOOKING_FOR = ["videographers", "photographers", "influencers", "writers", "athletes", "ambassadors", "friends/connections", "talent pipeline"];
 const AUDIENCE_SIZES = ["< 1K", "1K – 10K", "10K – 50K", "50K – 250K", "250K – 1M", "1M+"];
 const BUDGET_RANGES = ["No budget yet", "< $1K / project", "$1K – $5K", "$5K – $25K", "$25K+"];
 
@@ -33,17 +38,44 @@ interface Props {
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+// Role color tokens
+const ROLE = {
+  creator: { fill: "#4A1B0C", border: "#D85A30", text: "#F5C4B3" },
+  brand: { fill: "#1a1830", border: "#7F77DD", text: "#CECBF6" },
+  industry_expert: { fill: "#04342C", border: "#1D9E75", text: "#9FE1CB" },
+};
+
+// DiceBear-style deterministic SVG fallback
+const hashStr = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+};
+const buildAvatarSvg = (name: string) => {
+  const h = hashStr(name || "anon");
+  const skins = ["#F5C9A6", "#E0A57A", "#B07A52", "#8B5A36"];
+  const hairs = ["#2B1B12", "#5C3A21", "#A0522D", "#D4A017", "#1D9E75"];
+  const bgs = ["#4A1B0C", "#1a1830", "#04342C", "#412402"];
+  const skin = skins[h % skins.length];
+  const hair = hairs[(h >> 3) % hairs.length];
+  const bg = bgs[(h >> 5) % bgs.length];
+  const smile = (h >> 7) % 2 === 0;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect width='80' height='80' fill='${bg}'/><circle cx='40' cy='44' r='22' fill='${skin}'/><path d='M18 38c0-14 10-22 22-22s22 8 22 22v2H18z' fill='${hair}'/><circle cx='32' cy='42' r='2.2' fill='#111'/><circle cx='48' cy='42' r='2.2' fill='#111'/><path d='M32 ${smile ? 52 : 54} q8 ${smile ? 6 : -2} 16 0' stroke='#111' stroke-width='2' fill='none' stroke-linecap='round'/></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+};
+
 const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
-  const [otherLookingFor, setOtherLookingFor] = useState("");
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
     email: "",
     photo_url: "",
+    cartoon_url: "",
     social_links: { instagram: "", linkedin: "" },
     niches: [],
     looking_for: [],
@@ -64,6 +96,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
 
+  const fallbackAvatar = useMemo(() => buildAvatarSvg(form.full_name || "anon"), [form.full_name]);
+
   const toggle = (field: string, value: string) => {
     setForm((f: any) => {
       const arr: string[] = f[field] || [];
@@ -82,20 +116,34 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
     } else {
       const { data: urlData } = supabase.storage.from("event-photos").getPublicUrl(path);
-      setForm((f: any) => ({ ...f, photo_url: urlData.publicUrl }));
+      setForm((f: any) => ({ ...f, photo_url: urlData.publicUrl, cartoon_url: "" }));
     }
     setUploading(false);
   };
 
   const triggerCartoon = async (id: string, photoUrl: string) => {
+    setCartoonPolling(true);
     try {
       await supabase.functions.invoke("generate-cartoon-avatar", {
         body: { attendee_id: id, photo_url: photoUrl },
       });
+      // poll for cartoon_url
+      for (let i = 0; i < 10; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const { data } = await (supabase as any)
+          .from("afterparty_attendees")
+          .select("cartoon_url")
+          .eq("id", id)
+          .single();
+        if (data?.cartoon_url) {
+          setForm((f: any) => ({ ...f, cartoon_url: data.cartoon_url }));
+          break;
+        }
+      }
     } catch (e) {
-      // Non-blocking — cartoon is a nice-to-have
       console.warn("cartoon generation failed", e);
     }
+    setCartoonPolling(false);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -119,9 +167,9 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       audience_size: form.role === "creator" ? form.audience_size || null : null,
       platforms: form.role === "creator" ? form.platforms : [],
       brands_wishlist: form.role === "creator" ? form.brands_wishlist || null : null,
-      mind_blowing_fact: form.role === "creator" ? form.mind_blowing_fact || null : null,
-      company: form.role === "brand" ? form.company || null : null,
-      company_role: form.role === "brand" ? form.company_role || null : null,
+      mind_blowing_fact: form.mind_blowing_fact || null,
+      company: form.role === "brand" ? form.company || null : (form.role === "industry_expert" ? form.company || null : null),
+      company_role: form.role === "brand" || form.role === "industry_expert" ? form.company_role || null : null,
       brand_seeking: form.role === "brand" ? form.brand_seeking : [],
       budget_range: form.role === "brand" ? form.budget_range || null : null,
       brand_fit_notes: form.role === "brand" ? form.brand_fit_notes || null : null,
@@ -139,50 +187,57 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       id = data.id;
     }
     setSaving(false);
-    toast({ title: "Saved!", description: "Your card is live. Check your matches below." });
+    toast({ title: "You're in.", description: "Look out for your matches below." });
 
-    // Submit any "other" suggestions for admin approval
-    const suggestions: any[] = [];
-    const niche = otherNiche.trim();
-    const lf = otherLookingFor.trim();
-    if (niche) suggestions.push({ kind: "niche", value: niche, attendee_id: id, attendee_name: payload.full_name });
-    if (lf) suggestions.push({ kind: "looking_for", value: lf, attendee_id: id, attendee_name: payload.full_name });
-    if (suggestions.length) {
-      await (supabase as any).from("afterparty_suggestions").insert(suggestions);
+    if (otherNiche.trim()) {
+      await (supabase as any).from("afterparty_suggestions").insert([
+        { kind: "niche", value: otherNiche.trim(), attendee_id: id, attendee_name: payload.full_name },
+      ]);
       setOtherNiche("");
-      setOtherLookingFor("");
-      toast({ title: "Thanks!", description: "Your suggestion was sent for review." });
     }
 
     if (id) {
       onSaved(id);
-      // Trigger cartoon avatar generation in background (fire & forget)
-      if (form.photo_url) triggerCartoon(id, form.photo_url);
+      if (form.photo_url && !form.cartoon_url) triggerCartoon(id, form.photo_url);
     }
   };
 
-  const pill = (active: boolean) =>
-    `px-3 py-1.5 rounded-full text-sm border transition-colors cursor-pointer ${
-      active ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent border-events-cream/30 text-events-cream/80 hover:border-events-coral/50"
-    }`;
+  // Pill helpers — themed via inline style
+  const pillStyle = (active: boolean, color: { fill: string; border: string; text: string }) => ({
+    backgroundColor: active ? color.fill : "transparent",
+    border: `1px solid ${active ? color.border : "rgba(255,255,255,0.18)"}`,
+    color: active ? color.text : "rgba(255,255,255,0.75)",
+  });
+  const pillBase = "px-3 py-2 rounded-full text-[13px] cursor-pointer transition-colors min-h-[36px] inline-flex items-center";
 
-  // Amber-tinted social/intent pill (visually different from coral pro pills)
-  const socialPill = (active: boolean) =>
-    `px-3 py-1.5 rounded-full text-sm border transition-colors cursor-pointer ${
-      active
-        ? "bg-events-yellow/90 text-[#1a0d2e] border-events-yellow"
-        : "bg-events-yellow/5 border-events-yellow/40 text-events-yellow/90 hover:border-events-yellow"
-    }`;
+  const inputStyle = {
+    backgroundColor: "#080808",
+    border: "1px solid rgba(255,255,255,0.12)",
+    color: "#fff",
+  } as const;
+
+  const roleColor = ROLE[(form.role as keyof typeof ROLE)] || ROLE.brand;
+  const charCount = (form.mind_blowing_fact || "").length;
 
   return (
-    <form onSubmit={submit} className="space-y-6 text-events-cream">
+    <form onSubmit={submit} className="space-y-6" style={{ color: "#fff" }}>
       {/* Role */}
       <div>
-        <Label className="text-events-cream mb-2 block">I'm a…</Label>
-        <div className="flex gap-2">
-          {(["creator", "brand"] as const).map((r) => (
-            <button type="button" key={r} onClick={() => setForm({ ...form, role: r })} className={pill(form.role === r)}>
-              {r === "creator" ? "Creator" : "Brand"}
+        <Label className="mb-2 block" style={{ color: "rgba(255,255,255,0.85)" }}>I am a…</Label>
+        <div className="flex flex-wrap gap-2">
+          {([
+            { v: "creator", label: "Creator", c: ROLE.creator },
+            { v: "brand", label: "Brand rep", c: ROLE.brand },
+            { v: "industry_expert", label: "Industry expert", c: ROLE.industry_expert },
+          ] as const).map((r) => (
+            <button
+              type="button"
+              key={r.v}
+              onClick={() => setForm({ ...form, role: r.v })}
+              className={pillBase}
+              style={pillStyle(form.role === r.v, r.c)}
+            >
+              {r.label}
             </button>
           ))}
         </div>
@@ -191,59 +246,89 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label>Full name *</Label>
-          <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+          <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
         </div>
         <div>
           <Label>Email</Label>
-          <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+          <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
         </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label>Instagram (handle or URL)</Label>
-          <Input value={form.social_links.instagram} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value } })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+          <Input value={form.social_links.instagram} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value } })} style={inputStyle} />
         </div>
         <div>
           <Label>LinkedIn URL</Label>
-          <Input value={form.social_links.linkedin} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value } })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+          <Input value={form.social_links.linkedin} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value } })} style={inputStyle} />
         </div>
       </div>
 
+      {/* Photo + dual avatar preview */}
       <div>
-        <Label>Photo</Label>
-        <div className="flex items-center gap-3">
-          {form.photo_url && <img src={form.photo_url} alt="" className="w-16 h-16 rounded-full object-cover" />}
-          <label className="inline-flex items-center gap-2 cursor-pointer px-3 py-2 rounded border border-events-cream/30 hover:border-events-coral text-sm">
-            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            {form.photo_url ? "Replace" : "Upload"}
-            <input type="file" accept="image/*" hidden onChange={handlePhoto} />
-          </label>
+        <Label className="mb-2 block">Add your photo</Label>
+        <p className="text-[12px] mb-3" style={{ color: "rgba(255,255,255,0.55)" }}>
+          We'll show your real photo and generate a little illustrated avatar.
+        </p>
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="text-center">
+            <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your photo</div>
+            <div className="aspect-square rounded-full overflow-hidden mx-auto" style={{ width: 96, backgroundColor: "#111", border: "1px solid rgba(255,255,255,0.12)" }}>
+              {form.photo_url ? (
+                <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>No photo</div>
+              )}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your avatar</div>
+            <div className="aspect-square rounded-full overflow-hidden mx-auto relative" style={{ width: 96, backgroundColor: "#111", border: "1px solid rgba(255,255,255,0.12)" }}>
+              {cartoonPolling ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#D85A30" }} />
+                </div>
+              ) : form.cartoon_url ? (
+                <img src={form.cartoon_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <img src={fallbackAvatar} alt="" className="w-full h-full object-cover" />
+              )}
+            </div>
+          </div>
         </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer px-3 py-2 rounded text-[13px]" style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}>
+          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+          {form.photo_url ? "Replace photo" : "Upload photo"}
+          <input type="file" accept="image/*" hidden onChange={handlePhoto} />
+        </label>
       </div>
 
+      {/* Niches */}
       <div>
         <Label className="mb-2 block">Niches</Label>
         <div className="flex flex-wrap gap-2">
           {NICHES.map((n) => (
-            <button type="button" key={n} onClick={() => toggle("niches", n)} className={pill(form.niches.includes(n))}>{n}</button>
+            <button type="button" key={n} onClick={() => toggle("niches", n)} className={pillBase} style={pillStyle(form.niches.includes(n), ROLE.creator)}>{n}</button>
           ))}
         </div>
         <Input
           value={otherNiche}
           onChange={(e) => setOtherNiche(e.target.value)}
           placeholder="Other niche? Suggest one (we'll review)"
-          className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
+          className="mt-2"
+          style={inputStyle}
         />
       </div>
 
-      {form.role === "creator" ? (
+      {/* Creator-only block */}
+      {form.role === "creator" && (
         <>
           <div>
             <Label className="mb-2 block">I'm a…</Label>
             <div className="flex flex-wrap gap-2">
               {CREATOR_TYPES.map((t) => (
-                <button type="button" key={t} onClick={() => toggle("creator_types", t)} className={pill(form.creator_types.includes(t))}>{t}</button>
+                <button type="button" key={t} onClick={() => toggle("creator_types", t)} className={pillBase} style={pillStyle(form.creator_types.includes(t), ROLE.creator)}>{t}</button>
               ))}
             </div>
           </div>
@@ -252,7 +337,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             <div>
               <Label>Audience size</Label>
               <Select value={form.audience_size} onValueChange={(v) => setForm({ ...form, audience_size: v })}>
-                <SelectTrigger className="bg-black/20 border-events-cream/20 text-events-cream"><SelectValue placeholder="Select…" /></SelectTrigger>
+                <SelectTrigger style={inputStyle}><SelectValue placeholder="Select…" /></SelectTrigger>
                 <SelectContent>{AUDIENCE_SIZES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
               </Select>
             </div>
@@ -260,58 +345,30 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               <Label className="mb-2 block">Primary platforms</Label>
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((p) => (
-                  <button type="button" key={p} onClick={() => toggle("platforms", p)} className={pill(form.platforms.includes(p))}>{p}</button>
+                  <button type="button" key={p} onClick={() => toggle("platforms", p)} className={pillBase} style={pillStyle(form.platforms.includes(p), ROLE.creator)}>{p}</button>
                 ))}
               </div>
             </div>
           </div>
 
           <div>
-            <Label className="mb-2 block">I'm looking for…</Label>
-            <div className="flex flex-wrap gap-2">
-              {CREATOR_PRO_LOOKING_FOR.map((l) => (
-                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pill(form.looking_for.includes(l))}>{l}</button>
-              ))}
-            </div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {SOCIAL_LOOKING_FOR.map((l) => (
-                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={socialPill(form.looking_for.includes(l))}>{l}</button>
-              ))}
-            </div>
-            <Input
-              value={otherLookingFor}
-              onChange={(e) => setOtherLookingFor(e.target.value)}
-              placeholder="Looking for something else? Suggest one (we'll review)"
-              className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
-            />
-          </div>
-
-          <div>
             <Label>Brands you'd love to work with</Label>
-            <Textarea value={form.brands_wishlist} onChange={(e) => setForm({ ...form, brands_wishlist: e.target.value })} placeholder="Patagonia, Yeti, Cotopaxi…" className="bg-black/20 border-events-cream/20 text-events-cream" />
-          </div>
-
-          <div>
-            <Label>What's something you've made that you're most proud of — and why did it work?</Label>
-            <Textarea
-              value={form.mind_blowing_fact}
-              onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value })}
-              placeholder="Link a video, campaign, or product launch. The 'why' is the part that matches you with the right people."
-              rows={4}
-              className="bg-black/20 border-events-cream/20 text-events-cream"
-            />
+            <Textarea value={form.brands_wishlist} onChange={(e) => setForm({ ...form, brands_wishlist: e.target.value })} placeholder="Patagonia, Yeti, Cotopaxi…" style={inputStyle} />
           </div>
         </>
-      ) : (
+      )}
+
+      {/* Brand-only block */}
+      {form.role === "brand" && (
         <>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <Label>Company</Label>
-              <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+              <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
             </div>
             <div>
               <Label>Your role</Label>
-              <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
+              <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
             </div>
           </div>
 
@@ -319,55 +376,93 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             <Label className="mb-2 block">We're looking for…</Label>
             <div className="flex flex-wrap gap-2">
               {BRAND_LOOKING_FOR.map((l) => (
-                <button type="button" key={l} onClick={() => toggle("brand_seeking", l)} className={pill(form.brand_seeking.includes(l))}>{l}</button>
+                <button type="button" key={l} onClick={() => toggle("brand_seeking", l)} className={pillBase} style={pillStyle(form.brand_seeking.includes(l), ROLE.brand)}>{l}</button>
               ))}
             </div>
-          </div>
-
-          <div>
-            <Label className="mb-2 block">What we (also) want from the night</Label>
-            <div className="flex flex-wrap gap-2">
-              {SOCIAL_LOOKING_FOR.map((l) => (
-                <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={socialPill(form.looking_for.includes(l))}>{l}</button>
-              ))}
-            </div>
-            <Input
-              value={otherLookingFor}
-              onChange={(e) => setOtherLookingFor(e.target.value)}
-              placeholder="Looking for something else? Suggest one (we'll review)"
-              className="mt-2 bg-black/20 border-events-cream/20 text-events-cream"
-            />
           </div>
 
           <div>
             <Label>Budget range for creator work</Label>
             <Select value={form.budget_range} onValueChange={(v) => setForm({ ...form, budget_range: v })}>
-              <SelectTrigger className="bg-black/20 border-events-cream/20 text-events-cream"><SelectValue placeholder="Optional" /></SelectTrigger>
+              <SelectTrigger style={inputStyle}><SelectValue placeholder="Optional" /></SelectTrigger>
               <SelectContent>{BUDGET_RANGES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
             </Select>
           </div>
 
           <div>
             <Label>What makes a creator a great fit for you?</Label>
-            <Textarea value={form.brand_fit_notes} onChange={(e) => setForm({ ...form, brand_fit_notes: e.target.value })} className="bg-black/20 border-events-cream/20 text-events-cream" />
-          </div>
-
-          <div>
-            <Label>What's a campaign or launch you're most proud of — and why did it work?</Label>
-            <Textarea
-              value={form.mind_blowing_fact}
-              onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value })}
-              placeholder="Tell us about a collab, drop, or moment. The 'why' is the part that matches you with the right people."
-              rows={4}
-              className="bg-black/20 border-events-cream/20 text-events-cream"
-            />
+            <Textarea value={form.brand_fit_notes} onChange={(e) => setForm({ ...form, brand_fit_notes: e.target.value })} style={inputStyle} />
           </div>
         </>
       )}
 
-      <Button type="submit" disabled={saving} className="bg-events-coral hover:bg-events-coral/90 text-events-cream w-full sm:w-auto">
+      {/* Industry expert block */}
+      {form.role === "industry_expert" && (
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <Label>Company / org</Label>
+            <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+          </div>
+          <div>
+            <Label>Your role</Label>
+            <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
+          </div>
+        </div>
+      )}
+
+      {/* Unified intent chips */}
+      <div>
+        <Label className="mb-2 block">I'm here to…</Label>
+        <div className="flex flex-wrap gap-2">
+          {PRO_INTENTS.map((l) => (
+            <button type="button" key={l} onClick={() => toggle("looking_for", l)} className={pillBase} style={pillStyle(form.looking_for.includes(l), roleColor)}>{l}</button>
+          ))}
+        </div>
+        <div className="my-3" style={{ height: 1, backgroundColor: "rgba(255,255,255,0.09)" }} />
+        <div className="flex flex-wrap gap-2">
+          {SOCIAL_INTENTS.map((l) => (
+            <button
+              type="button"
+              key={l}
+              onClick={() => toggle("looking_for", l)}
+              className={pillBase}
+              style={pillStyle(form.looking_for.includes(l), { fill: "#412402", border: "#BA7517", text: "#FAC775" })}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* The question — single, 280 chars */}
+      <div>
+        <Label>What's something you've made that you're proud of — and why did it work?</Label>
+        <div className="relative">
+          <Textarea
+            value={form.mind_blowing_fact}
+            onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value.slice(0, 280) })}
+            placeholder="A 60-second reel I shot at 4am on a frozen lake. It worked because it was real — no script, just the moment."
+            rows={4}
+            maxLength={280}
+            style={inputStyle}
+          />
+          <div
+            className="absolute bottom-2 right-3 text-[11px] tabular-nums"
+            style={{ color: charCount >= 280 ? "#D85A30" : "rgba(255,255,255,0.5)" }}
+          >
+            {charCount}/280
+          </div>
+        </div>
+      </div>
+
+      <Button
+        type="submit"
+        disabled={saving}
+        className="w-full sm:w-auto hover:opacity-90"
+        style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
+      >
         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-        {attendeeId ? "Update my card" : "Save my card & see matches"}
+        {attendeeId ? "Update my card" : "Secure my spot →"}
       </Button>
     </form>
   );

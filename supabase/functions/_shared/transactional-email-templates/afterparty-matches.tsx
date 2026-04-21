@@ -36,7 +36,7 @@ const AfterPartyMatchesEmail = ({
 }: AfterPartyMatchesProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your 5 people are waiting — here are their numbers</Preview>
+    <Preview>Your 5 people for tonight — here are their numbers</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Hey {recipientName} 👋</Heading>
@@ -62,11 +62,11 @@ const AfterPartyMatchesEmail = ({
         <Hr style={hr} />
 
         <Button href={inviteUrl} style={button}>
-          See your card & live list
+          View your card
         </Button>
 
         <Text style={footer}>
-          See you there. — Basecamp
+          Presented by Popfly × Basecamp Match
         </Text>
       </Container>
     </Body>
@@ -75,7 +75,10 @@ const AfterPartyMatchesEmail = ({
 
 export const template = {
   component: AfterPartyMatchesEmail,
-  subject: 'Your 5 people are waiting',
+  subject: (data: Record<string, any>) => {
+    const first = (data?.recipientName || '').toString().trim().split(/\s+/)[0] || 'you'
+    return `Your 5 people for tonight, ${first}`
+  },
   displayName: 'After Party — match blast',
   previewData: {
     recipientName: 'Jane',
