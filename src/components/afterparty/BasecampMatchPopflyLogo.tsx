@@ -72,7 +72,7 @@ const BasecampMatchPopflyLogo = () => {
           </span>
           <div
             className="bmp-divider-r h-px w-8 sm:w-14"
-            style={{ background: "linear-gradient(to left, transparent, #3DDFD5)", boxShadow: "0 0 8px rgba(61,223,213,0.6)" }}
+            style={{ background: "linear-gradient(to left, transparent, #39FF14)", boxShadow: "0 0 8px rgba(57,255,20,0.6)" }}
           />
         </div>
 
