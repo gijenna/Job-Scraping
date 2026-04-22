@@ -32,9 +32,9 @@ const BasecampMatchPopflyLogo = () => {
           0%, 100% { filter: drop-shadow(0 0 12px rgba(225,182,36,0.55)) drop-shadow(0 0 24px rgba(225,182,36,0.35)); }
           50%     { filter: drop-shadow(0 0 18px rgba(225,182,36,0.85)) drop-shadow(0 0 36px rgba(225,182,36,0.55)); }
         }
-        @keyframes bmpTealPulse {
-          0%, 100% { filter: drop-shadow(0 0 12px rgba(61,223,213,0.55)) drop-shadow(0 0 24px rgba(61,223,213,0.35)); }
-          50%     { filter: drop-shadow(0 0 18px rgba(61,223,213,0.9))  drop-shadow(0 0 36px rgba(61,223,213,0.55)); }
+        @keyframes bmpNeonPulse {
+          0%, 100% { filter: drop-shadow(0 0 12px rgba(57,255,20,0.55)) drop-shadow(0 0 24px rgba(57,255,20,0.35)); }
+          50%     { filter: drop-shadow(0 0 18px rgba(57,255,20,0.9))  drop-shadow(0 0 36px rgba(57,255,20,0.55)); }
         }
         @keyframes bmpXGlow {
           0%, 100% { text-shadow: 0 0 8px rgba(245,230,211,0.6), 0 0 16px rgba(245,230,211,0.3); }
