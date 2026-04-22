@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
+import StarSparkle from "@/components/afterparty/StarSparkle";
 
 const BG = "#080808";
 const CARD = "#111111";
@@ -113,14 +114,20 @@ const GuestList = () => {
           <ArrowLeft className="w-3 h-3" /> Back to invite
         </Link>
 
-        <div className="text-center mb-8">
-          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: "rgba(255,255,255,0.55)" }}>
+        <div className="relative text-center mb-8">
+          <div className="absolute left-1/2 -translate-x-[140px] -top-4 opacity-80 rotate-[-18deg] pointer-events-none hidden sm:block">
+            <StarSparkle tone="coral" variant="single" size={48} />
+          </div>
+          <div className="absolute left-1/2 translate-x-[100px] -top-2 opacity-70 rotate-[14deg] pointer-events-none hidden sm:block">
+            <StarSparkle tone="green" variant="set" size={64} />
+          </div>
+          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: "rgba(245,230,211,0.55)" }}>
             Creator after party
           </div>
-          <h1 className="text-[36px] sm:text-[44px] leading-[1.05]" style={{ fontWeight: 500 }}>
+          <h1 className="font-afterparty text-[36px] sm:text-[44px] leading-[1.05]" style={{ fontWeight: 500, color: "#F5E6D3" }}>
             {loading ? "—" : guests.length} {guests.length === 1 ? "person" : "people"} coming
           </h1>
-          <p className="text-[14px] mt-2" style={{ color: "rgba(255,255,255,0.55)" }}>
+          <p className="text-[14px] mt-2" style={{ color: "rgba(245,230,211,0.6)" }}>
             Live roster · updates as folks RSVP
           </p>
         </div>
