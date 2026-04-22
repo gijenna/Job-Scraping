@@ -1,36 +1,66 @@
 
 
-## Splash intro + event details for Creator After Party
+## Public Guest List at `/guests`
 
-Two-part change to `/afterparty`:
+A new public, read-only browsing page for After Party attendees. Nothing existing is modified except: (a) one new DB column, (b) one new link on `/afterparty`, and (c) one new toggle on the verified user's own card.
 
-### 1. PB monogram splash → animated reveal
+### 1. Database
 
-- Save the uploaded coral PB monogram to `src/assets/pb-monogram.png` (transparent).
-- Update `BasecampMatchPopflyLogo.tsx` to play a 3-stage intro on first paint:
-  1. **0–1.4s**: Only the PB monogram is visible, centered, gently pulsing (scale + glow). Basecamp Match and Popfly logos are hidden (off-screen left/right).
-  2. **1.4–2.4s**: The two side logos "flutter" in to their final positions (slight rotation + ease, layered on the existing `bmpFromLeft`/`bmpFromRight` motion). PB monogram shrinks/fades to occupy the slot where the "presents" kicker currently sits.
-  3. **2.4s+**: PB monogram becomes the "presents" mark itself — replacing the current `presents` text. "The Creator After Party" title fades in below it, as today.
-- Net result: the old `presents` text is removed; the PB monogram permanently lives where it used to be (small, centered, between the logo row and the title).
-- All animation pure CSS keyframes, no new libraries. Honors `prefers-reduced-motion` by snapping to final state.
+Single additive migration on `afterparty_attendees`:
 
-### 2. Event details section + opt-in gating
+- Add column `public_listing boolean NOT NULL DEFAULT true`.
+- Backfill is automatic via default — all existing attendees default to visible.
+- No RLS change needed for SELECT: we'll expose a tightly-scoped public view (see below).
 
-Currently the intake form only shows in edit mode for verified attendees. Add a new "About the event" section in `AfterPartyInvite.tsx`, rendered between the hero copy and the lookup/matches area, visible to everyone:
+To avoid leaking email/phone/slug/full-name through the existing table (which currently has no public SELECT policy), create a **SQL view** `public.afterparty_guest_list` that exposes ONLY:
 
-- Heading: "An invite-only night in RiNo"
-- Body copy (admin-editable via `EditableText`, multiline): "A curated evening for brands, creators, and Outside Days festival sponsors — hosted in one of RiNo's newest, coolest spots. Address shared after RSVP."
-- Three small detail rows (date, neighborhood, dress) using `EditableText` keys so Jenna can edit.
-- Primary CTA button: **"Create my card"** — scrolls to / reveals the existing name lookup + (for invited attendees) intake form. Secondary link: "Already RSVP'd? Find my card" → focuses the existing lookup input.
-- The matches/skeleton block stays below, but only renders once a card is loaded (today it shows skeleton always — change to hide until `me` exists, so the first-visit page is just: splash → event info → CTA).
+`id, attendee_number, role, first_name_initial (computed: split_part(full_name,' ',1) || ' ' || left(split_part(full_name,' ',-1),1) || '.'), company, cartoon_url, niches, creator_types, looking_for, mind_blowing_fact, created_at`
 
-### Files touched
+Grant `SELECT` on the view to `anon` and `authenticated`, filtered to rows where `public_listing = true AND status = 'submitted'` (i.e. completed profile). Realtime is enabled by adding the underlying table to `supabase_realtime` publication and subscribing to row updates — the client re-filters via the view query.
 
-- `src/assets/pb-monogram.png` (new — copied from upload)
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` (intro animation, remove "presents" text, mount PB monogram in its place)
-- `src/pages/AfterPartyInvite.tsx` (new event-details + CTA section, gate matches skeleton on `me`)
+### 2. New page `/guests`
 
-### Editable copy keys added
+New file `src/pages/GuestList.tsx`, registered in `src/App.tsx` above the catch-all.
 
-- `afterparty.about.title`, `afterparty.about.body`, `afterparty.about.detail1/2/3`, `afterparty.cta.primary`, `afterparty.cta.secondary`
+Layout, top to bottom:
+
+- Header band with live count: **"{n} people coming"**, driven by a `count` query on the view + a realtime subscription on `afterparty_attendees` that re-runs the count + list on any change.
+- Filter bar (sticky on scroll):
+  - Role multi-select chips: Creator / Brand rep / Industry expert
+  - Niche multi-select dropdown (options derived from distinct values in the result set)
+  - Sort dropdown: "Newest first" (default, `created_at desc`) | "By niche" (group/sort by first niche alpha)
+  - Search input: client-side filter across `first_name_initial`, `niches`, `creator_types`, `mind_blowing_fact`
+- Card grid: `grid-cols-2 md:grid-cols-3 gap-4`.
+
+Each card (new component `src/components/afterparty/GuestCard.tsx`):
+
+- Top-right: `<NumberBadge>` (existing, role-colored)
+- Centered cartoon avatar (`cartoon_url` only — fallback to monogram initials if missing; never `photo_url`)
+- "Jordan M." display name
+- Role pill (reuses role color tokens from `NumberBadge`)
+- Niche tag chips + content-type chips
+- 2-line clamped `mind_blowing_fact` with "Read more" toggle (local state, expands inline)
+- "Here to" intent pills from `looking_for`, **filtering out** any value matching `/just here to vibe/i`
+
+Empty state: "No one matches those filters yet."
+
+### 3. Link from `/afterparty`
+
+In `src/pages/AfterPartyInvite.tsx`, add a single inline link **"See who's coming →"** directly under the hero copy block, rendered unconditionally (before and after form submission). Wraps `react-router-dom` `<Link to="/guests">`. Uses existing typography classes — no new section, no layout changes elsewhere.
+
+### 4. Opt-out toggle on own card
+
+In the existing verified-user view (where the attendee sees their own card after PIN verification — `MatchesPanel` / the "me" card area in `AfterPartyInvite.tsx`), add a small `<Switch>` row labeled **"Show me in the guest list"**, default reflects `me.public_listing`. Visible ONLY when `me` is loaded and PIN-verified (i.e. inside the existing authenticated branch). Toggling writes `public_listing` on that attendee row via the existing authenticated update policy (`auth.uid() = auth_user_id`). Realtime on `/guests` reflects the change instantly.
+
+### Files
+
+- `supabase/migrations/<ts>_guest_list.sql` (new — column + view + grants + publication)
+- `src/pages/GuestList.tsx` (new)
+- `src/components/afterparty/GuestCard.tsx` (new)
+- `src/App.tsx` (add `<Route path="/guests" element={<GuestList />} />`)
+- `src/pages/AfterPartyInvite.tsx` (add "See who's coming →" link + opt-out Switch on own card — surgical edits, no other changes)
+
+### What stays untouched
+
+No edits to matching logic, intake form, splash animation, hero, email flows, or any other page. No fields beyond the listed view columns are ever queried by `/guests`.
 
