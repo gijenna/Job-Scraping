@@ -1,66 +1,56 @@
 
 
-## Public Guest List at `/guests`
+## Matching algorithm: completeness score + mutual boost
 
-A new public, read-only browsing page for After Party attendees. Nothing existing is modified except: (a) one new DB column, (b) one new link on `/afterparty`, and (c) one new toggle on the verified user's own card.
+Three additive changes. No UI restructuring, no form changes, no schema changes beyond one column.
 
-### 1. Database
+### Where the matching code actually lives
 
-Single additive migration on `afterparty_attendees`:
+The live matching that powers the invite page and the admin "Lock matches" action runs in **`src/lib/afterparty-matching.ts`** (browser-side). The edge function `compute-afterparty-matches` mirrors the same algorithm for server-side testing and email blasts. Both will be updated identically so scores stay consistent.
 
-- Add column `public_listing boolean NOT NULL DEFAULT true`.
-- Backfill is automatic via default — all existing attendees default to visible.
-- No RLS change needed for SELECT: we'll expose a tightly-scoped public view (see below).
+### Change 1 — Completeness as a 0–15 score
 
-To avoid leaking email/phone/slug/full-name through the existing table (which currently has no public SELECT policy), create a **SQL view** `public.afterparty_guest_list` that exposes ONLY:
+In `src/lib/afterparty-matching.ts` (and mirror in `supabase/functions/compute-afterparty-matches/index.ts`):
 
-`id, attendee_number, role, first_name_initial (computed: split_part(full_name,' ',1) || ' ' || left(split_part(full_name,' ',-1),1) || '.'), company, cartoon_url, niches, creator_types, looking_for, mind_blowing_fact, created_at`
+- Replace the existing `completenessScore(them)` (currently a 0/2/5 step value derived from a counting helper) with a new computation that returns 0–15:
+  - Role selected → 2
+  - At least 1 niche → 2
+  - At least 1 content type (`creator_types`) → 2
+  - At least 1 intent (`looking_for`) → 2
+  - `mind_blowing_fact` length ≥ 50 chars → 3
+  - `photo_url` present → 2
+  - `cartoon_url` present → 2
+- This score is added to each pair's score in place of the old completeness term. All other dimensions (Intent 35 / Niche 27 / Format 19 / Role 14) stay untouched.
+- The old `profileCompleteness` helper stays only as the tiebreaker integer used in sort comparison (unchanged), since it's also used for diversity ordering. The new 15-point score is what feeds into the score itself.
 
-Grant `SELECT` on the view to `anon` and `authenticated`, filtered to rows where `public_listing = true AND status = 'submitted'` (i.e. completed profile). Realtime is enabled by adding the underlying table to `supabase_realtime` publication and subscribing to row updates — the client re-filters via the view query.
+### Change 2 — Mutual matching boost (second pass)
 
-### 2. New page `/guests`
+In `computeAllMatches` (and the edge function's batch path):
 
-New file `src/pages/GuestList.tsx`, registered in `src/App.tsx` above the catch-all.
+1. First pass: for every attendee A, score every candidate and keep their **top 10** (not 5) — using the existing sort and brand-diversity cap, but at `topN=10`.
+2. Build a lookup: `topTen[attendeeId] = Set<candidateId>`.
+3. Second pass: for each pair (A, B) where B is in A's top 10 **and** A is in B's top 10:
+   - Add 10 to A→B score and 10 to B→A score.
+   - Mark both rows `is_mutual_boost = true`.
+4. Re-sort each attendee's candidates by updated score, re-apply the brand-diversity cap, and slice to top 5.
 
-Layout, top to bottom:
+`computeMatchesFor` (single-attendee live preview on the invite page) gets a lightweight version: it now needs the full attendee set anyway, so it internally runs the same two-pass routine and returns just `me`'s top 5. This keeps the live preview consistent with what gets locked.
 
-- Header band with live count: **"{n} people coming"**, driven by a `count` query on the view + a realtime subscription on `afterparty_attendees` that re-runs the count + list on any change.
-- Filter bar (sticky on scroll):
-  - Role multi-select chips: Creator / Brand rep / Industry expert
-  - Niche multi-select dropdown (options derived from distinct values in the result set)
-  - Sort dropdown: "Newest first" (default, `created_at desc`) | "By niche" (group/sort by first niche alpha)
-  - Search input: client-side filter across `first_name_initial`, `niches`, `creator_types`, `mind_blowing_fact`
-- Card grid: `grid-cols-2 md:grid-cols-3 gap-4`.
+### Change 3 — DB column + UI border
 
-Each card (new component `src/components/afterparty/GuestCard.tsx`):
+- **Migration**: add `is_mutual_boost boolean NOT NULL DEFAULT false` to `afterparty_matches`. The admin "Lock matches" path (`afterparty-admin` edge function, `lock_matches` action) already inserts match rows; it'll start writing this column. No RLS or type changes beyond regen.
+- **Type updates**: `MatchResult` interface gains `is_mutual_boost?: boolean` and is propagated from both the lib and the edge function.
+- **UI** (`src/components/afterparty/MatchesPanel.tsx`): the only visual change is on each match row's outer button — when `match.is_mutual_boost` is true, set its left border to `2px solid #BA7517` (overriding just the left edge of the existing 1px border). No badge, label, tooltip, ordering change, or copy change.
 
-- Top-right: `<NumberBadge>` (existing, role-colored)
-- Centered cartoon avatar (`cartoon_url` only — fallback to monogram initials if missing; never `photo_url`)
-- "Jordan M." display name
-- Role pill (reuses role color tokens from `NumberBadge`)
-- Niche tag chips + content-type chips
-- 2-line clamped `mind_blowing_fact` with "Read more" toggle (local state, expands inline)
-- "Here to" intent pills from `looking_for`, **filtering out** any value matching `/just here to vibe/i`
+### Files touched
 
-Empty state: "No one matches those filters yet."
+- `supabase/migrations/<ts>_match_mutual_boost.sql` — adds `is_mutual_boost` column
+- `src/lib/afterparty-matching.ts` — new completeness scoring + mutual-boost two-pass; `MatchResult.is_mutual_boost`
+- `supabase/functions/compute-afterparty-matches/index.ts` — same algorithm changes mirrored
+- `supabase/functions/afterparty-admin/index.ts` — when locking matches, persist `is_mutual_boost` from incoming match rows
+- `src/components/afterparty/MatchesPanel.tsx` — amber left border when `is_mutual_boost` is true
 
-### 3. Link from `/afterparty`
+### Out of scope
 
-In `src/pages/AfterPartyInvite.tsx`, add a single inline link **"See who's coming →"** directly under the hero copy block, rendered unconditionally (before and after form submission). Wraps `react-router-dom` `<Link to="/guests">`. Uses existing typography classes — no new section, no layout changes elsewhere.
-
-### 4. Opt-out toggle on own card
-
-In the existing verified-user view (where the attendee sees their own card after PIN verification — `MatchesPanel` / the "me" card area in `AfterPartyInvite.tsx`), add a small `<Switch>` row labeled **"Show me in the guest list"**, default reflects `me.public_listing`. Visible ONLY when `me` is loaded and PIN-verified (i.e. inside the existing authenticated branch). Toggling writes `public_listing` on that attendee row via the existing authenticated update policy (`auth.uid() = auth_user_id`). Realtime on `/guests` reflects the change instantly.
-
-### Files
-
-- `supabase/migrations/<ts>_guest_list.sql` (new — column + view + grants + publication)
-- `src/pages/GuestList.tsx` (new)
-- `src/components/afterparty/GuestCard.tsx` (new)
-- `src/App.tsx` (add `<Route path="/guests" element={<GuestList />} />`)
-- `src/pages/AfterPartyInvite.tsx` (add "See who's coming →" link + opt-out Switch on own card — surgical edits, no other changes)
-
-### What stays untouched
-
-No edits to matching logic, intake form, splash animation, hero, email flows, or any other page. No fields beyond the listed view columns are ever queried by `/guests`.
+No changes to forms, schema fields beyond one boolean column, scoring weights for intent/niche/format/role, brand-diversity cap, vibe-mode discount, or any other component.
 
