@@ -46,9 +46,13 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
 
   return (
     <div
-      className="relative p-4 rounded-xl flex flex-col"
+      className="relative p-4 rounded-xl flex flex-col overflow-hidden"
       style={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.09)" }}
     >
+      {/* Decorative sparkle accent (top-left) */}
+      <div className="absolute -top-2 -left-2 opacity-70 rotate-[-12deg] pointer-events-none">
+        <StarSparkle tone="coral" variant="single" size={28} />
+      </div>
       <div className="absolute top-3 right-3">
         <NumberBadge number={guest.attendee_number} role={guest.role} size={36} />
       </div>

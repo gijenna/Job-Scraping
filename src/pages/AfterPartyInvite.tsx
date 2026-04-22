@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Search } from "lucide-react";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
+import StarSparkle from "@/components/afterparty/StarSparkle";
 import { getSession } from "@/services/auth";
 
 const slugify = (s: string) =>
