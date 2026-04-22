@@ -262,7 +262,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             className="bmp-title font-afterparty text-2xl sm:text-3xl md:text-4xl font-bold"
             style={{ color: "#F5E6D3" }}
           >
-            The Creator After Party
+            Creator After Party
           </h2>
         </div>
       </div>
