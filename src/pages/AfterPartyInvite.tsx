@@ -406,11 +406,13 @@ const AfterPartyInvite = () => {
             </section>
           )}
 
-          {/* Intake form (edit mode only — new attendees are admin-seeded) */}
-          {me && editMode && isOwner && (
-            <section className="mt-8">
-              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>Edit your card</h2>
-              <AfterPartyIntakeForm attendeeId={me.id} initial={me} onSaved={handleSaved} />
+          {/* Intake form — new RSVP or owner editing existing card */}
+          {editMode && (!me || isOwner) && (
+            <section id="intake-form" className="mt-8">
+              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
+                {me ? "Edit your card" : "RSVP & build your card"}
+              </h2>
+              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={me} onSaved={handleSaved} />
             </section>
           )}
 
