@@ -1,5 +1,5 @@
-import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
+import BasecampMatchAnimated from "./BasecampMatchAnimated";
 
 /**
  * Co-branded animated header: Basecamp Match × Popfly
@@ -49,13 +49,9 @@ const BasecampMatchPopflyLogo = () => {
       `}</style>
 
       <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4">
-        {/* Left: Basecamp Match */}
+        {/* Left: Basecamp Match (animated flame) */}
         <div className="bmp-left flex items-center justify-end flex-1 min-w-0">
-          <img
-            src={basecampMatchLogo}
-            alt="Basecamp Match"
-            className="h-10 sm:h-14 md:h-16 w-auto object-contain"
-          />
+          <BasecampMatchAnimated className="h-10 sm:h-14 md:h-16" />
         </div>
 
         {/* Neon divider + × */}
