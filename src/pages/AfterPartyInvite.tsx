@@ -269,15 +269,15 @@ const AfterPartyInvite = () => {
                 <Button
                   type="button"
                   onClick={() => {
-                    document.getElementById("opt-in")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    setEditMode(true);
                     setTimeout(() => {
-                      document.getElementById("lookup-input")?.focus();
-                    }, 400);
+                      document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 100);
                   }}
                   className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
-                  <EditableText settingKey="cta.primary" defaultText="Create my card" />
+                  <EditableText settingKey="cta.primary" defaultText="RSVP" />
                 </Button>
               </div>
             </section>
