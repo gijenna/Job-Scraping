@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
+import BrandActivateButton from "./BrandActivateButton";
 
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
@@ -459,6 +460,18 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
         {attendeeId ? "Update my card" : "Secure my spot →"}
       </Button>
+
+      {form.role === "brand" && attendeeId && (
+        <div className="pt-4">
+          <BrandActivateButton
+            attendeeId={attendeeId}
+            fullName={form.full_name}
+            company={form.company}
+            email={form.email}
+            variant="full"
+          />
+        </div>
+      )}
     </form>
   );
 };
