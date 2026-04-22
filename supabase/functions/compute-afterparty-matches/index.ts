@@ -2,7 +2,7 @@
 // Two modes:
 //   1. POST {} — pulls live attendees from the DB and returns everyone's top 5
 //   2. POST { attendees: [...], topN?: 5 } — runs against fake attendees you paste in
-// Useful for pre-event testing without touching real data.
+// Mirrors src/lib/afterparty-matching.ts including completeness 0–15 + mutual boost pass.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -14,7 +14,7 @@ interface Attendee {
   id: string
   attendee_number?: number
   full_name: string
-  role: 'creator' | 'brand'
+  role: 'creator' | 'brand' | 'industry_expert' | string
   niches?: string[] | null
   looking_for?: string[] | null
   creator_types?: string[] | null
@@ -23,6 +23,7 @@ interface Attendee {
   company?: string | null
   brand_seeking?: string[] | null
   photo_url?: string | null
+  cartoon_url?: string | null
   audience_size?: string | null
   mind_blowing_fact?: string | null
   brand_fit_notes?: string | null
@@ -53,7 +54,9 @@ const sharedSocial = (me: Attendee, them: Attendee) => {
   const theirs = new Set((them.looking_for || []).map(norm))
   return mine.filter((x) => theirs.has(x))
 }
-function completeness(a: Attendee): number {
+
+// Tiebreaker integer (used for sort/diversity ordering only)
+function profileCompleteness(a: Attendee): number {
   let n = 0
   if (a.photo_url) n++
   if (a.niches?.length) n++
@@ -71,6 +74,19 @@ function completeness(a: Attendee): number {
     if (a.budget_range) n++
   }
   return n
+}
+
+// New 0–15 score that feeds directly into the match score.
+function completenessScore(them: Attendee): number {
+  let pts = 0
+  if (them.role) pts += 2
+  if (them.niches && them.niches.length > 0) pts += 2
+  if (them.creator_types && them.creator_types.length > 0) pts += 2
+  if (them.looking_for && them.looking_for.length > 0) pts += 2
+  if (them.mind_blowing_fact && them.mind_blowing_fact.length >= 50) pts += 3
+  if (them.photo_url) pts += 2
+  if (them.cartoon_url) pts += 2
+  return pts
 }
 
 function scorePair(me: Attendee, them: Attendee) {
@@ -130,6 +146,8 @@ function scorePair(me: Attendee, them: Attendee) {
     }
   }
   score += 2 * intersect(me.platforms, them.platforms).length
+  // 0–15 completeness contribution
+  score += completenessScore(them)
   if (me.role === them.role) {
     const sameRoleAllowed = social.length > 0 && sharedNiches.length > 0
     if (!sameRoleAllowed) score = Math.floor(score * 0.6)
@@ -137,28 +155,40 @@ function scorePair(me: Attendee, them: Attendee) {
   return { score, reasons, brandPriority }
 }
 
-function topNFor(me: Attendee, all: Attendee[], topN = 5) {
+interface Scored {
+  them: Attendee
+  score: number
+  reasons: string[]
+  brandPriority: boolean
+  completeness: number
+  is_mutual_boost?: boolean
+}
+
+function scoreCandidates(me: Attendee, all: Attendee[]): Scored[] {
   const meVibing = isVibing(me)
-  const scored = all
+  return all
     .filter((a) => a.id !== me.id)
     .filter((them) => (isVibing(them) && !meVibing ? false : true))
     .map((them) => {
       const { score, reasons, brandPriority } = scorePair(me, them)
       return {
-        them, score: meVibing ? Math.floor(score * 0.5) : score,
-        reasons, brandPriority, completeness: completeness(them),
+        them,
+        score: meVibing ? Math.floor(score * 0.5) : score,
+        reasons, brandPriority, completeness: profileCompleteness(them),
       }
     })
     .filter((r) => r.score > 0)
-    .sort((a, b) => {
-      if (a.brandPriority !== b.brandPriority) return a.brandPriority ? -1 : 1
-      if (b.score !== a.score) return b.score - a.score
-      return b.completeness - a.completeness
-    })
-  // Diversity cap: max 1 per company
+}
+
+function rankAndCap(scored: Scored[], topN: number): Scored[] {
+  const sorted = [...scored].sort((a, b) => {
+    if (a.brandPriority !== b.brandPriority) return a.brandPriority ? -1 : 1
+    if (b.score !== a.score) return b.score - a.score
+    return b.completeness - a.completeness
+  })
   const seen = new Set<string>()
-  const capped: typeof scored = []
-  for (const r of scored) {
+  const capped: Scored[] = []
+  for (const r of sorted) {
     const key = r.them.company ? norm(r.them.company) : null
     if (key) {
       if (seen.has(key)) continue
@@ -167,7 +197,11 @@ function topNFor(me: Attendee, all: Attendee[], topN = 5) {
     capped.push(r)
     if (capped.length >= topN) break
   }
-  return capped.map((r, i) => ({
+  return capped
+}
+
+function toMatchRows(scored: Scored[]) {
+  return scored.map((r, i) => ({
     match_attendee_id: r.them.id,
     match_name: r.them.full_name,
     match_number: r.them.attendee_number,
@@ -176,7 +210,38 @@ function topNFor(me: Attendee, all: Attendee[], topN = 5) {
     score: r.score,
     reasons: r.reasons,
     rank: i + 1,
+    is_mutual_boost: r.is_mutual_boost ?? false,
   }))
+}
+
+// Two-pass: build top-10 per attendee, apply mutual boost, then take top-N.
+function runPipeline(attendees: Attendee[], topN: number) {
+  const scoredById = new Map<string, Scored[]>()
+  const topTen = new Map<string, Set<string>>()
+  for (const me of attendees) {
+    const s = scoreCandidates(me, attendees)
+    scoredById.set(me.id, s)
+    const t10 = rankAndCap(s, 10)
+    topTen.set(me.id, new Set(t10.map((r) => r.them.id)))
+  }
+  for (const me of attendees) {
+    const myTop10 = topTen.get(me.id)
+    if (!myTop10) continue
+    const myScored = scoredById.get(me.id)!
+    for (const cand of myScored) {
+      if (!myTop10.has(cand.them.id)) continue
+      const theirTop10 = topTen.get(cand.them.id)
+      if (theirTop10 && theirTop10.has(me.id)) {
+        cand.score += 10
+        cand.is_mutual_boost = true
+      }
+    }
+  }
+  const final = new Map<string, Scored[]>()
+  for (const me of attendees) {
+    final.set(me.id, rankAndCap(scoredById.get(me.id) || [], topN))
+  }
+  return final
 }
 
 Deno.serve(async (req) => {
@@ -203,6 +268,8 @@ Deno.serve(async (req) => {
   }
 
   const topN = body.topN || 5
+  const pipeline = runPipeline(attendees, topN)
+
   if (body.meId) {
     const me = attendees.find((a) => a.id === body.meId)
     if (!me) {
@@ -212,7 +279,7 @@ Deno.serve(async (req) => {
     }
     return new Response(JSON.stringify({
       me: { id: me.id, name: me.full_name, role: me.role, company: me.company },
-      matches: topNFor(me, attendees, topN),
+      matches: toMatchRows(pipeline.get(me.id) || []),
     }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
   }
 
@@ -222,7 +289,7 @@ Deno.serve(async (req) => {
     number: me.attendee_number,
     role: me.role,
     company: me.company,
-    matches: topNFor(me, attendees!, topN),
+    matches: toMatchRows(pipeline.get(me.id) || []),
   }))
   return new Response(JSON.stringify({ count: all.length, results: all }), {
     status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },

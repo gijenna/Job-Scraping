@@ -1,5 +1,6 @@
 // Matching engine for the Creator After Party.
-// 100-point weighted system: Intent 35 · Niche 27 · Format 19 · Role 14 · Completeness 5
+// Weighted system: Intent 35 · Niche 27 · Format 19 · Role 14 · Completeness 0–15
+// Plus a mutual-boost second pass: +10 to both sides when each is in the other's top 10.
 
 export interface AfterPartyAttendee {
   id: string;
@@ -30,6 +31,7 @@ export interface MatchResult {
   score: number;
   reasons: string[];
   rank: number;
+  is_mutual_boost?: boolean;
 }
 
 const CREATOR_TYPE_TO_BRAND_SEEKING: Record<string, string> = {
@@ -77,6 +79,7 @@ function intersect(a: string[] | null, b: string[] | null): string[] {
   return a.filter((x) => setB.has(norm(x)));
 }
 
+// Tiebreaker integer (kept for sort comparison + diversity ordering)
 function profileCompleteness(a: AfterPartyAttendee): number {
   let n = 0;
   if (a.photo_url) n++;
@@ -115,7 +118,6 @@ function nicheScore(me: AfterPartyAttendee, them: AfterPartyAttendee): { points:
   if (exact.length) {
     return { points: 27, reason: `You're both into ${exact.slice(0, 2).join(" & ")}` };
   }
-  // Adjacency check
   const myNiches = (me.niches || []).map(norm);
   const theirNiches = new Set((them.niches || []).map(norm));
   for (const mine of myNiches) {
@@ -137,7 +139,6 @@ function intentScore(
   const reasons: string[] = [];
   let brandPriority = false;
 
-  // Brand → Creator strong fit
   if (me.role === "brand" && them.role === "creator") {
     const seeking = (me.brand_seeking || []).map(norm);
     const theirTypes = (them.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
@@ -168,7 +169,6 @@ function intentScore(
     }
   }
 
-  // Shared social intents
   const sharedSocial = sharedSocialIntents(me, them);
   if (sharedSocial.length && points < 35) {
     points = Math.max(points, 20);
@@ -178,7 +178,6 @@ function intentScore(
     else if (intent.includes("collab")) reasons.push("Both open to creator collabs");
   }
 
-  // Generic shared looking_for
   const sharedLooking = intersect(me.looking_for, them.looking_for).filter(
     (x) => !SOCIAL_INTENTS.has(norm(x)) && norm(x) !== VIBE_INTENT,
   );
@@ -191,7 +190,6 @@ function intentScore(
 }
 
 function formatScore(me: AfterPartyAttendee, them: AfterPartyAttendee): number {
-  // Brand seeks specific creator type that matches creator's type → 19
   if (me.role === "brand" && them.role === "creator") {
     const seeking = (me.brand_seeking || []).map(norm);
     const types = (them.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
@@ -202,7 +200,6 @@ function formatScore(me: AfterPartyAttendee, them: AfterPartyAttendee): number {
     const types = (me.creator_types || []).map((t) => CREATOR_TYPE_TO_BRAND_SEEKING[norm(t)] || norm(t));
     if (types.some((t) => seeking.includes(t))) return 19;
   }
-  // General format alignment via shared platforms or shared creator_types
   const sharedTypes = intersect(me.creator_types, them.creator_types);
   const sharedPlatforms = intersect(me.platforms, them.platforms);
   if (sharedTypes.length || sharedPlatforms.length) return 10;
@@ -215,18 +212,23 @@ function roleComplementarity(me: AfterPartyAttendee, them: AfterPartyAttendee): 
   if ((r1 === "creator" && r2 === "industry_expert") || (r1 === "industry_expert" && r2 === "creator")) return 8;
   if ((r1 === "brand" && r2 === "industry_expert") || (r1 === "industry_expert" && r2 === "brand")) return 8;
   if (r1 === r2) {
-    // same-role baseline = 5, bumped to 14 if mutual social intent
     const sharedSocial = sharedSocialIntents(me, them);
     return sharedSocial.length > 0 ? 14 : 5;
   }
   return 5;
 }
 
+// New 0–15 completeness contribution to the score itself.
 function completenessScore(them: AfterPartyAttendee): number {
-  const c = profileCompleteness(them);
-  if (c >= 7) return 5;
-  if (c >= 4) return 2;
-  return 0;
+  let pts = 0;
+  if (them.role) pts += 2;
+  if (them.niches && them.niches.length > 0) pts += 2;
+  if (them.creator_types && them.creator_types.length > 0) pts += 2;
+  if (them.looking_for && them.looking_for.length > 0) pts += 2;
+  if (them.mind_blowing_fact && them.mind_blowing_fact.length >= 50) pts += 3;
+  if (them.photo_url) pts += 2;
+  if (them.cartoon_url) pts += 2;
+  return pts;
 }
 
 function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): {
@@ -249,15 +251,48 @@ function scorePair(me: AfterPartyAttendee, them: AfterPartyAttendee): {
   return { score, reasons, brandPriority: intent.brandPriority };
 }
 
-export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttendee[], topN = 5): MatchResult[] {
-  const meVibing = isJustVibing(me);
+interface ScoredCandidate {
+  attendee_id: string;
+  match_attendee_id: string;
+  score: number;
+  reasons: string[];
+  brandPriority: boolean;
+  completeness: number;
+  is_mutual_boost?: boolean;
+}
 
-  const scored = all
+// Sort + brand-diversity cap. Returns up to topN scored entries.
+function rankAndCap(
+  scored: ScoredCandidate[],
+  all: AfterPartyAttendee[],
+  topN: number,
+): ScoredCandidate[] {
+  const sorted = [...scored].sort((a, b) => {
+    if (a.brandPriority !== b.brandPriority) return a.brandPriority ? -1 : 1;
+    if (b.score !== a.score) return b.score - a.score;
+    return b.completeness - a.completeness;
+  });
+  const seenCompanies = new Set<string>();
+  const capped: ScoredCandidate[] = [];
+  for (const r of sorted) {
+    const them = all.find((a) => a.id === r.match_attendee_id);
+    const companyKey = them?.company ? norm(them.company) : null;
+    if (companyKey) {
+      if (seenCompanies.has(companyKey)) continue;
+      seenCompanies.add(companyKey);
+    }
+    capped.push(r);
+    if (capped.length >= topN) break;
+  }
+  return capped;
+}
+
+// Score every candidate for `me` (no cap, no rank — used as input to the pipeline).
+function scoreAll(me: AfterPartyAttendee, all: AfterPartyAttendee[]): ScoredCandidate[] {
+  const meVibing = isJustVibing(me);
+  return all
     .filter((a) => a.id !== me.id)
-    .filter((them) => {
-      if (isJustVibing(them) && !meVibing) return false;
-      return true;
-    })
+    .filter((them) => !(isJustVibing(them) && !meVibing))
     .map((them) => {
       const { score, reasons, brandPriority } = scorePair(me, them);
       const finalScore = meVibing ? Math.floor(score * 0.5) : score;
@@ -270,36 +305,71 @@ export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttende
         completeness: profileCompleteness(them),
       };
     })
-    .filter((r) => r.score > 0)
-    .sort((a, b) => {
-      if (a.brandPriority !== b.brandPriority) return a.brandPriority ? -1 : 1;
-      if (b.score !== a.score) return b.score - a.score;
-      return b.completeness - a.completeness;
-    });
+    .filter((r) => r.score > 0);
+}
 
-  // Brand-rep diversity cap: max 1 per company
-  const seenCompanies = new Set<string>();
-  const capped: typeof scored = [];
-  for (const r of scored) {
-    const them = all.find((a) => a.id === r.match_attendee_id);
-    const companyKey = them?.company ? norm(them.company) : null;
-    if (companyKey) {
-      if (seenCompanies.has(companyKey)) continue;
-      seenCompanies.add(companyKey);
-    }
-    capped.push(r);
-    if (capped.length >= topN) break;
+// Run the full two-pass pipeline across `attendees`, returning per-attendee top-N maps.
+function runPipeline(attendees: AfterPartyAttendee[], topN = 5): Map<string, ScoredCandidate[]> {
+  // Pass 1: score everyone, build top-10 per attendee.
+  const scoredById = new Map<string, ScoredCandidate[]>();
+  const topTen = new Map<string, Set<string>>();
+  for (const me of attendees) {
+    const scored = scoreAll(me, attendees);
+    scoredById.set(me.id, scored);
+    const t10 = rankAndCap(scored, attendees, 10);
+    topTen.set(me.id, new Set(t10.map((r) => r.match_attendee_id)));
   }
 
-  return capped.map((r, i) => ({
+  // Pass 2: apply mutual boost — both sides get +10 and is_mutual_boost = true.
+  for (const me of attendees) {
+    const myTop10 = topTen.get(me.id);
+    if (!myTop10) continue;
+    const myScored = scoredById.get(me.id)!;
+    for (const cand of myScored) {
+      if (!myTop10.has(cand.match_attendee_id)) continue;
+      const theirTop10 = topTen.get(cand.match_attendee_id);
+      if (theirTop10 && theirTop10.has(me.id)) {
+        cand.score += 10;
+        cand.is_mutual_boost = true;
+      }
+    }
+  }
+
+  // Re-rank + cap to topN.
+  const final = new Map<string, ScoredCandidate[]>();
+  for (const me of attendees) {
+    const myScored = scoredById.get(me.id) || [];
+    final.set(me.id, rankAndCap(myScored, attendees, topN));
+  }
+  return final;
+}
+
+export function computeMatchesFor(me: AfterPartyAttendee, all: AfterPartyAttendee[], topN = 5): MatchResult[] {
+  const result = runPipeline(all, topN).get(me.id) || [];
+  return result.map((r, i) => ({
     attendee_id: r.attendee_id,
     match_attendee_id: r.match_attendee_id,
     score: r.score,
     reasons: r.reasons,
     rank: i + 1,
+    is_mutual_boost: r.is_mutual_boost ?? false,
   }));
 }
 
 export function computeAllMatches(all: AfterPartyAttendee[], topN = 5): MatchResult[] {
-  return all.flatMap((me) => computeMatchesFor(me, all, topN));
+  const pipeline = runPipeline(all, topN);
+  const out: MatchResult[] = [];
+  for (const [, candidates] of pipeline) {
+    candidates.forEach((r, i) => {
+      out.push({
+        attendee_id: r.attendee_id,
+        match_attendee_id: r.match_attendee_id,
+        score: r.score,
+        reasons: r.reasons,
+        rank: i + 1,
+        is_mutual_boost: r.is_mutual_boost ?? false,
+      });
+    });
+  }
+  return out;
 }

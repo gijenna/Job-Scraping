@@ -43,6 +43,7 @@ const MatchesPanel = ({ matches, locked }: Props) => {
                 style={{
                   backgroundColor: "#111111",
                   border: "1px solid rgba(255,255,255,0.09)",
+                  ...(match.is_mutual_boost ? { borderLeft: "2px solid #BA7517" } : {}),
                 }}
               >
                 <div className="flex items-center gap-3">
