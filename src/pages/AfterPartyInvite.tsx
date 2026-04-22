@@ -144,15 +144,19 @@ const AfterPartyInvite = () => {
   return (
     <EditableTextProvider pageSlug="afterparty">
       <div
-        className="min-h-screen"
+        className="min-h-screen relative"
         style={{
           backgroundColor: BG,
+          backgroundImage: `linear-gradient(rgba(8,8,8,0.72), rgba(8,8,8,0.85)), url(/afterparty-bg.png)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
           color: "#fff",
           fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
           fontWeight: 400,
         }}
       >
-        <div className="mx-auto px-5 pt-10 pb-16" style={{ maxWidth: 480 }}>
+        <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup */}
           <BasecampMatchPopflyLogo />
 
