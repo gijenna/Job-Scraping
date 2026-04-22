@@ -147,7 +147,7 @@ const AfterPartyInvite = () => {
         className="min-h-screen relative"
         style={{
           backgroundColor: BG,
-          backgroundImage: `linear-gradient(rgba(8,8,8,0.72), rgba(8,8,8,0.85)), url(/afterparty-bg.jpg)`,
+          backgroundImage: `linear-gradient(rgba(8,8,8,0.35), rgba(8,8,8,0.45)), url(/afterparty-bg.jpg)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
