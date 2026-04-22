@@ -1,5 +1,6 @@
 import { useState } from "react";
 import NumberBadge from "./NumberBadge";
+import StarSparkle from "./StarSparkle";
 
 export interface GuestRow {
   id: string;
