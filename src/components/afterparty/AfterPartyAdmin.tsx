@@ -31,50 +31,56 @@ const AfterPartyAdmin = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [{ data: a }, { data: m }, { data: s }] = await Promise.all([
+    const [{ data: a }, { data: m }, sugRes] = await Promise.all([
       (supabase as any).from("afterparty_attendees").select("*").order("attendee_number"),
       (supabase as any).from("afterparty_matches").select("id").eq("locked", true),
-      (supabase as any).from("afterparty_suggestions").select("*").eq("status", "pending").order("created_at", { ascending: false }),
+      supabase.functions.invoke("afterparty-admin", { body: { action: "list_suggestions" } }),
     ]);
     setAttendees((a as AfterPartyAttendee[]) || []);
     setLockedCount((m as any[])?.length || 0);
-    setSuggestions((s as Suggestion[]) || []);
+    const sugData = (sugRes as any)?.data;
+    setSuggestions((sugData?.suggestions as Suggestion[]) || []);
     setLoading(false);
   };
 
   useEffect(() => { fetchAll(); }, []);
 
+  const callAdmin = async (action: string, payload: any = {}) => {
+    const { data, error } = await supabase.functions.invoke("afterparty-admin", {
+      body: { action, payload },
+    });
+    if (error) {
+      toast({ title: "Action failed", description: error.message, variant: "destructive" });
+      return null;
+    }
+    return data;
+  };
+
   const lockMatches = async () => {
     if (!confirm("Lock matches? This freezes everyone's top 5 and shows them as final on the invite page.")) return;
     setWorking(true);
     const matches = computeAllMatches(attendees, 5);
-    // Wipe previous locked
-    await (supabase as any).from("afterparty_matches").delete().eq("locked", true);
-    if (matches.length) {
-      const rows = matches.map((m) => ({ ...m, locked: true }));
-      const { error } = await (supabase as any).from("afterparty_matches").insert(rows);
-      if (error) {
-        toast({ title: "Lock failed", description: error.message, variant: "destructive" });
-        setWorking(false);
-        return;
-      }
-    }
-    toast({ title: "Matches locked", description: `${matches.length} match rows saved.` });
-    fetchAll();
+    const res = await callAdmin("lock_matches", { matches });
     setWorking(false);
+    if (res) {
+      toast({ title: "Matches locked", description: `${(res as any).count ?? matches.length} match rows saved.` });
+      fetchAll();
+    }
   };
 
   const unlockMatches = async () => {
     if (!confirm("Unlock matches? Page will go back to live computation.")) return;
-    await (supabase as any).from("afterparty_matches").delete().eq("locked", true);
-    toast({ title: "Unlocked" });
-    fetchAll();
+    const res = await callAdmin("unlock_matches");
+    if (res) {
+      toast({ title: "Unlocked" });
+      fetchAll();
+    }
   };
 
   const deleteAttendee = async (id: string) => {
     if (!confirm("Delete this attendee?")) return;
-    await (supabase as any).from("afterparty_attendees").delete().eq("id", id);
-    fetchAll();
+    const res = await callAdmin("delete_attendee", { id });
+    if (res) fetchAll();
   };
 
   const copyLink = (a: AfterPartyAttendee) => {
@@ -86,26 +92,22 @@ const AfterPartyAdmin = () => {
   const sendEmails = async () => {
     if (!confirm("Send match emails to every attendee with an email on file? This sends one email per person.")) return;
     setWorking(true);
-    const { data, error } = await supabase.functions.invoke("send-afterparty-matches", { body: {} });
+    const r = await callAdmin("send_match_emails");
     setWorking(false);
-    if (error) {
-      toast({ title: "Send failed", description: error.message, variant: "destructive" });
-      return;
+    if (r) {
+      toast({
+        title: "Match emails queued",
+        description: `Sent: ${(r as any)?.sent ?? 0} · Skipped: ${(r as any)?.skipped ?? 0}${(r as any)?.errors?.length ? ` · Errors: ${(r as any).errors.length}` : ""}`,
+      });
     }
-    const r = data as any;
-    toast({
-      title: "Match emails queued",
-      description: `Sent: ${r?.sent ?? 0} · Skipped (no email/no matches): ${r?.skipped ?? 0}${r?.errors?.length ? ` · Errors: ${r.errors.length}` : ""}`,
-    });
   };
 
   const reviewSuggestion = async (id: string, status: "approved" | "rejected") => {
-    await (supabase as any)
-      .from("afterparty_suggestions")
-      .update({ status, reviewed_at: new Date().toISOString() })
-      .eq("id", id);
-    setSuggestions((prev) => prev.filter((s) => s.id !== id));
-    toast({ title: status === "approved" ? "Approved" : "Rejected" });
+    const r = await callAdmin("review_suggestion", { id, status });
+    if (r) {
+      setSuggestions((prev) => prev.filter((s) => s.id !== id));
+      toast({ title: status === "approved" ? "Approved" : "Rejected" });
+    }
   };
 
   if (loading) return <p className="text-events-cream/60 text-center py-12">Loading…</p>;
