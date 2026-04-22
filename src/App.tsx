@@ -31,6 +31,7 @@ import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
 import PrintExpertCard from "./pages/PrintExpertCard";
 import AfterPartyInvite from "./pages/AfterPartyInvite";
+import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
@@ -94,6 +95,7 @@ const App = () => (
           {/* Creator After Party */}
           <Route path="/afterparty" element={<AfterPartyInvite />} />
           <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
+          <Route path="/guests" element={<GuestList />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
