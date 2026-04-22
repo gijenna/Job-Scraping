@@ -2,12 +2,14 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Download, Loader2, Link2 } from "lucide-react";
+import { Upload, Download, Loader2, Link2, ClipboardPaste } from "lucide-react";
+
+type AttendeeRole = "creator" | "brand" | "expert";
 
 interface ParsedRow {
   full_name: string;
   email?: string;
-  role: "creator" | "brand";
+  role: AttendeeRole;
   company?: string;
 }
 
