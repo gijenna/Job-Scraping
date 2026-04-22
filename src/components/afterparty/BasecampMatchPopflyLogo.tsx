@@ -39,19 +39,25 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
 
   // 12 stars that radiate outward from center then contract back.
   // Pre-computed angle/distance/tone/variant/size so animation is purely CSS.
+  // Individual hand-drawn stars in varied sizes (24px tiny → 140px hero)
+  // and our three brand tones. All use the single-star asset now.
   const burstStars = [
-    { angle:   0, dist: 46, tone: "cream" as const, variant: "single" as const, size: 92, delay: 0,    spin:  220 },
-    { angle:  30, dist: 40, tone: "coral" as const, variant: "set"    as const, size: 130, delay: 60,  spin: -180 },
-    { angle:  60, dist: 48, tone: "green" as const, variant: "single" as const, size: 80, delay: 30,  spin:  260 },
-    { angle:  95, dist: 42, tone: "cream" as const, variant: "set"    as const, size: 110, delay: 90,  spin: -240 },
-    { angle: 130, dist: 50, tone: "coral" as const, variant: "single" as const, size: 96, delay: 20,  spin:  200 },
-    { angle: 165, dist: 38, tone: "green" as const, variant: "set"    as const, size: 120, delay: 80,  spin: -220 },
-    { angle: 200, dist: 50, tone: "cream" as const, variant: "single" as const, size: 88, delay: 50,  spin:  240 },
-    { angle: 235, dist: 44, tone: "coral" as const, variant: "set"    as const, size: 105, delay: 100, spin: -200 },
-    { angle: 270, dist: 46, tone: "green" as const, variant: "single" as const, size: 100, delay: 35,  spin:  220 },
-    { angle: 305, dist: 40, tone: "cream" as const, variant: "set"    as const, size: 115, delay: 70,  spin: -260 },
-    { angle: 335, dist: 48, tone: "coral" as const, variant: "single" as const, size: 84, delay: 15,  spin:  200 },
-    { angle:  15, dist: 52, tone: "green" as const, variant: "set"    as const, size: 125, delay: 110, spin: -220 },
+    { angle:   8, dist: 42, tone: "cream" as const, size:  36, delay:   0, spin:  220 },
+    { angle:  34, dist: 50, tone: "coral" as const, size: 132, delay:  80, spin: -180 },
+    { angle:  62, dist: 38, tone: "green" as const, size:  54, delay:  20, spin:  260 },
+    { angle:  88, dist: 54, tone: "cream" as const, size:  96, delay: 110, spin: -240 },
+    { angle: 112, dist: 34, tone: "coral" as const, size:  28, delay:  40, spin:  200 },
+    { angle: 138, dist: 48, tone: "green" as const, size: 118, delay:  90, spin: -220 },
+    { angle: 162, dist: 40, tone: "cream" as const, size:  62, delay:  10, spin:  240 },
+    { angle: 188, dist: 56, tone: "coral" as const, size:  84, delay: 120, spin: -200 },
+    { angle: 214, dist: 36, tone: "green" as const, size:  40, delay:  60, spin:  220 },
+    { angle: 240, dist: 50, tone: "cream" as const, size: 108, delay: 100, spin: -260 },
+    { angle: 266, dist: 44, tone: "coral" as const, size:  52, delay:  30, spin:  200 },
+    { angle: 292, dist: 38, tone: "green" as const, size:  72, delay:  70, spin: -220 },
+    { angle: 318, dist: 54, tone: "cream" as const, size: 124, delay:  50, spin:  220 },
+    { angle: 344, dist: 32, tone: "coral" as const, size:  32, delay:  15, spin: -200 },
+    { angle:  20, dist: 58, tone: "green" as const, size:  90, delay: 130, spin:  240 },
+    { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
   return (
@@ -212,7 +218,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
                   animationDuration: "1900ms",
                 }}
               >
-                <StarSparkle tone={s.tone} variant={s.variant} size={s.size} />
+                <StarSparkle tone={s.tone} variant="single" size={s.size} />
               </div>
             );
           })}
