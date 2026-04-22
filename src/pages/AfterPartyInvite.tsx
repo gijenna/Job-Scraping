@@ -20,6 +20,7 @@ import { Search } from "lucide-react";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import { getSession } from "@/services/auth";
+import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -388,6 +389,18 @@ const AfterPartyInvite = () => {
                       checked={publicListing}
                       onCheckedChange={togglePublicListing}
                       disabled={updatingListing}
+                    />
+                  </div>
+                )}
+
+                {isOwner && me.role === "brand" && (
+                  <div className="mb-4">
+                    <BrandActivateButton
+                      attendeeId={me.id}
+                      fullName={me.full_name}
+                      company={me.company}
+                      email={(me as any).email}
+                      variant="compact"
                     />
                   </div>
                 )}
