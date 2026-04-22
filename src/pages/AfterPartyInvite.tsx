@@ -43,6 +43,8 @@ const AfterPartyInvite = () => {
   const [editMode, setEditMode] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
+  const [publicListing, setPublicListing] = useState<boolean>(true);
+  const [updatingListing, setUpdatingListing] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -141,6 +143,33 @@ const AfterPartyInvite = () => {
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
   const isOwner = !!me && verifiedAttendeeId === me.id;
+
+  // Load public_listing for owner (not exposed via public view)
+  useEffect(() => {
+    if (!isOwner || !me) return;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("public_listing")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data && typeof data.public_listing === "boolean") {
+        setPublicListing(data.public_listing);
+      }
+    })();
+  }, [isOwner, me?.id]);
+
+  const togglePublicListing = async (next: boolean) => {
+    if (!me) return;
+    setUpdatingListing(true);
+    setPublicListing(next);
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ public_listing: next })
+      .eq("id", me.id);
+    if (error) setPublicListing(!next);
+    setUpdatingListing(false);
+  };
 
   return (
     <EditableTextProvider pageSlug="afterparty">
