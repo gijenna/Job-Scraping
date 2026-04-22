@@ -414,16 +414,17 @@ const AfterPartyInvite = () => {
           {me && (
             <section id="matches" className="mt-10">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[17px]" style={{ fontWeight: 500, color: "#fff" }}>
+                <h2 className="font-afterparty text-[17px]" style={{ fontWeight: 500, color: CREAM }}>
                   Look out for these numbers tonight
                 </h2>
-                <span className="text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                <span className="text-[12px]" style={{ color: CREAM_DIM }}>
                   {lockedMatches ? "Final" : "Sent to your email too"}
                 </span>
               </div>
               <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
             </section>
           )}
+          </div>
         </div>
 
         {me && (
