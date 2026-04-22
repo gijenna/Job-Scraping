@@ -148,6 +148,7 @@ export type Database = {
           attendee_id: string
           generated_at: string
           id: string
+          is_mutual_boost: boolean
           locked: boolean
           match_attendee_id: string
           rank: number | null
@@ -158,6 +159,7 @@ export type Database = {
           attendee_id: string
           generated_at?: string
           id?: string
+          is_mutual_boost?: boolean
           locked?: boolean
           match_attendee_id: string
           rank?: number | null
@@ -168,6 +170,7 @@ export type Database = {
           attendee_id?: string
           generated_at?: string
           id?: string
+          is_mutual_boost?: boolean
           locked?: boolean
           match_attendee_id?: string
           rank?: number | null

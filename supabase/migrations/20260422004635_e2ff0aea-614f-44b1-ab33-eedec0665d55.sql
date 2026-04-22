@@ -1,0 +1,1 @@
+ALTER TABLE public.afterparty_matches ADD COLUMN is_mutual_boost boolean NOT NULL DEFAULT false;
