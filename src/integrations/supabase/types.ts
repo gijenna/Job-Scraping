@@ -277,6 +277,64 @@ export type Database = {
           },
         ]
       }
+      brand_activation_requests: {
+        Row: {
+          attendee_id: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          message: string | null
+          reviewed_at: string | null
+          status: string
+        }
+        Insert: {
+          attendee_id?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          message?: string | null
+          reviewed_at?: string | null
+          status?: string
+        }
+        Update: {
+          attendee_id?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          message?: string | null
+          reviewed_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_activation_requests_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_activation_requests_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_attendees_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_activation_requests_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_guest_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_send_log: {
         Row: {
           created_at: string
