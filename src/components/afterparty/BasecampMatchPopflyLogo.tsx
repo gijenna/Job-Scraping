@@ -218,7 +218,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
                   animationDuration: "1900ms",
                 }}
               >
-                <StarSparkle tone={s.tone} variant={s.variant} size={s.size} />
+                <StarSparkle tone={s.tone} variant="single" size={s.size} />
               </div>
             );
           })}
