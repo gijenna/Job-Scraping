@@ -27,3 +27,9 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = true
   [functions.compute-afterparty-matches]
     verify_jwt = false
+  [functions.request-pin]
+    verify_jwt = false
+  [functions.verify-pin]
+    verify_jwt = false
+  [functions.afterparty-admin]
+    verify_jwt = true
