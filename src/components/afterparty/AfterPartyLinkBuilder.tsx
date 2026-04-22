@@ -79,11 +79,57 @@ const downloadCsv = (filename: string, rows: ResultRow[]) => {
   URL.revokeObjectURL(url);
 };
 
+const normalizeRole = (s: string | undefined): AttendeeRole => {
+  const v = (s || "").trim().toLowerCase();
+  if (v === "brand" || v === "brand rep" || v === "rep") return "brand";
+  if (v === "expert" || v === "industry expert" || v === "industry_expert") return "expert";
+  return "creator";
+};
+
 const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
   const { toast } = useToast();
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [results, setResults] = useState<ResultRow[]>([]);
   const [working, setWorking] = useState(false);
+  const [mode, setMode] = useState<"csv" | "paste-simple" | "paste-detailed">("paste-simple");
+  const [pasteText, setPasteText] = useState("");
+  const [pasteRole, setPasteRole] = useState<AttendeeRole>("creator");
+
+  const parsePasteSimple = () => {
+    const lines = pasteText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const out: ParsedRow[] = lines
+      .map((line) => {
+        // Allow "Name | Brand", "Name - Brand", or "Name, Brand" for brand reps
+        const parts = line.split(/\s*\|\s*|\s+-\s+|\s*,\s*/);
+        const full_name = parts[0]?.trim() || "";
+        const company = parts[1]?.trim() || undefined;
+        return {
+          full_name,
+          role: pasteRole,
+          company: pasteRole === "brand" ? company : undefined,
+        };
+      })
+      .filter((r) => r.full_name);
+    setRows(out);
+    setResults([]);
+  };
+
+  const parsePasteDetailed = () => {
+    const lines = pasteText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const out: ParsedRow[] = lines
+      .map((line) => {
+        const cols = line.split(/\s*,\s*/);
+        return {
+          full_name: cols[0] || "",
+          email: cols[1] || undefined,
+          role: normalizeRole(cols[2]),
+          company: cols[3] || undefined,
+        };
+      })
+      .filter((r) => r.full_name);
+    setRows(out);
+    setResults([]);
+  };
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
