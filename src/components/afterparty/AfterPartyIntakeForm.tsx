@@ -71,6 +71,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [uploading, setUploading] = useState(false);
   const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
+  const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
@@ -194,8 +195,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     if (id) {
-      onSaved(id);
+      // For brand reps on first save, surface the activation CTA inline
+      // before the parent navigates them to the card view.
+      if (!attendeeId && form.role === "brand") {
+        setJustSavedId(id);
+        setTimeout(() => {
+          document
+            .getElementById("brand-activate-cta")
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 150);
+      } else {
+        onSaved(id);
+      }
     }
+  };
+
+  // Allow brand reps to dismiss the inline CTA and continue to their card view
+  const continueToCard = () => {
+    if (justSavedId) onSaved(justSavedId);
   };
 
   // Pill helpers — themed via inline style
@@ -461,15 +478,25 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         {attendeeId ? "Update my card" : "Secure my spot →"}
       </Button>
 
-      {form.role === "brand" && attendeeId && (
-        <div className="pt-4">
+      {form.role === "brand" && (attendeeId || justSavedId) && (
+        <div id="brand-activate-cta" className="pt-4 space-y-3">
           <BrandActivateButton
-            attendeeId={attendeeId}
+            attendeeId={attendeeId || justSavedId}
             fullName={form.full_name}
             company={form.company}
             email={form.email}
             variant="full"
           />
+          {justSavedId && !attendeeId && (
+            <button
+              type="button"
+              onClick={continueToCard}
+              className="text-[13px] underline"
+              style={{ color: "rgba(245,230,211,0.7)" }}
+            >
+              Skip for now → see my card
+            </button>
+          )}
         </div>
       )}
     </form>

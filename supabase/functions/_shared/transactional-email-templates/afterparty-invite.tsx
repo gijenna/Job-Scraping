@@ -9,13 +9,17 @@ interface AfterPartyInviteProps {
   recipientName?: string
   attendeeNumber?: number
   inviteUrl?: string
+  role?: 'creator' | 'brand' | 'industry_expert'
 }
 
 const AfterPartyInviteEmail = ({
   recipientName = 'there',
   attendeeNumber,
   inviteUrl = 'https://basecampoutdoorevents.com/afterparty',
-}: AfterPartyInviteProps) => (
+  role,
+}: AfterPartyInviteProps) => {
+  const activateUrl = `${inviteUrl}${inviteUrl.includes('?') ? '&' : '?'}activate=1`
+  return (
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>You're in for the Creator After Party — fill out your profile so we can match you</Preview>
@@ -40,6 +44,20 @@ const AfterPartyInviteEmail = ({
           Fill out your profile →
         </Button>
 
+        {role === 'brand' && (
+          <>
+            <Hr style={hr} />
+            <Heading as="h2" style={h2}>Want to activate your brand at the After Party?</Heading>
+            <Text style={text}>
+              Tap below and Jenna will personally reach out within one business day to walk through
+              activation options — product moments, branded touches, anything that fits the night.
+            </Text>
+            <Button href={activateUrl} style={secondaryButton}>
+              Activate my brand →
+            </Button>
+          </>
+        )}
+
         <Hr style={hr} />
 
         <Text style={footer}>
@@ -48,16 +66,18 @@ const AfterPartyInviteEmail = ({
       </Container>
     </Body>
   </Html>
-)
+  )
+}
 
 export const template = {
   component: AfterPartyInviteEmail,
   subject: "You're in — meet your 5 people at the After Party",
   displayName: 'After Party invite',
   previewData: {
-    recipientName: 'Maya',
-    attendeeNumber: 47,
-    inviteUrl: 'https://basecampoutdoorevents.com/afterparty/maya-park',
+    recipientName: 'Alex',
+    attendeeNumber: 12,
+    inviteUrl: 'https://basecampoutdoorevents.com/afterparty/alex-rivera',
+    role: 'brand',
   },
 } satisfies TemplateEntry
 
@@ -77,3 +97,10 @@ const button = {
 }
 const hr = { borderColor: '#e5e5e5', margin: '24px 0' }
 const footer = { fontSize: '13px', color: '#666', margin: '0' }
+const h2 = { fontSize: '18px', fontWeight: 'bold', color: '#19363B', margin: '0 0 12px' }
+const secondaryButton = {
+  backgroundColor: '#F5E6D3', color: '#ED7660', padding: '12px 24px',
+  borderRadius: '8px', fontWeight: 'bold', fontSize: '14px',
+  textDecoration: 'none', display: 'inline-block', margin: '8px 0 16px',
+  border: '2px solid #ED7660',
+}
