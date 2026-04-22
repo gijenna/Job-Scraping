@@ -1,4 +1,5 @@
 import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
+import popflyLogo from "@/assets/popfly-logo-neon.png";
 
 /**
  * Co-branded animated header: Basecamp Match × Popfly
