@@ -342,14 +342,14 @@ const AfterPartyInvite = () => {
                   <div className="grid grid-cols-2 gap-4 mb-4 text-[13px]">
                     {me.niches?.length ? (
                       <div>
-                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>Niche</div>
-                        <div style={{ color: "rgba(255,255,255,0.85)" }}>{me.niches.join(", ")}</div>
+                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>Niche</div>
+                        <div style={{ color: CREAM }}>{me.niches.join(", ")}</div>
                       </div>
                     ) : null}
                     {me.creator_types?.length || me.brand_seeking?.length ? (
                       <div>
-                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>{me.role === "brand" ? "Offers" : "Creates"}</div>
-                        <div style={{ color: "rgba(255,255,255,0.85)" }}>{(me.creator_types?.length ? me.creator_types : me.brand_seeking || []).join(", ")}</div>
+                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>{me.role === "brand" ? "Offers" : "Creates"}</div>
+                        <div style={{ color: CREAM }}>{(me.creator_types?.length ? me.creator_types : me.brand_seeking || []).join(", ")}</div>
                       </div>
                     ) : null}
                   </div>
@@ -357,15 +357,15 @@ const AfterPartyInvite = () => {
 
                 {me.looking_for?.length ? (
                   <div className="mb-4 text-[13px]">
-                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>Here to</div>
-                    <div style={{ color: "rgba(255,255,255,0.85)" }}>{me.looking_for.join(", ")}</div>
+                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>Here to</div>
+                    <div style={{ color: CREAM }}>{me.looking_for.join(", ")}</div>
                   </div>
                 ) : null}
 
                 {me.mind_blowing_fact ? (
                   <div className="pl-3 mb-4" style={{ borderLeft: `2px solid ${myPill?.border || "#7F77DD"}` }}>
                     <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: myPill?.text || "#CECBF6" }}>Why it worked</div>
-                    <p className="text-[13px] italic" style={{ color: "rgba(255,255,255,0.75)" }}>{me.mind_blowing_fact}</p>
+                    <p className="text-[13px] italic" style={{ color: CREAM_MUTED }}>{me.mind_blowing_fact}</p>
                   </div>
                 ) : null}
 
@@ -375,8 +375,8 @@ const AfterPartyInvite = () => {
                     style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}` }}
                   >
                     <div className="text-[12px]">
-                      <div style={{ color: "#fff" }}>Show me in the guest list</div>
-                      <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                      <div style={{ color: CREAM }}>Show me in the guest list</div>
+                      <div className="text-[11px]" style={{ color: CREAM_DIM }}>
                         Public roster at /guests · first name + last initial only
                       </div>
                     </div>
@@ -393,7 +393,7 @@ const AfterPartyInvite = () => {
                     type="button"
                     onClick={requestEdit}
                     className="text-[13px] underline"
-                    style={{ color: "rgba(255,255,255,0.6)" }}
+                    style={{ color: CREAM_MUTED }}
                   >
                     {isOwner ? "Edit my card →" : "Edit my card →"}
                   </button>
@@ -405,7 +405,7 @@ const AfterPartyInvite = () => {
           {/* Intake form (edit mode only — new attendees are admin-seeded) */}
           {me && editMode && isOwner && (
             <section className="mt-8">
-              <h2 className="text-[20px] mb-4" style={{ fontWeight: 500 }}>Edit your card</h2>
+              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>Edit your card</h2>
               <AfterPartyIntakeForm attendeeId={me.id} initial={me} onSaved={handleSaved} />
             </section>
           )}
