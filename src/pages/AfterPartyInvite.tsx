@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
@@ -15,6 +15,7 @@ import {
 } from "@/lib/afterparty-matching";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Search } from "lucide-react";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import { getSession } from "@/services/auth";
@@ -180,6 +181,15 @@ const AfterPartyInvite = () => {
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               <span>·</span>
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
+            </div>
+            <div className="mt-4">
+              <Link
+                to="/guests"
+                className="text-[13px] underline"
+                style={{ color: "rgba(255,255,255,0.7)" }}
+              >
+                See who's coming →
+              </Link>
             </div>
           </div>
 
