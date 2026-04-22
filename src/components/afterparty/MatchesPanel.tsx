@@ -14,10 +14,14 @@ const ROLE_PILL: Record<string, { bg: string; border: string; text: string; labe
   industry_expert: { bg: "#04342C", border: "#1D9E75", text: "#9FE1CB", label: "Industry expert" },
 };
 
+const CREAM = "#F5E6D3";
+const CREAM_MUTED = "rgba(245,230,211,0.7)";
+const CREAM_DIM = "rgba(245,230,211,0.55)";
+
 const MatchesPanel = ({ matches, locked }: Props) => {
   if (!matches.length) {
     return (
-      <div className="text-center py-12" style={{ color: "rgba(255,255,255,0.6)" }}>
+      <div className="text-center py-12" style={{ color: CREAM_DIM }}>
         <Sparkles className="w-8 h-8 mx-auto mb-3" style={{ color: "rgba(216,90,48,0.6)" }} />
         <p>No people for you yet. Check back as more sign up.</p>
       </div>
@@ -65,7 +69,7 @@ const MatchesPanel = ({ matches, locked }: Props) => {
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[15px] font-medium truncate" style={{ color: "#fff" }}>
+                      <span className="text-[15px] font-medium truncate" style={{ color: CREAM }}>
                         {attendee.full_name}
                       </span>
                       <span
@@ -81,7 +85,7 @@ const MatchesPanel = ({ matches, locked }: Props) => {
                       </span>
                     </div>
                     {match.reasons.length > 0 && (
-                      <p className="text-[12px] mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.65)" }}>
+                      <p className="text-[12px] mt-0.5 truncate" style={{ color: CREAM_MUTED }}>
                         {match.reasons[0]}
                       </p>
                     )}
@@ -92,22 +96,22 @@ const MatchesPanel = ({ matches, locked }: Props) => {
             <PopoverContent
               align="start"
               className="w-[320px] border-0 p-4"
-              style={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.12)", color: "#fff" }}
+              style={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.12)", color: CREAM }}
             >
               <p className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.08em", color: pill.text }}>
                 Why it worked
               </p>
               {attendee.mind_blowing_fact ? (
-                <p className="text-[13px] italic leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
+                <p className="text-[13px] italic leading-relaxed" style={{ color: CREAM_MUTED }}>
                   {attendee.mind_blowing_fact}
                 </p>
               ) : (
-                <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p className="text-[13px]" style={{ color: CREAM_DIM }}>
                   No answer yet — ask them in person.
                 </p>
               )}
               {match.reasons.length > 1 && (
-                <p className="text-[11px] mt-3 pt-3" style={{ color: "rgba(255,255,255,0.5)", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <p className="text-[11px] mt-3 pt-3" style={{ color: CREAM_DIM, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
                   {match.reasons.slice(1).join(" · ")}
                 </p>
               )}

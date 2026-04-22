@@ -71,7 +71,7 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
       </div>
 
       <div className="text-center mb-2">
-        <div className="text-[15px]" style={{ color: "#fff", fontWeight: 500 }}>
+        <div className="font-afterparty text-[15px]" style={{ color: "#F5E6D3", fontWeight: 500 }}>
           {guest.display_name}
         </div>
         <span
@@ -95,7 +95,7 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
       ) : null}
 
       {fact ? (
-        <div className="mt-3 text-[12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+        <div className="mt-3 text-[12px]" style={{ color: "rgba(245,230,211,0.7)" }}>
           <p className={expanded ? "" : "line-clamp-2"} style={{ lineHeight: 1.5 }}>
             {fact}
           </p>
@@ -104,7 +104,7 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
               type="button"
               onClick={() => setExpanded((v) => !v)}
               className="text-[11px] underline mt-1"
-              style={{ color: "rgba(255,255,255,0.5)" }}
+              style={{ color: "rgba(245,230,211,0.5)" }}
             >
               {expanded ? "Show less" : "Read more"}
             </button>

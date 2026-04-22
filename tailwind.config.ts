@@ -19,6 +19,7 @@ export default {
         glacial: ['Raleway', 'sans-serif'],
         ticker: ['Pacifico', 'cursive'],
         headline: ['Fredoka', 'sans-serif'],
+        afterparty: ['Unbounded', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

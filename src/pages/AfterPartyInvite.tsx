@@ -32,6 +32,10 @@ const ROLE_PILL: Record<string, { bg: string; border: string; text: string; labe
 const BG = "#080808";
 const CARD = "#111111";
 const BORDER = "rgba(255,255,255,0.09)";
+const CREAM = "#F5E6D3";
+const CREAM_MUTED = "rgba(245,230,211,0.7)";
+const CREAM_DIM = "rgba(245,230,211,0.55)";
+const CREAM_FAINT = "rgba(245,230,211,0.45)";
 
 const AfterPartyInvite = () => {
   const { name } = useParams();
@@ -45,6 +49,7 @@ const AfterPartyInvite = () => {
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
   const [publicListing, setPublicListing] = useState<boolean>(true);
   const [updatingListing, setUpdatingListing] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -182,31 +187,39 @@ const AfterPartyInvite = () => {
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
-          color: "#fff",
+          color: CREAM,
           fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
           fontWeight: 400,
         }}
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
-          {/* Logo lockup */}
-          <BasecampMatchPopflyLogo />
+          {/* Logo lockup (controls splash + reveal) */}
+          <BasecampMatchPopflyLogo onRevealed={() => setRevealed(true)} />
 
+          <div
+            style={{
+              opacity: revealed ? 1 : 0,
+              transform: revealed ? "translateY(0)" : "translateY(16px)",
+              transition: "opacity 600ms ease-out, transform 600ms ease-out",
+              pointerEvents: revealed ? "auto" : "none",
+            }}
+          >
           {/* Hero copy */}
-          <div className="mt-6 text-center">
-            <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: "rgba(255,255,255,0.55)" }}>
+          <div className="mt-6 text-center" style={{ transitionDelay: "60ms" }}>
+            <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
               <EditableText settingKey="hero.kicker" defaultText="You're invited" />
             </div>
-            <h1 className="text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: "#fff" }}>
+            <h1 className="font-afterparty text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: CREAM }}>
               <EditableText settingKey="hero.title" defaultText="Creator after party" />
             </h1>
-            <p className="text-[15px] mb-4" style={{ color: "rgba(255,255,255,0.7)" }}>
+            <p className="text-[15px] mb-4" style={{ color: CREAM_MUTED }}>
               <EditableText
                 settingKey="hero.subtitle"
                 defaultText="An evening for the outdoor industry's next wave."
                 multiline
               />
             </p>
-            <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               <span>·</span>
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
@@ -215,7 +228,7 @@ const AfterPartyInvite = () => {
               <Link
                 to="/guests"
                 className="text-[13px] underline"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: CREAM_MUTED }}
               >
                 See who's coming →
               </Link>
@@ -225,11 +238,11 @@ const AfterPartyInvite = () => {
           {/* About the event */}
           {!me && (
             <section className="mt-10">
-              <div className="p-5 rounded-xl" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
-                <h2 className="text-[20px] mb-3" style={{ fontWeight: 500, color: "#fff" }}>
+              <div className="px-1">
+                <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
                   <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
                 </h2>
-                <p className="text-[14px] leading-[1.55] mb-5" style={{ color: "rgba(255,255,255,0.75)" }}>
+                <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
                   <EditableText
                     settingKey="about.body"
                     defaultText="A curated evening for brands, creators, and Outside Days festival sponsors — hosted in one of RiNo's newest, coolest spots. Address shared after RSVP."
@@ -237,17 +250,17 @@ const AfterPartyInvite = () => {
                   />
                 </p>
 
-                <div className="space-y-2 mb-6 text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                <div className="space-y-2 mb-6 text-[13px]" style={{ color: CREAM_MUTED }}>
                   <div className="flex items-start gap-2">
-                    <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span>
+                    <span style={{ color: CREAM_FAINT }}>·</span>
                     <EditableText settingKey="about.detail1" defaultText="Thursday evening · doors at 7pm" />
                   </div>
                   <div className="flex items-start gap-2">
-                    <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span>
+                    <span style={{ color: CREAM_FAINT }}>·</span>
                     <EditableText settingKey="about.detail2" defaultText="RiNo Art District, Denver" />
                   </div>
                   <div className="flex items-start gap-2">
-                    <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span>
+                    <span style={{ color: CREAM_FAINT }}>·</span>
                     <EditableText settingKey="about.detail3" defaultText="Come as you are — outdoor industry casual" />
                   </div>
                 </div>
@@ -260,8 +273,8 @@ const AfterPartyInvite = () => {
                       document.getElementById("lookup-input")?.focus();
                     }, 400);
                   }}
-                  className="w-full text-[14px] h-11"
-                  style={{ backgroundColor: "#fff", color: BG, fontWeight: 500 }}
+                  className="w-full font-afterparty text-[14px] h-11"
+                  style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
                   <EditableText settingKey="cta.primary" defaultText="Create my card" />
                 </Button>
@@ -271,8 +284,8 @@ const AfterPartyInvite = () => {
 
           {/* Find existing card */}
           {!me && !loading && !name && (
-            <div id="opt-in" className="mt-8 p-4 rounded-xl" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
-              <p className="text-[13px] mb-2" style={{ color: "rgba(255,255,255,0.7)" }}>
+            <div id="opt-in" className="mt-8 px-1">
+              <p className="text-[13px] mb-2" style={{ color: CREAM_MUTED }}>
                 <EditableText
                   settingKey="cta.secondary"
                   defaultText="Already RSVP'd? Type your name to load your card."
@@ -284,9 +297,9 @@ const AfterPartyInvite = () => {
                   value={lookupName}
                   onChange={(e) => setLookupName(e.target.value)}
                   placeholder="Your full name"
-                  style={{ backgroundColor: BG, border: `1px solid ${BORDER}`, color: "#fff" }}
+                  style={{ backgroundColor: "rgba(0,0,0,0.25)", border: `1px solid ${BORDER}`, color: CREAM }}
                 />
-                <Button type="submit" style={{ backgroundColor: "#fff", color: BG }}>
+                <Button type="submit" style={{ backgroundColor: CREAM, color: BG }}>
                   <Search className="w-4 h-4" />
                 </Button>
               </form>
@@ -329,14 +342,14 @@ const AfterPartyInvite = () => {
                   <div className="grid grid-cols-2 gap-4 mb-4 text-[13px]">
                     {me.niches?.length ? (
                       <div>
-                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>Niche</div>
-                        <div style={{ color: "rgba(255,255,255,0.85)" }}>{me.niches.join(", ")}</div>
+                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>Niche</div>
+                        <div style={{ color: CREAM }}>{me.niches.join(", ")}</div>
                       </div>
                     ) : null}
                     {me.creator_types?.length || me.brand_seeking?.length ? (
                       <div>
-                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>{me.role === "brand" ? "Offers" : "Creates"}</div>
-                        <div style={{ color: "rgba(255,255,255,0.85)" }}>{(me.creator_types?.length ? me.creator_types : me.brand_seeking || []).join(", ")}</div>
+                        <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>{me.role === "brand" ? "Offers" : "Creates"}</div>
+                        <div style={{ color: CREAM }}>{(me.creator_types?.length ? me.creator_types : me.brand_seeking || []).join(", ")}</div>
                       </div>
                     ) : null}
                   </div>
@@ -344,15 +357,15 @@ const AfterPartyInvite = () => {
 
                 {me.looking_for?.length ? (
                   <div className="mb-4 text-[13px]">
-                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.45)" }}>Here to</div>
-                    <div style={{ color: "rgba(255,255,255,0.85)" }}>{me.looking_for.join(", ")}</div>
+                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: CREAM_FAINT }}>Here to</div>
+                    <div style={{ color: CREAM }}>{me.looking_for.join(", ")}</div>
                   </div>
                 ) : null}
 
                 {me.mind_blowing_fact ? (
                   <div className="pl-3 mb-4" style={{ borderLeft: `2px solid ${myPill?.border || "#7F77DD"}` }}>
                     <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: myPill?.text || "#CECBF6" }}>Why it worked</div>
-                    <p className="text-[13px] italic" style={{ color: "rgba(255,255,255,0.75)" }}>{me.mind_blowing_fact}</p>
+                    <p className="text-[13px] italic" style={{ color: CREAM_MUTED }}>{me.mind_blowing_fact}</p>
                   </div>
                 ) : null}
 
@@ -362,8 +375,8 @@ const AfterPartyInvite = () => {
                     style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}` }}
                   >
                     <div className="text-[12px]">
-                      <div style={{ color: "#fff" }}>Show me in the guest list</div>
-                      <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                      <div style={{ color: CREAM }}>Show me in the guest list</div>
+                      <div className="text-[11px]" style={{ color: CREAM_DIM }}>
                         Public roster at /guests · first name + last initial only
                       </div>
                     </div>
@@ -380,7 +393,7 @@ const AfterPartyInvite = () => {
                     type="button"
                     onClick={requestEdit}
                     className="text-[13px] underline"
-                    style={{ color: "rgba(255,255,255,0.6)" }}
+                    style={{ color: CREAM_MUTED }}
                   >
                     {isOwner ? "Edit my card →" : "Edit my card →"}
                   </button>
@@ -392,7 +405,7 @@ const AfterPartyInvite = () => {
           {/* Intake form (edit mode only — new attendees are admin-seeded) */}
           {me && editMode && isOwner && (
             <section className="mt-8">
-              <h2 className="text-[20px] mb-4" style={{ fontWeight: 500 }}>Edit your card</h2>
+              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>Edit your card</h2>
               <AfterPartyIntakeForm attendeeId={me.id} initial={me} onSaved={handleSaved} />
             </section>
           )}
@@ -401,16 +414,17 @@ const AfterPartyInvite = () => {
           {me && (
             <section id="matches" className="mt-10">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[17px]" style={{ fontWeight: 500, color: "#fff" }}>
+                <h2 className="font-afterparty text-[17px]" style={{ fontWeight: 500, color: CREAM }}>
                   Look out for these numbers tonight
                 </h2>
-                <span className="text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                <span className="text-[12px]" style={{ color: CREAM_DIM }}>
                   {lockedMatches ? "Final" : "Sent to your email too"}
                 </span>
               </div>
               <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
             </section>
           )}
+          </div>
         </div>
 
         {me && (
