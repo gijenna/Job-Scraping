@@ -239,46 +239,127 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
     downloadCsv(`afterparty-links-${new Date().toISOString().slice(0, 10)}.csv`, results);
   };
 
+  const modeBtn = (m: typeof mode, label: string) => (
+    <button
+      type="button"
+      onClick={() => { setMode(m); setRows([]); setResults([]); }}
+      className={`px-3 py-1.5 text-xs rounded-md transition ${
+        mode === m
+          ? "bg-events-yellow text-events-teal font-bold"
+          : "bg-events-cream/10 text-events-cream/70 hover:bg-events-cream/20"
+      }`}
+    >
+      {label}
+    </button>
+  );
+
   return (
     <div className="rounded-xl border border-events-cream/10 p-4 space-y-3">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h3 className="font-display font-bold text-events-cream flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-events-yellow" />
-            Generate personalized invite links
-          </h3>
-          <p className="text-xs text-events-cream/50 mt-1">
-            Upload a CSV with <code>name, email, role, company</code>. We'll create attendees and give you a CSV back with each person's personalized link.
-          </p>
-        </div>
-        <div className="flex gap-2">
+      <div>
+        <h3 className="font-display font-bold text-events-cream flex items-center gap-2">
+          <Link2 className="w-4 h-4 text-events-yellow" />
+          Generate personalized invite links
+        </h3>
+        <p className="text-xs text-events-cream/50 mt-1">
+          Create attendees + personalized <code>/afterparty/their-name</code> links in bulk. Roles: <strong>creator</strong>, <strong>brand</strong>, <strong>expert</strong>.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {modeBtn("paste-simple", "Paste names (simple)")}
+        {modeBtn("paste-detailed", "Paste detailed")}
+        {modeBtn("csv", "Upload CSV")}
+      </div>
+
+      {mode === "csv" && (
+        <div className="flex flex-wrap items-center gap-2">
           <label className="cursor-pointer">
             <input type="file" accept=".csv" onChange={handleFile} className="hidden" />
             <span className="inline-flex items-center px-3 py-2 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
               <Upload className="w-4 h-4 mr-2" /> Choose CSV
             </span>
           </label>
-          {rows.length > 0 && (
-            <Button
-              onClick={generate}
-              disabled={working}
-              className="bg-events-coral text-events-cream"
-            >
-              {working ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Link2 className="w-4 h-4 mr-2" />}
-              Generate {rows.length} links
+          <span className="text-xs text-events-cream/50">
+            Columns: <code>name, email, role, company</code>
+          </span>
+        </div>
+      )}
+
+      {mode === "paste-simple" && (
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-events-cream/60">Role for everyone in this paste:</span>
+            {(["creator", "brand", "expert"] as AttendeeRole[]).map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setPasteRole(r)}
+                className={`px-2.5 py-1 text-xs rounded capitalize ${
+                  pasteRole === r
+                    ? "bg-events-coral text-events-cream font-bold"
+                    : "bg-events-cream/10 text-events-cream/70 hover:bg-events-cream/20"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+          <textarea
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            rows={6}
+            placeholder={
+              pasteRole === "brand"
+                ? "Jane Doe | Patagonia\nJohn Smith | REI\nSarah Lee, The North Face"
+                : "Jane Doe\nJohn Smith\nSarah Lee"
+            }
+            className="w-full bg-events-cream/5 border border-events-cream/20 rounded-md p-2 text-sm text-events-cream font-mono"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={parsePasteSimple} variant="outline" className="border-events-cream/30 text-events-cream" disabled={!pasteText.trim()}>
+              <ClipboardPaste className="w-4 h-4 mr-2" /> Parse {pasteText.split(/\r?\n/).filter((l) => l.trim()).length} names
             </Button>
-          )}
+            {pasteRole === "brand" && (
+              <span className="text-xs text-events-cream/50">For brand reps, add the brand after <code>|</code>, <code> - </code>, or <code>,</code></span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {mode === "paste-detailed" && (
+        <div className="space-y-2">
+          <textarea
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            rows={6}
+            placeholder={"Jane Doe, jane@brand.com, brand, Patagonia\nJohn Smith, john@gmail.com, creator,\nSarah Lee, sarah@expert.com, expert,"}
+            className="w-full bg-events-cream/5 border border-events-cream/20 rounded-md p-2 text-sm text-events-cream font-mono"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button onClick={parsePasteDetailed} variant="outline" className="border-events-cream/30 text-events-cream" disabled={!pasteText.trim()}>
+              <ClipboardPaste className="w-4 h-4 mr-2" /> Parse {pasteText.split(/\r?\n/).filter((l) => l.trim()).length} lines
+            </Button>
+            <span className="text-xs text-events-cream/50">Format: <code>name, email, role, company</code> — one per line</span>
+          </div>
+        </div>
+      )}
+
+      {rows.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-events-cream/10">
+          <Button onClick={generate} disabled={working} className="bg-events-coral text-events-cream">
+            {working ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Link2 className="w-4 h-4 mr-2" />}
+            Generate {rows.length} links
+          </Button>
           {results.length > 0 && (
-            <Button
-              onClick={download}
-              variant="outline"
-              className="border-events-cream/30 text-events-cream"
-            >
+            <Button onClick={download} variant="outline" className="border-events-cream/30 text-events-cream">
               <Download className="w-4 h-4 mr-2" /> Download CSV
             </Button>
           )}
+          <span className="text-xs text-events-cream/50 ml-auto">
+            {rows.filter((r) => r.role === "brand").length} brand · {rows.filter((r) => r.role === "creator").length} creator · {rows.filter((r) => r.role === "expert").length} expert
+          </span>
         </div>
-      </div>
+      )}
 
       {(results.length > 0 || rows.length > 0) && (
         <div className="max-h-64 overflow-auto rounded border border-events-cream/10">
