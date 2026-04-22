@@ -1,4 +1,5 @@
 import basecampMatchLogo from "@/assets/basecamp-match-logo-dark.png";
+import popflyLogo from "@/assets/popfly-logo-neon.png";
 
 /**
  * Co-branded animated header: Basecamp Match × Popfly
@@ -31,16 +32,16 @@ const BasecampMatchPopflyLogo = () => {
           0%, 100% { filter: drop-shadow(0 0 12px rgba(225,182,36,0.55)) drop-shadow(0 0 24px rgba(225,182,36,0.35)); }
           50%     { filter: drop-shadow(0 0 18px rgba(225,182,36,0.85)) drop-shadow(0 0 36px rgba(225,182,36,0.55)); }
         }
-        @keyframes bmpTealPulse {
-          0%, 100% { filter: drop-shadow(0 0 12px rgba(61,223,213,0.55)) drop-shadow(0 0 24px rgba(61,223,213,0.35)); }
-          50%     { filter: drop-shadow(0 0 18px rgba(61,223,213,0.9))  drop-shadow(0 0 36px rgba(61,223,213,0.55)); }
+        @keyframes bmpNeonPulse {
+          0%, 100% { filter: drop-shadow(0 0 12px rgba(57,255,20,0.55)) drop-shadow(0 0 24px rgba(57,255,20,0.35)); }
+          50%     { filter: drop-shadow(0 0 18px rgba(57,255,20,0.9))  drop-shadow(0 0 36px rgba(57,255,20,0.55)); }
         }
         @keyframes bmpXGlow {
           0%, 100% { text-shadow: 0 0 8px rgba(245,230,211,0.6), 0 0 16px rgba(245,230,211,0.3); }
           50%     { text-shadow: 0 0 14px rgba(245,230,211,0.95), 0 0 28px rgba(245,230,211,0.55); }
         }
         .bmp-left   { animation: bmpFromLeft  900ms cubic-bezier(.2,.7,.2,1) both, bmpAmberPulse 2.6s ease-in-out 1s infinite; }
-        .bmp-right  { animation: bmpFromRight 900ms cubic-bezier(.2,.7,.2,1) both, bmpTealPulse  2.6s ease-in-out 1s infinite; }
+        .bmp-right  { animation: bmpFromRight 900ms cubic-bezier(.2,.7,.2,1) both, bmpNeonPulse 2.6s ease-in-out 1s infinite; }
         .bmp-x      { animation: bmpFadeUp 800ms ease-out 700ms both, bmpXGlow 2s ease-in-out 1.5s infinite; }
         .bmp-divider-l { transform-origin: right center; animation: bmpGrowDivider 800ms ease-out 600ms both; }
         .bmp-divider-r { transform-origin: left center;  animation: bmpGrowDivider 800ms ease-out 600ms both; }
@@ -71,47 +72,16 @@ const BasecampMatchPopflyLogo = () => {
           </span>
           <div
             className="bmp-divider-r h-px w-8 sm:w-14"
-            style={{ background: "linear-gradient(to left, transparent, #3DDFD5)", boxShadow: "0 0 8px rgba(61,223,213,0.6)" }}
+            style={{ background: "linear-gradient(to left, transparent, #39FF14)", boxShadow: "0 0 8px rgba(57,255,20,0.6)" }}
           />
         </div>
 
-        {/* Right: Popfly wordmark (custom SVG, neon teal) */}
         <div className="bmp-right flex items-center justify-start flex-1 min-w-0">
-          <svg
-            viewBox="0 0 240 64"
-            className="h-10 sm:h-14 md:h-16 w-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Popfly"
-          >
-            <defs>
-              <linearGradient id="popflyGrad" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stopColor="#3DDFD5" />
-                <stop offset="100%" stopColor="#7BF0E8" />
-              </linearGradient>
-            </defs>
-            {/* Pin / play mark */}
-            <g transform="translate(8 8)">
-              <path
-                d="M24 0 C10.7 0 0 10.7 0 24 c0 18 24 32 24 32 s24-14 24-32 C48 10.7 37.3 0 24 0 z"
-                fill="none"
-                stroke="url(#popflyGrad)"
-                strokeWidth="3"
-              />
-              <polygon points="19,15 35,24 19,33" fill="url(#popflyGrad)" />
-            </g>
-            {/* Wordmark */}
-            <text
-              x="68"
-              y="42"
-              fontFamily="'Josefin Sans', system-ui, sans-serif"
-              fontSize="34"
-              fontWeight="700"
-              fill="url(#popflyGrad)"
-              letterSpacing="1"
-            >
-              POPFLY
-            </text>
-          </svg>
+          <img
+            src={popflyLogo}
+            alt="Popfly"
+            className="h-10 sm:h-14 md:h-16 w-auto object-contain"
+          />
         </div>
       </div>
 
