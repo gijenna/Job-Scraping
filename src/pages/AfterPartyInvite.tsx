@@ -6,7 +6,7 @@ import EditableText from "@/components/EditableText";
 import AfterPartyIntakeForm from "@/components/afterparty/AfterPartyIntakeForm";
 import MatchesPanel from "@/components/afterparty/MatchesPanel";
 import NumberBadge from "@/components/afterparty/NumberBadge";
-import EditNameGate from "@/components/afterparty/EditNameGate";
+import PinSheet from "@/components/afterparty/PinSheet";
 import SkeletonMatches from "@/components/afterparty/SkeletonMatches";
 import {
   AfterPartyAttendee,
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
+import { getSession } from "@/services/auth";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -39,11 +40,13 @@ const AfterPartyInvite = () => {
   const [loading, setLoading] = useState(true);
   const [lockedMatches, setLockedMatches] = useState<MatchResult[] | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [showGate, setShowGate] = useState(false);
+  const [pinOpen, setPinOpen] = useState(false);
+  const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
 
   const fetchAll = async () => {
+    // Public read goes through the safe view (no email/pin fields exposed)
     const { data } = await (supabase as any)
-      .from("afterparty_attendees")
+      .from("afterparty_attendees_public")
       .select("*")
       .order("attendee_number");
     setAttendees((data as AfterPartyAttendee[]) || []);
@@ -51,6 +54,14 @@ const AfterPartyInvite = () => {
   };
 
   useEffect(() => { fetchAll(); }, []);
+
+  // Restore session on mount
+  useEffect(() => {
+    (async () => {
+      const session = await getSession();
+      if (session?.attendeeId) setVerifiedAttendeeId(session.attendeeId);
+    })();
+  }, []);
 
   // Auto-load by URL :name
   useEffect(() => {
@@ -94,13 +105,13 @@ const AfterPartyInvite = () => {
       (a) => slugify(a.full_name) === slugify(lookupName),
     );
     if (found) setMe(found);
-    else alert("No card found for that name. Fill out the form below to create one.");
+    else alert("No card found for that name. Reach out to the organizer for an invite link.");
   };
 
   const handleSaved = async (id: string) => {
     await fetchAll();
     const { data } = await (supabase as any)
-      .from("afterparty_attendees")
+      .from("afterparty_attendees_public")
       .select("*")
       .eq("id", id)
       .single();
@@ -111,9 +122,24 @@ const AfterPartyInvite = () => {
     }, 200);
   };
 
+  const requestEdit = () => {
+    if (!me) return;
+    if (verifiedAttendeeId === me.id) {
+      setEditMode(true);
+      return;
+    }
+    setPinOpen(true);
+  };
+
+  const handleVerified = (attendeeId: string) => {
+    setVerifiedAttendeeId(attendeeId);
+    setPinOpen(false);
+    setEditMode(true);
+  };
+
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
-  const myAvatar = me?.cartoon_url || me?.photo_url;
+  const isOwner = !!me && verifiedAttendeeId === me.id;
 
   return (
     <EditableTextProvider pageSlug="afterparty">
@@ -238,34 +264,22 @@ const AfterPartyInvite = () => {
                 <div className="text-right">
                   <button
                     type="button"
-                    onClick={() => setShowGate(true)}
+                    onClick={requestEdit}
                     className="text-[13px] underline"
                     style={{ color: "rgba(255,255,255,0.6)" }}
                   >
-                    Edit my card →
+                    {isOwner ? "Edit my card →" : "Edit my card →"}
                   </button>
                 </div>
               </div>
-
-              {showGate && (
-                <div className="mt-4">
-                  <EditNameGate
-                    expectedName={me.full_name}
-                    onUnlock={() => { setEditMode(true); setShowGate(false); }}
-                    onCancel={() => setShowGate(false)}
-                  />
-                </div>
-              )}
             </section>
           )}
 
-          {/* Intake form (initial create OR edit mode) */}
-          {(!me || editMode) && (
+          {/* Intake form (edit mode only — new attendees are admin-seeded) */}
+          {me && editMode && isOwner && (
             <section className="mt-8">
-              <h2 className="text-[20px] mb-4" style={{ fontWeight: 500 }}>
-                {me ? "Edit your card" : "Create your card"}
-              </h2>
-              <AfterPartyIntakeForm attendeeId={me?.id || null} initial={me} onSaved={handleSaved} />
+              <h2 className="text-[20px] mb-4" style={{ fontWeight: 500 }}>Edit your card</h2>
+              <AfterPartyIntakeForm attendeeId={me.id} initial={me} onSaved={handleSaved} />
             </section>
           )}
 
@@ -286,6 +300,15 @@ const AfterPartyInvite = () => {
             )}
           </section>
         </div>
+
+        {me && (
+          <PinSheet
+            open={pinOpen}
+            slug={me.slug}
+            onSuccess={handleVerified}
+            onClose={() => setPinOpen(false)}
+          />
+        )}
       </div>
     </EditableTextProvider>
   );
