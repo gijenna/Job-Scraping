@@ -41,7 +41,7 @@ const BasecampMatchPopflyLogo = () => {
           50%     { text-shadow: 0 0 14px rgba(245,230,211,0.95), 0 0 28px rgba(245,230,211,0.55); }
         }
         .bmp-left   { animation: bmpFromLeft  900ms cubic-bezier(.2,.7,.2,1) both, bmpAmberPulse 2.6s ease-in-out 1s infinite; }
-        .bmp-right  { animation: bmpFromRight 900ms cubic-bezier(.2,.7,.2,1) both, bmpTealPulse  2.6s ease-in-out 1s infinite; }
+        .bmp-right  { animation: bmpFromRight 900ms cubic-bezier(.2,.7,.2,1) both, bmpNeonPulse 2.6s ease-in-out 1s infinite; }
         .bmp-x      { animation: bmpFadeUp 800ms ease-out 700ms both, bmpXGlow 2s ease-in-out 1.5s infinite; }
         .bmp-divider-l { transform-origin: right center; animation: bmpGrowDivider 800ms ease-out 600ms both; }
         .bmp-divider-r { transform-origin: left center;  animation: bmpGrowDivider 800ms ease-out 600ms both; }
