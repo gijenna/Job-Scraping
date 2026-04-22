@@ -356,6 +356,25 @@ const AfterPartyInvite = () => {
                   </div>
                 ) : null}
 
+                {isOwner && (
+                  <div
+                    className="flex items-center justify-between gap-3 mb-4 p-3 rounded-lg"
+                    style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}` }}
+                  >
+                    <div className="text-[12px]">
+                      <div style={{ color: "#fff" }}>Show me in the guest list</div>
+                      <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                        Public roster at /guests · first name + last initial only
+                      </div>
+                    </div>
+                    <Switch
+                      checked={publicListing}
+                      onCheckedChange={togglePublicListing}
+                      disabled={updatingListing}
+                    />
+                  </div>
+                )}
+
                 <div className="text-right">
                   <button
                     type="button"
