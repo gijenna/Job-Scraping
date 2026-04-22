@@ -1,57 +1,62 @@
 
 
-## Splash → invite reveal: PB monogram morphs into the lockup
+## Brand activation prompt — show on first save + add to email
 
-Reworking the intro on `/afterparty` so the PB monogram fully owns the screen first, then physically transforms — letters fly out of it into the Basecamp Match and Popfly logos in their final positions, and the monogram itself shrinks down to become the "presents" mark above "The Creator After Party". After the choreography lands, the rest of the page (event details + CTA) cascades up into view.
+Make the brand activation CTA visible at three moments instead of one: (1) immediately after a brand rep first saves their RSVP, (2) on their saved card view going forward, and (3) inside the After Party invite email itself.
 
-No layout, no copy, no schema, no matching logic changes — only the intro choreography, typography, and a few text-color cleanups.
+### 1. Intake form — show CTA on first save
 
-### 1. New uploaded PB asset
+**File:** `src/components/afterparty/AfterPartyIntakeForm.tsx`
 
-- Save the new uploaded monogram to `src/assets/pb-monogram-v2.png` (transparent, large, coral). Replaces references to the prior `pb-monogram.png` inside the splash component only — the small "presents" placement keeps using the same file so it reads as the same mark throughout.
+- Add local state `justSavedId` (string | null), set inside the existing `submit()` success path using the `id` returned from the insert/upsert.
+- Change the existing brand CTA gate from `form.role === "brand" && attendeeId` to `form.role === "brand" && (attendeeId || justSavedId)`.
+- Pass `attendeeId || justSavedId` as the `attendeeId` prop to `BrandActivateButton` so the activation request gets correctly attributed.
+- Auto-scroll to the CTA after first save so the brand rep notices it (smooth scroll into view, no layout jank).
 
-### 2. Choreographed intro (rewrite of `BasecampMatchPopflyLogo.tsx`)
+### 2. Saved card view — relax owner gate for the just-RSVPed user
 
-Single self-contained component. Pure CSS keyframes + a tiny `useState` gate so the rest of the invite (event details, CTA, lookup) only mounts after the intro lands. Honors `prefers-reduced-motion` by snapping straight to the final state and immediately revealing the rest of the page.
+**File:** `src/pages/AfterPartyInvite.tsx`
 
-Timeline (≈ 4.8s total, slow enough to admire):
+- Add `justRsvped` boolean state, flipped to `true` inside `handleSaved` (the existing post-save callback).
+- Change the brand CTA gate from `isOwner && me.role === "brand"` to `(isOwner || justRsvped) && me.role === "brand"`.
+- This keeps the CTA hidden from random visitors browsing someone else's brand card, but shows it to the person who just signed up (no PIN dance needed).
 
-1. **0.0–2.0s — Solo splash.** Only the PB monogram is on screen. It sits centered at ~70vh height, with a slow pulse + subtle rumble (tiny rotational shake, ±0.6°, on a 180ms loop) and a soft amber glow halo. Background is the existing dark teal — no logos, no text, nothing else. The page below is hidden (`opacity:0; pointer-events:none`).
-2. **2.0–2.4s — Wind-up.** Rumble intensifies briefly (amplitude doubles, glow brightens), telegraphing the transform.
-3. **2.4–3.6s — Letters fly out.**
-   - A Basecamp Match SVG mark and a Popfly SVG mark are absolutely positioned **directly on top of the monogram**, scaled to roughly match the monogram's stroke width and starting at `opacity:0`.
-   - At 2.4s they fade in inside the monogram (as if "extracted" from the P and B), then translate outward along arcs (Basecamp Match drifts left + slightly up, Popfly drifts right + slightly up) using `cubic-bezier(.22,.9,.3,1)` over 1.2s, scaling up from ~0.35 to 1.0 and unrotating to level. They land in the exact slots the current logo row uses (same flex layout below — once the animation ends they hand off to the static logo row, position is identical so there's no jump).
-   - During the same window, the central monogram shrinks (`scale 1 → 0.18`) and translates **down** into the small "presents" slot below the logo row, ending at the same size and position the mini monogram occupies today.
-4. **3.6–4.2s — Title + divider settle.** The `× / divider` flourish fades in between the now-landed logos. "The Creator After Party" title fades up below the small monogram. The small monogram gets a one-time soft pulse to confirm it's the same mark.
-5. **4.2s — Reveal page.** Component flips an internal `revealed` state to true and calls an `onRevealed?: () => void` prop. The parent (`AfterPartyInvite.tsx`) uses that callback to fade/slide the rest of the page content (event details, CTA, "See who's coming" link, lookup) up from `opacity:0; translateY(16px)` over 600ms with a 60ms stagger between sections. Final layout is **visually identical** to today — only the entrance is new.
+### 3. Email — add brand activation block to the invite email
 
-Implementation notes:
+**File:** `supabase/functions/_shared/transactional-email-templates/afterparty-invite.tsx`
 
-- All motion is keyframes on absolutely-positioned layers, no JS rAF loops. One `setTimeout` at 4200ms flips `revealed`.
-- The two flying logos use the existing `BasecampMatchAnimated` component and the existing `popfly-logo-neon.png` — the splash just renders them as overlays during the transform, then the steady-state logo row (already in the component) takes over.
-- For the "letters extract" feel without doing per-glyph SVG morphing: the logos start centered on the monogram with a clip-path ellipse mask that opens outward as they translate, so they appear to bloom out of it rather than just slide in. Pure CSS — no morph library.
-- Final steady state of this component is **identical** to today's render: amber/neon glow logos on either side of `×` divider, small PB monogram centered below, "The Creator After Party" title beneath it.
+- Add a new optional prop `role?: 'creator' | 'brand' | 'expert'` to the template.
+- When `role === 'brand'`, render an additional section below the main CTA with:
+  - Heading: "Want to activate your brand at the After Party?"
+  - One-line pitch (matches the in-app copy: Jenna will personally reach out within one business day).
+  - Secondary button linking to `${inviteUrl}?activate=1` styled in coral on cream — visually distinct from the primary "Fill out your profile" button.
+- Update `previewData` to include a brand example.
+- No new template, no separate email — this is a conditional block inside the existing invite.
 
-### 3. Typography + color cleanup
+**File:** `src/pages/AfterPartyInvite.tsx` (also)
 
-Two small style passes, scoped to `/afterparty` only:
+- On mount, read the `activate=1` query param. If present AND `me.role === 'brand'`, set `justRsvped = true` (or a parallel `forceShowActivate` flag) so the CTA renders immediately when they land from the email — even before they verify with PIN.
+- Strip the param from the URL after reading (`history.replaceState`) to keep the link clean on refresh.
 
-- **Cream, not white**: replace any `text-white` / `#FFFFFF` text in `AfterPartyInvite.tsx`, `BasecampMatchPopflyLogo.tsx`, `MatchesPanel.tsx`, `GuestCard.tsx` (afterparty-only usage), and the event details / CTA blocks with the existing brand cream token (`text-events-cream` / `#F5E6D3`). Body copy, headings, button labels, switch labels, "See who's coming →" link.
-- **Kill the black boxes**: remove the dark/translucent backdrop pills currently sitting behind hero text and the event-details rows (e.g. `bg-black/40`, `bg-background/60` wrappers introduced for the about section). The hero background is already dark enough; text sits directly on it. Keeps the cream-on-teal contrast clean.
-- **Cooler heading font**: introduce one new display font for the afterparty page only — **Unbounded** (Google Fonts, weights 500/700). It's geometric, slightly unexpected, very legible, has elegant proportions, and pairs with the existing Glacial Indifference body. Loaded via a `<link>` in `index.html` and added as a Tailwind font family `font-afterparty` in `tailwind.config.ts`. Applied to: "The Creator After Party" title, "An invite-only night in RiNo" heading, the "Create my card" CTA label, and the matches/section headings on `/afterparty`. Body copy stays Glacial. No other pages affected.
-  - If the user prefers a different vibe (e.g. **Fraunces** for editorial-serif elegance, or **Space Grotesk** for techy-cool), it's a one-line swap — Unbounded is the recommended default for "cool but elegant + legible."
+### 4. Trigger — pass role to the invite email
 
-### 4. Files touched
+**File:** `supabase/functions/send-afterparty-invites/index.ts`
 
-- `src/assets/pb-monogram-v2.png` (new — copied from upload)
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` (rewrite intro choreography, add `onRevealed` prop, swap to v2 monogram for the splash, cream text)
-- `src/pages/AfterPartyInvite.tsx` (gate page content behind `revealed` state from splash, cascade-in animation for sections, cream text, remove black backdrop pills)
-- `src/components/afterparty/MatchesPanel.tsx` (white → cream text only, no structural change)
-- `src/components/afterparty/GuestCard.tsx` (white → cream text only, no structural change)
-- `tailwind.config.ts` (add `afterparty: ['Unbounded', 'sans-serif']` font family)
-- `index.html` (add Unbounded Google Fonts `<link>` — only one new font, weights 500/700)
+- Include `role: attendee.role` in the `templateData` passed to `send-transactional-email`. (One-line change.)
 
 ### Out of scope
 
-No changes to matching logic, intake form, schema, edge functions, guest list filtering, splash on other pages, or any non-afterparty surface.
+- No DB / schema changes
+- No changes to creator or industry-expert flows
+- No changes to `BrandActivateButton` itself
+- No changes to PIN/auth flow
+
+### Files touched
+
+- `src/components/afterparty/AfterPartyIntakeForm.tsx`
+- `src/pages/AfterPartyInvite.tsx`
+- `supabase/functions/_shared/transactional-email-templates/afterparty-invite.tsx`
+- `supabase/functions/send-afterparty-invites/index.ts`
+
+After edits, the invite email function will be redeployed automatically.
 
