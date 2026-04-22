@@ -269,15 +269,15 @@ const AfterPartyInvite = () => {
                 <Button
                   type="button"
                   onClick={() => {
-                    document.getElementById("opt-in")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    setEditMode(true);
                     setTimeout(() => {
-                      document.getElementById("lookup-input")?.focus();
-                    }, 400);
+                      document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 100);
                   }}
                   className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
-                  <EditableText settingKey="cta.primary" defaultText="Create my card" />
+                  <EditableText settingKey="cta.primary" defaultText="RSVP" />
                 </Button>
               </div>
             </section>
@@ -406,11 +406,13 @@ const AfterPartyInvite = () => {
             </section>
           )}
 
-          {/* Intake form (edit mode only — new attendees are admin-seeded) */}
-          {me && editMode && isOwner && (
-            <section className="mt-8">
-              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>Edit your card</h2>
-              <AfterPartyIntakeForm attendeeId={me.id} initial={me} onSaved={handleSaved} />
+          {/* Intake form — new RSVP or owner editing existing card */}
+          {editMode && (!me || isOwner) && (
+            <section id="intake-form" className="mt-8">
+              <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
+                {me ? "Edit your card" : "RSVP & build your card"}
+              </h2>
+              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={me} onSaved={handleSaved} />
             </section>
           )}
 
