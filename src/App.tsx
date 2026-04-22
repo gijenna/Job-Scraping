@@ -46,16 +46,16 @@ const App = () => (
       <BrowserRouter>
         <LinkTracker>
         <Routes>
+          {/* Pinned to top for quick access */}
+          <Route path="/afterparty" element={<AfterPartyInvite />} />
+          <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
           {/* Primary routes */}
           <Route path="/" element={<Events />} />
           <Route path="/events" element={<Events />} />
           <Route path="/gather-denver" element={<GatherDenver />} />
-          <Route path="/gather-pnw" element={<GatherPNW />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
-          <Route path="/PNW26" element={<EventPNW26 />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Secondary routes */}
@@ -92,11 +92,12 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
-          {/* Creator After Party */}
-          <Route path="/afterparty" element={<AfterPartyInvite />} />
-          <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
           <Route path="/guests" element={<GuestList />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          {/* Less-used \u2014 moved down */}
+          <Route path="/PNW26" element={<EventPNW26 />} />
+          <Route path="/gather-pnw" element={<GatherPNW />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
