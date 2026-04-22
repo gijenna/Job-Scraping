@@ -310,7 +310,10 @@ const AfterPartyInvite = () => {
           {/* My card (view mode) */}
           {me && !editMode && (
             <section className="mt-8">
-              <div className="p-5 rounded-xl" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
+              <div className="relative p-5 rounded-xl overflow-hidden" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
+                <div className="absolute -top-3 -right-3 opacity-70 rotate-12 pointer-events-none">
+                  <StarSparkle tone="green" variant="set" size={56} />
+                </div>
                 <div className="flex items-center gap-3 mb-4">
                   <NumberBadge number={me.attendee_number} role={me.role} size={46} />
                   <div className="flex -space-x-2">
@@ -415,7 +418,8 @@ const AfterPartyInvite = () => {
           {me && (
             <section id="matches" className="mt-10">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-afterparty text-[17px]" style={{ fontWeight: 500, color: CREAM }}>
+                <h2 className="font-afterparty text-[17px] flex items-center gap-2" style={{ fontWeight: 500, color: CREAM }}>
+                  <StarSparkle tone="coral" variant="single" size={18} />
                   Look out for these numbers tonight
                 </h2>
                 <span className="text-[12px]" style={{ color: CREAM_DIM }}>
