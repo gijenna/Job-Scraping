@@ -147,9 +147,10 @@ const AfterPartyInvite = () => {
         className="min-h-screen relative"
         style={{
           backgroundColor: BG,
-          backgroundImage: `linear-gradient(rgba(8,8,8,0.35), rgba(8,8,8,0.45)), url(/afterparty-bg.jpg)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
+          backgroundSize: "100% 100vh",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: "#fff",
           fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
