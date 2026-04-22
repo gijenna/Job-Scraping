@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
             content: [
               {
                 type: "text",
-                text: "Convert this portrait into a bold modern flat-design portrait illustration in the style of editorial magazine spot illustrations. Limited color palette (3-4 colors max), geometric simplified shapes, NO outlines, confident flat color blocks with subtle shading planes. Head and shoulders, centered on a solid colored background (deep teal, mustard, terracotta, or dusty pink). Keep these features recognizable and accurate: hair color and style, skin tone, glasses, facial hair, clothing color. Sophisticated, designer-y, editorial. Do NOT add outlines, do NOT make it 3D, do NOT make it photorealistic, do NOT make it cute or cartoony.",
+                text: "Convert this portrait into a bold modern flat-design portrait illustration in the style of editorial magazine spot illustrations. Limited color palette (3-4 colors max), geometric simplified shapes, NO outlines, confident flat color blocks with subtle shading planes. Head and shoulders, centered on a solid colored background (deep teal, mustard, terracotta, or dusty pink). Match the actual person in the photo: hair color and style, skin tone, facial hair, and clothing color must match what you see. CRITICAL: Only include eyewear if the person is clearly wearing glasses or sunglasses in the source photo. If they are not wearing glasses, do NOT add any glasses, sunglasses, frames, or eyewear of any kind. Sophisticated, designer-y, editorial. Do NOT add outlines, do NOT make it 3D, do NOT make it photorealistic, do NOT make it cute or cartoony.",
               },
               { type: "image_url", image_url: { url: photo_url } },
             ],
