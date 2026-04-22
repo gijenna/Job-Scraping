@@ -76,43 +76,12 @@ const BasecampMatchPopflyLogo = () => {
           />
         </div>
 
-        {/* Right: Popfly wordmark (custom SVG, neon teal) */}
         <div className="bmp-right flex items-center justify-start flex-1 min-w-0">
-          <svg
-            viewBox="0 0 240 64"
-            className="h-10 sm:h-14 md:h-16 w-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Popfly"
-          >
-            <defs>
-              <linearGradient id="popflyGrad" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stopColor="#3DDFD5" />
-                <stop offset="100%" stopColor="#7BF0E8" />
-              </linearGradient>
-            </defs>
-            {/* Pin / play mark */}
-            <g transform="translate(8 8)">
-              <path
-                d="M24 0 C10.7 0 0 10.7 0 24 c0 18 24 32 24 32 s24-14 24-32 C48 10.7 37.3 0 24 0 z"
-                fill="none"
-                stroke="url(#popflyGrad)"
-                strokeWidth="3"
-              />
-              <polygon points="19,15 35,24 19,33" fill="url(#popflyGrad)" />
-            </g>
-            {/* Wordmark */}
-            <text
-              x="68"
-              y="42"
-              fontFamily="'Josefin Sans', system-ui, sans-serif"
-              fontSize="34"
-              fontWeight="700"
-              fill="url(#popflyGrad)"
-              letterSpacing="1"
-            >
-              POPFLY
-            </text>
-          </svg>
+          <img
+            src={popflyLogo}
+            alt="Popfly"
+            className="h-10 sm:h-14 md:h-16 w-auto object-contain"
+          />
         </div>
       </div>
 
