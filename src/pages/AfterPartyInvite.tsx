@@ -232,12 +232,16 @@ const AfterPartyInvite = () => {
 
           {/* Find existing card */}
           {!me && !loading && !name && (
-            <div className="mt-8 p-4 rounded-xl" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
+            <div id="opt-in" className="mt-8 p-4 rounded-xl" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
               <p className="text-[13px] mb-2" style={{ color: "rgba(255,255,255,0.7)" }}>
-                Already filled this out? Type your name to load your card.
+                <EditableText
+                  settingKey="cta.secondary"
+                  defaultText="Already RSVP'd? Type your name to load your card."
+                />
               </p>
               <form onSubmit={handleLookup} className="flex gap-2">
                 <Input
+                  id="lookup-input"
                   value={lookupName}
                   onChange={(e) => setLookupName(e.target.value)}
                   placeholder="Your full name"
@@ -335,22 +339,20 @@ const AfterPartyInvite = () => {
             </section>
           )}
 
-          {/* Matches */}
-          <section id="matches" className="mt-10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[17px]" style={{ fontWeight: 500, color: "#fff" }}>
-                Look out for these numbers tonight
-              </h2>
-              <span className="text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
-                {submitted ? (lockedMatches ? "Final" : "Sent to your email too") : ""}
-              </span>
-            </div>
-            {submitted ? (
+          {/* Matches — only shown once a card is loaded */}
+          {me && (
+            <section id="matches" className="mt-10">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[17px]" style={{ fontWeight: 500, color: "#fff" }}>
+                  Look out for these numbers tonight
+                </h2>
+                <span className="text-[12px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                  {lockedMatches ? "Final" : "Sent to your email too"}
+                </span>
+              </div>
               <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
-            ) : (
-              <SkeletonMatches />
-            )}
-          </section>
+            </section>
+          )}
         </div>
 
         {me && (
