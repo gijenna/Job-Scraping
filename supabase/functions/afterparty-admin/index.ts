@@ -19,6 +19,7 @@ interface MatchRow {
   reasons: string[] | null
   score: number
   locked: boolean
+  is_mutual_boost?: boolean
 }
 
 Deno.serve(async (req) => {
@@ -55,7 +56,15 @@ Deno.serve(async (req) => {
         const matches = (payload.matches || []) as MatchRow[]
         await admin.from('afterparty_matches').delete().eq('locked', true)
         if (matches.length) {
-          const rows = matches.map((m) => ({ ...m, locked: true }))
+          const rows = matches.map((m) => ({
+            attendee_id: m.attendee_id,
+            match_attendee_id: m.match_attendee_id,
+            rank: m.rank,
+            reasons: m.reasons,
+            score: m.score,
+            locked: true,
+            is_mutual_boost: m.is_mutual_boost ?? false,
+          }))
           const { error } = await admin.from('afterparty_matches').insert(rows)
           if (error) return json({ error: error.message }, 500)
         }
