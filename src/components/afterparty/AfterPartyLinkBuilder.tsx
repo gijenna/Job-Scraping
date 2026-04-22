@@ -153,7 +153,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
       .map((r) => ({
         full_name: (idxName >= 0 ? r[idxName] : r[0])?.trim() || "",
         email: (idxEmail >= 0 ? r[idxEmail] : r[1])?.trim() || undefined,
-        role: ((idxRole >= 0 ? r[idxRole] : r[2])?.trim().toLowerCase() === "brand" ? "brand" : "creator") as "creator" | "brand",
+        role: normalizeRole(idxRole >= 0 ? r[idxRole] : r[2]),
         company: (idxCompany >= 0 ? r[idxCompany] : r[3])?.trim() || undefined,
       }))
       .filter((r) => r.full_name);
