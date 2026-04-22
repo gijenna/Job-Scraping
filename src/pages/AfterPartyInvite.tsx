@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
@@ -15,6 +15,7 @@ import {
 } from "@/lib/afterparty-matching";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Search } from "lucide-react";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import { getSession } from "@/services/auth";
@@ -42,6 +43,8 @@ const AfterPartyInvite = () => {
   const [editMode, setEditMode] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
+  const [publicListing, setPublicListing] = useState<boolean>(true);
+  const [updatingListing, setUpdatingListing] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -141,6 +144,33 @@ const AfterPartyInvite = () => {
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
   const isOwner = !!me && verifiedAttendeeId === me.id;
 
+  // Load public_listing for owner (not exposed via public view)
+  useEffect(() => {
+    if (!isOwner || !me) return;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("public_listing")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data && typeof data.public_listing === "boolean") {
+        setPublicListing(data.public_listing);
+      }
+    })();
+  }, [isOwner, me?.id]);
+
+  const togglePublicListing = async (next: boolean) => {
+    if (!me) return;
+    setUpdatingListing(true);
+    setPublicListing(next);
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ public_listing: next })
+      .eq("id", me.id);
+    if (error) setPublicListing(!next);
+    setUpdatingListing(false);
+  };
+
   return (
     <EditableTextProvider pageSlug="afterparty">
       <div
@@ -180,6 +210,15 @@ const AfterPartyInvite = () => {
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               <span>·</span>
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
+            </div>
+            <div className="mt-4">
+              <Link
+                to="/guests"
+                className="text-[13px] underline"
+                style={{ color: "rgba(255,255,255,0.7)" }}
+              >
+                See who's coming →
+              </Link>
             </div>
           </div>
 
@@ -316,6 +355,25 @@ const AfterPartyInvite = () => {
                     <p className="text-[13px] italic" style={{ color: "rgba(255,255,255,0.75)" }}>{me.mind_blowing_fact}</p>
                   </div>
                 ) : null}
+
+                {isOwner && (
+                  <div
+                    className="flex items-center justify-between gap-3 mb-4 p-3 rounded-lg"
+                    style={{ backgroundColor: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}` }}
+                  >
+                    <div className="text-[12px]">
+                      <div style={{ color: "#fff" }}>Show me in the guest list</div>
+                      <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+                        Public roster at /guests · first name + last initial only
+                      </div>
+                    </div>
+                    <Switch
+                      checked={publicListing}
+                      onCheckedChange={togglePublicListing}
+                      disabled={updatingListing}
+                    />
+                  </div>
+                )}
 
                 <div className="text-right">
                   <button

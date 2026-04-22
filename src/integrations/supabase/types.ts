@@ -65,6 +65,7 @@ export type Database = {
           pin_hash: string | null
           pin_locked_until: string | null
           platforms: string[] | null
+          public_listing: boolean
           role: string
           slug: string
           slug_opened_at: string | null
@@ -98,6 +99,7 @@ export type Database = {
           pin_hash?: string | null
           pin_locked_until?: string | null
           platforms?: string[] | null
+          public_listing?: boolean
           role: string
           slug: string
           slug_opened_at?: string | null
@@ -131,6 +133,7 @@ export type Database = {
           pin_hash?: string | null
           pin_locked_until?: string | null
           platforms?: string[] | null
+          public_listing?: boolean
           role?: string
           slug?: string
           slug_opened_at?: string | null
@@ -187,6 +190,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "afterparty_matches_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_guest_list"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "afterparty_matches_match_attendee_id_fkey"
             columns: ["match_attendee_id"]
             isOneToOne: false
@@ -198,6 +208,13 @@ export type Database = {
             columns: ["match_attendee_id"]
             isOneToOne: false
             referencedRelation: "afterparty_attendees_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterparty_matches_match_attendee_id_fkey"
+            columns: ["match_attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_guest_list"
             referencedColumns: ["id"]
           },
         ]
@@ -246,6 +263,13 @@ export type Database = {
             columns: ["attendee_id"]
             isOneToOne: false
             referencedRelation: "afterparty_attendees_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterparty_suggestions_attendee_id_fkey"
+            columns: ["attendee_id"]
+            isOneToOne: false
+            referencedRelation: "afterparty_guest_list"
             referencedColumns: ["id"]
           },
         ]
@@ -864,6 +888,48 @@ export type Database = {
           social_links?: Json | null
           status?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      afterparty_guest_list: {
+        Row: {
+          attendee_number: number | null
+          cartoon_url: string | null
+          company: string | null
+          created_at: string | null
+          creator_types: string[] | null
+          display_name: string | null
+          id: string | null
+          looking_for: string[] | null
+          mind_blowing_fact: string | null
+          niches: string[] | null
+          role: string | null
+        }
+        Insert: {
+          attendee_number?: number | null
+          cartoon_url?: string | null
+          company?: string | null
+          created_at?: string | null
+          creator_types?: string[] | null
+          display_name?: never
+          id?: string | null
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          role?: string | null
+        }
+        Update: {
+          attendee_number?: number | null
+          cartoon_url?: string | null
+          company?: string | null
+          created_at?: string | null
+          creator_types?: string[] | null
+          display_name?: never
+          id?: string | null
+          looking_for?: string[] | null
+          mind_blowing_fact?: string | null
+          niches?: string[] | null
+          role?: string | null
         }
         Relationships: []
       }
