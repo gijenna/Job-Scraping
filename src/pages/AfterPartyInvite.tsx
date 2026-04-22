@@ -52,6 +52,7 @@ const AfterPartyInvite = () => {
   const [publicListing, setPublicListing] = useState<boolean>(true);
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [justRsvped, setJustRsvped] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -127,10 +128,25 @@ const AfterPartyInvite = () => {
       .single();
     if (data) setMe(data as AfterPartyAttendee);
     setEditMode(false);
+    setJustRsvped(true);
     setTimeout(() => {
       document.getElementById("matches")?.scrollIntoView({ behavior: "smooth" });
     }, 200);
   };
+
+  // ?activate=1 from the invite email → show brand CTA immediately
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("activate") === "1") {
+      setJustRsvped(true);
+      params.delete("activate");
+      const qs = params.toString();
+      const newUrl =
+        window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash;
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, []);
 
   const requestEdit = () => {
     if (!me) return;
@@ -393,7 +409,7 @@ const AfterPartyInvite = () => {
                   </div>
                 )}
 
-                {isOwner && me.role === "brand" && (
+                {(isOwner || justRsvped) && me.role === "brand" && (
                   <div className="mb-4">
                     <BrandActivateButton
                       attendeeId={me.id}

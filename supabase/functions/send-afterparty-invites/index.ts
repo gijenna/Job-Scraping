@@ -51,6 +51,7 @@ Deno.serve(async (req) => {
           recipientName: a.full_name.split(' ')[0],
           attendeeNumber: a.attendee_number,
           inviteUrl,
+          role: a.role,
         },
       },
     })
