@@ -228,7 +228,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
 
       {/* Steady-state lockup (logos land here) */}
       <div className="relative w-full flex flex-col items-center">
-        <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4">
+        <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4 text-center">
           <div className="bmp-bloom-left flex items-center justify-end flex-1 min-w-0">
             <BasecampMatchAnimated className="h-10 sm:h-14 md:h-16" />
           </div>
@@ -269,10 +269,10 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             />
           </div>
           <h2
-            className="bmp-title font-afterparty text-2xl sm:text-3xl md:text-4xl font-bold"
+            className="bmp-title font-afterparty sm:text-3xl md:text-4xl font-bold text-6xl"
             style={{ color: "#F5E6D3" }}
           >
-            Creator After Party
+            Out of Office
           </h2>
           <div className="bmp-title mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm sm:text-base italic tracking-wide" style={{ color: "#F5E6D3", opacity: 0.9 }}>
             <span>The only official</span>

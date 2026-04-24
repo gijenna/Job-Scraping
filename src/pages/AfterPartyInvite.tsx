@@ -225,7 +225,7 @@ const AfterPartyInvite = () => {
           {/* Hero copy */}
           <div className="mt-6 text-center" style={{ transitionDelay: "60ms" }}>
             <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
-              <EditableText settingKey="hero.kicker" defaultText="You're invited" />
+              <EditableText settingKey="hero.kicker" defaultText="" />
             </div>
             <h1 className="font-afterparty text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: CREAM }}>
               <EditableText settingKey="hero.title" defaultText="Creator after party" />
