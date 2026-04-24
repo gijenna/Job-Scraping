@@ -236,13 +236,13 @@ const AfterPartyInvite = () => {
             <p className="text-[15px] mb-4" style={{ color: CREAM_MUTED }}>
               <EditableText
                 settingKey="hero.subtitle"
-                defaultText="An evening for the outdoor industry's next wave."
+                defaultText="Auraria Campus, Denver"
                 multiline
               />
             </p>
             <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
-              <span>·</span>
+              <span></span>
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
             </div>
             <div className="mt-4">
