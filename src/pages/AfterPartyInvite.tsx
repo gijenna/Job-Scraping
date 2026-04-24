@@ -84,7 +84,16 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     const found = attendees.find(
       (a) => slugify(a.full_name) === slugify(name) || a.slug === name,
     );
-    if (found) setMe(found);
+    if (found) {
+      setMe(found);
+      // If this is a pre-RSVP shell (created by the bulk link builder
+      // with no profile data yet), drop them straight into the intake form.
+      const isShell = !found.photo_url && !found.cartoon_url
+        && !(found.niches?.length) && !(found.looking_for?.length)
+        && !(found.creator_types?.length) && !(found.platforms?.length)
+        && !(found as any).mind_blowing_fact && !(found as any).company;
+      if (isShell) setEditMode(true);
+    }
   }, [name, attendees, me]);
 
   // Locked matches
@@ -154,7 +163,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const requestEdit = () => {
     if (!me) return;
-    if (verifiedAttendeeId === me.id) {
+    // Pre-RSVP shells (no email on file) skip PIN — there's nowhere to send a code.
+    if (verifiedAttendeeId === me.id || (!me.photo_url && !me.cartoon_url
+      && !(me.niches?.length) && !(me.looking_for?.length)
+      && !(me.creator_types?.length) && !(me.platforms?.length)
+      && !(me as any).mind_blowing_fact && !(me as any).company)) {
       setEditMode(true);
       return;
     }
@@ -169,7 +182,15 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
-  const isOwner = !!me && verifiedAttendeeId === me.id;
+  // A "pre-RSVP shell" is an attendee row created by the bulk link builder
+  // before the person has actually filled anything out — no photo, no
+  // niches, no looking_for, etc. We treat these as fresh RSVPs so the user
+  // lands on the intake form (not a view-mode "card" that asks for a PIN).
+  const isPreRsvpShell = !!me && !me.photo_url && !me.cartoon_url
+    && !(me.niches?.length) && !(me.looking_for?.length)
+    && !(me.creator_types?.length) && !(me.platforms?.length)
+    && !me.mind_blowing_fact && !me.company;
+  const isOwner = !!me && (verifiedAttendeeId === me.id || isPreRsvpShell);
 
   // Load public_listing for owner (not exposed via public view)
   useEffect(() => {
