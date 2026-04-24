@@ -362,25 +362,46 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
       )}
 
       {(results.length > 0 || rows.length > 0) && (
-        <div className="max-h-64 overflow-auto rounded border border-events-cream/10">
+        <div className="max-h-80 overflow-auto rounded border border-events-cream/10">
           <table className="w-full text-xs text-events-cream">
             <thead className="bg-events-cream/5 sticky top-0">
               <tr>
                 <th className="text-left px-2 py-1">Name</th>
-                <th className="text-left px-2 py-1">Email</th>
                 <th className="text-left px-2 py-1">Role</th>
                 <th className="text-left px-2 py-1">Personalized link</th>
                 <th className="text-left px-2 py-1">Status</th>
               </tr>
             </thead>
             <tbody>
-              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: ", " as any }))).map((r: any, i) => (
-                <tr key={i} className="border-t border-events-cream/10">
-                  <td className="px-2 py-1">{r.full_name}</td>
-                  <td className="px-2 py-1 text-events-cream/60">{r.email || ", "}</td>
+              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: "—" as any }))).map((r: any, i) => (
+                <tr key={i} className="border-t border-events-cream/10 align-top">
+                  <td className="px-2 py-1 whitespace-nowrap">{r.full_name}</td>
                   <td className="px-2 py-1 capitalize text-events-cream/70">{r.role}</td>
-                  <td className="px-2 py-1 text-events-yellow truncate max-w-[280px]">{r.link || ", "}</td>
-                  <td className="px-2 py-1 text-events-cream/70">{r.status}{r.note ? ` · ${r.note}` : ""}</td>
+                  <td className="px-2 py-1 text-events-yellow break-all">
+                    {r.link ? (
+                      <div className="flex items-center gap-2">
+                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="underline hover:text-events-coral break-all">
+                          {r.link}
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(r.link);
+                            toast({ title: "Link copied", description: r.full_name });
+                          }}
+                          className="shrink-0 px-2 py-0.5 rounded bg-events-cream/10 text-events-cream hover:bg-events-cream/20"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-events-cream/40">—</span>
+                    )}
+                  </td>
+                  <td className="px-2 py-1 text-events-cream/70 whitespace-nowrap">
+                    <span className={r.status === "error" ? "text-events-coral font-bold" : ""}>{r.status}</span>
+                    {r.note ? <div className="text-events-cream/50 text-[11px] whitespace-normal">{r.note}</div> : null}
+                  </td>
                 </tr>
               ))}
             </tbody>
