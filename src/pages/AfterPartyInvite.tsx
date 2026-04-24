@@ -227,9 +227,6 @@ const AfterPartyInvite = () => {
             <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
               <EditableText settingKey="hero.kicker" defaultText="" />
             </div>
-            <h1 className="font-afterparty text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: CREAM }}>
-              <EditableText settingKey="hero.title" defaultText="Creator after party" />
-            </h1>
             <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               
