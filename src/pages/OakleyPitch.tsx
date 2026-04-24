@@ -84,22 +84,25 @@ const OakleyPitch = () => {
       key: "oakley_pill",
       content: (
         <div className="bg-events-teal py-4 text-center">
-          <motion.div
+          <motion.a
+            href="https://www.oakley.com"
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="inline-flex items-center gap-4 px-6 py-3 rounded-full border border-events-yellow/30 bg-events-card/50"
+            className="inline-flex items-center gap-5 px-7 py-4 rounded-full border border-events-yellow/30 bg-events-card/50 hover:bg-events-card/70 transition-colors cursor-pointer"
           >
-            <span className="text-events-cream/80 text-sm font-body">Free registration thanks to</span>
+            <span className="text-events-cream/80 text-base font-body">Free registration thanks to</span>
             <img
               src={OAKLEY_LOGO}
               alt="Oakley"
-              className="h-7 w-auto"
+              className="h-12 md:h-14 w-auto"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = "https://www.google.com/s2/favicons?domain=oakley.com&sz=128";
               }}
             />
-          </motion.div>
+          </motion.a>
         </div>
       ),
     },
