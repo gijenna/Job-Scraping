@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import pbMonogramSplash from "@/assets/pb-monogram-v2.png";
 import presentsWordmark from "@/assets/presents-wordmark.png";
+import outsideDaysLogo from "@/assets/outside-days-logo.png";
 import BasecampMatchAnimated from "./BasecampMatchAnimated";
 import StarSparkle from "./StarSparkle";
 
@@ -273,6 +274,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           >
             Creator After Party
           </h2>
+          <div className="bmp-title mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm sm:text-base italic tracking-wide" style={{ color: "#F5E6D3", opacity: 0.9 }}>
+            <span>The only official</span>
+            <img
+              src={outsideDaysLogo}
+              alt="Outside Days (Capital One x REI)"
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+            />
+            <span>after-party</span>
+          </div>
         </div>
       </div>
     </div>
