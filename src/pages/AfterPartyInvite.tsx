@@ -163,7 +163,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const requestEdit = () => {
     if (!me) return;
-    if (verifiedAttendeeId === me.id) {
+    // Pre-RSVP shells (no email on file) skip PIN — there's nowhere to send a code.
+    if (verifiedAttendeeId === me.id || (!me.photo_url && !me.cartoon_url
+      && !(me.niches?.length) && !(me.looking_for?.length)
+      && !(me.creator_types?.length) && !(me.platforms?.length)
+      && !(me as any).mind_blowing_fact && !(me as any).company)) {
       setEditMode(true);
       return;
     }
