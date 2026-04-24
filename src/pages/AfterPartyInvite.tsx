@@ -84,7 +84,16 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     const found = attendees.find(
       (a) => slugify(a.full_name) === slugify(name) || a.slug === name,
     );
-    if (found) setMe(found);
+    if (found) {
+      setMe(found);
+      // If this is a pre-RSVP shell (created by the bulk link builder
+      // with no profile data yet), drop them straight into the intake form.
+      const isShell = !found.photo_url && !found.cartoon_url
+        && !(found.niches?.length) && !(found.looking_for?.length)
+        && !(found.creator_types?.length) && !(found.platforms?.length)
+        && !(found as any).mind_blowing_fact && !(found as any).company;
+      if (isShell) setEditMode(true);
+    }
   }, [name, attendees, me]);
 
   // Locked matches
