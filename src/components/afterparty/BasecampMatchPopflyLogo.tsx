@@ -259,7 +259,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           </div>
         </div>
 
-        <div className="mt-6 text-center flex flex-col items-center">
+        <div className="mt-2 text-center flex flex-col items-center">
           <div className="bmp-presents h-7 sm:h-8 mb-3 overflow-hidden" style={{ aspectRatio: `${1920 * 0.88} / 575` }}>
             <img
               src={presentsWordmark}
