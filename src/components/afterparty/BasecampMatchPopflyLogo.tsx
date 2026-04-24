@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
-import pbMonogramSplash from "@/assets/outside-days-stacked.svg";
+import pbMonogramSplash from "@/assets/pb-monogram-v2.png";
+import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
 import presentsWordmark from "@/assets/presents-wordmark.png";
 import outsideDaysLogo from "@/assets/outside-days-logo.svg";
 import BasecampMatchAnimated from "./BasecampMatchAnimated";
