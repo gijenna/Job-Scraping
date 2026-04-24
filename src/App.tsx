@@ -50,6 +50,32 @@ const App = () => (
           {/* Pinned to top for quick access */}
           <Route path="/afterparty" element={<AfterPartyInvite />} />
           <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
+          <Route
+            path="/afterpartyoakley"
+            element={
+              <AfterPartyInvite
+                presenter={{
+                  label: "Peak Vibes provided by",
+                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoAlt: "Oakley",
+                  href: "https://www.oakley.com",
+                }}
+              />
+            }
+          />
+          <Route
+            path="/afterpartyoakley/:name"
+            element={
+              <AfterPartyInvite
+                presenter={{
+                  label: "Peak Vibes provided by",
+                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoAlt: "Oakley",
+                  href: "https://www.oakley.com",
+                }}
+              />
+            }
+          />
           {/* Primary routes */}
           <Route path="/" element={<Events />} />
           <Route path="/events" element={<Events />} />
