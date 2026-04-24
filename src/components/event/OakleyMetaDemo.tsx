@@ -12,13 +12,13 @@ const bullets = [
 
 const OakleyMetaDemo = () => {
   return (
-    <section className="py-20 md:py-24 px-6 bg-events-teal">
-      <div className="container mx-auto max-w-6xl">
+    <section className="py-8 md:py-10 px-6 bg-events-teal">
+      <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative rounded-3xl p-8 md:p-14 overflow-hidden border border-events-cream/10"
+          className="relative rounded-2xl p-6 md:p-8 overflow-hidden border border-events-cream/10"
           style={{
             background: "linear-gradient(135deg, #0a1416 0%, #122a2e 50%, #0a1416 100%)",
           }}
@@ -33,27 +33,27 @@ const OakleyMetaDemo = () => {
             style={{ backgroundColor: OAKLEY_ORANGE }}
           />
 
-          <div className="relative grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          <div className="relative grid lg:grid-cols-2 gap-6 lg:gap-10 items-center">
             {/* Copy */}
             <div>
               <span
-                className="inline-block text-xs font-display font-bold tracking-widest uppercase mb-4"
+                className="inline-block text-[10px] font-display font-bold tracking-widest uppercase mb-2"
                 style={{ color: OAKLEY_ORANGE }}
               >
                 On-Site at Outside Days
               </span>
-              <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream mb-5 leading-tight">
+              <h2 className="font-headline font-bold text-2xl md:text-3xl text-events-cream mb-3 leading-tight">
                 Try the Meta × Oakley smart glasses live.
               </h2>
-              <p className="font-body text-events-cream/75 text-base md:text-lg mb-6 leading-relaxed">
+              <p className="font-body text-events-cream/75 text-sm md:text-base mb-4 leading-relaxed">
                 For 50 years, Oakley has built eyewear for everyone who moves. They're bringing a live demo of the new Meta × Oakley smart glasses to Outside Days
               </p>
 
-              <ul className="space-y-3 mb-2">
+              <ul className="space-y-2">
                 {bullets.map((b, i) => (
-                  <li key={i} className="flex gap-3 text-events-cream/85 font-body text-sm md:text-base">
+                  <li key={i} className="flex gap-2.5 text-events-cream/85 font-body text-xs md:text-sm">
                     <Check
-                      className="w-5 h-5 shrink-0 mt-0.5"
+                      className="w-4 h-4 shrink-0 mt-0.5"
                       style={{ color: OAKLEY_ORANGE }}
                     />
                     <span>{b}</span>
@@ -75,7 +75,7 @@ const OakleyMetaDemo = () => {
                 width={1024}
                 height={1024}
                 loading="lazy"
-                className="relative z-10 w-full max-w-md drop-shadow-2xl"
+                className="relative z-10 w-full max-w-xs drop-shadow-2xl"
                 animate={{
                   y: [0, -14, 0],
                   rotateY: [-8, 8, -8],
