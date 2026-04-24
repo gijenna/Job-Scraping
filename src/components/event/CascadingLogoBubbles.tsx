@@ -81,44 +81,51 @@ const CascadingLogoBubbles = ({
         </div>
       ) : (
       <div className="relative h-24 md:h-32 overflow-hidden">
-        {rainLogos.map((item, i) => {
-          const imgSrc = item.logo.logo_url || `https://www.google.com/s2/favicons?domain=${item.logo.domain}&sz=128`;
-          const bubble = (
-            <motion.div
-              initial={{ y: "-100%", opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, margin: "200px" }}
-              transition={{
-                y: { duration: 2.5, delay: item.delay, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.5, delay: item.delay },
-              }}
-              className="absolute bottom-3 w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg"
-              style={{ left: `${item.leftPercent}%`, transform: `rotate(${item.rotate})`, backgroundColor: bubbleColor }}
-            >
+        {(() => {
+          const spreadPercent = Math.min(85, logos.length * 15);
+          const centerOffset = (100 - spreadPercent) / 2;
+          const rainLogos = logos.map((logo, i) => ({
+            logo,
+            leftPercent: logos.length === 1 ? 50 : centerOffset + (i / (logos.length - 1)) * spreadPercent,
+            delay: 0.3 + i * 0.18,
+            rotate: rotateAt(i),
+          }));
+          return rainLogos.map((item, i) => {
+            const imgSrc = item.logo.logo_url || `https://www.google.com/s2/favicons?domain=${item.logo.domain}&sz=128`;
+            const bubble = (
               <motion.div
-                initial={{ scale: 1 }}
-                whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: item.delay + 2.4, ease: "easeOut" }}
+                initial={{ y: "-100%", opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, margin: "200px" }}
+                transition={{
+                  y: { duration: 2.5, delay: item.delay, ease: [0.22, 1, 0.36, 1] },
+                  opacity: { duration: 0.5, delay: item.delay },
+                }}
+                className="absolute bottom-3 w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg"
+                style={{ left: `${item.leftPercent}%`, transform: `rotate(${item.rotate})`, backgroundColor: bubbleColor }}
               >
-                <img src={imgSrc} alt={item.logo.name} className="w-5 h-5 md:w-8 md:h-8 object-contain" style={{ mixBlendMode: 'multiply' }} />
+                <motion.div
+                  initial={{ scale: 1 }}
+                  whileInView={{ scale: [1, 1.2, 0.9, 1.05, 1] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: item.delay + 2.4, ease: "easeOut" }}
+                >
+                  <img src={imgSrc} alt={item.logo.name} className="w-5 h-5 md:w-8 md:h-8 object-contain" style={{ mixBlendMode: 'multiply' }} />
+                </motion.div>
               </motion.div>
-            </motion.div>
-          );
-
-          const normalizedUrl = item.logo.url?.trim()
-            ? (item.logo.url.trim().startsWith("http") ? item.logo.url.trim() : `https://${item.logo.url.trim()}`)
-            : null;
-
-          return normalizedUrl ? (
-            <a key={i} href={normalizedUrl} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
-              {bubble}
-            </a>
-          ) : (
-            <React.Fragment key={i}>{bubble}</React.Fragment>
-          );
-        })}
+            );
+            const normalizedUrl = item.logo.url?.trim()
+              ? (item.logo.url.trim().startsWith("http") ? item.logo.url.trim() : `https://${item.logo.url.trim()}`)
+              : null;
+            return normalizedUrl ? (
+              <a key={i} href={normalizedUrl} target="_blank" rel="noopener noreferrer" className="cursor-pointer">{bubble}</a>
+            ) : (
+              <React.Fragment key={i}>{bubble}</React.Fragment>
+            );
+          });
+        })()}
       </div>
+      )}
     </div>
   );
 };
