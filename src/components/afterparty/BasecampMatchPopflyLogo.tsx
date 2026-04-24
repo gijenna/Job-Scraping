@@ -274,12 +274,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           >
             Out of Office
           </h2>
-          <p
-            className="bmp-title font-afterparty text-2xl sm:text-3xl md:text-4xl font-bold mt-2"
-            style={{ color: "#F5E6D3" }}
-          >
-            May 28, 2026
-          </p>
           <div className="bmp-title mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm sm:text-base italic tracking-wide" style={{ color: "#F5E6D3", opacity: 0.9 }}>
             <span>The only official</span>
             <img

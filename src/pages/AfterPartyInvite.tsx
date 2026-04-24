@@ -230,6 +230,9 @@ const AfterPartyInvite = () => {
             <h1 className="font-afterparty text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: CREAM }}>
               <EditableText settingKey="hero.title" defaultText="Creator after party" />
             </h1>
+            <p className="font-afterparty text-2xl sm:text-3xl font-bold mb-2" style={{ color: CREAM }}>
+              <EditableText settingKey="hero.date.display" defaultText="May 28, 2026" />
+            </p>
             <p className="text-[15px] mb-4" style={{ color: CREAM_MUTED }}>
               <EditableText
                 settingKey="hero.subtitle"
