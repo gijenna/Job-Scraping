@@ -294,7 +294,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             />
           </div>
           <h2
-            className="bmp-title font-afterparty sm:text-3xl md:text-4xl font-bold text-7xl"
+            className="bmp-title font-afterparty sm:text-3xl md:text-4xl font-bold text-6xl"
             style={{ color: "#F5E6D3" }}
           >
             Out of Office
