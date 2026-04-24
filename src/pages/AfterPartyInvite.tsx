@@ -245,9 +245,6 @@ const AfterPartyInvite = () => {
               <StarSparkle tone="green" size={10} />
               <span>Friends</span>
             </div>
-            <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
-              <EditableText settingKey="hero.kicker" defaultText="" />
-            </div>
             <div className="mt-1 text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               
