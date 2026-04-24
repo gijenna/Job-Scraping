@@ -244,7 +244,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 <img
                   src={presenter.logoUrl}
                   alt={presenter.logoAlt}
-                  className="h-14 sm:h-16 w-auto"
+                  className="h-16 sm:h-20 w-auto"
                 />
               </a>
             )}
