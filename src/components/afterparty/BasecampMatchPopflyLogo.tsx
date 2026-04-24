@@ -274,23 +274,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           >
             Creator After Party
           </h2>
-          <p
-            className="bmp-title mt-3 text-xs sm:text-sm tracking-wide italic"
-            style={{ color: "#F5E6D3", opacity: 0.85 }}
-          >
-            The only official
-          </p>
-          <img
-            src={outsideDaysLogo}
-            alt="Outside Days — Capital One x REI"
-            className="bmp-title mt-1 h-16 sm:h-20 md:h-24 w-auto object-contain"
-          />
-          <p
-            className="bmp-title mt-1 text-xs sm:text-sm tracking-wide italic"
-            style={{ color: "#F5E6D3", opacity: 0.85 }}
-          >
-            after-party
-          </p>
+          <div className="bmp-title mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm sm:text-base italic tracking-wide" style={{ color: "#F5E6D3", opacity: 0.9 }}>
+            <span>The only official</span>
+            <img
+              src={outsideDaysLogo}
+              alt="Outside Days (Capital One x REI)"
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+            />
+            <span>after-party</span>
+          </div>
         </div>
       </div>
     </div>
