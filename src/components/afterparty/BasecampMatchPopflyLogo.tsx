@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
-import pbMonogramSplash from "@/assets/outside-days-stacked.svg";
+import pbMonogramSplash from "@/assets/pb-monogram-v2.png";
+import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
 import presentsWordmark from "@/assets/presents-wordmark.png";
 import outsideDaysLogo from "@/assets/outside-days-logo.svg";
 import BasecampMatchAnimated from "./BasecampMatchAnimated";
@@ -179,6 +180,24 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         .bmp-presents    { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) 5.4s both; }
         .bmp-title       { animation: bmpFadeUp 800ms ease-out 5.8s both; }
 
+        @keyframes bmpODPop {
+          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-6deg); }
+          40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+          70%  { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+          100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85) rotate(0); }
+        }
+        .bmp-od-stacked {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          width: min(34vh, 34vw);
+          height: auto;
+          z-index: 63;
+          opacity: 0;
+          filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
+          animation: bmpODPop 1800ms cubic-bezier(.2,.7,.3,1) 3.6s forwards;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .bmp-splash-stage, .bmp-splash-mono, .bmp-burst-star { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
@@ -198,6 +217,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             src={pbMonogramSplash}
             alt="Presented by Basecamp"
             className="bmp-splash-mono"
+          />
+          <img
+            src={outsideDaysStacked}
+            alt="Outside Days"
+            className="bmp-od-stacked"
+            aria-hidden="true"
           />
           {burstStars.map((s, i) => {
             const rad = (s.angle * Math.PI) / 180;
