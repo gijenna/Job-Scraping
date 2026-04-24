@@ -275,11 +275,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             />
           </div>
 
-          <div className="bmp-bloom-right flex items-center justify-start flex-1 min-w-0">
+          <div className="bmp-bloom-right flex items-center justify-start flex-1 min-w-0 overflow-visible">
             <img
               src={popflyLogo}
               alt="Popfly"
-              className="h-28 sm:h-36 md:h-44 w-auto object-contain"
+              className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
+              style={{
+                clipPath: "inset(24% 11% 24% 11%)",
+                transform: "scale(1.5)",
+                transformOrigin: "center center",
+              }}
             />
           </div>
         </div>
@@ -294,7 +299,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             />
           </div>
           <h2
-            className="bmp-title font-afterparty sm:text-3xl md:text-4xl font-bold text-6xl"
+            className="bmp-title font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold"
             style={{ color: "#F5E6D3" }}
           >
             Out of Office
