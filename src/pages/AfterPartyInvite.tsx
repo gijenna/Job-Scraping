@@ -231,6 +231,20 @@ const AfterPartyInvite = () => {
               <StarSparkle tone="cream" size={14} />
               <StarSparkle tone="coral" size={22} />
             </div>
+            <div
+              className="font-afterparty font-bold flex items-center justify-center gap-1.5 sm:gap-2 mb-3 whitespace-nowrap text-[13px] sm:text-base"
+              style={{ color: CREAM }}
+            >
+              <span>DJ</span>
+              <StarSparkle tone="green" size={10} />
+              <span>Drinks</span>
+              <StarSparkle tone="coral" size={10} />
+              <span>Swag</span>
+              <StarSparkle tone="cream" size={10} />
+              <span>Food</span>
+              <StarSparkle tone="green" size={10} />
+              <span>Friends</span>
+            </div>
             <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
               <EditableText settingKey="hero.kicker" defaultText="" />
             </div>
