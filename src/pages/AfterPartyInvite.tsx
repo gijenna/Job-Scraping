@@ -228,6 +228,30 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           >
           {/* Hero copy */}
           <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
+            {presenter && (
+              <a
+                href={presenter.href || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center mb-4 mt-1"
+              >
+                <span
+                  className="font-afterparty text-[12px] sm:text-[13px] tracking-wide mb-1.5"
+                  style={{ color: CREAM_MUTED, fontWeight: 500 }}
+                >
+                  {presenter.label}
+                </span>
+                <img
+                  src={presenter.logoUrl}
+                  alt={presenter.logoAlt}
+                  className="h-7 sm:h-8 w-auto"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.filter = "none";
+                  }}
+                />
+              </a>
+            )}
             <div className="flex items-center justify-center gap-3 mb-3 mt-1" aria-hidden="true">
               <StarSparkle tone="coral" size={18} />
               <StarSparkle tone="cream" size={26} />
