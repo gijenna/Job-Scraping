@@ -282,7 +282,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
               className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
               style={{
                 clipPath: "inset(24% 11% 24% 11%)",
-                transform: "scale(1.5)",
+                transform: "scale(1.25)",
                 transformOrigin: "center center",
               }}
             />
