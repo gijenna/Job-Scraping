@@ -24,6 +24,7 @@ import ExpertDetail from "./pages/ExpertDetail";
 import EventOR26 from "./pages/EventOR26";
 import BestDayPitch from "./pages/BestDayPitch";
 import BestDayExample from "./pages/BestDayExample";
+import OakleyPitch from "./pages/OakleyPitch";
 import CardStylePreview from "./pages/CardStylePreview";
 import GenerateCards from "./pages/GenerateCards";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/OR26" element={<EventOR26 />} />
           <Route path="/bestday" element={<BestDayPitch />} />
           <Route path="/bestdayexample" element={<BestDayExample />} />
+          <Route path="/oakley" element={<OakleyPitch />} />
           {/* Brand Rep invite pages */}
           <Route path="/denverreps" element={<BrandRepInvite citySlug="denver" />} />
           <Route path="/denverreps/:name" element={<BrandRepInvite citySlug="denver" />} />
