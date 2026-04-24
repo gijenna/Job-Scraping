@@ -39,7 +39,11 @@ const CREAM_MUTED = "rgba(245,230,211,0.7)";
 const CREAM_DIM = "rgba(245,230,211,0.55)";
 const CREAM_FAINT = "rgba(245,230,211,0.45)";
 
-const AfterPartyInvite = () => {
+interface AfterPartyInviteProps {
+  presenter?: { label: string; logoUrl: string; logoAlt: string; href?: string };
+}
+
+const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
