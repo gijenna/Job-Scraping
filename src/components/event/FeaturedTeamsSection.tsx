@@ -41,6 +41,13 @@ const FeaturedTeamsSection = ({
           <h2 className="font-headline font-bold text-2xl md:text-4xl text-events-cream">
             <EditableText settingKey={headlineKey} defaultText="Meet the Teams" as="span" />
           </h2>
+          <p className="font-body text-events-cream/70 text-sm md:text-base max-w-2xl mx-auto mt-4">
+            <EditableText
+              settingKey={`${headlineKey}_subtitle`}
+              defaultText="If you see a logo below, that brand will be exhibiting on-site. Brands decide which team members to send based on registrant lists, so check back to see which departments will be represented."
+              as="span"
+            />
+          </p>
         </motion.div>
 
         <CascadingLogoBubbles logos={bubbleLogos} bubbleColor={bubbleColor} editKeyPrefix={editKeyPrefix} />
