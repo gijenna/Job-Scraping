@@ -224,6 +224,13 @@ const AfterPartyInvite = () => {
           >
           {/* Hero copy */}
           <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
+            <div className="flex items-center justify-center gap-3 mb-3 mt-1" aria-hidden="true">
+              <StarSparkle tone="coral" size={18} />
+              <StarSparkle tone="cream" size={26} />
+              <StarSparkle tone="green" size={20} />
+              <StarSparkle tone="cream" size={14} />
+              <StarSparkle tone="coral" size={22} />
+            </div>
             <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
               <EditableText settingKey="hero.kicker" defaultText="" />
             </div>
