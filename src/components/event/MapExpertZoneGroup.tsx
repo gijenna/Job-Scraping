@@ -83,7 +83,7 @@ const MapExpertZoneGroup = ({
       onMouseDown={interactive ? handleMouseDown : undefined}
       onClick={() => onClick?.(brand)}
     >
-      {/* Tables grid — rotated */}
+      {/* Tables grid, rotated */}
       <div
         className="relative"
         style={{
@@ -125,7 +125,7 @@ const MapExpertZoneGroup = ({
         </div>
       </div>
 
-      {/* Logo + name — always upright */}
+      {/* Logo + name, always upright */}
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
         <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-events-gold">
           <img src={basecampMatchLogo} alt="Expert Zone" className="w-7 h-7 object-contain" />

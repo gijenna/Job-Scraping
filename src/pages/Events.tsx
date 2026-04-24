@@ -77,7 +77,7 @@ const Events = () => {
         <div className="bg-events-coral py-6 px-6">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="font-display text-events-teal font-bold text-lg md:text-xl text-center sm:text-left">
-              <EditableText settingKey="newsletter_cta_text" defaultText="Stay in the loop — sign up for events & our weekly newsletter" as="span" />
+              <EditableText settingKey="newsletter_cta_text" defaultText="Stay in the loop, sign up for events & our weekly newsletter" as="span" />
             </p>
             <a
               href="https://basecampoutdoor.typeform.com/Basecamp"

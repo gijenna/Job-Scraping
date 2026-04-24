@@ -215,7 +215,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     if (justSavedId) onSaved(justSavedId);
   };
 
-  // Pill helpers — themed via inline style
+  // Pill helpers, themed via inline style
   const pillStyle = (active: boolean, color: { fill: string; border: string; text: string }) => ({
     backgroundColor: active ? color.fill : "transparent",
     border: `1px solid ${active ? color.border : "rgba(255,255,255,0.18)"}`,
@@ -447,14 +447,14 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </div>
       </div>
 
-      {/* The question — single, 280 chars */}
+      {/* The question, single, 280 chars */}
       <div>
-        <Label>What's something you've made that you're proud of — and why did it work?</Label>
+        <Label>What's something you've made that you're proud of, and why did it work?</Label>
         <div className="relative">
           <Textarea
             value={form.mind_blowing_fact}
             onChange={(e) => setForm({ ...form, mind_blowing_fact: e.target.value.slice(0, 280) })}
-            placeholder="A 60-second reel I shot at 4am on a frozen lake. It worked because it was real — no script, just the moment."
+            placeholder="A 60-second reel I shot at 4am on a frozen lake. It worked because it was real, no script, just the moment."
             rows={4}
             maxLength={280}
             style={inputStyle}

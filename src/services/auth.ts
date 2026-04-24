@@ -26,7 +26,7 @@ export interface AfterPartySession {
 export async function requestPin(slug: string): Promise<RequestPinResult> {
   const { data, error } = await supabase.functions.invoke("request-pin", { body: { slug } });
   if (error) {
-    // Edge function returned non-2xx — body is in error.context if present.
+    // Edge function returned non-2xx, body is in error.context if present.
     const ctx = (error as any)?.context;
     if (ctx?.reason) return { ok: false, reason: ctx.reason };
     return { ok: false, reason: "server_error" };

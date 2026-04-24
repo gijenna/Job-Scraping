@@ -209,7 +209,7 @@ const OakleyPitch = () => {
           date="May 28, 2026"
           eventTime="3:00 – 6:00 PM MT"
           accentColor="#E1B624"
-          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
+          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival, a 3-day celebration of music, culture, and the outdoors in Denver."
         />
       ),
     },
@@ -245,7 +245,7 @@ const OakleyPitch = () => {
 
   return (
     <EditableTextProvider pageSlug="oakley">
-      <PageMetaApplier title="Outside Days Denver 2026 — Presented by Oakley" />
+      <PageMetaApplier title="Outside Days Denver 2026, Presented by Oakley" />
       <main className="bg-events-teal min-h-screen relative">
         <PageMetaEditor />
         <AdminLogoManager lists={[

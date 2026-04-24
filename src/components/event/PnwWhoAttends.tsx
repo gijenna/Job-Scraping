@@ -28,7 +28,7 @@ const experienceSegments = [
     count: "~40",
     pct: 12,
     yearHighlight: "3–5",
-    desc: " years of experience. Tech, CPG, and healthcare professionals pivoting into outdoor — bringing fresh skills and perspective.",
+    desc: " years of experience. Tech, CPG, and healthcare professionals pivoting into outdoor, bringing fresh skills and perspective.",
     color: "#F5E6D3",
   },
   {
@@ -37,7 +37,7 @@ const experienceSegments = [
     count: "~65",
     pct: 20,
     yearHighlight: "0–2",
-    desc: " years of experience. University of Oregon's Sports Product Management students and recent grads — the PNW's most specialized emerging talent.",
+    desc: " years of experience. University of Oregon's Sports Product Management students and recent grads, the PNW's most specialized emerging talent.",
     color: "#154733",
   },
 ];
@@ -53,11 +53,11 @@ const weGather = [
   },
   {
     icon: Sparkles,
-    text: "Industry tastemakers — leaders, creatives, and brand strategists shaping the PNW outdoor scene",
+    text: "Industry tastemakers, leaders, creatives, and brand strategists shaping the PNW outdoor scene",
   },
   {
     icon: GraduationCap,
-    text: "UO SPM grad students — the pipeline that feeds Nike, Adidas, Columbia, and beyond",
+    text: "UO SPM grad students, the pipeline that feeds Nike, Adidas, Columbia, and beyond",
   },
 ];
 
@@ -139,7 +139,7 @@ const PnwWhoAttends = () => {
             Who Attends
           </h2>
           <p className="text-muted-foreground font-body max-w-2xl mx-auto">
-            We gather four distinct groups — each with something your brand needs.
+            We gather four distinct groups, each with something your brand needs.
           </p>
         </motion.div>
 

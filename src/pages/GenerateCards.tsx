@@ -218,13 +218,13 @@ async function generateCard(
       const imgAspect = photoImg.width / photoImg.height;
       let sx: number, sy: number, sw: number, sh: number;
       if (imgAspect > frameAspect) {
-        // Image is wider — crop sides
+        // Image is wider, crop sides
         sh = photoImg.height;
         sw = sh * frameAspect;
         sx = (photoImg.width - sw) / 2;
         sy = 0;
       } else {
-        // Image is taller — crop top/bottom
+        // Image is taller, crop top/bottom
         sw = photoImg.width;
         sh = sw / frameAspect;
         sx = 0;
@@ -252,14 +252,14 @@ async function generateCard(
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(-w / 2, -30, w, 70);
     
-    // Full Name — bold, left-aligned
+    // Full Name, bold, left-aligned
     const nameSize = fitText(ctx, expert.full_name, maxTextW, 30, true);
     ctx.font = `bold ${nameSize}px 'Inter', sans-serif`;
     ctx.fillStyle = "#1a1a1a";
     ctx.textAlign = "left";
     ctx.fillText(expert.full_name, -w / 2 + 10, 0, maxTextW);
     
-    // Job Title, Company — regular, left-aligned
+    // Job Title, Company, regular, left-aligned
     const titleLine = [expert.job_title, expert.current_company].filter(Boolean).join(", ");
     if (titleLine) {
       const titleSize = fitText(ctx, titleLine, maxTextW, 22, false);
@@ -307,7 +307,7 @@ async function generateCard(
   const rightCenterX = 1350; // center of the right-side teal area
   const rightMaxW = 800;
   
-  // 1. "NETWORK WITH ME IN [CITY]" — yellow bold uppercase, centered
+  // 1. "NETWORK WITH ME IN [CITY]", yellow bold uppercase, centered
   {
     ctx.save();
     ctx.fillStyle = "#E6C742";
@@ -358,7 +358,7 @@ async function generateCard(
     ctx.restore();
   }
   
-  // 3. "Ask me about: [topics]" — cream italic, centered
+  // 3. "Ask me about: [topics]", cream italic, centered
   if (expert.ask_me_about) {
     ctx.save();
     ctx.fillStyle = "#F5E6D3";

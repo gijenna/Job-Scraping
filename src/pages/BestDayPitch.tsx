@@ -48,7 +48,7 @@ const beverageTiers: Tier[] = [
     bestFor: "The brand that wants to own the beverage experience and be synonymous with 'Proudly Sober' at Outside Days.",
     perks: [
       "Everything in Sampling Partner",
-      "Exclusive bar branding — <strong>the only beverage on-site</strong>",
+      "Exclusive bar branding, <strong>the only beverage on-site</strong>",
       "Branded cups, koozies & drinkware",
       "Dedicated social media post + story feature",
       "Logo on <strong>all</strong> event signage & printed materials",
@@ -59,7 +59,7 @@ const beverageTiers: Tier[] = [
   {
     name: "Title Beverage Presenter",
     price: "$20,000",
-    spots: "Exclusive — 1 partner only",
+    spots: "Exclusive, 1 partner only",
     icon: Crown,
     popular: false,
     bestFor: "The brand that wants naming rights and full integration into the event's identity and marketing.",
@@ -104,7 +104,7 @@ const BestDayPitch = () => {
         date="May 28, 2026"
         location="Auraria Campus Wellness Center · Denver, CO"
         time="3:00 – 6:00 PM MT"
-        tagline="The outdoor industry's biggest career discovery event — proudly alcohol-free."
+        tagline="The outdoor industry's biggest career discovery event, proudly alcohol-free."
         registrationUrl={`mailto:${CTA_EMAIL}?subject=Best Day Brewing x Outside Days Partnership`}
         accentColor="#E1B624"
         sponsorPageUrl="/gather-denver"
@@ -145,7 +145,7 @@ const BestDayPitch = () => {
               "On a personal note, I LOVED that it was a sober event. Celebrating 4 years of sobriety in August (wooo!) and I often feel out of place at events, nervously clutching my seltzer water. Huge win that everyone was clear-eyed and sober for this event, and I could blend into the crowd. I know the team really appreciated that too, because drunk, pushy candidates are NEVER an ideal Friday night."
             </p>
             <p className="text-events-cream/50 font-body text-sm">
-              — Recruiter, <span className="text-events-cream/70 font-semibold">The North Face</span>
+             , Recruiter, <span className="text-events-cream/70 font-semibold">The North Face</span>
             </p>
           </motion.div>
         </div>
@@ -162,7 +162,7 @@ const BestDayPitch = () => {
         <EventTiers
           tiers={beverageTiers}
           ctaEmail={CTA_EMAIL}
-          eventName="Outside Days Denver 2026 — Best Day Brewing Beverage Partnership"
+          eventName="Outside Days Denver 2026, Best Day Brewing Beverage Partnership"
         />
       </div>
 
@@ -174,7 +174,7 @@ const BestDayPitch = () => {
               Let's Make It the Best Day Yet
             </h2>
             <p className="font-body text-events-cream/60 mb-8">
-              Outside Days is the outdoor industry's biggest career discovery event — and it's proudly sober. Let's put Best Day Brewing at the center of it.
+              Outside Days is the outdoor industry's biggest career discovery event, and it's proudly sober. Let's put Best Day Brewing at the center of it.
             </p>
             <a
               href={`mailto:${CTA_EMAIL}?subject=Best Day Brewing x Outside Days Partnership`}

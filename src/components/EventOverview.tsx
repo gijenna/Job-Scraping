@@ -18,21 +18,21 @@ const events = [
     format: [
       "Employer tables with 5–10 min recruiter conversations",
       "Industry Expert / Mentor Zone (leaders featured by name)",
-      '"How I Broke In" panel — 45 min career tactics',
+      '"How I Broke In" panel, 45 min career tactics',
       "Light snacks & drinks provided by U of O",
     ],
     icon: GraduationCap,
-    highlight: "5th annual — proven format, growing every year",
+    highlight: "5th annual, proven format, growing every year",
     link: "/gather-pnw",
   },
   {
     label: "Gather Denver @ Outside Days",
     date: "May 28, 2026",
-    location: "Denver, CO — part of Outside Days Festival",
+    location: "Denver, CO, part of Outside Days Festival",
     scale: "600+",
     scaleNote: "career event · 40,000+ at full festival",
     audience: [
-      "Strong presence of passive experts — not actively searching but networking",
+      "Strong presence of passive experts, not actively searching but networking",
       "Outdoor-oriented talent applying skills at mission-aligned companies",
       "Heavily product, design, creative, and corporate roles",
       "Professionals from VF brands, Yeti, REI, and more",
@@ -41,10 +41,10 @@ const events = [
       "Same employer table + mentor + panel format at larger scale",
       "VIP hour for underrepresented communities (200 candidates)",
       "Full festival access for brand reps (Death Cab headlining)",
-      "Unofficial after-party — ask us",
+      "Unofficial after-party, ask us",
     ],
     icon: Music,
-    highlight: "3rd year with Outside Inc — named top activation 2024 & 2025",
+    highlight: "3rd year with Outside Inc, named top activation 2024 & 2025",
     link: "/gather-denver",
   },
 ];
@@ -171,11 +171,11 @@ const EventOverview = () => {
         >
           <p className="text-foreground font-display text-lg md:text-xl italic max-w-3xl mx-auto">
             "I actually got more than 30 seconds with a recruiter. I had a deep, meaningful
-            conversation and got really good advice — and I could follow up personally
+            conversation and got really good advice, and I could follow up personally
             afterwards. I was one of 50, not one of 1,200."
           </p>
           <p className="text-muted-foreground text-sm mt-4 font-body">
-            — The candidate experience brands tell us they're looking for
+           , The candidate experience brands tell us they're looking for
           </p>
         </motion.div>
       </div>

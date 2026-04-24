@@ -107,7 +107,7 @@ const EventMapCanvas = ({
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {/* Court outlines — side by side horizontally */}
+          {/* Court outlines, side by side horizontally */}
           {Array.from({ length: COURTS }).map((_, i) => (
             <div
               key={i}
@@ -132,7 +132,7 @@ const EventMapCanvas = ({
                   height: 120,
                 }}
               />
-              {/* Half court line — vertical since courts are rotated */}
+              {/* Half court line, vertical since courts are rotated */}
               <div className="absolute top-0 bottom-0 border-l border-white/10" style={{ left: COURT_W / 2 }} />
             </div>
           ))}

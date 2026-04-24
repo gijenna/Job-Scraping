@@ -143,7 +143,7 @@ const DenverWhoAttends = () => {
           </p>
         </motion.div>
 
-        {/* CTA to widget — now right after header */}
+        {/* CTA to widget, now right after header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

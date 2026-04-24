@@ -230,7 +230,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                           })}
                         </div>
                       ) : (
-                        <span className="text-events-cream/30 text-xs">—</span>
+                        <span className="text-events-cream/30 text-xs">, </span>
                       )}
                     </td>
                     <td className="p-3">
@@ -319,7 +319,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                         {expert.status}
                       </Badge>
                     </td>
-                    <td className="p-3 text-events-cream/60">{expert.current_company || '—'}</td>
+                    <td className="p-3 text-events-cream/60">{expert.current_company || ', '}</td>
                     <td className="p-3">
                       {expert.status === 'confirmed' && expertAssigns.length > 0 ? (
                         <div className="space-y-1">
@@ -336,9 +336,9 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                                 const data = await resp.json();
                                 const imageUrl = data.image_url;
                                 if (!imageUrl) throw new Error("No image URL returned");
-                                // Open in new tab — user can right-click save; avoids CORS issues
+                                // Open in new tab, user can right-click save; avoids CORS issues
                                 window.open(imageUrl, "_blank");
-                                toast({ title: "Card opened — right-click to save!" });
+                                toast({ title: "Card opened, right-click to save!" });
                               } catch (err) {
                                 console.error("Download error:", err);
                                 toast({ title: "Download failed", description: String(err), variant: "destructive" });
@@ -351,7 +351,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                                   variant="ghost"
                                   onClick={() => {
                                     navigator.clipboard.writeText(shareUrl);
-                                    toast({ title: "Share link copied!", description: `${expert.full_name} — ${cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}` });
+                                    toast({ title: "Share link copied!", description: `${expert.full_name}, ${cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}` });
                                   }}
                                   className="text-events-cream/60 hover:text-events-cream h-6 px-2 gap-1 text-xs"
                                   title={shareUrl}
@@ -373,7 +373,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                           })}
                         </div>
                       ) : (
-                        <span className="text-events-cream/30 text-xs">—</span>
+                        <span className="text-events-cream/30 text-xs">, </span>
                       )}
                     </td>
                     <td className="p-3">

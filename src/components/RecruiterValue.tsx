@@ -18,19 +18,19 @@ const defaultQualityPoints: QualityPoint[] = [
   icon: Target,
   stat: "92%",
   label: "Role-Relevant",
-  desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic."
+  desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle, not random job fair traffic."
 },
 {
   icon: Users,
   stat: "250–500",
   label: "Per Event",
-  desc: "Smaller pool, far higher concentration of relevant candidates. Every conversation is intentional — no 30-second drive-bys."
+  desc: "Smaller pool, far higher concentration of relevant candidates. Every conversation is intentional, no 30-second drive-bys."
 },
 {
   icon: Star,
   stat: "Mid-to-Senior",
   label: "Career Level",
-  desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, and REI — plus hungry SPM grads."
+  desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, and REI, plus hungry SPM grads."
 }];
 
 

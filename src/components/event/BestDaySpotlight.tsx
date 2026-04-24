@@ -27,7 +27,7 @@ const valueProps = [
   {
     icon: Leaf,
     title: "Premium Ingredients",
-    desc: "Non-GMO, vegan, made with water, barley, hops, and yeast — packed with antioxidant polyphenols.",
+    desc: "Non-GMO, vegan, made with water, barley, hops, and yeast, packed with antioxidant polyphenols.",
   },
   {
     icon: Beer,
@@ -58,7 +58,7 @@ const BestDaySpotlight = () => {
             />
           </div>
           <p className="font-body text-events-cream/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Best Day Brewing crafts the world's best-tasting non-alcoholic beer — brewed to full strength, then gently de-alcoholized to keep every ounce of flavor. Premium, non-GMO, vegan, and damn near perfect.
+            Best Day Brewing crafts the world's best-tasting non-alcoholic beer, brewed to full strength, then gently de-alcoholized to keep every ounce of flavor. Premium, non-GMO, vegan, and damn near perfect.
           </p>
         </motion.div>
 

@@ -170,7 +170,7 @@ const CardStylePreview = () => {
 
         <div className="text-center">
           <p className="font-body text-events-cream/40 text-sm">
-            Tell me which style you prefer (A, B, or C) — or mix and match for experts vs. brand reps!
+            Tell me which style you prefer (A, B, or C), or mix and match for experts vs. brand reps!
           </p>
         </div>
       </div>

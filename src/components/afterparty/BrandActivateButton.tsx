@@ -114,7 +114,7 @@ const BrandActivateButton = ({
         }}
       >
         <Check className="w-4 h-4" style={{ color: CORAL }} />
-        Request received — Jenna will be in touch shortly.
+        Request received, Jenna will be in touch shortly.
       </div>
     );
   }

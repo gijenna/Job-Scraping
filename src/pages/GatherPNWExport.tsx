@@ -44,16 +44,16 @@ const stats = [
 ];
 
 const talentInsights = [
-  { title: 'The "Design-to-Delivery" Talent Pool', stat: "22% + 15%", desc: "Recruiters meet the entire product lifecycle — from R&D labs to logistics centers. With 22% in Product/Design and 15% in Ops/Supply Chain, hire across the board from a single event.", image: insightTalentPool },
+  { title: 'The "Design-to-Delivery" Talent Pool', stat: "22% + 15%", desc: "Recruiters meet the entire product lifecycle, from R&D labs to logistics centers. With 22% in Product/Design and 15% in Ops/Supply Chain, hire across the board from a single event.", image: insightTalentPool },
   { title: "High Brand Influence & Advocacy", stat: "~40%", desc: "Nearly 40% work in Marketing & Comms. Sponsors get products in front of the people who manage social, PR, and brand strategy at Nike, Columbia, and On Running.", image: insightBrandInfluence },
-  { title: "The UO SPM Pipeline", stat: "20%+", desc: "Heavy concentration of UO Sports Product Management grad students — a program built to feed the top levels of footwear and apparel. First-look advantage at the PNW's most specialized emerging talent.", image: insightSpmPipeline },
-  { title: "A Hub for Industry Pivots", stat: "High Volume", desc: "Professionals from tech, military, and healthcare pivoting into outdoor — bringing transferable skills like R&D and Strategic Ops that are often missing from traditional outdoor networks.", image: insightPivots },
+  { title: "The UO SPM Pipeline", stat: "20%+", desc: "Heavy concentration of UO Sports Product Management grad students, a program built to feed the top levels of footwear and apparel. First-look advantage at the PNW's most specialized emerging talent.", image: insightSpmPipeline },
+  { title: "A Hub for Industry Pivots", stat: "High Volume", desc: "Professionals from tech, military, and healthcare pivoting into outdoor, bringing transferable skills like R&D and Strategic Ops that are often missing from traditional outdoor networks.", image: insightPivots },
 ];
 
 const showUpOptions = [
   { icon: Briefcase, title: "Employer Table / Booth", desc: "Recruiters or hiring managers take 5–10 minute quality conversations. Space for banners, pull-ups, printed materials, QR codes to your careers page, and swag.", tag: "Most Popular", example: "Columbia brings product samples and a banner; VF brands set up QR-code stands linking directly to open roles. Keen brings swag bags with branded materials." },
-  { icon: MessageCircle, title: "Industry Expert / Mentor", desc: "Your leaders are featured by name — called out just as prominently as the brand itself. Show up as approachable mentors, not just a logo. 1:1 mini-mentorship conversations.", tag: "Low Lift", example: "Individual leaders from Nike, Adidas, and Columbia have participated as named mentors — even when their company wasn't formally tabling." },
-  { icon: Mic, title: "Panel Speaker", desc: "Join the 'How I Broke In' panel — 45 minutes of concrete career steps, networking tactics, and Q&A. Your people become the face of what it means to work at your brand.", tag: "High Visibility", example: "Panelists share their exact career trajectory — who they talked to, what they said, how they found the role. It's the most-requested segment at every event." },
+  { icon: MessageCircle, title: "Industry Expert / Mentor", desc: "Your leaders are featured by name, called out just as prominently as the brand itself. Show up as approachable mentors, not just a logo. 1:1 mini-mentorship conversations.", tag: "Low Lift", example: "Individual leaders from Nike, Adidas, and Columbia have participated as named mentors, even when their company wasn't formally tabling." },
+  { icon: Mic, title: "Panel Speaker", desc: "Join the 'How I Broke In' panel, 45 minutes of concrete career steps, networking tactics, and Q&A. Your people become the face of what it means to work at your brand.", tag: "High Visibility", example: "Panelists share their exact career trajectory, who they talked to, what they said, how they found the role. It's the most-requested segment at every event." },
 ];
 
 const schedule = [
@@ -77,9 +77,9 @@ const testimonials = [
 ];
 
 const qualityPoints = [
-  { icon: Target, stat: "92%", label: "Role-Relevant", desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic." },
-  { icon: Users, stat: "250–500", label: "Per Event", desc: "Smaller pool, far higher concentration of relevant candidates. Every conversation is intentional — no 30-second drive-bys." },
-  { icon: Star, stat: "Mid-to-Senior", label: "Career Level", desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, and REI — plus hungry SPM grads." },
+  { icon: Target, stat: "92%", label: "Role-Relevant", desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle, not random job fair traffic." },
+  { icon: Users, stat: "250–500", label: "Per Event", desc: "Smaller pool, far higher concentration of relevant candidates. Every conversation is intentional, no 30-second drive-bys." },
+  { icon: Star, stat: "Mid-to-Senior", label: "Career Level", desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, and REI, plus hungry SPM grads." },
 ];
 
 const roiPoints = [
@@ -254,7 +254,7 @@ const GatherPNWExport = () => {
             <div key={i} className="flex items-start gap-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
               <Clock className="w-5 h-5 text-[#ED7660] shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-sm text-gray-900">{item.time} — {item.label}</p>
+                <p className="font-bold text-sm text-gray-900">{item.time}, {item.label}</p>
                 <p className="text-gray-600 text-sm">{item.desc}</p>
               </div>
             </div>
@@ -302,7 +302,7 @@ const GatherPNWExport = () => {
       <section className="py-12 px-8 bg-[#19363B] text-center border-b-2 border-gray-200">
         <p className="text-[#ED7660] text-xs tracking-widest uppercase mb-4">Make it a collab with marketing</p>
         <p className="text-white text-xl italic max-w-3xl mx-auto leading-relaxed">
-          "You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers."
+          "You aren't just buying a table, you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers."
         </p>
       </section>
 
@@ -335,7 +335,7 @@ const GatherPNWExport = () => {
       <section className="py-12 px-8 bg-[#19363B] text-white text-center">
         <h2 className="font-bold text-3xl mb-3">Ready to Be Part of This?</h2>
         <p className="text-white/70 text-sm max-w-xl mx-auto mb-6">
-          Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event — where 250–500 highly relevant professionals gather in one room.
+          Spots are limited. Secure your presence at Portland's most impactful outdoor industry career event, where 250–500 highly relevant professionals gather in one room.
         </p>
         <p className="text-[#ED7660] font-bold text-lg">jenna@wearetheoutdoorindustry.com</p>
       </section>

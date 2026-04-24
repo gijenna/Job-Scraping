@@ -202,7 +202,7 @@ const EventPNW26 = () => {
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
-                { num: "300+", label: "Professionals & Students", desc: "Marketing, product, design, ops, and career changers — all in one room." },
+                { num: "300+", label: "Professionals & Students", desc: "Marketing, product, design, ops, and career changers, all in one room." },
                 { num: "15+", label: "Brands Represented", desc: "Talk directly with hiring managers and team leads at top outdoor brands." },
                 { num: "45min", label: "'How I Broke In' Panel", desc: "Hear real career stories from leaders who built their path in outdoor." },
                 { num: "FREE", label: "Always Free to Attend", desc: "We believe access to opportunity shouldn't cost anything." },
@@ -239,7 +239,7 @@ const EventPNW26 = () => {
                   <EditableText settingKey="uo_body1" defaultText="The University of Oregon partnered with the sports and outdoor product industry's best to create this one-of-a-kind master's program. Experience the entire product creation lifecycle through the lenses of innovation, sustainability, diversity and inclusion, and global business." as="span" multiline />
                 </p>
                 <p className="font-body text-events-teal/70 leading-relaxed mb-6">
-                  <EditableText settingKey="uo_body2" defaultText="90% of alumni work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus — the heart of the PNW outdoor industry." as="span" multiline />
+                  <EditableText settingKey="uo_body2" defaultText="90% of alumni work at leading brands including Nike, adidas, Under Armour, New Balance, On Running, Hoka, Specialized, and more. Located at UO's Portland campus, the heart of the PNW outdoor industry." as="span" multiline />
                 </p>
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="text-center p-3 rounded-lg" style={{ backgroundColor: "rgba(21, 71, 51, 0.08)" }}>
@@ -274,7 +274,7 @@ const EventPNW26 = () => {
           googleMapsUrl="https://maps.google.com/?q=2800+NE+Liberty+St+Portland+OR"
           date="April 16, 2026"
           eventTime="5:30 – 8:30 PM PT"
-          description="Basecamp Outdoor × University of Oregon's Sports Product Management program. Located at UO's new Portland campus — the heart of the PNW outdoor industry."
+          description="Basecamp Outdoor × University of Oregon's Sports Product Management program. Located at UO's new Portland campus, the heart of the PNW outdoor industry."
           accentColor="#FEE123"
         />
       ),

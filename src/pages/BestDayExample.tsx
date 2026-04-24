@@ -49,7 +49,7 @@ const BestDayExample = () => {
 
   return (
     <EditableTextProvider pageSlug="bestday-example">
-      <PageMetaApplier title="Outside Days Denver 2026 — Best Day Brewing" />
+      <PageMetaApplier title="Outside Days Denver 2026, Best Day Brewing" />
       <main className="bg-events-teal min-h-screen relative">
         <PageMetaEditor />
         <AdminLogoManager lists={[
@@ -160,7 +160,7 @@ const BestDayExample = () => {
             date="May 28, 2026"
             eventTime="3:00 – 6:00 PM MT"
             accentColor="#E1B624"
-            description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
+            description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival, a 3-day celebration of music, culture, and the outdoors in Denver."
           />
         </HideableSection>
 

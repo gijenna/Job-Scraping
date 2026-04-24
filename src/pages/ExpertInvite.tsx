@@ -36,23 +36,23 @@ const CITY_EVENT_DATA: Record<string, {
 }> = {
   denver: {
     tagline: 'Basecamp × Outside Days Festival',
-    yearNote: '3rd year with Outside Inc — named top activation 2024 & 2025',
+    yearNote: '3rd year with Outside Inc, named top activation 2024 & 2025',
     attendance: '500–800',
     attendanceNote: 'career event · 40,000+ at full festival',
     venue: 'Auraria Campus Wellness Center, Denver, CO',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Auraria+Campus+Wellness+Center+Denver+CO',
     time: '3–6 PM MT',
     whoAttends: [
-      'Strong presence of passive candidates — not actively searching but networking',
+      'Strong presence of passive candidates, not actively searching but networking',
       'Outdoor-oriented talent applying skills at mission-aligned companies',
       'Heavily product, design, creative, and corporate roles',
       'Professionals from VF brands, Yeti, REI, and more',
     ],
     format: [
-      'Discovery Zone — your branded space to tell your story',
+      'Discovery Zone, your branded space to tell your story',
       'Employer tables with 5–10 min recruiter conversations',
       'VIP hour for underrepresented communities (200 candidates)',
-      'Full festival access — Death Cab headlining Friday night',
+      'Full festival access, Death Cab headlining Friday night',
     ],
     companies: [
       'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
@@ -62,22 +62,22 @@ const CITY_EVENT_DATA: Record<string, {
   },
   portland: {
     tagline: 'Basecamp × University of Oregon Portland',
-    yearNote: '5th annual — proven format, growing every year',
+    yearNote: '5th annual, proven format, growing every year',
     attendance: '300+',
     attendanceNote: 'fresh grads, tenured leaders & industry-curious',
-    venue: 'UO Portland Campus — 2800 NE Liberty St, Portland',
+    venue: 'UO Portland Campus, 2800 NE Liberty St, Portland',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=2800+NE+Liberty+St+Portland+OR',
     time: '5:30–8:30 PM PT',
     whoAttends: [
-      'UO Sports Product Management grads — elite & diverse cohort',
+      'UO Sports Product Management grads, elite & diverse cohort',
       'Tenured outdoor industry leaders open to new possibilities',
       'Mid-career professionals from tech, healthcare & sport pivoting into outdoor',
       'Active job seekers in the current market',
     ],
     format: [
-      'Discovery Zone — your branded space to tell your story',
+      'Discovery Zone, your branded space to tell your story',
       'Employer tables with 5–10 min recruiter conversations',
-      '"How I Broke In" panel — tactical career tips from real leaders',
+      '"How I Broke In" panel, tactical career tips from real leaders',
       'Free food & drinks for all attendees',
     ],
     companies: [
@@ -88,7 +88,7 @@ const CITY_EVENT_DATA: Record<string, {
   },
   minneapolis: {
     tagline: 'Basecamp Minneapolis',
-    yearNote: 'New market — first event in the Twin Cities',
+    yearNote: 'New market, first event in the Twin Cities',
     attendance: '200+',
     attendanceNote: 'outdoor professionals & job seekers',
     venue: 'Minneapolis, MN',
@@ -101,7 +101,7 @@ const CITY_EVENT_DATA: Record<string, {
       'Active job seekers in the current market',
     ],
     format: [
-      'Discovery Zone — your branded space to tell your story',
+      'Discovery Zone, your branded space to tell your story',
       'Employer tables with 5–10 min recruiter conversations',
       'Networking hour with food & drinks',
       'Panel discussion with industry leaders',
@@ -335,7 +335,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               </h2>
               <p className="text-events-cream/60 text-lg text-center mt-6 max-w-2xl mx-auto leading-relaxed">
                 As an <strong className="text-events-coral">Industry Expert</strong>, you'll be a go-to resource
-                for attendees — answering questions, sharing your career journey, and helping people navigate the outdoor industry.
+                for attendees, answering questions, sharing your career journey, and helping people navigate the outdoor industry.
               </p>
               <p className="text-events-cream/70 text-lg text-center mt-4 max-w-2xl mx-auto leading-relaxed">
                 We want attendees to know <strong className="text-events-cream">who's coming</strong> in advance
@@ -351,7 +351,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   </div>
                   <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
                   <p className="text-events-cream/50 text-sm mt-2">
-                    Tell your story — how you got into the industry, what you've learned, and what excites you most.
+                    Tell your story, how you got into the industry, what you've learned, and what excites you most.
                   </p>
                 </div>
                 <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
@@ -360,7 +360,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   </div>
                   <h4 className="font-display text-events-cream font-bold mt-4">Pre-Event Spotlight</h4>
                   <p className="text-events-cream/50 text-sm mt-2">
-                    Your card is published on our site before the event — attendees will come prepared with questions for you.
+                    Your card is published on our site before the event, attendees will come prepared with questions for you.
                   </p>
                 </div>
                 <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
@@ -587,7 +587,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 Build your <span className="text-events-coral">Industry Expert</span> card
               </h2>
               <p className="text-events-cream/50 mt-2">
-                The more details you add, the better your card looks. Fill out what you can now —
+                The more details you add, the better your card looks. Fill out what you can now , 
                 <strong className="text-events-cream/70"> return anytime to edit your card</strong>.
               </p>
             </div>

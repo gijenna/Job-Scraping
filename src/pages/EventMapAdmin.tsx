@@ -368,14 +368,14 @@ const EventMapAdmin = () => {
                         {isEditing ? (
                           <Input value={editFields.website_url || ""} onChange={(e) => setEditFields((p) => ({ ...p, website_url: e.target.value }))} placeholder="https://..." className="bg-white/10 border-white/20 text-white h-7 text-xs" />
                         ) : (
-                          <span className="text-xs text-white/60 font-body truncate max-w-[120px] block">{brand.website_url || "—"}</span>
+                          <span className="text-xs text-white/60 font-body truncate max-w-[120px] block">{brand.website_url || ", "}</span>
                         )}
                       </TableCell>
                       <TableCell>
                         {isEditing ? (
                           <Input value={editFields.description || ""} onChange={(e) => setEditFields((p) => ({ ...p, description: e.target.value }))} className="bg-white/10 border-white/20 text-white h-7 text-xs" />
                         ) : (
-                          <span className="text-xs text-white/60 font-body">{brand.description || "—"}</span>
+                          <span className="text-xs text-white/60 font-body">{brand.description || ", "}</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -409,7 +409,7 @@ const EventMapAdmin = () => {
                           </select>
                         ) : (
                           <span className="text-xs text-white/60 font-body">
-                            {brand.sponsor_brand_id ? brands.find((b) => b.id === brand.sponsor_brand_id)?.name || "—" : "—"}
+                            {brand.sponsor_brand_id ? brands.find((b) => b.id === brand.sponsor_brand_id)?.name || ", " : ", "}
                           </span>
                         )}
                       </TableCell>

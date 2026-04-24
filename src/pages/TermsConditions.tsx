@@ -65,7 +65,7 @@ const TermsConditions = () => (
 
       <section className="space-y-3">
         <h2 className="font-display text-xl font-bold text-events-cream">6. Intellectual Property</h2>
-        <p>All content on this website — including text, graphics, logos, images, and software — is the property of Basecamp Outdoor or its content suppliers and is protected by United States and international copyright laws. You may not reproduce, distribute, or create derivative works from our content without express written permission.</p>
+        <p>All content on this website, including text, graphics, logos, images, and software, is the property of Basecamp Outdoor or its content suppliers and is protected by United States and international copyright laws. You may not reproduce, distribute, or create derivative works from our content without express written permission.</p>
       </section>
 
       <section className="space-y-3">

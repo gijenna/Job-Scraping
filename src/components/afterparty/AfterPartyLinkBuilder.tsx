@@ -185,7 +185,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
           slug: baseSlug,
           link: `${PUBLISHED_BASE}/afterparty/${baseSlug}`,
           status: "existing",
-          note: "Slug already existed — reusing link",
+          note: "Slug already existed, reusing link",
         });
         continue;
       }
@@ -339,7 +339,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
             <Button onClick={parsePasteDetailed} variant="outline" className="border-events-cream/30 text-events-cream" disabled={!pasteText.trim()}>
               <ClipboardPaste className="w-4 h-4 mr-2" /> Parse {pasteText.split(/\r?\n/).filter((l) => l.trim()).length} lines
             </Button>
-            <span className="text-xs text-events-cream/50">Format: <code>name, email, role, company</code> — one per line</span>
+            <span className="text-xs text-events-cream/50">Format: <code>name, email, role, company</code>, one per line</span>
           </div>
         </div>
       )}
@@ -374,12 +374,12 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
               </tr>
             </thead>
             <tbody>
-              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: "—" as any }))).map((r: any, i) => (
+              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: ", " as any }))).map((r: any, i) => (
                 <tr key={i} className="border-t border-events-cream/10">
                   <td className="px-2 py-1">{r.full_name}</td>
-                  <td className="px-2 py-1 text-events-cream/60">{r.email || "—"}</td>
+                  <td className="px-2 py-1 text-events-cream/60">{r.email || ", "}</td>
                   <td className="px-2 py-1 capitalize text-events-cream/70">{r.role}</td>
-                  <td className="px-2 py-1 text-events-yellow truncate max-w-[280px]">{r.link || "—"}</td>
+                  <td className="px-2 py-1 text-events-yellow truncate max-w-[280px]">{r.link || ", "}</td>
                   <td className="px-2 py-1 text-events-cream/70">{r.status}{r.note ? ` · ${r.note}` : ""}</td>
                 </tr>
               ))}

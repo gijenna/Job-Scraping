@@ -54,7 +54,7 @@ const QuestionDialog = ({ open, onOpenChange, expertName, citySlug, expertId }: 
           <DialogTitle className="font-display text-events-coral">I have questions first</DialogTitle>
         </DialogHeader>
         <p className="text-events-cream/60 text-sm">
-          Ask us anything! This won't stop you from filling out your profile — you can still click "I'm In" anytime.
+          Ask us anything! This won't stop you from filling out your profile, you can still click "I'm In" anytime.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Textarea

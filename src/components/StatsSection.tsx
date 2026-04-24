@@ -47,7 +47,7 @@ const StatsSection = () => {
             Who Is In The Room?
           </h2>
           <p className="text-muted-foreground font-body max-w-xl mx-auto">
-            We don't just fill seats — we curate a community. Based on 425+ registrants from our 2025 PNW event.
+            We don't just fill seats, we curate a community. Based on 425+ registrants from our 2025 PNW event.
           </p>
         </motion.div>
 

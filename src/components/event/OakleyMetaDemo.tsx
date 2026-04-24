@@ -5,9 +5,9 @@ import oakleyMetaGlasses from "@/assets/oakley-meta-glasses.png";
 const OAKLEY_ORANGE = "#F47B00";
 
 const bullets = [
-  "Built for every athlete — from the morning walker to Olympic medalists and elite snowboarders.",
+  "Built for every athlete, from the morning walker to Olympic medalists and elite snowboarders.",
   "Prizm lens technology, dialed for trail, snow, and road.",
-  "Try the Meta × Oakley smart glasses live on-site — capture, livestream, and play hands-free.",
+  "Try the Meta × Oakley smart glasses live on-site, capture, livestream, and play hands-free.",
 ];
 
 const OakleyMetaDemo = () => {

@@ -1,6 +1,6 @@
 /**
  * Basecamp Match logo with the flame animated like real fire.
- * Colors are preserved exactly — only motion (scale, skew, opacity) is added.
+ * Colors are preserved exactly, only motion (scale, skew, opacity) is added.
  * The flame's transform-origin is anchored at its base where it meets the matchstick.
  */
 const BasecampMatchAnimated = ({ className = "" }: { className?: string }) => {

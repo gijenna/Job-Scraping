@@ -176,7 +176,7 @@ const EventOutsideDays26 = () => {
            date="May 28, 2026"
           eventTime="3:00 – 6:00 PM MT"
           accentColor="#E1B624"
-          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival — a 3-day celebration of music, culture, and the outdoors in Denver."
+          description="Gather is a free outdoor industry career discovery zone inside the Outside Days festival, a 3-day celebration of music, culture, and the outdoors in Denver."
         />
       ),
     },

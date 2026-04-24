@@ -230,7 +230,7 @@ const LogoListPanel = ({
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
-          <DialogHeader><DialogTitle className="font-display text-events-cream">Add Logo — {label}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle className="font-display text-events-cream">Add Logo, {label}</DialogTitle></DialogHeader>
           <div className="space-y-3 mt-2">
             <div><Label className="text-events-cream/80 text-xs">Brand Name *</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
             <div><Label className="text-events-cream/80 text-xs">Domain (for auto-logo)</Label><Input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="e.g. rei.com" className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
@@ -243,7 +243,7 @@ const LogoListPanel = ({
 
       <Dialog open={urlEditOpen} onOpenChange={setUrlEditOpen}>
         <DialogContent className="bg-events-teal border-events-cream/20 text-events-cream max-w-sm">
-          <DialogHeader><DialogTitle className="font-display text-events-cream">Edit URL — {editingLogo?.name}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle className="font-display text-events-cream">Edit URL, {editingLogo?.name}</DialogTitle></DialogHeader>
           <div className="space-y-3 mt-2">
             <div><Label className="text-events-cream/80 text-xs">Link URL</Label><Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} placeholder="https://..." className="bg-events-card border-events-cream/20 text-events-cream h-8 text-sm" /></div>
             <Button onClick={handleUrlSave} className="w-full bg-events-coral text-events-teal font-bold text-sm">Save URL</Button>

@@ -46,7 +46,7 @@ const ConfluenceSpotlight = () => {
             {
               icon: Globe,
               title: "2.5M+ Jobs",
-              desc: "Millions of people work in outdoor recreation across these 21 states — and they need talented people like you.",
+              desc: "Millions of people work in outdoor recreation across these 21 states, and they need talented people like you.",
             },
           ].map((item, i) => (
             <div
