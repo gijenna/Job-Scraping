@@ -244,11 +244,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 <img
                   src={presenter.logoUrl}
                   alt={presenter.logoAlt}
-                  className="h-7 sm:h-8 w-auto"
-                  style={{ filter: "brightness(0) invert(1)" }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.filter = "none";
-                  }}
+                  className="h-14 sm:h-16 w-auto"
                 />
               </a>
             )}

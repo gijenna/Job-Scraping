@@ -36,6 +36,7 @@ import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
+import oakleyWhiteLogo from "./assets/oakley-white.svg";
 
 const queryClient = new QueryClient();
 
@@ -56,7 +57,7 @@ const App = () => (
               <AfterPartyInvite
                 presenter={{
                   label: "Peak Vibes provided by",
-                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoUrl: oakleyWhiteLogo,
                   logoAlt: "Oakley",
                   href: "https://www.oakley.com",
                 }}
@@ -69,7 +70,7 @@ const App = () => (
               <AfterPartyInvite
                 presenter={{
                   label: "Peak Vibes provided by",
-                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoUrl: oakleyWhiteLogo,
                   logoAlt: "Oakley",
                   href: "https://www.oakley.com",
                 }}
