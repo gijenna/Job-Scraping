@@ -169,7 +169,15 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
-  const isOwner = !!me && verifiedAttendeeId === me.id;
+  // A "pre-RSVP shell" is an attendee row created by the bulk link builder
+  // before the person has actually filled anything out — no photo, no
+  // niches, no looking_for, etc. We treat these as fresh RSVPs so the user
+  // lands on the intake form (not a view-mode "card" that asks for a PIN).
+  const isPreRsvpShell = !!me && !me.photo_url && !me.cartoon_url
+    && !(me.niches?.length) && !(me.looking_for?.length)
+    && !(me.creator_types?.length) && !(me.platforms?.length)
+    && !me.mind_blowing_fact && !me.company;
+  const isOwner = !!me && (verifiedAttendeeId === me.id || isPreRsvpShell);
 
   // Load public_listing for owner (not exposed via public view)
   useEffect(() => {
