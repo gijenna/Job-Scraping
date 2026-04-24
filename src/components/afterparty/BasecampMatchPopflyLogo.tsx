@@ -279,7 +279,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             <img
               src={outsideDaysLogo}
               alt="Outside Days"
-              className="h-5 sm:h-6 md:h-7 w-auto object-contain"
+              className="h-3.5 sm:h-4 md:h-5 w-auto object-contain"
             />
             <span>after-party</span>
           </div>
