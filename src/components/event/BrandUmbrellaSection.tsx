@@ -71,7 +71,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
   const gridCols = groups.length <= 2 ? "md:grid-cols-2" : groups.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4";
 
   return (
-    <div className={`grid grid-cols-1 ${gridCols} gap-4`}>
+    <div className={`grid grid-cols-2 ${gridCols} gap-3 md:gap-4`}>
       {groups.map((group) => {
         const slug = slugify(group.company);
         const isExpanded = expandedBrands.has(group.company);
@@ -85,34 +85,40 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
 
         const brandAnchor = `brand-${slug}`;
         return (
-          <div key={group.company} id={brandAnchor} ref={hasHighlightedExpert ? highlightRef : undefined} className="rounded-xl border border-white/10 overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+          <div
+            key={group.company}
+            id={brandAnchor}
+            ref={hasHighlightedExpert ? highlightRef : undefined}
+            className={`rounded-xl border border-white/10 overflow-hidden ${isExpanded ? 'col-span-2 md:col-span-1' : ''}`}
+            style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+          >
             {/* Brand header */}
             <button
               onClick={() => toggleBrand(group.company)}
-              className="w-full flex items-center gap-4 p-4 md:p-5 hover:bg-white/5 transition-colors text-left"
+              className="w-full flex items-center gap-2 md:gap-4 p-3 md:p-5 hover:bg-white/5 transition-colors text-left"
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-events-cream flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-events-cream flex items-center justify-center shrink-0 overflow-hidden">
                 {logoUrl ? (
-                  <img src={logoUrl} alt={group.company} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+                  <img src={logoUrl} alt={group.company} className="w-7 h-7 md:w-10 md:h-10 object-contain" />
                 ) : (
-                  <span className="font-display font-bold text-events-teal text-lg">
+                  <span className="font-display font-bold text-events-teal text-base md:text-lg">
                     {group.company.split(' ').map(w => w[0]).join('').slice(0, 2)}
                   </span>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-display font-bold text-lg text-events-cream">{group.company}</h4>
-                <div className="flex items-center gap-3 mt-0.5">
-                  <span className="text-events-cream/40 text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
+                <h4 className="font-display font-bold text-sm md:text-lg text-events-cream truncate">{group.company}</h4>
+                <div className="flex items-center gap-2 md:gap-3 mt-0.5 flex-wrap">
+                  <span className="text-events-cream/40 text-[10px] md:text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
                   {normalizedCareersUrl && (
-                    <a href={normalizedCareersUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-xs flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
+                    <a href={normalizedCareersUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[10px] md:text-xs flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
                       Visit our site <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                   {isAdmin && <AnchorCopyButton anchor={brandAnchor} label={group.company} />}
                 </div>
                 {hiringBlurb && (
-                  <p className="text-events-cream/50 text-xs mt-1">{hiringBlurb}</p>
+                  <p className="text-events-cream/50 text-[10px] md:text-xs mt-1 line-clamp-2">{hiringBlurb}</p>
                 )}
                 {isAdmin && (
                   <div className="flex flex-col gap-0.5 mt-1" onClick={(e) => e.stopPropagation()}>
@@ -122,7 +128,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                 )}
               </div>
               <div className="shrink-0 text-events-cream/40">
-                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {isExpanded ? <ChevronUp className="w-4 h-4 md:w-5 md:h-5" /> : <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />}
               </div>
             </button>
 
@@ -136,7 +142,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-4 pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  <div className="px-3 md:px-4 pb-3 md:pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                     {group.experts.map((expert) => (
                       <ExpertCardMinimal
                         key={expert.id}
