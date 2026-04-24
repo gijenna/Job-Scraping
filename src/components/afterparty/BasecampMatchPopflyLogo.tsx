@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import pbMonogramSplash from "@/assets/pb-monogram-v2.png";
 import presentsWordmark from "@/assets/presents-wordmark.png";
-import outsideDaysLogo from "@/assets/outside-days-logo.png";
+import outsideDaysLogo from "@/assets/outside-days-logo.svg";
 import BasecampMatchAnimated from "./BasecampMatchAnimated";
 import StarSparkle from "./StarSparkle";
 
@@ -278,8 +278,8 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             <span>The only official</span>
             <img
               src={outsideDaysLogo}
-              alt="Outside Days (Capital One x REI)"
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+              alt="Outside Days"
+              className="h-5 sm:h-6 md:h-7 w-auto object-contain"
             />
             <span>after-party</span>
           </div>
