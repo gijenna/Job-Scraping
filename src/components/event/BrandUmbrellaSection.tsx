@@ -107,7 +107,7 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-display font-bold text-sm md:text-lg text-events-cream truncate">{group.company}</h4>
+                <h4 className="font-display font-bold text-sm md:text-lg text-events-cream break-words leading-tight">{group.company}</h4>
                 <div className="flex items-center gap-2 md:gap-3 mt-0.5 flex-wrap">
                   <span className="text-events-cream/40 text-[10px] md:text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
                   {normalizedCareersUrl && (
