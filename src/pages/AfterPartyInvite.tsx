@@ -242,7 +242,7 @@ const AfterPartyInvite = () => {
             </p>
             <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
-              <span></span>
+              
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
             </div>
             <div className="mt-4">
