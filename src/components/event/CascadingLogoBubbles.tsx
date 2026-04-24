@@ -49,9 +49,9 @@ const CascadingLogoBubbles = ({
       )}
 
       {isMobile ? (
-        <div className="flex flex-col gap-3 items-center">
+        <div className="flex flex-col gap-2 items-center">
           {rows.map((row, rIdx) => (
-            <div key={rIdx} className="flex flex-wrap justify-center gap-2">
+            <div key={rIdx} className="grid grid-cols-6 gap-2 justify-items-center w-full max-w-[320px]">
               {row.map((logo, i) => {
                 const globalIdx = rIdx * perRow + i;
                 const imgSrc = logo.logo_url || `https://www.google.com/s2/favicons?domain=${logo.domain}&sz=128`;
