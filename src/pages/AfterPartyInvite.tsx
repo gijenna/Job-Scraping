@@ -230,16 +230,6 @@ const AfterPartyInvite = () => {
             <h1 className="font-afterparty text-[32px] sm:text-[36px] leading-[1.1] mb-3" style={{ fontWeight: 500, color: CREAM }}>
               <EditableText settingKey="hero.title" defaultText="Creator after party" />
             </h1>
-            <p className="font-afterparty text-2xl sm:text-3xl font-bold mb-2" style={{ color: CREAM }}>
-              <EditableText settingKey="hero.date.display" defaultText="May 28, 2026" />
-            </p>
-            <p className="text-[15px] mb-4" style={{ color: CREAM_MUTED }}>
-              <EditableText
-                settingKey="hero.subtitle"
-                defaultText="Auraria Campus, Denver"
-                multiline
-              />
-            </p>
             <div className="text-[13px] flex items-center justify-center gap-2 flex-wrap" style={{ color: CREAM_DIM }}>
               <EditableText settingKey="hero.date" defaultText="Date TBA" />
               
@@ -266,7 +256,7 @@ const AfterPartyInvite = () => {
                 <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
                   <EditableText
                     settingKey="about.body"
-                    defaultText="A curated evening for brands, creators, and Outside Days festival sponsors, hosted in one of RiNo's newest, coolest spots. Address shared after RSVP."
+                    defaultText="A curated evening for brands, creators, and Outside Days festival sponsors. Address shared after RSVP."
                     multiline
                   />
                 </p>
@@ -274,11 +264,11 @@ const AfterPartyInvite = () => {
                 <div className="space-y-2 mb-6 text-[13px]" style={{ color: CREAM_MUTED }}>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
-                    <EditableText settingKey="about.detail1" defaultText="Thursday evening · doors at 7pm" />
+                    <EditableText settingKey="about.detail1" defaultText="Thursday evening · 7–9pm" />
                   </div>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
-                    <EditableText settingKey="about.detail2" defaultText="RiNo Art District, Denver" />
+                    <EditableText settingKey="about.detail2" defaultText="Auraria Campus, Denver" />
                   </div>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
