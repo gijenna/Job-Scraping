@@ -255,7 +255,9 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
       <div className="relative w-full flex flex-col items-center">
         <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4 text-center">
           <div className="bmp-bloom-left flex items-center justify-end flex-1 min-w-0">
-            <BasecampMatchAnimated className="h-10 sm:h-14 md:h-16" />
+            <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" aria-label="Basecamp Match">
+              <BasecampMatchAnimated className="h-10 sm:h-14 md:h-16" />
+            </a>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -276,16 +278,18 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           </div>
 
           <div className="bmp-bloom-right flex items-center justify-start flex-1 min-w-0 overflow-visible">
-            <img
-              src={popflyLogo}
-              alt="Popfly"
-              className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
-              style={{
-                clipPath: "inset(24% 11% 24% 11%)",
-                transform: "scale(1.25)",
-                transformOrigin: "center center",
-              }}
-            />
+            <a href="https://popfly.com" target="_blank" rel="noopener noreferrer" aria-label="Popfly">
+              <img
+                src={popflyLogo}
+                alt="Popfly"
+                className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
+                style={{
+                  clipPath: "inset(24% 11% 24% 11%)",
+                  transform: "scale(1.25)",
+                  transformOrigin: "center center",
+                }}
+              />
+            </a>
           </div>
         </div>
 
