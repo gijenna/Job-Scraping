@@ -95,19 +95,19 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
             {/* Brand header */}
             <button
               onClick={() => toggleBrand(group.company)}
-              className="w-full flex items-center gap-2 md:gap-4 p-3 md:p-5 hover:bg-white/5 transition-colors text-left"
+              className="w-full flex items-center gap-2 md:gap-4 p-2.5 md:p-5 hover:bg-white/5 transition-colors text-left"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-events-cream flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="w-9 h-9 md:w-14 md:h-14 rounded-full bg-events-cream flex items-center justify-center shrink-0 overflow-hidden">
                 {logoUrl ? (
-                  <img src={logoUrl} alt={group.company} className="w-7 h-7 md:w-10 md:h-10 object-contain" />
+                  <img src={logoUrl} alt={group.company} className="w-6 h-6 md:w-10 md:h-10 object-contain" />
                 ) : (
-                  <span className="font-display font-bold text-events-teal text-base md:text-lg">
+                  <span className="font-display font-bold text-events-teal text-sm md:text-lg">
                     {group.company.split(' ').map(w => w[0]).join('').slice(0, 2)}
                   </span>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-display font-bold text-sm md:text-lg text-events-cream break-words leading-tight">{group.company}</h4>
+                <h4 className="font-display font-bold text-[11px] md:text-lg text-events-cream break-words leading-tight">{group.company}</h4>
                 <div className="flex items-center gap-2 md:gap-3 mt-0.5 flex-wrap">
                   <span className="text-events-cream/40 text-[10px] md:text-xs">{group.experts.length} {group.experts.length === 1 ? 'rep' : 'reps'}</span>
                   {normalizedCareersUrl && (
