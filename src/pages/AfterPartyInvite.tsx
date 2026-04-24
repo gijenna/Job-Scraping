@@ -223,7 +223,7 @@ const AfterPartyInvite = () => {
             }}
           >
           {/* Hero copy */}
-          <div className="mt-6 text-center" style={{ transitionDelay: "60ms" }}>
+          <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
             <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.12em", color: CREAM_DIM }}>
               <EditableText settingKey="hero.kicker" defaultText="" />
             </div>
@@ -248,7 +248,7 @@ const AfterPartyInvite = () => {
 
           {/* About the event */}
           {!me && (
-            <section className="mt-10">
+            <section className="mt-16">
               <div className="px-1">
                 <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
                   <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
