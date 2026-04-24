@@ -100,10 +100,6 @@ const OakleyRinoStorefront = () => {
                 Read the Announcement <ExternalLink className="w-4 h-4" />
               </a>
             </div>
-
-            <p className="font-body italic text-events-cream/60 text-sm leading-relaxed border-l-2 border-events-yellow/40 pl-4">
-              Outside Days puts 1,500+ outdoor industry pros within a 10-minute drive of your front door.
-            </p>
           </motion.div>
         </div>
       </div>
