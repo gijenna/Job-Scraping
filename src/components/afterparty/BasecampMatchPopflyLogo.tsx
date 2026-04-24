@@ -279,7 +279,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             <img
               src={popflyLogo}
               alt="Popfly"
-              className="h-12 sm:h-16 md:h-20 w-auto object-contain"
+              className="h-16 sm:h-20 md:h-24 w-auto object-contain"
             />
           </div>
         </div>
