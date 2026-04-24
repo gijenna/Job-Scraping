@@ -57,7 +57,7 @@ const App = () => (
               <AfterPartyInvite
                 presenter={{
                   label: "Peak Vibes provided by",
-                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoUrl: "${OAKLEY_LOGO_PLACEHOLDER}",
                   logoAlt: "Oakley",
                   href: "https://www.oakley.com",
                 }}
@@ -70,7 +70,7 @@ const App = () => (
               <AfterPartyInvite
                 presenter={{
                   label: "Peak Vibes provided by",
-                  logoUrl: "https://logo.clearbit.com/oakley.com",
+                  logoUrl: "${OAKLEY_LOGO_PLACEHOLDER}",
                   logoAlt: "Oakley",
                   href: "https://www.oakley.com",
                 }}
