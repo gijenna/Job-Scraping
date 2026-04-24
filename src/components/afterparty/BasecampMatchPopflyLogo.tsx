@@ -278,16 +278,18 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           </div>
 
           <div className="bmp-bloom-right flex items-center justify-start flex-1 min-w-0 overflow-visible">
-            <img
-              src={popflyLogo}
-              alt="Popfly"
-              className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
-              style={{
-                clipPath: "inset(24% 11% 24% 11%)",
-                transform: "scale(1.25)",
-                transformOrigin: "center center",
-              }}
-            />
+            <a href="https://popfly.com" target="_blank" rel="noopener noreferrer" aria-label="Popfly">
+              <img
+                src={popflyLogo}
+                alt="Popfly"
+                className="h-10 sm:h-14 md:h-16 w-auto max-w-none object-contain"
+                style={{
+                  clipPath: "inset(24% 11% 24% 11%)",
+                  transform: "scale(1.25)",
+                  transformOrigin: "center center",
+                }}
+              />
+            </a>
           </div>
         </div>
 
