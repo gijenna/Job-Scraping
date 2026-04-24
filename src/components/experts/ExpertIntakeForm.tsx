@@ -19,7 +19,7 @@ interface ExpertIntakeFormProps {
   citySlug: string;
   cityName: string;
   expertType?: 'industry_expert' | 'brand_rep';
-  brandExpertId?: string; // The brand shell record ID — never overwrite this
+  brandExpertId?: string; // The brand shell record ID, never overwrite this
   onComplete: (savedExpert?: Expert) => void;
 }
 
@@ -64,7 +64,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         }));
         setMyAssignments(mapped);
       } else if (citiesData) {
-        // Expert exists but no assignments found — default to current city
+        // Expert exists but no assignments found, default to current city
         setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
       }
     };
@@ -130,7 +130,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
     }
 
     if (found) {
-      // Never match the brand shell record — reps must create their own
+      // Never match the brand shell record, reps must create their own
       if (brandExpertId && found.id === brandExpertId) {
         return;
       }
@@ -140,7 +140,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         full_name: ex.full_name || prev.full_name,
         email: ex.email || prev.email,
         job_title: ex.job_title || prev.job_title,
-        // For brand reps, keep the brand's company — don't overwrite with the person's existing company
+        // For brand reps, keep the brand's company, don't overwrite with the person's existing company
         current_company: expertType === 'brand_rep' ? prev.current_company : (ex.current_company || prev.current_company),
         photo_url: ex.photo_url || prev.photo_url,
         linkedin_url: ex.linkedin_url || prev.linkedin_url,
@@ -153,7 +153,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         niche_interests: ex.niche_interests?.length ? ex.niche_interests : prev.niche_interests,
         company_domains: ex.company_domains && Object.keys(ex.company_domains).length ? { ...prev.company_domains, ...ex.company_domains } : prev.company_domains,
       }));
-      // Notify parent so expertId gets set — pass found expert but DON'T trigger full reload
+      // Notify parent so expertId gets set, pass found expert but DON'T trigger full reload
       onComplete(ex);
       toast({ title: "Welcome back!", description: "We found your existing profile and loaded your details." });
     }
@@ -296,7 +296,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         }
       }
 
-      // Sync city assignments — add new ones, remove deleted ones
+      // Sync city assignments, add new ones, remove deleted ones
       if (finalExpertId) {
         const { data: existingAssignments, error: existingAssignmentsError } = await supabase
           .from('expert_city_assignments')
@@ -430,7 +430,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           </div>
         )}
         <p className="text-events-cream/50 text-sm">
-          Return anytime to edit your card. Fields marked * are required — everything else makes your card shine.
+          Return anytime to edit your card. Fields marked * are required, everything else makes your card shine.
         </p>
 
         {/* Required Fields */}
@@ -444,7 +444,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           </div>
 
           <div className="space-y-2">
-            <Label className="text-events-cream">Email * <span className="text-events-cream/40 text-xs">(not shown publicly — admin only)</span></Label>
+            <Label className="text-events-cream">Email * <span className="text-events-cream/40 text-xs">(not shown publicly, admin only)</span></Label>
             <Input type="email" value={form.email} onChange={e => update('email', e.target.value)} required
               className="bg-events-card border-events-cream/20 text-events-cream" />
           </div>
@@ -611,7 +611,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
 
           <div className="space-y-2">
             <Label className="text-events-cream">Previous Companies</Label>
-            <p className="text-events-cream/40 text-xs">Comma separated — we'll show their logos. Add a domain below if the logo doesn't load.</p>
+            <p className="text-events-cream/40 text-xs">Comma separated, we'll show their logos. Add a domain below if the logo doesn't load.</p>
             <Input value={form.previous_companies} onChange={e => update('previous_companies', e.target.value)}
               className="bg-events-card border-events-cream/20 text-events-cream" placeholder="Nike, REI, Patagonia" />
             {form.previous_companies && form.previous_companies.split(',').map(c => c.trim()).filter(Boolean).map(company => (

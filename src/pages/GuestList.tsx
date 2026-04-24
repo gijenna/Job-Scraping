@@ -125,7 +125,7 @@ const GuestList = () => {
             Creator after party
           </div>
           <h1 className="font-afterparty text-[36px] sm:text-[44px] leading-[1.05]" style={{ fontWeight: 500, color: "#F5E6D3" }}>
-            {loading ? "—" : guests.length} {guests.length === 1 ? "person" : "people"} coming
+            {loading ? ", " : guests.length} {guests.length === 1 ? "person" : "people"} coming
           </h1>
           <p className="text-[14px] mt-2" style={{ color: "rgba(245,230,211,0.6)" }}>
             Live roster · updates as folks RSVP

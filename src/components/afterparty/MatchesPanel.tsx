@@ -32,7 +32,7 @@ const MatchesPanel = ({ matches, locked }: Props) => {
     <div className="space-y-3">
       {locked && (
         <p className="text-[11px] uppercase" style={{ letterSpacing: "0.08em", color: "#FAC775" }}>
-          Final list — locked by host
+          Final list, locked by host
         </p>
       )}
       {matches.map(({ match, attendee }) => {
@@ -107,7 +107,7 @@ const MatchesPanel = ({ matches, locked }: Props) => {
                 </p>
               ) : (
                 <p className="text-[13px]" style={{ color: CREAM_DIM }}>
-                  No answer yet — ask them in person.
+                  No answer yet, ask them in person.
                 </p>
               )}
               {match.reasons.length > 1 && (

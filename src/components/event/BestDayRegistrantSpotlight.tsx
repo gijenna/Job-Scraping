@@ -23,7 +23,7 @@ const BestDayRegistrantSpotlight = () => {
           <p className="mx-auto max-w-3xl font-body text-base leading-relaxed text-bestday-blue/70 md:text-lg">
             <EditableText
               settingKey="bd_spot_vibe"
-              defaultText="Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine."
+              defaultText="Last year we shifted to fully sober events, and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine."
               as="span"
               multiline
             />
@@ -56,7 +56,7 @@ const BestDayRegistrantSpotlight = () => {
                   <p className="font-display text-xs font-bold uppercase tracking-wide text-bestday-blue/55">
                     <EditableText
                       settingKey="bd_spot_attribution"
-                      defaultText="— Recruiter, The North Face"
+                      defaultText=",  Recruiter, The North Face"
                       as="span"
                     />
                   </p>

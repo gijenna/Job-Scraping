@@ -263,7 +263,7 @@ const AfterPartyInvite = () => {
                 <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
                   <EditableText
                     settingKey="about.body"
-                    defaultText="A curated evening for brands, creators, and Outside Days festival sponsors — hosted in one of RiNo's newest, coolest spots. Address shared after RSVP."
+                    defaultText="A curated evening for brands, creators, and Outside Days festival sponsors, hosted in one of RiNo's newest, coolest spots. Address shared after RSVP."
                     multiline
                   />
                 </p>
@@ -279,7 +279,7 @@ const AfterPartyInvite = () => {
                   </div>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
-                    <EditableText settingKey="about.detail3" defaultText="Come as you are — outdoor industry casual" />
+                    <EditableText settingKey="about.detail3" defaultText="Come as you are, outdoor industry casual" />
                   </div>
                 </div>
 
@@ -435,7 +435,7 @@ const AfterPartyInvite = () => {
             </section>
           )}
 
-          {/* Intake form — new RSVP or owner editing existing card */}
+          {/* Intake form, new RSVP or owner editing existing card */}
           {editMode && (!me || isOwner) && (
             <section id="intake-form" className="mt-8">
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
@@ -445,7 +445,7 @@ const AfterPartyInvite = () => {
             </section>
           )}
 
-          {/* Matches — only shown once a card is loaded */}
+          {/* Matches, only shown once a card is loaded */}
           {me && (
             <section id="matches" className="mt-10">
               <div className="flex items-center justify-between mb-4">

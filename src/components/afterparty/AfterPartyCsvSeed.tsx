@@ -14,7 +14,7 @@ interface ParsedRow {
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-// Tiny CSV parser — handles quoted values + commas in quotes.
+// Tiny CSV parser, handles quoted values + commas in quotes.
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -178,9 +178,9 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
                 {rows.map((r, i) => (
                   <tr key={i} className="border-t border-events-cream/10">
                     <td className="px-2 py-1">{r.full_name}</td>
-                    <td className="px-2 py-1 text-events-cream/70">{r.email || "—"}</td>
+                    <td className="px-2 py-1 text-events-cream/70">{r.email || ", "}</td>
                     <td className="px-2 py-1 capitalize">{r.role}</td>
-                    <td className="px-2 py-1 text-events-cream/70">{r.company || "—"}</td>
+                    <td className="px-2 py-1 text-events-cream/70">{r.company || ", "}</td>
                   </tr>
                 ))}
               </tbody>

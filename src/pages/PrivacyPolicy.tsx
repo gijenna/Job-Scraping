@@ -36,8 +36,8 @@ const PrivacyPolicy = () => (
         <h2 className="font-display text-xl font-bold text-events-cream">3. Lawful Basis for Processing (GDPR)</h2>
         <p>We process your personal data under the following lawful bases as defined by the General Data Protection Regulation (GDPR):</p>
         <ul className="list-disc list-inside space-y-1 pl-2">
-          <li><strong className="text-events-cream">Consent</strong> — By voluntarily submitting your information through our forms, you consent to its processing for the stated purposes.</li>
-          <li><strong className="text-events-cream">Legitimate Interest</strong> — We have a legitimate interest in communicating with you about the events you have registered for or inquired about.</li>
+          <li><strong className="text-events-cream">Consent</strong>, By voluntarily submitting your information through our forms, you consent to its processing for the stated purposes.</li>
+          <li><strong className="text-events-cream">Legitimate Interest</strong>, We have a legitimate interest in communicating with you about the events you have registered for or inquired about.</li>
         </ul>
       </section>
 
@@ -57,19 +57,19 @@ const PrivacyPolicy = () => (
 
       <section className="space-y-3">
         <h2 className="font-display text-xl font-bold text-events-cream">5. Data Retention</h2>
-        <p>We retain your personal data for the duration necessary to fulfill the purposes described above — typically through the conclusion of the event and any post-event follow-up (generally no more than 12 months after the event). You may request deletion of your data at any time.</p>
+        <p>We retain your personal data for the duration necessary to fulfill the purposes described above, typically through the conclusion of the event and any post-event follow-up (generally no more than 12 months after the event). You may request deletion of your data at any time.</p>
       </section>
 
       <section className="space-y-3">
         <h2 className="font-display text-xl font-bold text-events-cream">6. Your Rights Under GDPR</h2>
         <p>If you are located in the European Economic Area (EEA) or United Kingdom, you have the following rights under GDPR Articles 15–21:</p>
         <ul className="list-disc list-inside space-y-1 pl-2">
-          <li><strong className="text-events-cream">Right of Access</strong> — Request a copy of the personal data we hold about you.</li>
-          <li><strong className="text-events-cream">Right to Rectification</strong> — Request correction of inaccurate or incomplete data.</li>
-          <li><strong className="text-events-cream">Right to Erasure</strong> — Request deletion of your personal data ("right to be forgotten").</li>
-          <li><strong className="text-events-cream">Right to Restrict Processing</strong> — Request that we limit how we use your data.</li>
-          <li><strong className="text-events-cream">Right to Data Portability</strong> — Request your data in a structured, machine-readable format.</li>
-          <li><strong className="text-events-cream">Right to Object</strong> — Object to processing of your data based on legitimate interest.</li>
+          <li><strong className="text-events-cream">Right of Access</strong>, Request a copy of the personal data we hold about you.</li>
+          <li><strong className="text-events-cream">Right to Rectification</strong>, Request correction of inaccurate or incomplete data.</li>
+          <li><strong className="text-events-cream">Right to Erasure</strong>, Request deletion of your personal data ("right to be forgotten").</li>
+          <li><strong className="text-events-cream">Right to Restrict Processing</strong>, Request that we limit how we use your data.</li>
+          <li><strong className="text-events-cream">Right to Data Portability</strong>, Request your data in a structured, machine-readable format.</li>
+          <li><strong className="text-events-cream">Right to Object</strong>, Object to processing of your data based on legitimate interest.</li>
         </ul>
         <p>To exercise any of these rights, contact us at <a href="mailto:jenna@wearetheoutdoorindustry.com" className="text-events-coral hover:underline">jenna@wearetheoutdoorindustry.com</a>. We will respond within 30 days.</p>
       </section>
@@ -83,8 +83,8 @@ const PrivacyPolicy = () => (
         <h2 className="font-display text-xl font-bold text-events-cream">8. Third-Party Services</h2>
         <p>We use the following third-party services to operate our platform:</p>
         <ul className="list-disc list-inside space-y-1 pl-2">
-          <li><strong className="text-events-cream">Typeform</strong> — For event registration form submissions</li>
-          <li><strong className="text-events-cream">Cloud hosting</strong> — For secure data storage and website hosting</li>
+          <li><strong className="text-events-cream">Typeform</strong>, For event registration form submissions</li>
+          <li><strong className="text-events-cream">Cloud hosting</strong>, For secure data storage and website hosting</li>
         </ul>
         <p>These service providers process data on our behalf under appropriate data processing agreements and do not use your data for their own purposes.</p>
       </section>

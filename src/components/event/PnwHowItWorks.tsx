@@ -22,7 +22,7 @@ const tiers: TierAccordion[] = [
   {
     id: "hiring",
     title: "Hiring Table",
-    subtitle: "Your brand, your team, your conversations — 5–10 min quality chats",
+    subtitle: "Your brand, your team, your conversations, 5–10 min quality chats",
     spots: "7 available",
     backgroundImage: eventReiConvo,
     perks: [
@@ -35,7 +35,7 @@ const tiers: TierAccordion[] = [
   {
     id: "deluxe",
     title: "Deluxe Branding Space",
-    subtitle: "Larger space, product demos, stage spotlight — combine HR & marketing budgets",
+    subtitle: "Larger space, product demos, stage spotlight, combine HR & marketing budgets",
     spots: "4 available",
     backgroundImage: eventCrowdConvo,
     perks: [
@@ -97,7 +97,7 @@ const PnwHowItWorks = () => {
             className="font-body text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "#F5E6D3", opacity: 0.8 }}
           >
-            <EditableText settingKey="hiw_body" defaultText="We invite 300+ people who work in the outdoor industry — or want to. They visit your brand discovery zone to learn your story through the people that make your company unique." as="span" multiline />
+            <EditableText settingKey="hiw_body" defaultText="We invite 300+ people who work in the outdoor industry, or want to. They visit your brand discovery zone to learn your story through the people that make your company unique." as="span" multiline />
           </p>
         </motion.div>
 
@@ -269,7 +269,7 @@ const PnwHowItWorks = () => {
                 style={{ color: "#F5E6D3", opacity: 0.8 }}
               >
                 Product demos? Swag bags? A panel speaker? Portland's most engaged outdoor professionals 
-                are coming to discover brands — make sure yours is one they can't forget. 
+                are coming to discover brands, make sure yours is one they can't forget. 
                 Go beyond your careers page to show top talent they don't just want to{" "}
                 <strong style={{ color: "#FEE123" }}>BUY</strong> from you… they want to{" "}
                 <strong style={{ color: "#FEE123" }}>WORK</strong> for you.

@@ -24,19 +24,19 @@ const audienceSummary = [
     icon: Megaphone,
     stat: "50%",
     title: 'The Industry "Tastemakers"',
-    desc: "Marketing and Communications professionals — brand strategists, creators, and storytellers who are the primary voice of the outdoor and sports industries.",
+    desc: "Marketing and Communications professionals, brand strategists, creators, and storytellers who are the primary voice of the outdoor and sports industries.",
   },
   {
     icon: Wrench,
     stat: "16%",
     title: 'A "Makers" Hub',
-    desc: "Technical Product Designers, Apparel Developers, and Merchandisers — the people who actually build the products, not just those who sell them.",
+    desc: "Technical Product Designers, Apparel Developers, and Merchandisers, the people who actually build the products, not just those who sell them.",
   },
   {
     icon: ArrowRightLeft,
     stat: "17%",
     title: "The Career Pivot Point",
-    desc: "Professionals like nurses, military officers, and educators actively seeking to bring their specialized skills into the outdoor space — a critical talent pipeline.",
+    desc: "Professionals like nurses, military officers, and educators actively seeking to bring their specialized skills into the outdoor space, a critical talent pipeline.",
   },
 ];
 

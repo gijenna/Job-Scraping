@@ -42,9 +42,9 @@ const stats = [
 ];
 
 const showUpOptions = [
-  { icon: Star, title: "Branding / Discovery Partner", desc: "This isn't just a career fair — it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry.", tag: "High Visibility", example: "Yeti, REI, and Cotopaxi have set up product discovery zones — turning career fair foot traffic into organic brand moments shared across the industry." },
+  { icon: Star, title: "Branding / Discovery Partner", desc: "This isn't just a career fair, it's a product showcase. Bring your new lines, gear demos, and brand activations to the people who manage the social feeds of the entire industry.", tag: "High Visibility", example: "Yeti, REI, and Cotopaxi have set up product discovery zones, turning career fair foot traffic into organic brand moments shared across the industry." },
   { icon: Briefcase, title: "Employer Partner", desc: "Set up in our Recruitment Zone for quality 5–10 minute conversations with highly experienced candidates. Space for banners, product samples, QR codes, and swag.", tag: "Most Popular", example: "VF brands set up interactive QR-code stations; REI brings their team leads for on-the-spot conversations; Yeti showcases new product alongside career info." },
-  { icon: MessageCircle, title: "Industry Expert / Mentor", desc: "Your leaders are featured by name — called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals.", tag: "Low Lift", example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors — building authentic connections beyond their corporate role." },
+  { icon: MessageCircle, title: "Industry Expert / Mentor", desc: "Your leaders are featured by name, called out just as prominently as your brand. 1:1 mentorship conversations with mid-to-senior career professionals.", tag: "Low Lift", example: "Leaders from Patagonia, Black Diamond, and The North Face have shown up as individual mentors, building authentic connections beyond their corporate role." },
 ];
 
 const schedule = [
@@ -69,8 +69,8 @@ const testimonials = [
 ];
 
 const qualityPoints = [
-  { icon: Target, stat: "92%", label: "Role-Relevant", desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle — not random job fair traffic." },
-  { icon: Users, stat: "500–800", label: "Per Event", desc: "A concentrated, high-quality talent pool. Every conversation is intentional — no 30-second drive-bys." },
+  { icon: Target, stat: "92%", label: "Role-Relevant", desc: "Attendees are in product, design, creative, and corporate roles adjacent to outdoor/active lifestyle, not random job fair traffic." },
+  { icon: Users, stat: "500–800", label: "Per Event", desc: "A concentrated, high-quality talent pool. Every conversation is intentional, no 30-second drive-bys." },
   { icon: Star, stat: "Mid-to-Senior", label: "Career Level", desc: "Awesomely tenured professionals already at brands like Patagonia, Columbia, Nike, REI, Deloitte, The North Face, and Arc'teryx." },
 ];
 
@@ -153,7 +153,7 @@ const GatherDenverExport = () => {
       <section className={sectionClass}>
         <p className={subheadClass}>The Data That Matters</p>
         <h2 className={headingClass}>Who Is In The Room?</h2>
-        <p className={`${bodyClass} max-w-2xl mb-6`}>We don't just fill seats — we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds.</p>
+        <p className={`${bodyClass} max-w-2xl mb-6`}>We don't just fill seats, we curate a community. Denver draws a uniquely experienced talent pool: 67% have 6+ years of experience, 88% have management backgrounds.</p>
 
         <div className="grid grid-cols-4 gap-4 mb-8">
           {stats.map((s, i) => (
@@ -229,7 +229,7 @@ const GatherDenverExport = () => {
             <div key={i} className="flex items-start gap-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
               <Clock className="w-5 h-5 text-[#ED7660] shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-sm text-gray-900">{item.time} — {item.label}</p>
+                <p className="font-bold text-sm text-gray-900">{item.time}, {item.label}</p>
                 <p className="text-gray-600 text-sm">{item.desc}</p>
               </div>
             </div>
@@ -253,7 +253,7 @@ const GatherDenverExport = () => {
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-500 mt-4"><strong>Venue:</strong> Auraria Campus — this year's Outside Days Festival grounds in Denver.</p>
+        <p className="text-xs text-gray-500 mt-4"><strong>Venue:</strong> Auraria Campus, this year's Outside Days Festival grounds in Denver.</p>
       </section>
 
       {/* ROI */}
@@ -277,7 +277,7 @@ const GatherDenverExport = () => {
       <section className="py-12 px-8 bg-[#19363B] text-center border-b-2 border-gray-200">
         <p className="text-[#ED7660] text-xs tracking-widest uppercase mb-4">Make it a collab with marketing</p>
         <p className="text-white text-xl italic max-w-3xl mx-auto leading-relaxed">
-          "You aren't just buying a table — you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers."
+          "You aren't just buying a table, you are setting up a product demo for the people who manage the social feeds of the entire industry. This is your chance to get your new line into the hands of the storytellers."
         </p>
       </section>
 
@@ -310,7 +310,7 @@ const GatherDenverExport = () => {
       <section className="py-12 px-8 bg-[#19363B] text-white text-center">
         <h2 className="font-bold text-3xl mb-3">Ready to Be Part of This?</h2>
         <p className="text-white/70 text-sm max-w-xl mx-auto mb-6">
-          Spots are limited. Secure your presence at the outdoor industry's biggest career event — embedded inside the 40,000-person Outside Days Festival in Denver.
+          Spots are limited. Secure your presence at the outdoor industry's biggest career event, embedded inside the 40,000-person Outside Days Festival in Denver.
         </p>
         <p className="text-[#ED7660] font-bold text-lg">jenna@wearetheoutdoorindustry.com</p>
       </section>

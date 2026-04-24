@@ -22,7 +22,7 @@ const valueProps = [
   {
     icon: Mountain,
     title: "Built for Every Athlete",
-    desc: "From the morning walker to the elite snowboarder to the Olympic medalist — Oakley meets every level of movement.",
+    desc: "From the morning walker to the elite snowboarder to the Olympic medalist, Oakley meets every level of movement.",
   },
   {
     icon: Eye,
@@ -60,7 +60,7 @@ const OakleySpotlight = () => {
             />
           </div>
           <p className="font-body text-events-cream/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            For 50 years, Oakley has been the eyewear of athletes who push limits — and the everyday creators, riders, runners, and adventurers who shape the outdoor industry from the ground up.
+            For 50 years, Oakley has been the eyewear of athletes who push limits, and the everyday creators, riders, runners, and adventurers who shape the outdoor industry from the ground up.
           </p>
         </motion.div>
 

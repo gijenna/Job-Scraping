@@ -9,7 +9,7 @@ interface EventPhotoGalleryProps {
 const EventPhotoGallery = ({
   photos,
   headline = "Last Year's Event",
-  subheadline = "Real moments from Gather — the outdoor industry's premier sober career event.",
+  subheadline = "Real moments from Gather, the outdoor industry's premier sober career event.",
 }: EventPhotoGalleryProps) => {
   return (
     <section className="py-20 px-6 bg-events-teal">

@@ -117,7 +117,7 @@ const PnwPowerfulPremium = () => {
               <EditableText settingKey="powerful_headline" defaultText="Powerful & Premium" as="span" />
             </motion.h2>
             <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="text-lg md:text-xl font-body leading-relaxed mb-12" style={{ color: "#2a5a3e" }}>
-              <EditableText settingKey="powerful_subtitle" defaultText="Portland's most intimate gathering of outdoor industry professionals — featuring top brands, UO's Sports Product Management program, and the PNW's deepest talent pool." as="span" multiline />
+              <EditableText settingKey="powerful_subtitle" defaultText="Portland's most intimate gathering of outdoor industry professionals, featuring top brands, UO's Sports Product Management program, and the PNW's deepest talent pool." as="span" multiline />
             </motion.p>
 
             <div className="h-[130px] md:h-[110px] flex items-center justify-center">

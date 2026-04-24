@@ -123,7 +123,7 @@ const MapBrandGroup = ({
       onMouseDown={interactive ? handleMouseDown : undefined}
       onClick={() => onClick?.(brand)}
     >
-      {/* Tables grid — rotated */}
+      {/* Tables grid, rotated */}
       <div
         className="relative"
         style={{
@@ -148,7 +148,7 @@ const MapBrandGroup = ({
         ))}
       </div>
 
-      {/* Logo bubble + name — always upright (no rotation) */}
+      {/* Logo bubble + name, always upright (no rotation) */}
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
         <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white">
           {logoSrc ? (

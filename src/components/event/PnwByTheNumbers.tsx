@@ -40,11 +40,11 @@ const brandLogos: BrandLogo[] = [
 const testimonials: Testimonial[] = [
   { quote: "This event connected me with my dream job at an outdoor brand!", avatarId: 32 },
   { quote: "The UO connection makes this unlike any other industry event.", avatarId: 44 },
-  { quote: "Intimate, genuine conversations — not the usual career fair chaos.", avatarId: 28 },
+  { quote: "Intimate, genuine conversations, not the usual career fair chaos.", avatarId: 28 },
   { quote: "I met three hiring managers and got a follow-up the next day.", avatarId: 15 },
   { quote: "The panel gave me actionable steps to break into outdoor.", avatarId: 67 },
   { quote: "Best networking event in the PNW, hands down.", avatarId: 20 },
-  { quote: "Portland is the heart of outdoor — and this event proves it.", avatarId: 51 },
+  { quote: "Portland is the heart of outdoor, and this event proves it.", avatarId: 51 },
   { quote: "I brought my whole team and we all made valuable connections.", avatarId: 38 },
 ];
 

@@ -26,14 +26,14 @@ interface PhotoItem {
 }
 
 const photos: PhotoItem[] = [
-  // Row 1 — top row, 5 photos staggered
+  // Row 1, top row, 5 photos staggered
   { src: eventBoaConvo, alt: "BOA Conversation", top: "4%", left: "-1%", width: 220, height: 280, rotate: "-3deg", zIndex: 2, parallaxSpeed: 0.12 },
   { src: eventGroupPhoto, alt: "Group Photo", top: "-2%", left: "16%", width: 240, height: 300, rotate: "4deg", zIndex: 3, parallaxSpeed: 0.08 },
   { src: eventYetiKate, alt: "Kate Volunteering", top: "2%", left: "36%", width: 230, height: 280, rotate: "-2deg", zIndex: 4, parallaxSpeed: 0.1 },
   { src: eventBoaSwag, alt: "BOA Swag", top: "-4%", left: "58%", width: 220, height: 270, rotate: "5deg", zIndex: 2, parallaxSpeed: 0.14 },
   { src: eventOutsideBooth, alt: "Outside Booth", top: "2%", left: "78%", width: 240, height: 290, rotate: "-4deg", zIndex: 3, parallaxSpeed: 0.09 },
 
-  // Row 2 — bottom row, 4 photos offset from top row
+  // Row 2, bottom row, 4 photos offset from top row
   { src: eventAlisonVolunteer, alt: "Volunteers", top: "52%", left: "2%", width: 230, height: 280, rotate: "3deg", zIndex: 3, parallaxSpeed: 0.11 },
   { src: eventBoa, alt: "BOA", top: "56%", left: "24%", width: 220, height: 270, rotate: "-5deg", zIndex: 2, parallaxSpeed: 0.15 },
   { src: eventCareerCoaching, alt: "Coaching", top: "50%", left: "48%", width: 240, height: 290, rotate: "2deg", zIndex: 3, parallaxSpeed: 0.07 },

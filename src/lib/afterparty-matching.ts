@@ -145,7 +145,7 @@ function intentScore(
     const matched = theirTypes.filter((t) => seeking.includes(t));
     if (matched.length) {
       points = Math.max(points, 35);
-      reasons.unshift(`You're looking for ${matched[0]} — they are one`);
+      reasons.unshift(`You're looking for ${matched[0]}, they are one`);
       brandPriority = true;
     }
     if (them.brands_wishlist && me.company && them.brands_wishlist.toLowerCase().includes(me.company.toLowerCase())) {
@@ -160,7 +160,7 @@ function intentScore(
     const matched = myTypes.filter((t) => seeking.includes(t));
     if (matched.length) {
       points = Math.max(points, 35);
-      reasons.unshift(`They're looking for ${matched[0]} — that's you`);
+      reasons.unshift(`They're looking for ${matched[0]}, that's you`);
       brandPriority = true;
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {
@@ -287,7 +287,7 @@ function rankAndCap(
   return capped;
 }
 
-// Score every candidate for `me` (no cap, no rank — used as input to the pipeline).
+// Score every candidate for `me` (no cap, no rank, used as input to the pipeline).
 function scoreAll(me: AfterPartyAttendee, all: AfterPartyAttendee[]): ScoredCandidate[] {
   const meVibing = isJustVibing(me);
   return all
@@ -320,7 +320,7 @@ function runPipeline(attendees: AfterPartyAttendee[], topN = 5): Map<string, Sco
     topTen.set(me.id, new Set(t10.map((r) => r.match_attendee_id)));
   }
 
-  // Pass 2: apply mutual boost — both sides get +10 and is_mutual_boost = true.
+  // Pass 2: apply mutual boost, both sides get +10 and is_mutual_boost = true.
   for (const me of attendees) {
     const myTop10 = topTen.get(me.id);
     if (!myTop10) continue;

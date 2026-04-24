@@ -15,7 +15,7 @@ const features = [
 
 const OakleyRinoStorefront = () => {
   return (
-    <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-events-teal to-[#0d1f22]">
+    <section className="py-10 md:py-14 px-6 bg-gradient-to-b from-events-teal to-[#0d1f22]">
       <div className="container mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -54,7 +54,7 @@ const OakleyRinoStorefront = () => {
               Make sure to visit Oakley RiNo while you're in Denver.
             </h2>
             <p className="font-body text-events-cream/70 text-lg leading-relaxed mb-6">
-              Oakley's next-gen retail hub blurs the lines between performance and culture — a space built for the athletes, artists, and creators of River North Arts District.
+              Oakley's next-gen retail hub blurs the lines between performance and culture, a space built for the athletes, artists, and creators of River North Arts District.
             </p>
 
             <div className="flex flex-wrap gap-2 mb-8">

@@ -35,7 +35,7 @@ const DenverHero = () => {
 
       <div className="relative z-10 container mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center max-w-7xl mx-auto">
-          {/* Left — logo + date */}
+          {/* Left, logo + date */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -55,7 +55,7 @@ const DenverHero = () => {
           {/* Divider */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-48 w-px bg-gradient-to-b from-transparent via-foreground/15 to-transparent" />
 
-          {/* Right — Fredoka text */}
+          {/* Right, Fredoka text */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}

@@ -28,10 +28,10 @@ const HeroSection = () => {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }} className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/gather-pnw" className="inline-flex items-center justify-center px-8 py-4 bg-gradient-gold text-primary-foreground font-display font-bold text-lg rounded-lg hover:opacity-90 transition-opacity shadow-gold">
-            Portland — April 16
+            Portland, April 16
           </Link>
           <Link to="/gather-denver" className="inline-flex items-center justify-center px-8 py-4 bg-gradient-gold text-primary-foreground font-display font-bold text-lg rounded-lg hover:opacity-90 transition-opacity shadow-gold">
-            Denver — May 28
+            Denver, May 28
           </Link>
         </motion.div>
       </div>

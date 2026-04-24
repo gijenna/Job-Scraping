@@ -67,7 +67,7 @@ const GatherDenver = () => {
 
   return (
     <EditableTextProvider pageSlug="gather-denver">
-      <PageMetaApplier title="Gather Denver — Sponsors" />
+      <PageMetaApplier title="Gather Denver, Sponsors" />
       <main className="bg-background min-h-screen">
         <PageMetaEditor />
         <SponsorPageNav otherEvent={{ label: "Gather PNW", path: "/gather-pnw" }} />

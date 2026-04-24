@@ -6,12 +6,12 @@ const SoberEventSection = () => {
     {
       icon: Eye,
       title: "Clear-Headed Networking",
-      desc: "Every conversation is intentional. Candidates and recruiters connect at their best — no awkward, alcohol-fueled interactions.",
+      desc: "Every conversation is intentional. Candidates and recruiters connect at their best, no awkward, alcohol-fueled interactions.",
     },
     {
       icon: Users,
       title: "Inclusive for Everyone",
-      desc: "Whether you're sober-curious, in recovery, or simply prefer non-alcoholic options — everyone feels welcome and comfortable.",
+      desc: "Whether you're sober-curious, in recovery, or simply prefer non-alcoholic options, everyone feels welcome and comfortable.",
     },
     {
       icon: Shield,
@@ -36,7 +36,7 @@ const SoberEventSection = () => {
             We're a Proudly Sober Event
           </h2>
           <p className="font-body text-events-cream/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Last year we shifted to fully sober events — and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine.
+            Last year we shifted to fully sober events, and the response from both job seekers and brands was incredible. Clear eyes, real connections, and a professional atmosphere that lets the outdoor industry's best talent shine.
           </p>
         </motion.div>
 

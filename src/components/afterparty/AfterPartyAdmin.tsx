@@ -187,9 +187,9 @@ const AfterPartyAdmin = () => {
                 <td className="px-3 py-2 font-bold">{a.full_name}</td>
                 <td className="px-3 py-2 capitalize text-events-cream/70">{a.role}</td>
                 <td className="px-3 py-2 text-events-cream/70">
-                  {a.role === "brand" ? a.company || "—" : (a.niches?.slice(0, 2).join(", ") || "—")}
+                  {a.role === "brand" ? a.company || ", " : (a.niches?.slice(0, 2).join(", ") || ", ")}
                 </td>
-                <td className="px-3 py-2 text-events-cream/60">{a.email || "—"}</td>
+                <td className="px-3 py-2 text-events-cream/60">{a.email || ", "}</td>
                 <td className="px-3 py-2 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => copyLink(a)} className="text-events-cream/70 hover:text-events-cream">
                     <Copy className="w-3.5 h-3.5" />
