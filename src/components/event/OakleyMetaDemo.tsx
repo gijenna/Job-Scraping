@@ -43,10 +43,10 @@ const OakleyMetaDemo = () => {
                 On-Site at Outside Days
               </span>
               <h2 className="font-headline font-bold text-3xl md:text-5xl text-events-cream mb-5 leading-tight">
-                Try the Meta × Oakley smart glasses on us.
+                Try the Meta × Oakley smart glasses live.
               </h2>
               <p className="font-body text-events-cream/75 text-base md:text-lg mb-6 leading-relaxed">
-                For 50 years, Oakley has built eyewear for everyone who moves. They're bringing a live demo of the new Meta × Oakley smart glasses to Outside Days — record your run, livestream the festival, and walk away knowing what's next in performance eyewear.
+                For 50 years, Oakley has built eyewear for everyone who moves. They're bringing a live demo of the new Meta × Oakley smart glasses to Outside Days
               </p>
 
               <ul className="space-y-3 mb-2">
