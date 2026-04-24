@@ -36,7 +36,7 @@ import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
-import oakleyWhiteLogo from "./assets/oakley-white.png";
+import oakleyWhiteLogo from "./assets/oakley-white-clean.png";
 
 const queryClient = new QueryClient();
 
