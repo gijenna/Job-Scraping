@@ -32,7 +32,7 @@ const FeaturedTeamsSection = ({
   if (brandReps.length === 0 && bubbleLogos.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24 px-6" style={{ backgroundColor: bgColor }}>
+    <section className="py-10 md:py-14 px-6" style={{ backgroundColor: bgColor }}>
       <div className="container mx-auto max-w-6xl">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-2">
           <p className="text-xs tracking-[0.3em] uppercase mb-4 font-body" style={{ color: accentColor }}>

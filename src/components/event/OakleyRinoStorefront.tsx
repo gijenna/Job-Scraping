@@ -15,7 +15,7 @@ const features = [
 
 const OakleyRinoStorefront = () => {
   return (
-    <section className="py-20 md:py-28 px-6 bg-gradient-to-b from-events-teal to-[#0d1f22]">
+    <section className="py-10 md:py-14 px-6 bg-gradient-to-b from-events-teal to-[#0d1f22]">
       <div className="container mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
