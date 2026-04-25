@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NumberBadge from "./NumberBadge";
 import StarSparkle from "./StarSparkle";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 export interface GuestRow {
   id: string;
@@ -8,6 +9,7 @@ export interface GuestRow {
   role: string;
   display_name: string;
   company: string | null;
+  company_url?: string | null;
   cartoon_url: string | null;
   niches: string[] | null;
   creator_types: string[] | null;
