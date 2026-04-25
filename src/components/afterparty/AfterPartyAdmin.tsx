@@ -134,6 +134,41 @@ const AfterPartyAdmin = () => {
     toast({ title: `Copied ${ids.length} link${ids.length === 1 ? "" : "s"}` });
   };
 
+  const bulkSetInvitedBy = async () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    const value = bulkInvitedBy.trim();
+    if (!confirm(`Set "Invited by" to "${value || "(empty)"}" for ${ids.length} attendee${ids.length === 1 ? "" : "s"}?`)) return;
+    setWorking(true);
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ invited_by: value || null })
+      .in("id", ids);
+    setWorking(false);
+    if (error) {
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: `Updated ${ids.length} attendee${ids.length === 1 ? "" : "s"}` });
+    setBulkInvitedBy("");
+    setSelected(new Set());
+    fetchAll();
+  };
+
+  const saveInvitedBy = async (id: string) => {
+    const value = editValue.trim();
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ invited_by: value || null })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingInvitedBy(null);
+    fetchAll();
+  };
+
   const copyLink = (a: AfterPartyAttendee) => {
     const url = `${PUBLISHED_BASE}/afterparty/${slugify(a.full_name)}`;
     navigator.clipboard.writeText(url);
