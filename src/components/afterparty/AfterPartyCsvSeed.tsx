@@ -63,6 +63,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
     const idxEmail = header.indexOf("email");
     const idxRole = header.indexOf("role");
     const idxCompany = header.indexOf("company");
+    const idxInvitedBy = Math.max(header.indexOf("invited_by"), header.indexOf("invited by"));
 
     const out: ParsedRow[] = dataRows
       .map((r) => ({
@@ -70,6 +71,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
         email: (idxEmail >= 0 ? r[idxEmail] : r[1])?.trim() || "",
         role: ((idxRole >= 0 ? r[idxRole] : r[2])?.trim().toLowerCase() === "brand" ? "brand" : "creator") as "creator" | "brand",
         company: (idxCompany >= 0 ? r[idxCompany] : r[3])?.trim() || undefined,
+        invited_by: (idxInvitedBy >= 0 ? r[idxInvitedBy] : undefined)?.trim() || undefined,
       }))
       .filter((r) => r.full_name);
     setRows(out);
