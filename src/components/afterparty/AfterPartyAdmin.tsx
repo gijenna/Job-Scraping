@@ -322,6 +322,38 @@ const AfterPartyAdmin = () => {
                   {a.role === "brand" ? a.company || ", " : (a.niches?.slice(0, 2).join(", ") || ", ")}
                 </td>
                 <td className="px-3 py-2 text-events-cream/60">{a.email || ", "}</td>
+                <td className="px-3 py-2 text-events-cream/70">
+                  {editingInvitedBy === a.id ? (
+                    <div className="flex items-center gap-1">
+                      <Input
+                        autoFocus
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveInvitedBy(a.id);
+                          if (e.key === "Escape") setEditingInvitedBy(null);
+                        }}
+                        placeholder='e.g. "Basecamp"'
+                        className="h-7 text-xs bg-black/20 border-events-cream/20 text-events-cream w-32"
+                      />
+                      <Button size="sm" variant="ghost" onClick={() => saveInvitedBy(a.id)} className="text-green-400 h-7 px-1.5">
+                        <Check className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setEditingInvitedBy(null)} className="text-events-cream/50 h-7 px-1.5">
+                        <X className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => { setEditingInvitedBy(a.id); setEditValue((a as any).invited_by || ""); }}
+                      className="inline-flex items-center gap-1 hover:text-events-cream"
+                    >
+                      <span>{(a as any).invited_by || <span className="text-events-cream/30">—</span>}</span>
+                      <Pencil className="w-3 h-3 opacity-50" />
+                    </button>
+                  )}
+                </td>
                 <td className="px-3 py-2 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => copyLink(a)} className="text-events-cream/70 hover:text-events-cream">
                     <Copy className="w-3.5 h-3.5" />
@@ -333,7 +365,7 @@ const AfterPartyAdmin = () => {
               </tr>
             ))}
             {!attendees.length && (
-              <tr><td colSpan={7} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
+              <tr><td colSpan={8} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
             )}
           </tbody>
         </table>
