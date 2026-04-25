@@ -115,7 +115,7 @@ const GuestList = () => {
           try {
             const slug = sessionStorage.getItem("afterparty:return_slug");
             if (slug) {
-              returnTo = `/${slug}?edit=1`;
+              returnTo = `/afterparty/${slug}?edit=1`;
               label = "Back to my card";
             }
           } catch {}
