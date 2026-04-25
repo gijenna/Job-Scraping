@@ -32,7 +32,12 @@ const AdminExperts = () => {
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    // Reject missing OR anonymous sessions (the After Party PIN flow uses
+    // signInAnonymously, so a logged-in card holder is NOT an admin).
+    const isAnon = (user as any)?.is_anonymous === true || !user?.email;
+    if (!user || isAnon) {
+      // Sign out the anonymous session so the admin login form is clean.
+      if (user && isAnon) await supabase.auth.signOut();
       navigate('/admin');
       return;
     }

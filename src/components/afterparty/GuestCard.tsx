@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Instagram, Linkedin } from "lucide-react";
 import NumberBadge from "./NumberBadge";
 import StarSparkle from "./StarSparkle";
 import { resolveLogoSrc } from "@/lib/url-logo";
@@ -15,6 +16,9 @@ export interface GuestRow {
   creator_types: string[] | null;
   looking_for: string[] | null;
   mind_blowing_fact: string | null;
+  social_links?: { instagram?: string | null; linkedin?: string | null } | null;
+  show_instagram?: boolean | null;
+  show_linkedin?: boolean | null;
   created_at: string;
 }
 
@@ -129,6 +133,44 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
           );
         })()
       ) : null}
+
+      {(() => {
+        const ig = (guest.social_links?.instagram || "").trim().replace(/^@+/, "");
+        const li = (guest.social_links?.linkedin || "").trim();
+        const showIg = ig && (guest.show_instagram ?? true);
+        const showLi = li && (guest.show_linkedin ?? true);
+        if (!showIg && !showLi) return null;
+        return (
+          <div className="mt-2 flex items-center justify-center gap-2">
+            {showIg && (
+              <a
+                href={`https://instagram.com/${ig}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
+                title={`@${ig} on Instagram`}
+              >
+                <Instagram className="w-3 h-3" />
+                <span className="text-[11px]">@{ig}</span>
+              </a>
+            )}
+            {showLi && (
+              <a
+                href={`https://linkedin.com/in/${li}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
+                title="LinkedIn"
+              >
+                <Linkedin className="w-3 h-3" />
+                <span className="text-[11px]">LinkedIn</span>
+              </a>
+            )}
+          </div>
+        );
+      })()}
 
       {(guest.niches?.length || guest.creator_types?.length) ? (
         <div className="mt-2 -mb-1 flex flex-wrap justify-center">
