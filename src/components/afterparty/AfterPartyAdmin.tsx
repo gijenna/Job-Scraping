@@ -301,6 +301,7 @@ const AfterPartyAdmin = () => {
               <th className="text-left px-3 py-2">Role</th>
               <th className="text-left px-3 py-2">Brand / Niche</th>
               <th className="text-left px-3 py-2">Email</th>
+              <th className="text-left px-3 py-2">Invited by</th>
               <th className="text-right px-3 py-2">Actions</th>
             </tr>
           </thead>
