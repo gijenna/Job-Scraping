@@ -593,16 +593,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
       {/* Industry expert block */}
       {form.role === "industry_expert" && (
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <Label>Company / org</Label>
-            <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+        <>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label>Company / org</Label>
+              <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+            </div>
+            <div>
+              <Label>Your role</Label>
+              <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
+            </div>
           </div>
-          <div>
-            <Label>Your role</Label>
-            <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
-          </div>
-        </div>
+          <CompanyLogoField
+            company={form.company}
+            companyUrl={form.company_url}
+            onChange={(v) => setForm({ ...form, company_url: v })}
+            inputStyle={inputStyle}
+          />
+        </>
       )}
 
       {/* Unified intent chips */}
