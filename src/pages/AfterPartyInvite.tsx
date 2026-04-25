@@ -561,6 +561,9 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
           {/* Partners — global, bottom of page */}
           <AfterPartyPartners />
+
+          {/* Admin-only inline editor for partners + spotlights */}
+          <AfterPartyAdminInline />
           </div>
         </div>
 
