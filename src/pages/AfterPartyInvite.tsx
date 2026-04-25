@@ -60,6 +60,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [justRsvped, setJustRsvped] = useState(false);
+  const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -89,13 +90,17 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     );
     if (found) {
       setMe(found);
-      // If this is a pre-RSVP shell (created by the bulk link builder
-      // with no profile data yet), drop them straight into the intake form.
-      const isShell = !found.photo_url && !found.cartoon_url
-        && !(found.niches?.length) && !(found.looking_for?.length)
-        && !(found.creator_types?.length) && !(found.platforms?.length)
-        && !(found as any).mind_blowing_fact && !(found as any).company;
-      if (isShell) setEditMode(true);
+      // First-time personalized greeting: only the very first time someone
+      // opens THEIR personalized link in this browser. Not on edit/back/etc.
+      try {
+        const key = `afterparty:greeted:${found.id}`;
+        if (!sessionStorage.getItem(key) && !localStorage.getItem(key)) {
+          setShowPersonalGreeting(true);
+          localStorage.setItem(key, "1");
+          // Hide after enough time to read it
+          setTimeout(() => setShowPersonalGreeting(false), 5200);
+        }
+      } catch {}
     }
   }, [name, attendees, me]);
 
@@ -262,6 +267,42 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo onRevealed={() => setRevealed(true)} />
 
+          {/* Personalized greeting — only first time someone opens their link */}
+          {showPersonalGreeting && me?.full_name && (
+            <div
+              className="fixed inset-0 z-[70] flex items-center justify-center px-6 pointer-events-none"
+              style={{
+                backgroundColor: "rgba(8,8,8,0.78)",
+                animation: "apGreetFade 5200ms ease-in-out forwards",
+              }}
+              aria-hidden="true"
+            >
+              <style>{`
+                @keyframes apGreetFade {
+                  0%   { opacity: 0; }
+                  10%  { opacity: 1; }
+                  85%  { opacity: 1; }
+                  100% { opacity: 0; }
+                }
+                @keyframes apGreetRise {
+                  0%   { opacity: 0; transform: translateY(14px); }
+                  100% { opacity: 1; transform: translateY(0); }
+                }
+              `}</style>
+              <h2
+                className="font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold text-center"
+                style={{
+                  color: "#F5E6D3",
+                  animation: "apGreetRise 700ms ease-out 200ms both",
+                  textShadow: "0 0 20px rgba(237,118,96,0.45)",
+                }}
+              >
+                Hey {me.full_name.split(" ")[0]},<br />you're invited to...
+              </h2>
+            </div>
+          )}
+
+
           <div
             style={{
               opacity: revealed ? 1 : 0,
@@ -334,10 +375,25 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
           </div>
 
-          {/* About the event */}
-          {!me && (
+          {/* About the event — shown when no card loaded OR when this is a
+              personalized pre-RSVP shell (so invitees see event info first) */}
+          {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
               <div className="px-1">
+                {/* Personalized "Lucky you" banner for shells with invited_by */}
+                {me?.invited_by && (
+                  <div
+                    className="mb-4 px-3 py-2 rounded-lg text-center text-[13px]"
+                    style={{
+                      backgroundColor: "rgba(216,90,48,0.12)",
+                      border: "1px solid rgba(216,90,48,0.4)",
+                      color: CREAM,
+                    }}
+                  >
+                    Invite-only · Luckily, you're on{" "}
+                    <span style={{ fontWeight: 600 }}>{me.invited_by}</span>'s list
+                  </div>
+                )}
                 <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
                   <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
                 </h2>
@@ -375,7 +431,9 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                   className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
-                  <EditableText settingKey="cta.primary" defaultText="RSVP" />
+                  {me?.full_name
+                    ? `RSVP here, ${me.full_name.split(" ")[0]}`
+                    : <EditableText settingKey="cta.primary" defaultText="RSVP" />}
                 </Button>
               </div>
             </section>
