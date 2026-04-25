@@ -310,6 +310,16 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
               </button>
             ))}
           </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="text-xs text-events-cream/60">Invited by (optional, e.g. "Basecamp"):</label>
+            <input
+              type="text"
+              value={pasteInvitedBy}
+              onChange={(e) => setPasteInvitedBy(e.target.value)}
+              placeholder="Basecamp"
+              className="text-xs px-2 py-1 rounded bg-events-cream/5 border border-events-cream/20 text-events-cream w-48"
+            />
+          </div>
           <textarea
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
