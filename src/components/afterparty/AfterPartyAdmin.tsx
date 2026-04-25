@@ -86,6 +86,43 @@ const AfterPartyAdmin = () => {
     }
   };
 
+  const downloadAllLinksCsv = () => {
+    if (!attendees.length) {
+      toast({ title: "No attendees", description: "Nothing to export yet." });
+      return;
+    }
+    const csvEscape = (v: string) => {
+      const s = (v ?? "").toString();
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ["attendee_number", "name", "role", "company", "email", "phone", "invited_by", "status", "slug", "personalized_link"];
+    const lines = [header.join(",")];
+    for (const a of attendees) {
+      lines.push([
+        a.attendee_number ?? "",
+        csvEscape(a.full_name || ""),
+        csvEscape(a.role || ""),
+        csvEscape((a as any).company || ""),
+        csvEscape((a as any).email || ""),
+        csvEscape((a as any).phone || ""),
+        csvEscape((a as any).invited_by || ""),
+        csvEscape((a as any).status || ""),
+        csvEscape(a.slug || ""),
+        csvEscape(`${PUBLISHED_BASE}/afterparty/${a.slug}`),
+      ].join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `afterparty-links-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast({ title: "Download started", description: `${attendees.length} links exported.` });
+  };
+
   const deleteAttendee = async (id: string) => {
     if (!confirm("Delete this attendee?")) return;
     const res = await callAdmin("delete_attendee", { id });
