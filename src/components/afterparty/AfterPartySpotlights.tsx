@@ -25,11 +25,30 @@ const AfterPartySpotlights = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await (supabase as any)
-        .from("afterparty_spotlights")
-        .select("*")
-        .order("display_order");
-      setItems((data as Spotlight[]) || []);
+      // Source of truth: afterparty_partners rows that have a category set.
+      // Falls back to legacy afterparty_spotlights table for older entries.
+      const [partnersRes, legacyRes] = await Promise.all([
+        (supabase as any)
+          .from("afterparty_partners")
+          .select("id, name, logo_url, website_url, display_order, category, description")
+          .not("category", "is", null)
+          .order("display_order"),
+        (supabase as any)
+          .from("afterparty_spotlights")
+          .select("*")
+          .order("display_order"),
+      ]);
+      const fromPartners = (partnersRes.data || []).map((p: any) => ({
+        id: p.id,
+        category: p.category,
+        name: p.name,
+        description: p.description,
+        logo_url: p.logo_url,
+        website_url: p.website_url,
+        display_order: p.display_order,
+      })) as Spotlight[];
+      const legacy = (legacyRes.data || []) as Spotlight[];
+      setItems([...fromPartners, ...legacy]);
     })();
   }, []);
 
