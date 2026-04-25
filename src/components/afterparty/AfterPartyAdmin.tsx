@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil, Download } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
@@ -84,6 +84,43 @@ const AfterPartyAdmin = () => {
       toast({ title: "Unlocked" });
       fetchAll();
     }
+  };
+
+  const downloadAllLinksCsv = () => {
+    if (!attendees.length) {
+      toast({ title: "No attendees", description: "Nothing to export yet." });
+      return;
+    }
+    const csvEscape = (v: string) => {
+      const s = (v ?? "").toString();
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ["attendee_number", "name", "role", "company", "email", "phone", "invited_by", "status", "slug", "personalized_link"];
+    const lines = [header.join(",")];
+    for (const a of attendees) {
+      lines.push([
+        a.attendee_number ?? "",
+        csvEscape(a.full_name || ""),
+        csvEscape(a.role || ""),
+        csvEscape((a as any).company || ""),
+        csvEscape((a as any).email || ""),
+        csvEscape((a as any).phone || ""),
+        csvEscape((a as any).invited_by || ""),
+        csvEscape((a as any).status || ""),
+        csvEscape(a.slug || ""),
+        csvEscape(`${PUBLISHED_BASE}/afterparty/${a.slug}`),
+      ].join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `afterparty-links-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast({ title: "Download started", description: `${attendees.length} links exported.` });
   };
 
   const deleteAttendee = async (id: string) => {
@@ -212,6 +249,9 @@ const AfterPartyAdmin = () => {
         )}
         <Button onClick={sendEmails} variant="outline" className="border-events-cream/30 text-events-cream">
           <Mail className="w-4 h-4 mr-2" /> Send match emails
+        </Button>
+        <Button onClick={downloadAllLinksCsv} variant="outline" className="border-events-cream/30 text-events-cream">
+          <Download className="w-4 h-4 mr-2" /> Download all links CSV
         </Button>
         <span className="text-xs text-events-cream/50 ml-auto">
           {attendees.length} attendees · {lockedCount > 0 ? `${lockedCount} locked match rows` : "matches are live"}
