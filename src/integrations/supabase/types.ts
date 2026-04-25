@@ -56,6 +56,7 @@ export type Database = {
           email_verified: boolean
           full_name: string
           id: string
+          invited_by: string | null
           looking_for: string[] | null
           mind_blowing_fact: string | null
           niches: string[] | null
@@ -91,6 +92,7 @@ export type Database = {
           email_verified?: boolean
           full_name: string
           id?: string
+          invited_by?: string | null
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
@@ -126,6 +128,7 @@ export type Database = {
           email_verified?: boolean
           full_name?: string
           id?: string
+          invited_by?: string | null
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
@@ -224,6 +227,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      afterparty_partners: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          logo_url: string | null
+          name: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          logo_url?: string | null
+          name: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          logo_url?: string | null
+          name?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      afterparty_spotlights: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          logo_url: string | null
+          name: string
+          website_url: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          logo_url?: string | null
+          name: string
+          website_url?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          logo_url?: string | null
+          name?: string
+          website_url?: string | null
+        }
+        Relationships: []
       }
       afterparty_suggestions: {
         Row: {
