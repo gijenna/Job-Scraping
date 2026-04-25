@@ -458,6 +458,15 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               style={{ ...inputStyle, border: "none" }}
             />
           </div>
+          <label className="flex items-center gap-2 mt-1.5 cursor-pointer text-[11px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+            <input
+              type="checkbox"
+              checked={form.show_instagram !== false}
+              onChange={(e) => setForm({ ...form, show_instagram: e.target.checked })}
+              className="accent-[#ED7660]"
+            />
+            Show on the public guest list
+          </label>
         </div>
         <div>
           <Label>LinkedIn handle</Label>
@@ -476,6 +485,15 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               style={{ ...inputStyle, border: "none" }}
             />
           </div>
+          <label className="flex items-center gap-2 mt-1.5 cursor-pointer text-[11px]" style={{ color: "rgba(255,255,255,0.6)" }}>
+            <input
+              type="checkbox"
+              checked={form.show_linkedin !== false}
+              onChange={(e) => setForm({ ...form, show_linkedin: e.target.checked })}
+              className="accent-[#ED7660]"
+            />
+            Show on the public guest list
+          </label>
         </div>
       </div>
 
