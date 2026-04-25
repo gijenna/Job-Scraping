@@ -59,8 +59,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const [publicListing, setPublicListing] = useState<boolean>(true);
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [splashDone, setSplashDone] = useState(false);
   const [justRsvped, setJustRsvped] = useState(false);
   const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
+  const [greetingQueued, setGreetingQueued] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
@@ -97,13 +99,25 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         const key = `afterparty:greeted:${found.id}`;
         if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
-          // Splash runs ~6.4s. Show greeting just after, for ~4.5s.
-          setTimeout(() => setShowPersonalGreeting(true), 6600);
-          setTimeout(() => setShowPersonalGreeting(false), 11200);
+          setGreetingQueued(true);
+          setTimeout(() => setShowPersonalGreeting(true), 6100);
+          setTimeout(() => setShowPersonalGreeting(false), 9900);
         }
       } catch {}
     }
   }, [name, attendees, me]);
+
+  // Reveal invite content after splash AND after personalized greeting (if any) finishes.
+  useEffect(() => {
+    if (!splashDone) return;
+    if (greetingQueued && showPersonalGreeting) return;
+    if (greetingQueued && !showPersonalGreeting) {
+      // greeting was shown and is now hidden; reveal
+      setRevealed(true);
+      return;
+    }
+    setRevealed(true);
+  }, [splashDone, greetingQueued, showPersonalGreeting]);
 
   // Locked matches
   useEffect(() => {
@@ -266,7 +280,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
-          <BasecampMatchPopflyLogo onRevealed={() => setRevealed(true)} />
+          <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
 
           {/* Personalized greeting — appears AFTER the splash so it doesn't
               cover the animation. Only the first visit per browser. */}
