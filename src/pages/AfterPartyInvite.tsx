@@ -92,13 +92,14 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       setMe(found);
       // First-time personalized greeting: only the very first time someone
       // opens THEIR personalized link in this browser. Not on edit/back/etc.
+      // Wait for the splash animation to finish before showing it.
       try {
         const key = `afterparty:greeted:${found.id}`;
-        if (!sessionStorage.getItem(key) && !localStorage.getItem(key)) {
-          setShowPersonalGreeting(true);
+        if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
-          // Hide after enough time to read it
-          setTimeout(() => setShowPersonalGreeting(false), 5200);
+          // Splash runs ~6.4s. Show greeting just after, for ~4.5s.
+          setTimeout(() => setShowPersonalGreeting(true), 6600);
+          setTimeout(() => setShowPersonalGreeting(false), 11200);
         }
       } catch {}
     }
@@ -267,34 +268,28 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo onRevealed={() => setRevealed(true)} />
 
-          {/* Personalized greeting — only first time someone opens their link */}
+          {/* Personalized greeting — appears AFTER the splash so it doesn't
+              cover the animation. Only the first visit per browser. */}
           {showPersonalGreeting && me?.full_name && (
             <div
-              className="fixed inset-0 z-[70] flex items-center justify-center px-6 pointer-events-none"
-              style={{
-                backgroundColor: "rgba(8,8,8,0.78)",
-                animation: "apGreetFade 5200ms ease-in-out forwards",
-              }}
+              className="fixed inset-x-0 top-1/2 -translate-y-1/2 z-[70] flex items-center justify-center px-6 pointer-events-none"
               aria-hidden="true"
             >
               <style>{`
-                @keyframes apGreetFade {
-                  0%   { opacity: 0; }
-                  10%  { opacity: 1; }
-                  85%  { opacity: 1; }
-                  100% { opacity: 0; }
-                }
-                @keyframes apGreetRise {
+                @keyframes apGreetInOut {
                   0%   { opacity: 0; transform: translateY(14px); }
-                  100% { opacity: 1; transform: translateY(0); }
+                  10%  { opacity: 1; transform: translateY(0); }
+                  85%  { opacity: 1; transform: translateY(0); }
+                  100% { opacity: 0; transform: translateY(-8px); }
                 }
               `}</style>
               <h2
                 className="font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold text-center"
                 style={{
                   color: "#F5E6D3",
-                  animation: "apGreetRise 700ms ease-out 200ms both",
-                  textShadow: "0 0 20px rgba(237,118,96,0.45)",
+                  animation: "apGreetInOut 4600ms ease-in-out forwards",
+                  textShadow:
+                    "0 0 20px rgba(8,8,8,0.95), 0 0 40px rgba(8,8,8,0.85), 0 0 60px rgba(237,118,96,0.45)",
                 }}
               >
                 Hey {me.full_name.split(" ")[0]},<br />you're invited to...
