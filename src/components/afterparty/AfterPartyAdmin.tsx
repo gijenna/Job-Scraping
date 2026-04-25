@@ -213,9 +213,33 @@ const AfterPartyAdmin = () => {
       )}
 
       <div className="rounded-xl border border-events-cream/10 overflow-hidden">
+        {selected.size > 0 && (
+          <div className="flex flex-wrap items-center gap-2 px-3 py-2 bg-events-coral/15 border-b border-events-cream/10 text-sm text-events-cream">
+            <span className="font-bold">{selected.size} selected</span>
+            <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())} className="text-events-cream/70 hover:text-events-cream">
+              Clear
+            </Button>
+            <div className="ml-auto flex gap-2">
+              <Button size="sm" variant="outline" onClick={bulkCopyLinks} className="border-events-cream/30 text-events-cream">
+                <Copy className="w-3.5 h-3.5 mr-1" /> Copy links
+              </Button>
+              <Button size="sm" onClick={bulkDelete} disabled={working} className="bg-red-500/80 hover:bg-red-500 text-events-cream">
+                {working ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Trash2 className="w-3.5 h-3.5 mr-1" />}
+                Delete selected
+              </Button>
+            </div>
+          </div>
+        )}
         <table className="w-full text-sm text-events-cream">
           <thead className="bg-events-cream/5">
             <tr>
+              <th className="text-left px-3 py-2 w-8">
+                <Checkbox
+                  checked={attendees.length > 0 && selected.size === attendees.length}
+                  onCheckedChange={toggleAll}
+                  aria-label="Select all"
+                />
+              </th>
               <th className="text-left px-3 py-2">#</th>
               <th className="text-left px-3 py-2">Name</th>
               <th className="text-left px-3 py-2">Role</th>
@@ -226,7 +250,14 @@ const AfterPartyAdmin = () => {
           </thead>
           <tbody>
             {attendees.map((a) => (
-              <tr key={a.id} className="border-t border-events-cream/10">
+              <tr key={a.id} className={`border-t border-events-cream/10 ${selected.has(a.id) ? "bg-events-coral/10" : ""}`}>
+                <td className="px-3 py-2">
+                  <Checkbox
+                    checked={selected.has(a.id)}
+                    onCheckedChange={() => toggleOne(a.id)}
+                    aria-label={`Select ${a.full_name}`}
+                  />
+                </td>
                 <td className="px-3 py-2 font-mono text-events-yellow">#{a.attendee_number}</td>
                 <td className="px-3 py-2 font-bold">{a.full_name}</td>
                 <td className="px-3 py-2 capitalize text-events-cream/70">{a.role}</td>
@@ -245,7 +276,7 @@ const AfterPartyAdmin = () => {
               </tr>
             ))}
             {!attendees.length && (
-              <tr><td colSpan={6} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
+              <tr><td colSpan={7} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
             )}
           </tbody>
         </table>
