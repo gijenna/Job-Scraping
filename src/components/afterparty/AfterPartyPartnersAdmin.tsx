@@ -98,7 +98,7 @@ const AfterPartyPartnersAdmin = () => {
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <Input
-          placeholder="Website URL (optional)"
+          placeholder="Website URL (auto-pulls logo)"
           value={websiteUrl}
           onChange={(e) => setWebsiteUrl(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
