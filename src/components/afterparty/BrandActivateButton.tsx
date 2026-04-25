@@ -160,7 +160,7 @@ const BrandActivateButton = ({
         style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
       >
         <Sparkles className="w-4 h-4 mr-2" />
-        Activate my brand at the After Party
+        Get my brand in the room
       </Button>
     );
   }
