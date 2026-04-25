@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
+import AfterPartySuggestionsAdmin from "./AfterPartySuggestionsAdmin";
 import { ChevronDown, ChevronRight, Lock } from "lucide-react";
 
 const BORDER = "rgba(255,255,255,0.12)";
@@ -46,7 +47,7 @@ const AfterPartyAdminInline = () => {
       >
         <span className="flex items-center gap-2 text-[12px] uppercase" style={{ letterSpacing: "0.12em", color: CREAM }}>
           <Lock className="w-3.5 h-3.5" />
-          Admin · Partners & Spotlights
+          Admin · Partners, Spotlights & Suggestions
         </span>
         <span className="flex items-center gap-2 text-[11px]" style={{ color: CREAM_DIM }}>
           {open ? "Hide" : "Edit"}
@@ -65,6 +66,9 @@ const AfterPartyAdminInline = () => {
             .
           </p>
           <AfterPartyPartnersAdmin />
+          <div className="pt-4" style={{ borderTop: `1px dashed ${BORDER}` }}>
+            <AfterPartySuggestionsAdmin />
+          </div>
         </div>
       )}
     </section>

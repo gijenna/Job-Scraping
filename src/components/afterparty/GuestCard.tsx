@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NumberBadge from "./NumberBadge";
 import StarSparkle from "./StarSparkle";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 export interface GuestRow {
   id: string;
@@ -8,6 +9,7 @@ export interface GuestRow {
   role: string;
   display_name: string;
   company: string | null;
+  company_url?: string | null;
   cartoon_url: string | null;
   niches: string[] | null;
   creator_types: string[] | null;
@@ -91,6 +93,42 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
           {pill.label}
         </span>
       </div>
+
+      {(guest.role === "brand" || guest.role === "industry_expert") && guest.company ? (
+        (() => {
+          const guessedDomain = guest.company
+            ? `${guest.company.toLowerCase().replace(/[^a-z0-9]+/g, "")}.com`
+            : null;
+          const logoSrc = resolveLogoSrc(null, guest.company_url || guessedDomain);
+          const href = guest.company_url
+            ? (guest.company_url.startsWith("http") ? guest.company_url : `https://${guest.company_url}`)
+            : null;
+          const inner = (
+            <div
+              className="mt-2 mx-auto inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              {logoSrc && (
+                <img
+                  src={logoSrc}
+                  alt=""
+                  className="w-4 h-4 rounded-sm object-contain"
+                  style={{ backgroundColor: "#fff" }}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              )}
+              <span className="text-[11px]" style={{ color: "rgba(245,230,211,0.85)" }}>{guest.company}</span>
+            </div>
+          );
+          return (
+            <div className="text-center">
+              {href ? (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">{inner}</a>
+              ) : inner}
+            </div>
+          );
+        })()
+      ) : null}
 
       {(guest.niches?.length || guest.creator_types?.length) ? (
         <div className="mt-2 -mb-1 flex flex-wrap justify-center">

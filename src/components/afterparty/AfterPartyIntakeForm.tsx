@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveLogoSrc } from "@/lib/url-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,8 +67,73 @@ const buildAvatarSvg = (name: string) => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 };
 
+const CompanyLogoField = ({
+  company,
+  companyUrl,
+  onChange,
+  inputStyle,
+}: {
+  company: string;
+  companyUrl: string;
+  onChange: (v: string) => void;
+  inputStyle: React.CSSProperties;
+}) => {
+  const [logoBroken, setLogoBroken] = useState(false);
+  // Prefer the explicit URL if provided; otherwise guess from the company name.
+  const guessedFromName = (() => {
+    const c = (company || "").trim();
+    if (!c) return null;
+    const slug = c.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    if (!slug) return null;
+    return `${slug}.com`;
+  })();
+  const effectiveUrl = (companyUrl || "").trim() || guessedFromName;
+  const logoSrc = resolveLogoSrc(null, effectiveUrl);
+  useEffect(() => { setLogoBroken(false); }, [logoSrc]);
+
+  return (
+    <div className="rounded-lg p-3 flex items-center gap-3" style={{ border: "1px solid rgba(255,255,255,0.1)", backgroundColor: "rgba(255,255,255,0.03)" }}>
+      <div
+        className="w-12 h-12 rounded-md flex items-center justify-center shrink-0 overflow-hidden"
+        style={{ backgroundColor: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
+      >
+        {logoSrc && !logoBroken ? (
+          <img src={logoSrc} alt="" className="w-full h-full object-contain" onError={() => setLogoBroken(true)} />
+        ) : (
+          <span className="text-[14px] font-semibold" style={{ color: "#080808" }}>
+            {(company || "?").charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <Label className="text-[12px]">Company website</Label>
+        <Input
+          value={companyUrl}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Type hyperlink if your logo doesn't populate (e.g. yourbrand.com)"
+          style={inputStyle}
+        />
+      </div>
+    </div>
+  );
+};
+
 const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const { toast } = useToast();
+  const [extraNiches, setExtraNiches] = useState<string[]>([]);
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("event_settings")
+        .select("setting_value")
+        .eq("event_slug", "afterparty")
+        .eq("setting_key", "afterparty.extra_niches")
+        .maybeSingle();
+      const list = (data?.setting_value || "").split(",").map((v: string) => v.trim()).filter(Boolean);
+      setExtraNiches(list);
+    })();
+  }, []);
+
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [cartoonPolling, setCartoonPolling] = useState(false);
@@ -91,6 +157,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     brands_wishlist: "",
     mind_blowing_fact: "",
     company: "",
+    company_url: "",
     company_role: "",
     brand_seeking: [],
     budget_range: "",
@@ -160,6 +227,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Name required", variant: "destructive" });
       return;
     }
+    const emailTrimmed = (form.email || "").trim();
+    if (!emailTrimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
+      toast({ title: "Email required", description: "Please enter a valid email so we can send your card link.", variant: "destructive" });
+      return;
+    }
     // Phone is required for new attendees — last 4 digits become their card password.
     const phoneDigits = (form.phone || "").replace(/\D/g, "");
     if (!attendeeId && phoneDigits.length < 4) {
@@ -216,6 +288,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       brands_wishlist: form.role === "creator" ? form.brands_wishlist || null : null,
       mind_blowing_fact: form.mind_blowing_fact || null,
       company: form.role === "brand" ? form.company || null : (form.role === "industry_expert" ? form.company || null : null),
+      company_url: form.role === "brand" || form.role === "industry_expert" ? (form.company_url || null) : null,
       company_role: form.role === "brand" || form.role === "industry_expert" ? form.company_role || null : null,
       brand_seeking: form.role === "brand" ? form.brand_seeking : [],
       budget_range: form.role === "brand" ? form.budget_range || null : null,
@@ -341,8 +414,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
         </div>
         <div>
-          <Label>Email</Label>
-          <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
+          <Label>Email *</Label>
+          <Input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
         </div>
       </div>
 
@@ -444,7 +517,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       <div>
         <Label className="mb-2 block">Niches</Label>
         <div className="flex flex-wrap gap-2">
-          {NICHES.map((n) => (
+          {[...NICHES, ...extraNiches.filter((n) => !NICHES.includes(n))].map((n) => (
             <button type="button" key={n} onClick={() => toggle("niches", n)} className={pillBase} style={pillStyle(form.niches.includes(n), ROLE.creator)}>{n}</button>
           ))}
         </div>
@@ -552,6 +625,13 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             </div>
           </div>
 
+          <CompanyLogoField
+            company={form.company}
+            companyUrl={form.company_url}
+            onChange={(v) => setForm({ ...form, company_url: v })}
+            inputStyle={inputStyle}
+          />
+
           <div>
             <Label className="mb-2 block">We're looking for…</Label>
             <div className="flex flex-wrap gap-2">
@@ -578,16 +658,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
       {/* Industry expert block */}
       {form.role === "industry_expert" && (
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <Label>Company / org</Label>
-            <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+        <>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label>Company / org</Label>
+              <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} style={inputStyle} />
+            </div>
+            <div>
+              <Label>Your role</Label>
+              <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
+            </div>
           </div>
-          <div>
-            <Label>Your role</Label>
-            <Input value={form.company_role} onChange={(e) => setForm({ ...form, company_role: e.target.value })} style={inputStyle} />
-          </div>
-        </div>
+          <CompanyLogoField
+            company={form.company}
+            companyUrl={form.company_url}
+            onChange={(v) => setForm({ ...form, company_url: v })}
+            inputStyle={inputStyle}
+          />
+        </>
       )}
 
       {/* Unified intent chips */}
