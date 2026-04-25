@@ -955,6 +955,7 @@ export type Database = {
           creator_types: string[] | null
           full_name: string | null
           id: string | null
+          invited_by: string | null
           looking_for: string[] | null
           mind_blowing_fact: string | null
           niches: string[] | null
@@ -980,6 +981,7 @@ export type Database = {
           creator_types?: string[] | null
           full_name?: string | null
           id?: string | null
+          invited_by?: string | null
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
@@ -1005,6 +1007,7 @@ export type Database = {
           creator_types?: string[] | null
           full_name?: string | null
           id?: string | null
+          invited_by?: string | null
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
