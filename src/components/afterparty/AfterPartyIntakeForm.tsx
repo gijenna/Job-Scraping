@@ -318,6 +318,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
               inviteUrl: `${base}/afterparty/${data.slug}`,
               guestsUrl: `${base}/guests`,
+              matchesUrl: `${base}/afterparty/${data.slug}#matches`,
               brandActivated: false,
               role: form.role,
             },
