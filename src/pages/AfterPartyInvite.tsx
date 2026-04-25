@@ -21,6 +21,8 @@ import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopfly
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import { getSession } from "@/services/auth";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
+import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
+import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
