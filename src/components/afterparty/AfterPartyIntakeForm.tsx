@@ -300,11 +300,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <Label>Full name *</Label>
           <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
         </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <Label>Full name *</Label>
-          <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
-        </div>
         <div>
           <Label>Email</Label>
           <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
