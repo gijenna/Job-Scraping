@@ -75,7 +75,12 @@ const AfterPartyPartners = () => {
             </div>
           );
           return p.website_url ? (
-            <a key={p.id} href={p.website_url} target="_blank" rel="noopener noreferrer">
+            <a
+              key={p.id}
+              href={toAbsoluteUrl(p.website_url) || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {inner}
             </a>
           ) : (
