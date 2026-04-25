@@ -517,7 +517,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       <div>
         <Label className="mb-2 block">Niches</Label>
         <div className="flex flex-wrap gap-2">
-          {NICHES.map((n) => (
+          {[...NICHES, ...extraNiches.filter((n) => !NICHES.includes(n))].map((n) => (
             <button type="button" key={n} onClick={() => toggle("niches", n)} className={pillBase} style={pillStyle(form.niches.includes(n), ROLE.creator)}>{n}</button>
           ))}
         </div>
