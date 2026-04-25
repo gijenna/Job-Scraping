@@ -161,6 +161,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Name required", variant: "destructive" });
       return;
     }
+    const emailTrimmed = (form.email || "").trim();
+    if (!emailTrimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
+      toast({ title: "Email required", description: "Please enter a valid email so we can send your card link.", variant: "destructive" });
+      return;
+    }
     // Phone is required for new attendees — last 4 digits become their card password.
     const phoneDigits = (form.phone || "").replace(/\D/g, "");
     if (!attendeeId && phoneDigits.length < 4) {
