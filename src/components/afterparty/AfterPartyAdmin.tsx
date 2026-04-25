@@ -3,11 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
 import AfterPartyLinkBuilder from "./AfterPartyLinkBuilder";
 import AfterPartyTestMatches from "./AfterPartyTestMatches";
+import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
+import AfterPartySpotlightsAdmin from "./AfterPartySpotlightsAdmin";
 
 interface Suggestion {
   id: string;
