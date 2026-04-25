@@ -181,18 +181,18 @@ const BrandActivateButton = ({
           Brand activation
         </div>
         <div className="font-afterparty text-[16px]" style={{ color: CREAM, fontWeight: 500 }}>
-          Want to activate your brand at the After Party?
+          Want to integrate your brand?
         </div>
         <div className="text-[13px] mt-1" style={{ color: "rgba(245,230,211,0.7)" }}>
-          Tap below and Jenna will personally reach out within one business day to walk through
-          activation options.
+          200 of the industry's hottest creators, influencers, and athletes in one place. At least
+          know your options.
         </div>
       </div>
 
       <Textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Anything specific you're hoping to do? (optional)"
+        placeholder="What's the one product or moment you'd love every creator at this party posting about the next day?"
         rows={3}
         maxLength={500}
         style={{
