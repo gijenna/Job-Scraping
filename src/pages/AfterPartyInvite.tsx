@@ -92,13 +92,14 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       setMe(found);
       // First-time personalized greeting: only the very first time someone
       // opens THEIR personalized link in this browser. Not on edit/back/etc.
+      // Wait for the splash animation to finish before showing it.
       try {
         const key = `afterparty:greeted:${found.id}`;
-        if (!sessionStorage.getItem(key) && !localStorage.getItem(key)) {
-          setShowPersonalGreeting(true);
+        if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
-          // Hide after enough time to read it
-          setTimeout(() => setShowPersonalGreeting(false), 5200);
+          // Splash runs ~6.4s. Show greeting just after, for ~4.5s.
+          setTimeout(() => setShowPersonalGreeting(true), 6600);
+          setTimeout(() => setShowPersonalGreeting(false), 11200);
         }
       } catch {}
     }
