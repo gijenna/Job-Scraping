@@ -12,6 +12,7 @@ interface BrandActivateButtonProps {
   email?: string | null;
   /** "compact" hides the message field and shows a single-tap button */
   variant?: "compact" | "full";
+  onSubmitted?: () => void;
 }
 
 const CREAM = "#F5E6D3";
