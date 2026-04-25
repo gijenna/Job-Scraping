@@ -146,7 +146,7 @@ const AfterPartySpotlights = () => {
 
                 const nameLinked = s.website_url ? (
                   <a
-                    href={s.website_url}
+                    href={toAbsoluteUrl(s.website_url) || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:opacity-90 transition-opacity inline-flex items-center gap-2"
