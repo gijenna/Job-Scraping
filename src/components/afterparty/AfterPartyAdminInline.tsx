@@ -66,6 +66,9 @@ const AfterPartyAdminInline = () => {
             .
           </p>
           <AfterPartyPartnersAdmin />
+          <div className="pt-4" style={{ borderTop: `1px dashed ${BORDER}` }}>
+            <AfterPartySuggestionsAdmin />
+          </div>
         </div>
       )}
     </section>
