@@ -97,10 +97,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     brand_fit_notes: "",
   });
 
+  const [savedSnapshot, setSavedSnapshot] = useState<string>("");
   useEffect(() => {
-    if (initial) setForm({ ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } });
+    if (initial) {
+      const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
+      setForm(merged);
+      setSavedSnapshot(JSON.stringify(merged));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
+
+  const isDirty = attendeeId ? JSON.stringify(form) !== savedSnapshot : false;
 
   const fallbackAvatar = useMemo(() => buildAvatarSvg(form.full_name || "anon"), [form.full_name]);
 
@@ -246,7 +253,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       }
     }
     setSaving(false);
-    toast({ title: "You're in.", description: "Look out for your matches below." });
+    setSavedSnapshot(JSON.stringify(form));
+    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated." : "Look out for your matches below." });
 
     const allSuggestions = [
       ...pendingNiches,
@@ -356,12 +364,40 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <Label>Instagram (handle or URL)</Label>
-          <Input value={form.social_links.instagram} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value } })} style={inputStyle} />
+          <Label>Instagram handle</Label>
+          <div className="flex items-stretch rounded-md overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.2)" }}>
+            <span
+              className="px-2 flex items-center text-[13px] select-none"
+              style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              @
+            </span>
+            <Input
+              value={(form.social_links.instagram || "").replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "")}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value.replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "") } })}
+              placeholder="yourhandle"
+              className="border-0 rounded-none"
+              style={{ ...inputStyle, border: "none" }}
+            />
+          </div>
         </div>
         <div>
-          <Label>LinkedIn URL</Label>
-          <Input value={form.social_links.linkedin} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value } })} style={inputStyle} />
+          <Label>LinkedIn handle</Label>
+          <div className="flex items-stretch rounded-md overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.2)" }}>
+            <span
+              className="px-2 flex items-center text-[13px] select-none whitespace-nowrap"
+              style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              linkedin.com/in/
+            </span>
+            <Input
+              value={(form.social_links.linkedin || "").replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "")}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "") } })}
+              placeholder="jennafrombasecamp"
+              className="border-0 rounded-none"
+              style={{ ...inputStyle, border: "none" }}
+            />
+          </div>
         </div>
       </div>
 
@@ -600,19 +636,52 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       </div>
 
       {(attendeeId || justSavedId) ? (
-        <Link
-          to="/guests"
-          onClick={() => {
-            const slug = (form as any).slug;
-            if (slug) {
-              try { sessionStorage.setItem("afterparty:return_slug", slug); } catch {}
-            }
-          }}
-          className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
-          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
-        >
-          See who's coming →
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          {attendeeId && (
+            <Button
+              type="submit"
+              disabled={saving || !isDirty}
+              className={`w-full sm:w-auto hover:opacity-90 ${isDirty ? "animate-pulse" : ""}`}
+              style={
+                isDirty
+                  ? {
+                      backgroundColor: "#D85A30",
+                      color: "#fff",
+                      fontWeight: 600,
+                      boxShadow: "0 0 0 0 rgba(216,90,48,0.7), 0 0 24px rgba(216,90,48,0.55)",
+                      border: "1px solid #F5C4B3",
+                    }
+                  : {
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.55)",
+                      fontWeight: 500,
+                      border: "1px solid rgba(255,255,255,0.15)",
+                    }
+              }
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              {isDirty ? "Save changes" : "Saved ✓"}
+            </Button>
+          )}
+          <Link
+            to="/guests"
+            onClick={() => {
+              const slug = (form as any).slug;
+              if (slug) {
+                try { sessionStorage.setItem("afterparty:return_slug", slug); } catch {}
+              }
+            }}
+            className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
+            style={{
+              backgroundColor: attendeeId ? "transparent" : "#fff",
+              color: attendeeId ? "rgba(255,255,255,0.75)" : "#080808",
+              fontWeight: 500,
+              border: attendeeId ? "1px solid rgba(255,255,255,0.18)" : "none",
+            }}
+          >
+            See who's coming →
+          </Link>
+        </div>
       ) : (
         <Button
           type="submit"

@@ -39,9 +39,11 @@ const BrandActivateButton = ({
   const [done, setDone] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
 
-  // Check whether this attendee has previously submitted an activation request
+  // Check whether this attendee has previously submitted an activation request.
+  // We always check when we have an attendeeId so we can show the "received" state
+  // instead of the form on subsequent visits.
   useEffect(() => {
-    if (!hideIfAlreadySent || !attendeeId) return;
+    if (!attendeeId) return;
     let cancelled = false;
     (async () => {
       const { data } = await (supabase as any)
@@ -54,7 +56,7 @@ const BrandActivateButton = ({
     return () => {
       cancelled = true;
     };
-  }, [attendeeId, hideIfAlreadySent]);
+  }, [attendeeId]);
 
 
   const submit = async () => {
@@ -132,21 +134,35 @@ const BrandActivateButton = ({
     }
   };
 
-  // Already submitted previously and caller wants it hidden — render nothing
-  if (alreadySent && !done) return null;
-
-  if (done) {
+  // Already submitted previously — show a confirmation card with a "prompt her" mailto.
+  const showSentCard = done || alreadySent;
+  if (showSentCard) {
+    const subject = encodeURIComponent(
+      `After Party brand activation follow-up${company ? ` — ${company}` : ""}`,
+    );
+    const body = encodeURIComponent(
+      `Hi Jenna,\n\nFollowing up on my brand activation request${company ? ` for ${company}` : ""}.\n\n— ${fullName}`,
+    );
     return (
       <div
-        className="rounded-xl px-4 py-3 flex items-center gap-2 text-[13px]"
+        className="rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 text-[13px]"
         style={{
           backgroundColor: "rgba(237,118,96,0.12)",
           border: `1px solid ${CORAL}`,
           color: CREAM,
         }}
       >
-        <Check className="w-4 h-4" style={{ color: CORAL }} />
-        Request received, Jenna will be in touch shortly.
+        <div className="flex items-start gap-2 flex-1">
+          <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: CORAL }} />
+          <span>Activation request received — Jenna will be in touch shortly, or prompt her here.</span>
+        </div>
+        <a
+          href={`mailto:jenna@wearetheoutdoorindustry.com?subject=${subject}&body=${body}`}
+          className="inline-flex items-center justify-center rounded-md px-3 py-1.5 text-[12px] hover:opacity-90 whitespace-nowrap"
+          style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
+        >
+          Prompt her here
+        </a>
       </div>
     );
   }
