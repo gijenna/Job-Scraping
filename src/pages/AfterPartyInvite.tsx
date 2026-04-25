@@ -276,28 +276,29 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
 
-          {/* Personalized greeting — appears AFTER the splash so it doesn't
-              cover the animation. Only the first visit per browser. */}
+          {/* Personalized greeting — sits ABOVE the splash monogram so the two
+              never overlap. Appears in sync with the splash and fades out as
+              the splash transitions. First visit per browser only. */}
           {showPersonalGreeting && me?.full_name && (
             <div
-              className="fixed inset-x-0 top-1/2 -translate-y-1/2 z-[70] flex items-center justify-center px-6 pointer-events-none"
+              className="fixed inset-x-0 top-0 z-[70] flex items-start justify-center px-6 pt-[6vh] pointer-events-none"
               aria-hidden="true"
             >
               <style>{`
                 @keyframes apGreetInOut {
-                  0%   { opacity: 0; transform: translateY(14px); }
-                  10%  { opacity: 1; transform: translateY(0); }
-                  85%  { opacity: 1; transform: translateY(0); }
-                  100% { opacity: 0; transform: translateY(-8px); }
+                  0%   { opacity: 0; transform: translateY(-12px); }
+                  12%  { opacity: 1; transform: translateY(0); }
+                  82%  { opacity: 1; transform: translateY(0); }
+                  100% { opacity: 0; transform: translateY(-10px); }
                 }
               `}</style>
               <h2
-                className="font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold text-center"
+                className="font-afterparty text-3xl sm:text-4xl md:text-5xl font-bold text-center"
                 style={{
                   color: "#F5E6D3",
-                  animation: "apGreetInOut 4600ms ease-in-out forwards",
+                  animation: "apGreetInOut 4200ms ease-in-out forwards",
                   textShadow:
-                    "0 0 20px rgba(8,8,8,0.95), 0 0 40px rgba(8,8,8,0.85), 0 0 60px rgba(237,118,96,0.45)",
+                    "0 0 18px rgba(8,8,8,0.95), 0 0 36px rgba(8,8,8,0.8), 0 0 54px rgba(237,118,96,0.4)",
                 }}
               >
                 Hey {me.full_name.split(" ")[0]},<br />you're invited to...
