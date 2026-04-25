@@ -264,6 +264,17 @@ const AfterPartyAdmin = () => {
             <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())} className="text-events-cream/70 hover:text-events-cream">
               Clear
             </Button>
+            <div className="flex items-center gap-1.5 ml-2">
+              <Input
+                value={bulkInvitedBy}
+                onChange={(e) => setBulkInvitedBy(e.target.value)}
+                placeholder='Set invited by (e.g. "Basecamp")'
+                className="h-8 text-xs bg-black/20 border-events-cream/20 text-events-cream w-56"
+              />
+              <Button size="sm" variant="outline" onClick={bulkSetInvitedBy} disabled={working} className="border-events-cream/30 text-events-cream">
+                Apply
+              </Button>
+            </div>
             <div className="ml-auto flex gap-2">
               <Button size="sm" variant="outline" onClick={bulkCopyLinks} className="border-events-cream/30 text-events-cream">
                 <Copy className="w-3.5 h-3.5 mr-1" /> Copy links
