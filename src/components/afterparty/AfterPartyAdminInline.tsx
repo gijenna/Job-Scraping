@@ -47,7 +47,7 @@ const AfterPartyAdminInline = () => {
       >
         <span className="flex items-center gap-2 text-[12px] uppercase" style={{ letterSpacing: "0.12em", color: CREAM }}>
           <Lock className="w-3.5 h-3.5" />
-          Admin · Partners & Spotlights
+          Admin · Partners, Spotlights & Suggestions
         </span>
         <span className="flex items-center gap-2 text-[11px]" style={{ color: CREAM_DIM }}>
           {open ? "Hide" : "Edit"}
