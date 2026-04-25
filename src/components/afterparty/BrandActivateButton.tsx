@@ -12,6 +12,7 @@ interface BrandActivateButtonProps {
   email?: string | null;
   /** "compact" hides the message field and shows a single-tap button */
   variant?: "compact" | "full";
+  onSubmitted?: () => void;
 }
 
 const CREAM = "#F5E6D3";
@@ -23,6 +24,7 @@ const BrandActivateButton = ({
   company,
   email,
   variant = "full",
+  onSubmitted,
 }: BrandActivateButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
@@ -94,6 +96,7 @@ const BrandActivateButton = ({
       }
 
       setDone(true);
+      onSubmitted?.();
       toast({
         title: "Request sent ✨",
         description: "Jenna will reach out within one business day.",

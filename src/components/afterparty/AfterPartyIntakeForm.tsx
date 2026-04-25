@@ -72,6 +72,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
+  const [activationSent, setActivationSent] = useState(false);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
@@ -541,6 +542,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             company={form.company}
             email={form.email}
             variant="full"
+            onSubmitted={() => setActivationSent(true)}
           />
           {justSavedId && !attendeeId && (
             <button
@@ -549,7 +551,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               className="text-[13px] underline"
               style={{ color: "rgba(245,230,211,0.7)" }}
             >
-              Skip for now → see my card
+              {activationSent ? "See my card" : "Skip for now → see my card"}
             </button>
           )}
         </div>
