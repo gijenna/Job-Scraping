@@ -67,7 +67,58 @@ const buildAvatarSvg = (name: string) => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 };
 
-const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
+const CompanyLogoField = ({
+  company,
+  companyUrl,
+  onChange,
+  inputStyle,
+}: {
+  company: string;
+  companyUrl: string;
+  onChange: (v: string) => void;
+  inputStyle: React.CSSProperties;
+}) => {
+  const [logoBroken, setLogoBroken] = useState(false);
+  // Prefer the explicit URL if provided; otherwise guess from the company name.
+  const guessedFromName = (() => {
+    const c = (company || "").trim();
+    if (!c) return null;
+    const slug = c.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    if (!slug) return null;
+    return `${slug}.com`;
+  })();
+  const effectiveUrl = (companyUrl || "").trim() || guessedFromName;
+  const logoSrc = resolveLogoSrc(null, effectiveUrl);
+  useEffect(() => { setLogoBroken(false); }, [logoSrc]);
+
+  return (
+    <div className="rounded-lg p-3 flex items-center gap-3" style={{ border: "1px solid rgba(255,255,255,0.1)", backgroundColor: "rgba(255,255,255,0.03)" }}>
+      <div
+        className="w-12 h-12 rounded-md flex items-center justify-center shrink-0 overflow-hidden"
+        style={{ backgroundColor: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}
+      >
+        {logoSrc && !logoBroken ? (
+          <img src={logoSrc} alt="" className="w-full h-full object-contain" onError={() => setLogoBroken(true)} />
+        ) : (
+          <span className="text-[14px] font-semibold" style={{ color: "#080808" }}>
+            {(company || "?").charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <Label className="text-[12px]">Company website</Label>
+        <Input
+          value={companyUrl}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Type hyperlink if your logo doesn't populate (e.g. yourbrand.com)"
+          style={inputStyle}
+        />
+      </div>
+    </div>
+  );
+};
+
+
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
