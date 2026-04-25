@@ -214,7 +214,7 @@ const BrandActivateButton = ({
         ) : (
           <Sparkles className="w-4 h-4 mr-2" />
         )}
-        Activate my brand →
+        Get my brand in the room →
       </Button>
     </div>
   );
