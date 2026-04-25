@@ -377,9 +377,13 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
               <div className="px-1">
+                <h2 className="font-afterparty text-[22px] mb-2" style={{ fontWeight: 500, color: CREAM }}>
+                  <EditableText settingKey="about.title" defaultText="A lil party" />
+                </h2>
+                <div className="mb-3 flex flex-col items-start gap-1.5 text-[13px] font-afterparty">
                 {me?.invited_by ? (
                   <div
-                    className="mb-3 px-3 py-2 rounded-lg text-center text-[14px] font-afterparty"
+                    className="px-3 py-1.5 rounded-lg text-center"
                     style={{
                       backgroundColor: "rgba(216,90,48,0.12)",
                       border: "1px solid rgba(216,90,48,0.4)",
@@ -387,14 +391,14 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       fontWeight: 500,
                     }}
                   >
-                    Invite-only · Luckily, you're on{" "}
+                    Luckily, you're on{" "}
                     <span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
                   </div>
                 ) : (
-                  <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
-                    <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
-                  </h2>
+                  <div style={{ color: CREAM, fontWeight: 500 }}>Invite-only</div>
                 )}
+                  <div style={{ color: CREAM_MUTED }}>swag for the first 50 folks</div>
+                </div>
                 <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
                   <EditableText
                     settingKey="about.body"
