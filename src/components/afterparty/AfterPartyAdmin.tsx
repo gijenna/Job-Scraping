@@ -213,6 +213,9 @@ const AfterPartyAdmin = () => {
         <Button onClick={sendEmails} variant="outline" className="border-events-cream/30 text-events-cream">
           <Mail className="w-4 h-4 mr-2" /> Send match emails
         </Button>
+        <Button onClick={downloadAllLinksCsv} variant="outline" className="border-events-cream/30 text-events-cream">
+          <Download className="w-4 h-4 mr-2" /> Download all links CSV
+        </Button>
         <span className="text-xs text-events-cream/50 ml-auto">
           {attendees.length} attendees · {lockedCount > 0 ? `${lockedCount} locked match rows` : "matches are live"}
         </span>
