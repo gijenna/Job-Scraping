@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 interface Spotlight {
   id: string;
