@@ -553,6 +553,12 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
               <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
             </section>
           )}
+
+          {/* Brand spotlights — global to event, shown after matches/see-who's-coming */}
+          <AfterPartySpotlights />
+
+          {/* Partners — global, bottom of page */}
+          <AfterPartyPartners />
           </div>
         </div>
 
