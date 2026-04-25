@@ -70,6 +70,8 @@ export type Database = {
           platforms: string[] | null
           public_listing: boolean
           role: string
+          show_instagram: boolean
+          show_linkedin: boolean
           slug: string
           slug_opened_at: string | null
           social_links: Json | null
@@ -107,6 +109,8 @@ export type Database = {
           platforms?: string[] | null
           public_listing?: boolean
           role: string
+          show_instagram?: boolean
+          show_linkedin?: boolean
           slug: string
           slug_opened_at?: string | null
           social_links?: Json | null
@@ -144,6 +148,8 @@ export type Database = {
           platforms?: string[] | null
           public_listing?: boolean
           role?: string
+          show_instagram?: boolean
+          show_linkedin?: boolean
           slug?: string
           slug_opened_at?: string | null
           social_links?: Json | null
@@ -1044,6 +1050,9 @@ export type Database = {
           mind_blowing_fact: string | null
           niches: string[] | null
           role: string | null
+          show_instagram: boolean | null
+          show_linkedin: boolean | null
+          social_links: Json | null
         }
         Insert: {
           attendee_number?: number | null
@@ -1058,6 +1067,9 @@ export type Database = {
           mind_blowing_fact?: string | null
           niches?: string[] | null
           role?: string | null
+          show_instagram?: boolean | null
+          show_linkedin?: boolean | null
+          social_links?: Json | null
         }
         Update: {
           attendee_number?: number | null
@@ -1072,6 +1084,9 @@ export type Database = {
           mind_blowing_fact?: string | null
           niches?: string[] | null
           role?: string | null
+          show_instagram?: boolean | null
+          show_linkedin?: boolean | null
+          social_links?: Json | null
         }
         Relationships: []
       }
