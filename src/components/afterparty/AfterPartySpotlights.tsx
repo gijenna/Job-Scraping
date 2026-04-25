@@ -22,6 +22,15 @@ const CATEGORY_ORDER = ["Brands", "Beverages", "Food", "Giveaways & Swag"];
 
 const AfterPartySpotlights = () => {
   const [items, setItems] = useState<Spotlight[]>([]);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggle = (id: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   useEffect(() => {
     (async () => {
