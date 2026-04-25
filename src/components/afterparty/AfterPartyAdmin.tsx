@@ -222,6 +222,10 @@ const AfterPartyAdmin = () => {
 
       <AfterPartyCsvSeed onImported={fetchAll} />
 
+      <AfterPartyPartnersAdmin />
+
+      <AfterPartySpotlightsAdmin />
+
       <AfterPartyTestMatches />
 
       {suggestions.length > 0 && (
