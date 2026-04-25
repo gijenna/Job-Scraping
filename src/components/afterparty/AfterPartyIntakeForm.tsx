@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -598,15 +599,31 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        disabled={saving}
-        className="w-full sm:w-auto hover:opacity-90"
-        style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
-      >
-        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-        {attendeeId ? "Update my card" : "Secure my spot →"}
-      </Button>
+      {(attendeeId || justSavedId) ? (
+        <Link
+          to="/guests"
+          onClick={() => {
+            const slug = (form as any).slug;
+            if (slug) {
+              try { sessionStorage.setItem("afterparty:return_slug", slug); } catch {}
+            }
+          }}
+          className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
+          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
+        >
+          See who's coming →
+        </Link>
+      ) : (
+        <Button
+          type="submit"
+          disabled={saving}
+          className="w-full sm:w-auto hover:opacity-90"
+          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
+        >
+          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          Secure my spot →
+        </Button>
+      )}
 
       {form.role === "brand" && (attendeeId || justSavedId) && (
         <div id="brand-activate-cta" className="pt-4 space-y-3">
