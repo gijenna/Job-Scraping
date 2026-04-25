@@ -470,6 +470,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       company={me.company}
                       email={(me as any).email}
                       variant="compact"
+                      hideIfAlreadySent
                     />
                   </div>
                 )}
