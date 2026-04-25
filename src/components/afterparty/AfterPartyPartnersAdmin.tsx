@@ -105,7 +105,7 @@ const AfterPartyPartnersAdmin = () => {
         />
         <label className="cursor-pointer inline-flex items-center justify-center px-3 py-2 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
           <Upload className="w-4 h-4 mr-2" />
-          {logoFile ? logoFile.name.slice(0, 16) : "Logo image"}
+          {logoFile ? logoFile.name.slice(0, 16) : "Custom logo (optional)"}
           <input
             ref={fileRef}
             type="file"
