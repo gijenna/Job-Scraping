@@ -234,6 +234,9 @@ const GuestList = () => {
             {filtered.map((g) => <GuestCard key={g.id} guest={g} />)}
           </div>
         )}
+
+        <AfterPartySpotlights />
+        <AfterPartyPartners />
       </div>
     </div>
   );
