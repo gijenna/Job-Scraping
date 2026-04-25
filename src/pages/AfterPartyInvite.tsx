@@ -161,6 +161,26 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     }
   }, []);
 
+  // ?edit=1 (e.g. coming back from /guests) → jump straight into edit mode
+  useEffect(() => {
+    if (!me) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edit") !== "1") return;
+    // Only auto-edit if this is the user's own card (already verified)
+    if (verifiedAttendeeId === me.id) {
+      setEditMode(true);
+    } else {
+      // Trigger PIN flow / shell shortcut
+      requestEdit();
+    }
+    params.delete("edit");
+    const qs = params.toString();
+    const newUrl =
+      window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash;
+    window.history.replaceState({}, "", newUrl);
+  }, [me?.id, verifiedAttendeeId]);
+
   const requestEdit = () => {
     if (!me) return;
     // Pre-RSVP shells (no email on file) skip PIN — there's nowhere to send a code.
@@ -298,6 +318,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             <div className="mt-4">
               <Link
                 to="/guests"
+                onClick={() => {
+                  if (me?.slug) {
+                    try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
+                  }
+                }}
                 className="text-[13px] underline"
                 style={{ color: CREAM_MUTED }}
               >
@@ -470,6 +495,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       company={me.company}
                       email={(me as any).email}
                       variant="compact"
+                      hideIfAlreadySent
                     />
                   </div>
                 )}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +13,8 @@ interface BrandActivateButtonProps {
   /** "compact" hides the message field and shows a single-tap button */
   variant?: "compact" | "full";
   onSubmitted?: () => void;
+  /** When true, render nothing if a request was already submitted by this attendee */
+  hideIfAlreadySent?: boolean;
 }
 
 const CREAM = "#F5E6D3";
@@ -25,12 +27,32 @@ const BrandActivateButton = ({
   email,
   variant = "full",
   onSubmitted,
+  hideIfAlreadySent = false,
 }: BrandActivateButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [alreadySent, setAlreadySent] = useState(false);
+
+  // Check whether this attendee has previously submitted an activation request
+  useEffect(() => {
+    if (!hideIfAlreadySent || !attendeeId) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("brand_activation_requests")
+        .select("id")
+        .eq("attendee_id", attendeeId)
+        .limit(1);
+      if (!cancelled && data && data.length > 0) setAlreadySent(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [attendeeId, hideIfAlreadySent]);
+
 
   const submit = async () => {
     setSubmitting(true);
@@ -105,6 +127,9 @@ const BrandActivateButton = ({
       setSubmitting(false);
     }
   };
+
+  // Already submitted previously and caller wants it hidden — render nothing
+  if (alreadySent && !done) return null;
 
   if (done) {
     return (
