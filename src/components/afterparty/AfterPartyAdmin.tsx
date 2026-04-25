@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
 import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
 import AfterPartyLinkBuilder from "./AfterPartyLinkBuilder";
 import AfterPartyTestMatches from "./AfterPartyTestMatches";
@@ -29,6 +30,7 @@ const AfterPartyAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const fetchAll = async () => {
     setLoading(true);
@@ -82,6 +84,48 @@ const AfterPartyAdmin = () => {
     if (!confirm("Delete this attendee?")) return;
     const res = await callAdmin("delete_attendee", { id });
     if (res) fetchAll();
+  };
+
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelected((prev) =>
+      prev.size === attendees.length ? new Set() : new Set(attendees.map((a) => a.id))
+    );
+  };
+
+  const bulkDelete = async () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    if (!confirm(`Delete ${ids.length} attendee${ids.length === 1 ? "" : "s"}? This cannot be undone.`)) return;
+    setWorking(true);
+    let ok = 0;
+    let fail = 0;
+    for (const id of ids) {
+      const res = await callAdmin("delete_attendee", { id });
+      res ? ok++ : fail++;
+    }
+    setWorking(false);
+    setSelected(new Set());
+    toast({ title: "Bulk delete complete", description: `Deleted ${ok}${fail ? ` · Failed ${fail}` : ""}` });
+    fetchAll();
+  };
+
+  const bulkCopyLinks = () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    const urls = attendees
+      .filter((a) => ids.includes(a.id))
+      .map((a) => `${PUBLISHED_BASE}/afterparty/${slugify(a.full_name)}`)
+      .join("\n");
+    navigator.clipboard.writeText(urls);
+    toast({ title: `Copied ${ids.length} link${ids.length === 1 ? "" : "s"}` });
   };
 
   const copyLink = (a: AfterPartyAttendee) => {
@@ -169,9 +213,33 @@ const AfterPartyAdmin = () => {
       )}
 
       <div className="rounded-xl border border-events-cream/10 overflow-hidden">
+        {selected.size > 0 && (
+          <div className="flex flex-wrap items-center gap-2 px-3 py-2 bg-events-coral/15 border-b border-events-cream/10 text-sm text-events-cream">
+            <span className="font-bold">{selected.size} selected</span>
+            <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())} className="text-events-cream/70 hover:text-events-cream">
+              Clear
+            </Button>
+            <div className="ml-auto flex gap-2">
+              <Button size="sm" variant="outline" onClick={bulkCopyLinks} className="border-events-cream/30 text-events-cream">
+                <Copy className="w-3.5 h-3.5 mr-1" /> Copy links
+              </Button>
+              <Button size="sm" onClick={bulkDelete} disabled={working} className="bg-red-500/80 hover:bg-red-500 text-events-cream">
+                {working ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Trash2 className="w-3.5 h-3.5 mr-1" />}
+                Delete selected
+              </Button>
+            </div>
+          </div>
+        )}
         <table className="w-full text-sm text-events-cream">
           <thead className="bg-events-cream/5">
             <tr>
+              <th className="text-left px-3 py-2 w-8">
+                <Checkbox
+                  checked={attendees.length > 0 && selected.size === attendees.length}
+                  onCheckedChange={toggleAll}
+                  aria-label="Select all"
+                />
+              </th>
               <th className="text-left px-3 py-2">#</th>
               <th className="text-left px-3 py-2">Name</th>
               <th className="text-left px-3 py-2">Role</th>
@@ -182,7 +250,14 @@ const AfterPartyAdmin = () => {
           </thead>
           <tbody>
             {attendees.map((a) => (
-              <tr key={a.id} className="border-t border-events-cream/10">
+              <tr key={a.id} className={`border-t border-events-cream/10 ${selected.has(a.id) ? "bg-events-coral/10" : ""}`}>
+                <td className="px-3 py-2">
+                  <Checkbox
+                    checked={selected.has(a.id)}
+                    onCheckedChange={() => toggleOne(a.id)}
+                    aria-label={`Select ${a.full_name}`}
+                  />
+                </td>
                 <td className="px-3 py-2 font-mono text-events-yellow">#{a.attendee_number}</td>
                 <td className="px-3 py-2 font-bold">{a.full_name}</td>
                 <td className="px-3 py-2 capitalize text-events-cream/70">{a.role}</td>
@@ -201,7 +276,7 @@ const AfterPartyAdmin = () => {
               </tr>
             ))}
             {!attendees.length && (
-              <tr><td colSpan={6} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
+              <tr><td colSpan={7} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
             )}
           </tbody>
         </table>
