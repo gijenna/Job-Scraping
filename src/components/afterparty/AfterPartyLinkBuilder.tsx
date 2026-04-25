@@ -204,6 +204,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
         email: r.email || null,
         role: r.role,
         company: r.company || null,
+        invited_by: r.invited_by || null,
         slug,
         status: "invited",
       });
