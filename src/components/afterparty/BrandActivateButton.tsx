@@ -39,9 +39,11 @@ const BrandActivateButton = ({
   const [done, setDone] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
 
-  // Check whether this attendee has previously submitted an activation request
+  // Check whether this attendee has previously submitted an activation request.
+  // We always check when we have an attendeeId so we can show the "received" state
+  // instead of the form on subsequent visits.
   useEffect(() => {
-    if (!hideIfAlreadySent || !attendeeId) return;
+    if (!attendeeId) return;
     let cancelled = false;
     (async () => {
       const { data } = await (supabase as any)
@@ -54,7 +56,7 @@ const BrandActivateButton = ({
     return () => {
       cancelled = true;
     };
-  }, [attendeeId, hideIfAlreadySent]);
+  }, [attendeeId]);
 
 
   const submit = async () => {
