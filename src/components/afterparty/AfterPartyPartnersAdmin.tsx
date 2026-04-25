@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 interface Partner {
   id: string;
@@ -97,14 +98,14 @@ const AfterPartyPartnersAdmin = () => {
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <Input
-          placeholder="Website URL (optional)"
+          placeholder="Website URL (auto-pulls logo)"
           value={websiteUrl}
           onChange={(e) => setWebsiteUrl(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <label className="cursor-pointer inline-flex items-center justify-center px-3 py-2 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
           <Upload className="w-4 h-4 mr-2" />
-          {logoFile ? logoFile.name.slice(0, 16) : "Logo image"}
+          {logoFile ? logoFile.name.slice(0, 16) : "Custom logo (optional)"}
           <input
             ref={fileRef}
             type="file"
@@ -125,10 +126,12 @@ const AfterPartyPartnersAdmin = () => {
         <p className="text-xs text-events-cream/50">No partners yet.</p>
       ) : (
         <div className="space-y-1.5">
-          {partners.map((p) => (
+          {partners.map((p) => {
+            const previewSrc = resolveLogoSrc(p.logo_url, p.website_url);
+            return (
             <div key={p.id} className="flex items-center gap-3 px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10">
-              {p.logo_url ? (
-                <img src={p.logo_url} alt={p.name} className="w-9 h-9 rounded-full object-cover" />
+              {previewSrc ? (
+                <img src={previewSrc} alt={p.name} className="w-9 h-9 rounded-full object-cover" />
               ) : (
                 <div className="w-9 h-9 rounded-full bg-events-cream/10" />
               )}
@@ -142,7 +145,8 @@ const AfterPartyPartnersAdmin = () => {
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

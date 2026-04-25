@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 interface Spotlight {
   id: string;
@@ -122,14 +123,14 @@ const AfterPartySpotlightsAdmin = () => {
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <Input
-          placeholder="Website URL (optional)"
+          placeholder="Website URL (auto-pulls logo)"
           value={websiteUrl}
           onChange={(e) => setWebsiteUrl(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <label className="cursor-pointer inline-flex items-center justify-center px-3 h-10 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
           <Upload className="w-4 h-4 mr-2" />
-          {logoFile ? logoFile.name.slice(0, 18) : "Logo image"}
+          {logoFile ? logoFile.name.slice(0, 18) : "Custom logo (optional)"}
           <input
             ref={fileRef}
             type="file"
@@ -163,10 +164,12 @@ const AfterPartySpotlightsAdmin = () => {
               <div key={cat}>
                 <div className="text-[11px] uppercase tracking-wider text-events-cream/60 mb-1.5">{cat}</div>
                 <div className="space-y-1.5">
-                  {list.map((s) => (
+                  {list.map((s) => {
+                    const previewSrc = resolveLogoSrc(s.logo_url, s.website_url);
+                    return (
                     <div key={s.id} className="flex items-start gap-3 px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10">
-                      {s.logo_url ? (
-                        <img src={s.logo_url} alt={s.name} className="w-10 h-10 rounded object-cover flex-shrink-0" />
+                      {previewSrc ? (
+                        <img src={previewSrc} alt={s.name} className="w-10 h-10 rounded object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-10 h-10 rounded bg-events-cream/10 flex-shrink-0" />
                       )}
@@ -183,7 +186,8 @@ const AfterPartySpotlightsAdmin = () => {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )
