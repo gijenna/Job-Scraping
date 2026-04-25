@@ -30,6 +30,7 @@ const AfterPartyAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const fetchAll = async () => {
     setLoading(true);
