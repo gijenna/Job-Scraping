@@ -9,6 +9,7 @@ interface ParsedRow {
   email: string;
   role: "creator" | "brand";
   company?: string;
+  invited_by?: string;
 }
 
 const slugify = (s: string) =>
