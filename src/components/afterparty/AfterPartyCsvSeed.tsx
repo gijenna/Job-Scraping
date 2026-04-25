@@ -176,6 +176,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
                   <th className="text-left px-2 py-1">Email</th>
                   <th className="text-left px-2 py-1">Role</th>
                   <th className="text-left px-2 py-1">Company</th>
+                  <th className="text-left px-2 py-1">Invited by</th>
                 </tr>
               </thead>
               <tbody>
@@ -185,6 +186,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
                     <td className="px-2 py-1 text-events-cream/70">{r.email || ", "}</td>
                     <td className="px-2 py-1 capitalize">{r.role}</td>
                     <td className="px-2 py-1 text-events-cream/70">{r.company || ", "}</td>
+                    <td className="px-2 py-1 text-events-cream/70">{r.invited_by || ", "}</td>
                   </tr>
                 ))}
               </tbody>
