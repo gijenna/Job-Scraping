@@ -118,8 +118,8 @@ const CompanyLogoField = ({
   );
 };
 
+const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
-  const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [cartoonPolling, setCartoonPolling] = useState(false);
