@@ -32,4 +32,4 @@ project_id = "qpnzjcbdtybwazceggmv"
   [functions.verify-pin]
     verify_jwt = false
   [functions.afterparty-admin]
-    verify_jwt = true
+    verify_jwt = false
