@@ -356,12 +356,40 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <Label>Instagram (handle or URL)</Label>
-          <Input value={form.social_links.instagram} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value } })} style={inputStyle} />
+          <Label>Instagram handle</Label>
+          <div className="flex items-stretch rounded-md overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.2)" }}>
+            <span
+              className="px-2 flex items-center text-[13px] select-none"
+              style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              @
+            </span>
+            <Input
+              value={(form.social_links.instagram || "").replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "")}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value.replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "") } })}
+              placeholder="yourhandle"
+              className="border-0 rounded-none"
+              style={{ ...inputStyle, border: "none" }}
+            />
+          </div>
         </div>
         <div>
-          <Label>LinkedIn URL</Label>
-          <Input value={form.social_links.linkedin} onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value } })} style={inputStyle} />
+          <Label>LinkedIn handle</Label>
+          <div className="flex items-stretch rounded-md overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.2)" }}>
+            <span
+              className="px-2 flex items-center text-[13px] select-none whitespace-nowrap"
+              style={{ backgroundColor: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)", borderRight: "1px solid rgba(255,255,255,0.12)" }}
+            >
+              linkedin.com/in/
+            </span>
+            <Input
+              value={(form.social_links.linkedin || "").replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "")}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "") } })}
+              placeholder="jennafrombasecamp"
+              className="border-0 rounded-none"
+              style={{ ...inputStyle, border: "none" }}
+            />
+          </div>
         </div>
       </div>
 
