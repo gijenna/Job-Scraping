@@ -164,10 +164,12 @@ const AfterPartySpotlightsAdmin = () => {
               <div key={cat}>
                 <div className="text-[11px] uppercase tracking-wider text-events-cream/60 mb-1.5">{cat}</div>
                 <div className="space-y-1.5">
-                  {list.map((s) => (
+                  {list.map((s) => {
+                    const previewSrc = resolveLogoSrc(s.logo_url, s.website_url);
+                    return (
                     <div key={s.id} className="flex items-start gap-3 px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10">
-                      {s.logo_url ? (
-                        <img src={s.logo_url} alt={s.name} className="w-10 h-10 rounded object-cover flex-shrink-0" />
+                      {previewSrc ? (
+                        <img src={previewSrc} alt={s.name} className="w-10 h-10 rounded object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-10 h-10 rounded bg-events-cream/10 flex-shrink-0" />
                       )}
@@ -184,7 +186,8 @@ const AfterPartySpotlightsAdmin = () => {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )
