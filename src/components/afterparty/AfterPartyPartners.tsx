@@ -9,6 +9,15 @@ interface Partner {
   website_url: string | null;
 }
 
+const toAbsoluteUrl = (u: string | null): string | null => {
+  if (!u) return null;
+  const trimmed = u.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("//")) return `https:${trimmed}`;
+  return `https://${trimmed.replace(/^\/+/, "")}`;
+};
+
 const CREAM = "#F5E6D3";
 const CREAM_MUTED = "rgba(245,230,211,0.7)";
 
