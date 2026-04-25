@@ -1,5 +1,5 @@
 // Admin dispatcher: locks/unlocks matches, deletes attendees, sends emails, reviews suggestions.
-// Caller must be authenticated AND their email must match ADMIN_EMAIL.
+// Caller must be authenticated with an approved admin email/domain.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0'
 
 const corsHeaders = {
@@ -14,6 +14,7 @@ const ADMIN_EMAILS = (Deno.env.get('ADMIN_EMAIL') || '')
   .split(',')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean)
+const ADMIN_DOMAINS = ['wearetheoutdoorindustry.com']
 
 interface MatchRow {
   attendee_id: string
@@ -39,8 +40,11 @@ Deno.serve(async (req) => {
     const { data: userData, error: userErr } = await userClient.auth.getUser()
     if (userErr || !userData.user?.email) return json({ error: 'unauthorized' }, 401)
 
-    const callerEmail = userData.user.email.toLowerCase()
-    if (!ADMIN_EMAILS.length || !ADMIN_EMAILS.includes(callerEmail)) {
+    const callerEmail = userData.user.email.trim().toLowerCase()
+    const callerDomain = callerEmail.split('@').pop() || ''
+    const isApprovedAdmin = ADMIN_EMAILS.includes(callerEmail) || ADMIN_DOMAINS.includes(callerDomain)
+
+    if (!isApprovedAdmin) {
       return json({ error: 'forbidden' }, 403)
     }
 
