@@ -128,6 +128,9 @@ const BrandActivateButton = ({
     }
   };
 
+  // Already submitted previously and caller wants it hidden — render nothing
+  if (alreadySent && !done) return null;
+
   if (done) {
     return (
       <div
