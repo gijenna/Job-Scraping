@@ -86,6 +86,48 @@ const AfterPartyAdmin = () => {
     if (res) fetchAll();
   };
 
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelected((prev) =>
+      prev.size === attendees.length ? new Set() : new Set(attendees.map((a) => a.id))
+    );
+  };
+
+  const bulkDelete = async () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    if (!confirm(`Delete ${ids.length} attendee${ids.length === 1 ? "" : "s"}? This cannot be undone.`)) return;
+    setWorking(true);
+    let ok = 0;
+    let fail = 0;
+    for (const id of ids) {
+      const res = await callAdmin("delete_attendee", { id });
+      res ? ok++ : fail++;
+    }
+    setWorking(false);
+    setSelected(new Set());
+    toast({ title: "Bulk delete complete", description: `Deleted ${ok}${fail ? ` · Failed ${fail}` : ""}` });
+    fetchAll();
+  };
+
+  const bulkCopyLinks = () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    const urls = attendees
+      .filter((a) => ids.includes(a.id))
+      .map((a) => `${PUBLISHED_BASE}/afterparty/${slugify(a.full_name)}`)
+      .join("\n");
+    navigator.clipboard.writeText(urls);
+    toast({ title: `Copied ${ids.length} link${ids.length === 1 ? "" : "s"}` });
+  };
+
   const copyLink = (a: AfterPartyAttendee) => {
     const url = `${PUBLISHED_BASE}/afterparty/${slugify(a.full_name)}`;
     navigator.clipboard.writeText(url);
