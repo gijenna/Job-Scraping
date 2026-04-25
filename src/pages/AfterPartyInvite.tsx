@@ -60,6 +60,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [justRsvped, setJustRsvped] = useState(false);
+  const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
 
   const fetchAll = async () => {
     // Public read goes through the safe view (no email/pin fields exposed)
