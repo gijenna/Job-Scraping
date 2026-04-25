@@ -247,11 +247,21 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     setSaving(false);
     toast({ title: "You're in.", description: "Look out for your matches below." });
 
-    if (otherNiche.trim()) {
-      await (supabase as any).from("afterparty_suggestions").insert([
-        { kind: "niche", value: otherNiche.trim(), attendee_id: id, attendee_name: payload.full_name },
-      ]);
+    const allSuggestions = [
+      ...pendingNiches,
+      ...(otherNiche.trim() ? [otherNiche.trim()] : []),
+    ];
+    if (allSuggestions.length) {
+      await (supabase as any).from("afterparty_suggestions").insert(
+        allSuggestions.map((value) => ({
+          kind: "niche",
+          value,
+          attendee_id: id,
+          attendee_name: payload.full_name,
+        })),
+      );
       setOtherNiche("");
+      setPendingNiches([]);
     }
 
     if (id) {
