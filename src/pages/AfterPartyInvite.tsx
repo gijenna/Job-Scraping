@@ -298,6 +298,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             <div className="mt-4">
               <Link
                 to="/guests"
+                onClick={() => {
+                  if (me?.slug) {
+                    try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
+                  }
+                }}
                 className="text-[13px] underline"
                 style={{ color: CREAM_MUTED }}
               >
