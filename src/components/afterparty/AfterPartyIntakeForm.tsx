@@ -253,7 +253,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       }
     }
     setSaving(false);
-    toast({ title: "You're in.", description: "Look out for your matches below." });
+    setSavedSnapshot(JSON.stringify(form));
+    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated." : "Look out for your matches below." });
 
     const allSuggestions = [
       ...pendingNiches,
