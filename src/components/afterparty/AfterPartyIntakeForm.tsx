@@ -222,6 +222,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       brands_wishlist: form.role === "creator" ? form.brands_wishlist || null : null,
       mind_blowing_fact: form.mind_blowing_fact || null,
       company: form.role === "brand" ? form.company || null : (form.role === "industry_expert" ? form.company || null : null),
+      company_url: form.role === "brand" || form.role === "industry_expert" ? (form.company_url || null) : null,
       company_role: form.role === "brand" || form.role === "industry_expert" ? form.company_role || null : null,
       brand_seeking: form.role === "brand" ? form.brand_seeking : [],
       budget_range: form.role === "brand" ? form.budget_range || null : null,
