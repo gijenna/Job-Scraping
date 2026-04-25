@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
     if (userErr || !userData.user?.email) return json({ error: 'unauthorized' }, 401)
 
     const callerEmail = userData.user.email.toLowerCase()
-    if (!ADMIN_EMAIL || callerEmail !== ADMIN_EMAIL) {
+    if (!ADMIN_EMAILS.length || !ADMIN_EMAILS.includes(callerEmail)) {
       return json({ error: 'forbidden' }, 403)
     }
 
