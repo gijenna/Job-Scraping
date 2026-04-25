@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveLogoSrc, faviconFromUrl } from "@/lib/url-logo";
 
 interface Spotlight {
   id: string;
