@@ -127,7 +127,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
         <div>
           <h3 className="font-display font-bold text-events-cream">Seed invitees from CSV</h3>
           <p className="text-xs text-events-cream/50 mt-1">
-            Columns: <code>name, email, role, company</code> (role = creator|brand)
+            Columns: <code>name, email, role, company, invited_by</code> (role = creator|brand; invited_by optional, e.g. "Basecamp")
           </p>
         </div>
         <div className="flex gap-2">
