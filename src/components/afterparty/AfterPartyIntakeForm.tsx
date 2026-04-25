@@ -341,8 +341,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
         </div>
         <div>
-          <Label>Email</Label>
-          <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
+          <Label>Email *</Label>
+          <Input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
         </div>
       </div>
 
