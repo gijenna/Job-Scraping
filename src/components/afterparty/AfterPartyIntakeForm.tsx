@@ -151,6 +151,37 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
     setSaving(true);
 
+    // Duplicate guard — only on first RSVP (no attendeeId yet).
+    // If the same name OR email already exists, send the user to that
+    // existing card so they can sign in via PIN instead of creating a dup.
+    if (!attendeeId) {
+      const nameTrim = form.full_name.trim();
+      const emailTrim = (form.email || "").trim().toLowerCase();
+      const orParts: string[] = [`full_name.ilike.${nameTrim}`];
+      if (emailTrim) orParts.push(`email.ilike.${emailTrim}`);
+      const { data: existing } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("id, slug, full_name, email")
+        .or(orParts.join(","))
+        .limit(1)
+        .maybeSingle();
+      if (existing?.slug) {
+        setSaving(false);
+        const matchedOn =
+          existing.email && emailTrim && existing.email.toLowerCase() === emailTrim
+            ? "email"
+            : "name";
+        toast({
+          title: "Card already exists",
+          description: `We found a card with that ${matchedOn}. Sending you there to sign in.`,
+        });
+        setTimeout(() => {
+          window.location.href = `/afterparty/${existing.slug}`;
+        }, 900);
+        return;
+      }
+    }
+
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
