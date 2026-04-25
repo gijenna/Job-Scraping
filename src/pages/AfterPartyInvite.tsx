@@ -99,9 +99,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         const key = `afterparty:greeted:${found.id}`;
         if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
-          // Splash stage fades out 5.2s-6.0s; invite "reveal" callback fires at 6.4s.
-          // Show greeting immediately after stage clears, for ~3.8s, fully
-          // separated from both the animation and the invite content.
+          setGreetingQueued(true);
           setTimeout(() => setShowPersonalGreeting(true), 6100);
           setTimeout(() => setShowPersonalGreeting(false), 9900);
         }
