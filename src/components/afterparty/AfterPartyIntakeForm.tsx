@@ -150,6 +150,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Name required", variant: "destructive" });
       return;
     }
+    // Phone is required for new attendees — last 4 digits become their card password.
+    const phoneDigits = (form.phone || "").replace(/\D/g, "");
+    if (!attendeeId && phoneDigits.length < 4) {
+      toast({ title: "Phone number required", description: "We use the last 4 digits as your password to edit your card.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
 
     // Duplicate guard — only on first RSVP (no attendeeId yet).
