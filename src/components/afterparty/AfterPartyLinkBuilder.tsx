@@ -151,6 +151,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
     const idxEmail = header.indexOf("email");
     const idxRole = header.indexOf("role");
     const idxCompany = header.indexOf("company");
+    const idxInvitedBy = Math.max(header.indexOf("invited_by"), header.indexOf("invited by"));
 
     const out: ParsedRow[] = dataRows
       .map((r) => ({
@@ -158,6 +159,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
         email: (idxEmail >= 0 ? r[idxEmail] : r[1])?.trim() || undefined,
         role: normalizeRole(idxRole >= 0 ? r[idxRole] : r[2]),
         company: (idxCompany >= 0 ? r[idxCompany] : r[3])?.trim() || undefined,
+        invited_by: (idxInvitedBy >= 0 ? r[idxInvitedBy] : undefined)?.trim() || undefined,
       }))
       .filter((r) => r.full_name);
     setRows(out);
