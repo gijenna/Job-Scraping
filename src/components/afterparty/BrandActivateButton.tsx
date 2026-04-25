@@ -96,6 +96,7 @@ const BrandActivateButton = ({
       }
 
       setDone(true);
+      onSubmitted?.();
       toast({
         title: "Request sent ✨",
         description: "Jenna will reach out within one business day.",
