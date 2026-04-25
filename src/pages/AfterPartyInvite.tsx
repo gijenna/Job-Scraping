@@ -90,13 +90,17 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     );
     if (found) {
       setMe(found);
-      // If this is a pre-RSVP shell (created by the bulk link builder
-      // with no profile data yet), drop them straight into the intake form.
-      const isShell = !found.photo_url && !found.cartoon_url
-        && !(found.niches?.length) && !(found.looking_for?.length)
-        && !(found.creator_types?.length) && !(found.platforms?.length)
-        && !(found as any).mind_blowing_fact && !(found as any).company;
-      if (isShell) setEditMode(true);
+      // First-time personalized greeting: only the very first time someone
+      // opens THEIR personalized link in this browser. Not on edit/back/etc.
+      try {
+        const key = `afterparty:greeted:${found.id}`;
+        if (!sessionStorage.getItem(key) && !localStorage.getItem(key)) {
+          setShowPersonalGreeting(true);
+          localStorage.setItem(key, "1");
+          // Hide after enough time to read it
+          setTimeout(() => setShowPersonalGreeting(false), 5200);
+        }
+      } catch {}
     }
   }, [name, attendees, me]);
 
