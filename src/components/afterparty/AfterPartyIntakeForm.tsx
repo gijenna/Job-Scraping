@@ -72,6 +72,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
+  const [activationSent, setActivationSent] = useState(false);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
