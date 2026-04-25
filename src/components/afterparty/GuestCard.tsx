@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Instagram, Linkedin } from "lucide-react";
 import NumberBadge from "./NumberBadge";
 import StarSparkle from "./StarSparkle";
 import { resolveLogoSrc } from "@/lib/url-logo";
@@ -15,6 +16,9 @@ export interface GuestRow {
   creator_types: string[] | null;
   looking_for: string[] | null;
   mind_blowing_fact: string | null;
+  social_links?: { instagram?: string | null; linkedin?: string | null } | null;
+  show_instagram?: boolean | null;
+  show_linkedin?: boolean | null;
   created_at: string;
 }
 
