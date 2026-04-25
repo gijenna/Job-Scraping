@@ -123,14 +123,14 @@ const AfterPartySpotlightsAdmin = () => {
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <Input
-          placeholder="Website URL (optional)"
+          placeholder="Website URL (auto-pulls logo)"
           value={websiteUrl}
           onChange={(e) => setWebsiteUrl(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
         <label className="cursor-pointer inline-flex items-center justify-center px-3 h-10 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
           <Upload className="w-4 h-4 mr-2" />
-          {logoFile ? logoFile.name.slice(0, 18) : "Logo image"}
+          {logoFile ? logoFile.name.slice(0, 18) : "Custom logo (optional)"}
           <input
             ref={fileRef}
             type="file"
