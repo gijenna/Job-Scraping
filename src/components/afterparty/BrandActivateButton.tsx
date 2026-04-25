@@ -24,6 +24,7 @@ const BrandActivateButton = ({
   company,
   email,
   variant = "full",
+  onSubmitted,
 }: BrandActivateButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
