@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
 import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
 import AfterPartyLinkBuilder from "./AfterPartyLinkBuilder";
 import AfterPartyTestMatches from "./AfterPartyTestMatches";
