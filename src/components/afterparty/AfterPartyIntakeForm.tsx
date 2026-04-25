@@ -300,10 +300,31 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <Label>Full name *</Label>
           <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
         </div>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <Label>Full name *</Label>
+          <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} style={inputStyle} />
+        </div>
         <div>
           <Label>Email</Label>
           <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
         </div>
+      </div>
+
+      <div>
+        <Label>Phone {attendeeId ? "" : "*"}</Label>
+        <Input
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          placeholder="(555) 123-4567"
+          style={inputStyle}
+        />
+        <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+          The last 4 digits become your password to edit this card later. Easy to remember, no email codes.
+        </p>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
