@@ -15,6 +15,8 @@ interface BrandActivateButtonProps {
   onSubmitted?: () => void;
   /** When true, render nothing if a request was already submitted by this attendee */
   hideIfAlreadySent?: boolean;
+  /** Personalized After Party page URL for this attendee (used in confirmation email) */
+  afterPartyUrl?: string;
 }
 
 const CREAM = "#F5E6D3";
