@@ -126,10 +126,12 @@ const AfterPartyPartnersAdmin = () => {
         <p className="text-xs text-events-cream/50">No partners yet.</p>
       ) : (
         <div className="space-y-1.5">
-          {partners.map((p) => (
+          {partners.map((p) => {
+            const previewSrc = resolveLogoSrc(p.logo_url, p.website_url);
+            return (
             <div key={p.id} className="flex items-center gap-3 px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10">
-              {p.logo_url ? (
-                <img src={p.logo_url} alt={p.name} className="w-9 h-9 rounded-full object-cover" />
+              {previewSrc ? (
+                <img src={previewSrc} alt={p.name} className="w-9 h-9 rounded-full object-cover" />
               ) : (
                 <div className="w-9 h-9 rounded-full bg-events-cream/10" />
               )}
