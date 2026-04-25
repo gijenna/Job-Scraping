@@ -429,6 +429,16 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               )}
             </tbody>
           </table>
+      <div className="flex justify-end pt-3 px-3 pb-3">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={exportCsv}
+          className="text-events-cream/40 hover:text-events-cream/80 text-xs"
+        >
+          <Download className="w-3.5 h-3.5 mr-1" /> Export CSV ({filteredExperts.length})
+        </Button>
+      </div>
       {/* Card Preview Dialog */}
       <Dialog open={!!previewExpert} onOpenChange={(open) => !open && setPreviewExpert(null)}>
         <DialogContent className="bg-events-teal border-events-cream/20 max-w-sm p-0 overflow-hidden">
