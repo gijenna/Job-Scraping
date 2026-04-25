@@ -23,6 +23,7 @@ import { getSession } from "@/services/auth";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
