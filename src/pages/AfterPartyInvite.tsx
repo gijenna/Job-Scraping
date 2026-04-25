@@ -377,23 +377,24 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
               <div className="px-1">
-                {/* Personalized "Lucky you" banner for shells with invited_by */}
-                {me?.invited_by && (
+                {me?.invited_by ? (
                   <div
-                    className="mb-4 px-3 py-2 rounded-lg text-center text-[13px]"
+                    className="mb-3 px-3 py-2 rounded-lg text-center text-[14px] font-afterparty"
                     style={{
                       backgroundColor: "rgba(216,90,48,0.12)",
                       border: "1px solid rgba(216,90,48,0.4)",
                       color: CREAM,
+                      fontWeight: 500,
                     }}
                   >
                     Invite-only · Luckily, you're on{" "}
-                    <span style={{ fontWeight: 600 }}>{me.invited_by}</span>'s list
+                    <span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
                   </div>
+                ) : (
+                  <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
+                    <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
+                  </h2>
                 )}
-                <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
-                  <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
-                </h2>
                 <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
                   <EditableText
                     settingKey="about.body"
