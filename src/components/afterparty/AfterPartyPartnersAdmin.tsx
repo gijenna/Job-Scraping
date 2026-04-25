@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { resolveLogoSrc } from "@/lib/url-logo";
 
 interface Partner {
   id: string;
