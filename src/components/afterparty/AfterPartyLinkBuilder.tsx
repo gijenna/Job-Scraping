@@ -95,6 +95,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
   const [mode, setMode] = useState<"csv" | "paste-simple" | "paste-detailed">("paste-simple");
   const [pasteText, setPasteText] = useState("");
   const [pasteRole, setPasteRole] = useState<AttendeeRole>("creator");
+  const [pasteInvitedBy, setPasteInvitedBy] = useState("");
 
   const parsePasteSimple = () => {
     const lines = pasteText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
