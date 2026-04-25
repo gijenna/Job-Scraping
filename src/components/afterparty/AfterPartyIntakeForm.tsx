@@ -97,10 +97,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     brand_fit_notes: "",
   });
 
+  const [savedSnapshot, setSavedSnapshot] = useState<string>("");
   useEffect(() => {
-    if (initial) setForm({ ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } });
+    if (initial) {
+      const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
+      setForm(merged);
+      setSavedSnapshot(JSON.stringify(merged));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
+
+  const isDirty = attendeeId ? JSON.stringify(form) !== savedSnapshot : false;
 
   const fallbackAvatar = useMemo(() => buildAvatarSvg(form.full_name || "anon"), [form.full_name]);
 
