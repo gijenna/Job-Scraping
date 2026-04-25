@@ -268,22 +268,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
-          <BasecampMatchPopflyLogo onRevealed={() => {
-            // If a personalized greeting is queued, hold the invite reveal
-            // until the greeting fully finishes so the three moments are
-            // sequential: animation → greeting → invite.
-            if (showPersonalGreeting) {
-              const wait = setInterval(() => {
-                if (!showPersonalGreeting) {
-                  clearInterval(wait);
-                  setRevealed(true);
-                }
-              }, 200);
-              setTimeout(() => { clearInterval(wait); setRevealed(true); }, 5000);
-            } else {
-              setRevealed(true);
-            }
-          }} />
+          <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
 
           {/* Personalized greeting — appears AFTER the splash so it doesn't
               cover the animation. Only the first visit per browser. */}
