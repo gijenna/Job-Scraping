@@ -88,56 +88,102 @@ const AfterPartySpotlights = () => {
             >
               {category}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-start">
               {list.map((s) => {
                 const src = resolveLogoSrc(s.logo_url, s.website_url);
-                const pill = (
+                const hasDesc = !!(s.description && s.description.trim());
+                const isOpen = expanded.has(s.id);
+                const logo = (
                   <div
-                    className="inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full"
-                    style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}
-                    title={s.description || s.name}
+                    className="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0"
+                    style={{
+                      width: 26,
+                      height: 26,
+                      backgroundColor: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                    }}
                   >
-                    <div
-                      className="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0"
-                      style={{
-                        width: 26,
-                        height: 26,
-                        backgroundColor: "rgba(255,255,255,0.06)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                      }}
-                    >
-                      {src ? (
-                        <img
-                          src={src}
-                          alt={s.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const fav = faviconFromUrl(s.website_url);
-                            const el = e.currentTarget as HTMLImageElement;
-                            if (fav && el.src !== fav) el.src = fav;
-                          }}
-                        />
-                      ) : (
-                        <span style={{ color: CREAM, fontSize: 10 }}>{s.name.slice(0, 2)}</span>
-                      )}
-                    </div>
-                    <span className="text-[12px] leading-none" style={{ color: CREAM, fontWeight: 500 }}>
-                      {s.name}
-                    </span>
+                    {src ? (
+                      <img
+                        src={src}
+                        alt={s.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const fav = faviconFromUrl(s.website_url);
+                          const el = e.currentTarget as HTMLImageElement;
+                          if (fav && el.src !== fav) el.src = fav;
+                        }}
+                      />
+                    ) : (
+                      <span style={{ color: CREAM, fontSize: 10 }}>{s.name.slice(0, 2)}</span>
+                    )}
                   </div>
                 );
-                return s.website_url ? (
+
+                const nameEl = (
+                  <span className="text-[12px] leading-none" style={{ color: CREAM, fontWeight: 500 }}>
+                    {s.name}
+                  </span>
+                );
+
+                const nameLinked = s.website_url ? (
                   <a
-                    key={s.id}
                     href={s.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:opacity-90 transition-opacity"
+                    className="hover:opacity-90 transition-opacity inline-flex items-center gap-2"
                   >
-                    {pill}
+                    {logo}
+                    {nameEl}
                   </a>
                 ) : (
-                  <div key={s.id}>{pill}</div>
+                  <span className="inline-flex items-center gap-2">
+                    {logo}
+                    {nameEl}
+                  </span>
+                );
+
+                return (
+                  <div
+                    key={s.id}
+                    className="inline-flex flex-col rounded-2xl overflow-hidden"
+                    style={{
+                      backgroundColor: CARD,
+                      border: `1px solid ${BORDER}`,
+                      maxWidth: isOpen ? 280 : undefined,
+                    }}
+                  >
+                    <div className="flex items-center gap-2 pl-1 pr-2 py-1">
+                      {nameLinked}
+                      {hasDesc && (
+                        <button
+                          type="button"
+                          onClick={() => toggle(s.id)}
+                          aria-expanded={isOpen}
+                          aria-label={isOpen ? "Hide details" : "Show details"}
+                          className="ml-0.5 flex items-center justify-center rounded-full transition-transform"
+                          style={{
+                            width: 18,
+                            height: 18,
+                            color: CREAM_MUTED,
+                            transform: isOpen ? "rotate(180deg)" : "none",
+                          }}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                    {hasDesc && isOpen && (
+                      <div
+                        className="px-3 pb-2 pt-1 text-[12px] leading-snug"
+                        style={{ color: CREAM_MUTED, borderTop: `1px solid ${BORDER}` }}
+                      >
+                        {s.description}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
