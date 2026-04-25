@@ -107,6 +107,18 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     }
   }, [name, attendees, me]);
 
+  // Reveal invite content after splash AND after personalized greeting (if any) finishes.
+  useEffect(() => {
+    if (!splashDone) return;
+    if (greetingQueued && showPersonalGreeting) return;
+    if (greetingQueued && !showPersonalGreeting) {
+      // greeting was shown and is now hidden; reveal
+      setRevealed(true);
+      return;
+    }
+    setRevealed(true);
+  }, [splashDone, greetingQueued, showPersonalGreeting]);
+
   // Locked matches
   useEffect(() => {
     if (!me) { setLockedMatches(null); return; }
