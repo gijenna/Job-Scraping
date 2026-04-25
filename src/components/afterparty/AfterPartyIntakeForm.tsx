@@ -71,6 +71,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [uploading, setUploading] = useState(false);
   const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
+  const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [activationSent, setActivationSent] = useState(false);
   const [form, setForm] = useState<any>({
@@ -246,11 +247,21 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     setSaving(false);
     toast({ title: "You're in.", description: "Look out for your matches below." });
 
-    if (otherNiche.trim()) {
-      await (supabase as any).from("afterparty_suggestions").insert([
-        { kind: "niche", value: otherNiche.trim(), attendee_id: id, attendee_name: payload.full_name },
-      ]);
+    const allSuggestions = [
+      ...pendingNiches,
+      ...(otherNiche.trim() ? [otherNiche.trim()] : []),
+    ];
+    if (allSuggestions.length) {
+      await (supabase as any).from("afterparty_suggestions").insert(
+        allSuggestions.map((value) => ({
+          kind: "niche",
+          value,
+          attendee_id: id,
+          attendee_name: payload.full_name,
+        })),
+      );
       setOtherNiche("");
+      setPendingNiches([]);
     }
 
     if (id) {
@@ -400,13 +411,57 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             <button type="button" key={n} onClick={() => toggle("niches", n)} className={pillBase} style={pillStyle(form.niches.includes(n), ROLE.creator)}>{n}</button>
           ))}
         </div>
-        <Input
-          value={otherNiche}
-          onChange={(e) => setOtherNiche(e.target.value)}
-          placeholder="Other niche? Suggest one (we'll review)"
-          className="mt-2"
-          style={inputStyle}
-        />
+        <div className="mt-2 flex gap-2">
+          <Input
+            value={otherNiche}
+            onChange={(e) => setOtherNiche(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                const v = otherNiche.trim();
+                if (!v) return;
+                if (!pendingNiches.includes(v)) setPendingNiches([...pendingNiches, v]);
+                setOtherNiche("");
+              }
+            }}
+            placeholder="Other niche? Suggest one (we'll review)"
+            style={inputStyle}
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              const v = otherNiche.trim();
+              if (!v) return;
+              if (!pendingNiches.includes(v)) setPendingNiches([...pendingNiches, v]);
+              setOtherNiche("");
+            }}
+            disabled={!otherNiche.trim()}
+            style={{ backgroundColor: ROLE.creator.fill, color: "#fff" }}
+          >
+            Suggest
+          </Button>
+        </div>
+        {pendingNiches.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {pendingNiches.map((n) => (
+              <span
+                key={n}
+                className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs"
+                style={{ backgroundColor: ROLE.creator.fill, color: "#fff" }}
+              >
+                {n}
+                <button
+                  type="button"
+                  onClick={() => setPendingNiches(pendingNiches.filter((p) => p !== n))}
+                  aria-label={`Remove ${n}`}
+                  className="ml-1 opacity-80 hover:opacity-100"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Creator-only block */}
