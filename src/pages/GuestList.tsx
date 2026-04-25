@@ -238,6 +238,7 @@ const GuestList = () => {
 
         <AfterPartySpotlights />
         <AfterPartyPartners />
+        <AfterPartyAdminInline />
       </div>
     </div>
   );
