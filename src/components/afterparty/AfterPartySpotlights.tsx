@@ -71,6 +71,7 @@ const AfterPartySpotlights = () => {
             </div>
             <div className="space-y-2">
               {list.map((s) => {
+                const src = resolveLogoSrc(s.logo_url, s.website_url);
                 const card = (
                   <div
                     className="flex items-center gap-3 p-3 rounded-lg"
@@ -85,8 +86,17 @@ const AfterPartySpotlights = () => {
                         border: "1px solid rgba(255,255,255,0.1)",
                       }}
                     >
-                      {s.logo_url ? (
-                        <img src={s.logo_url} alt={s.name} className="w-full h-full object-cover" />
+                      {src ? (
+                        <img
+                          src={src}
+                          alt={s.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const fav = faviconFromUrl(s.website_url);
+                            const el = e.currentTarget as HTMLImageElement;
+                            if (fav && el.src !== fav) el.src = fav;
+                          }}
+                        />
                       ) : (
                         <span style={{ color: CREAM, fontSize: 12 }}>{s.name.slice(0, 2)}</span>
                       )}
