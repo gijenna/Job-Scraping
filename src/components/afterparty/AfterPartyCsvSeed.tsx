@@ -86,6 +86,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
       email: r.email || null,
       role: r.role,
       company: r.company || null,
+      invited_by: r.invited_by || null,
       slug: slugify(r.full_name),
       status: "invited",
     }));
