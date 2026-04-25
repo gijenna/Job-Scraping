@@ -59,6 +59,7 @@ export type Database = {
           looking_for: string[] | null
           mind_blowing_fact: string | null
           niches: string[] | null
+          phone: string | null
           photo_url: string | null
           pin_attempts: number
           pin_expires_at: string | null
@@ -93,6 +94,7 @@ export type Database = {
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
+          phone?: string | null
           photo_url?: string | null
           pin_attempts?: number
           pin_expires_at?: string | null
@@ -127,6 +129,7 @@ export type Database = {
           looking_for?: string[] | null
           mind_blowing_fact?: string | null
           niches?: string[] | null
+          phone?: string | null
           photo_url?: string | null
           pin_attempts?: number
           pin_expires_at?: string | null

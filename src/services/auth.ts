@@ -14,7 +14,7 @@ export interface RequestPinResult {
 export interface VerifyPinResult {
   ok: boolean;
   attendee_id?: string;
-  reason?: "invalid" | "session_failed" | "server_error";
+  reason?: "invalid" | "locked" | "no_phone" | "session_failed" | "server_error";
 }
 
 export interface AfterPartySession {
@@ -48,6 +48,23 @@ export async function verifyPin(slug: string, pin: string): Promise<VerifyPinRes
   if (setErr) {
     return { ok: false, reason: "session_failed" };
   }
+  return { ok: true, attendee_id };
+}
+
+// Phone-based: identifies attendee by slug, verifies last 4 digits of phone on file.
+export async function verifyPhonePin(slug: string, pin: string): Promise<VerifyPinResult> {
+  const { data, error } = await supabase.functions.invoke("verify-phone-pin", { body: { slug, pin } });
+  if (error || !data?.ok) {
+    const ctx = (error as any)?.context;
+    return { ok: false, reason: (data?.reason || ctx?.reason || "invalid") as VerifyPinResult["reason"] };
+  }
+  const { access_token, refresh_token, attendee_id } = data as {
+    access_token: string;
+    refresh_token: string;
+    attendee_id: string;
+  };
+  const { error: setErr } = await supabase.auth.setSession({ access_token, refresh_token });
+  if (setErr) return { ok: false, reason: "session_failed" };
   return { ok: true, attendee_id };
 }
 

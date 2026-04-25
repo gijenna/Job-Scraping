@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { requestPin, verifyPin } from "@/services/auth";
+import { requestPin, verifyPin, verifyPhonePin } from "@/services/auth";
 import { Loader2 } from "lucide-react";
 
 interface Props {
@@ -14,7 +14,8 @@ interface Props {
 const RESEND_SECONDS = 60;
 
 const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
-  const [stage, setStage] = useState<"intro" | "code">("intro");
+  // mode: 'phone' (default) | 'email-intro' | 'email-code'
+  const [mode, setMode] = useState<"phone" | "email-intro" | "email-code">("phone");
   const [sending, setSending] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [maskedEmail, setMaskedEmail] = useState<string | null>(null);
@@ -24,10 +25,9 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
   const [cooldown, setCooldown] = useState(0);
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
-  // Reset on open/close
   useEffect(() => {
     if (!open) {
-      setStage("intro");
+      setMode("phone");
       setSending(false);
       setVerifying(false);
       setMaskedEmail(null);
@@ -38,39 +38,32 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
     }
   }, [open]);
 
-  // Cooldown timer
   useEffect(() => {
     if (cooldown <= 0) return;
     const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
     return () => clearTimeout(t);
   }, [cooldown]);
 
-  // Auto-focus first box on stage change
+  // Auto-focus first box whenever we land on a code-entry mode
   useEffect(() => {
-    if (stage === "code") {
+    if (mode === "phone" || mode === "email-code") {
       setTimeout(() => inputs.current[0]?.focus(), 60);
     }
-  }, [stage]);
+  }, [mode]);
 
-  const handleSend = async () => {
+  const handleSendEmail = async () => {
     setSending(true);
     setError(null);
     const r = await requestPin(slug);
     setSending(false);
     if (!r.ok) {
-      if (r.reason === "no_email") {
-        setNoEmail(true);
-        return;
-      }
-      if (r.reason === "locked") {
-        setError("Too many attempts. Try again in 30 minutes.");
-        return;
-      }
+      if (r.reason === "no_email") { setNoEmail(true); return; }
+      if (r.reason === "locked") { setError("Too many attempts. Try again in 30 minutes."); return; }
       setError("Couldn't send the code. Try again in a moment.");
       return;
     }
     setMaskedEmail(r.masked_email || null);
-    setStage("code");
+    setMode("email-code");
     setCooldown(RESEND_SECONDS);
   };
 
@@ -78,7 +71,7 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
     if (cooldown > 0) return;
     setDigits(["", "", "", ""]);
     setError(null);
-    await handleSend();
+    await handleSendEmail();
   };
 
   const handleDigit = (idx: number, v: string) => {
@@ -111,6 +104,32 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
   const submitCode = async (code: string) => {
     setVerifying(true);
     setError(null);
+
+    if (mode === "phone") {
+      const r = await verifyPhonePin(slug, code);
+      setVerifying(false);
+      if (!r.ok) {
+        if (r.reason === "no_phone") {
+          // Fallback: this attendee predates phone auth. Offer email code.
+          setError(null);
+          setMode("email-intro");
+          return;
+        }
+        if (r.reason === "locked") {
+          setError("Too many tries. Locked for 30 minutes.");
+          setDigits(["", "", "", ""]);
+          return;
+        }
+        setError("That didn't match. Try again.");
+        setDigits(["", "", "", ""]);
+        setTimeout(() => inputs.current[0]?.focus(), 30);
+        return;
+      }
+      onSuccess(r.attendee_id!);
+      return;
+    }
+
+    // email-code path
     const r = await verifyPin(slug, code);
     setVerifying(false);
     if (!r.ok) {
@@ -122,6 +141,22 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
     onSuccess(r.attendee_id!);
   };
 
+  const headingFor = () => {
+    if (mode === "phone") return "Enter your code";
+    if (mode === "email-intro") return "Verify it's you";
+    return "Enter your code";
+  };
+
+  const descFor = () => {
+    if (mode === "phone") return "Last 4 digits of the phone number on your card.";
+    if (mode === "email-intro") return "No phone on file for this card. We'll send a 4-digit code to your email instead.";
+    return maskedEmail
+      ? `Sent to ${maskedEmail}. Valid for 10 minutes.`
+      : "Sent. Valid for 10 minutes.";
+  };
+
+  const showCodeInputs = mode === "phone" || mode === "email-code";
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent
@@ -130,27 +165,21 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
       >
         <div className="p-6">
           <DialogHeader>
-            <DialogTitle style={{ color: "#fff", fontWeight: 500 }}>
-              {stage === "intro" ? "Verify it's you" : "Enter your code"}
-            </DialogTitle>
+            <DialogTitle style={{ color: "#fff", fontWeight: 500 }}>{headingFor()}</DialogTitle>
             <DialogDescription style={{ color: "rgba(255,255,255,0.65)" }}>
-              {stage === "intro"
-                ? "We'll send a 4-digit code to the email on file."
-                : maskedEmail
-                  ? `Sent to ${maskedEmail}. Valid for 10 minutes.`
-                  : "Sent. Valid for 10 minutes."}
+              {descFor()}
             </DialogDescription>
           </DialogHeader>
 
-          {stage === "intro" && (
+          {mode === "email-intro" && (
             <div className="mt-6 space-y-3">
               {noEmail ? (
                 <div className="text-sm" style={{ color: "#F5C4B3" }}>
-                  We don't have an email for this invite. Reach out to the organizer to add one.
+                  We don't have an email or phone for this card. Reach out to the organizer.
                 </div>
               ) : (
                 <Button
-                  onClick={handleSend}
+                  onClick={handleSendEmail}
                   disabled={sending}
                   className="w-full"
                   style={{ backgroundColor: "#fff", color: "#080808" }}
@@ -163,7 +192,7 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
             </div>
           )}
 
-          {stage === "code" && (
+          {showCodeInputs && (
             <div className="mt-6 space-y-4">
               <div className="flex justify-between gap-2">
                 {[0, 1, 2, 3].map((i) => (
@@ -198,17 +227,19 @@ const PinSheet = ({ open, slug, onSuccess, onClose }: Props) => {
 
               {error && <p className="text-xs text-center" style={{ color: "#D85A30" }}>{error}</p>}
 
-              <div className="text-center">
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={cooldown > 0 || sending}
-                  className="text-xs underline disabled:opacity-50"
-                  style={{ color: "rgba(255,255,255,0.65)" }}
-                >
-                  {cooldown > 0 ? `Resend in ${cooldown}s` : sending ? "Sending…" : "Didn't get it? Resend"}
-                </button>
-              </div>
+              {mode === "email-code" && (
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={cooldown > 0 || sending}
+                    className="text-xs underline disabled:opacity-50"
+                    style={{ color: "rgba(255,255,255,0.65)" }}
+                  >
+                    {cooldown > 0 ? `Resend in ${cooldown}s` : sending ? "Sending…" : "Didn't get it? Resend"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

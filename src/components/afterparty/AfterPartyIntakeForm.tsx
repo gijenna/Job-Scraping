@@ -76,6 +76,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     role: "creator",
     full_name: "",
     email: "",
+    phone: "",
     photo_url: "",
     cartoon_url: "",
     social_links: { instagram: "", linkedin: "" },
@@ -149,6 +150,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Name required", variant: "destructive" });
       return;
     }
+    // Phone is required for new attendees — last 4 digits become their card password.
+    const phoneDigits = (form.phone || "").replace(/\D/g, "");
+    if (!attendeeId && phoneDigits.length < 4) {
+      toast({ title: "Phone number required", description: "We use the last 4 digits as your password to edit your card.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
 
     // Duplicate guard — only on first RSVP (no attendeeId yet).
@@ -186,6 +193,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
       email: form.email || null,
+      phone: form.phone || null,
       photo_url: form.photo_url || null,
       cartoon_url: form.cartoon_url || null,
       social_links: form.social_links,
@@ -296,6 +304,22 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           <Label>Email</Label>
           <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} />
         </div>
+      </div>
+
+      <div>
+        <Label>Phone {attendeeId ? "" : "*"}</Label>
+        <Input
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          placeholder="(555) 123-4567"
+          style={inputStyle}
+        />
+        <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+          The last 4 digits become your password to edit this card later. Easy to remember, no email codes.
+        </p>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
