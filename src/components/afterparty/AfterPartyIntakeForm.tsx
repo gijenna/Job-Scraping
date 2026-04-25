@@ -560,6 +560,13 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             </div>
           </div>
 
+          <CompanyLogoField
+            company={form.company}
+            companyUrl={form.company_url}
+            onChange={(v) => setForm({ ...form, company_url: v })}
+            inputStyle={inputStyle}
+          />
+
           <div>
             <Label className="mb-2 block">We're looking for…</Label>
             <div className="flex flex-wrap gap-2">
