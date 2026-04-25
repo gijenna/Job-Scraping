@@ -34,6 +34,9 @@ const AfterPartyAdmin = () => {
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkInvitedBy, setBulkInvitedBy] = useState("");
+  const [editingInvitedBy, setEditingInvitedBy] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
 
   const fetchAll = async () => {
     setLoading(true);
