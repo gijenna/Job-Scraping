@@ -23,6 +23,7 @@ import { getSession } from "@/services/auth";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -560,6 +561,9 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
           {/* Partners — global, bottom of page */}
           <AfterPartyPartners />
+
+          {/* Admin-only inline editor for partners + spotlights */}
+          <AfterPartyAdminInline />
           </div>
         </div>
 

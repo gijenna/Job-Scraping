@@ -7,6 +7,7 @@ import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
+import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 
 const BG = "#080808";
 const CARD = "#111111";
@@ -237,6 +238,7 @@ const GuestList = () => {
 
         <AfterPartySpotlights />
         <AfterPartyPartners />
+        <AfterPartyAdminInline />
       </div>
     </div>
   );
