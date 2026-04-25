@@ -307,14 +307,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           )}
 
 
-          <div
-            style={{
-              opacity: revealed ? 1 : 0,
-              transform: revealed ? "translateY(0)" : "translateY(16px)",
-              transition: "opacity 600ms ease-out, transform 600ms ease-out",
-              pointerEvents: revealed ? "auto" : "none",
-            }}
-          >
+          <div>
           {/* Hero copy */}
           <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
             {presenter && (
