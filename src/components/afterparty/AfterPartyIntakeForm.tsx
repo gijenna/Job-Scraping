@@ -71,6 +71,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [uploading, setUploading] = useState(false);
   const [cartoonPolling, setCartoonPolling] = useState(false);
   const [otherNiche, setOtherNiche] = useState("");
+  const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [activationSent, setActivationSent] = useState(false);
   const [form, setForm] = useState<any>({
