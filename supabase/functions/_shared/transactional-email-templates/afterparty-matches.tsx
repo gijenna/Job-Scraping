@@ -41,7 +41,7 @@ const AfterPartyMatchesEmail = ({
       <Container style={container}>
         <Heading style={h1}>Hey {recipientName} 👋</Heading>
         {attendeeNumber && <Text style={numberBadge}>You're attendee #{attendeeNumber}</Text>}
-        <Text style={text}>5 new connections are waiting. Here are their numbers - look out for them tonight.</Text>
+        <Text style={text}>5 new connections are waiting. Here are their numbers, look out for them tonight.</Text>
 
         <Hr style={hr} />
 
@@ -73,13 +73,13 @@ export const template = {
     const first = (data?.recipientName || "").toString().trim().split(/\s+/)[0] || "you";
     return `Your 5 people for tonight, ${first}`;
   },
-  displayName: "After Party — match blast",
+  displayName: "After Party - match blast",
   previewData: {
     recipientName: "Jane",
     attendeeNumber: 42,
     inviteUrl: "https://basecampoutdoorevents.com/afterparty/jane-doe",
     matches: [
-      { number: 17, name: "Alex Rivera", role: "brand", reason: "They're looking for videographers — that's you" },
+      { number: 17, name: "Alex Rivera", role: "brand", reason: "They're looking for videographers, that's you" },
       { number: 23, name: "Sam Chen", role: "creator", reason: "Both into Climbing & Hiking" },
       { number: 8, name: "Patagonia", role: "brand", reason: "You named Patagonia as a dream brand" },
     ],
