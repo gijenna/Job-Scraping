@@ -83,10 +83,10 @@ const AfterPartySpotlights = () => {
         className="font-afterparty text-[20px] mb-1 text-center"
         style={{ fontWeight: 500, color: CREAM }}
       >
-        Who else to check out
+        Peak vibes assured by community partners
       </h2>
       <p className="text-center text-[12px] mb-6" style={{ color: CREAM_FAINT }}>
-        Folks contributing to make this night happen
+        Check out the folks contributing to make this night happen
       </p>
       <div className="space-y-6">
         {grouped.map(({ category, list }) => (
