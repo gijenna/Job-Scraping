@@ -9,6 +9,7 @@ interface ParsedRow {
   email: string;
   role: "creator" | "brand";
   company?: string;
+  invited_by?: string;
 }
 
 const slugify = (s: string) =>
@@ -62,6 +63,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
     const idxEmail = header.indexOf("email");
     const idxRole = header.indexOf("role");
     const idxCompany = header.indexOf("company");
+    const idxInvitedBy = Math.max(header.indexOf("invited_by"), header.indexOf("invited by"));
 
     const out: ParsedRow[] = dataRows
       .map((r) => ({
@@ -69,6 +71,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
         email: (idxEmail >= 0 ? r[idxEmail] : r[1])?.trim() || "",
         role: ((idxRole >= 0 ? r[idxRole] : r[2])?.trim().toLowerCase() === "brand" ? "brand" : "creator") as "creator" | "brand",
         company: (idxCompany >= 0 ? r[idxCompany] : r[3])?.trim() || undefined,
+        invited_by: (idxInvitedBy >= 0 ? r[idxInvitedBy] : undefined)?.trim() || undefined,
       }))
       .filter((r) => r.full_name);
     setRows(out);
@@ -83,6 +86,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
       email: r.email || null,
       role: r.role,
       company: r.company || null,
+      invited_by: r.invited_by || null,
       slug: slugify(r.full_name),
       status: "invited",
     }));
@@ -123,7 +127,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
         <div>
           <h3 className="font-display font-bold text-events-cream">Seed invitees from CSV</h3>
           <p className="text-xs text-events-cream/50 mt-1">
-            Columns: <code>name, email, role, company</code> (role = creator|brand)
+            Columns: <code>name, email, role, company, invited_by</code> (role = creator|brand; invited_by optional, e.g. "Basecamp")
           </p>
         </div>
         <div className="flex gap-2">
@@ -172,6 +176,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
                   <th className="text-left px-2 py-1">Email</th>
                   <th className="text-left px-2 py-1">Role</th>
                   <th className="text-left px-2 py-1">Company</th>
+                  <th className="text-left px-2 py-1">Invited by</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,6 +186,7 @@ const AfterPartyCsvSeed = ({ onImported }: { onImported: () => void }) => {
                     <td className="px-2 py-1 text-events-cream/70">{r.email || ", "}</td>
                     <td className="px-2 py-1 capitalize">{r.role}</td>
                     <td className="px-2 py-1 text-events-cream/70">{r.company || ", "}</td>
+                    <td className="px-2 py-1 text-events-cream/70">{r.invited_by || ", "}</td>
                   </tr>
                 ))}
               </tbody>

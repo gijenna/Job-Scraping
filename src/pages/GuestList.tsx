@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
+import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 
 const BG = "#080808";
 const CARD = "#111111";
@@ -232,6 +234,9 @@ const GuestList = () => {
             {filtered.map((g) => <GuestCard key={g.id} guest={g} />)}
           </div>
         )}
+
+        <AfterPartySpotlights />
+        <AfterPartyPartners />
       </div>
     </div>
   );

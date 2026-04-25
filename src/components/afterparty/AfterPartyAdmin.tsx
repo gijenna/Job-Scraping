@@ -3,11 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
 import AfterPartyLinkBuilder from "./AfterPartyLinkBuilder";
 import AfterPartyTestMatches from "./AfterPartyTestMatches";
+import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
+import AfterPartySpotlightsAdmin from "./AfterPartySpotlightsAdmin";
 
 interface Suggestion {
   id: string;
@@ -31,6 +34,9 @@ const AfterPartyAdmin = () => {
   const [working, setWorking] = useState(false);
   const [lockedCount, setLockedCount] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkInvitedBy, setBulkInvitedBy] = useState("");
+  const [editingInvitedBy, setEditingInvitedBy] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
 
   const fetchAll = async () => {
     setLoading(true);
@@ -128,6 +134,41 @@ const AfterPartyAdmin = () => {
     toast({ title: `Copied ${ids.length} link${ids.length === 1 ? "" : "s"}` });
   };
 
+  const bulkSetInvitedBy = async () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    const value = bulkInvitedBy.trim();
+    if (!confirm(`Set "Invited by" to "${value || "(empty)"}" for ${ids.length} attendee${ids.length === 1 ? "" : "s"}?`)) return;
+    setWorking(true);
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ invited_by: value || null })
+      .in("id", ids);
+    setWorking(false);
+    if (error) {
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: `Updated ${ids.length} attendee${ids.length === 1 ? "" : "s"}` });
+    setBulkInvitedBy("");
+    setSelected(new Set());
+    fetchAll();
+  };
+
+  const saveInvitedBy = async (id: string) => {
+    const value = editValue.trim();
+    const { error } = await (supabase as any)
+      .from("afterparty_attendees")
+      .update({ invited_by: value || null })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    setEditingInvitedBy(null);
+    fetchAll();
+  };
+
   const copyLink = (a: AfterPartyAttendee) => {
     const url = `${PUBLISHED_BASE}/afterparty/${slugify(a.full_name)}`;
     navigator.clipboard.writeText(url);
@@ -181,6 +222,10 @@ const AfterPartyAdmin = () => {
 
       <AfterPartyCsvSeed onImported={fetchAll} />
 
+      <AfterPartyPartnersAdmin />
+
+      <AfterPartySpotlightsAdmin />
+
       <AfterPartyTestMatches />
 
       {suggestions.length > 0 && (
@@ -219,6 +264,17 @@ const AfterPartyAdmin = () => {
             <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())} className="text-events-cream/70 hover:text-events-cream">
               Clear
             </Button>
+            <div className="flex items-center gap-1.5 ml-2">
+              <Input
+                value={bulkInvitedBy}
+                onChange={(e) => setBulkInvitedBy(e.target.value)}
+                placeholder='Set invited by (e.g. "Basecamp")'
+                className="h-8 text-xs bg-black/20 border-events-cream/20 text-events-cream w-56"
+              />
+              <Button size="sm" variant="outline" onClick={bulkSetInvitedBy} disabled={working} className="border-events-cream/30 text-events-cream">
+                Apply
+              </Button>
+            </div>
             <div className="ml-auto flex gap-2">
               <Button size="sm" variant="outline" onClick={bulkCopyLinks} className="border-events-cream/30 text-events-cream">
                 <Copy className="w-3.5 h-3.5 mr-1" /> Copy links
@@ -245,6 +301,7 @@ const AfterPartyAdmin = () => {
               <th className="text-left px-3 py-2">Role</th>
               <th className="text-left px-3 py-2">Brand / Niche</th>
               <th className="text-left px-3 py-2">Email</th>
+              <th className="text-left px-3 py-2">Invited by</th>
               <th className="text-right px-3 py-2">Actions</th>
             </tr>
           </thead>
@@ -265,6 +322,38 @@ const AfterPartyAdmin = () => {
                   {a.role === "brand" ? a.company || ", " : (a.niches?.slice(0, 2).join(", ") || ", ")}
                 </td>
                 <td className="px-3 py-2 text-events-cream/60">{a.email || ", "}</td>
+                <td className="px-3 py-2 text-events-cream/70">
+                  {editingInvitedBy === a.id ? (
+                    <div className="flex items-center gap-1">
+                      <Input
+                        autoFocus
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveInvitedBy(a.id);
+                          if (e.key === "Escape") setEditingInvitedBy(null);
+                        }}
+                        placeholder='e.g. "Basecamp"'
+                        className="h-7 text-xs bg-black/20 border-events-cream/20 text-events-cream w-32"
+                      />
+                      <Button size="sm" variant="ghost" onClick={() => saveInvitedBy(a.id)} className="text-green-400 h-7 px-1.5">
+                        <Check className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setEditingInvitedBy(null)} className="text-events-cream/50 h-7 px-1.5">
+                        <X className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => { setEditingInvitedBy(a.id); setEditValue((a as any).invited_by || ""); }}
+                      className="inline-flex items-center gap-1 hover:text-events-cream"
+                    >
+                      <span>{(a as any).invited_by || <span className="text-events-cream/30">—</span>}</span>
+                      <Pencil className="w-3 h-3 opacity-50" />
+                    </button>
+                  )}
+                </td>
                 <td className="px-3 py-2 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => copyLink(a)} className="text-events-cream/70 hover:text-events-cream">
                     <Copy className="w-3.5 h-3.5" />
@@ -276,7 +365,7 @@ const AfterPartyAdmin = () => {
               </tr>
             ))}
             {!attendees.length && (
-              <tr><td colSpan={7} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
+              <tr><td colSpan={8} className="px-3 py-8 text-center text-events-cream/50">No attendees yet. Share an invite link.</td></tr>
             )}
           </tbody>
         </table>

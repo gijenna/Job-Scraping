@@ -11,6 +11,7 @@ interface ParsedRow {
   email?: string;
   role: AttendeeRole;
   company?: string;
+  invited_by?: string;
 }
 
 interface ResultRow extends ParsedRow {
@@ -94,12 +95,13 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
   const [mode, setMode] = useState<"csv" | "paste-simple" | "paste-detailed">("paste-simple");
   const [pasteText, setPasteText] = useState("");
   const [pasteRole, setPasteRole] = useState<AttendeeRole>("creator");
+  const [pasteInvitedBy, setPasteInvitedBy] = useState("");
 
   const parsePasteSimple = () => {
     const lines = pasteText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const invitedBy = pasteInvitedBy.trim() || undefined;
     const out: ParsedRow[] = lines
       .map((line) => {
-        // Allow "Name | Brand", "Name - Brand", or "Name, Brand" for brand reps
         const parts = line.split(/\s*\|\s*|\s+-\s+|\s*,\s*/);
         const full_name = parts[0]?.trim() || "";
         const company = parts[1]?.trim() || undefined;
@@ -107,6 +109,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
           full_name,
           role: pasteRole,
           company: pasteRole === "brand" ? company : undefined,
+          invited_by: invitedBy,
         };
       })
       .filter((r) => r.full_name);
@@ -148,6 +151,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
     const idxEmail = header.indexOf("email");
     const idxRole = header.indexOf("role");
     const idxCompany = header.indexOf("company");
+    const idxInvitedBy = Math.max(header.indexOf("invited_by"), header.indexOf("invited by"));
 
     const out: ParsedRow[] = dataRows
       .map((r) => ({
@@ -155,6 +159,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
         email: (idxEmail >= 0 ? r[idxEmail] : r[1])?.trim() || undefined,
         role: normalizeRole(idxRole >= 0 ? r[idxRole] : r[2]),
         company: (idxCompany >= 0 ? r[idxCompany] : r[3])?.trim() || undefined,
+        invited_by: (idxInvitedBy >= 0 ? r[idxInvitedBy] : undefined)?.trim() || undefined,
       }))
       .filter((r) => r.full_name);
     setRows(out);
@@ -199,6 +204,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
         email: r.email || null,
         role: r.role,
         company: r.company || null,
+        invited_by: r.invited_by || null,
         slug,
         status: "invited",
       });
@@ -303,6 +309,16 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
                 {r}
               </button>
             ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="text-xs text-events-cream/60">Invited by (optional, e.g. "Basecamp"):</label>
+            <input
+              type="text"
+              value={pasteInvitedBy}
+              onChange={(e) => setPasteInvitedBy(e.target.value)}
+              placeholder="Basecamp"
+              className="text-xs px-2 py-1 rounded bg-events-cream/5 border border-events-cream/20 text-events-cream w-48"
+            />
           </div>
           <textarea
             value={pasteText}

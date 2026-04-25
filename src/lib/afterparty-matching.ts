@@ -23,6 +23,7 @@ export interface AfterPartyAttendee {
   brand_seeking: string[] | null;
   budget_range: string | null;
   brand_fit_notes: string | null;
+  invited_by?: string | null;
 }
 
 export interface MatchResult {

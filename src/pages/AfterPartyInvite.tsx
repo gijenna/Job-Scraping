@@ -21,6 +21,8 @@ import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopfly
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import { getSession } from "@/services/auth";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
+import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
+import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -517,8 +519,20 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Intake form, new RSVP or owner editing existing card */}
           {editMode && (!me || isOwner) && (
             <section id="intake-form" className="mt-8">
+              {me?.invited_by && (
+                <div
+                  className="mb-4 px-3 py-2 rounded-lg text-center text-[13px]"
+                  style={{
+                    backgroundColor: "rgba(216,90,48,0.12)",
+                    border: "1px solid rgba(216,90,48,0.4)",
+                    color: CREAM,
+                  }}
+                >
+                  Lucky you — <span style={{ fontWeight: 600 }}>{me.invited_by}</span> wants you there
+                </div>
+              )}
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
-                {me ? "Edit your card" : "RSVP & build your card"}
+                {me ? (me.invited_by ? `RSVP here, ${me.full_name?.split(" ")[0] || ""}!` : "Edit your card") : "RSVP & build your card"}
               </h2>
               <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={me} onSaved={handleSaved} />
             </section>
@@ -539,6 +553,12 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
               <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
             </section>
           )}
+
+          {/* Brand spotlights — global to event, shown after matches/see-who's-coming */}
+          <AfterPartySpotlights />
+
+          {/* Partners — global, bottom of page */}
+          <AfterPartyPartners />
           </div>
         </div>
 
