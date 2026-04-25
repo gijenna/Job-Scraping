@@ -20,6 +20,15 @@ const BORDER = "rgba(255,255,255,0.09)";
 
 const CATEGORY_ORDER = ["Brands", "Beverages", "Food", "Giveaways & Swag"];
 
+const toAbsoluteUrl = (u: string | null): string | null => {
+  if (!u) return null;
+  const t = u.trim();
+  if (!t) return null;
+  if (/^https?:\/\//i.test(t)) return t;
+  if (t.startsWith("//")) return `https:${t}`;
+  return `https://${t.replace(/^\/+/, "")}`;
+};
+
 const AfterPartySpotlights = () => {
   const [items, setItems] = useState<Spotlight[]>([]);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
