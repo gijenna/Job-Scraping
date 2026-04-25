@@ -88,19 +88,20 @@ const AfterPartySpotlights = () => {
             >
               {category}
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
               {list.map((s) => {
                 const src = resolveLogoSrc(s.logo_url, s.website_url);
-                const card = (
+                const pill = (
                   <div
-                    className="flex items-center gap-3 p-3 rounded-lg"
+                    className="inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full"
                     style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}
+                    title={s.description || s.name}
                   >
                     <div
-                      className="flex items-center justify-center rounded-md overflow-hidden flex-shrink-0"
+                      className="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0"
                       style={{
-                        width: 44,
-                        height: 44,
+                        width: 26,
+                        height: 26,
                         backgroundColor: "rgba(255,255,255,0.06)",
                         border: "1px solid rgba(255,255,255,0.1)",
                       }}
@@ -117,19 +118,12 @@ const AfterPartySpotlights = () => {
                           }}
                         />
                       ) : (
-                        <span style={{ color: CREAM, fontSize: 12 }}>{s.name.slice(0, 2)}</span>
+                        <span style={{ color: CREAM, fontSize: 10 }}>{s.name.slice(0, 2)}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[14px]" style={{ color: CREAM, fontWeight: 500 }}>
-                        {s.name}
-                      </div>
-                      {s.description ? (
-                        <div className="text-[12px] leading-snug mt-0.5" style={{ color: CREAM_MUTED }}>
-                          {s.description}
-                        </div>
-                      ) : null}
-                    </div>
+                    <span className="text-[12px] leading-none" style={{ color: CREAM, fontWeight: 500 }}>
+                      {s.name}
+                    </span>
                   </div>
                 );
                 return s.website_url ? (
@@ -138,12 +132,12 @@ const AfterPartySpotlights = () => {
                     href={s.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block hover:opacity-90 transition-opacity"
+                    className="hover:opacity-90 transition-opacity"
                   >
-                    {card}
+                    {pill}
                   </a>
                 ) : (
-                  <div key={s.id}>{card}</div>
+                  <div key={s.id}>{pill}</div>
                 );
               })}
             </div>
