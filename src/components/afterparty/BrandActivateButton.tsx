@@ -15,6 +15,8 @@ interface BrandActivateButtonProps {
   onSubmitted?: () => void;
   /** When true, render nothing if a request was already submitted by this attendee */
   hideIfAlreadySent?: boolean;
+  /** Personalized After Party page URL for this attendee (used in confirmation email) */
+  afterPartyUrl?: string;
 }
 
 const CREAM = "#F5E6D3";
@@ -28,6 +30,7 @@ const BrandActivateButton = ({
   variant = "full",
   onSubmitted,
   hideIfAlreadySent = false,
+  afterPartyUrl,
 }: BrandActivateButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
@@ -112,6 +115,7 @@ const BrandActivateButton = ({
             idempotencyKey: `${idempotencyBase}-confirm`,
             templateData: {
               recipientName: fullName.split(" ")[0] || fullName,
+              afterPartyUrl: afterPartyUrl || (typeof window !== "undefined" ? window.location.href : undefined),
             },
           },
         });
