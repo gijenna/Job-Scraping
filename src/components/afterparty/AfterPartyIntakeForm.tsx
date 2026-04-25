@@ -91,6 +91,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     brands_wishlist: "",
     mind_blowing_fact: "",
     company: "",
+    company_url: "",
     company_role: "",
     brand_seeking: [],
     budget_range: "",
