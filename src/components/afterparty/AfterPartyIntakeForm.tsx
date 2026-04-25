@@ -636,19 +636,52 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       </div>
 
       {(attendeeId || justSavedId) ? (
-        <Link
-          to="/guests"
-          onClick={() => {
-            const slug = (form as any).slug;
-            if (slug) {
-              try { sessionStorage.setItem("afterparty:return_slug", slug); } catch {}
-            }
-          }}
-          className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
-          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
-        >
-          See who's coming →
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          {attendeeId && (
+            <Button
+              type="submit"
+              disabled={saving || !isDirty}
+              className={`w-full sm:w-auto hover:opacity-90 ${isDirty ? "animate-pulse" : ""}`}
+              style={
+                isDirty
+                  ? {
+                      backgroundColor: "#D85A30",
+                      color: "#fff",
+                      fontWeight: 600,
+                      boxShadow: "0 0 0 0 rgba(216,90,48,0.7), 0 0 24px rgba(216,90,48,0.55)",
+                      border: "1px solid #F5C4B3",
+                    }
+                  : {
+                      backgroundColor: "rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.55)",
+                      fontWeight: 500,
+                      border: "1px solid rgba(255,255,255,0.15)",
+                    }
+              }
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              {isDirty ? "Save changes" : "Saved ✓"}
+            </Button>
+          )}
+          <Link
+            to="/guests"
+            onClick={() => {
+              const slug = (form as any).slug;
+              if (slug) {
+                try { sessionStorage.setItem("afterparty:return_slug", slug); } catch {}
+              }
+            }}
+            className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
+            style={{
+              backgroundColor: attendeeId ? "transparent" : "#fff",
+              color: attendeeId ? "rgba(255,255,255,0.75)" : "#080808",
+              fontWeight: 500,
+              border: attendeeId ? "1px solid rgba(255,255,255,0.18)" : "none",
+            }}
+          >
+            See who's coming →
+          </Link>
+        </div>
       ) : (
         <Button
           type="submit"
