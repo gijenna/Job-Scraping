@@ -14,7 +14,7 @@ export interface RequestPinResult {
 export interface VerifyPinResult {
   ok: boolean;
   attendee_id?: string;
-  reason?: "invalid" | "session_failed" | "server_error";
+  reason?: "invalid" | "locked" | "no_phone" | "session_failed" | "server_error";
 }
 
 export interface AfterPartySession {
