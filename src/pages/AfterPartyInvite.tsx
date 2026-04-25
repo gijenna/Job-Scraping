@@ -339,10 +339,25 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
           </div>
 
-          {/* About the event */}
-          {!me && (
+          {/* About the event — shown when no card loaded OR when this is a
+              personalized pre-RSVP shell (so invitees see event info first) */}
+          {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
               <div className="px-1">
+                {/* Personalized "Lucky you" banner for shells with invited_by */}
+                {me?.invited_by && (
+                  <div
+                    className="mb-4 px-3 py-2 rounded-lg text-center text-[13px]"
+                    style={{
+                      backgroundColor: "rgba(216,90,48,0.12)",
+                      border: "1px solid rgba(216,90,48,0.4)",
+                      color: CREAM,
+                    }}
+                  >
+                    Invite-only · Luckily, you're on{" "}
+                    <span style={{ fontWeight: 600 }}>{me.invited_by}</span>'s list
+                  </div>
+                )}
                 <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
                   <EditableText settingKey="about.title" defaultText="An invite-only night in RiNo" />
                 </h2>
@@ -380,7 +395,9 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                   className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
-                  <EditableText settingKey="cta.primary" defaultText="RSVP" />
+                  {me?.full_name
+                    ? `RSVP here, ${me.full_name.split(" ")[0]}`
+                    : <EditableText settingKey="cta.primary" defaultText="RSVP" />}
                 </Button>
               </div>
             </section>
