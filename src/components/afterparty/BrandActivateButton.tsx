@@ -115,6 +115,7 @@ const BrandActivateButton = ({
             idempotencyKey: `${idempotencyBase}-confirm`,
             templateData: {
               recipientName: fullName.split(" ")[0] || fullName,
+              afterPartyUrl: afterPartyUrl || (typeof window !== "undefined" ? window.location.href : undefined),
             },
           },
         });
