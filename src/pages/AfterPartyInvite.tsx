@@ -99,25 +99,19 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         const key = `afterparty:greeted:${found.id}`;
         if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
-          setGreetingQueued(true);
-          setTimeout(() => setShowPersonalGreeting(true), 6100);
-          setTimeout(() => setShowPersonalGreeting(false), 9900);
+          // Show greeting alongside the splash (Popfly+Basecamp solo monogram phase),
+          // physically above it. Hide it as the splash transitions out.
+          setShowPersonalGreeting(true);
+          setTimeout(() => setShowPersonalGreeting(false), 4200);
         }
       } catch {}
     }
   }, [name, attendees, me]);
 
-  // Reveal invite content after splash AND after personalized greeting (if any) finishes.
+  // Reveal invite content after splash finishes (original behavior).
   useEffect(() => {
-    if (!splashDone) return;
-    if (greetingQueued && showPersonalGreeting) return;
-    if (greetingQueued && !showPersonalGreeting) {
-      // greeting was shown and is now hidden; reveal
-      setRevealed(true);
-      return;
-    }
-    setRevealed(true);
-  }, [splashDone, greetingQueued, showPersonalGreeting]);
+    if (splashDone) setRevealed(true);
+  }, [splashDone]);
 
   // Locked matches
   useEffect(() => {
