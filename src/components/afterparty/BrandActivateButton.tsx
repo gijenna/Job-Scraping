@@ -138,10 +138,10 @@ const BrandActivateButton = ({
   const showSentCard = done || alreadySent;
   if (showSentCard) {
     const subject = encodeURIComponent(
-      `After Party brand activation follow-up${company ? ` — ${company}` : ""}`,
+      `After Party brand activation follow-up${company ? `, ${company}` : ""}`,
     );
     const body = encodeURIComponent(
-      `Hi Jenna,\n\nFollowing up on my brand activation request${company ? ` for ${company}` : ""}.\n\n— ${fullName}`,
+      `Hi Jenna,\n\nFollowing up on my brand activation request${company ? ` for ${company}` : ""}.\n\nThanks,\n${fullName}`,
     );
     return (
       <div
