@@ -11,6 +11,7 @@ interface ParsedRow {
   email?: string;
   role: AttendeeRole;
   company?: string;
+  invited_by?: string;
 }
 
 interface ResultRow extends ParsedRow {
