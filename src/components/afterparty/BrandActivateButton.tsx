@@ -154,7 +154,7 @@ const BrandActivateButton = ({
       >
         <div className="flex items-start gap-2 flex-1">
           <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: CORAL }} />
-          <span>Activation request received — Jenna will be in touch shortly, or prompt her here.</span>
+          <span>Activation request received. Jenna will be in touch shortly, or prompt her here.</span>
         </div>
         <a
           href={`mailto:jenna@wearetheoutdoorindustry.com?subject=${subject}&body=${body}`}
