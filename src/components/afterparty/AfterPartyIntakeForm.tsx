@@ -76,6 +76,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     role: "creator",
     full_name: "",
     email: "",
+    phone: "",
     photo_url: "",
     cartoon_url: "",
     social_links: { instagram: "", linkedin: "" },
