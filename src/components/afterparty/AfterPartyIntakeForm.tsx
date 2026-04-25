@@ -120,6 +120,19 @@ const CompanyLogoField = ({
 
 const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const { toast } = useToast();
+  const [extraNiches, setExtraNiches] = useState<string[]>([]);
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("event_settings")
+        .select("setting_value")
+        .eq("event_slug", "afterparty")
+        .eq("setting_key", "afterparty.extra_niches")
+        .maybeSingle();
+      const list = (data?.setting_value || "").split(",").map((v: string) => v.trim()).filter(Boolean);
+      setExtraNiches(list);
+    })();
+  }, []);
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
