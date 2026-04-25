@@ -30,6 +30,7 @@ const BrandActivateButton = ({
   variant = "full",
   onSubmitted,
   hideIfAlreadySent = false,
+  afterPartyUrl,
 }: BrandActivateButtonProps) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
