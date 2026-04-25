@@ -498,6 +498,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       email={(me as any).email}
                       variant="compact"
                       hideIfAlreadySent
+                      afterPartyUrl={`${window.location.origin}/afterparty/${me.slug}`}
                     />
                   </div>
                 )}
