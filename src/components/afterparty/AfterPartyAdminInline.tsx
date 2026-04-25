@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
+import AfterPartySuggestionsAdmin from "./AfterPartySuggestionsAdmin";
 import { ChevronDown, ChevronRight, Lock } from "lucide-react";
 
 const BORDER = "rgba(255,255,255,0.12)";
