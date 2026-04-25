@@ -220,9 +220,28 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       const { error } = await (supabase as any).from("afterparty_attendees").update(payload).eq("id", attendeeId);
       if (error) { toast({ title: "Save failed", description: error.message, variant: "destructive" }); setSaving(false); return; }
     } else {
-      const { data, error } = await (supabase as any).from("afterparty_attendees").insert(payload).select("id").single();
+      const { data, error } = await (supabase as any).from("afterparty_attendees").insert(payload).select("id, slug").single();
       if (error) { toast({ title: "Save failed", description: error.message, variant: "destructive" }); setSaving(false); return; }
       id = data.id;
+
+      // Fire-and-forget RSVP confirmation email (only on first RSVP, only if email)
+      if (form.email) {
+        const base = (typeof window !== "undefined" ? window.location.origin : "https://basecampoutdoorevents.com");
+        supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "afterparty-rsvp-confirmation",
+            recipientEmail: form.email,
+            idempotencyKey: `afterparty-rsvp-${id}`,
+            templateData: {
+              recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
+              inviteUrl: `${base}/afterparty/${data.slug}`,
+              guestsUrl: `${base}/guests`,
+              brandActivated: false,
+              role: form.role,
+            },
+          },
+        });
+      }
     }
     setSaving(false);
     toast({ title: "You're in.", description: "Look out for your matches below." });
