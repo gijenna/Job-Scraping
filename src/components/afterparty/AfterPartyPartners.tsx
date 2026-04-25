@@ -37,6 +37,7 @@ const AfterPartyPartners = () => {
       </p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         {partners.map((p) => {
+          const src = resolveLogoSrc(p.logo_url, p.website_url);
           const inner = (
             <div
               className="flex items-center justify-center rounded-full overflow-hidden"
@@ -48,11 +49,16 @@ const AfterPartyPartners = () => {
               }}
               title={p.name}
             >
-              {p.logo_url ? (
+              {src ? (
                 <img
-                  src={p.logo_url}
+                  src={src}
                   alt={p.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const fav = faviconFromUrl(p.website_url);
+                    const el = e.currentTarget as HTMLImageElement;
+                    if (fav && el.src !== fav) el.src = fav;
+                  }}
                 />
               ) : (
                 <span style={{ color: CREAM, fontSize: 11 }}>{p.name.slice(0, 2)}</span>
