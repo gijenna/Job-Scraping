@@ -99,9 +99,9 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
 
   const parsePasteSimple = () => {
     const lines = pasteText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const invitedBy = pasteInvitedBy.trim() || undefined;
     const out: ParsedRow[] = lines
       .map((line) => {
-        // Allow "Name | Brand", "Name - Brand", or "Name, Brand" for brand reps
         const parts = line.split(/\s*\|\s*|\s+-\s+|\s*,\s*/);
         const full_name = parts[0]?.trim() || "";
         const company = parts[1]?.trim() || undefined;
@@ -109,6 +109,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
           full_name,
           role: pasteRole,
           company: pasteRole === "brand" ? company : undefined,
+          invited_by: invitedBy,
         };
       })
       .filter((r) => r.full_name);
