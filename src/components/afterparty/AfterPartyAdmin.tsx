@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AfterPartyAttendee, computeAllMatches } from "@/lib/afterparty-matching";
-import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil } from "lucide-react";
+import { Copy, Lock, RefreshCw, Trash2, Mail, Loader2, Check, X, Pencil, Download } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import AfterPartyCsvSeed from "./AfterPartyCsvSeed";
