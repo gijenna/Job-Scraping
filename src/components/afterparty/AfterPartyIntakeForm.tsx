@@ -826,10 +826,26 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           </div>
         </div>
       </div>
+        </>
+      )}
+      {/* ----- end STEP 2 ----- */}
 
-      {(attendeeId || justSavedId) ? (
+      {/* Action area */}
+      {step === 1 && !attendeeId ? (
+        // Step 1 (fresh RSVP): single primary CTA, takes them to step 2 next.
+        <Button
+          type="submit"
+          disabled={saving}
+          className="w-full sm:w-auto hover:opacity-90"
+          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
+        >
+          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          Secure my spot →
+        </Button>
+      ) : (attendeeId || justSavedId) ? (
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          {attendeeId && (
+          {attendeeId ? (
+            // Editing existing card
             <Button
               type="submit"
               disabled={saving || !isDirty}
@@ -854,6 +870,17 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {isDirty ? "Save changes" : "Saved ✓"}
             </Button>
+          ) : (
+            // Step 2 just-saved fresh RSVP: primary save button + skip
+            <Button
+              type="submit"
+              disabled={saving}
+              className="w-full sm:w-auto hover:opacity-90"
+              style={{ backgroundColor: "#ED7660", color: "#fff", fontWeight: 600 }}
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Save & see suggestions →
+            </Button>
           )}
           <Link
             to="/guests"
@@ -865,26 +892,16 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             }}
             className="inline-flex items-center justify-center w-full sm:w-auto rounded-md px-4 py-2 hover:opacity-90"
             style={{
-              backgroundColor: attendeeId ? "transparent" : "#fff",
-              color: attendeeId ? "rgba(255,255,255,0.75)" : "#080808",
+              backgroundColor: attendeeId ? "transparent" : "transparent",
+              color: "rgba(255,255,255,0.75)",
               fontWeight: 500,
-              border: attendeeId ? "1px solid rgba(255,255,255,0.18)" : "none",
+              border: "1px solid rgba(255,255,255,0.18)",
             }}
           >
-            See who's coming →
+            {attendeeId ? "See who's coming →" : "Skip for now → see who's coming"}
           </Link>
         </div>
-      ) : (
-        <Button
-          type="submit"
-          disabled={saving}
-          className="w-full sm:w-auto hover:opacity-90"
-          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-          Secure my spot →
-        </Button>
-      )}
+      ) : null}
 
       {form.role === "brand" && (attendeeId || justSavedId) && (
         <div id="brand-activate-cta" className="pt-4 space-y-3">
@@ -896,16 +913,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             variant="full"
             onSubmitted={() => setActivationSent(true)}
           />
-          {justSavedId && !attendeeId && (
-            <button
-              type="button"
-              onClick={continueToCard}
-              className="text-[13px] underline"
-              style={{ color: "rgba(245,230,211,0.7)" }}
-            >
-              {activationSent ? "See my card" : "Skip for now → see my card"}
-            </button>
-          )}
         </div>
       )}
     </form>
