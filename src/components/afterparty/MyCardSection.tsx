@@ -10,6 +10,7 @@ import MatchesPanel from "./MatchesPanel";
 import AfterPartyIntakeForm from "./AfterPartyIntakeForm";
 import PinSheet from "./PinSheet";
 import StarSparkle from "./StarSparkle";
+import GuestCard, { GuestRow } from "./GuestCard";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth";
 import { Pencil, ExternalLink } from "lucide-react";
