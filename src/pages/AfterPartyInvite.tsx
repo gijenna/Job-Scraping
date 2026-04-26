@@ -358,7 +358,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
             <div className="mt-4">
               <Link
-                to="/guests"
+                to={me?.slug ? `/guests?slug=${me.slug}` : "/guests"}
                 onClick={() => {
                   if (me?.slug) {
                     try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
@@ -554,20 +554,22 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       email={(me as any).email}
                       variant="compact"
                       hideIfAlreadySent
-                      afterPartyUrl={`${window.location.origin}/afterparty/${me.slug}`}
+                      afterPartyUrl={`${window.location.origin}/guests?slug=${me.slug}`}
                     />
                   </div>
                 )}
 
                 <div className="text-right">
-                  <button
-                    type="button"
-                    onClick={requestEdit}
+                  <Link
+                    to={`/guests?slug=${me.slug}&edit=1`}
+                    onClick={() => {
+                      try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
+                    }}
                     className="text-[13px] underline"
                     style={{ color: CREAM_MUTED }}
                   >
-                    {isOwner ? "Edit my card →" : "Edit my card →"}
-                  </button>
+                    Edit my card →
+                  </Link>
                 </div>
               </div>
             </section>

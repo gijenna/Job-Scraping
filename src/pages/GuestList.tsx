@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowLeft } from "lucide-react";
@@ -8,6 +8,8 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
+import MyCardSection from "@/components/afterparty/MyCardSection";
+import { AfterPartyAttendee } from "@/lib/afterparty-matching";
 
 const BG = "#080808";
 const CARD = "#111111";
@@ -22,12 +24,33 @@ const ROLE_OPTIONS: { value: string; label: string }[] = [
 type Sort = "newest" | "niche";
 
 const GuestList = () => {
+  const [searchParams] = useSearchParams();
   const [guests, setGuests] = useState<GuestRow[]>([]);
+  const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeRoles, setActiveRoles] = useState<Set<string>>(new Set());
   const [activeNiches, setActiveNiches] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
+
+  // Resolve current viewer's slug from query param or sessionStorage
+  const viewerSlug = useMemo(() => {
+    const qs = searchParams.get("slug");
+    if (qs) return qs;
+    try {
+      return sessionStorage.getItem("afterparty:return_slug");
+    } catch {
+      return null;
+    }
+  }, [searchParams]);
+
+  // Persist slug in sessionStorage when it comes via query param
+  useEffect(() => {
+    const qs = searchParams.get("slug");
+    if (qs) {
+      try { sessionStorage.setItem("afterparty:return_slug", qs); } catch {}
+    }
+  }, [searchParams]);
 
   const fetchGuests = async () => {
     const { data } = await (supabase as any)
@@ -35,6 +58,12 @@ const GuestList = () => {
       .select("*")
       .order("created_at", { ascending: false });
     setGuests((data as GuestRow[]) || []);
+    // Also fetch full attendees (for matching) from public view
+    const { data: attData } = await (supabase as any)
+      .from("afterparty_attendees_public")
+      .select("*")
+      .order("attendee_number");
+    setAttendees((attData as AfterPartyAttendee[]) || []);
     setLoading(false);
   };
 
@@ -148,7 +177,14 @@ const GuestList = () => {
           </p>
         </div>
 
-        {/* Filter bar */}
+        {/* The viewer's own card + matches at the top, when we know who they are */}
+        <MyCardSection
+          allAttendees={attendees}
+          slug={viewerSlug}
+          onCardSaved={fetchGuests}
+        />
+
+
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 backdrop-blur"
           style={{ backgroundColor: "rgba(17,17,17,0.92)", border: `1px solid ${BORDER}` }}

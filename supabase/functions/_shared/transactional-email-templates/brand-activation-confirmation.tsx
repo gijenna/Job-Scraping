@@ -30,7 +30,7 @@ const BrandActivationConfirmationEmail = ({
 
         <Text style={text}>
           In the meantime, keep an eye on your matches on the{' '}
-          <Link href={afterPartyUrl} style={link}>After Party page</Link>{' '}
+          <Link href={afterPartyUrl} style={link}>Guest List page</Link>{' '}
           & make sure your card is updated. We'll use your answers to surface people we think
           you'll want to meet.
         </Text>
@@ -54,7 +54,7 @@ const BrandActivationConfirmationEmail = ({
 
 export const template = {
   component: BrandActivationConfirmationEmail,
-  subject: "Got it — let's get your brand in the mix",
+  subject: "Got it, let's get your brand in the mix",
   displayName: 'Brand activation confirmation',
   previewData: {
     recipientName: 'Jane',
