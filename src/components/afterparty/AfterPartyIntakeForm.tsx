@@ -234,9 +234,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       toast({ title: "Email required", description: "Please enter a valid email so we can send your card link.", variant: "destructive" });
       return;
     }
-    // Phone is required for new attendees — last 4 digits become their card password.
+    // Phone is required whenever the card does not already have one.
+    // Invited shells already have an attendeeId, so attendeeId alone is not
+    // enough to decide whether edit access will work later.
     const phoneDigits = (form.phone || "").replace(/\D/g, "");
-    if (!attendeeId && phoneDigits.length < 4) {
+    const existingPhoneDigits = (initial?.phone || "").replace(/\D/g, "");
+    if (phoneDigits.length < 4 && existingPhoneDigits.length < 4) {
       toast({ title: "Phone number required", description: "We use the last 4 digits as your password to edit your card.", variant: "destructive" });
       return;
     }
@@ -273,9 +276,23 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       }
     }
 
+    const { data: authData } = await supabase.auth.getUser();
+    let authUserId = authData.user?.id || null;
+    if (!authUserId) {
+      const { data: anonData, error: anonErr } = await supabase.auth.signInAnonymously({
+        options: { data: { afterparty_slug: initial?.slug || null, afterparty_attendee_id: attendeeId || null } },
+      });
+      if (anonErr || !anonData.user?.id) {
+        toast({ title: "Save failed", description: "Could not create secure edit access. Please try again.", variant: "destructive" });
+        setSaving(false);
+        return;
+      }
+      authUserId = anonData.user.id;
+    }
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
+      auth_user_id: authUserId,
       // Defense-in-depth: never overwrite an existing email/phone with null
       // when the form field is empty (e.g. on an edit where these fields
       // weren't pre-populated because the public view doesn't expose them).

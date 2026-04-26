@@ -31,5 +31,7 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.verify-pin]
     verify_jwt = false
+  [functions.verify-phone-pin]
+    verify_jwt = false
   [functions.afterparty-admin]
     verify_jwt = false
