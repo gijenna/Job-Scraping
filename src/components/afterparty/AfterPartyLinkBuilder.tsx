@@ -389,7 +389,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
               </tr>
             </thead>
             <tbody>
-              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: "—" as any }))).map((r: any, i) => (
+              {(results.length ? results : rows.map((r) => ({ ...r, slug: "", link: "", status: "Pending" as any }))).map((r: any, i) => (
                 <tr key={i} className="border-t border-events-cream/10 align-top">
                   <td className="px-2 py-1 whitespace-nowrap">{r.full_name}</td>
                   <td className="px-2 py-1 capitalize text-events-cream/70">{r.role}</td>
@@ -411,7 +411,7 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
                         </button>
                       </div>
                     ) : (
-                      <span className="text-events-cream/40">—</span>
+                      <span className="text-events-cream/40">Not generated yet</span>
                     )}
                   </td>
                   <td className="px-2 py-1 text-events-cream/70 whitespace-nowrap">
