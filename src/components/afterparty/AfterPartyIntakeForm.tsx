@@ -398,18 +398,22 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
 
     if (id) {
       const isFirstSave = !attendeeId;
-      // For brand reps on first save, surface the activation CTA inline
-      // before the parent navigates them to the card view.
-      if (!attendeeId && form.role === "brand") {
+      // Fresh RSVP just finished step 1 → don't navigate away. Promote
+      // them into step 2 (optional matching info) so we can prompt:
+      // "Want suggestions on people to find at the party?"
+      if (isFirstSave && step === 1) {
         setJustSavedId(id);
+        setStep(2);
         setTimeout(() => {
           document
-            .getElementById("brand-activate-cta")
-            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+            .getElementById("intake-step2")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 150);
-      } else {
-        onSaved(id, isFirstSave);
+        // Brand reps: also surface the activation CTA at the bottom of step 2.
+        return;
       }
+      // Step 2 (or any edit) → hand back to parent (which routes to /guests).
+      onSaved(id, isFirstSave);
     }
   };
 
