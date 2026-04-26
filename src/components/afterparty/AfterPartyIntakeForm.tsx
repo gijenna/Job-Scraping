@@ -141,6 +141,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [activationSent, setActivationSent] = useState(false);
+  // Two-step flow for fresh RSVPs:
+  //   step 1 = basics (name, email, phone, role, photo, socials)
+  //   step 2 = optional matching info (niches, intents, fact, role-specifics)
+  // Edit mode (attendeeId present from the start) shows everything at once.
+  const startInStep2 = !!attendeeId;
+  const [step, setStep] = useState<1 | 2>(startInStep2 ? 2 : 1);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
