@@ -276,8 +276,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
-      email: form.email || null,
-      phone: form.phone || null,
+      // Defense-in-depth: never overwrite an existing email/phone with null
+      // when the form field is empty (e.g. on an edit where these fields
+      // weren't pre-populated because the public view doesn't expose them).
+      ...((form.email && form.email.trim()) ? { email: form.email.trim() } : (attendeeId ? {} : { email: null })),
+      ...((form.phone && form.phone.trim()) ? { phone: form.phone.trim() } : (attendeeId ? {} : { phone: null })),
       photo_url: form.photo_url || null,
       cartoon_url: form.cartoon_url || null,
       social_links: form.social_links,

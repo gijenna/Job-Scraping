@@ -32,10 +32,15 @@ interface Props {
 const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
+  // Full row (including phone/email) — only loaded once the viewer is the
+  // verified owner. This is what we feed the editor form so saves don't
+  // accidentally overwrite phone/email with null.
+  const [meFull, setMeFull] = useState<any>(null);
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [lockedMatches, setLockedMatches] = useState<MatchResult[] | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
 
   // Restore session
   useEffect(() => {
@@ -57,6 +62,20 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
     }
     if (target) setMe(target);
   }, [allAttendees, slug, verifiedAttendeeId]);
+
+  // When the viewer is the verified owner, load the full row (with phone/email)
+  // so the editor pre-populates correctly and saves don't wipe those fields.
+  useEffect(() => {
+    if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data) setMeFull(data);
+    })();
+  }, [me?.id, verifiedAttendeeId]);
 
   // Locked matches
   useEffect(() => {
@@ -124,14 +143,26 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
 
   const handleSaved = async (id: string) => {
     setEditMode(false);
+    setJustSaved(true);
     onCardSaved?.();
-    // Refresh me from DB
+    // Refresh me from DB (public view for greeting)
     const { data } = await (supabase as any)
       .from("afterparty_attendees_public")
       .select("*")
       .eq("id", id)
       .maybeSingle();
     if (data) setMe(data as AfterPartyAttendee);
+    // Refresh full row (with phone/email) for the editor
+    const { data: full } = await (supabase as any)
+      .from("afterparty_attendees")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (full) setMeFull(full);
+    // Scroll to the roster CTA so they see "see who's coming"
+    setTimeout(() => {
+      document.getElementById("roster-cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 200);
   };
 
   if (!me) return null;
@@ -184,7 +215,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         <div className="mb-6 pb-6" style={{ borderBottom: `1px solid ${BORDER}` }}>
           <AfterPartyIntakeForm
             attendeeId={me.id}
-            initial={me}
+            initial={meFull || me}
             onSaved={handleSaved}
           />
           <div className="text-right mt-2">
@@ -197,6 +228,40 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
               Cancel
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Prominent post-save CTA: take them straight to the roster below */}
+      {justSaved && !editMode && (
+        <div
+          id="roster-cta"
+          className="mb-4 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          style={{
+            backgroundColor: "rgba(237,118,96,0.12)",
+            border: `1px solid ${CORAL}`,
+          }}
+        >
+          <div>
+            <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 700 }}>
+              Saved ✓
+            </div>
+            <div className="text-[15px]" style={{ color: CREAM, fontWeight: 600 }}>
+              See who else is coming
+            </div>
+            <div className="text-[12px]" style={{ color: CREAM_MUTED }}>
+              The full roster is right below — filter by role, niche, or search.
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={() => {
+              document.getElementById("guest-roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="hover:opacity-90 shrink-0"
+            style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 700 }}
+          >
+            See who's coming →
+          </Button>
         </div>
       )}
 

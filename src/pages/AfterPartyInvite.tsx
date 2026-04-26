@@ -59,6 +59,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const [publicListing, setPublicListing] = useState<boolean>(true);
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [meFull, setMeFull] = useState<any>(null);
   const [splashDone, setSplashDone] = useState(false);
   const [justRsvped, setJustRsvped] = useState(false);
   const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
@@ -157,6 +158,13 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       .eq("id", id)
       .single();
     if (data) setMe(data as AfterPartyAttendee);
+    // Refresh full row too so the editor stays accurate on next open
+    const { data: full } = await (supabase as any)
+      .from("afterparty_attendees")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (full) setMeFull(full);
     setEditMode(false);
     setJustRsvped(true);
     setTimeout(() => {
@@ -243,6 +251,21 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       }
     })();
   }, [isOwner, me?.id]);
+
+  // Load the full attendee row (with phone/email) when the viewer is the
+  // verified owner — the public view doesn't expose those fields, and we
+  // need them in the editor so saves don't blank them out.
+  useEffect(() => {
+    if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data) setMeFull(data);
+    })();
+  }, [me?.id, verifiedAttendeeId]);
 
   const togglePublicListing = async (next: boolean) => {
     if (!me) return;
@@ -593,7 +616,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
                 {me ? (me.invited_by ? `RSVP here, ${me.full_name?.split(" ")[0] || ""}!` : "Edit your card") : "RSVP & build your card"}
               </h2>
-              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={me} onSaved={handleSaved} />
+              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={meFull || me} onSaved={handleSaved} />
             </section>
           )}
 
