@@ -163,7 +163,7 @@ const GuestList = () => {
             {loading ? "·" : guests.length} <span style={{ color: "rgba(245,230,211,0.45)" }}>{guests.length === 1 ? "person" : "people"} coming</span>
           </h1>
           <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
-            Live roster — updates as folks RSVP.
+            Live roster. Updates as folks RSVP.
           </p>
         </div>
 

@@ -585,7 +585,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       {/* ----- STEP 2: optional matching info ----- */}
       {step === 2 && (
         <>
-        {/* Step 2 prompt — only show on a fresh RSVP that just hit step 2.
+        {/* Step 2 prompt: only show on a fresh RSVP that just hit step 2.
             In edit mode (attendeeId present from the start) the user already
             knows what these fields are for, so we skip the pep talk. */}
         {!attendeeId && justSavedId && (
@@ -608,7 +608,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
                   : "Want suggestions on people you should meet at the party?"}
             </h3>
             <p className="text-[13px]" style={{ color: "rgba(245,230,211,0.7)" }}>
-              Add a bit more about you and we'll match you to people in the room you might not have known to look for. Totally optional — you can always do this later.
+              Add a bit more about you and we'll match you to people in the room you might not have known to look for. Totally optional, you can always do this later.
             </p>
           </div>
         )}

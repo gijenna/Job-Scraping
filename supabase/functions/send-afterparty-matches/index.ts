@@ -61,7 +61,7 @@ function score(me: Attendee, them: Attendee): { score: number; reason: string } 
     const matched = types.filter((t) => seeking.includes(t))
     if (matched.length) {
       s += 10 * matched.length
-      reason = `You're looking for ${matched[0]} — they are one`
+      reason = `You're looking for ${matched[0]}, they are one`
     }
     if (them.brands_wishlist && me.company && them.brands_wishlist.toLowerCase().includes(me.company.toLowerCase())) {
       s += 8
@@ -74,7 +74,7 @@ function score(me: Attendee, them: Attendee): { score: number; reason: string } 
     const matched = types.filter((t) => seeking.includes(t))
     if (matched.length) {
       s += 10 * matched.length
-      reason = `They're looking for ${matched[0]} — that's you`
+      reason = `They're looking for ${matched[0]}, that's you`
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {
       s += 8
