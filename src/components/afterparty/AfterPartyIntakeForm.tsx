@@ -586,6 +586,37 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </label>
       </div>
 
+      {/* ----- STEP 2: optional matching info ----- */}
+      {step === 2 && (
+        <>
+        {/* Step 2 prompt — only show on a fresh RSVP that just hit step 2.
+            In edit mode (attendeeId present from the start) the user already
+            knows what these fields are for, so we skip the pep talk. */}
+        {!attendeeId && justSavedId && (
+          <div
+            id="intake-step2"
+            className="rounded-xl p-4 sm:p-5"
+            style={{
+              backgroundColor: "rgba(237,118,96,0.10)",
+              border: "1px solid rgba(237,118,96,0.45)",
+            }}
+          >
+            <div className="text-[11px] uppercase mb-1.5" style={{ letterSpacing: "0.14em", color: "#ED7660", fontWeight: 700 }}>
+              You're in ✓
+            </div>
+            <h3 className="text-[17px] mb-1" style={{ color: "#F5E6D3", fontWeight: 600, letterSpacing: "-0.01em" }}>
+              {form.role === "creator"
+                ? "Want suggestions on brands you should meet at the party?"
+                : form.role === "brand"
+                  ? "Want suggestions on creators you should meet at the party?"
+                  : "Want suggestions on people you should meet at the party?"}
+            </h3>
+            <p className="text-[13px]" style={{ color: "rgba(245,230,211,0.7)" }}>
+              Add a bit more about you and we'll match you to people in the room you might not have known to look for. Totally optional — you can always do this later.
+            </p>
+          </div>
+        )}
+
       {/* Niches */}
       <div>
         <Label className="mb-2 block">Niches</Label>
