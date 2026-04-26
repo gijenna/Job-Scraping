@@ -37,7 +37,7 @@ const AfterPartyPartners = () => {
   if (!partners.length) return null;
 
   return (
-    <section className="mt-12">
+    <section className="mt-6">
       <p
         className="text-center text-[11px] uppercase mb-4"
         style={{ letterSpacing: "0.14em", color: CREAM_MUTED }}
