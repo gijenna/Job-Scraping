@@ -199,10 +199,9 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
 
       <PinSheet
         open={pinOpen}
-        onOpenChange={setPinOpen}
-        attendeeId={me.id}
-        attendeeEmail={(me as any).email}
-        onVerified={handleVerified}
+        slug={me.slug}
+        onSuccess={handleVerified}
+        onClose={() => setPinOpen(false)}
       />
     </section>
   );
