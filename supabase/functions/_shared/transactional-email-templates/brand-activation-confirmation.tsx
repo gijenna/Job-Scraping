@@ -54,7 +54,7 @@ const BrandActivationConfirmationEmail = ({
 
 export const template = {
   component: BrandActivationConfirmationEmail,
-  subject: "Got it — let's get your brand in the mix",
+  subject: "Got it, let's get your brand in the mix",
   displayName: 'Brand activation confirmation',
   previewData: {
     recipientName: 'Jane',
