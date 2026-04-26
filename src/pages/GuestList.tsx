@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowLeft } from "lucide-react";
@@ -8,6 +8,8 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
+import MyCardSection from "@/components/afterparty/MyCardSection";
+import { AfterPartyAttendee } from "@/lib/afterparty-matching";
 
 const BG = "#080808";
 const CARD = "#111111";
