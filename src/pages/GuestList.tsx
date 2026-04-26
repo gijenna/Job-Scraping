@@ -184,11 +184,7 @@ const GuestList = () => {
           onCardSaved={fetchGuests}
         />
 
-        {/* Sponsors / spotlights sit directly under the viewer's matches and above the full guest roster */}
-        <div className="mt-2">
-          <AfterPartySpotlights />
-          <AfterPartyPartners />
-        </div>
+        {/* Sponsors / spotlights now live inside MyCardSection beside the card preview */}
 
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 mt-8 backdrop-blur"
