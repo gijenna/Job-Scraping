@@ -151,6 +151,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   };
 
   const handleSaved = async (id: string) => {
+    const wasFirstSave = !me?.id;
     await fetchAll();
     const { data } = await (supabase as any)
       .from("afterparty_attendees_public")
@@ -167,6 +168,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     if (full) setMeFull(full);
     setEditMode(false);
     setJustRsvped(true);
+    if (wasFirstSave) {
+      navigate("/guests");
+      return;
+    }
     setTimeout(() => {
       document.getElementById("matches")?.scrollIntoView({ behavior: "smooth" });
     }, 200);
