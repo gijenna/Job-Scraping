@@ -215,6 +215,21 @@ const BrandActivateButton = ({
         </div>
       </div>
 
+      {!email && (
+        <input
+          type="email"
+          value={emailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
+          placeholder="Your email (so Jenna can reply directly)"
+          className="w-full rounded-md px-3 py-2 text-[13px]"
+          style={{
+            backgroundColor: "#080808",
+            border: "1px solid rgba(245,230,211,0.18)",
+            color: "#fff",
+          }}
+        />
+      )}
+
       <Textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
