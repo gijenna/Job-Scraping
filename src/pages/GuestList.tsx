@@ -159,21 +159,15 @@ const GuestList = () => {
           );
         })()}
 
-        <div className="relative text-center mb-8">
-          <div className="absolute left-1/2 -translate-x-[140px] -top-4 opacity-80 rotate-[-18deg] pointer-events-none hidden sm:block">
-            <StarSparkle tone="coral" variant="single" size={48} />
+        <div className="relative text-left mb-10">
+          <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
+            Creator After Party
           </div>
-          <div className="absolute left-1/2 translate-x-[100px] -top-2 opacity-70 rotate-[14deg] pointer-events-none hidden sm:block">
-            <StarSparkle tone="green" variant="set" size={64} />
-          </div>
-          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: "rgba(245,230,211,0.55)" }}>
-            Creator after party
-          </div>
-          <h1 className="font-afterparty text-[36px] sm:text-[44px] leading-[1.05]" style={{ fontWeight: 500, color: "#F5E6D3" }}>
-            {loading ? ", " : guests.length} {guests.length === 1 ? "person" : "people"} coming
+          <h1 className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight" style={{ fontWeight: 500, color: "#F5E6D3" }}>
+            {loading ? "·" : guests.length} <span style={{ color: "rgba(245,230,211,0.45)" }}>{guests.length === 1 ? "person" : "people"} coming</span>
           </h1>
-          <p className="text-[14px] mt-2" style={{ color: "rgba(245,230,211,0.6)" }}>
-            Live roster · updates as folks RSVP
+          <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
+            Live roster — updates as folks RSVP.
           </p>
         </div>
 
