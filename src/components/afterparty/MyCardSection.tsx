@@ -72,6 +72,22 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
     })();
   }, [me?.id]);
 
+  // Honor ?edit=1 deep-link from email / AfterPartyInvite
+  useEffect(() => {
+    if (!me) return;
+    if (searchParams.get("edit") !== "1") return;
+    if (verifiedAttendeeId === me.id || isPreRsvpShell) {
+      setEditMode(true);
+    } else {
+      setPinOpen(true);
+    }
+    // strip the param so reloads don't re-trigger
+    const next = new URLSearchParams(searchParams);
+    next.delete("edit");
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me?.id, verifiedAttendeeId]);
+
   const liveMatches = useMemo(() => {
     if (!me) return [];
     return computeMatchesFor(me, allAttendees, 5);
