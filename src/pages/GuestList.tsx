@@ -136,26 +136,6 @@ const GuestList = () => {
       }}
     >
       <div className="mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
-        {(() => {
-          let returnTo = "/afterparty";
-          let label = "Back to invite";
-          try {
-            const slug = sessionStorage.getItem("afterparty:return_slug");
-            if (slug) {
-              returnTo = `/afterparty/${slug}?edit=1`;
-              label = "Back to my card";
-            }
-          } catch {}
-          return (
-            <Link
-              to={returnTo}
-              className="inline-flex items-center gap-1 text-[12px] mb-5"
-              style={{ color: "rgba(255,255,255,0.55)" }}
-            >
-              <ArrowLeft className="w-3 h-3" /> {label}
-            </Link>
-          );
-        })()}
 
         <div className="relative text-center mb-8">
           <div className="absolute left-1/2 -translate-x-[140px] -top-4 opacity-80 rotate-[-18deg] pointer-events-none hidden sm:block">
