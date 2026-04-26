@@ -12,7 +12,6 @@ import PinSheet from "./PinSheet";
 import StarSparkle from "./StarSparkle";
 import GuestCard, { GuestRow } from "./GuestCard";
 import AfterPartySpotlights from "./AfterPartySpotlights";
-import AfterPartyPartners from "./AfterPartyPartners";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth";
 import { Pencil } from "lucide-react";
@@ -259,7 +258,6 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             {/* Right: sponsors / peak vibes */}
             <div className="min-w-0">
               <AfterPartySpotlights />
-              <AfterPartyPartners />
             </div>
           </div>
         );
