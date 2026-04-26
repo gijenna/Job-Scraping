@@ -358,7 +358,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
             <div className="mt-4">
               <Link
-                to="/guests"
+                to={me?.slug ? `/guests?slug=${me.slug}` : "/guests"}
                 onClick={() => {
                   if (me?.slug) {
                     try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
