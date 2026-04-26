@@ -59,6 +59,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const [publicListing, setPublicListing] = useState<boolean>(true);
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [meFull, setMeFull] = useState<any>(null);
   const [splashDone, setSplashDone] = useState(false);
   const [justRsvped, setJustRsvped] = useState(false);
   const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
