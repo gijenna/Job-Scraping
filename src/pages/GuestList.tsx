@@ -184,10 +184,11 @@ const GuestList = () => {
           onCardSaved={fetchGuests}
         />
 
-
-        {/* Sponsors / spotlights between the user's own card and the full guest list */}
-        <AfterPartySpotlights />
-        <AfterPartyPartners />
+        {/* Sponsors / spotlights sit directly under the viewer's matches and above the full guest roster */}
+        <div className="mt-2">
+          <AfterPartySpotlights />
+          <AfterPartyPartners />
+        </div>
 
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 mt-8 backdrop-blur"
