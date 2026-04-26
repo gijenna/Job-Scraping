@@ -24,12 +24,33 @@ const ROLE_OPTIONS: { value: string; label: string }[] = [
 type Sort = "newest" | "niche";
 
 const GuestList = () => {
+  const [searchParams] = useSearchParams();
   const [guests, setGuests] = useState<GuestRow[]>([]);
+  const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeRoles, setActiveRoles] = useState<Set<string>>(new Set());
   const [activeNiches, setActiveNiches] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
+
+  // Resolve current viewer's slug from query param or sessionStorage
+  const viewerSlug = useMemo(() => {
+    const qs = searchParams.get("slug");
+    if (qs) return qs;
+    try {
+      return sessionStorage.getItem("afterparty:return_slug");
+    } catch {
+      return null;
+    }
+  }, [searchParams]);
+
+  // Persist slug in sessionStorage when it comes via query param
+  useEffect(() => {
+    const qs = searchParams.get("slug");
+    if (qs) {
+      try { sessionStorage.setItem("afterparty:return_slug", qs); } catch {}
+    }
+  }, [searchParams]);
 
   const fetchGuests = async () => {
     const { data } = await (supabase as any)
@@ -37,6 +58,12 @@ const GuestList = () => {
       .select("*")
       .order("created_at", { ascending: false });
     setGuests((data as GuestRow[]) || []);
+    // Also fetch full attendees (for matching) from public view
+    const { data: attData } = await (supabase as any)
+      .from("afterparty_attendees_public")
+      .select("*")
+      .order("attendee_number");
+    setAttendees((attData as AfterPartyAttendee[]) || []);
     setLoading(false);
   };
 
