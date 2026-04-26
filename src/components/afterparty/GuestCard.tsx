@@ -82,7 +82,7 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
       </div>
 
       <div className="text-center mb-2">
-        <div className="font-afterparty text-[15px]" style={{ color: "#F5E6D3", fontWeight: 500 }}>
+        <div className="text-[14px]" style={{ color: "#F5E6D3", fontWeight: 600, letterSpacing: "-0.01em" }}>
           {guest.display_name}
         </div>
         <span
