@@ -158,6 +158,13 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       .eq("id", id)
       .single();
     if (data) setMe(data as AfterPartyAttendee);
+    // Refresh full row too so the editor stays accurate on next open
+    const { data: full } = await (supabase as any)
+      .from("afterparty_attendees")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (full) setMeFull(full);
     setEditMode(false);
     setJustRsvped(true);
     setTimeout(() => {
