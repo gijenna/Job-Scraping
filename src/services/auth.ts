@@ -14,7 +14,7 @@ export interface RequestPinResult {
 export interface VerifyPinResult {
   ok: boolean;
   attendee_id?: string;
-  reason?: "invalid" | "locked" | "no_phone" | "session_failed" | "server_error";
+  reason?: "invalid" | "locked" | "no_phone" | "session_failed" | "server_error" | "bad_request";
 }
 
 export interface AfterPartySession {
@@ -59,10 +59,11 @@ export async function verifyPhonePin(slug: string, pin: string): Promise<VerifyP
     return { ok: false, reason: (data?.reason || ctx?.reason || "invalid") as VerifyPinResult["reason"] };
   }
   const { access_token, refresh_token, attendee_id } = data as {
-    access_token: string;
-    refresh_token: string;
+    access_token?: string;
+    refresh_token?: string;
     attendee_id: string;
   };
+  if (!access_token || !refresh_token) return { ok: true, attendee_id };
   const { error: setErr } = await supabase.auth.setSession({ access_token, refresh_token });
   if (setErr) return { ok: false, reason: "session_failed" };
   return { ok: true, attendee_id };
@@ -74,7 +75,21 @@ export async function getSession(): Promise<AfterPartySession | null> {
   if (!session?.user) return null;
   const meta = (session.user.user_metadata || {}) as Record<string, unknown>;
   const attendeeId = typeof meta.attendee_id === "string" ? meta.attendee_id : null;
-  if (!attendeeId) return null;
+  if (!attendeeId) {
+    const { data: attendee } = await (supabase as any)
+      .from("afterparty_attendees")
+      .select("id")
+      .eq("auth_user_id", session.user.id)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (!attendee?.id) return null;
+    return {
+      attendeeId: attendee.id,
+      authUserId: session.user.id,
+      email: session.user.email ?? null,
+    };
+  }
   return {
     attendeeId,
     authUserId: session.user.id,
