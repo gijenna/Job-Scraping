@@ -260,12 +260,16 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
 
       {/* Matches */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-afterparty text-[16px] flex items-center gap-2" style={{ fontWeight: 500, color: CREAM }}>
-            <StarSparkle tone="coral" variant="single" size={16} />
-            Your matches. Look out for these numbers
-          </h3>
-          <span className="text-[11px]" style={{ color: CREAM_DIM }}>
+        <div className="flex items-end justify-between mb-3 pb-2" style={{ borderBottom: `1px solid ${BORDER}` }}>
+          <div>
+            <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
+              Your matches
+            </div>
+            <div className="text-[14px]" style={{ color: CREAM_MUTED }}>
+              Look out for these numbers
+            </div>
+          </div>
+          <span className="text-[10px] uppercase" style={{ color: CREAM_DIM, letterSpacing: "0.12em" }}>
             {lockedMatches ? "Final" : "Live"}
           </span>
         </div>
