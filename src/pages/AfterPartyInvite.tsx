@@ -297,8 +297,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: CREAM,
-          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-          fontWeight: 400,
+          fontFamily: '"Josefin Sans", sans-serif',
+          fontWeight: 300,
         }}
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>

@@ -134,7 +134,8 @@ const GuestList = () => {
       style={{
         backgroundColor: BG,
         color: "#fff",
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        fontFamily: '"Josefin Sans", sans-serif',
+        fontWeight: 300,
       }}
     >
       <div className="mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
