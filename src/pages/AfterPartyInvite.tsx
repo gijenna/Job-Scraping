@@ -151,8 +151,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     else alert("No card found for that name. Reach out to the organizer for an invite link.");
   };
 
-  const handleSaved = async (id: string) => {
-    const wasFirstSave = !me?.id;
+  const handleSaved = async (id: string, isFirstSave?: boolean) => {
+    const wasFirstSave = isFirstSave ?? !me?.id;
     await fetchAll();
     const { data } = await (supabase as any)
       .from("afterparty_attendees_public")

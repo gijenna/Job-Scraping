@@ -35,7 +35,7 @@ const BUDGET_RANGES = ["No budget yet", "< $1K / project", "$1K â€“ $5K", "$5K â
 interface Props {
   attendeeId: string | null;
   initial?: any;
-  onSaved: (id: string) => void;
+  onSaved: (id: string, isFirstSave?: boolean) => void;
 }
 
 const slugify = (s: string) =>
@@ -372,6 +372,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     if (id) {
+      const isFirstSave = !attendeeId;
       // For brand reps on first save, surface the activation CTA inline
       // before the parent navigates them to the card view.
       if (!attendeeId && form.role === "brand") {
@@ -382,14 +383,14 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             ?.scrollIntoView({ behavior: "smooth", block: "center" });
         }, 150);
       } else {
-        onSaved(id);
+        onSaved(id, isFirstSave);
       }
     }
   };
 
   // Allow brand reps to dismiss the inline CTA and continue to their card view
   const continueToCard = () => {
-    if (justSavedId) onSaved(justSavedId);
+    if (justSavedId) onSaved(justSavedId, true);
   };
 
   // Pill helpers, themed via inline style
