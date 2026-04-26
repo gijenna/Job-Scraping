@@ -177,7 +177,14 @@ const GuestList = () => {
           </p>
         </div>
 
-        {/* Filter bar */}
+        {/* The viewer's own card + matches at the top, when we know who they are */}
+        <MyCardSection
+          allAttendees={attendees}
+          slug={viewerSlug}
+          onCardSaved={fetchGuests}
+        />
+
+
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 backdrop-blur"
           style={{ backgroundColor: "rgba(17,17,17,0.92)", border: `1px solid ${BORDER}` }}
