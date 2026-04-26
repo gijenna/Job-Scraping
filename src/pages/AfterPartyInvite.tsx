@@ -560,14 +560,16 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 )}
 
                 <div className="text-right">
-                  <button
-                    type="button"
-                    onClick={requestEdit}
+                  <Link
+                    to={`/guests?slug=${me.slug}`}
+                    onClick={() => {
+                      try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
+                    }}
                     className="text-[13px] underline"
                     style={{ color: CREAM_MUTED }}
                   >
-                    {isOwner ? "Edit my card →" : "Edit my card →"}
-                  </button>
+                    Edit my card →
+                  </Link>
                 </div>
               </div>
             </section>
