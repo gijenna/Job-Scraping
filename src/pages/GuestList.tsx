@@ -257,6 +257,8 @@ const GuestList = () => {
         </div>
 
         {/* Grid */}
+        <div id="guest-roster" />
+
         {loading ? (
           <div className="text-center py-12" style={{ color: "rgba(255,255,255,0.5)" }}>Loading…</div>
         ) : filtered.length === 0 ? (
