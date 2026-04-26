@@ -35,6 +35,7 @@ const BrandActivateButton = ({
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
   const [message, setMessage] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
@@ -60,6 +61,16 @@ const BrandActivateButton = ({
 
 
   const submit = async () => {
+    const effectiveEmail = (email || emailInput || "").trim();
+    if (!effectiveEmail || !/^\S+@\S+\.\S+$/.test(effectiveEmail)) {
+      toast({
+        title: "Email required",
+        description: "Add your email so Jenna can reply directly to you.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
       const submittedAt = new Date().toLocaleString("en-US", {
@@ -72,7 +83,7 @@ const BrandActivateButton = ({
         attendee_id: attendeeId || null,
         full_name: fullName,
         company: company || null,
-        email: email || null,
+        email: effectiveEmail,
         message: message.trim() || null,
       };
 
@@ -97,11 +108,12 @@ const BrandActivateButton = ({
         body: {
           templateName: "brand-activation-alert",
           recipientEmail: "jenna@wearetheoutdoorindustry.com",
+          replyTo: effectiveEmail,
           idempotencyKey: `${idempotencyBase}-alert`,
           templateData: {
             fullName,
             company: company || undefined,
-            email: email || undefined,
+            email: effectiveEmail,
             message: message.trim() || undefined,
             attendeeId: attendeeId || undefined,
             submittedAt: `${submittedAt} PT`,
@@ -109,19 +121,17 @@ const BrandActivateButton = ({
         },
       });
 
-      if (email) {
-        supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "brand-activation-confirmation",
-            recipientEmail: email,
-            idempotencyKey: `${idempotencyBase}-confirm`,
-            templateData: {
-              recipientName: fullName.split(" ")[0] || fullName,
-              afterPartyUrl: afterPartyUrl || (typeof window !== "undefined" ? window.location.href : undefined),
-            },
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "brand-activation-confirmation",
+          recipientEmail: effectiveEmail,
+          idempotencyKey: `${idempotencyBase}-confirm`,
+          templateData: {
+            recipientName: fullName.split(" ")[0] || fullName,
+            afterPartyUrl: afterPartyUrl || (typeof window !== "undefined" ? window.location.href : undefined),
           },
-        });
-      }
+        },
+      });
 
       setDone(true);
       onSubmitted?.();
@@ -204,6 +214,21 @@ const BrandActivateButton = ({
           know your options.
         </div>
       </div>
+
+      {!email && (
+        <input
+          type="email"
+          value={emailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
+          placeholder="Your email (so Jenna can reply directly)"
+          className="w-full rounded-md px-3 py-2 text-[13px]"
+          style={{
+            backgroundColor: "#080808",
+            border: "1px solid rgba(245,230,211,0.18)",
+            color: "#fff",
+          }}
+        />
+      )}
 
       <Textarea
         value={message}

@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
   let idempotencyKey: string
   let messageId: string
   let templateData: Record<string, any> = {}
+  let replyToOverride: string | undefined
   try {
     const body = await req.json()
     templateName = body.templateName || body.template_name
@@ -64,6 +65,8 @@ Deno.serve(async (req) => {
     if (body.templateData && typeof body.templateData === 'object') {
       templateData = body.templateData
     }
+    const rt = body.replyTo || body.reply_to
+    if (typeof rt === 'string' && rt.includes('@')) replyToOverride = rt.trim()
   } catch {
     return new Response(
       JSON.stringify({ error: 'Invalid JSON in request body' }),
@@ -309,7 +312,7 @@ Deno.serve(async (req) => {
       message_id: messageId,
       to: effectiveRecipient,
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
-      reply_to: REPLY_TO,
+      reply_to: replyToOverride || REPLY_TO,
       sender_domain: SENDER_DOMAIN,
       subject: resolvedSubject,
       html,
