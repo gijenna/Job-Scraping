@@ -297,7 +297,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: CREAM,
-          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          fontFamily: '"Josefin Sans", sans-serif',
+          fontWeight: 300,
           fontWeight: 400,
         }}
       >
