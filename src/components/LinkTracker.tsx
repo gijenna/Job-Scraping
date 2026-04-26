@@ -155,7 +155,7 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
       {isAdmin && (
         <button
           onClick={downloadCSV}
-          className="fixed bottom-20 right-4 z-[9999] flex items-center gap-1.5 bg-black/80 hover:bg-black text-white text-xs px-3 py-2 rounded-full shadow-lg transition-colors"
+          className="fixed top-1/2 -translate-y-1/2 right-2 z-[9999] flex items-center gap-1.5 bg-black/80 hover:bg-black text-white text-xs px-3 py-2 rounded-full shadow-lg transition-colors"
           title="Download link click stats CSV for this page"
         >
           <Download className="w-3.5 h-3.5" />
