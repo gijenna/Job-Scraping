@@ -46,7 +46,7 @@ const AfterPartyRsvpConfirmationEmail = ({
   return (
     <Html lang="en" dir="ltr">
       <Head />
-      <Preview>You're on the list, {recipientName} — get suggestions on {matchTargetShort}</Preview>
+      <Preview>You're on the list, {recipientName}. Get suggestions on {matchTargetShort}.</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>You're on the list, {recipientName}</Heading>
@@ -71,7 +71,7 @@ const AfterPartyRsvpConfirmationEmail = ({
           </Button>
 
           <Text style={text}>
-            <strong>2. See who else is coming.</strong> Browse the full guest list — who's bringing giveaways, who's bringing snacks, and who you should say hi to.
+            <strong>2. See who else is coming.</strong> Browse the full guest list to see who's bringing giveaways, who's bringing snacks, and who you should say hi to.
           </Text>
           <Button href={dashboardUrl} style={secondaryButton}>
             See who's coming →
