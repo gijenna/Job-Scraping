@@ -321,35 +321,50 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     };
 
     let id = attendeeId;
+    let resolvedSlug = (initial as any)?.slug as string | undefined;
     if (attendeeId) {
       delete payload.slug;
-      const { error } = await (supabase as any).from("afterparty_attendees").update(payload).eq("id", attendeeId);
+      const { data, error } = await (supabase as any)
+        .from("afterparty_attendees")
+        .update(payload)
+        .eq("id", attendeeId)
+        .select("id, slug")
+        .single();
       if (error) { toast({ title: "Save failed", description: error.message, variant: "destructive" }); setSaving(false); return; }
+      if (data?.slug) resolvedSlug = data.slug;
     } else {
       const { data, error } = await (supabase as any).from("afterparty_attendees").insert(payload).select("id, slug").single();
       if (error) { toast({ title: "Save failed", description: error.message, variant: "destructive" }); setSaving(false); return; }
       id = data.id;
-
-      // Fire-and-forget RSVP confirmation email (only on first RSVP, only if email)
-      if (form.email) {
-        const base = (typeof window !== "undefined" ? window.location.origin : "https://basecampoutdoorevents.com");
-        supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "afterparty-rsvp-confirmation",
-            recipientEmail: form.email,
-            idempotencyKey: `afterparty-rsvp-${id}`,
-            templateData: {
-              recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
-              inviteUrl: `${base}/afterparty/${data.slug}`,
-              guestsUrl: `${base}/guests`,
-              matchesUrl: `${base}/afterparty/${data.slug}#matches`,
-              brandActivated: false,
-              role: form.role,
-            },
-          },
-        });
-      }
+      resolvedSlug = data.slug;
     }
+
+    // Fire-and-forget RSVP confirmation email. Idempotency key (per attendee)
+    // ensures the email API only delivers it the first time, so resaves/edits
+    // won't trigger a duplicate. Runs for both freshly-inserted records AND
+    // pre-invited shells that the user is RSVPing into for the first time.
+    if (id && form.email) {
+      const base = (typeof window !== "undefined" ? window.location.origin : "https://basecampoutdoorevents.com");
+      const slugForLinks = resolvedSlug || id;
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "afterparty-rsvp-confirmation",
+          recipientEmail: form.email,
+          idempotencyKey: `afterparty-rsvp-${id}`,
+          templateData: {
+            recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
+            inviteUrl: `${base}/afterparty/${slugForLinks}`,
+            guestsUrl: `${base}/guests`,
+            matchesUrl: `${base}/afterparty/${slugForLinks}#matches`,
+            brandActivated: false,
+            role: form.role,
+          },
+        },
+      }).catch((err) => {
+        console.warn("[afterparty] RSVP confirmation email enqueue failed", err);
+      });
+    }
+
     setSaving(false);
     setSavedSnapshot(JSON.stringify(form));
     toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated." : "Look out for your matches below." });
