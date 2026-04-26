@@ -245,6 +245,21 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     })();
   }, [isOwner, me?.id]);
 
+  // Load the full attendee row (with phone/email) when the viewer is the
+  // verified owner — the public view doesn't expose those fields, and we
+  // need them in the editor so saves don't blank them out.
+  useEffect(() => {
+    if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data) setMeFull(data);
+    })();
+  }, [me?.id, verifiedAttendeeId]);
+
   const togglePublicListing = async (next: boolean) => {
     if (!me) return;
     setUpdatingListing(true);
