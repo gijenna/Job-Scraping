@@ -48,6 +48,7 @@ interface AfterPartyInviteProps {
 
 const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
+  const navigate = useNavigate();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
   const [lookupName, setLookupName] = useState("");
