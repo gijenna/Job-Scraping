@@ -277,10 +277,22 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     const { data: authData } = await supabase.auth.getUser();
+    let authUserId = authData.user?.id || null;
+    if (!authUserId) {
+      const { data: anonData, error: anonErr } = await supabase.auth.signInAnonymously({
+        options: { data: { afterparty_slug: initial?.slug || null, afterparty_attendee_id: attendeeId || null } },
+      });
+      if (anonErr || !anonData.user?.id) {
+        toast({ title: "Save failed", description: "Could not create secure edit access. Please try again.", variant: "destructive" });
+        setSaving(false);
+        return;
+      }
+      authUserId = anonData.user.id;
+    }
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
-      ...(authData.user?.id ? { auth_user_id: authData.user.id } : {}),
+      auth_user_id: authUserId,
       // Defense-in-depth: never overwrite an existing email/phone with null
       // when the form field is empty (e.g. on an edit where these fields
       // weren't pre-populated because the public view doesn't expose them).
