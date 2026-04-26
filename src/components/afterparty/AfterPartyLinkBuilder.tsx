@@ -395,20 +395,31 @@ const AfterPartyLinkBuilder = ({ onCreated }: { onCreated: () => void }) => {
                   <td className="px-2 py-1 capitalize text-events-cream/70">{r.role}</td>
                   <td className="px-2 py-1 text-events-yellow break-all">
                     {r.link ? (
-                      <div className="flex items-center gap-2">
-                        <a href={r.link} target="_blank" rel="noopener noreferrer" className="underline hover:text-events-coral break-all">
-                          {r.link}
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(r.link);
-                            toast({ title: "Link copied", description: r.full_name });
-                          }}
-                          className="shrink-0 px-2 py-0.5 rounded bg-events-cream/10 text-events-cream hover:bg-events-cream/20"
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <a href={r.link} target="_blank" rel="noopener noreferrer" className="underline hover:text-events-coral break-all">
+                            {r.link}
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(r.link);
+                              toast({ title: "Link copied", description: r.full_name });
+                            }}
+                            className="shrink-0 px-2 py-0.5 rounded bg-events-cream/10 text-events-cream hover:bg-events-cream/20"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                        <a
+                          href={`/afterparty/${r.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-events-cream/60 underline hover:text-events-cream break-all"
+                          title="Open in this preview environment"
                         >
-                          Copy
-                        </button>
+                          Preview here → /afterparty/{r.slug}
+                        </a>
                       </div>
                     ) : (
                       <span className="text-events-cream/40">Not generated yet</span>
