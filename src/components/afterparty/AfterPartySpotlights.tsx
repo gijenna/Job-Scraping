@@ -87,7 +87,7 @@ const AfterPartySpotlights = () => {
   if (!items.length) return null;
 
   return (
-    <section className="mt-12">
+    <section className="mt-6">
       <h2
         className="font-afterparty text-[20px] mb-1 text-center"
         style={{ fontWeight: 500, color: CREAM }}
