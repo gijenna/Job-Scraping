@@ -377,13 +377,12 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
               <div className="px-1">
-                <h2 className="font-afterparty text-[22px] mb-2" style={{ fontWeight: 500, color: CREAM }}>
-                  <EditableText settingKey="about.title" defaultText="A lil party" />
+                <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
+                  <EditableText settingKey="about.title" defaultText="A lil party for outdoor industry creators, brands & festival sponsors" />
                 </h2>
-                <div className="mb-3 flex flex-col items-start gap-1.5 text-[13px] font-afterparty">
                 {me?.invited_by ? (
                   <div
-                    className="px-3 py-1.5 rounded-lg text-center"
+                    className="mb-5 inline-flex px-3 py-1.5 rounded-lg text-center text-[14px] font-afterparty"
                     style={{
                       backgroundColor: "rgba(216,90,48,0.12)",
                       border: "1px solid rgba(216,90,48,0.4)",
@@ -391,21 +390,18 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       fontWeight: 500,
                     }}
                   >
-                    Luckily, you're on{" "}
+                    Invite-only · Luckily, you're on{" "}
                     <span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
                   </div>
                 ) : (
-                  <div style={{ color: CREAM, fontWeight: 500 }}>Invite-only</div>
+                  <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
+                    <EditableText
+                      settingKey="about.body"
+                      defaultText="Invite-only"
+                      multiline
+                    />
+                  </p>
                 )}
-                  <div style={{ color: CREAM_MUTED }}>swag for the first 50 folks</div>
-                </div>
-                <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
-                  <EditableText
-                    settingKey="about.body"
-                    defaultText="A curated evening for brands, creators, and Outside Days festival sponsors. Address shared after RSVP."
-                    multiline
-                  />
-                </p>
 
                 <div className="space-y-2 mb-6 text-[13px]" style={{ color: CREAM_MUTED }}>
                   <div className="flex items-start gap-2">
