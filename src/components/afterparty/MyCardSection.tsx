@@ -30,6 +30,7 @@ interface Props {
 }
 
 const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
