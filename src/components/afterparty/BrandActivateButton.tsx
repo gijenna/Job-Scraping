@@ -144,7 +144,7 @@ const BrandActivateButton = ({
     }
   };
 
-  // Already submitted previously — show a confirmation card with a "prompt her" mailto.
+  // Already submitted previously, show a confirmation card with a "prompt her" mailto.
   const showSentCard = done || alreadySent;
   if (showSentCard) {
     const subject = encodeURIComponent(

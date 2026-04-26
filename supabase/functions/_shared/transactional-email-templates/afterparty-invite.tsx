@@ -68,7 +68,7 @@ const AfterPartyInviteEmail = ({
           </Text>
           <Text style={footer}>
             Just hit reply if you want to chat. It comes straight to me.
-            <br />— Jenna
+            <br />Jenna
           </Text>
         </Container>
       </Body>

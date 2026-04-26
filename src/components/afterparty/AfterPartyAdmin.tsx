@@ -389,7 +389,7 @@ const AfterPartyAdmin = () => {
                       onClick={() => { setEditingInvitedBy(a.id); setEditValue((a as any).invited_by || ""); }}
                       className="inline-flex items-center gap-1 hover:text-events-cream"
                     >
-                      <span>{(a as any).invited_by || <span className="text-events-cream/30">—</span>}</span>
+                      <span>{(a as any).invited_by || <span className="text-events-cream/30">None</span>}</span>
                       <Pencil className="w-3 h-3 opacity-50" />
                     </button>
                   )}

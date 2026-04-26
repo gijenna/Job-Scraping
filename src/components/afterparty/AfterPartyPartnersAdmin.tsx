@@ -143,7 +143,7 @@ const AfterPartyPartnersAdmin = () => {
         </label>
       </div>
       <Textarea
-        placeholder="Spotlight description (optional — only shown if a category is set)"
+        placeholder="Spotlight description (optional, only shown if a category is set)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         className="bg-black/30 border-events-cream/20 text-events-cream min-h-[60px]"

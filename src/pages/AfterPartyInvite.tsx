@@ -214,7 +214,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const requestEdit = () => {
     if (!me) return;
-    // Pre-RSVP shells (no email on file) skip PIN — there's nowhere to send a code.
+    // Pre-RSVP shells (no email on file) skip PIN since there's nowhere to send a code.
     if (verifiedAttendeeId === me.id || (!me.photo_url && !me.cartoon_url
       && !(me.niches?.length) && !(me.looking_for?.length)
       && !(me.creator_types?.length) && !(me.platforms?.length)
@@ -234,7 +234,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
   // A "pre-RSVP shell" is an attendee row created by the bulk link builder
-  // before the person has actually filled anything out — no photo, no
+  // before the person has actually filled anything out: no photo, no
   // niches, no looking_for, etc. We treat these as fresh RSVPs so the user
   // lands on the intake form (not a view-mode "card" that asks for a PIN).
   const isPreRsvpShell = !!me && !me.photo_url && !me.cartoon_url
@@ -259,7 +259,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   }, [isOwner, me?.id]);
 
   // Load the full attendee row (with phone/email) when the viewer is the
-  // verified owner — the public view doesn't expose those fields, and we
+  // verified owner. The public view doesn't expose those fields, and we
   // need them in the editor so saves don't blank them out.
   useEffect(() => {
     if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
@@ -305,7 +305,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
 
-          {/* Personalized greeting — sits ABOVE the splash monogram so the two
+          {/* Personalized greeting sits ABOVE the splash monogram so the two
               never overlap. Appears in sync with the splash and fades out as
               the splash transitions. First visit per browser only. */}
           {showPersonalGreeting && me?.full_name && (
@@ -401,7 +401,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
           </div>
 
-          {/* About the event — shown when no card loaded OR when this is a
+          {/* About the event shown when no card loaded OR when this is a
               personalized pre-RSVP shell (so invitees see event info first) */}
           {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
@@ -616,7 +616,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                     color: CREAM,
                   }}
                 >
-                  Lucky you — <span style={{ fontWeight: 600 }}>{me.invited_by}</span> wants you there
+                  Lucky you, <span style={{ fontWeight: 600 }}>{me.invited_by}</span> wants you there
                 </div>
               )}
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
@@ -642,10 +642,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </section>
           )}
 
-          {/* Brand spotlights — global to event, shown after matches/see-who's-coming */}
+          {/* Brand spotlights, global to event, shown after matches/see-who's-coming */}
           <AfterPartySpotlights />
 
-          {/* Partners — global, bottom of page */}
+          {/* Partners, global, bottom of page */}
           <AfterPartyPartners />
 
           {/* Admin-only inline editor for partners + spotlights */}
