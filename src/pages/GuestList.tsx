@@ -185,8 +185,12 @@ const GuestList = () => {
         />
 
 
+        {/* Sponsors / spotlights between the user's own card and the full guest list */}
+        <AfterPartySpotlights />
+        <AfterPartyPartners />
+
         <div
-          className="sticky top-2 z-20 p-3 rounded-xl mb-6 backdrop-blur"
+          className="sticky top-2 z-20 p-3 rounded-xl mb-6 mt-8 backdrop-blur"
           style={{ backgroundColor: "rgba(17,17,17,0.92)", border: `1px solid ${BORDER}` }}
         >
           <div className="flex flex-wrap gap-2 mb-3">
@@ -274,8 +278,6 @@ const GuestList = () => {
           </div>
         )}
 
-        <AfterPartySpotlights />
-        <AfterPartyPartners />
         <AfterPartyAdminInline />
       </div>
     </div>
