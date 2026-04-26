@@ -161,7 +161,7 @@ const GuestList = () => {
 
         <div className="relative text-left mb-10">
           <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
-            Creator After Party
+            Creator Kick-Off Party
           </div>
           <h1 className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight" style={{ fontWeight: 500, color: "#F5E6D3" }}>
             {loading ? "·" : guests.length} <span style={{ color: "rgba(245,230,211,0.45)" }}>{guests.length === 1 ? "person" : "people"} coming</span>
