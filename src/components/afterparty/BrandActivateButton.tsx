@@ -35,6 +35,7 @@ const BrandActivateButton = ({
   const { toast } = useToast();
   const [open, setOpen] = useState(variant === "full");
   const [message, setMessage] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [alreadySent, setAlreadySent] = useState(false);
