@@ -417,10 +417,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
   };
 
-  // Allow brand reps to dismiss the inline CTA and continue to their card view
-  const continueToCard = () => {
-    if (justSavedId) onSaved(justSavedId, true);
-  };
 
   // Pill helpers, themed via inline style
   const pillStyle = (active: boolean, color: { fill: string; border: string; text: string }) => ({
