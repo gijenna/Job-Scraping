@@ -372,6 +372,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     if (id) {
+      const isFirstSave = !attendeeId;
       // For brand reps on first save, surface the activation CTA inline
       // before the parent navigates them to the card view.
       if (!attendeeId && form.role === "brand") {
@@ -382,14 +383,14 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             ?.scrollIntoView({ behavior: "smooth", block: "center" });
         }, 150);
       } else {
-        onSaved(id);
+        onSaved(id, isFirstSave);
       }
     }
   };
 
   // Allow brand reps to dismiss the inline CTA and continue to their card view
   const continueToCard = () => {
-    if (justSavedId) onSaved(justSavedId);
+    if (justSavedId) onSaved(justSavedId, true);
   };
 
   // Pill helpers, themed via inline style
