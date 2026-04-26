@@ -11,9 +11,11 @@ import AfterPartyIntakeForm from "./AfterPartyIntakeForm";
 import PinSheet from "./PinSheet";
 import StarSparkle from "./StarSparkle";
 import GuestCard, { GuestRow } from "./GuestCard";
+import AfterPartySpotlights from "./AfterPartySpotlights";
+import AfterPartyPartners from "./AfterPartyPartners";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth";
-import { Pencil, ExternalLink } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 const CARD = "#111111";
 const BORDER = "rgba(255,255,255,0.09)";
@@ -176,39 +178,16 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         border: `1px solid ${BORDER}`,
       }}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
-          <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
-            Your card
-          </div>
-          <h2 className="font-afterparty text-[22px] sm:text-[26px]" style={{ fontWeight: 500, color: CREAM }}>
-            Hey {me.full_name?.split(" ")[0] || "there"}, you're all set
-          </h2>
-          <p className="text-[13px] mt-1" style={{ color: CREAM_MUTED }}>
-            Edit your card and check your matches below. Everything in one place.
-          </p>
+      <div className="mb-4">
+        <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
+          Your card
         </div>
-        <div className="flex flex-col gap-2 shrink-0">
-          {!editMode && (
-            <Button
-              type="button"
-              onClick={requestEdit}
-              className="hover:opacity-90"
-              style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
-              size="sm"
-            >
-              <Pencil className="w-3.5 h-3.5 mr-1.5" />
-              Edit my card
-            </Button>
-          )}
-          <Link
-            to={`/afterparty/${me.slug}`}
-            className="text-[12px] inline-flex items-center gap-1 underline justify-end"
-            style={{ color: CREAM_DIM }}
-          >
-            View public card <ExternalLink className="w-3 h-3" />
-          </Link>
-        </div>
+        <h2 className="font-afterparty text-[22px] sm:text-[26px]" style={{ fontWeight: 500, color: CREAM }}>
+          Hey {me.full_name?.split(" ")[0] || "there"}, you're all set
+        </h2>
+        <p className="text-[13px] mt-1" style={{ color: CREAM_MUTED }}>
+          Edit your card and check your matches below. Everything in one place.
+        </p>
       </div>
 
       {/* Inline editor */}
@@ -232,7 +211,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         </div>
       )}
 
-      {/* Live preview of public card */}
+      {/* Two-column: card preview (left) + sponsors (right) */}
       {!editMode && !isPreRsvpShell && (() => {
         const src: any = meFull || me;
         const previewGuest: GuestRow = {
@@ -253,16 +232,35 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
           created_at: src.created_at ?? new Date().toISOString(),
         };
         return (
-          <div className="mb-6">
-            <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
-              Card preview
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] gap-6 mb-6">
+            {/* Left: card preview + edit button */}
+            <div>
+              <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
+                Card preview
+              </div>
+              <div className="max-w-sm">
+                <GuestCard guest={previewGuest} />
+              </div>
+              <p className="text-[12px] mt-2 mb-3" style={{ color: CREAM_DIM }}>
+                This is exactly how others see you in the guest list.
+              </p>
+              <Button
+                type="button"
+                onClick={requestEdit}
+                className="hover:opacity-90 w-full sm:w-auto"
+                style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
+                size="sm"
+              >
+                <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                Edit my card
+              </Button>
             </div>
-            <div className="max-w-sm">
-              <GuestCard guest={previewGuest} />
+
+            {/* Right: sponsors / peak vibes */}
+            <div className="min-w-0">
+              <AfterPartySpotlights />
+              <AfterPartyPartners />
             </div>
-            <p className="text-[12px] mt-2" style={{ color: CREAM_DIM }}>
-              This is exactly how others see you in the guest list.
-            </p>
           </div>
         );
       })()}

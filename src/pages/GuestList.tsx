@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
-import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
-import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
@@ -184,11 +182,7 @@ const GuestList = () => {
           onCardSaved={fetchGuests}
         />
 
-        {/* Sponsors / spotlights sit directly under the viewer's matches and above the full guest roster */}
-        <div className="mt-2">
-          <AfterPartySpotlights />
-          <AfterPartyPartners />
-        </div>
+        {/* Sponsors / spotlights now live inside MyCardSection beside the card preview */}
 
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 mt-8 backdrop-blur"
