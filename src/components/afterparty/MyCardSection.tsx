@@ -32,10 +32,15 @@ interface Props {
 const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
+  // Full row (including phone/email) — only loaded once the viewer is the
+  // verified owner. This is what we feed the editor form so saves don't
+  // accidentally overwrite phone/email with null.
+  const [meFull, setMeFull] = useState<any>(null);
   const [verifiedAttendeeId, setVerifiedAttendeeId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [lockedMatches, setLockedMatches] = useState<MatchResult[] | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
 
   // Restore session
   useEffect(() => {
@@ -57,6 +62,20 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
     }
     if (target) setMe(target);
   }, [allAttendees, slug, verifiedAttendeeId]);
+
+  // When the viewer is the verified owner, load the full row (with phone/email)
+  // so the editor pre-populates correctly and saves don't wipe those fields.
+  useEffect(() => {
+    if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("afterparty_attendees")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (data) setMeFull(data);
+    })();
+  }, [me?.id, verifiedAttendeeId]);
 
   // Locked matches
   useEffect(() => {
