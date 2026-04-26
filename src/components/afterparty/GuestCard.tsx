@@ -182,6 +182,7 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
       {fact ? (
         <div className="mt-3 text-[12px]" style={{ color: "rgba(245,230,211,0.7)" }}>
           <p className={expanded ? "" : "line-clamp-2"} style={{ lineHeight: 1.5 }}>
+            <span style={{ color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>Proud of: </span>
             {fact}
           </p>
           {needsTruncate && (
