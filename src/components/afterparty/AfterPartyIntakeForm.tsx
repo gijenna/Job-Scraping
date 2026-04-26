@@ -245,7 +245,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
     setSaving(true);
 
-    // Duplicate guard — only on first RSVP (no attendeeId yet).
+    // Duplicate guard, only on first RSVP (no attendeeId yet).
     // If the same name OR email already exists, send the user to that
     // existing card so they can sign in via PIN instead of creating a dup.
     if (!attendeeId) {
