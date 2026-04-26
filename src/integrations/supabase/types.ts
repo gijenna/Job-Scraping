@@ -966,6 +966,7 @@ export type Database = {
           cartoon_url: string | null
           company: string | null
           company_role: string | null
+          company_url: string | null
           created_at: string | null
           creator_types: string[] | null
           full_name: string | null
@@ -977,6 +978,8 @@ export type Database = {
           photo_url: string | null
           platforms: string[] | null
           role: string | null
+          show_instagram: boolean | null
+          show_linkedin: boolean | null
           slug: string | null
           social_links: Json | null
           status: string | null
@@ -992,6 +995,7 @@ export type Database = {
           cartoon_url?: string | null
           company?: string | null
           company_role?: string | null
+          company_url?: string | null
           created_at?: string | null
           creator_types?: string[] | null
           full_name?: string | null
@@ -1003,6 +1007,8 @@ export type Database = {
           photo_url?: string | null
           platforms?: string[] | null
           role?: string | null
+          show_instagram?: boolean | null
+          show_linkedin?: boolean | null
           slug?: string | null
           social_links?: Json | null
           status?: string | null
@@ -1018,6 +1024,7 @@ export type Database = {
           cartoon_url?: string | null
           company?: string | null
           company_role?: string | null
+          company_url?: string | null
           created_at?: string | null
           creator_types?: string[] | null
           full_name?: string | null
@@ -1029,6 +1036,8 @@ export type Database = {
           photo_url?: string | null
           platforms?: string[] | null
           role?: string | null
+          show_instagram?: boolean | null
+          show_linkedin?: boolean | null
           slug?: string | null
           social_links?: Json | null
           status?: string | null
