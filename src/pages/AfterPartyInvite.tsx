@@ -299,7 +299,6 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           color: CREAM,
           fontFamily: '"Josefin Sans", sans-serif',
           fontWeight: 300,
-          fontWeight: 400,
         }}
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
