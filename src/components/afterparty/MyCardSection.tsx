@@ -185,7 +185,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
           Hey {me.full_name?.split(" ")[0] || "there"}, you're all set
         </h2>
         <p className="text-[13px] mt-1" style={{ color: CREAM_MUTED }}>
-          Edit your card and check your matches below. Everything in one place.
+          Edit your card and check your matches below.
         </p>
       </div>
 
