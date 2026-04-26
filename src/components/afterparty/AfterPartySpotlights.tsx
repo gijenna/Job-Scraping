@@ -88,14 +88,17 @@ const AfterPartySpotlights = () => {
 
   return (
     <section className="mt-6">
+      <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
+        Community partners
+      </div>
       <h2
-        className="font-afterparty text-[20px] mb-1 text-center"
-        style={{ fontWeight: 500, color: CREAM }}
+        className="text-[18px] mb-1"
+        style={{ fontWeight: 600, color: CREAM, letterSpacing: "-0.01em" }}
       >
-        Peak vibes assured by community partners
+        Peak vibes, brought by these folks
       </h2>
-      <p className="text-center text-[12px] mb-6" style={{ color: CREAM_FAINT }}>
-        Check out the folks contributing to make this night happen
+      <p className="text-[12px] mb-6" style={{ color: CREAM_FAINT }}>
+        Thanks to everyone helping make the night happen.
       </p>
       <div className="space-y-6">
         {grouped.map(({ category, list }) => (

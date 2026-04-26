@@ -167,28 +167,14 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   });
 
   const [savedSnapshot, setSavedSnapshot] = useState<string>("");
-  // Re-merge whenever `initial` changes — including when the parent swaps
-  // from a public-view row (no email/phone/company_url) to the full row
-  // after verifying ownership. Keying only on `initial?.id` would miss this
-  // because the id is the same; we'd render with stale blanks for fields
-  // the public view doesn't expose.
   useEffect(() => {
-    if (!initial) return;
-    setForm((prev: any) => {
-      const merged = {
-        ...prev,
-        ...initial,
-        // Never let an undefined incoming field clobber a value the user
-        // is actively typing. Only overwrite fields that are present on
-        // `initial` (the spread above already does this), then patch
-        // social_links which needs the nested-object guard.
-        social_links: initial.social_links || prev.social_links || { instagram: "", linkedin: "" },
-      };
+    if (initial) {
+      const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
+      setForm(merged);
       setSavedSnapshot(JSON.stringify(merged));
-      return merged;
-    });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initial]);
+  }, [initial?.id]);
 
   const isDirty = attendeeId ? JSON.stringify(form) !== savedSnapshot : false;
 
@@ -360,9 +346,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     if (id && form.email) {
       const base = (typeof window !== "undefined" ? window.location.origin : "https://basecampoutdoorevents.com");
       const slugForLinks = resolvedSlug || id;
-      // All links land on the consolidated guest list page. The viewer's
-      // own card + editor + matches live at the top of /guests.
-      const guestsBase = `${base}/guests?slug=${encodeURIComponent(slugForLinks)}`;
       supabase.functions.invoke("send-transactional-email", {
         body: {
           templateName: "afterparty-rsvp-confirmation",
@@ -370,9 +353,9 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           idempotencyKey: `afterparty-rsvp-${id}`,
           templateData: {
             recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
-            inviteUrl: `${guestsBase}&edit=1`,
+            inviteUrl: `${base}/afterparty/${slugForLinks}`,
             guestsUrl: `${base}/guests`,
-            matchesUrl: `${guestsBase}#matches`,
+            matchesUrl: `${base}/afterparty/${slugForLinks}#matches`,
             brandActivated: false,
             role: form.role,
           },

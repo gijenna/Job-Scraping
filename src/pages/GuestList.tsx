@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
+import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
@@ -136,22 +138,36 @@ const GuestList = () => {
       }}
     >
       <div className="mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
+        {(() => {
+          let returnTo = "/afterparty";
+          let label = "Back to invite";
+          try {
+            const slug = sessionStorage.getItem("afterparty:return_slug");
+            if (slug) {
+              returnTo = `/afterparty/${slug}?edit=1`;
+              label = "Back to my card";
+            }
+          } catch {}
+          return (
+            <Link
+              to={returnTo}
+              className="inline-flex items-center gap-1 text-[12px] mb-5"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              <ArrowLeft className="w-3 h-3" /> {label}
+            </Link>
+          );
+        })()}
 
-        <div className="relative text-center mb-8">
-          <div className="absolute left-1/2 -translate-x-[140px] -top-4 opacity-80 rotate-[-18deg] pointer-events-none hidden sm:block">
-            <StarSparkle tone="coral" variant="single" size={48} />
+        <div className="relative text-left mb-10">
+          <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
+            Creator After Party
           </div>
-          <div className="absolute left-1/2 translate-x-[100px] -top-2 opacity-70 rotate-[14deg] pointer-events-none hidden sm:block">
-            <StarSparkle tone="green" variant="set" size={64} />
-          </div>
-          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: "rgba(245,230,211,0.55)" }}>
-            Creator after party
-          </div>
-          <h1 className="font-afterparty text-[36px] sm:text-[44px] leading-[1.05]" style={{ fontWeight: 500, color: "#F5E6D3" }}>
-            {loading ? ", " : guests.length} {guests.length === 1 ? "person" : "people"} coming
+          <h1 className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight" style={{ fontWeight: 500, color: "#F5E6D3" }}>
+            {loading ? "·" : guests.length} <span style={{ color: "rgba(245,230,211,0.45)" }}>{guests.length === 1 ? "person" : "people"} coming</span>
           </h1>
-          <p className="text-[14px] mt-2" style={{ color: "rgba(245,230,211,0.6)" }}>
-            Live roster · updates as folks RSVP
+          <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
+            Live roster — updates as folks RSVP.
           </p>
         </div>
 
@@ -162,7 +178,11 @@ const GuestList = () => {
           onCardSaved={fetchGuests}
         />
 
-        {/* Sponsors / spotlights now live inside MyCardSection beside the card preview */}
+        {/* Sponsors / spotlights sit directly under the viewer's matches and above the full guest roster */}
+        <div className="mt-2">
+          <AfterPartySpotlights />
+          <AfterPartyPartners />
+        </div>
 
         <div
           className="sticky top-2 z-20 p-3 rounded-xl mb-6 mt-8 backdrop-blur"
