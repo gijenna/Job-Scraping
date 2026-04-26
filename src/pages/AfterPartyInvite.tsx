@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
@@ -48,6 +48,7 @@ interface AfterPartyInviteProps {
 
 const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
+  const navigate = useNavigate();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
   const [lookupName, setLookupName] = useState("");
@@ -151,6 +152,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   };
 
   const handleSaved = async (id: string) => {
+    const wasFirstSave = !me?.id;
     await fetchAll();
     const { data } = await (supabase as any)
       .from("afterparty_attendees_public")
@@ -167,6 +169,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     if (full) setMeFull(full);
     setEditMode(false);
     setJustRsvped(true);
+    if (wasFirstSave) {
+      navigate("/guests");
+      return;
+    }
     setTimeout(() => {
       document.getElementById("matches")?.scrollIntoView({ behavior: "smooth" });
     }, 200);
