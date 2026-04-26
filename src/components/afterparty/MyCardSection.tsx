@@ -169,7 +169,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
 
   return (
     <section
-      className="mb-10 rounded-2xl p-5 sm:p-6"
+      className="mb-4 rounded-2xl p-5 sm:p-6"
       style={{
         backgroundColor: CARD,
         border: `1px solid ${BORDER}`,
