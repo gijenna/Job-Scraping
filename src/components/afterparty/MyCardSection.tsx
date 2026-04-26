@@ -258,7 +258,6 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             {/* Right: sponsors / peak vibes */}
             <div className="min-w-0">
               <AfterPartySpotlights />
-              <AfterPartyPartners />
             </div>
           </div>
         );
