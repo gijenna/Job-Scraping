@@ -174,10 +174,9 @@ const GuestList = () => {
           onCardSaved={fetchGuests}
         />
 
-        {/* Sponsors / spotlights sit directly under the viewer's matches and above the full guest roster */}
+        {/* Spotlights (Peak Vibes pill logos) sit directly under the viewer's matches and above the full guest roster */}
         <div className="mt-2">
           <AfterPartySpotlights />
-          <AfterPartyPartners />
         </div>
 
         <div
