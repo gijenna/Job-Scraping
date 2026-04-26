@@ -6,7 +6,7 @@ import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
-import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
+
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
