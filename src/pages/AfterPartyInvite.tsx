@@ -407,7 +407,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             <section className="mt-16">
               <div className="px-1">
                 <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
-                  <EditableText settingKey="about.title" defaultText="A lil party for outdoor industry creators, brands & festival sponsors" />
+                  <EditableText settingKey="about.title" defaultText="A lil' party for outdoor industry creators & brands" />
                 </h2>
                 {me?.invited_by ? (
                   <div

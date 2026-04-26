@@ -6,7 +6,7 @@ const defaultSchedule = [
   { time: "5–5:30 PM", label: "VIP Hour", desc: "Select candidates get exclusive early access" },
   { time: "5:30–8 PM", label: "Main Event", desc: "Registrants network with brands, career coaches, and each other" },
   { time: "8–8:30 PM", label: "Wrap Up", desc: "Teardown and final conversations" },
-  { time: "9 PM+", label: "Unofficial After-Party", desc: "Just ask us!" },
+  { time: "9 PM+", label: "Unofficial Kick-Off Party", desc: "Just ask us!" },
 ];
 
 interface ScheduleProps {

@@ -41,7 +41,7 @@ const events = [
       "Same employer table + mentor + panel format at larger scale",
       "VIP hour for underrepresented communities (200 candidates)",
       "Full festival access for brand reps (Death Cab headlining)",
-      "Unofficial after-party, ask us",
+      "Unofficial kick-off party, ask us",
     ],
     icon: Music,
     highlight: "3rd year with Outside Inc, named top activation 2024 & 2025",
