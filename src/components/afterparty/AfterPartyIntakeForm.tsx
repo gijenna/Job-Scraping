@@ -346,6 +346,10 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     if (id && form.email) {
       const base = (typeof window !== "undefined" ? window.location.origin : "https://basecampoutdoorevents.com");
       const slugForLinks = resolvedSlug || id;
+      // All primary CTAs in the confirmation email go to the unified guest
+      // list dashboard, with the viewer's slug so the page knows who they
+      // are (their card + matches surface at the top of /guests).
+      const dashboardUrl = `${base}/guests?slug=${slugForLinks}`;
       supabase.functions.invoke("send-transactional-email", {
         body: {
           templateName: "afterparty-rsvp-confirmation",
@@ -353,9 +357,9 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
           idempotencyKey: `afterparty-rsvp-${id}`,
           templateData: {
             recipientName: (form.full_name || "").trim().split(/\s+/)[0] || "there",
-            inviteUrl: `${base}/afterparty/${slugForLinks}`,
-            guestsUrl: `${base}/guests`,
-            matchesUrl: `${base}/afterparty/${slugForLinks}#matches`,
+            inviteUrl: dashboardUrl,
+            guestsUrl: dashboardUrl,
+            matchesUrl: dashboardUrl,
             brandActivated: false,
             role: form.role,
           },
