@@ -305,7 +305,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
 
-          {/* Personalized greeting — sits ABOVE the splash monogram so the two
+          {/* Personalized greeting sits ABOVE the splash monogram so the two
               never overlap. Appears in sync with the splash and fades out as
               the splash transitions. First visit per browser only. */}
           {showPersonalGreeting && me?.full_name && (
@@ -401,7 +401,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </div>
           </div>
 
-          {/* About the event — shown when no card loaded OR when this is a
+          {/* About the event shown when no card loaded OR when this is a
               personalized pre-RSVP shell (so invitees see event info first) */}
           {(!me || (me && isPreRsvpShell && !editMode)) && (
             <section className="mt-16">
@@ -616,7 +616,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                     color: CREAM,
                   }}
                 >
-                  Lucky you — <span style={{ fontWeight: 600 }}>{me.invited_by}</span> wants you there
+                  Lucky you, <span style={{ fontWeight: 600 }}>{me.invited_by}</span> wants you there
                 </div>
               )}
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
@@ -642,10 +642,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
             </section>
           )}
 
-          {/* Brand spotlights — global to event, shown after matches/see-who's-coming */}
+          {/* Brand spotlights, global to event, shown after matches/see-who's-coming */}
           <AfterPartySpotlights />
 
-          {/* Partners — global, bottom of page */}
+          {/* Partners, global, bottom of page */}
           <AfterPartyPartners />
 
           {/* Admin-only inline editor for partners + spotlights */}
