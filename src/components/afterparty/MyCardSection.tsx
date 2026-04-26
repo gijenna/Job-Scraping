@@ -184,7 +184,11 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             Hey {me.full_name?.split(" ")[0] || "there"}, you're all set.
           </h2>
           <p className="text-[13px] mt-1.5" style={{ color: CREAM_MUTED }}>
-            Edit your card and check your matches below.
+            {(me as any).role === "creator"
+              ? "Fill out your card to get matched to brands you should meet at the party."
+              : (me as any).role === "brand"
+                ? "Fill out your card to get matched to creators you should meet at the party."
+                : "Fill out your card to get matched to people you should meet at the party."}
           </p>
         </div>
         <div className="flex flex-col gap-2 shrink-0">
