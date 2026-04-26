@@ -315,7 +315,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
               alt="Outside Days"
               className="h-3.5 sm:h-4 md:h-5 w-auto object-contain"
             />
-            <span>after-party</span>
+            <span>kick-off party</span>
           </div>
         </div>
       </div>
