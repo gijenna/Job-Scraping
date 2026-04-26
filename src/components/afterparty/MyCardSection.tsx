@@ -32,7 +32,7 @@ interface Props {
 const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
-  // Full row (including phone/email) — only loaded once the viewer is the
+  // Full row (including phone/email), only loaded once the viewer is the
   // verified owner. This is what we feed the editor form so saves don't
   // accidentally overwrite phone/email with null.
   const [meFull, setMeFull] = useState<any>(null);
@@ -181,7 +181,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             Your card
           </div>
           <h2 className="font-afterparty text-[22px] sm:text-[26px]" style={{ fontWeight: 500, color: CREAM }}>
-            Hey {me.full_name?.split(" ")[0] || "there"} — you're all set
+            Hey {me.full_name?.split(" ")[0] || "there"}, you're all set
           </h2>
           <p className="text-[13px] mt-1" style={{ color: CREAM_MUTED }}>
             Edit your card and check your matches below. Everything in one place.
@@ -249,7 +249,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
               See who else is coming
             </div>
             <div className="text-[12px]" style={{ color: CREAM_MUTED }}>
-              The full roster is right below — filter by role, niche, or search.
+              The full roster is right below. Filter by role, niche, or search.
             </div>
           </div>
           <Button
@@ -270,7 +270,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-afterparty text-[16px] flex items-center gap-2" style={{ fontWeight: 500, color: CREAM }}>
             <StarSparkle tone="coral" variant="single" size={16} />
-            Your matches — look out for these numbers
+            Your matches. Look out for these numbers
           </h3>
           <span className="text-[11px]" style={{ color: CREAM_DIM }}>
             {lockedMatches ? "Final" : "Live"}
