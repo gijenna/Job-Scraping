@@ -22,11 +22,31 @@ const AfterPartyRsvpConfirmationEmail = ({
   brandActivated = false,
   role,
 }: AfterPartyRsvpConfirmationProps) => {
-  const matches = matchesUrl || `${inviteUrl}#matches`;
+  // ALL primary CTAs go to the guest list dashboard. The personal invite
+  // URL is kept only as the "find your card" deep-link via the guest list
+  // (which carries ?slug= so the dashboard knows who you are).
+  const dashboardUrl = guestsUrl;
+
+  // Role-aware match copy: tell them who they'll be matched WITH (the
+  // opposite of who they are), so the value of filling out their card
+  // is concrete.
+  const isCreator = role === "creator";
+  const isBrand = role === "brand";
+  const matchTargetShort = isCreator
+    ? "brands you should meet"
+    : isBrand
+      ? "creators you should meet"
+      : "people you should meet";
+  const yourCardLabel = isCreator
+    ? "your full creator card"
+    : isBrand
+      ? "your full brand card"
+      : "the rest of your card";
+
   return (
     <Html lang="en" dir="ltr">
       <Head />
-      <Preview>You're on the list, {recipientName}</Preview>
+      <Preview>You're on the list, {recipientName} — get suggestions on {matchTargetShort}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>You're on the list, {recipientName}</Heading>
@@ -44,23 +64,16 @@ const AfterPartyRsvpConfirmationEmail = ({
           <Heading as="h2" style={h2}>What next</Heading>
 
           <Text style={text}>
-            <strong>1. Make sure your card is up to date.</strong> The more you share (niches, what you're looking for, a quick fact about something you've made), the better your matches.
+            <strong>1. Get suggestions on {matchTargetShort}.</strong> Fill out {yourCardLabel} to get matched to people in the room you might not have known to look for. The more you share (niches, what you're looking for, a quick fact about something you've made), the better your matches.
           </Text>
-          <Button href={inviteUrl} style={button}>
-            See &amp; edit my card →
+          <Button href={dashboardUrl} style={button}>
+            Add my info & see suggestions →
           </Button>
 
           <Text style={text}>
-            <strong>2. Check out your matches</strong> (aka People we think you should look for &amp; meet). They'll appear right under your card and we'll send a final set the morning of the event.
+            <strong>2. See who else is coming.</strong> Browse the full guest list — who's bringing giveaways, who's bringing snacks, and who you should say hi to.
           </Text>
-          <Button href={matches} style={button}>
-            See my matches →
-          </Button>
-
-          <Text style={text}>
-            <strong>3. Check out who's coming, who's doing giveaways, and who's bringing Noms.</strong>
-          </Text>
-          <Button href={guestsUrl} style={secondaryButton}>
+          <Button href={dashboardUrl} style={secondaryButton}>
             See who's coming →
           </Button>
 
@@ -92,7 +105,7 @@ const AfterPartyRsvpConfirmationEmail = ({
             <Link href="https://basecampjobs.com" style={footerLink}>Basecamp Match</Link> 🔥 × <Link href="https://popfly.com" style={footerLink}>Popfly</Link> ✨
           </Text>
           <Text style={footer}>
-            <Link href={inviteUrl} style={footerLink}>Bookmark your card link</Link> so it's easy to find &amp; update.
+            <Link href={dashboardUrl} style={footerLink}>Bookmark your dashboard</Link> so it's easy to find your card, matches, and the guest list.
           </Text>
         </Container>
       </Body>
@@ -110,8 +123,8 @@ export const template = {
   previewData: {
     recipientName: "Jenna",
     inviteUrl: "https://basecampoutdoorevents.com/afterparty/jenna",
-    guestsUrl: "https://basecampoutdoorevents.com/guests",
-    matchesUrl: "https://basecampoutdoorevents.com/afterparty/jenna#matches",
+    guestsUrl: "https://basecampoutdoorevents.com/guests?slug=jenna",
+    matchesUrl: "https://basecampoutdoorevents.com/guests?slug=jenna",
     brandActivated: false,
     role: "creator",
   },
