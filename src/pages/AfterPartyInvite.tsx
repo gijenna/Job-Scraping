@@ -561,7 +561,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
                 <div className="text-right">
                   <Link
-                    to={`/guests?slug=${me.slug}`}
+                    to={`/guests?slug=${me.slug}&edit=1`}
                     onClick={() => {
                       try { sessionStorage.setItem("afterparty:return_slug", me.slug); } catch {}
                     }}
