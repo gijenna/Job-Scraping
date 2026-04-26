@@ -89,7 +89,7 @@ const AfterPartySuggestionsAdmin = () => {
       .update({ status: "approved", reviewed_at: new Date().toISOString() })
       .eq("status", "pending")
       .ilike("value", trimmed);
-    toast({ title: `Added "${trimmed}"`, description: exists ? "Already in the list — marked reviewed." : "Now selectable in the form." });
+    toast({ title: `Added "${trimmed}"`, description: exists ? "Already in the list. Marked reviewed." : "Now selectable in the form." });
     setBusyId(null);
     load();
   };
