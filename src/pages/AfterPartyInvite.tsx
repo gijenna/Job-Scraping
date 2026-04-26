@@ -214,7 +214,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   const requestEdit = () => {
     if (!me) return;
-    // Pre-RSVP shells (no email on file) skip PIN — there's nowhere to send a code.
+    // Pre-RSVP shells (no email on file) skip PIN since there's nowhere to send a code.
     if (verifiedAttendeeId === me.id || (!me.photo_url && !me.cartoon_url
       && !(me.niches?.length) && !(me.looking_for?.length)
       && !(me.creator_types?.length) && !(me.platforms?.length)
@@ -234,7 +234,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const submitted = !!me;
   const myPill = me ? (ROLE_PILL[me.role] || ROLE_PILL.brand) : null;
   // A "pre-RSVP shell" is an attendee row created by the bulk link builder
-  // before the person has actually filled anything out — no photo, no
+  // before the person has actually filled anything out: no photo, no
   // niches, no looking_for, etc. We treat these as fresh RSVPs so the user
   // lands on the intake form (not a view-mode "card" that asks for a PIN).
   const isPreRsvpShell = !!me && !me.photo_url && !me.cartoon_url
@@ -259,7 +259,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   }, [isOwner, me?.id]);
 
   // Load the full attendee row (with phone/email) when the viewer is the
-  // verified owner — the public view doesn't expose those fields, and we
+  // verified owner. The public view doesn't expose those fields, and we
   // need them in the editor so saves don't blank them out.
   useEffect(() => {
     if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
