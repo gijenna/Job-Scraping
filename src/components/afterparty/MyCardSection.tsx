@@ -143,14 +143,26 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
 
   const handleSaved = async (id: string) => {
     setEditMode(false);
+    setJustSaved(true);
     onCardSaved?.();
-    // Refresh me from DB
+    // Refresh me from DB (public view for greeting)
     const { data } = await (supabase as any)
       .from("afterparty_attendees_public")
       .select("*")
       .eq("id", id)
       .maybeSingle();
     if (data) setMe(data as AfterPartyAttendee);
+    // Refresh full row (with phone/email) for the editor
+    const { data: full } = await (supabase as any)
+      .from("afterparty_attendees")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (full) setMeFull(full);
+    // Scroll to the roster CTA so they see "see who's coming"
+    setTimeout(() => {
+      document.getElementById("roster-cta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 200);
   };
 
   if (!me) return null;
