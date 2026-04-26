@@ -10,6 +10,7 @@ import MatchesPanel from "./MatchesPanel";
 import AfterPartyIntakeForm from "./AfterPartyIntakeForm";
 import PinSheet from "./PinSheet";
 import StarSparkle from "./StarSparkle";
+import GuestCard, { GuestRow } from "./GuestCard";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth";
 import { Pencil, ExternalLink } from "lucide-react";
@@ -231,7 +232,41 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         </div>
       )}
 
-      {/* Prominent post-save CTA: take them straight to the roster below */}
+      {/* Live preview of public card */}
+      {!editMode && !isPreRsvpShell && (() => {
+        const src: any = meFull || me;
+        const previewGuest: GuestRow = {
+          id: me.id,
+          attendee_number: me.attendee_number,
+          role: me.role,
+          display_name: me.full_name,
+          company: me.company ?? null,
+          company_url: src.company_url ?? null,
+          cartoon_url: me.cartoon_url ?? null,
+          niches: me.niches ?? null,
+          creator_types: me.creator_types ?? null,
+          looking_for: me.looking_for ?? null,
+          mind_blowing_fact: me.mind_blowing_fact ?? null,
+          social_links: src.social_links ?? null,
+          show_instagram: src.show_instagram ?? null,
+          show_linkedin: src.show_linkedin ?? null,
+          created_at: src.created_at ?? new Date().toISOString(),
+        };
+        return (
+          <div className="mb-6">
+            <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
+              Card preview
+            </div>
+            <div className="max-w-sm">
+              <GuestCard guest={previewGuest} />
+            </div>
+            <p className="text-[12px] mt-2" style={{ color: CREAM_DIM }}>
+              This is exactly how others see you in the guest list.
+            </p>
+          </div>
+        );
+      })()}
+
       {justSaved && !editMode && (
         <div
           id="roster-cta"
