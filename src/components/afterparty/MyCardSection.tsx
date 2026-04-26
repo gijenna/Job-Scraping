@@ -175,16 +175,16 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         border: `1px solid ${BORDER}`,
       }}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-start justify-between gap-3 mb-5">
         <div>
-          <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 600 }}>
+          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
             Your card
           </div>
-          <h2 className="font-afterparty text-[22px] sm:text-[26px]" style={{ fontWeight: 500, color: CREAM }}>
-            Hey {me.full_name?.split(" ")[0] || "there"}, you're all set
+          <h2 className="text-[20px] sm:text-[22px] leading-tight" style={{ fontWeight: 600, color: CREAM, letterSpacing: "-0.01em" }}>
+            Hey {me.full_name?.split(" ")[0] || "there"}, you're all set.
           </h2>
-          <p className="text-[13px] mt-1" style={{ color: CREAM_MUTED }}>
-            Edit your card and check your matches below. Everything in one place.
+          <p className="text-[13px] mt-1.5" style={{ color: CREAM_MUTED }}>
+            Edit your card and check your matches below.
           </p>
         </div>
         <div className="flex flex-col gap-2 shrink-0">
@@ -200,13 +200,6 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
               Edit my card
             </Button>
           )}
-          <Link
-            to={`/afterparty/${me.slug}`}
-            className="text-[12px] inline-flex items-center gap-1 underline justify-end"
-            style={{ color: CREAM_DIM }}
-          >
-            View public card <ExternalLink className="w-3 h-3" />
-          </Link>
         </div>
       </div>
 
