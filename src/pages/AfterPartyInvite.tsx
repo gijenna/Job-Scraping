@@ -390,8 +390,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                       fontWeight: 500,
                     }}
                   >
-                    Invite-only · Luckily, you're on{" "}
-                    <span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
+                    Invite-only · Luckily, you're on&nbsp;<span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
                   </div>
                 ) : (
                   <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
