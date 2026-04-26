@@ -593,7 +593,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
               <h2 className="font-afterparty text-[20px] mb-4" style={{ fontWeight: 500, color: CREAM }}>
                 {me ? (me.invited_by ? `RSVP here, ${me.full_name?.split(" ")[0] || ""}!` : "Edit your card") : "RSVP & build your card"}
               </h2>
-              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={me} onSaved={handleSaved} />
+              <AfterPartyIntakeForm attendeeId={me?.id ?? null} initial={meFull || me} onSaved={handleSaved} />
             </section>
           )}
 
