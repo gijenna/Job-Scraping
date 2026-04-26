@@ -215,7 +215,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         <div className="mb-6 pb-6" style={{ borderBottom: `1px solid ${BORDER}` }}>
           <AfterPartyIntakeForm
             attendeeId={me.id}
-            initial={me}
+            initial={meFull || me}
             onSaved={handleSaved}
           />
           <div className="text-right mt-2">
@@ -228,6 +228,40 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
               Cancel
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Prominent post-save CTA: take them straight to the roster below */}
+      {justSaved && !editMode && (
+        <div
+          id="roster-cta"
+          className="mb-4 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          style={{
+            backgroundColor: "rgba(237,118,96,0.12)",
+            border: `1px solid ${CORAL}`,
+          }}
+        >
+          <div>
+            <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 700 }}>
+              Saved ✓
+            </div>
+            <div className="text-[15px]" style={{ color: CREAM, fontWeight: 600 }}>
+              See who else is coming
+            </div>
+            <div className="text-[12px]" style={{ color: CREAM_MUTED }}>
+              The full roster is right below — filter by role, niche, or search.
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={() => {
+              document.getElementById("guest-roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="hover:opacity-90 shrink-0"
+            style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 700 }}
+          >
+            See who's coming →
+          </Button>
         </div>
       )}
 
