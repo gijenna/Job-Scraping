@@ -140,22 +140,17 @@ const GuestList = () => {
     >
       <div className="mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
         {(() => {
-          let returnTo = "/afterparty";
-          let label = "Back to invite";
           try {
             const slug = sessionStorage.getItem("afterparty:return_slug");
-            if (slug) {
-              returnTo = `/afterparty/${slug}?edit=1`;
-              label = "Back to my card";
-            }
+            if (slug) return null;
           } catch {}
           return (
             <Link
-              to={returnTo}
+              to="/afterparty"
               className="inline-flex items-center gap-1 text-[12px] mb-5"
               style={{ color: "rgba(255,255,255,0.55)" }}
             >
-              <ArrowLeft className="w-3 h-3" /> {label}
+              <ArrowLeft className="w-3 h-3" /> Back to invite
             </Link>
           );
         })()}
