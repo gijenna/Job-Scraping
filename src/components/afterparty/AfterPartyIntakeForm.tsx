@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
-import BrandActivateButton from "./BrandActivateButton";
+
 
 const NICHES = ["Hiking", "Climbing", "Fishing", "Hunting", "Surfing", "Skiing", "Snowboarding", "Trail Running", "Cycling", "Camping", "Kayaking", "Mountain Biking", "Backpacking", "Photography"];
 const CREATOR_TYPES = ["videographer", "photographer", "influencer", "writer", "podcaster", "athlete"];
@@ -36,6 +36,9 @@ interface Props {
   attendeeId: string | null;
   initial?: any;
   onSaved: (id: string, isFirstSave?: boolean) => void;
+  /** When true, jump straight to step 2 (matching info) on open. Used by the
+   *  "Add more about me" coral prompt for already-RSVP'd users. */
+  startInStep2Hint?: boolean;
 }
 
 const slugify = (s: string) =>
@@ -118,7 +121,7 @@ const CompanyLogoField = ({
   );
 };
 
-const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
+const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }: Props) => {
   const { toast } = useToast();
   const [extraNiches, setExtraNiches] = useState<string[]>([]);
   useEffect(() => {
@@ -140,17 +143,19 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [otherNiche, setOtherNiche] = useState("");
   const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
-  const [activationSent, setActivationSent] = useState(false);
+  
   // Two-step flow:
   //   step 1 = basics (name, email, phone, role, photo, socials) → card shows up in guest list
   //   step 2 = optional matching info (niches, intents, fact, role-specifics)
-  // We start in step 2 only when editing a card that already has real content.
-  // A "pre-RSVP shell" (invited record with no photo/cartoon yet) is treated
-  // like a fresh RSVP so the user gets the focused step-1 → step-2 flow with
-  // proper context about why we ask for matching info.
-  const isPreRsvpShell = !!attendeeId && !initial?.photo_url && !initial?.cartoon_url;
+  //
+  // "Pre-RSVP shell" = a row that has NEVER been saved by the user
+  // (status is still 'invited'). Once the user submits the form once,
+  // submit() flips status='confirmed'. After that, this is always false
+  // and the button label is "Edit my card" / "Save changes". The ONLY
+  // time "Secure my spot" should appear is on the very first save.
+  const isPreRsvpShell = !!attendeeId && (initial?.status ?? "invited") === "invited";
   const startInStep2 = !!attendeeId && !isPreRsvpShell;
-  const [step, setStep] = useState<1 | 2>(startInStep2 ? 2 : 1);
+  const [step, setStep] = useState<1 | 2>(startInStep2 || startInStep2Hint ? 2 : 1);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
@@ -182,11 +187,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
       setForm(merged);
       setSavedSnapshot(JSON.stringify(merged));
-      // If the loaded record is a pre-RSVP shell (invited but never filled
-      // in basics), force the user back into step 1 so we can introduce the
-      // matching step with proper context after they submit basics.
-      const shell = !!attendeeId && !initial.photo_url && !initial.cartoon_url;
+      // Force back to step 1 only if this is truly a pre-RSVP shell
+      // (status === 'invited'). Anything else has already saved before.
+      const shell = !!attendeeId && (initial.status ?? "invited") === "invited";
       if (shell) setStep(1);
+      else if (startInStep2Hint) setStep(2);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
@@ -552,22 +557,65 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </div>
       </div>
 
-      {/* Photo + dual avatar preview */}
+      {/* Photo + dual avatar preview. The photo circle itself IS the upload
+          button — tap anywhere in it to pick a file. */}
       <div>
         <Label className="mb-2 block">Add your photo</Label>
         <p className="text-[12px] mb-3" style={{ color: "rgba(255,255,255,0.55)" }}>
-          We'll show your real photo and generate a little illustrated avatar.
+          Tap your photo circle to upload. We'll show your real photo and generate a little illustrated avatar.
         </p>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="text-center">
             <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your photo</div>
-            <div className="aspect-square rounded-full overflow-hidden mx-auto" style={{ width: 96, backgroundColor: "#111", border: "1px solid rgba(255,255,255,0.12)" }}>
-              {form.photo_url ? (
-                <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+            <label
+              htmlFor="afterparty-photo-input"
+              className="aspect-square rounded-full overflow-hidden mx-auto block cursor-pointer relative group"
+              style={{ width: 96, backgroundColor: "#111", border: form.photo_url ? "1px solid rgba(255,255,255,0.12)" : "1.5px dashed rgba(237,118,96,0.55)" }}
+              title={form.photo_url ? "Tap to replace" : "Tap to upload"}
+            >
+              {uploading ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#ED7660" }} />
+                </div>
+              ) : form.photo_url ? (
+                <>
+                  <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+                  <div
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: "rgba(0,0,0,0.45)", color: "#fff" }}
+                  >
+                    <Upload className="w-5 h-5" />
+                  </div>
+                </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>No photo</div>
+                <div className="w-full h-full flex flex-col items-center justify-center gap-1" style={{ color: "rgba(237,118,96,0.85)" }}>
+                  <Upload className="w-5 h-5" />
+                  <span className="text-[10px] uppercase tracking-wider">Tap to add</span>
+                </div>
               )}
-            </div>
+            </label>
+            <input
+              id="afterparty-photo-input"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handlePhoto}
+            />
+            {form.photo_url && (
+              <div className="mt-1.5 flex items-center justify-center gap-3 text-[11px]">
+                <label htmlFor="afterparty-photo-input" className="underline cursor-pointer" style={{ color: "rgba(245,230,211,0.7)" }}>
+                  Replace
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setForm((f: any) => ({ ...f, photo_url: "", cartoon_url: "" }))}
+                  className="underline"
+                  style={{ color: "rgba(245,230,211,0.5)" }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
           </div>
           <div className="text-center">
             <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your avatar</div>
@@ -584,11 +632,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             </div>
           </div>
         </div>
-        <label className="inline-flex items-center gap-2 cursor-pointer px-3 py-2 rounded text-[13px]" style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}>
-          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-          {form.photo_url ? "Replace photo" : "Upload photo"}
-          <input type="file" accept="image/*" hidden onChange={handlePhoto} />
-        </label>
       </div>
 
       {/* ----- STEP 2: optional matching info ----- */}
@@ -908,19 +951,9 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </div>
       ) : null}
 
-      {form.role === "brand" && (attendeeId || justSavedId) && (
-        <div id="brand-activate-cta" className="pt-4 space-y-3">
-          <BrandActivateButton
-            attendeeId={attendeeId || justSavedId}
-            fullName={form.full_name}
-            company={form.company}
-            email={form.email}
-            variant="full"
-            hideIfAlreadySent
-            onSubmitted={() => setActivationSent(true)}
-          />
-        </div>
-      )}
+      {/* Brand activation CTA is rendered by MyCardSection in a combined
+          "next steps" card alongside the matching prompt, not inside the
+          form, to avoid stacking multiple coral boxes. */}
     </form>
   );
 };

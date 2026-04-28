@@ -1,82 +1,86 @@
 ## Goal
 
-Three fixes to the `/afterparty` opening intro:
-
-1. Kite shows ONLY the green kite shape — no white box, no dark outline behind it.
-2. Slow down the entire kite section (overall pacing, flight speed, wing fold) so it reads as elegant.
-3. Make the Outside Days logo actually land on the small inline OD logo in the "An official [OD] kick-off party" line.
+Cut the noise on `/guests?slug=...`. One coral CTA at a time, smarter button labels, and the photo circle is the only upload affordance.
 
 ---
 
-## 1. Strip white + outline from the kite asset
+## 1. Photo circle = the upload button (`AfterPartyIntakeForm.tsx`)
 
-`src/assets/popfly-kite.png` is currently a 200×200 PNG with an opaque white background and a dark `rgb(29,38,45)` outline around the green kite. Even with no `border-radius`, the rectangle and outline render as a visible white/black box.
+- Remove the separate "Upload photo" rectangle button.
+- Wrap the existing photo circle in a `<label htmlFor="photo-input">` so the whole circle is the click/tap target.
+- Keep the hidden `<input type="file">`.
+- Empty state: circle shows the dashed "Your photo" hint plus a small camera icon, all clickable.
+- Filled state: photo fills the circle; below the circle show a tiny `Replace` (link styling) and `Remove` text link. Replace also triggers the same hidden input.
+- Cartoon-generating spinner overlays the circle as today.
 
-Run a one-off Python script to overwrite the asset with a clean transparent version:
-- Set alpha = 0 for any pixel where R/G/B > 240 (white background).
-- Set alpha = 0 for any pixel where R/G/B < 70 (dark outline).
-- Set alpha = 0 for low-saturation gray pixels (anti-aliased edges between white and outline) so the silhouette is crisp and only the green body remains.
+## 2. Smarter primary button on the My Card section (`MyCardSection.tsx`)
 
-Result: only the green kite shape is visible — its glow filter and dust trail will read clean against the dark teal stage.
+Today the only signal is `isPreRsvpShell` (no photo, no cartoon, no niches, etc.). Problem: a user who RSVPd with just basics and no photo still trips the shell heuristic.
 
-(Already executed in the read-only inspection step; the file is updated. No code change needed for this item.)
+New rule for the button label:
+- "Secure my spot" appears **only** when the attendee record has never been saved past `status='invited'` AND has no `email` filled in by the user.
+- Use `status` (`invited` vs `confirmed`) as the source of truth, since `submit()` already sets `status='confirmed'` on save. This is set the very first time anyone saves the form.
+- All other cases (returning from confirmation email, editing later, no photo yet, etc.) show "Edit my card".
 
-## 2. Slow the kite section down
+Inside the form's submit button itself, mirror the same logic: show "Secure my spot →" only on a true first save (`!attendeeId || initial.status !== 'confirmed'`). Otherwise show "Save changes".
 
-Edit `src/components/afterparty/BasecampMatchPopflyLogo.tsx`:
+### Times "Secure my spot" is the right label
+Only one: a brand-new visitor filling out the form for the first time, OR a pre-invited shell where Jenna seeded the row but the person has never opened/saved it. After that one save, it's always "Edit my card" / "Save changes".
 
-- **Wing fold**: `bmpKiteWingFold` cycle from `700ms` → `1200ms` (slower, more deliberate flap).
-- **Flutter flight**: `bmpKiteFlutter` from `2800ms` → `4200ms` for a single revolution around the fire.
-- **Kite appear**: `350ms` → `500ms` (slightly softer entrance).
-- **Kite glow pulse**: `1.4s` → `1.8s`.
-- **Kite dismiss**: shifts from `4600ms` → `6000ms` to allow the longer flutter.
-- **Fire dismiss**: `4500ms` → `5800ms` so the fire stays present while the kite finishes its slower path.
-- **Hero spark launch delay**: `1500ms` → `1700ms` so the spark→kite handoff isn't rushed.
-- **Trail motes**: extend the dust delay window from `1900–4100ms` → `2300–5500ms` and bump each mote's drift duration from `~900ms` → `1200ms` so the dust feels like it's gently floating, matching the slower flight.
+I'll flag in code with a comment so future-you remembers.
 
-Updated steady-state lockup timings (everything shifts later by ~1.6s):
-- `bmp-bloom-left/right` start: `5.2s` → `6.8s`
-- `PRESENTS_DELAY_S`: `5.8` → `7.4`
-- `DIVIDER_DELAY_S`: `5.6` → `7.2`
-- `X_DELAY_S`: `5.7` → `7.3`
-- `TITLE_DELAY_S`: `6.2` → `7.8`
-- `X_GLOW_DELAY_S`: `6.6` → `8.2`
-- `NEON_PULSE_DELAY_S`: `6.0` → `7.6`
-- `OD_POP_DELAY_S`: `6.0` → `7.6` (OD starts as lockup blooms in)
-- `STAR_BURST_DELAY_MS`: `6600` → `8400` (snowflakes burst as OD lands)
-- `STAGE_OUT_DELAY_S`: `6.6` → `8.4` (dark stage fades with the snowflake burst)
-- `useEffect` reveal timeout: `7000ms` → `8800ms`
+## 3. Post-save preview replaces the editor
 
-Net total runtime: ~7s → ~8.8s — still tight, but every beat has room to breathe.
+After `handleSaved` fires:
+- Close the editor (already happens).
+- Render a mini preview card (reuse `GuestCard` styling at compact size) directly inside the My Card section, with the existing "Edit my card" coral button overlaid in the top-right corner where it already lives.
+- Below it, render the new coral "Want suggestions?" prompt (see #4) instead of the current "See who's coming" CTA, **unless** the user has already filled in matching info.
 
-## 3. Outside Days lands in the kickoff line
+## 4. New coral "add more about you" prompt
 
-The kickoff line ("An official [OD logo] kick-off party") sits in the lockup container, roughly **220–260px below viewport center** on a typical mobile viewport. The current `bmpODFindHome` keyframe ends at `translate(-50%, 40%)` of the OD element's OWN height, which only moves it down ~50px — nowhere near the kickoff line. That's why it doesn't visually merge.
+Replaces the current "See who's coming" coral box for users who haven't filled in any matching info (no `niches`, no `looking_for`, no `mind_blowing_fact`, no `creator_types`).
 
-Fix the keyframe to use a viewport-based translate:
-
-```css
-@keyframes bmpODFindHome {
-  0%   { opacity: 0; transform: translate(-50%, calc(-50% - 30vh)) scale(0.4); }
-  20%  { opacity: 1; transform: translate(-50%, calc(-50% - 26vh)) scale(1); }
-  55%  { opacity: 1; transform: translate(-50%, calc(-50% - 8vh)) scale(0.6); }
-  90%  { opacity: 0.6; transform: translate(-50%, calc(-50% + 22vh)) scale(0.16); }
-  100% { opacity: 0; transform: translate(-50%, calc(-50% + 26vh)) scale(0.12); }
-}
+```
+You're in ✓
+Want suggestions on creators you should meet at the party?
+Add a bit more about you and we'll match you to people in the room you might
+not have known to look for. Totally optional, you can always do this later.
+[ Add more about me → ]
 ```
 
-What this does:
-- Starts ~30vh above center (high on the page, as requested).
-- Hits full size near the top of its arc.
-- Drifts smoothly down past lockup.
-- Lands at +26vh below viewport center (≈ where the inline kickoff-line OD logo sits) at ~12% scale (matching the inline logo's tiny size of `h-3.5 sm:h-4 md:h-5`).
-- Fades out at the very end so it visually merges into the inline logo rather than popping away.
+Clicking it opens the editor in step 2 (matching info only), scrolling to the niche section. This is exactly the existing `requestEdit()` path with a new `setStep(2)` hint passed through.
 
-Also bump the OD animation duration from `1500ms` → `1900ms` so the descent feels graceful, not snappy.
+For users who **have** filled in matching info, keep the existing "See who's coming →" coral box.
 
-## Files
+The `MatchesPanel`'s "Finish your card to get matches" empty-state copy stays as a secondary nudge inside the matches list itself.
 
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — timing constants, kite/wing/glow/dismiss/fire-dismiss durations, trail mote delays + durations, OD keyframe + duration, and the `useEffect` reveal timeout.
-- `src/assets/popfly-kite.png` — already cleaned (alpha mask applied).
+## 5. Brand reps: one combined card instead of two coral boxes
 
-No other files affected.
+For brand reps who haven't activated AND haven't filled in matching info, today they'd see two coral-ish boxes. New approach: a single bordered container titled "A couple optional next steps" with two stacked actions:
+
+```
+A couple optional next steps
+─────────────────────────────────────
+[ ✦ Get my brand in the room → ]      (opens BrandActivateButton form inline)
+[ + Add more about me → ]              (opens step 2 of the editor)
+```
+
+Once activation is sent, that row collapses; if matching info is filled, that row collapses. When both are done, the combined card disappears entirely and we fall back to the standard "See who's coming" coral box.
+
+Removing the standalone `BrandActivateButton` rendering currently in `MyCardSection` (the one above the roster CTA) and the `BrandActivateButton` block currently rendered inside `AfterPartyIntakeForm` — both consolidated into the new combined card. The "prompt her here" mailto card after submission is removed (you said no more "prompt her here" box).
+
+## 6. /blindfold flow gotchas worth raising
+
+- **Brand reps editing later**: Once they've activated AND filled in matching info, they should still be able to edit either. Keep both reachable from the "Edit my card" full editor; the combined-card just disappears from the post-save view.
+- **Returning via PIN from a different browser**: The `verifiedAttendeeId` flow still triggers the PIN sheet for non-shell users. After PIN they should land on the preview, not in edit mode, unless they came via `?edit=1`.
+- **Locked matches**: If host has locked matches, the matching prompt should still appear if they haven't filled in info — they can still influence who *looks for them*. I'll keep the prompt visible regardless of lock state.
+- **Confirmation email link**: I'll double-check the confirmation email's "Edit my card" CTA links to `/guests?slug=...&edit=1` (it currently links to `dashboardUrl` without `&edit=1`). Without `&edit=1`, clicking "Edit my card" in the email lands them on the preview, which is fine — they then click the on-page "Edit my card" button. We can leave email as-is or add `&edit=1` to skip a click. Recommend leaving as-is so they see their card first.
+- **Empty state when there's literally nothing to show**: A confirmed user with no photo, no matching info, no activation → preview card looks bare. The mini preview will use the cartoon fallback avatar so it's never empty.
+
+## Files touched
+
+- `src/components/afterparty/MyCardSection.tsx` — button labels, post-save preview, new combined "next steps" card, removal of standalone BrandActivateButton block, new "Add more about me" coral prompt.
+- `src/components/afterparty/AfterPartyIntakeForm.tsx` — photo circle as upload target, remove rectangle button, smarter submit button label, accept an optional `startStep` prop so step 2 can be jumped into directly, remove the BrandActivateButton block (moved to MyCardSection's combined card).
+- `src/components/afterparty/MatchesPanel.tsx` — no change needed (empty-state copy already correct).
+
+No DB or edge function changes.
