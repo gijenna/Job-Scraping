@@ -13,6 +13,7 @@ import StarSparkle from "./StarSparkle";
 import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/auth";
 import { Pencil, ExternalLink } from "lucide-react";
+import BrandActivateButton from "./BrandActivateButton";
 
 const CARD = "#111111";
 const BORDER = "rgba(255,255,255,0.09)";
@@ -41,6 +42,23 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
   const [pinOpen, setPinOpen] = useState(false);
   const [lockedMatches, setLockedMatches] = useState<MatchResult[] | null>(null);
   const [justSaved, setJustSaved] = useState(false);
+  const [brandActivated, setBrandActivated] = useState<boolean | null>(null);
+
+  // For brand reps: check whether they've already submitted an activation
+  // request. While this is null we don't yet know which CTA to show.
+  useEffect(() => {
+    if (!me || (me as any).role !== "brand") { setBrandActivated(null); return; }
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("brand_activation_requests")
+        .select("id")
+        .eq("attendee_id", me.id)
+        .limit(1);
+      if (!cancelled) setBrandActivated(!!(data && data.length));
+    })();
+    return () => { cancelled = true; };
+  }, [me?.id, (me as any)?.role]);
 
   // Restore session
   useEffect(() => {
@@ -232,8 +250,26 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
         </div>
       )}
 
-      {/* Prominent post-save CTA: take them straight to the roster below */}
-      {justSaved && !editMode && (
+      {/* Brand reps who haven't activated yet: show the activation CTA in
+          this slot (replaces the "see who's coming" CTA until they submit). */}
+      {!editMode && !isPreRsvpShell && (me as any).role === "brand" && brandActivated === false && (
+        <div className="mb-4">
+          <BrandActivateButton
+            attendeeId={me.id}
+            fullName={me.full_name}
+            company={(me as any).company}
+            email={(meFull as any)?.email}
+            variant="full"
+            afterPartyUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/guests?slug=${me.slug}`}
+            onSubmitted={() => setBrandActivated(true)}
+          />
+        </div>
+      )}
+
+      {/* Prominent post-save CTA: take them straight to the roster below.
+          For brand reps, only show once they've submitted the activation
+          request (otherwise the activation CTA above takes this slot). */}
+      {!editMode && (justSaved || ((me as any).role === "brand" && brandActivated === true)) && (
         <div
           id="roster-cta"
           className="mb-4 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
@@ -243,9 +279,11 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
           }}
         >
           <div>
-            <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 700 }}>
-              Saved ✓
-            </div>
+            {justSaved && (
+              <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.12em", color: CORAL, fontWeight: 700 }}>
+                Saved ✓
+              </div>
+            )}
             <div className="text-[15px]" style={{ color: CREAM, fontWeight: 600 }}>
               See who else is coming
             </div>
