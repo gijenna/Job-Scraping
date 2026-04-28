@@ -18,6 +18,18 @@ const CREAM_FAINT = "rgba(245,230,211,0.5)";
 const CARD = "#111111";
 const BORDER = "rgba(255,255,255,0.09)";
 
+// These partners ship dark / black logos that disappear against the dark UI.
+// Render their logo bubble on a cream background so they stay legible.
+const CREAM_BUBBLE_NAMES = new Set([
+  "4 noses",
+  "westbound & down",
+  "westbound and down",
+  "rod and hammer",
+  "rod & hammer",
+]);
+const needsCreamBubble = (name: string) =>
+  CREAM_BUBBLE_NAMES.has(name.trim().toLowerCase());
+
 const CATEGORY_ORDER = ["Brands", "Beverages", "Food", "Giveaways & Swag"];
 
 const toAbsoluteUrl = (u: string | null): string | null => {
@@ -114,21 +126,26 @@ const AfterPartySpotlights = () => {
                 const src = resolveLogoSrc(s.logo_url, s.website_url);
                 const hasDesc = !!(s.description && s.description.trim());
                 const isOpen = expanded.has(s.id);
+                const cream = needsCreamBubble(s.name);
                 const logo = (
                   <div
                     className="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0"
                     style={{
                       width: 26,
                       height: 26,
-                      backgroundColor: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      backgroundColor: cream ? CREAM : "rgba(255,255,255,0.06)",
+                      border: cream
+                        ? "1px solid rgba(245,230,211,0.6)"
+                        : "1px solid rgba(255,255,255,0.1)",
+                      padding: cream ? 2 : 0,
                     }}
                   >
                     {src ? (
                       <img
                         src={src}
                         alt={s.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full"
+                        style={{ objectFit: cream ? "contain" : "cover" }}
                         onError={(e) => {
                           const fav = faviconFromUrl(s.website_url);
                           const el = e.currentTarget as HTMLImageElement;
@@ -136,7 +153,7 @@ const AfterPartySpotlights = () => {
                         }}
                       />
                     ) : (
-                      <span style={{ color: CREAM, fontSize: 10 }}>{s.name.slice(0, 2)}</span>
+                      <span style={{ color: cream ? "#19363B" : CREAM, fontSize: 10 }}>{s.name.slice(0, 2)}</span>
                     )}
                   </div>
                 );

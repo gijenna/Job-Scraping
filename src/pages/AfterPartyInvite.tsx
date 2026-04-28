@@ -21,7 +21,7 @@ import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopfly
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import { getSession } from "@/services/auth";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
-import AfterPartyPartners from "@/components/afterparty/AfterPartyPartners";
+
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 
@@ -436,7 +436,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 <div className="space-y-2 mb-6 text-[13px]" style={{ color: CREAM_MUTED }}>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
-                    <EditableText settingKey="about.detail1" defaultText="Thursday evening · 7–9pm" />
+                    <EditableText settingKey="about.detail1" defaultText="Thursday evening · 7:30-9:30pm" />
                   </div>
                   <div className="flex items-start gap-2">
                     <span style={{ color: CREAM_FAINT }}>·</span>
@@ -646,9 +646,6 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
           {/* Brand spotlights, global to event, shown after matches/see-who's-coming */}
           <AfterPartySpotlights />
-
-          {/* Partners, global, bottom of page */}
-          <AfterPartyPartners />
 
           {/* Admin-only inline editor for partners + spotlights */}
           <AfterPartyAdminInline />
