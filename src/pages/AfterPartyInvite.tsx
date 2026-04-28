@@ -411,15 +411,17 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 </h2>
                 {me?.invited_by ? (
                   <div
-                    className="mb-5 inline-flex px-3 py-1.5 rounded-lg text-center text-[14px] font-afterparty"
+                    className="mb-5 px-3 py-1.5 rounded-lg text-[14px] font-afterparty leading-[1.4]"
                     style={{
                       backgroundColor: "rgba(216,90,48,0.12)",
                       border: "1px solid rgba(216,90,48,0.4)",
                       color: CREAM,
                       fontWeight: 500,
+                      display: "inline-block",
+                      maxWidth: "100%",
                     }}
                   >
-                    Invite-only · Luckily, you're on&nbsp;<span style={{ fontWeight: 700 }}>{me.invited_by}</span>'s list
+                    Invite-only · Luckily, you're on <span style={{ fontWeight: 700, whiteSpace: "nowrap" }}>{me.invited_by}'s list</span>
                   </div>
                 ) : (
                   <p className="text-[14px] leading-[1.55] mb-5" style={{ color: CREAM_MUTED }}>
