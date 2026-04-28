@@ -304,7 +304,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           opacity: 0;
           animation:
             bmpFireGrow 900ms cubic-bezier(.16,.84,.32,1) 0s forwards,
-            bmpFireDismiss 700ms cubic-bezier(.4,.1,.3,1) 4.5s forwards;
+            bmpFireDismiss 800ms cubic-bezier(.4,.1,.3,1) 5.8s forwards;
         }
         .bmp-splash-fire-glow {
           width: 100%;
