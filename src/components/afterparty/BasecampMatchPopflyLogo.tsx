@@ -445,7 +445,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
                   ["--sx" as any]: sx,
                   ["--sy" as any]: sy,
                   ["--sdur" as any]: `${s.dur}ms`,
-                  animationDelay: `${1000 + s.delay}ms`,
+                  animationDelay: `${600 + s.delay}ms`,
                 }}
               />
             );
@@ -454,13 +454,29 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           {/* Hero spark that becomes the kite */}
           <div className="bmp-hero-spark" aria-hidden="true" />
 
-          {/* Popfly kite firefly */}
-          <img
-            src={popflyKite}
-            alt=""
-            aria-hidden="true"
-            className="bmp-kite"
-          />
+          {/* Popfly kite firefly — outer = flight path, inner = wing fold, img = glow */}
+          <div className="bmp-kite" aria-hidden="true">
+            <div className="bmp-kite-wings">
+              <img src={popflyKite} alt="" className="bmp-kite-img" />
+            </div>
+          </div>
+
+          {/* Kite dust trail — neon + warm motes that drop off the kite */}
+          {trailMotes.map((m, i) => (
+            <div
+              key={`trail-${i}`}
+              className="bmp-trail"
+              style={{
+                width: `${m.size}px`,
+                height: `${m.size}px`,
+                background: `radial-gradient(circle, #FFFFFF 0%, ${m.color} 55%, transparent 100%)`,
+                boxShadow: `0 0 ${m.size * 2}px ${m.color}`,
+                ["--tox" as any]: `${m.ox}px`,
+                ["--toy" as any]: `${m.oy}px`,
+                animation: `bmpTrailDrift ${m.dur}ms ease-out ${m.delay}ms forwards`,
+              }}
+            />
+          ))}
 
           {/* Existing star burst, fired AFTER lockup forms */}
           {burstStars.map((s, i) => {
