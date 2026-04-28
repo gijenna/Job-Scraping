@@ -281,7 +281,13 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             {lockedMatches ? "Final" : "Live"}
           </span>
         </div>
-        <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
+        <MatchesPanel
+          matches={matchesWithAttendee}
+          locked={!!lockedMatches}
+          awaitingMatchingInfo={
+            !(me.niches?.length) && !(me.looking_for?.length) && !me.mind_blowing_fact
+          }
+        />
       </div>
 
       <PinSheet
