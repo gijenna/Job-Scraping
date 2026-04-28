@@ -463,6 +463,20 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                     ? `RSVP here, ${me.full_name.split(" ")[0]}`
                     : <EditableText settingKey="cta.primary" defaultText="RSVP" />}
                 </Button>
+
+                {me?.role === "brand" && (
+                  <div className="mt-3">
+                    <BrandActivateButton
+                      attendeeId={me.id}
+                      fullName={me.full_name}
+                      company={me.company}
+                      email={(me as any).email}
+                      variant="compact"
+                      hideIfAlreadySent
+                      afterPartyUrl={`${window.location.origin}/guests?slug=${me.slug}`}
+                    />
+                  </div>
+                )}
               </div>
             </section>
           )}
@@ -492,7 +506,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           )}
 
           {/* My card (view mode) */}
-          {me && !editMode && (
+          {me && !editMode && !isPreRsvpShell && (
             <section className="mt-8">
               <div className="relative p-5 rounded-xl overflow-hidden" style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}>
                 <div className="absolute -top-3 -right-3 opacity-70 rotate-12 pointer-events-none">
@@ -629,7 +643,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           )}
 
           {/* Matches, only shown once a card is loaded */}
-          {me && (
+          {me && !isPreRsvpShell && (
             <section id="matches" className="mt-10">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-afterparty text-[17px] flex items-center gap-2" style={{ fontWeight: 500, color: CREAM }}>
