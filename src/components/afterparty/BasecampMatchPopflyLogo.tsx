@@ -165,23 +165,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
-        /* Fire grows in from tiny, settles at full size */
+        /* Fire grows in smoothly — single ease-out, no mid-bounce */
         @keyframes bmpFireGrow {
-          0%   { transform: translate(-50%, -50%) scale(0.05) rotate(-4deg); opacity: 0; }
-          50%  { transform: translate(-50%, -50%) scale(0.6)  rotate(2deg);  opacity: 1; }
-          100% { transform: translate(-50%, -50%) scale(1)    rotate(0);     opacity: 1; }
+          0%   { transform: translate(-50%, -50%) scale(0.08); opacity: 0; }
+          100% { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
         }
         @keyframes bmpFireGlow {
           0%, 100% { filter: drop-shadow(0 0 24px rgba(225,182,36,0.7)) drop-shadow(0 0 48px rgba(237,105,83,0.45)); }
           50%      { filter: drop-shadow(0 0 36px rgba(225,182,36,1)) drop-shadow(0 0 72px rgba(237,105,83,0.7)); }
         }
-        @keyframes bmpFireRumble {
-          0%, 100% { margin-left: 0; }
-          25%      { margin-left: -1px; }
-          75%      { margin-left: 1px; }
-        }
-        /* After kite flutter, fire shrinks and slides off-screen (the steady-state lockup
-           uses its own BasecampMatchAnimated, so we just dismiss the splash fire). */
+        /* After kite flutter, fire shrinks gracefully and fades. */
         @keyframes bmpFireDismiss {
           0%   { transform: translate(-50%, -50%) scale(1) rotate(0); opacity: 1; }
           100% { transform: translate(-50%, -50%) scale(0.2) rotate(0); opacity: 0; }
@@ -203,24 +196,24 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           100% { transform: translate(-50%, -50%) translate(0, -160px) scale(2.6); opacity: 0; }
         }
         @keyframes bmpKiteAppear {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4) rotate(-8deg); }
-          40%  { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1) rotate(0deg); }
-          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1) rotate(0deg); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4); }
+          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
         }
 
-        /* Kite flutters around the fire like a firefly. ~2.5s */
+        /* Kite flutters around the fire — smoother, fewer hard waypoints. */
         @keyframes bmpKiteFlutter {
-          0%   { transform: translate(-50%, -50%) translate(0, -160px) rotate(0deg); }
-          12%  { transform: translate(-50%, -50%) translate(120px, -120px) rotate(8deg); }
-          25%  { transform: translate(-50%, -50%) translate(160px, 20px) rotate(-6deg); }
-          38%  { transform: translate(-50%, -50%) translate(60px, 140px) rotate(10deg); }
-          50%  { transform: translate(-50%, -50%) translate(-90px, 110px) rotate(-8deg); }
-          62%  { transform: translate(-50%, -50%) translate(-170px, -10px) rotate(6deg); }
-          75%  { transform: translate(-50%, -50%) translate(-110px, -130px) rotate(-10deg); }
-          88%  { transform: translate(-50%, -50%) translate(40px, -150px) rotate(8deg); }
-          100% { transform: translate(-50%, -50%) translate(0, -160px) rotate(0deg); }
+          0%   { transform: translate(-50%, -50%) translate(0, -160px); }
+          25%  { transform: translate(-50%, -50%) translate(150px, 0); }
+          50%  { transform: translate(-50%, -50%) translate(0, 140px); }
+          75%  { transform: translate(-50%, -50%) translate(-150px, 0); }
+          100% { transform: translate(-50%, -50%) translate(0, -160px); }
         }
-        @keyframes bmpKiteWingFlap {
+        /* Wing fold — the kite folds in half and back out like butterfly wings. */
+        @keyframes bmpKiteWingFold {
+          0%, 100% { transform: scaleX(1); }
+          50%      { transform: scaleX(0.55); }
+        }
+        @keyframes bmpKiteGlow {
           0%, 100% { filter: drop-shadow(0 0 8px rgba(57,255,20,0.7)) drop-shadow(0 0 16px rgba(57,255,20,0.4)); }
           50%      { filter: drop-shadow(0 0 14px rgba(57,255,20,1)) drop-shadow(0 0 28px rgba(57,255,20,0.6)); }
         }
@@ -228,6 +221,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         @keyframes bmpKiteDismiss {
           0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
           100% { opacity: 0; transform: translate(-50%, -50%) translate(180px, -40px) scale(0.4); }
+        }
+
+        /* Dust trail mote — drifts outward + downward, fading as it shrinks. */
+        @keyframes bmpTrailDrift {
+          0%   { transform: translate(-50%, -50%) translate(0, 0) scale(1);   opacity: 0; }
+          15%  { opacity: 1; }
+          100% { transform: translate(-50%, -50%) translate(var(--tox), calc(var(--toy) + 40px)) scale(0.2); opacity: 0; }
         }
 
         /* ===== Existing star burst (kept) ===== */
