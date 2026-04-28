@@ -916,6 +916,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             company={form.company}
             email={form.email}
             variant="full"
+            hideIfAlreadySent
             onSubmitted={() => setActivationSent(true)}
           />
         </div>
