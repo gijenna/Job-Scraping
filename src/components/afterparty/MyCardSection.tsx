@@ -196,7 +196,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
     creator_types: me.creator_types || [],
     looking_for: me.looking_for || [],
     mind_blowing_fact: me.mind_blowing_fact || null,
-    social_links: me.social_links as any,
+    social_links: (me as any).social_links as any,
     show_instagram: (me as any).show_instagram ?? true,
     show_linkedin: (me as any).show_linkedin ?? true,
     created_at: (me as any).created_at || new Date().toISOString(),
