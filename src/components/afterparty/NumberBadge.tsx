@@ -9,7 +9,7 @@ interface Props {
 
 const ROLE_COLORS: Record<string, { fill: string; border: string; text: string }> = {
   creator: { fill: "#4A1B0C", border: "#D85A30", text: "#F5C4B3" },
-  brand: { fill: "#1a1830", border: "#7F77DD", text: "#CECBF6" },
+  brand: { fill: "#0A2A0F", border: "#39FF14", text: "#B8FFC2" },
   industry_expert: { fill: "#04342C", border: "#1D9E75", text: "#9FE1CB" },
 };
 

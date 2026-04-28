@@ -30,7 +30,7 @@ const slugify = (s: string) =>
 
 const ROLE_PILL: Record<string, { bg: string; border: string; text: string; label: string }> = {
   creator: { bg: "#4A1B0C", border: "#D85A30", text: "#F5C4B3", label: "Creator" },
-  brand: { bg: "#1a1830", border: "#7F77DD", text: "#CECBF6", label: "Brand rep" },
+  brand: { bg: "#0A2A0F", border: "#39FF14", text: "#B8FFC2", label: "Brand rep" },
   industry_expert: { bg: "#04342C", border: "#1D9E75", text: "#9FE1CB", label: "Industry expert" },
 };
 
@@ -565,8 +565,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
                 ) : null}
 
                 {me.mind_blowing_fact ? (
-                  <div className="pl-3 mb-4" style={{ borderLeft: `2px solid ${myPill?.border || "#7F77DD"}` }}>
-                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: myPill?.text || "#CECBF6" }}>Why it worked</div>
+                  <div className="pl-3 mb-4" style={{ borderLeft: `2px solid ${myPill?.border || "#39FF14"}` }}>
+                    <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: myPill?.text || "#B8FFC2" }}>Why it worked</div>
                     <p className="text-[13px] italic" style={{ color: CREAM_MUTED }}>{me.mind_blowing_fact}</p>
                   </div>
                 ) : null}
