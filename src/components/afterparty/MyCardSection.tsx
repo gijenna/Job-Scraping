@@ -181,14 +181,18 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             Your card
           </div>
           <h2 className="text-[20px] sm:text-[22px] leading-tight" style={{ fontWeight: 600, color: CREAM, letterSpacing: "-0.01em" }}>
-            Hey {me.full_name?.split(" ")[0] || "there"}, you're all set.
+            {isPreRsvpShell
+              ? `Hey ${me.full_name?.split(" ")[0] || "there"}, RSVP here.`
+              : `Hey ${me.full_name?.split(" ")[0] || "there"}, you're all set.`}
           </h2>
           <p className="text-[13px] mt-1.5" style={{ color: CREAM_MUTED }}>
-            {(me as any).role === "creator"
-              ? "Fill out your card to get matched to brands you should meet at the party."
-              : (me as any).role === "brand"
-                ? "Fill out your card to get matched to creators you should meet at the party."
-                : "Fill out your card to get matched to people you should meet at the party."}
+            {isPreRsvpShell
+              ? "Lock in your spot, then we'll match you with people in the room you should meet."
+              : (me as any).role === "creator"
+                ? "Fill out your card to get matched to brands you should meet at the party."
+                : (me as any).role === "brand"
+                  ? "Fill out your card to get matched to creators you should meet at the party."
+                  : "Fill out your card to get matched to people you should meet at the party."}
           </p>
         </div>
         <div className="flex flex-col gap-2 shrink-0">
@@ -200,8 +204,8 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
               style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
               size="sm"
             >
-              <Pencil className="w-3.5 h-3.5 mr-1.5" />
-              Edit my card
+              {!isPreRsvpShell && <Pencil className="w-3.5 h-3.5 mr-1.5" />}
+              {isPreRsvpShell ? "RSVP" : "Edit my card"}
             </Button>
           )}
         </div>
@@ -277,7 +281,13 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
             {lockedMatches ? "Final" : "Live"}
           </span>
         </div>
-        <MatchesPanel matches={matchesWithAttendee} locked={!!lockedMatches} />
+        <MatchesPanel
+          matches={matchesWithAttendee}
+          locked={!!lockedMatches}
+          awaitingMatchingInfo={
+            !(me.niches?.length) && !(me.looking_for?.length) && !me.mind_blowing_fact
+          }
+        />
       </div>
 
       <PinSheet
