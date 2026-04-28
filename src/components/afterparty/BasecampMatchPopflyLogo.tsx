@@ -335,7 +335,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           background: radial-gradient(circle, #FFFFFF 0%, #2EF116 60%, transparent 100%);
           box-shadow: 0 0 14px rgba(57,255,20,0.9), 0 0 28px rgba(57,255,20,0.6);
           opacity: 0;
-          animation: bmpHeroSparkLaunch 500ms cubic-bezier(.4,.1,.3,1) 1500ms forwards;
+          animation: bmpHeroSparkLaunch 600ms cubic-bezier(.4,.1,.3,1) 1700ms forwards;
         }
         /* Outer kite wrapper handles flight path; inner wrapper handles wing fold; img keeps glow. */
         .bmp-kite {
@@ -348,21 +348,21 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           opacity: 0;
           will-change: transform, opacity;
           animation:
-            bmpKiteAppear 350ms ease-out 1800ms forwards,
-            bmpKiteFlutter 2800ms cubic-bezier(.45,.05,.55,.95) 1900ms 1 forwards,
-            bmpKiteDismiss 600ms cubic-bezier(.4,.1,.3,1) 4600ms forwards;
+            bmpKiteAppear 500ms ease-out 2000ms forwards,
+            bmpKiteFlutter 4200ms cubic-bezier(.45,.05,.55,.95) 2300ms 1 forwards,
+            bmpKiteDismiss 800ms cubic-bezier(.4,.1,.3,1) 6000ms forwards;
         }
         .bmp-kite-wings {
           width: 100%;
           height: 100%;
-          animation: bmpKiteWingFold 700ms ease-in-out 1900ms infinite;
+          animation: bmpKiteWingFold 1200ms ease-in-out 2300ms infinite;
           will-change: transform;
         }
         .bmp-kite-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
-          animation: bmpKiteGlow 1.4s ease-in-out 1900ms infinite;
+          animation: bmpKiteGlow 1.8s ease-in-out 2300ms infinite;
           will-change: filter;
         }
 
