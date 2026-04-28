@@ -187,11 +187,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
       setForm(merged);
       setSavedSnapshot(JSON.stringify(merged));
-      // If the loaded record is a pre-RSVP shell (invited but never filled
-      // in basics), force the user back into step 1 so we can introduce the
-      // matching step with proper context after they submit basics.
-      const shell = !!attendeeId && !initial.photo_url && !initial.cartoon_url;
+      // Force back to step 1 only if this is truly a pre-RSVP shell
+      // (status === 'invited'). Anything else has already saved before.
+      const shell = !!attendeeId && (initial.status ?? "invited") === "invited";
       if (shell) setStep(1);
+      else if (startInStep2Hint) setStep(2);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
