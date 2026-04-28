@@ -44,7 +44,7 @@ const slugify = (s: string) =>
 // Role color tokens
 const ROLE = {
   creator: { fill: "#4A1B0C", border: "#D85A30", text: "#F5C4B3" },
-  brand: { fill: "#1a1830", border: "#7F77DD", text: "#CECBF6" },
+  brand: { fill: "#0A2A0F", border: "#39FF14", text: "#B8FFC2" },
   industry_expert: { fill: "#04342C", border: "#1D9E75", text: "#9FE1CB" },
 };
 
@@ -58,7 +58,7 @@ const buildAvatarSvg = (name: string) => {
   const h = hashStr(name || "anon");
   const skins = ["#F5C9A6", "#E0A57A", "#B07A52", "#8B5A36"];
   const hairs = ["#2B1B12", "#5C3A21", "#A0522D", "#D4A017", "#1D9E75"];
-  const bgs = ["#4A1B0C", "#1a1830", "#04342C", "#412402"];
+  const bgs = ["#4A1B0C", "#0A2A0F", "#04342C", "#412402"];
   const skin = skins[h % skins.length];
   const hair = hairs[(h >> 3) % hairs.length];
   const bg = bgs[(h >> 5) % bgs.length];
