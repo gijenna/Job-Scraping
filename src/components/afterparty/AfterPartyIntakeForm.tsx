@@ -951,19 +951,9 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
         </div>
       ) : null}
 
-      {form.role === "brand" && (attendeeId || justSavedId) && (
-        <div id="brand-activate-cta" className="pt-4 space-y-3">
-          <BrandActivateButton
-            attendeeId={attendeeId || justSavedId}
-            fullName={form.full_name}
-            company={form.company}
-            email={form.email}
-            variant="full"
-            hideIfAlreadySent
-            onSubmitted={() => setActivationSent(true)}
-          />
-        </div>
-      )}
+      {/* Brand activation CTA is rendered by MyCardSection in a combined
+          "next steps" card alongside the matching prompt, not inside the
+          form, to avoid stacking multiple coral boxes. */}
     </form>
   );
 };
