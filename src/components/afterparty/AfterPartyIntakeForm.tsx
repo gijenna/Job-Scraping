@@ -849,7 +849,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </Button>
       ) : (attendeeId || justSavedId) ? (
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          {attendeeId ? (
+          {attendeeId && !isPreRsvpShell ? (
             // Editing existing card
             <Button
               type="submit"
@@ -876,7 +876,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               {isDirty ? "Save changes" : "Saved ✓"}
             </Button>
           ) : (
-            // Step 2 just-saved fresh RSVP: primary save button + skip
+            // Step 2 just-saved fresh RSVP (or pre-RSVP shell): primary save + skip
             <Button
               type="submit"
               disabled={saving}
