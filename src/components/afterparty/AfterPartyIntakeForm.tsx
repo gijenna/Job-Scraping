@@ -143,7 +143,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
   const [otherNiche, setOtherNiche] = useState("");
   const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
-  const [activationSent, setActivationSent] = useState(false);
+  
   // Two-step flow:
   //   step 1 = basics (name, email, phone, role, photo, socials) → card shows up in guest list
   //   step 2 = optional matching info (niches, intents, fact, role-specifics)
