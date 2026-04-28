@@ -141,11 +141,15 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [activationSent, setActivationSent] = useState(false);
-  // Two-step flow for fresh RSVPs:
-  //   step 1 = basics (name, email, phone, role, photo, socials)
+  // Two-step flow:
+  //   step 1 = basics (name, email, phone, role, photo, socials) → card shows up in guest list
   //   step 2 = optional matching info (niches, intents, fact, role-specifics)
-  // Edit mode (attendeeId present from the start) shows everything at once.
-  const startInStep2 = !!attendeeId;
+  // We start in step 2 only when editing a card that already has real content.
+  // A "pre-RSVP shell" (invited record with no photo/cartoon yet) is treated
+  // like a fresh RSVP so the user gets the focused step-1 → step-2 flow with
+  // proper context about why we ask for matching info.
+  const isPreRsvpShell = !!attendeeId && !initial?.photo_url && !initial?.cartoon_url;
+  const startInStep2 = !!attendeeId && !isPreRsvpShell;
   const [step, setStep] = useState<1 | 2>(startInStep2 ? 2 : 1);
   const [form, setForm] = useState<any>({
     role: "creator",
@@ -178,6 +182,11 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
       setForm(merged);
       setSavedSnapshot(JSON.stringify(merged));
+      // If the loaded record is a pre-RSVP shell (invited but never filled
+      // in basics), force the user back into step 1 so we can introduce the
+      // matching step with proper context after they submit basics.
+      const shell = !!attendeeId && !initial.photo_url && !initial.cartoon_url;
+      if (shell) setStep(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initial?.id]);
@@ -397,10 +406,10 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     if (id) {
-      const isFirstSave = !attendeeId;
-      // Fresh RSVP just finished step 1 → don't navigate away. Promote
-      // them into step 2 (optional matching info) so we can prompt:
-      // "Want suggestions on people to find at the party?"
+      const isFirstSave = !attendeeId || isPreRsvpShell;
+      // Fresh RSVP (or pre-RSVP shell from invite) just finished step 1 →
+      // don't navigate away. Promote them into step 2 (optional matching
+      // info) so we can prompt: "Want suggestions on people to find?"
       if (isFirstSave && step === 1) {
         setJustSavedId(id);
         setStep(2);
@@ -588,7 +597,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         {/* Step 2 prompt: only show on a fresh RSVP that just hit step 2.
             In edit mode (attendeeId present from the start) the user already
             knows what these fields are for, so we skip the pep talk. */}
-        {!attendeeId && justSavedId && (
+        {(!attendeeId || isPreRsvpShell) && justSavedId && (
           <div
             id="intake-step2"
             className="rounded-xl p-4 sm:p-5"
@@ -827,7 +836,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       {/* ----- end STEP 2 ----- */}
 
       {/* Action area */}
-      {step === 1 && !attendeeId ? (
+      {step === 1 && (!attendeeId || isPreRsvpShell) ? (
         // Step 1 (fresh RSVP): single primary CTA, takes them to step 2 next.
         <Button
           type="submit"
@@ -840,7 +849,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </Button>
       ) : (attendeeId || justSavedId) ? (
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          {attendeeId ? (
+          {attendeeId && !isPreRsvpShell ? (
             // Editing existing card
             <Button
               type="submit"
@@ -867,7 +876,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
               {isDirty ? "Save changes" : "Saved ✓"}
             </Button>
           ) : (
-            // Step 2 just-saved fresh RSVP: primary save button + skip
+            // Step 2 just-saved fresh RSVP (or pre-RSVP shell): primary save + skip
             <Button
               type="submit"
               disabled={saving}
