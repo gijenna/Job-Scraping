@@ -40,13 +40,13 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
       .bmp-flame-outer {
         transform-origin: 22px 30px;
         transform-box: fill-box;
-        animation: bmpFlameOuter 1.4s ease-in-out infinite;
+        animation: bmpFlameOuter 1.8s cubic-bezier(.4,0,.6,1) infinite;
         will-change: transform, opacity;
       }
       .bmp-flame-inner {
         transform-origin: 22px 29px;
         transform-box: fill-box;
-        animation: bmpFlameInner 0.9s ease-in-out infinite;
+        animation: bmpFlameInner 1.2s cubic-bezier(.4,0,.6,1) infinite;
         will-change: transform, opacity;
       }
     `}</style>
