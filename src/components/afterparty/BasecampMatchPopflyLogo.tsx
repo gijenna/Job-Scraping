@@ -197,8 +197,8 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           100% { transform: translate(-50%, -50%) translate(0, -160px) scale(2.6); opacity: 0; }
         }
         @keyframes bmpKiteAppear {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4); }
-          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -260px) scale(0.4); }
+          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -260px) scale(1); }
         }
 
         /* Kite flutters wide around the fire — far enough out that it never overlaps the yellow circle. */
