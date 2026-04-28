@@ -117,16 +117,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
   // Kite dust trail motes — drop off the kite during its flutter.
   // Mostly neon green with warm sparks mixed in to tie to the fire flickers.
   const trailMotes = [
-    { color: "#39FF14", size: 5, delay: 1900, dur: 900,  ox:  20, oy:  10 },
-    { color: "#E1B624", size: 4, delay: 2100, dur: 950,  ox: -18, oy:  20 },
-    { color: "#39FF14", size: 6, delay: 2350, dur: 900,  ox:  30, oy:  -8 },
-    { color: "#F5E6D3", size: 4, delay: 2600, dur: 1000, ox: -25, oy:  16 },
-    { color: "#39FF14", size: 5, delay: 2850, dur: 900,  ox:  10, oy:  24 },
-    { color: "#ED7660", size: 4, delay: 3100, dur: 950,  ox:  22, oy: -12 },
-    { color: "#39FF14", size: 5, delay: 3350, dur: 900,  ox: -28, oy:  18 },
-    { color: "#E1B624", size: 4, delay: 3600, dur: 1000, ox:  16, oy:  22 },
-    { color: "#39FF14", size: 6, delay: 3850, dur: 900,  ox: -14, oy:  -6 },
-    { color: "#F5E6D3", size: 4, delay: 4100, dur: 950,  ox:  26, oy:  14 },
+    { color: "#39FF14", size: 5, delay: 2300, dur: 1200, ox:  20, oy:  10 },
+    { color: "#E1B624", size: 4, delay: 2600, dur: 1300, ox: -18, oy:  20 },
+    { color: "#39FF14", size: 6, delay: 2950, dur: 1200, ox:  30, oy:  -8 },
+    { color: "#F5E6D3", size: 4, delay: 3300, dur: 1300, ox: -25, oy:  16 },
+    { color: "#39FF14", size: 5, delay: 3650, dur: 1200, ox:  10, oy:  24 },
+    { color: "#ED7660", size: 4, delay: 4000, dur: 1300, ox:  22, oy: -12 },
+    { color: "#39FF14", size: 5, delay: 4350, dur: 1200, ox: -28, oy:  18 },
+    { color: "#E1B624", size: 4, delay: 4700, dur: 1300, ox:  16, oy:  22 },
+    { color: "#39FF14", size: 6, delay: 5050, dur: 1200, ox: -14, oy:  -6 },
+    { color: "#F5E6D3", size: 4, delay: 5400, dur: 1300, ox:  26, oy:  14 },
   ];
 
   // Pre-existing star burst (kept exactly as-is, just shifted later in the timeline).
