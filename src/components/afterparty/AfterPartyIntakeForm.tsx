@@ -147,13 +147,15 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
   // Two-step flow:
   //   step 1 = basics (name, email, phone, role, photo, socials) → card shows up in guest list
   //   step 2 = optional matching info (niches, intents, fact, role-specifics)
-  // We start in step 2 only when editing a card that already has real content.
-  // A "pre-RSVP shell" (invited record with no photo/cartoon yet) is treated
-  // like a fresh RSVP so the user gets the focused step-1 → step-2 flow with
-  // proper context about why we ask for matching info.
-  const isPreRsvpShell = !!attendeeId && !initial?.photo_url && !initial?.cartoon_url;
+  //
+  // "Pre-RSVP shell" = a row that has NEVER been saved by the user
+  // (status is still 'invited'). Once the user submits the form once,
+  // submit() flips status='confirmed'. After that, this is always false
+  // and the button label is "Edit my card" / "Save changes". The ONLY
+  // time "Secure my spot" should appear is on the very first save.
+  const isPreRsvpShell = !!attendeeId && (initial?.status ?? "invited") === "invited";
   const startInStep2 = !!attendeeId && !isPreRsvpShell;
-  const [step, setStep] = useState<1 | 2>(startInStep2 ? 2 : 1);
+  const [step, setStep] = useState<1 | 2>(startInStep2 || startInStep2Hint ? 2 : 1);
   const [form, setForm] = useState<any>({
     role: "creator",
     full_name: "",
