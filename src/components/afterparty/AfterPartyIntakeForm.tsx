@@ -121,7 +121,7 @@ const CompanyLogoField = ({
   );
 };
 
-const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
+const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }: Props) => {
   const { toast } = useToast();
   const [extraNiches, setExtraNiches] = useState<string[]>([]);
   useEffect(() => {
