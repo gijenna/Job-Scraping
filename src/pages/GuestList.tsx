@@ -172,15 +172,18 @@ const GuestList = () => {
           </p>
         </div>
 
-        {/* The viewer's own card + matches at the top, when we know who they are */}
+        {/* The viewer's own card + matches at the top, when we know who they are.
+            On tablet/desktop, sponsor spotlights sit beside the card preview.
+            On mobile, they fall back to rendering below. */}
         <MyCardSection
           allAttendees={attendees}
           slug={viewerSlug}
           onCardSaved={fetchGuests}
+          sidebar={<AfterPartySpotlights />}
         />
 
-        {/* Spotlights (Peak Vibes pill logos) sit directly under the viewer's matches and above the full guest roster */}
-        <div className="mt-2">
+        {/* Mobile fallback: spotlights below the matches */}
+        <div className="mt-2 md:hidden">
           <AfterPartySpotlights />
         </div>
 
