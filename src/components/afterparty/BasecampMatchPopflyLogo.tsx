@@ -40,13 +40,13 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
       .bmp-flame-outer {
         transform-origin: 22px 30px;
         transform-box: fill-box;
-        animation: bmpFlameOuter 1.4s ease-in-out infinite;
+        animation: bmpFlameOuter 1.8s cubic-bezier(.4,0,.6,1) infinite;
         will-change: transform, opacity;
       }
       .bmp-flame-inner {
         transform-origin: 22px 29px;
         transform-box: fill-box;
-        animation: bmpFlameInner 0.9s ease-in-out infinite;
+        animation: bmpFlameInner 1.2s cubic-bezier(.4,0,.6,1) infinite;
         will-change: transform, opacity;
       }
     `}</style>
@@ -93,7 +93,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 9500;
+    const delay = reduced ? 0 : 7000;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
@@ -102,20 +102,31 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
   }, [onRevealed]);
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
-  // They arc outward like real embers.
+  // They arc outward like real embers. Tightened window to keep pacing snappy.
   const sparks = [
-    { angle:  -85, dist: 28, size:  6, color: "#E1B624", delay:    0, dur: 1400 },
-    { angle:  -70, dist: 36, size:  5, color: "#ED7660", delay:  180, dur: 1500 },
-    { angle: -100, dist: 32, size:  7, color: "#F5E6D3", delay:  340, dur: 1300 },
-    { angle:  -55, dist: 40, size:  4, color: "#E1B624", delay:  500, dur: 1600 },
-    { angle: -115, dist: 30, size:  6, color: "#ED7660", delay:  650, dur: 1400 },
-    { angle:  -80, dist: 44, size:  5, color: "#F5E6D3", delay:  820, dur: 1500 },
-    { angle:  -65, dist: 26, size:  4, color: "#E1B624", delay: 1000, dur: 1300 },
-    { angle:  -95, dist: 38, size:  6, color: "#ED7660", delay: 1180, dur: 1500 },
-    { angle:  -75, dist: 34, size:  5, color: "#F5E6D3", delay: 1360, dur: 1400 },
-    { angle: -105, dist: 42, size:  4, color: "#E1B624", delay: 1540, dur: 1500 },
-    { angle:  -60, dist: 30, size:  6, color: "#F5E6D3", delay: 1720, dur: 1400 },
-    { angle: -110, dist: 36, size:  5, color: "#ED7660", delay: 1900, dur: 1500 },
+    { angle:  -85, dist: 28, size:  6, color: "#E1B624", delay:    0, dur: 1200 },
+    { angle:  -70, dist: 36, size:  5, color: "#ED7660", delay:  120, dur: 1300 },
+    { angle: -100, dist: 32, size:  7, color: "#F5E6D3", delay:  220, dur: 1200 },
+    { angle:  -55, dist: 40, size:  4, color: "#E1B624", delay:  340, dur: 1400 },
+    { angle: -115, dist: 30, size:  6, color: "#ED7660", delay:  460, dur: 1200 },
+    { angle:  -80, dist: 44, size:  5, color: "#F5E6D3", delay:  580, dur: 1300 },
+    { angle:  -65, dist: 26, size:  4, color: "#E1B624", delay:  720, dur: 1200 },
+    { angle:  -95, dist: 38, size:  6, color: "#ED7660", delay:  860, dur: 1300 },
+  ];
+
+  // Kite dust trail motes — drop off the kite during its flutter.
+  // Mostly neon green with warm sparks mixed in to tie to the fire flickers.
+  const trailMotes = [
+    { color: "#39FF14", size: 5, delay: 1900, dur: 900,  ox:  20, oy:  10 },
+    { color: "#E1B624", size: 4, delay: 2100, dur: 950,  ox: -18, oy:  20 },
+    { color: "#39FF14", size: 6, delay: 2350, dur: 900,  ox:  30, oy:  -8 },
+    { color: "#F5E6D3", size: 4, delay: 2600, dur: 1000, ox: -25, oy:  16 },
+    { color: "#39FF14", size: 5, delay: 2850, dur: 900,  ox:  10, oy:  24 },
+    { color: "#ED7660", size: 4, delay: 3100, dur: 950,  ox:  22, oy: -12 },
+    { color: "#39FF14", size: 5, delay: 3350, dur: 900,  ox: -28, oy:  18 },
+    { color: "#E1B624", size: 4, delay: 3600, dur: 1000, ox:  16, oy:  22 },
+    { color: "#39FF14", size: 6, delay: 3850, dur: 900,  ox: -14, oy:  -6 },
+    { color: "#F5E6D3", size: 4, delay: 4100, dur: 950,  ox:  26, oy:  14 },
   ];
 
   // Pre-existing star burst (kept exactly as-is, just shifted later in the timeline).
@@ -138,39 +149,32 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Star burst & later beats are now shifted by +5.4s (was 3.6s → now 9.0s, etc.)
-  const STAR_BURST_DELAY_MS = 9000;     // was 3600
-  const STAGE_OUT_DELAY_S = 8.2;        // was 5.2
-  const OD_POP_DELAY_S = 9.0;           // was 3.6
-  const PRESENTS_DELAY_S = 8.4;         // was 5.4
-  const DIVIDER_DELAY_S = 8.4;          // was 5.4
-  const X_DELAY_S = 8.5;                // was 5.5
-  const TITLE_DELAY_S = 8.8;            // was 5.8
-  const X_GLOW_DELAY_S = 9.4;           // was 6.4
-  const NEON_PULSE_DELAY_S = 8.8;       // was 5.8
+  // Tightened pacing — total runtime ~7s.
+  const STAR_BURST_DELAY_MS = 6600;     // snowflakes burst as the invite reveals
+  const STAGE_OUT_DELAY_S = 6.6;        // dark stage fades with the snowflake burst
+  const OD_POP_DELAY_S = 6.0;           // OD finds its home into the kickoff line
+  const PRESENTS_DELAY_S = 5.8;
+  const DIVIDER_DELAY_S = 5.6;
+  const X_DELAY_S = 5.7;
+  const TITLE_DELAY_S = 6.2;
+  const X_GLOW_DELAY_S = 6.6;
+  const NEON_PULSE_DELAY_S = 6.0;
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-10 select-none">
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
-        /* Fire grows in from tiny, settles at full size */
+        /* Fire grows in smoothly — single ease-out, no mid-bounce */
         @keyframes bmpFireGrow {
-          0%   { transform: translate(-50%, -50%) scale(0.05) rotate(-4deg); opacity: 0; }
-          50%  { transform: translate(-50%, -50%) scale(0.6)  rotate(2deg);  opacity: 1; }
-          100% { transform: translate(-50%, -50%) scale(1)    rotate(0);     opacity: 1; }
+          0%   { transform: translate(-50%, -50%) scale(0.08); opacity: 0; }
+          100% { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
         }
         @keyframes bmpFireGlow {
           0%, 100% { filter: drop-shadow(0 0 24px rgba(225,182,36,0.7)) drop-shadow(0 0 48px rgba(237,105,83,0.45)); }
           50%      { filter: drop-shadow(0 0 36px rgba(225,182,36,1)) drop-shadow(0 0 72px rgba(237,105,83,0.7)); }
         }
-        @keyframes bmpFireRumble {
-          0%, 100% { margin-left: 0; }
-          25%      { margin-left: -1px; }
-          75%      { margin-left: 1px; }
-        }
-        /* After kite flutter, fire shrinks and slides off-screen (the steady-state lockup
-           uses its own BasecampMatchAnimated, so we just dismiss the splash fire). */
+        /* After kite flutter, fire shrinks gracefully and fades. */
         @keyframes bmpFireDismiss {
           0%   { transform: translate(-50%, -50%) scale(1) rotate(0); opacity: 1; }
           100% { transform: translate(-50%, -50%) scale(0.2) rotate(0); opacity: 0; }
@@ -192,24 +196,24 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           100% { transform: translate(-50%, -50%) translate(0, -160px) scale(2.6); opacity: 0; }
         }
         @keyframes bmpKiteAppear {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4) rotate(-8deg); }
-          40%  { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1) rotate(0deg); }
-          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1) rotate(0deg); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4); }
+          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
         }
 
-        /* Kite flutters around the fire like a firefly. ~2.5s */
+        /* Kite flutters around the fire — smoother, fewer hard waypoints. */
         @keyframes bmpKiteFlutter {
-          0%   { transform: translate(-50%, -50%) translate(0, -160px) rotate(0deg); }
-          12%  { transform: translate(-50%, -50%) translate(120px, -120px) rotate(8deg); }
-          25%  { transform: translate(-50%, -50%) translate(160px, 20px) rotate(-6deg); }
-          38%  { transform: translate(-50%, -50%) translate(60px, 140px) rotate(10deg); }
-          50%  { transform: translate(-50%, -50%) translate(-90px, 110px) rotate(-8deg); }
-          62%  { transform: translate(-50%, -50%) translate(-170px, -10px) rotate(6deg); }
-          75%  { transform: translate(-50%, -50%) translate(-110px, -130px) rotate(-10deg); }
-          88%  { transform: translate(-50%, -50%) translate(40px, -150px) rotate(8deg); }
-          100% { transform: translate(-50%, -50%) translate(0, -160px) rotate(0deg); }
+          0%   { transform: translate(-50%, -50%) translate(0, -160px); }
+          25%  { transform: translate(-50%, -50%) translate(150px, 0); }
+          50%  { transform: translate(-50%, -50%) translate(0, 140px); }
+          75%  { transform: translate(-50%, -50%) translate(-150px, 0); }
+          100% { transform: translate(-50%, -50%) translate(0, -160px); }
         }
-        @keyframes bmpKiteWingFlap {
+        /* Wing fold — the kite folds in half and back out like butterfly wings. */
+        @keyframes bmpKiteWingFold {
+          0%, 100% { transform: scaleX(1); }
+          50%      { transform: scaleX(0.55); }
+        }
+        @keyframes bmpKiteGlow {
           0%, 100% { filter: drop-shadow(0 0 8px rgba(57,255,20,0.7)) drop-shadow(0 0 16px rgba(57,255,20,0.4)); }
           50%      { filter: drop-shadow(0 0 14px rgba(57,255,20,1)) drop-shadow(0 0 28px rgba(57,255,20,0.6)); }
         }
@@ -217,6 +221,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         @keyframes bmpKiteDismiss {
           0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
           100% { opacity: 0; transform: translate(-50%, -50%) translate(180px, -40px) scale(0.4); }
+        }
+
+        /* Dust trail mote — drifts outward + downward, fading as it shrinks. */
+        @keyframes bmpTrailDrift {
+          0%   { transform: translate(-50%, -50%) translate(0, 0) scale(1);   opacity: 0; }
+          15%  { opacity: 1; }
+          100% { transform: translate(-50%, -50%) translate(var(--tox), calc(var(--toy) + 40px)) scale(0.2); opacity: 0; }
         }
 
         /* ===== Existing star burst (kept) ===== */
@@ -289,16 +300,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           width: min(40vh, 40vw);
           height: min(40vh, 40vw);
           z-index: 62;
-          transform: translate(-50%, -50%) scale(0.05);
+          transform: translate(-50%, -50%) scale(0.08);
           opacity: 0;
           animation:
-            bmpFireGrow 1000ms cubic-bezier(.2,.9,.3,1) 0s forwards,
-            bmpFireDismiss 800ms cubic-bezier(.4,.1,.3,1) 5.0s forwards;
+            bmpFireGrow 900ms cubic-bezier(.16,.84,.32,1) 0s forwards,
+            bmpFireDismiss 700ms cubic-bezier(.4,.1,.3,1) 4.5s forwards;
         }
         .bmp-splash-fire-glow {
           width: 100%;
           height: 100%;
-          animation: bmpFireGlow 1.6s ease-in-out infinite, bmpFireRumble 280ms ease-in-out 0s 30 alternate;
+          animation: bmpFireGlow 2.2s ease-in-out infinite;
         }
 
         /* Sparks */
@@ -324,8 +335,9 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           background: radial-gradient(circle, #FFFFFF 0%, #2EF116 60%, transparent 100%);
           box-shadow: 0 0 14px rgba(57,255,20,0.9), 0 0 28px rgba(57,255,20,0.6);
           opacity: 0;
-          animation: bmpHeroSparkLaunch 600ms cubic-bezier(.4,.1,.3,1) 2000ms forwards;
+          animation: bmpHeroSparkLaunch 500ms cubic-bezier(.4,.1,.3,1) 1500ms forwards;
         }
+        /* Outer kite wrapper handles flight path; inner wrapper handles wing fold; img keeps glow. */
         .bmp-kite {
           position: fixed;
           top: 50%;
@@ -334,44 +346,67 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           height: min(14vh, 14vw);
           z-index: 64;
           opacity: 0;
-          object-fit: contain;
-          border-radius: 50%;
+          will-change: transform, opacity;
           animation:
-            bmpKiteAppear 400ms ease-out 2400ms forwards,
-            bmpKiteFlutter 2400ms ease-in-out 2800ms 1 forwards,
-            bmpKiteWingFlap 600ms ease-in-out 2800ms infinite,
-            bmpKiteDismiss 700ms cubic-bezier(.4,.1,.3,1) 5200ms forwards;
+            bmpKiteAppear 350ms ease-out 1800ms forwards,
+            bmpKiteFlutter 2800ms cubic-bezier(.45,.05,.55,.95) 1900ms 1 forwards,
+            bmpKiteDismiss 600ms cubic-bezier(.4,.1,.3,1) 4600ms forwards;
+        }
+        .bmp-kite-wings {
+          width: 100%;
+          height: 100%;
+          animation: bmpKiteWingFold 700ms ease-in-out 1900ms infinite;
+          will-change: transform;
+        }
+        .bmp-kite-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          animation: bmpKiteGlow 1.4s ease-in-out 1900ms infinite;
+          will-change: filter;
         }
 
-        /* Steady-state lockup animations (timings shifted later) */
-        .bmp-bloom-left  { animation: bmpBloomLeft  1400ms cubic-bezier(.22,.9,.3,1) 7.6s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
-        .bmp-bloom-right { animation: bmpBloomRight 1400ms cubic-bezier(.22,.9,.3,1) 7.6s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        /* Dust trail mote (drops off the kite as it flutters) */
+        .bmp-trail {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          z-index: 63;
+          border-radius: 50%;
+          opacity: 0;
+          will-change: transform, opacity;
+        }
+
+        /* Steady-state lockup animations (timings tightened) */
+        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
         .bmp-divider-l   { transform-origin: right center; animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-divider-r   { transform-origin: left center;  animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-x           { animation: bmpFadeUp 700ms ease-out ${X_DELAY_S}s both, bmpXGlow 2s ease-in-out ${X_GLOW_DELAY_S}s infinite; }
         .bmp-presents    { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) ${PRESENTS_DELAY_S}s both; }
         .bmp-title       { animation: bmpFadeUp 800ms ease-out ${TITLE_DELAY_S}s both; }
 
-        @keyframes bmpODPop {
-          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-6deg); }
-          40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
-          70%  { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
-          100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85) rotate(0); }
+        /* OD logo finds its home in the kickoff line — appears higher, then drifts down + shrinks. */
+        @keyframes bmpODFindHome {
+          0%   { opacity: 0; transform: translate(-50%, -120%) scale(0.4); }
+          25%  { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+          60%  { opacity: 1; transform: translate(-50%, -60%) scale(0.75); }
+          100% { opacity: 0; transform: translate(-50%, 40%) scale(0.22); }
         }
         .bmp-od-stacked {
           position: fixed;
           top: 50%;
           left: 50%;
-          width: min(34vh, 34vw);
+          width: min(28vh, 28vw);
           height: auto;
           z-index: 63;
           opacity: 0;
           filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
-          animation: bmpODPop 1800ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
+          animation: bmpODFindHome 1500ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-burst-star { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-title {
             animation: none !important;
@@ -410,7 +445,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
                   ["--sx" as any]: sx,
                   ["--sy" as any]: sy,
                   ["--sdur" as any]: `${s.dur}ms`,
-                  animationDelay: `${1000 + s.delay}ms`,
+                  animationDelay: `${600 + s.delay}ms`,
                 }}
               />
             );
@@ -419,13 +454,29 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           {/* Hero spark that becomes the kite */}
           <div className="bmp-hero-spark" aria-hidden="true" />
 
-          {/* Popfly kite firefly */}
-          <img
-            src={popflyKite}
-            alt=""
-            aria-hidden="true"
-            className="bmp-kite"
-          />
+          {/* Popfly kite firefly — outer = flight path, inner = wing fold, img = glow */}
+          <div className="bmp-kite" aria-hidden="true">
+            <div className="bmp-kite-wings">
+              <img src={popflyKite} alt="" className="bmp-kite-img" />
+            </div>
+          </div>
+
+          {/* Kite dust trail — neon + warm motes that drop off the kite */}
+          {trailMotes.map((m, i) => (
+            <div
+              key={`trail-${i}`}
+              className="bmp-trail"
+              style={{
+                width: `${m.size}px`,
+                height: `${m.size}px`,
+                background: `radial-gradient(circle, #FFFFFF 0%, ${m.color} 55%, transparent 100%)`,
+                boxShadow: `0 0 ${m.size * 2}px ${m.color}`,
+                ["--tox" as any]: `${m.ox}px`,
+                ["--toy" as any]: `${m.oy}px`,
+                animation: `bmpTrailDrift ${m.dur}ms ease-out ${m.delay}ms forwards`,
+              }}
+            />
+          ))}
 
           {/* Existing star burst, fired AFTER lockup forms */}
           {burstStars.map((s, i) => {

@@ -1,89 +1,84 @@
-## New Opening Animation: Fire → Spark → Kite → Lockup
+## Goal
 
-Replace the current "PB monogram splash + star burst" opening with a cinematic fire/spark/kite sequence that resolves into the existing Basecamp Match × Popfly lockup. Everything from the Outside Days snowflakes onward stays untouched.
+Refine the opening intro on `/afterparty` so it feels smooth, elegant, and tightly paced — and have the snowflake burst be the moment the rest of the invite appears (snowflakes scatter into the page).
 
-### Asset prep
+All work happens in `src/components/afterparty/BasecampMatchPopflyLogo.tsx` plus a tiny tweak to `src/pages/AfterPartyInvite.tsx` so the rest of the invite renders earlier (synchronized with the snowflake burst, not after it).
 
-Copy three uploaded files into `src/assets/`:
-- `basecamp-match-fire.png` (full Basecamp Match logo with fire circle + wordmark) — we'll also use it solo as the central fire mark
-- `popfly-wordmark.png` (full green Popfly wordmark with kite)
-- `popfly-kite.png` (just the dark teal kite/triangle in a circle)
+---
 
-The two wordmarks will get the same neon glow treatment already used on the main invite (amber for Basecamp Match, neon green for Popfly).
+## Changes
 
-### Choreographed timeline (~7s before existing Outside Days beat)
+### 1. Smoother Basecamp fire grow-in
+- Replace `bmpFireGrow` with a single-stage ease-out curve (no mid-bounce step) using `cubic-bezier(.16,.84,.32,1)`, starting from `scale(0.08)` and growing continuously to `scale(1)` over ~900ms.
+- Remove the `bmpFireRumble` margin-shift animation (it's the source of the jerky horizontal jitter). Keep only `bmpFireGlow` for the amber halo pulse.
+- Slow `bmpFlameOuter` / `bmpFlameInner` slightly (1.6s / 1.1s) and switch to `cubic-bezier(.4,0,.6,1)` so the flame licks read as fluid rather than twitchy.
 
-```
-0.0 - 1.0s   Fire circle (just the Basecamp flame mark, no wordmark) appears
-             tiny at center, scales up to ~min(40vh,40vw), gentle rumble +
-             amber glow. Flames "move" via subtle hue/scale pulse + drop-shadow
-             flicker (no new asset, just CSS keyframes on the existing fire).
+### 2. Kite — no circular clip, true wing flutter, dust trail
+- Remove `border-radius: 50%` from `.bmp-kite` so the kite shows freely (no circle around it).
+- Replace the current jerky `bmpKiteFlutter` (8 hard waypoints) with a smoother path:
+  - Use a Bezier-style figure-8 with only 4 waypoints + `cubic-bezier(.45,.05,.55,.95)` so motion eases between every point. Total path stays around the fire but feels like a butterfly.
+- Add a real "wing fold" via a second animation `bmpKiteWingFold`:
+  - Animates `transform: scaleX(...)` between `1 → 0.55 → 1` on a child wrapper at ~600ms infinite ease-in-out, simulating the kite folding in half and back out like wings.
+  - Implementation: wrap the `<img>` in a `<div class="bmp-kite-wings">` so the outer div handles flight path + rotation, the inner div handles the wing-fold scaleX, and the img keeps its glow filter. This avoids transform conflicts.
+- Slow the per-revolution flutter to ~3s (one loop) so the path reads as elegant rather than frantic.
 
-1.0 - 2.0s   Sparks start emitting from the fire — 8-12 small cream/coral/yellow
-             dots that arc outward, fade, and drift up like real embers.
-             Continuous loop while fire stays centered.
+### 3. Kite dust trail (mixed warm + neon)
+- Add a new emitter: 6–8 small dust motes positioned at the kite's center via a shared CSS variable system. Each mote uses `position: fixed; top: 50%; left: 50%;` and a new `bmpKiteTrail` keyframe that fades + drifts down ~30px while shrinking.
+- Implementation approach: render the trail motes as siblings of the kite, each with `animation-delay` staggered every 180ms across the kite's flutter window (2.4s–5.0s), and position them by reading `--kx / --ky` CSS vars set on the kite's parent via the same flutter keyframe values at the trail-mote percentages. To keep this simple and performant: render ~10 trail motes that each follow a shortened/offset version of the flutter path with their own delay, so they appear to "drop off" the kite.
+- Mote palette alternates: `#39FF14` (neon), `#E1B624` (amber), `#F5E6D3` (cream), `#ED7660` (coral) — mostly neon with warm sparks mixed in.
+- Each mote: 4–6px, radial-gradient white→tone, soft `box-shadow` glow.
 
-2.0 - 2.3s   One spark (slightly brighter, green-tinted) shoots out from the
-             top of the fire and morphs into the Popfly kite mid-flight
-             (cross-fade spark → kite asset, scale-up).
+### 4. Tightened pacing
+Current → New timeline:
 
-2.3 - 4.8s   Kite "firefly" flutter: travels a hand-tuned path around the fire
-             circle (figure-eight / loose orbit) with gentle wing-flap rotation
-             (-8deg ↔ +8deg) and a soft green glow trail. ~2.5s of personality.
-             Sparks continue in background.
-
-4.8 - 5.8s   LOCKUP FORMS:
-             • Fire circle shrinks + slides left to its final Basecamp Match
-               icon position
-             • Basecamp Match wordmark fades in to the right of the fire
-               (forming the complete Basecamp Match logo on the LEFT side of
-               the lockup)
-             • Kite flies to its home position above the "y" in Popfly
-             • Popfly wordmark fades in around the landed kite (forming the
-               complete Popfly logo on the RIGHT side of the lockup)
-             • Divider lines + "×" grow in between them
-             • Both logos settle with their existing neon glow pulses
-               (amber-pulse on Basecamp, neon-green-pulse on Popfly)
-
-5.8s onward  EXISTING SEQUENCE RESUMES UNCHANGED:
-             • Star burst (the 16 cream/coral/green hand-drawn stars)
-             • "presents" wordmark drops in
-             • "Out of Office" title fades up
-             • "An official [Outside Days] kick-off party" line
-             • Outside Days stacked logo pop (the part you said NOT to change)
-             • Page reveal at end
+```text
+                 OLD          NEW
+Fire grow        0.0–1.0s     0.0–0.9s   (smoother curve)
+Sparks loop      1.0–2.0s     0.6–1.6s   (start sooner, shorter window)
+Hero spark       2.0–2.6s     1.5–1.9s
+Kite appear      2.4s         1.8s
+Kite flutter     2.8–5.2s     1.9–4.7s   (~2.8s, smoother path + dust)
+Fire dismiss     5.0–5.8s     4.5–5.1s
+Kite dismiss     5.2–5.9s     4.6–5.2s
+Lockup bloom     7.6s         5.2s       (no awkward dead air)
+Presents/X/title 8.4–8.8s     5.8–6.4s
+OD pop           9.0s         6.0s       (appears sooner, higher Y, animates downward)
+Star burst       9.0s         6.6s       (snowflakes burst)
+Stage out / reveal 9.5s       7.0s       (invite appears AS snowflakes burst)
 ```
 
-The lockup, once formed, stays static and visible through the rest of the invite (Outside Days beat happens with the lockup still in place at the top), exactly as the current steady-state already does.
+Net result: ~7.0s total, with no period of "just sparks with nothing else on screen."
 
-### Technical implementation
+### 5. Outside Days logo lands in the kickoff line
+- Add a new keyframe `bmpODFindHome` that replaces `bmpODPop`:
+  - 0%: opacity 0, `translate(-50%, -120%) scale(0.4)` (higher on the page).
+  - 30%: opacity 1, `translate(-50%, -100%) scale(1)`.
+  - 70%: opacity 1, `translate(-50%, -50%) scale(0.7)` (drifts downward).
+  - 100%: opacity 0, `translate(-50%, +30%) scale(0.28)` (lands ~where the inline OD logo sits in the kick-off line, then fades into it).
+- The exact `+30%` translation target is calibrated so the shrunk OD logo visually overlaps the inline `<img src={outsideDaysLogo}>` in the "An official [OD] kick-off party" line.
 
-Edit only `src/components/afterparty/BasecampMatchPopflyLogo.tsx`:
+### 6. Snowflake burst = invite reveal (the big sync change)
+- The snowflakes (the `burstStars` rendering `StarSparkle`) currently fire at 9.0s and the invite reveals at 9.5s (after they finish). Move the burst earlier (6.6s) and have `onRevealed` fire at 7.0s — i.e. just as the snowflakes reach their outermost point. This makes them feel like they burst into the page.
+- In `AfterPartyInvite.tsx`, the existing `revealed` state already fades in the rest of the invite when `splashDone` flips. Add a 250ms ease-out fade-up on the invite content so snowflakes feel like they scatter and the invite materializes underneath. This requires confirming the existing wrapper around the post-splash content has a transition class — if not, add `transition-opacity duration-300` and toggle `opacity-0`/`opacity-100` based on `revealed`.
+- Reduce the `setTimeout(... 9500)` in `BasecampMatchPopflyLogo.tsx` to `7000`.
+- Update `bmp-splash-stage` `bmpStageOut` delay from `8.2s` to `6.6s` so the dark stage fades out simultaneously with the snowflake burst.
 
-1. Replace the splash overlay JSX (the `bmp-splash-mono` PB monogram, the 16 `bmp-burst-star` elements that fire during the splash, and the `bmpSoloPulse` / `bmpWindUp` / `bmpSplashShrink` keyframes) with a new fire/spark/kite splash stage.
-2. Add new keyframes:
-   - `bmpFireGrow` (0 → full size, 0–1s)
-   - `bmpFireFlicker` (continuous flame pulse via filter drop-shadow)
-   - `bmpSparkEmit` (per-spark arc + fade, multiple instances with staggered delays)
-   - `bmpSparkToKite` (the chosen spark scale + cross-fade into kite)
-   - `bmpKiteFlutter` (path animation using translate + rotate keyframes, ~2.5s)
-   - `bmpFireToLockup` (shrink + translate fire to its left-side lockup slot)
-   - `bmpKiteToLockup` (translate kite to its position above the "y")
-   - `bmpWordmarkFadeIn` (each wordmark fades + scales in around its anchor)
-3. Push the existing star burst, presents wordmark, Out of Office title, and Outside Days pop animations LATER on the timeline by ~5.8s (they currently start at 3.6s, 5.4s, etc.) so they play AFTER the new lockup forms. The existing `bmp-burst-star`, `bmp-presents`, `bmp-title`, `bmp-od-stacked`, and `bmp-splash-stage` animation-delay values get shifted.
-4. Update the `useEffect` reveal delay from `6400` to roughly `9500` ms so `onRevealed` fires after the full new sequence completes.
-5. Update the `bmpStageOut` delay so the dark teal splash stage fades out at the right new moment.
-6. Reduced-motion path: skip the splash entirely and show the final lockup + title immediately, same approach as today.
+### 7. Reduced-motion preserved
+- Keep the existing `@media (prefers-reduced-motion: reduce)` block; just update the new selectors (`.bmp-kite-wings`, `.bmp-kite-trail`) to be hidden too.
 
-### Things that stay exactly the same
-- Outside Days stacked-logo pop and the entire snowflake/kick-off beat
-- Final lockup layout (Basecamp Match × Popfly with the divider + "×")
-- "presents" wordmark, "Out of Office" title, "An official Outside Days kick-off party" line
-- Neon amber glow on Basecamp Match and neon green glow on Popfly in steady state
-- All sizing, fonts, and colors of the steady-state lockup
-- No other component or page is touched
+---
 
-### Open assumptions (will proceed unless you say otherwise)
-- Fire mark in the opening = the flame-in-yellow-circle from the Basecamp Match logo asset (cropped/used solo). If you'd rather I use a different isolated fire asset, say so and I'll wait for it.
-- Sparks are pure CSS dots (no new image asset) styled with the cream/coral/yellow brand palette.
-- Kite flutter path is hand-tuned, not random — same on every load.
+## Files
+
+- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — keyframes, timings, kite wrapper structure, dust-trail emitters, OD landing keyframe, removal of circular clip, removal of rumble.
+- `src/pages/AfterPartyInvite.tsx` — ensure the post-splash content has a smooth fade-in tied to `revealed`, so it visibly "materializes" with the snowflake burst.
+
+No new assets, no DB or edge function changes.
+
+---
+
+## What stays exactly the same
+
+- The OutsideDays + snowflakes block content (snowflake shapes, colors, sizes, count).
+- The final lockup design (Basecamp Match × Popfly), the "presents" wordmark, "Out of Office" title, and "An official [OD] kick-off party" line.
+- Every section of the invite below the splash.
