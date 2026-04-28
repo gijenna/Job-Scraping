@@ -356,14 +356,14 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
               ? `Hey ${me.full_name?.split(" ")[0] || "there"}, RSVP here.`
               : `Hey ${me.full_name?.split(" ")[0] || "there"}, you're all set.`}
           </h2>
-          <p className="text-[13px] mt-1.5" style={{ color: CREAM_MUTED }}>
-            {isPreRsvpShell
-              ? "Lock in your spot, then we'll match you with people in the room you should meet."
-              : "Here's what your card looks like to others. Tap edit to update anything."}
-          </p>
+          {isPreRsvpShell && (
+            <p className="text-[13px] mt-1.5" style={{ color: CREAM_MUTED }}>
+              Lock in your spot, then we'll match you with people in the room you should meet.
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-2 shrink-0">
-          {!editMode && (
+          {!editMode && isPreRsvpShell && (
             <Button
               type="button"
               onClick={() => requestEdit(false)}
@@ -371,7 +371,6 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
               style={{ backgroundColor: CORAL, color: "#fff", fontWeight: 600 }}
               size="sm"
             >
-              {headerButtonShowPencil && <Pencil className="w-3.5 h-3.5 mr-1.5" />}
               {headerButtonLabel}
             </Button>
           )}
@@ -401,15 +400,44 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
       )}
 
       {/* Mini preview of how the card looks in the roster (shown only after
-          the user has saved at least once, i.e. not a pre-RSVP shell). */}
+          the user has saved at least once, i.e. not a pre-RSVP shell).
+          The whole card is clickable to enter edit mode. */}
       {!editMode && !isPreRsvpShell && (
-        <div className="mb-4">
-          <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.14em", color: CREAM_DIM, fontWeight: 600 }}>
-            How others see you
+        <div className="mb-4 grid gap-5 md:grid-cols-[280px_1fr] md:items-start">
+          <div>
+            <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+              <div className="text-[11px] uppercase" style={{ letterSpacing: "0.14em", color: CREAM_DIM, fontWeight: 600 }}>
+                How others see you
+              </div>
+              <div className="text-[11px]" style={{ color: CORAL, fontWeight: 600 }}>
+                Click anywhere on your card to edit
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => requestEdit(false)}
+              aria-label="Edit my card"
+              className="relative block w-full max-w-[280px] text-left rounded-xl transition-transform hover:scale-[1.01] focus:outline-none focus-visible:ring-2"
+              style={{ outlineColor: CORAL }}
+            >
+              <GuestCard guest={previewGuest} />
+              <span
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-full"
+                style={{
+                  width: 28,
+                  height: 28,
+                  backgroundColor: CORAL,
+                  color: "#fff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
+                }}
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </span>
+            </button>
           </div>
-          <div className="max-w-[280px]">
-            <GuestCard guest={previewGuest} />
-          </div>
+          {sidebar && (
+            <div className="hidden md:block">{sidebar}</div>
+          )}
         </div>
       )}
 
@@ -418,18 +446,35 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
 
       {/* Matches */}
       <div>
-        <div className="flex items-end justify-between mb-3 pb-2" style={{ borderBottom: `1px solid ${BORDER}` }}>
+        <div className="flex items-end justify-between gap-3 mb-3 pb-2" style={{ borderBottom: `1px solid ${BORDER}` }}>
           <div>
             <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
               Your matches
             </div>
             <div className="text-[14px]" style={{ color: CREAM_MUTED }}>
-              Look out for these numbers
+              Look out for these numbers at the event
             </div>
           </div>
-          <span className="text-[10px] uppercase" style={{ color: CREAM_DIM, letterSpacing: "0.12em" }}>
-            {lockedMatches ? "Final" : "Live"}
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            {!editMode && !isPreRsvpShell && (
+              <button
+                type="button"
+                onClick={() => requestEdit(false)}
+                className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md hover:opacity-90 transition-opacity"
+                style={{
+                  border: `1px solid ${CORAL}`,
+                  color: CORAL,
+                  backgroundColor: "rgba(237,118,96,0.08)",
+                  fontWeight: 600,
+                }}
+              >
+                <Pencil className="w-3 h-3" /> Edit your card
+              </button>
+            )}
+            <span className="text-[10px] uppercase" style={{ color: CREAM_DIM, letterSpacing: "0.12em" }}>
+              {lockedMatches ? "Final" : "Live"}
+            </span>
+          </div>
         </div>
         <MatchesPanel
           matches={matchesWithAttendee}
