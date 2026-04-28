@@ -552,22 +552,65 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         </div>
       </div>
 
-      {/* Photo + dual avatar preview */}
+      {/* Photo + dual avatar preview. The photo circle itself IS the upload
+          button — tap anywhere in it to pick a file. */}
       <div>
         <Label className="mb-2 block">Add your photo</Label>
         <p className="text-[12px] mb-3" style={{ color: "rgba(255,255,255,0.55)" }}>
-          We'll show your real photo and generate a little illustrated avatar.
+          Tap your photo circle to upload. We'll show your real photo and generate a little illustrated avatar.
         </p>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="text-center">
             <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your photo</div>
-            <div className="aspect-square rounded-full overflow-hidden mx-auto" style={{ width: 96, backgroundColor: "#111", border: "1px solid rgba(255,255,255,0.12)" }}>
-              {form.photo_url ? (
-                <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+            <label
+              htmlFor="afterparty-photo-input"
+              className="aspect-square rounded-full overflow-hidden mx-auto block cursor-pointer relative group"
+              style={{ width: 96, backgroundColor: "#111", border: form.photo_url ? "1px solid rgba(255,255,255,0.12)" : "1.5px dashed rgba(237,118,96,0.55)" }}
+              title={form.photo_url ? "Tap to replace" : "Tap to upload"}
+            >
+              {uploading ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#ED7660" }} />
+                </div>
+              ) : form.photo_url ? (
+                <>
+                  <img src={form.photo_url} alt="" className="w-full h-full object-cover" />
+                  <div
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: "rgba(0,0,0,0.45)", color: "#fff" }}
+                  >
+                    <Upload className="w-5 h-5" />
+                  </div>
+                </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>No photo</div>
+                <div className="w-full h-full flex flex-col items-center justify-center gap-1" style={{ color: "rgba(237,118,96,0.85)" }}>
+                  <Upload className="w-5 h-5" />
+                  <span className="text-[10px] uppercase tracking-wider">Tap to add</span>
+                </div>
               )}
-            </div>
+            </label>
+            <input
+              id="afterparty-photo-input"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handlePhoto}
+            />
+            {form.photo_url && (
+              <div className="mt-1.5 flex items-center justify-center gap-3 text-[11px]">
+                <label htmlFor="afterparty-photo-input" className="underline cursor-pointer" style={{ color: "rgba(245,230,211,0.7)" }}>
+                  Replace
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setForm((f: any) => ({ ...f, photo_url: "", cartoon_url: "" }))}
+                  className="underline"
+                  style={{ color: "rgba(245,230,211,0.5)" }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
           </div>
           <div className="text-center">
             <div className="text-[10px] uppercase mb-1" style={{ letterSpacing: "0.08em", color: "rgba(255,255,255,0.5)" }}>Your avatar</div>
@@ -584,11 +627,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
             </div>
           </div>
         </div>
-        <label className="inline-flex items-center gap-2 cursor-pointer px-3 py-2 rounded text-[13px]" style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.85)" }}>
-          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-          {form.photo_url ? "Replace photo" : "Upload photo"}
-          <input type="file" accept="image/*" hidden onChange={handlePhoto} />
-        </label>
       </div>
 
       {/* ----- STEP 2: optional matching info ----- */}
