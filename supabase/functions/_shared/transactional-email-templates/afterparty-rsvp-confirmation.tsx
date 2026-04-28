@@ -52,7 +52,7 @@ const AfterPartyRsvpConfirmationEmail = ({
           <Heading style={h1}>You're on the list, {recipientName}</Heading>
 
           <Text style={text}>
-            Save the date: <strong>Thursday, May 28 · 7 to 9pm</strong>.
+            Save the date: <strong>Thursday, May 28 · 7:30 to 9:30pm</strong>.
           </Text>
 
           <Text style={text}>
