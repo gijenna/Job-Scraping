@@ -141,11 +141,15 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
   const [pendingNiches, setPendingNiches] = useState<string[]>([]);
   const [justSavedId, setJustSavedId] = useState<string | null>(null);
   const [activationSent, setActivationSent] = useState(false);
-  // Two-step flow for fresh RSVPs:
-  //   step 1 = basics (name, email, phone, role, photo, socials)
+  // Two-step flow:
+  //   step 1 = basics (name, email, phone, role, photo, socials) → card shows up in guest list
   //   step 2 = optional matching info (niches, intents, fact, role-specifics)
-  // Edit mode (attendeeId present from the start) shows everything at once.
-  const startInStep2 = !!attendeeId;
+  // We start in step 2 only when editing a card that already has real content.
+  // A "pre-RSVP shell" (invited record with no photo/cartoon yet) is treated
+  // like a fresh RSVP so the user gets the focused step-1 → step-2 flow with
+  // proper context about why we ask for matching info.
+  const isPreRsvpShell = !!attendeeId && !initial?.photo_url && !initial?.cartoon_url;
+  const startInStep2 = !!attendeeId && !isPreRsvpShell;
   const [step, setStep] = useState<1 | 2>(startInStep2 ? 2 : 1);
   const [form, setForm] = useState<any>({
     role: "creator",
