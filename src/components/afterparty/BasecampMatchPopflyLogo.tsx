@@ -284,7 +284,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         .bmp-splash-stage {
           position: fixed;
           inset: 0;
-          background: #19363B;
+          background-color: #19363B;
+          background-image: linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg);
+          background-size: cover;
+          background-position: center top;
+          background-repeat: no-repeat;
           z-index: 60;
           pointer-events: none;
           animation: bmpStageOut 800ms ease-out ${STAGE_OUT_DELAY_S}s forwards;
