@@ -406,10 +406,10 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
     }
 
     if (id) {
-      const isFirstSave = !attendeeId;
-      // Fresh RSVP just finished step 1 → don't navigate away. Promote
-      // them into step 2 (optional matching info) so we can prompt:
-      // "Want suggestions on people to find at the party?"
+      const isFirstSave = !attendeeId || isPreRsvpShell;
+      // Fresh RSVP (or pre-RSVP shell from invite) just finished step 1 →
+      // don't navigate away. Promote them into step 2 (optional matching
+      // info) so we can prompt: "Want suggestions on people to find?"
       if (isFirstSave && step === 1) {
         setJustSavedId(id);
         setStep(2);
