@@ -1,83 +1,89 @@
+## New Opening Animation: Fire → Spark → Kite → Lockup
 
+Replace the current "PB monogram splash + star burst" opening with a cinematic fire/spark/kite sequence that resolves into the existing Basecamp Match × Popfly lockup. Everything from the Outside Days snowflakes onward stays untouched.
 
-## Oakley Title Sponsor pitch page
+### Asset prep
 
-A new sleek, marketer-grade pitch page modeled on `/bestday`, repositioned to sell Oakley on title sponsoring Outside Days Denver 2026. Reuses the existing pitch shell so it inherits hero, ticker, sober narrative, gallery, tiers, and footer — but swaps in an Oakley-specific spotlight, a Meta glasses demo callout, and a RiNo storefront feature.
+Copy three uploaded files into `src/assets/`:
+- `basecamp-match-fire.png` (full Basecamp Match logo with fire circle + wordmark) — we'll also use it solo as the central fire mark
+- `popfly-wordmark.png` (full green Popfly wordmark with kite)
+- `popfly-kite.png` (just the dark teal kite/triangle in a circle)
 
-### Route
+The two wordmarks will get the same neon glow treatment already used on the main invite (amber for Basecamp Match, neon green for Popfly).
 
-- New page: `src/pages/OakleyPitch.tsx`
-- Mounted at `/oakley` in `src/App.tsx` (next to `/bestday`)
+### Choreographed timeline (~7s before existing Outside Days beat)
 
-### Page structure (top → bottom)
+```
+0.0 - 1.0s   Fire circle (just the Basecamp flame mark, no wordmark) appears
+             tiny at center, scales up to ~min(40vh,40vw), gentle rumble +
+             amber glow. Flames "move" via subtle hue/scale pulse + drop-shadow
+             flicker (no new asset, just CSS keyframes on the existing fire).
 
-1. **Hero** — reuses `RegistrantHero` with Denver mountains background, dates, location, tagline tweaked to "The outdoor industry's biggest career discovery event — meet the athletes, creators, and recruiters shaping what's next." Primary CTA → `mailto:jenna@…?subject=Oakley × Outside Days Title Sponsorship`.
+1.0 - 2.0s   Sparks start emitting from the fire — 8-12 small cream/coral/yellow
+             dots that arc outward, fade, and drift up like real embers.
+             Continuous loop while fire stays centered.
 
-2. **"A title sponsorship proposal for" pill** — same pattern as Best Day, Oakley logo (Clearbit `logo.clearbit.com/oakley.com` with favicon fallback) inside the cream-bordered chip.
+2.0 - 2.3s   One spark (slightly brighter, green-tinted) shoots out from the
+             top of the fire and morphs into the Popfly kite mid-flight
+             (cross-fade spark → kite asset, scale-up).
 
-3. **Logo ticker** — reuses `EventLogoTicker` with `denver26` brands, headline "The brands & athletes Oakley already lives alongside."
+2.3 - 4.8s   Kite "firefly" flutter: travels a hand-tuned path around the fire
+             circle (figure-eight / loose orbit) with gentle wing-flap rotation
+             (-8deg ↔ +8deg) and a soft green glow trail. ~2.5s of personality.
+             Sparks continue in background.
 
-4. **Marquee value statement** — short, bold, full-bleed: *"Oakley makes eyewear for everyone who moves — from the morning walker to the Olympic medalist to the rider dropping into Loveland at 6 a.m."* Sets the universality angle.
+4.8 - 5.8s   LOCKUP FORMS:
+             • Fire circle shrinks + slides left to its final Basecamp Match
+               icon position
+             • Basecamp Match wordmark fades in to the right of the fire
+               (forming the complete Basecamp Match logo on the LEFT side of
+               the lockup)
+             • Kite flies to its home position above the "y" in Popfly
+             • Popfly wordmark fades in around the landed kite (forming the
+               complete Popfly logo on the RIGHT side of the lockup)
+             • Divider lines + "×" grow in between them
+             • Both logos settle with their existing neon glow pulses
+               (amber-pulse on Basecamp, neon-green-pulse on Popfly)
 
-5. **`OakleySpotlight` (new component)** — the centerpiece, mirrors `BestDaySpotlight` structure:
-   - Eyebrow: "Title Sponsor Spotlight"
-   - Oakley wordmark + one-paragraph positioning (50-year legacy, Prizm lens tech, athletes of every level).
-   - **3 value cards** (icon + title + copy):
-     - *Built for Every Athlete* — from daily walkers to elite snowboarders & Olympians.
-     - *Prizm Lens Technology* — see the trail, the snow, the road clearer than ever.
-     - *Future Genesis* — where performance meets culture and creators.
-   - **3 product/lifestyle image tiles** — Oakley CDN imagery (Latitude / Reserve / Field Gear lines, sourced from oakley.com public product imagery; if a fetch fails the existing image fallback pattern applies).
-   - CTA button → `https://www.oakley.com`.
+5.8s onward  EXISTING SEQUENCE RESUMES UNCHANGED:
+             • Star burst (the 16 cream/coral/green hand-drawn stars)
+             • "presents" wordmark drops in
+             • "Out of Office" title fades up
+             • "An official [Outside Days] kick-off party" line
+             • Outside Days stacked logo pop (the part you said NOT to change)
+             • Page reveal at end
+```
 
-6. **`OakleyMetaDemo` (new section)** — distinct dark card with a glowing accent, headline *"On-site: Live Meta × Oakley smart glasses demo."* Subcopy positions it as a magnet for the creator/influencer/recruiter crowd attending Outside Days. Bullet list:
-   - Hands-on demo station inside the Oakley activation footprint.
-   - First look for outdoor creators, athletes, and brand marketers.
-   - Natural lead-gen for influencer, creator-economy, and brand partnerships.
-   Small "Powered by Meta" line and an inline icon row (camera, mic, sparkle).
+The lockup, once formed, stays static and visible through the rest of the invite (Outside Days beat happens with the lockup still in place at the top), exactly as the current steady-state already does.
 
-7. **`OakleyRinoStorefront` (new section)** — two-column on desktop, stacked on mobile:
-   - Left: hero photo of the RiNo store from the press release (`https://cdn.assets.prezly.com/8c6136a6-712c-4d77-a51d-a9da86618e21/-/format/auto/Rino.jpg`), with a small thumbnail strip of the three interior shots beneath it.
-   - Right: headline *"Make sure to visit Oakley RiNo while you're in Denver."* Excerpted copy from the press release ("blurring the lines between performance and culture… built for the athletes, artists, and creators of RiNo"). Feature pills: Customization Zone · Prizm Wall · Museum Wall · Catalyst Wall · Rooftop Lounge.
-   - Address block: **2660 Walnut Street, Unit 3 · Denver, CO** · Mon–Sun 10 AM – 6 PM.
-   - Two buttons: "Get directions" (Google Maps link) and "Read the announcement" (press release URL).
-   - Foot traffic angle in italic line at bottom: *"Outside Days puts 1,500+ outdoor industry pros within a 10-minute drive of your front door."*
+### Technical implementation
 
-8. **The North Face quote block** — reuse the existing styled testimonial card from `BestDayPitch` (recruiter quote about the sober vibe), reframed with eyebrow "From our community" — no Best Day branding.
+Edit only `src/components/afterparty/BasecampMatchPopflyLogo.tsx`:
 
-9. **Sober + Photo Gallery** — reuse `SoberEventSection` and `EventPhotoGallery` with the existing `bestday-event-*` photos (these are generic event photos despite the filename).
+1. Replace the splash overlay JSX (the `bmp-splash-mono` PB monogram, the 16 `bmp-burst-star` elements that fire during the splash, and the `bmpSoloPulse` / `bmpWindUp` / `bmpSplashShrink` keyframes) with a new fire/spark/kite splash stage.
+2. Add new keyframes:
+   - `bmpFireGrow` (0 → full size, 0–1s)
+   - `bmpFireFlicker` (continuous flame pulse via filter drop-shadow)
+   - `bmpSparkEmit` (per-spark arc + fade, multiple instances with staggered delays)
+   - `bmpSparkToKite` (the chosen spark scale + cross-fade into kite)
+   - `bmpKiteFlutter` (path animation using translate + rotate keyframes, ~2.5s)
+   - `bmpFireToLockup` (shrink + translate fire to its left-side lockup slot)
+   - `bmpKiteToLockup` (translate kite to its position above the "y")
+   - `bmpWordmarkFadeIn` (each wordmark fades + scales in around its anchor)
+3. Push the existing star burst, presents wordmark, Out of Office title, and Outside Days pop animations LATER on the timeline by ~5.8s (they currently start at 3.6s, 5.4s, etc.) so they play AFTER the new lockup forms. The existing `bmp-burst-star`, `bmp-presents`, `bmp-title`, `bmp-od-stacked`, and `bmp-splash-stage` animation-delay values get shifted.
+4. Update the `useEffect` reveal delay from `6400` to roughly `9500` ms so `onRevealed` fires after the full new sequence completes.
+5. Update the `bmpStageOut` delay so the dark teal splash stage fades out at the right new moment.
+6. Reduced-motion path: skip the splash entirely and show the final lockup + title immediately, same approach as today.
 
-10. **Title sponsor tiers** — reuse `EventTiers` styled the same way as Best Day, but with Oakley-specific tiers:
-    - **Activation Partner — $7,500** — branded sampling/demo footprint, signage, ticker logo, social mention.
-    - **Official Eyewear Sponsor — $15,000 (1 spot)** — exclusive eyewear category, Meta demo station co-branding, dedicated social posts, "Proudly seen through Oakley" callout, branded swag in welcome bags.
-    - **Title Presenter — $30,000 (exclusive)** — *"Outside Days Denver, presented by Oakley"* naming rights, keynote intro, custom Oakley × RiNo lounge activation, co-branded content series, post-event recap video integration, foot-traffic referral campaign to Oakley RiNo, post-event attendee insights report.
+### Things that stay exactly the same
+- Outside Days stacked-logo pop and the entire snowflake/kick-off beat
+- Final lockup layout (Basecamp Match × Popfly with the divider + "×")
+- "presents" wordmark, "Out of Office" title, "An official Outside Days kick-off party" line
+- Neon amber glow on Basecamp Match and neon green glow on Popfly in steady state
+- All sizing, fonts, and colors of the steady-state lockup
+- No other component or page is touched
 
-11. **Final CTA** — *"Let's put Oakley at the center of Denver's biggest outdoor industry moment."* Email Jenna button.
-
-12. **Footer** — `SiteFooter`.
-
-### New files
-
-- `src/pages/OakleyPitch.tsx` — page composition.
-- `src/components/event/OakleySpotlight.tsx` — title-sponsor spotlight (mirrors `BestDaySpotlight`).
-- `src/components/event/OakleyMetaDemo.tsx` — Meta glasses demo callout.
-- `src/components/event/OakleyRinoStorefront.tsx` — RiNo store feature with image, copy, pills, address, CTAs.
-
-### Edited files
-
-- `src/App.tsx` — add `<Route path="/oakley" element={<OakleyPitch />} />` near `/bestday`.
-
-### Design / brand notes
-
-- Keep the existing dark teal / cream / yellow palette — no jarring Oakley-red shift, just clean `events-yellow` accents and a single Oakley-orange (`#F47B00`) reserved for the Meta demo glow and tier-popular highlight to give it punch without clashing.
-- Headlines in `font-headline`, body in `font-body`, all consistent with Best Day pitch.
-- Buttons match existing rounded-xl, scale-on-hover treatment.
-- All Oakley-supplied images load from public CDN URLs (Prezly + oakley.com); no asset uploads needed.
-- No DB schema changes, no editable-text wiring (this is a pitch page, not a registrant page — copy is hardcoded so it ships sleek and on-message immediately).
-- `mailto:` subject lines clearly identify the deal: "Oakley × Outside Days Title Sponsorship".
-
-### Out of scope
-
-- No changes to `/bestday`, `/bestdayexample`, or any registrant pages.
-- No new admin tooling or DB tables.
-- No Meta-branded logos shipped (text-only callout) to avoid trademark issues until Oakley signs.
-
+### Open assumptions (will proceed unless you say otherwise)
+- Fire mark in the opening = the flame-in-yellow-circle from the Basecamp Match logo asset (cropped/used solo). If you'd rather I use a different isolated fire asset, say so and I'll wait for it.
+- Sparks are pure CSS dots (no new image asset) styled with the cream/coral/yellow brand palette.
+- Kite flutter path is hand-tuned, not random — same on every load.
