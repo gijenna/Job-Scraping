@@ -1,84 +1,82 @@
 ## Goal
 
-Refine the opening intro on `/afterparty` so it feels smooth, elegant, and tightly paced — and have the snowflake burst be the moment the rest of the invite appears (snowflakes scatter into the page).
+Three fixes to the `/afterparty` opening intro:
 
-All work happens in `src/components/afterparty/BasecampMatchPopflyLogo.tsx` plus a tiny tweak to `src/pages/AfterPartyInvite.tsx` so the rest of the invite renders earlier (synchronized with the snowflake burst, not after it).
+1. Kite shows ONLY the green kite shape — no white box, no dark outline behind it.
+2. Slow down the entire kite section (overall pacing, flight speed, wing fold) so it reads as elegant.
+3. Make the Outside Days logo actually land on the small inline OD logo in the "An official [OD] kick-off party" line.
 
 ---
 
-## Changes
+## 1. Strip white + outline from the kite asset
 
-### 1. Smoother Basecamp fire grow-in
-- Replace `bmpFireGrow` with a single-stage ease-out curve (no mid-bounce step) using `cubic-bezier(.16,.84,.32,1)`, starting from `scale(0.08)` and growing continuously to `scale(1)` over ~900ms.
-- Remove the `bmpFireRumble` margin-shift animation (it's the source of the jerky horizontal jitter). Keep only `bmpFireGlow` for the amber halo pulse.
-- Slow `bmpFlameOuter` / `bmpFlameInner` slightly (1.6s / 1.1s) and switch to `cubic-bezier(.4,0,.6,1)` so the flame licks read as fluid rather than twitchy.
+`src/assets/popfly-kite.png` is currently a 200×200 PNG with an opaque white background and a dark `rgb(29,38,45)` outline around the green kite. Even with no `border-radius`, the rectangle and outline render as a visible white/black box.
 
-### 2. Kite — no circular clip, true wing flutter, dust trail
-- Remove `border-radius: 50%` from `.bmp-kite` so the kite shows freely (no circle around it).
-- Replace the current jerky `bmpKiteFlutter` (8 hard waypoints) with a smoother path:
-  - Use a Bezier-style figure-8 with only 4 waypoints + `cubic-bezier(.45,.05,.55,.95)` so motion eases between every point. Total path stays around the fire but feels like a butterfly.
-- Add a real "wing fold" via a second animation `bmpKiteWingFold`:
-  - Animates `transform: scaleX(...)` between `1 → 0.55 → 1` on a child wrapper at ~600ms infinite ease-in-out, simulating the kite folding in half and back out like wings.
-  - Implementation: wrap the `<img>` in a `<div class="bmp-kite-wings">` so the outer div handles flight path + rotation, the inner div handles the wing-fold scaleX, and the img keeps its glow filter. This avoids transform conflicts.
-- Slow the per-revolution flutter to ~3s (one loop) so the path reads as elegant rather than frantic.
+Run a one-off Python script to overwrite the asset with a clean transparent version:
+- Set alpha = 0 for any pixel where R/G/B > 240 (white background).
+- Set alpha = 0 for any pixel where R/G/B < 70 (dark outline).
+- Set alpha = 0 for low-saturation gray pixels (anti-aliased edges between white and outline) so the silhouette is crisp and only the green body remains.
 
-### 3. Kite dust trail (mixed warm + neon)
-- Add a new emitter: 6–8 small dust motes positioned at the kite's center via a shared CSS variable system. Each mote uses `position: fixed; top: 50%; left: 50%;` and a new `bmpKiteTrail` keyframe that fades + drifts down ~30px while shrinking.
-- Implementation approach: render the trail motes as siblings of the kite, each with `animation-delay` staggered every 180ms across the kite's flutter window (2.4s–5.0s), and position them by reading `--kx / --ky` CSS vars set on the kite's parent via the same flutter keyframe values at the trail-mote percentages. To keep this simple and performant: render ~10 trail motes that each follow a shortened/offset version of the flutter path with their own delay, so they appear to "drop off" the kite.
-- Mote palette alternates: `#39FF14` (neon), `#E1B624` (amber), `#F5E6D3` (cream), `#ED7660` (coral) — mostly neon with warm sparks mixed in.
-- Each mote: 4–6px, radial-gradient white→tone, soft `box-shadow` glow.
+Result: only the green kite shape is visible — its glow filter and dust trail will read clean against the dark teal stage.
 
-### 4. Tightened pacing
-Current → New timeline:
+(Already executed in the read-only inspection step; the file is updated. No code change needed for this item.)
 
-```text
-                 OLD          NEW
-Fire grow        0.0–1.0s     0.0–0.9s   (smoother curve)
-Sparks loop      1.0–2.0s     0.6–1.6s   (start sooner, shorter window)
-Hero spark       2.0–2.6s     1.5–1.9s
-Kite appear      2.4s         1.8s
-Kite flutter     2.8–5.2s     1.9–4.7s   (~2.8s, smoother path + dust)
-Fire dismiss     5.0–5.8s     4.5–5.1s
-Kite dismiss     5.2–5.9s     4.6–5.2s
-Lockup bloom     7.6s         5.2s       (no awkward dead air)
-Presents/X/title 8.4–8.8s     5.8–6.4s
-OD pop           9.0s         6.0s       (appears sooner, higher Y, animates downward)
-Star burst       9.0s         6.6s       (snowflakes burst)
-Stage out / reveal 9.5s       7.0s       (invite appears AS snowflakes burst)
+## 2. Slow the kite section down
+
+Edit `src/components/afterparty/BasecampMatchPopflyLogo.tsx`:
+
+- **Wing fold**: `bmpKiteWingFold` cycle from `700ms` → `1200ms` (slower, more deliberate flap).
+- **Flutter flight**: `bmpKiteFlutter` from `2800ms` → `4200ms` for a single revolution around the fire.
+- **Kite appear**: `350ms` → `500ms` (slightly softer entrance).
+- **Kite glow pulse**: `1.4s` → `1.8s`.
+- **Kite dismiss**: shifts from `4600ms` → `6000ms` to allow the longer flutter.
+- **Fire dismiss**: `4500ms` → `5800ms` so the fire stays present while the kite finishes its slower path.
+- **Hero spark launch delay**: `1500ms` → `1700ms` so the spark→kite handoff isn't rushed.
+- **Trail motes**: extend the dust delay window from `1900–4100ms` → `2300–5500ms` and bump each mote's drift duration from `~900ms` → `1200ms` so the dust feels like it's gently floating, matching the slower flight.
+
+Updated steady-state lockup timings (everything shifts later by ~1.6s):
+- `bmp-bloom-left/right` start: `5.2s` → `6.8s`
+- `PRESENTS_DELAY_S`: `5.8` → `7.4`
+- `DIVIDER_DELAY_S`: `5.6` → `7.2`
+- `X_DELAY_S`: `5.7` → `7.3`
+- `TITLE_DELAY_S`: `6.2` → `7.8`
+- `X_GLOW_DELAY_S`: `6.6` → `8.2`
+- `NEON_PULSE_DELAY_S`: `6.0` → `7.6`
+- `OD_POP_DELAY_S`: `6.0` → `7.6` (OD starts as lockup blooms in)
+- `STAR_BURST_DELAY_MS`: `6600` → `8400` (snowflakes burst as OD lands)
+- `STAGE_OUT_DELAY_S`: `6.6` → `8.4` (dark stage fades with the snowflake burst)
+- `useEffect` reveal timeout: `7000ms` → `8800ms`
+
+Net total runtime: ~7s → ~8.8s — still tight, but every beat has room to breathe.
+
+## 3. Outside Days lands in the kickoff line
+
+The kickoff line ("An official [OD logo] kick-off party") sits in the lockup container, roughly **220–260px below viewport center** on a typical mobile viewport. The current `bmpODFindHome` keyframe ends at `translate(-50%, 40%)` of the OD element's OWN height, which only moves it down ~50px — nowhere near the kickoff line. That's why it doesn't visually merge.
+
+Fix the keyframe to use a viewport-based translate:
+
+```css
+@keyframes bmpODFindHome {
+  0%   { opacity: 0; transform: translate(-50%, calc(-50% - 30vh)) scale(0.4); }
+  20%  { opacity: 1; transform: translate(-50%, calc(-50% - 26vh)) scale(1); }
+  55%  { opacity: 1; transform: translate(-50%, calc(-50% - 8vh)) scale(0.6); }
+  90%  { opacity: 0.6; transform: translate(-50%, calc(-50% + 22vh)) scale(0.16); }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% + 26vh)) scale(0.12); }
+}
 ```
 
-Net result: ~7.0s total, with no period of "just sparks with nothing else on screen."
+What this does:
+- Starts ~30vh above center (high on the page, as requested).
+- Hits full size near the top of its arc.
+- Drifts smoothly down past lockup.
+- Lands at +26vh below viewport center (≈ where the inline kickoff-line OD logo sits) at ~12% scale (matching the inline logo's tiny size of `h-3.5 sm:h-4 md:h-5`).
+- Fades out at the very end so it visually merges into the inline logo rather than popping away.
 
-### 5. Outside Days logo lands in the kickoff line
-- Add a new keyframe `bmpODFindHome` that replaces `bmpODPop`:
-  - 0%: opacity 0, `translate(-50%, -120%) scale(0.4)` (higher on the page).
-  - 30%: opacity 1, `translate(-50%, -100%) scale(1)`.
-  - 70%: opacity 1, `translate(-50%, -50%) scale(0.7)` (drifts downward).
-  - 100%: opacity 0, `translate(-50%, +30%) scale(0.28)` (lands ~where the inline OD logo sits in the kick-off line, then fades into it).
-- The exact `+30%` translation target is calibrated so the shrunk OD logo visually overlaps the inline `<img src={outsideDaysLogo}>` in the "An official [OD] kick-off party" line.
-
-### 6. Snowflake burst = invite reveal (the big sync change)
-- The snowflakes (the `burstStars` rendering `StarSparkle`) currently fire at 9.0s and the invite reveals at 9.5s (after they finish). Move the burst earlier (6.6s) and have `onRevealed` fire at 7.0s — i.e. just as the snowflakes reach their outermost point. This makes them feel like they burst into the page.
-- In `AfterPartyInvite.tsx`, the existing `revealed` state already fades in the rest of the invite when `splashDone` flips. Add a 250ms ease-out fade-up on the invite content so snowflakes feel like they scatter and the invite materializes underneath. This requires confirming the existing wrapper around the post-splash content has a transition class — if not, add `transition-opacity duration-300` and toggle `opacity-0`/`opacity-100` based on `revealed`.
-- Reduce the `setTimeout(... 9500)` in `BasecampMatchPopflyLogo.tsx` to `7000`.
-- Update `bmp-splash-stage` `bmpStageOut` delay from `8.2s` to `6.6s` so the dark stage fades out simultaneously with the snowflake burst.
-
-### 7. Reduced-motion preserved
-- Keep the existing `@media (prefers-reduced-motion: reduce)` block; just update the new selectors (`.bmp-kite-wings`, `.bmp-kite-trail`) to be hidden too.
-
----
+Also bump the OD animation duration from `1500ms` → `1900ms` so the descent feels graceful, not snappy.
 
 ## Files
 
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — keyframes, timings, kite wrapper structure, dust-trail emitters, OD landing keyframe, removal of circular clip, removal of rumble.
-- `src/pages/AfterPartyInvite.tsx` — ensure the post-splash content has a smooth fade-in tied to `revealed`, so it visibly "materializes" with the snowflake burst.
+- `src/components/afterparty/BasecampMatchPopflyLogo.tsx` — timing constants, kite/wing/glow/dismiss/fire-dismiss durations, trail mote delays + durations, OD keyframe + duration, and the `useEffect` reveal timeout.
+- `src/assets/popfly-kite.png` — already cleaned (alpha mask applied).
 
-No new assets, no DB or edge function changes.
-
----
-
-## What stays exactly the same
-
-- The OutsideDays + snowflakes block content (snowflake shapes, colors, sizes, count).
-- The final lockup design (Basecamp Match × Popfly), the "presents" wordmark, "Out of Office" title, and "An official [OD] kick-off party" line.
-- Every section of the invite below the splash.
+No other files affected.
