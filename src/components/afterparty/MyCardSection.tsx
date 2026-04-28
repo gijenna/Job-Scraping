@@ -33,7 +33,7 @@ interface Props {
   sidebar?: React.ReactNode;
 }
 
-const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
+const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
   const [meFull, setMeFull] = useState<any>(null);
