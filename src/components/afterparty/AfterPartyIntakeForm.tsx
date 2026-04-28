@@ -597,7 +597,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
         {/* Step 2 prompt: only show on a fresh RSVP that just hit step 2.
             In edit mode (attendeeId present from the start) the user already
             knows what these fields are for, so we skip the pep talk. */}
-        {!attendeeId && justSavedId && (
+        {(!attendeeId || isPreRsvpShell) && justSavedId && (
           <div
             id="intake-step2"
             className="rounded-xl p-4 sm:p-5"
@@ -836,7 +836,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved }: Props) => {
       {/* ----- end STEP 2 ----- */}
 
       {/* Action area */}
-      {step === 1 && !attendeeId ? (
+      {step === 1 && (!attendeeId || isPreRsvpShell) ? (
         // Step 1 (fresh RSVP): single primary CTA, takes them to step 2 next.
         <Button
           type="submit"
