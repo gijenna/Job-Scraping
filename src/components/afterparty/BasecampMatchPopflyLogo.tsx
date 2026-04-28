@@ -149,16 +149,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Star burst & later beats are now shifted by +5.4s (was 3.6s → now 9.0s, etc.)
-  const STAR_BURST_DELAY_MS = 9000;     // was 3600
-  const STAGE_OUT_DELAY_S = 8.2;        // was 5.2
-  const OD_POP_DELAY_S = 9.0;           // was 3.6
-  const PRESENTS_DELAY_S = 8.4;         // was 5.4
-  const DIVIDER_DELAY_S = 8.4;          // was 5.4
-  const X_DELAY_S = 8.5;                // was 5.5
-  const TITLE_DELAY_S = 8.8;            // was 5.8
-  const X_GLOW_DELAY_S = 9.4;           // was 6.4
-  const NEON_PULSE_DELAY_S = 8.8;       // was 5.8
+  // Tightened pacing — total runtime ~7s.
+  const STAR_BURST_DELAY_MS = 6600;     // snowflakes burst as the invite reveals
+  const STAGE_OUT_DELAY_S = 6.6;        // dark stage fades with the snowflake burst
+  const OD_POP_DELAY_S = 6.0;           // OD finds its home into the kickoff line
+  const PRESENTS_DELAY_S = 5.8;
+  const DIVIDER_DELAY_S = 5.6;
+  const X_DELAY_S = 5.7;
+  const TITLE_DELAY_S = 6.2;
+  const X_GLOW_DELAY_S = 6.6;
+  const NEON_PULSE_DELAY_S = 6.0;
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-10 select-none">
