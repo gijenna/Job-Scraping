@@ -377,21 +377,23 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           will-change: transform, opacity;
         }
 
-        /* Steady-state lockup animations (timings tightened) */
-        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
-        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        /* Steady-state lockup animations */
+        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 6.8s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 6.8s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
         .bmp-divider-l   { transform-origin: right center; animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-divider-r   { transform-origin: left center;  animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-x           { animation: bmpFadeUp 700ms ease-out ${X_DELAY_S}s both, bmpXGlow 2s ease-in-out ${X_GLOW_DELAY_S}s infinite; }
         .bmp-presents    { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) ${PRESENTS_DELAY_S}s both; }
         .bmp-title       { animation: bmpFadeUp 800ms ease-out ${TITLE_DELAY_S}s both; }
 
-        /* OD logo finds its home in the kickoff line — appears higher, then drifts down + shrinks. */
+        /* OD logo finds its home in the kickoff line — appears high, drifts down past lockup,
+           lands tiny right where the inline kickoff-line OD logo sits, then fades into it. */
         @keyframes bmpODFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -120%) scale(0.4); }
-          25%  { opacity: 1; transform: translate(-50%, -100%) scale(1); }
-          60%  { opacity: 1; transform: translate(-50%, -60%) scale(0.75); }
-          100% { opacity: 0; transform: translate(-50%, 40%) scale(0.22); }
+          0%   { opacity: 0; transform: translate(-50%, calc(-50% - 30vh)) scale(0.4); }
+          20%  { opacity: 1; transform: translate(-50%, calc(-50% - 26vh)) scale(1); }
+          55%  { opacity: 1; transform: translate(-50%, calc(-50% - 8vh))  scale(0.6); }
+          90%  { opacity: 0.6; transform: translate(-50%, calc(-50% + 22vh)) scale(0.16); }
+          100% { opacity: 0; transform: translate(-50%, calc(-50% + 26vh)) scale(0.12); }
         }
         .bmp-od-stacked {
           position: fixed;
@@ -402,7 +404,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           z-index: 63;
           opacity: 0;
           filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
-          animation: bmpODFindHome 1500ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
+          animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
