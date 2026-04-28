@@ -174,10 +174,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           0%, 100% { filter: drop-shadow(0 0 24px rgba(225,182,36,0.7)) drop-shadow(0 0 48px rgba(237,105,83,0.45)); }
           50%      { filter: drop-shadow(0 0 36px rgba(225,182,36,1)) drop-shadow(0 0 72px rgba(237,105,83,0.7)); }
         }
-        /* After kite flutter, fire shrinks gracefully and fades. */
+        /* After kite flutter, fire shrinks down to nothing — leaving the embers behind. */
         @keyframes bmpFireDismiss {
-          0%   { transform: translate(-50%, -50%) scale(1) rotate(0); opacity: 1; }
-          100% { transform: translate(-50%, -50%) scale(0.2) rotate(0); opacity: 0; }
+          0%   { transform: translate(-50%, -50%) scale(1)    rotate(0); opacity: 1; }
+          70%  { transform: translate(-50%, -50%) scale(0.18) rotate(0); opacity: 0.5; }
+          100% { transform: translate(-50%, -50%) scale(0)    rotate(0); opacity: 0; }
         }
 
         /* Each spark arcs outward + fades, then loops */
@@ -196,17 +197,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           100% { transform: translate(-50%, -50%) translate(0, -160px) scale(2.6); opacity: 0; }
         }
         @keyframes bmpKiteAppear {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -160px) scale(0.4); }
-          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, -260px) scale(0.4); }
+          100% { opacity: 1; transform: translate(-50%, -50%) translate(0, -260px) scale(1); }
         }
 
-        /* Kite flutters around the fire — smoother, fewer hard waypoints. */
+        /* Kite flutters wide around the fire — far enough out that it never overlaps the yellow circle. */
         @keyframes bmpKiteFlutter {
-          0%   { transform: translate(-50%, -50%) translate(0, -160px); }
-          25%  { transform: translate(-50%, -50%) translate(150px, 0); }
-          50%  { transform: translate(-50%, -50%) translate(0, 140px); }
-          75%  { transform: translate(-50%, -50%) translate(-150px, 0); }
-          100% { transform: translate(-50%, -50%) translate(0, -160px); }
+          0%   { transform: translate(-50%, -50%) translate(0, -260px); }
+          25%  { transform: translate(-50%, -50%) translate(280px, -40px); }
+          50%  { transform: translate(-50%, -50%) translate(0, 240px); }
+          75%  { transform: translate(-50%, -50%) translate(-280px, -40px); }
+          100% { transform: translate(-50%, -50%) translate(0, -260px); }
         }
         /* Wing fold — the kite folds in half and back out like butterfly wings. */
         @keyframes bmpKiteWingFold {
@@ -217,10 +218,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           0%, 100% { filter: drop-shadow(0 0 8px rgba(57,255,20,0.7)) drop-shadow(0 0 16px rgba(57,255,20,0.4)); }
           50%      { filter: drop-shadow(0 0 14px rgba(57,255,20,1)) drop-shadow(0 0 28px rgba(57,255,20,0.6)); }
         }
-        /* Kite flies off / dismisses (steady-state lockup uses its own popfly logo) */
+        /* Kite flies fully off the page (top-right) */
         @keyframes bmpKiteDismiss {
-          0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -160px) scale(1); }
-          100% { opacity: 0; transform: translate(-50%, -50%) translate(180px, -40px) scale(0.4); }
+          0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -260px) scale(1); }
+          70%  { opacity: 1; }
+          100% { opacity: 0; transform: translate(-50%, -50%) translate(120vw, -90vh) scale(0.5); }
         }
 
         /* Dust trail mote — drifts outward + downward, fading as it shrinks. */
@@ -355,7 +357,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         .bmp-kite-wings {
           width: 100%;
           height: 100%;
-          animation: bmpKiteWingFold 1200ms ease-in-out 2300ms infinite;
+          animation: bmpKiteWingFold 850ms ease-in-out 2300ms infinite;
           will-change: transform;
         }
         .bmp-kite-img {
