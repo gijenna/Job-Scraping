@@ -93,7 +93,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 7000;
+    const delay = reduced ? 0 : 8800;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
@@ -117,16 +117,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
   // Kite dust trail motes — drop off the kite during its flutter.
   // Mostly neon green with warm sparks mixed in to tie to the fire flickers.
   const trailMotes = [
-    { color: "#39FF14", size: 5, delay: 1900, dur: 900,  ox:  20, oy:  10 },
-    { color: "#E1B624", size: 4, delay: 2100, dur: 950,  ox: -18, oy:  20 },
-    { color: "#39FF14", size: 6, delay: 2350, dur: 900,  ox:  30, oy:  -8 },
-    { color: "#F5E6D3", size: 4, delay: 2600, dur: 1000, ox: -25, oy:  16 },
-    { color: "#39FF14", size: 5, delay: 2850, dur: 900,  ox:  10, oy:  24 },
-    { color: "#ED7660", size: 4, delay: 3100, dur: 950,  ox:  22, oy: -12 },
-    { color: "#39FF14", size: 5, delay: 3350, dur: 900,  ox: -28, oy:  18 },
-    { color: "#E1B624", size: 4, delay: 3600, dur: 1000, ox:  16, oy:  22 },
-    { color: "#39FF14", size: 6, delay: 3850, dur: 900,  ox: -14, oy:  -6 },
-    { color: "#F5E6D3", size: 4, delay: 4100, dur: 950,  ox:  26, oy:  14 },
+    { color: "#39FF14", size: 5, delay: 2300, dur: 1200, ox:  20, oy:  10 },
+    { color: "#E1B624", size: 4, delay: 2600, dur: 1300, ox: -18, oy:  20 },
+    { color: "#39FF14", size: 6, delay: 2950, dur: 1200, ox:  30, oy:  -8 },
+    { color: "#F5E6D3", size: 4, delay: 3300, dur: 1300, ox: -25, oy:  16 },
+    { color: "#39FF14", size: 5, delay: 3650, dur: 1200, ox:  10, oy:  24 },
+    { color: "#ED7660", size: 4, delay: 4000, dur: 1300, ox:  22, oy: -12 },
+    { color: "#39FF14", size: 5, delay: 4350, dur: 1200, ox: -28, oy:  18 },
+    { color: "#E1B624", size: 4, delay: 4700, dur: 1300, ox:  16, oy:  22 },
+    { color: "#39FF14", size: 6, delay: 5050, dur: 1200, ox: -14, oy:  -6 },
+    { color: "#F5E6D3", size: 4, delay: 5400, dur: 1300, ox:  26, oy:  14 },
   ];
 
   // Pre-existing star burst (kept exactly as-is, just shifted later in the timeline).
@@ -149,16 +149,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Tightened pacing — total runtime ~7s.
-  const STAR_BURST_DELAY_MS = 6600;     // snowflakes burst as the invite reveals
-  const STAGE_OUT_DELAY_S = 6.6;        // dark stage fades with the snowflake burst
-  const OD_POP_DELAY_S = 6.0;           // OD finds its home into the kickoff line
-  const PRESENTS_DELAY_S = 5.8;
-  const DIVIDER_DELAY_S = 5.6;
-  const X_DELAY_S = 5.7;
-  const TITLE_DELAY_S = 6.2;
-  const X_GLOW_DELAY_S = 6.6;
-  const NEON_PULSE_DELAY_S = 6.0;
+  // Pacing — total runtime ~8.8s. Slower kite section, gives every beat room to breathe.
+  const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
+  const STAGE_OUT_DELAY_S = 8.4;        // dark stage fades with the snowflake burst
+  const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
+  const PRESENTS_DELAY_S = 7.4;
+  const DIVIDER_DELAY_S = 7.2;
+  const X_DELAY_S = 7.3;
+  const TITLE_DELAY_S = 7.8;
+  const X_GLOW_DELAY_S = 8.2;
+  const NEON_PULSE_DELAY_S = 7.6;
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-10 select-none">
@@ -304,7 +304,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           opacity: 0;
           animation:
             bmpFireGrow 900ms cubic-bezier(.16,.84,.32,1) 0s forwards,
-            bmpFireDismiss 700ms cubic-bezier(.4,.1,.3,1) 4.5s forwards;
+            bmpFireDismiss 800ms cubic-bezier(.4,.1,.3,1) 5.8s forwards;
         }
         .bmp-splash-fire-glow {
           width: 100%;
@@ -335,7 +335,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           background: radial-gradient(circle, #FFFFFF 0%, #2EF116 60%, transparent 100%);
           box-shadow: 0 0 14px rgba(57,255,20,0.9), 0 0 28px rgba(57,255,20,0.6);
           opacity: 0;
-          animation: bmpHeroSparkLaunch 500ms cubic-bezier(.4,.1,.3,1) 1500ms forwards;
+          animation: bmpHeroSparkLaunch 600ms cubic-bezier(.4,.1,.3,1) 1700ms forwards;
         }
         /* Outer kite wrapper handles flight path; inner wrapper handles wing fold; img keeps glow. */
         .bmp-kite {
@@ -348,21 +348,21 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           opacity: 0;
           will-change: transform, opacity;
           animation:
-            bmpKiteAppear 350ms ease-out 1800ms forwards,
-            bmpKiteFlutter 2800ms cubic-bezier(.45,.05,.55,.95) 1900ms 1 forwards,
-            bmpKiteDismiss 600ms cubic-bezier(.4,.1,.3,1) 4600ms forwards;
+            bmpKiteAppear 500ms ease-out 2000ms forwards,
+            bmpKiteFlutter 4200ms cubic-bezier(.45,.05,.55,.95) 2300ms 1 forwards,
+            bmpKiteDismiss 800ms cubic-bezier(.4,.1,.3,1) 6000ms forwards;
         }
         .bmp-kite-wings {
           width: 100%;
           height: 100%;
-          animation: bmpKiteWingFold 700ms ease-in-out 1900ms infinite;
+          animation: bmpKiteWingFold 1200ms ease-in-out 2300ms infinite;
           will-change: transform;
         }
         .bmp-kite-img {
           width: 100%;
           height: 100%;
           object-fit: contain;
-          animation: bmpKiteGlow 1.4s ease-in-out 1900ms infinite;
+          animation: bmpKiteGlow 1.8s ease-in-out 2300ms infinite;
           will-change: filter;
         }
 
@@ -377,21 +377,23 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           will-change: transform, opacity;
         }
 
-        /* Steady-state lockup animations (timings tightened) */
-        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
-        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        /* Steady-state lockup animations */
+        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 6.8s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 6.8s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
         .bmp-divider-l   { transform-origin: right center; animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-divider-r   { transform-origin: left center;  animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-x           { animation: bmpFadeUp 700ms ease-out ${X_DELAY_S}s both, bmpXGlow 2s ease-in-out ${X_GLOW_DELAY_S}s infinite; }
         .bmp-presents    { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) ${PRESENTS_DELAY_S}s both; }
         .bmp-title       { animation: bmpFadeUp 800ms ease-out ${TITLE_DELAY_S}s both; }
 
-        /* OD logo finds its home in the kickoff line — appears higher, then drifts down + shrinks. */
+        /* OD logo finds its home in the kickoff line — appears high, drifts down past lockup,
+           lands tiny right where the inline kickoff-line OD logo sits, then fades into it. */
         @keyframes bmpODFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -120%) scale(0.4); }
-          25%  { opacity: 1; transform: translate(-50%, -100%) scale(1); }
-          60%  { opacity: 1; transform: translate(-50%, -60%) scale(0.75); }
-          100% { opacity: 0; transform: translate(-50%, 40%) scale(0.22); }
+          0%   { opacity: 0; transform: translate(-50%, calc(-50% - 30vh)) scale(0.4); }
+          20%  { opacity: 1; transform: translate(-50%, calc(-50% - 26vh)) scale(1); }
+          55%  { opacity: 1; transform: translate(-50%, calc(-50% - 8vh))  scale(0.6); }
+          90%  { opacity: 0.6; transform: translate(-50%, calc(-50% + 22vh)) scale(0.16); }
+          100% { opacity: 0; transform: translate(-50%, calc(-50% + 26vh)) scale(0.12); }
         }
         .bmp-od-stacked {
           position: fixed;
@@ -402,7 +404,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           z-index: 63;
           opacity: 0;
           filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
-          animation: bmpODFindHome 1500ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
+          animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
