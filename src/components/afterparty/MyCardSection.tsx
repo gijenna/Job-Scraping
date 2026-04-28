@@ -28,6 +28,9 @@ interface Props {
   /** Slug to identify the viewer (from query param / sessionStorage) */
   slug?: string | null;
   onCardSaved?: () => void;
+  /** Optional sidebar content (e.g. sponsor spotlights) shown beside the
+   *  card preview on tablet/desktop, hidden here on mobile. */
+  sidebar?: React.ReactNode;
 }
 
 const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
