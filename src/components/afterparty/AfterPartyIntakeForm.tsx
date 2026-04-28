@@ -36,6 +36,9 @@ interface Props {
   attendeeId: string | null;
   initial?: any;
   onSaved: (id: string, isFirstSave?: boolean) => void;
+  /** When true, jump straight to step 2 (matching info) on open. Used by the
+   *  "Add more about me" coral prompt for already-RSVP'd users. */
+  startInStep2Hint?: boolean;
 }
 
 const slugify = (s: string) =>
