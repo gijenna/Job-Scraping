@@ -41,6 +41,23 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved }: Props) => {
   const [pinOpen, setPinOpen] = useState(false);
   const [lockedMatches, setLockedMatches] = useState<MatchResult[] | null>(null);
   const [justSaved, setJustSaved] = useState(false);
+  const [brandActivated, setBrandActivated] = useState<boolean | null>(null);
+
+  // For brand reps: check whether they've already submitted an activation
+  // request. While this is null we don't yet know which CTA to show.
+  useEffect(() => {
+    if (!me || (me as any).role !== "brand") { setBrandActivated(null); return; }
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("brand_activation_requests")
+        .select("id")
+        .eq("attendee_id", me.id)
+        .limit(1);
+      if (!cancelled) setBrandActivated(!!(data && data.length));
+    })();
+    return () => { cancelled = true; };
+  }, [me?.id, (me as any)?.role]);
 
   // Restore session
   useEffect(() => {
