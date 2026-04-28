@@ -300,16 +300,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           width: min(40vh, 40vw);
           height: min(40vh, 40vw);
           z-index: 62;
-          transform: translate(-50%, -50%) scale(0.05);
+          transform: translate(-50%, -50%) scale(0.08);
           opacity: 0;
           animation:
-            bmpFireGrow 1000ms cubic-bezier(.2,.9,.3,1) 0s forwards,
-            bmpFireDismiss 800ms cubic-bezier(.4,.1,.3,1) 5.0s forwards;
+            bmpFireGrow 900ms cubic-bezier(.16,.84,.32,1) 0s forwards,
+            bmpFireDismiss 700ms cubic-bezier(.4,.1,.3,1) 4.5s forwards;
         }
         .bmp-splash-fire-glow {
           width: 100%;
           height: 100%;
-          animation: bmpFireGlow 1.6s ease-in-out infinite, bmpFireRumble 280ms ease-in-out 0s 30 alternate;
+          animation: bmpFireGlow 2.2s ease-in-out infinite;
         }
 
         /* Sparks */
@@ -335,8 +335,9 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           background: radial-gradient(circle, #FFFFFF 0%, #2EF116 60%, transparent 100%);
           box-shadow: 0 0 14px rgba(57,255,20,0.9), 0 0 28px rgba(57,255,20,0.6);
           opacity: 0;
-          animation: bmpHeroSparkLaunch 600ms cubic-bezier(.4,.1,.3,1) 2000ms forwards;
+          animation: bmpHeroSparkLaunch 500ms cubic-bezier(.4,.1,.3,1) 1500ms forwards;
         }
+        /* Outer kite wrapper handles flight path; inner wrapper handles wing fold; img keeps glow. */
         .bmp-kite {
           position: fixed;
           top: 50%;
@@ -345,40 +346,63 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           height: min(14vh, 14vw);
           z-index: 64;
           opacity: 0;
-          object-fit: contain;
-          border-radius: 50%;
+          will-change: transform, opacity;
           animation:
-            bmpKiteAppear 400ms ease-out 2400ms forwards,
-            bmpKiteFlutter 2400ms ease-in-out 2800ms 1 forwards,
-            bmpKiteWingFlap 600ms ease-in-out 2800ms infinite,
-            bmpKiteDismiss 700ms cubic-bezier(.4,.1,.3,1) 5200ms forwards;
+            bmpKiteAppear 350ms ease-out 1800ms forwards,
+            bmpKiteFlutter 2800ms cubic-bezier(.45,.05,.55,.95) 1900ms 1 forwards,
+            bmpKiteDismiss 600ms cubic-bezier(.4,.1,.3,1) 4600ms forwards;
+        }
+        .bmp-kite-wings {
+          width: 100%;
+          height: 100%;
+          animation: bmpKiteWingFold 700ms ease-in-out 1900ms infinite;
+          will-change: transform;
+        }
+        .bmp-kite-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          animation: bmpKiteGlow 1.4s ease-in-out 1900ms infinite;
+          will-change: filter;
         }
 
-        /* Steady-state lockup animations (timings shifted later) */
-        .bmp-bloom-left  { animation: bmpBloomLeft  1400ms cubic-bezier(.22,.9,.3,1) 7.6s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
-        .bmp-bloom-right { animation: bmpBloomRight 1400ms cubic-bezier(.22,.9,.3,1) 7.6s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        /* Dust trail mote (drops off the kite as it flutters) */
+        .bmp-trail {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          z-index: 63;
+          border-radius: 50%;
+          opacity: 0;
+          will-change: transform, opacity;
+        }
+
+        /* Steady-state lockup animations (timings tightened) */
+        .bmp-bloom-left  { animation: bmpBloomLeft  1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpAmberPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+        .bmp-bloom-right { animation: bmpBloomRight 1200ms cubic-bezier(.22,.9,.3,1) 5.2s both, bmpNeonPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
         .bmp-divider-l   { transform-origin: right center; animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-divider-r   { transform-origin: left center;  animation: bmpGrowDivider 700ms ease-out ${DIVIDER_DELAY_S}s both; }
         .bmp-x           { animation: bmpFadeUp 700ms ease-out ${X_DELAY_S}s both, bmpXGlow 2s ease-in-out ${X_GLOW_DELAY_S}s infinite; }
         .bmp-presents    { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) ${PRESENTS_DELAY_S}s both; }
         .bmp-title       { animation: bmpFadeUp 800ms ease-out ${TITLE_DELAY_S}s both; }
 
-        @keyframes bmpODPop {
-          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-6deg); }
-          40%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
-          70%  { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
-          100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85) rotate(0); }
+        /* OD logo finds its home in the kickoff line — appears higher, then drifts down + shrinks. */
+        @keyframes bmpODFindHome {
+          0%   { opacity: 0; transform: translate(-50%, -120%) scale(0.4); }
+          25%  { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+          60%  { opacity: 1; transform: translate(-50%, -60%) scale(0.75); }
+          100% { opacity: 0; transform: translate(-50%, 40%) scale(0.22); }
         }
         .bmp-od-stacked {
           position: fixed;
           top: 50%;
           left: 50%;
-          width: min(34vh, 34vw);
+          width: min(28vh, 28vw);
           height: auto;
           z-index: 63;
           opacity: 0;
           filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
-          animation: bmpODPop 1800ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
+          animation: bmpODFindHome 1500ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
         @media (prefers-reduced-motion: reduce) {
