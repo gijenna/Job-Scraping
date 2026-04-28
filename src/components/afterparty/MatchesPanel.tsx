@@ -6,6 +6,9 @@ import NumberBadge from "./NumberBadge";
 interface Props {
   matches: { match: MatchResult; attendee: AfterPartyAttendee }[];
   locked: boolean;
+  /** True when the viewer hasn't filled in any matching info yet
+   *  (no niches, intents, or "why it worked" answer). */
+  awaitingMatchingInfo?: boolean;
 }
 
 const ROLE_PILL: Record<string, { bg: string; border: string; text: string; label: string }> = {
@@ -18,12 +21,16 @@ const CREAM = "#F5E6D3";
 const CREAM_MUTED = "rgba(245,230,211,0.7)";
 const CREAM_DIM = "rgba(245,230,211,0.55)";
 
-const MatchesPanel = ({ matches, locked }: Props) => {
+const MatchesPanel = ({ matches, locked, awaitingMatchingInfo }: Props) => {
   if (!matches.length) {
     return (
       <div className="text-center py-12" style={{ color: CREAM_DIM }}>
         <Sparkles className="w-8 h-8 mx-auto mb-3" style={{ color: "rgba(216,90,48,0.6)" }} />
-        <p>No people for you yet. Check back as more sign up.</p>
+        {awaitingMatchingInfo ? (
+          <p>Finish your card to get matches. Scroll down to see who's coming.</p>
+        ) : (
+          <p>No people for you yet. Check back as more sign up.</p>
+        )}
       </div>
     );
   }
