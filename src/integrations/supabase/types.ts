@@ -1050,6 +1050,7 @@ export type Database = {
           attendee_number: number | null
           cartoon_url: string | null
           company: string | null
+          company_role: string | null
           company_url: string | null
           created_at: string | null
           creator_types: string[] | null
@@ -1067,6 +1068,7 @@ export type Database = {
           attendee_number?: number | null
           cartoon_url?: string | null
           company?: string | null
+          company_role?: string | null
           company_url?: string | null
           created_at?: string | null
           creator_types?: string[] | null
@@ -1084,6 +1086,7 @@ export type Database = {
           attendee_number?: number | null
           cartoon_url?: string | null
           company?: string | null
+          company_role?: string | null
           company_url?: string | null
           created_at?: string | null
           creator_types?: string[] | null
