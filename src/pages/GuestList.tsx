@@ -17,7 +17,7 @@ const BORDER = "rgba(255,255,255,0.09)";
 
 const ROLE_OPTIONS: { value: string; label: string }[] = [
   { value: "creator", label: "Creator" },
-  { value: "brand", label: "Brand rep" },
+  { value: "brand", label: "Brand" },
   { value: "industry_expert", label: "Industry expert" },
 ];
 
