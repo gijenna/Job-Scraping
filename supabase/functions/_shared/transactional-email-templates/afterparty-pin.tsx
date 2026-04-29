@@ -38,7 +38,7 @@ export const template = {
   previewData: { pin: '4271', name: 'Jenna' },
 } satisfies TemplateEntry
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Inter, Arial, sans-serif' }
+const main = { backgroundColor: '#ffffff', fontFamily: "'Josefin Sans', Inter, Arial, sans-serif" }
 const container = { padding: '32px 24px', maxWidth: '480px' }
 const h1 = { fontSize: '22px', fontWeight: 600, color: '#080808', margin: '0 0 16px' }
 const text = { fontSize: '14px', color: '#55575d', lineHeight: '1.6', margin: '0 0 24px' }

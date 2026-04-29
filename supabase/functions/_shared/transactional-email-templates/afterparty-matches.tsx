@@ -86,7 +86,7 @@ export const template = {
   },
 } satisfies TemplateEntry;
 
-const main = { backgroundColor: "#ffffff", fontFamily: '"Helvetica Neue", Arial, sans-serif' };
+const main = { backgroundColor: "#ffffff", fontFamily: "'Josefin Sans', \"Helvetica Neue\", Arial, sans-serif" };
 const container = { padding: "32px 28px", maxWidth: "560px" };
 const h1 = { fontSize: "28px", fontWeight: "bold", color: "#19363B", margin: "0 0 8px" };
 const numberBadge = {
