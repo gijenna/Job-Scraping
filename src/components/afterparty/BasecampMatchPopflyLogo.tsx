@@ -9,6 +9,20 @@ import StarSparkle from "./StarSparkle";
 
 interface Props {
   onRevealed?: () => void;
+  /** Presenter logo shown under the lockup, replacing the "present" wordmark.
+   *  When provided, an `@ / [logo] / RiNo` style stack is rendered. */
+  presenter?: {
+    label?: string;          // small text above the logo (e.g. "@")
+    sublabel?: string;       // small text below the logo (e.g. "RiNo")
+    logoUrl: string;
+    logoAlt: string;
+    href?: string;
+    /** When true, render with cream-toned neon glow (matches cream logos). */
+    creamGlow?: boolean;
+  };
+  /** Optional images injected into the snowflake burst. When provided, roughly
+   *  half the burst stars are swapped for round photo medallions. */
+  burstImages?: string[];
 }
 
 /**
@@ -87,7 +101,7 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
+const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) => {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
