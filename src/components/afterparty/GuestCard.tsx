@@ -150,6 +150,11 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
                 href={`https://instagram.com/${ig}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  // Break out of the Lovable preview iframe so Instagram doesn't refuse to load
+                  e.preventDefault();
+                  window.open(`https://instagram.com/${ig}`, "_blank", "noopener,noreferrer");
+                }}
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
                 title={`@${ig} on Instagram`}
@@ -163,6 +168,10 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
                 href={`https://linkedin.com/in/${li}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(`https://linkedin.com/in/${li}`, "_blank", "noopener,noreferrer");
+                }}
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
                 title="LinkedIn"
