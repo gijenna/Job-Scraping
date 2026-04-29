@@ -8,6 +8,7 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
+import DesignCredit from "@/components/afterparty/DesignCredit";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
 
