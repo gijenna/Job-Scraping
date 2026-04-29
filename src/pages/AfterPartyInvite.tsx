@@ -78,6 +78,20 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   useEffect(() => { fetchAll(); }, []);
 
+  // Preload the hero background so it's ready before first paint.
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = "/afterparty-bg.jpg";
+    link.fetchPriority = "high" as any;
+    document.head.appendChild(link);
+    // Also kick off an actual image load so the browser caches it ASAP.
+    const img = new Image();
+    img.src = "/afterparty-bg.jpg";
+    return () => { document.head.removeChild(link); };
+  }, []);
+
   // Restore session on mount
   useEffect(() => {
     (async () => {
@@ -94,19 +108,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     );
     if (found) {
       setMe(found);
-      // First-time personalized greeting: only the very first time someone
-      // opens THEIR personalized link in this browser. Not on edit/back/etc.
-      // Wait for the splash animation to finish before showing it.
-      try {
-        const key = `afterparty:greeted:${found.id}`;
-        if (!localStorage.getItem(key)) {
-          localStorage.setItem(key, "1");
-          // Show greeting alongside the splash (Popfly+Basecamp solo monogram phase),
-          // physically above it. Hide it as the splash transitions out.
-          setShowPersonalGreeting(true);
-          setTimeout(() => setShowPersonalGreeting(false), 4200);
-        }
-      } catch {}
+      // Personalized greeting: show every time someone arrives via their
+      // own personalized link. Plays in sync with the splash animation.
+      setShowPersonalGreeting(true);
+      setTimeout(() => setShowPersonalGreeting(false), 4200);
     }
   }, [name, attendees, me]);
 
@@ -296,8 +301,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         style={{
           backgroundColor: BG,
           backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
-          backgroundSize: "100% 100vh",
-          backgroundPosition: "center top",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: CREAM,
