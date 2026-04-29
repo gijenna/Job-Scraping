@@ -840,14 +840,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
           </div>
 
           <div>
-            <Label>Budget range for creator work</Label>
-            <Select value={form.budget_range} onValueChange={(v) => setForm({ ...form, budget_range: v })}>
-              <SelectTrigger style={inputStyle}><SelectValue placeholder="Optional" /></SelectTrigger>
-              <SelectContent>{BUDGET_RANGES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-            </Select>
-          </div>
-
-          <div>
             <Label>What makes a creator a great fit for you?</Label>
             <Textarea value={form.brand_fit_notes} onChange={(e) => setForm({ ...form, brand_fit_notes: e.target.value })} style={inputStyle} />
           </div>
