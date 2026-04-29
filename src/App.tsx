@@ -36,7 +36,7 @@ import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
-import oakleyWhiteLogo from "./assets/oakley-white-logo.png";
+// (oakleyWhiteLogo no longer used — replaced by oakleyCreamLogo below.)
 import oakleyCreamLogo from "./assets/oakley-logo-cream.png";
 
 // Oakley product photos for the snowflake burst on /afterpartyoakley.
