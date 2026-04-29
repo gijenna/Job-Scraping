@@ -107,13 +107,25 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       (a) => slugify(a.full_name) === slugify(name) || a.slug === name,
     );
     if (found) {
+      // If they've already filled out their card, send them to /guests
+      // (their dashboard) instead of the invite page. Pre-RSVP shells
+      // (no real data yet) stay here so they can complete intake.
+      const hasRsvpd = !!(found.photo_url || found.cartoon_url
+        || (found.niches?.length) || (found.looking_for?.length)
+        || (found.creator_types?.length) || (found.platforms?.length)
+        || (found as any).mind_blowing_fact || (found as any).company);
+      if (hasRsvpd) {
+        try { sessionStorage.setItem("afterparty:return_slug", found.slug || slugify(found.full_name)); } catch {}
+        navigate(`/guests?slug=${found.slug || slugify(found.full_name)}`, { replace: true });
+        return;
+      }
       setMe(found);
       // Personalized greeting: show every time someone arrives via their
       // own personalized link. Plays in sync with the splash animation.
       setShowPersonalGreeting(true);
       setTimeout(() => setShowPersonalGreeting(false), 4200);
     }
-  }, [name, attendees, me]);
+  }, [name, attendees, me, navigate]);
 
   // Reveal invite content after splash finishes (original behavior).
   useEffect(() => {
