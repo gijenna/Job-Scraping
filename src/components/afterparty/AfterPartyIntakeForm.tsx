@@ -504,7 +504,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
           {([
             { v: "creator", label: "Creator", c: ROLE.creator },
             { v: "brand", label: "Brand", c: ROLE.brand },
-            { v: "industry_expert", label: "Industry expert", c: ROLE.industry_expert },
+            { v: "industry_expert", label: "Industry member", c: ROLE.industry_expert },
           ] as const).map((r) => (
             <button
               type="button"
