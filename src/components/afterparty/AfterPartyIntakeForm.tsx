@@ -332,6 +332,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       }
       authUserId = anonData.user.id;
     }
+    const normalizedSocialLinks = {
+      ...(form.social_links || {}),
+      instagram: normalizeInstagram(form.social_links?.instagram),
+      linkedin: normalizeLinkedIn(form.social_links?.linkedin),
+    };
+
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
@@ -343,7 +349,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       ...((form.phone && form.phone.trim()) ? { phone: form.phone.trim() } : (attendeeId ? {} : { phone: null })),
       photo_url: form.photo_url || null,
       cartoon_url: form.cartoon_url || null,
-      social_links: form.social_links,
+      social_links: normalizedSocialLinks,
       show_instagram: form.show_instagram !== false,
       show_linkedin: form.show_linkedin !== false,
       role: form.role,
