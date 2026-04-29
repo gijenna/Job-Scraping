@@ -25,7 +25,7 @@ export interface GuestRow {
 
 const ROLE_PILL: Record<string, { bg: string; border: string; text: string; label: string }> = {
   creator: { bg: "#4A1B0C", border: "#D85A30", text: "#F5C4B3", label: "Creator" },
-  brand: { bg: "#0A2A0F", border: "#39FF14", text: "#B8FFC2", label: "Brand rep" },
+  brand: { bg: "#0A2A0F", border: "#39FF14", text: "#B8FFC2", label: "Brand" },
   industry_expert: { bg: "#04342C", border: "#1D9E75", text: "#9FE1CB", label: "Industry expert" },
 };
 
