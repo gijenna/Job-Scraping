@@ -92,7 +92,7 @@ export const template = {
   },
 } satisfies TemplateEntry;
 
-const main = { backgroundColor: "#ffffff", fontFamily: "Arial, sans-serif" };
+const main = { backgroundColor: "#ffffff", fontFamily: "'Josefin Sans', Arial, sans-serif" };
 const container = { padding: "32px 28px", maxWidth: "560px" };
 const h1 = { fontSize: "26px", fontWeight: "bold", color: "#19363B", margin: "0 0 12px" };
 const inviterTag = {
