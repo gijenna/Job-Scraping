@@ -37,6 +37,25 @@ import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
 import oakleyWhiteLogo from "./assets/oakley-white-logo.png";
+import oakleyCreamLogo from "./assets/oakley-logo-cream.png";
+
+// Oakley product photos for the snowflake burst on /afterpartyoakley.
+// Drop sunglasses + goggles images into src/assets/oakley-products/ and
+// import them here. Roughly half the burst stars become circular medallions
+// using these images. Leave the array empty to keep the original star burst.
+const OAKLEY_BURST_IMAGES: string[] = [
+  // import oakleySG1 from "./assets/oakley-products/sg-1.jpg";
+  // oakleySG1,
+];
+
+const OAKLEY_PRESENTER = {
+  label: "@",
+  sublabel: "RiNo",
+  logoUrl: oakleyCreamLogo,
+  logoAlt: "Oakley",
+  href: "https://www.oakley.com",
+  creamGlow: true,
+};
 
 const queryClient = new QueryClient();
 
