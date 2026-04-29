@@ -258,11 +258,15 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     })();
   }, [isOwner, me?.id]);
 
-  // Load the full attendee row (with phone/email) when the viewer is the
-  // verified owner. The public view doesn't expose those fields, and we
-  // need them in the editor so saves don't blank them out.
+  // Load the full attendee row whenever we have a `me`, so the editor
+  // always opens against the freshest, most complete data, regardless of
+  // entry point (direct link, email link, /guests, etc.). The public view
+  // omits some fields (email, phone, public_listing) and historically we
+  // only fetched the full row after PIN verification, which meant edits
+  // made in one session could appear "missing" when the editor was
+  // re-opened from a different entry point before verification.
   useEffect(() => {
-    if (!me || verifiedAttendeeId !== me.id) { setMeFull(null); return; }
+    if (!me) { setMeFull(null); return; }
     (async () => {
       const { data } = await (supabase as any)
         .from("afterparty_attendees")
@@ -271,7 +275,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         .maybeSingle();
       if (data) setMeFull(data);
     })();
-  }, [me?.id, verifiedAttendeeId]);
+  }, [me?.id, verifiedAttendeeId, editMode]);
 
   const togglePublicListing = async (next: boolean) => {
     if (!me) return;
