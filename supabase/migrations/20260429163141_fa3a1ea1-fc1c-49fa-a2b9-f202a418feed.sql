@@ -1,0 +1,2 @@
+ALTER TABLE public.afterparty_attendees DROP CONSTRAINT IF EXISTS afterparty_attendees_role_check;
+ALTER TABLE public.afterparty_attendees ADD CONSTRAINT afterparty_attendees_role_check CHECK (role = ANY (ARRAY['creator'::text, 'brand'::text, 'industry_expert'::text]));
