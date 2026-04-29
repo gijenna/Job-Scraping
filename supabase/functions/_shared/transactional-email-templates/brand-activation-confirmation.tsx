@@ -37,6 +37,11 @@ const BrandActivationConfirmationEmail = ({
 
         <Text style={text}>Questions? Just hit reply.</Text>
 
+        <Text style={fineprint}>
+          A note: any swag or giveaways you contribute may be tax deductible as a donation if
+          you'd like to structure it that way. Just let Jenna know.
+        </Text>
+
         <Hr style={hr} />
         <Text style={signoff}>
           {'<3 '}
