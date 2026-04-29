@@ -310,6 +310,7 @@ const GuestList = () => {
         )}
 
         <AfterPartyAdminInline />
+        <DesignCredit />
       </div>
     </div>
   );
