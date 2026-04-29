@@ -74,12 +74,8 @@ const App = () => (
             path="/afterpartyoakley"
             element={
               <AfterPartyInvite
-                presenter={{
-                  label: "Peak Vibes provided by",
-                  logoUrl: oakleyWhiteLogo,
-                  logoAlt: "Oakley",
-                  href: "https://www.oakley.com",
-                }}
+                presenter={OAKLEY_PRESENTER}
+                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />
@@ -87,12 +83,8 @@ const App = () => (
             path="/afterpartyoakley/:name"
             element={
               <AfterPartyInvite
-                presenter={{
-                  label: "Peak Vibes provided by",
-                  logoUrl: oakleyWhiteLogo,
-                  logoAlt: "Oakley",
-                  href: "https://www.oakley.com",
-                }}
+                presenter={OAKLEY_PRESENTER}
+                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />
@@ -141,6 +133,9 @@ const App = () => (
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
           <Route path="/guests" element={<GuestList />} />
+          {/* Hidden Oakley variant — same data as /guests, with the RiNo
+              venue showcase replacing the event-info column. Not linked. */}
+          <Route path="/guestsoakley" element={<GuestList venueShowcase="oakley-rino" />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           {/* Less-used \u2014 moved down */}
           <Route path="/PNW26" element={<EventPNW26 />} />
