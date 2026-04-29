@@ -62,15 +62,16 @@ const AfterPartyMatchesEmail = ({
 
         <Hr style={hr} />
 
-        <Button href={inviteUrl} style={button}>
-          View your card
+        <Button href={ctaUrl} style={button}>
+          See the full guest list →
         </Button>
 
         <Text style={footer}>Presented by Popfly × Basecamp Match</Text>
       </Container>
     </Body>
   </Html>
-);
+  );
+};
 
 export const template = {
   component: AfterPartyMatchesEmail,
