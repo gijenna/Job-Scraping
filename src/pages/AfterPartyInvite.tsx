@@ -318,8 +318,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         style={{
           backgroundColor: BG,
           backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
+          backgroundSize: "auto 100vh",
+          backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: CREAM,
