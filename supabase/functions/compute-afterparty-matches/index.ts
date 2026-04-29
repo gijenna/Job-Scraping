@@ -137,7 +137,7 @@ function scorePair(me: Attendee, them: Attendee) {
     const matched = types.filter((t) => seeking.includes(t))
     if (matched.length) {
       score += 10 * matched.length
-      reasons.unshift(`They're looking for ${matched[0]}, that's you`)
+      reasons.unshift(`They're looking for ${matched[0]}, and that's you`)
       brandPriority = true
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {

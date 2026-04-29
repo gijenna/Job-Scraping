@@ -161,7 +161,7 @@ function intentScore(
     const matched = myTypes.filter((t) => seeking.includes(t));
     if (matched.length) {
       points = Math.max(points, 35);
-      reasons.unshift(`They're looking for ${matched[0]}, that's you`);
+      reasons.unshift(`They're looking for ${matched[0]}, and that's you`);
       brandPriority = true;
     }
     if (me.brands_wishlist && them.company && me.brands_wishlist.toLowerCase().includes(them.company.toLowerCase())) {
