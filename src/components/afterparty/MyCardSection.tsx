@@ -193,6 +193,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
     role: (me as any).role,
     display_name: me.full_name,
     company: (me as any).company || null,
+    company_role: (me as any).company_role || null,
     company_url: (me as any).company_url || null,
     cartoon_url: me.cartoon_url || null,
     niches: me.niches || [],
