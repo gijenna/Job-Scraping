@@ -25,15 +25,20 @@ interface AfterPartyMatchesProps {
   recipientName?: string;
   attendeeNumber?: number;
   matches?: MatchItem[];
+  /** @deprecated kept for backwards compat - use guestsUrl */
   inviteUrl?: string;
+  guestsUrl?: string;
 }
 
 const AfterPartyMatchesEmail = ({
   recipientName = "there",
   attendeeNumber,
   matches = [],
-  inviteUrl = "https://basecampoutdoorevents.com/afterparty",
-}: AfterPartyMatchesProps) => (
+  inviteUrl,
+  guestsUrl = "https://basecampoutdoorevents.com/guests",
+}: AfterPartyMatchesProps) => {
+  const ctaUrl = guestsUrl || inviteUrl || "https://basecampoutdoorevents.com/guests";
+  return (
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>5 people you should look for tonight</Preview>
