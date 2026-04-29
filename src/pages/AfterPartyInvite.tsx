@@ -689,6 +689,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
           {/* Admin-only inline editor for partners + spotlights */}
           <AfterPartyAdminInline />
+          <DesignCredit />
           </div>
         </div>
 
