@@ -183,18 +183,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
 
   const [savedSnapshot, setSavedSnapshot] = useState<string>("");
   useEffect(() => {
-    if (initial) {
-      const merged = { ...form, ...initial, social_links: initial.social_links || { instagram: "", linkedin: "" } };
-      setForm(merged);
-      setSavedSnapshot(JSON.stringify(merged));
-      // Force back to step 1 only if this is truly a pre-RSVP shell
-      // (status === 'invited'). Anything else has already saved before.
-      const shell = !!attendeeId && (initial.status ?? "invited") === "invited";
-      if (shell) setStep(1);
-      else if (startInStep2Hint) setStep(2);
-    }
+    if (!initial) return;
+    // Re-sync the form from the latest `initial` whenever it changes,
+    // BUT only when the user hasn't started editing yet. This way, if a
+    // fuller version of the row arrives shortly after mount (e.g. after
+    // PIN verification unlocks email/phone), we pick it up without
+    // clobbering anything the user has typed.
+    const hasUnsavedEdits = savedSnapshot && JSON.stringify(form) !== savedSnapshot;
+    if (hasUnsavedEdits) return;
+    const merged = { ...form, ...initial, social_links: initial.social_links || form.social_links || { instagram: "", linkedin: "" } };
+    setForm(merged);
+    setSavedSnapshot(JSON.stringify(merged));
+    // Force back to step 1 only if this is truly a pre-RSVP shell
+    // (status === 'invited'). Anything else has already saved before.
+    const shell = !!attendeeId && (initial.status ?? "invited") === "invited";
+    if (shell) setStep(1);
+    else if (startInStep2Hint) setStep(2);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initial?.id]);
+  }, [initial?.id, initial?.updated_at, initial?.email, initial?.phone, initial?.mind_blowing_fact, initial?.company]);
 
   const isDirty = attendeeId ? JSON.stringify(form) !== savedSnapshot : false;
 
