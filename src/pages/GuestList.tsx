@@ -6,6 +6,7 @@ import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import OakleyRinoVenueShowcase from "@/components/afterparty/OakleyRinoVenueShowcase";
 
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
 import DesignCredit from "@/components/afterparty/DesignCredit";
@@ -24,7 +25,14 @@ const ROLE_OPTIONS: { value: string; label: string }[] = [
 
 type Sort = "newest" | "niche";
 
-const GuestList = () => {
+interface GuestListProps {
+  /** When set, replaces the default event-info column with a venue showcase
+   *  panel. Currently only "oakley-rino" is supported. The guest data itself
+   *  is unchanged — same RSVPs flow into both views. */
+  venueShowcase?: "oakley-rino";
+}
+
+const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
   const [searchParams] = useSearchParams();
   const [guests, setGuests] = useState<GuestRow[]>([]);
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
