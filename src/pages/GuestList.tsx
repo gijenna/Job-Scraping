@@ -160,16 +160,72 @@ const GuestList = () => {
           );
         })()}
 
-        <div className="relative text-left mb-10">
-          <div className="text-[11px] uppercase mb-3" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
-            Creator Kick-Off Party
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 mb-10 items-start">
+          {/* Event info card - top left */}
+          <div
+            className="rounded-xl p-5"
+            style={{
+              backgroundColor: "rgba(17,17,17,0.85)",
+              border: `1px solid ${BORDER}`,
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <div
+              className="text-[10px] uppercase mb-2"
+              style={{ letterSpacing: "0.18em", color: "#FAC775", fontWeight: 600 }}
+            >
+              Creator Kick-Off Party
+            </div>
+            <h2
+              className="font-afterparty text-[26px] sm:text-[30px] leading-[1.05] tracking-tight mb-3"
+              style={{ fontWeight: 500, color: "#F5E6D3" }}
+            >
+              A rooftop party for outdoor industry creators &amp; brands
+            </h2>
+            <div className="space-y-1.5 text-[13px]" style={{ color: "rgba(245,230,211,0.85)" }}>
+              <div>
+                <span style={{ color: "rgba(245,230,211,0.5)" }}>When · </span>
+                Thursday, May 28 · 7:30 to 9:30pm MT
+              </div>
+              <div>
+                <span style={{ color: "rgba(245,230,211,0.5)" }}>Where · </span>
+                Denver rooftop venue (full address sent via calendar invite closer to the date)
+              </div>
+              <div>
+                <span style={{ color: "rgba(245,230,211,0.5)" }}>Vibe · </span>
+                Proudly sober. Bring your card, your numbers, and your curiosity.
+              </div>
+            </div>
+            <div
+              className="mt-4 pt-3 text-[12px]"
+              style={{ borderTop: `1px solid ${BORDER}`, color: "rgba(245,230,211,0.6)" }}
+            >
+              Need help or have a question? Email{" "}
+              <a
+                href="mailto:jenna@wearetheoutdoorindustry.com"
+                style={{ color: "#ED7660", textDecoration: "underline" }}
+              >
+                jenna@wearetheoutdoorindustry.com
+              </a>
+              .
+            </div>
           </div>
-          <h1 className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight" style={{ fontWeight: 500, color: "#F5E6D3" }}>
-            {loading ? "·" : guests.length} <span style={{ color: "rgba(245,230,211,0.45)" }}>{guests.length === 1 ? "person" : "people"} coming</span>
-          </h1>
-          <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
-            Live roster. Updates as folks RSVP.
-          </p>
+
+          {/* Headcount header - right */}
+          <div className="relative text-left md:text-right">
+            <h1
+              className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight"
+              style={{ fontWeight: 500, color: "#F5E6D3" }}
+            >
+              {loading ? "·" : guests.length}{" "}
+              <span style={{ color: "rgba(245,230,211,0.45)" }}>
+                {guests.length === 1 ? "person" : "people"} coming
+              </span>
+            </h1>
+            <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
+              Live roster. Updates as folks RSVP.
+            </p>
+          </div>
         </div>
 
         {/* The viewer's own card + matches at the top, when we know who they are.

@@ -25,15 +25,20 @@ interface AfterPartyMatchesProps {
   recipientName?: string;
   attendeeNumber?: number;
   matches?: MatchItem[];
+  /** @deprecated kept for backwards compat - use guestsUrl */
   inviteUrl?: string;
+  guestsUrl?: string;
 }
 
 const AfterPartyMatchesEmail = ({
   recipientName = "there",
   attendeeNumber,
   matches = [],
-  inviteUrl = "https://basecampoutdoorevents.com/afterparty",
-}: AfterPartyMatchesProps) => (
+  inviteUrl,
+  guestsUrl = "https://basecampoutdoorevents.com/guests",
+}: AfterPartyMatchesProps) => {
+  const ctaUrl = guestsUrl || inviteUrl || "https://basecampoutdoorevents.com/guests";
+  return (
   <Html lang="en" dir="ltr">
     <Head />
     <Preview>5 people you should look for tonight</Preview>
@@ -57,15 +62,16 @@ const AfterPartyMatchesEmail = ({
 
         <Hr style={hr} />
 
-        <Button href={inviteUrl} style={button}>
-          View your card
+        <Button href={ctaUrl} style={button}>
+          See the full guest list →
         </Button>
 
         <Text style={footer}>Presented by Popfly × Basecamp Match</Text>
       </Container>
     </Body>
   </Html>
-);
+  );
+};
 
 export const template = {
   component: AfterPartyMatchesEmail,
@@ -77,7 +83,7 @@ export const template = {
   previewData: {
     recipientName: "Jane",
     attendeeNumber: 42,
-    inviteUrl: "https://basecampoutdoorevents.com/afterparty/jane-doe",
+    guestsUrl: "https://basecampoutdoorevents.com/guests?slug=jane-doe",
     matches: [
       { number: 17, name: "Alex Rivera", role: "brand", reason: "They're looking for videographers, and that's you" },
       { number: 23, name: "Sam Chen", role: "creator", reason: "Both into Climbing & Hiking" },
