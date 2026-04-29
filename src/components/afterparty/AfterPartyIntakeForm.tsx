@@ -503,7 +503,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
         <div className="flex flex-wrap gap-2">
           {([
             { v: "creator", label: "Creator", c: ROLE.creator },
-            { v: "brand", label: "Brand rep", c: ROLE.brand },
+            { v: "brand", label: "Brand", c: ROLE.brand },
             { v: "industry_expert", label: "Industry expert", c: ROLE.industry_expert },
           ] as const).map((r) => (
             <button
