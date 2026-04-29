@@ -621,14 +621,48 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
         </div>
 
         <div className="mt-2 text-center flex flex-col items-center">
-          <div className="bmp-presents h-7 sm:h-8 mb-3 overflow-hidden" style={{ aspectRatio: `${1920 * 0.88} / 575` }}>
-            <img
-              src={presentsWordmark}
-              alt="present"
-              className="h-full w-auto max-w-none object-cover object-left"
-              style={{ clipPath: "inset(0 12% 0 0)", transform: "translateX(0)" }}
-            />
-          </div>
+          {presenter ? (
+            // Custom presenter stack (e.g. Oakley): "@ / [logo] / RiNo".
+            // Replaces the "presents" wordmark when supplied.
+            <a
+              href={presenter.href || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bmp-presenter flex flex-col items-center justify-center mb-3 group"
+              aria-label={presenter.logoAlt}
+            >
+              {presenter.label && (
+                <span
+                  className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.2em] mb-1"
+                  style={{ color: "rgba(245,230,211,0.85)", fontWeight: 500 }}
+                >
+                  {presenter.label}
+                </span>
+              )}
+              <img
+                src={presenter.logoUrl}
+                alt={presenter.logoAlt}
+                className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
+              />
+              {presenter.sublabel && (
+                <span
+                  className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.25em] mt-1"
+                  style={{ color: "rgba(245,230,211,0.85)", fontWeight: 500 }}
+                >
+                  {presenter.sublabel}
+                </span>
+              )}
+            </a>
+          ) : (
+            <div className="bmp-presents h-7 sm:h-8 mb-3 overflow-hidden" style={{ aspectRatio: `${1920 * 0.88} / 575` }}>
+              <img
+                src={presentsWordmark}
+                alt="present"
+                className="h-full w-auto max-w-none object-cover object-left"
+                style={{ clipPath: "inset(0 12% 0 0)", transform: "translateX(0)" }}
+              />
+            </div>
+          )}
           <h2
             className="bmp-title font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold"
             style={{ color: "#F5E6D3" }}
