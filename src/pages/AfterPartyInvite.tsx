@@ -24,6 +24,7 @@ import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
+import DesignCredit from "@/components/afterparty/DesignCredit";
 
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -688,6 +689,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
           {/* Admin-only inline editor for partners + spotlights */}
           <AfterPartyAdminInline />
+          <DesignCredit />
           </div>
         </div>
 

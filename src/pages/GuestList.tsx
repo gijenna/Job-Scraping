@@ -8,6 +8,7 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
 
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
+import DesignCredit from "@/components/afterparty/DesignCredit";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
 
@@ -134,8 +135,8 @@ const GuestList = () => {
       style={{
         backgroundColor: BG,
         backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
-        backgroundSize: "100% 100vh",
-        backgroundPosition: "center top",
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         color: "#fff",
@@ -309,6 +310,7 @@ const GuestList = () => {
         )}
 
         <AfterPartyAdminInline />
+        <DesignCredit />
       </div>
     </div>
   );
