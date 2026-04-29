@@ -257,6 +257,13 @@ const BrandActivateButton = ({
         )}
         Get my brand in the room →
       </Button>
+
+      <div
+        className="text-[11px] italic leading-snug pt-1"
+        style={{ color: "rgba(245,230,211,0.55)" }}
+      >
+        Heads up: any swag or giveaways you contribute may be tax deductible as a donation if you'd like to structure it that way.
+      </div>
     </div>
   );
 };

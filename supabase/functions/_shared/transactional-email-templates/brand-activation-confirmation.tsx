@@ -37,6 +37,11 @@ const BrandActivationConfirmationEmail = ({
 
         <Text style={text}>Questions? Just hit reply.</Text>
 
+        <Text style={fineprint}>
+          A note: any swag or giveaways you contribute may be tax deductible as a donation if
+          you'd like to structure it that way. Just let Jenna know.
+        </Text>
+
         <Hr style={hr} />
         <Text style={signoff}>
           {'<3 '}
@@ -70,3 +75,4 @@ const link = { color: '#ED7660', textDecoration: 'underline', fontWeight: 600 }
 const hr = { borderColor: 'rgba(25,54,59,0.15)', margin: '24px 0 16px' }
 const signoff = { fontSize: '13px', color: '#ED7660', margin: '0', fontWeight: 600 }
 const signoffLink = { color: '#ED7660', textDecoration: 'underline', fontWeight: 600 }
+const fineprint = { fontSize: '12px', color: 'rgba(25,54,59,0.65)', lineHeight: '1.5', fontStyle: 'italic', margin: '20px 0 0' }
