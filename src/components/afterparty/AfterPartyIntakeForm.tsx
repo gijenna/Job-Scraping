@@ -418,9 +418,25 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       });
     }
 
+    const { data: persisted, error: verifyErr } = id
+      ? await (supabase as any)
+          .from("afterparty_attendees")
+          .select("id, updated_at, full_name, email, phone, photo_url, cartoon_url, social_links, show_instagram, show_linkedin, role, niches, looking_for, creator_types, audience_size, platforms, brands_wishlist, mind_blowing_fact, company, company_url, company_role, brand_seeking, budget_range, brand_fit_notes, status")
+          .eq("id", id)
+          .maybeSingle()
+      : { data: null, error: null };
+
+    if (verifyErr || (id && !persisted)) {
+      toast({ title: "Save needs a retry", description: verifyErr?.message || "I could not confirm your card was saved. Please press save again.", variant: "destructive" });
+      setSaving(false);
+      return;
+    }
+
+    const persistedForm = persisted ? { ...form, ...persisted, social_links: persisted.social_links || normalizedSocialLinks } : { ...form, social_links: normalizedSocialLinks };
+    setForm(persistedForm);
     setSaving(false);
-    setSavedSnapshot(JSON.stringify(form));
-    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated." : "Look out for your matches below." });
+    setSavedSnapshot(JSON.stringify(persistedForm));
+    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated everywhere." : "Look out for your matches below." });
 
     const allSuggestions = [
       ...pendingNiches,
