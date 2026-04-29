@@ -44,10 +44,24 @@ const CREAM_DIM = "rgba(245,230,211,0.55)";
 const CREAM_FAINT = "rgba(245,230,211,0.45)";
 
 interface AfterPartyInviteProps {
-  presenter?: { label: string; logoUrl: string; logoAlt: string; href?: string };
+  /** Optional sponsor/presenter shown UNDER the Basecamp x Popfly lockup
+   *  during the opening sequence (renders as `label` / [logo] / `sublabel`).
+   *  Replaces the default "presents" wordmark. */
+  presenter?: {
+    label?: string;       // small text above the logo (e.g. "@")
+    sublabel?: string;    // small text below the logo (e.g. "RiNo")
+    logoUrl: string;
+    logoAlt: string;
+    href?: string;
+    creamGlow?: boolean;
+  };
+  /** Optional images mixed into the snowflake/star burst at the end of the
+   *  intro sequence. Roughly half the bursting stars are swapped for round
+   *  photo medallions when this is provided. */
+  burstImages?: string[];
 }
 
-const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
+const AfterPartyInvite = ({ presenter, burstImages }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
   const navigate = useNavigate();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
@@ -327,7 +341,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
       >
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
-          <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
+          <BasecampMatchPopflyLogo
+            onRevealed={() => setSplashDone(true)}
+            presenter={presenter}
+            burstImages={burstImages}
+          />
 
           {/* Personalized greeting sits ABOVE the splash monogram so the two
               never overlap. Appears in sync with the splash and fades out as
@@ -363,26 +381,8 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           <div>
           {/* Hero copy */}
           <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
-            {presenter && (
-              <a
-                href={presenter.href || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center justify-center mb-4 mt-1"
-              >
-                <span
-                  className="font-afterparty text-[12px] sm:text-[13px] tracking-wide mb-1.5"
-                  style={{ color: CREAM_MUTED, fontWeight: 500 }}
-                >
-                  {presenter.label}
-                </span>
-                <img
-                  src={presenter.logoUrl}
-                  alt={presenter.logoAlt}
-                  className="h-16 sm:h-20 w-auto"
-                />
-              </a>
-            )}
+            {/* Presenter logo is rendered inside the opening lockup
+                (BasecampMatchPopflyLogo). No duplicate above the sparkles. */}
             <div className="flex items-center justify-center gap-3 mb-3 mt-1" aria-hidden="true">
               <StarSparkle tone="coral" size={18} />
               <StarSparkle tone="cream" size={26} />

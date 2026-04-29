@@ -36,7 +36,26 @@ import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
-import oakleyWhiteLogo from "./assets/oakley-white-logo.png";
+// (oakleyWhiteLogo no longer used — replaced by oakleyCreamLogo below.)
+import oakleyCreamLogo from "./assets/oakley-logo-cream.png";
+
+// Oakley product photos for the snowflake burst on /afterpartyoakley.
+// Drop sunglasses + goggles images into src/assets/oakley-products/ and
+// import them here. Roughly half the burst stars become circular medallions
+// using these images. Leave the array empty to keep the original star burst.
+const OAKLEY_BURST_IMAGES: string[] = [
+  // import oakleySG1 from "./assets/oakley-products/sg-1.jpg";
+  // oakleySG1,
+];
+
+const OAKLEY_PRESENTER = {
+  label: "@",
+  sublabel: "RiNo",
+  logoUrl: oakleyCreamLogo,
+  logoAlt: "Oakley",
+  href: "https://www.oakley.com",
+  creamGlow: true,
+};
 
 const queryClient = new QueryClient();
 
@@ -55,12 +74,8 @@ const App = () => (
             path="/afterpartyoakley"
             element={
               <AfterPartyInvite
-                presenter={{
-                  label: "Peak Vibes provided by",
-                  logoUrl: oakleyWhiteLogo,
-                  logoAlt: "Oakley",
-                  href: "https://www.oakley.com",
-                }}
+                presenter={OAKLEY_PRESENTER}
+                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />
@@ -68,12 +83,8 @@ const App = () => (
             path="/afterpartyoakley/:name"
             element={
               <AfterPartyInvite
-                presenter={{
-                  label: "Peak Vibes provided by",
-                  logoUrl: oakleyWhiteLogo,
-                  logoAlt: "Oakley",
-                  href: "https://www.oakley.com",
-                }}
+                presenter={OAKLEY_PRESENTER}
+                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />
@@ -122,6 +133,9 @@ const App = () => (
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
           <Route path="/guests" element={<GuestList />} />
+          {/* Hidden Oakley variant — same data as /guests, with the RiNo
+              venue showcase replacing the event-info column. Not linked. */}
+          <Route path="/guestsoakley" element={<GuestList venueShowcase="oakley-rino" />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           {/* Less-used \u2014 moved down */}
           <Route path="/PNW26" element={<EventPNW26 />} />

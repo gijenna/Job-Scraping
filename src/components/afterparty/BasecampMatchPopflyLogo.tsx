@@ -9,6 +9,20 @@ import StarSparkle from "./StarSparkle";
 
 interface Props {
   onRevealed?: () => void;
+  /** Presenter logo shown under the lockup, replacing the "present" wordmark.
+   *  When provided, an `@ / [logo] / RiNo` style stack is rendered. */
+  presenter?: {
+    label?: string;          // small text above the logo (e.g. "@")
+    sublabel?: string;       // small text below the logo (e.g. "RiNo")
+    logoUrl: string;
+    logoAlt: string;
+    href?: string;
+    /** When true, render with cream-toned neon glow (matches cream logos). */
+    creamGlow?: boolean;
+  };
+  /** Optional images injected into the snowflake burst. When provided, roughly
+   *  half the burst stars are swapped for round photo medallions. */
+  burstImages?: string[];
 }
 
 /**
@@ -87,7 +101,7 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
+const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) => {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -413,10 +427,30 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
+        /* Photo medallion in the burst (Oakley products etc.) */
+        .bmp-burst-photo {
+          border-radius: 9999px;
+          object-fit: cover;
+          background: #19363B;
+          border: 2px solid rgba(245,230,211,0.85);
+          box-shadow:
+            0 0 12px rgba(245,230,211,0.55),
+            0 0 24px rgba(225,182,36,0.35),
+            0 4px 14px rgba(0,0,0,0.5);
+        }
+
+        /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
+        @keyframes bmpCreamPulse {
+          0%, 100% { filter: drop-shadow(0 0 10px rgba(245,230,211,0.55)) drop-shadow(0 0 20px rgba(245,230,211,0.3)); }
+          50%      { filter: drop-shadow(0 0 18px rgba(245,230,211,0.95)) drop-shadow(0 0 36px rgba(245,230,211,0.55)); }
+        }
+        .bmp-presenter      { animation: bmpPresentsIn 800ms cubic-bezier(.2,.9,.3,1) ${PRESENTS_DELAY_S}s both; }
+        .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
+
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-burst-photo-wrap, .bmp-od-stacked { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
-          .bmp-x, .bmp-presents, .bmp-title {
+          .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
             opacity: 1 !important;
             transform: none !important;
@@ -486,17 +520,26 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
             />
           ))}
 
-          {/* Existing star burst, fired AFTER lockup forms */}
+          {/* Existing star burst, fired AFTER lockup forms.
+              When `burstImages` is provided (e.g. Oakley product photos),
+              roughly half the entries become circular photo medallions instead
+              of stars, using the same orbital animation. */}
           {burstStars.map((s, i) => {
             const rad = (s.angle * Math.PI) / 180;
             const out = `${Math.cos(rad) * s.dist}vmin`;
             const outY = `${Math.sin(rad) * s.dist}vmin`;
             const mid = `${Math.cos(rad) * s.dist * 0.45}vmin`;
             const midY = `${Math.sin(rad) * s.dist * 0.45}vmin`;
+            // Alternate odd-indexed entries with photos, when available.
+            const usePhoto = !!(burstImages && burstImages.length && i % 2 === 1);
+            const photoSrc = usePhoto ? burstImages![Math.floor(i / 2) % burstImages!.length] : undefined;
+            // Photo medallions sized a bit larger than star pixels for presence,
+            // capped so they never crowd the lockup.
+            const photoSize = usePhoto ? Math.min(120, Math.max(70, s.size + 30)) : s.size;
             return (
               <div
                 key={`burst-${i}`}
-                className="bmp-burst-star"
+                className={usePhoto ? "bmp-burst-star bmp-burst-photo-wrap" : "bmp-burst-star"}
                 style={{
                   position: "fixed",
                   top: "50%",
@@ -511,7 +554,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
                   animation: `bmpStarBurst 1900ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
-                <StarSparkle tone={s.tone} variant="single" size={s.size} />
+                {usePhoto ? (
+                  <img
+                    src={photoSrc}
+                    alt=""
+                    className="bmp-burst-photo"
+                    style={{ width: photoSize, height: photoSize }}
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <StarSparkle tone={s.tone} variant="single" size={s.size} />
+                )}
               </div>
             );
           })}
@@ -568,14 +621,48 @@ const BasecampMatchPopflyLogo = ({ onRevealed }: Props) => {
         </div>
 
         <div className="mt-2 text-center flex flex-col items-center">
-          <div className="bmp-presents h-7 sm:h-8 mb-3 overflow-hidden" style={{ aspectRatio: `${1920 * 0.88} / 575` }}>
-            <img
-              src={presentsWordmark}
-              alt="present"
-              className="h-full w-auto max-w-none object-cover object-left"
-              style={{ clipPath: "inset(0 12% 0 0)", transform: "translateX(0)" }}
-            />
-          </div>
+          {presenter ? (
+            // Custom presenter stack (e.g. Oakley): "@ / [logo] / RiNo".
+            // Replaces the "presents" wordmark when supplied.
+            <a
+              href={presenter.href || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bmp-presenter flex flex-col items-center justify-center mb-3 group"
+              aria-label={presenter.logoAlt}
+            >
+              {presenter.label && (
+                <span
+                  className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.2em] mb-1"
+                  style={{ color: "rgba(245,230,211,0.85)", fontWeight: 500 }}
+                >
+                  {presenter.label}
+                </span>
+              )}
+              <img
+                src={presenter.logoUrl}
+                alt={presenter.logoAlt}
+                className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
+              />
+              {presenter.sublabel && (
+                <span
+                  className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.25em] mt-1"
+                  style={{ color: "rgba(245,230,211,0.85)", fontWeight: 500 }}
+                >
+                  {presenter.sublabel}
+                </span>
+              )}
+            </a>
+          ) : (
+            <div className="bmp-presents h-7 sm:h-8 mb-3 overflow-hidden" style={{ aspectRatio: `${1920 * 0.88} / 575` }}>
+              <img
+                src={presentsWordmark}
+                alt="present"
+                className="h-full w-auto max-w-none object-cover object-left"
+                style={{ clipPath: "inset(0 12% 0 0)", transform: "translateX(0)" }}
+              />
+            </div>
+          )}
           <h2
             className="bmp-title font-afterparty text-4xl sm:text-5xl md:text-6xl font-bold"
             style={{ color: "#F5E6D3" }}
