@@ -269,10 +269,23 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
     </div>
   );
 
-  // ---- Combined "next steps" for brand reps with outstanding actions. ----
-  const isBrand = (me as any).role === "brand";
-  const needsActivation = isBrand && brandActivated === false;
+  // ---- Combined "next steps" for brands & industry members with outstanding actions. ----
+  const role = (me as any).role;
+  const isBrand = role === "brand";
+  const isIndustryMember = role === "industry_expert";
+  const canActivate = isBrand || isIndustryMember;
+  const needsActivation = canActivate && brandActivated === false;
   const needsMatching = !hasMatchingInfo;
+
+  const activationHeading = isIndustryMember
+    ? "Get more visibility at the party"
+    : "Get your brand in the room";
+  const activationBlurb = isIndustryMember
+    ? "200 of the industry's hottest creators in one place. Let Jenna know how you'd like to show up."
+    : "200 of the industry's hottest creators in one place. At least know your options.";
+  const matchingHeading = isIndustryMember
+    ? "Get matched to people worth meeting"
+    : "Get matched to creators worth meeting";
 
   const brandCombinedCard = (
     <div
@@ -286,10 +299,10 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
         {needsActivation && (
           <div className="rounded-lg p-3 sm:p-4" style={{ border: `1px solid ${CORAL}`, backgroundColor: "rgba(237,118,96,0.10)" }}>
             <div className="text-[14px] mb-2" style={{ color: CREAM, fontWeight: 600 }}>
-              Get your brand in the room
+              {activationHeading}
             </div>
             <div className="text-[12px] mb-3" style={{ color: CREAM_MUTED }}>
-              200 of the industry's hottest creators in one place. At least know your options.
+              {activationBlurb}
             </div>
             <BrandActivateButton
               attendeeId={me.id}
@@ -310,7 +323,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
             style={{ border: `1px dashed ${CORAL}`, backgroundColor: "rgba(237,118,96,0.04)" }}
           >
             <div className="text-[14px] mb-1" style={{ color: CREAM, fontWeight: 600 }}>
-              Get matched to creators worth meeting
+              {matchingHeading}
             </div>
             <div className="text-[12px]" style={{ color: CREAM_MUTED }}>
               Add a bit more about who you're looking for. Totally optional.
@@ -325,11 +338,11 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
   );
 
   // Decide which CTA block sits above the matches list.
-  // Priority for brand reps: combined card if anything outstanding, else fall back.
+  // Priority for brands & industry members: combined card if anything outstanding, else fall back.
   // For everyone else: matching prompt if no matching info, else "see who's coming".
   let ctaBlock: React.ReactNode = null;
   if (!editMode) {
-    if (isBrand && (needsActivation || needsMatching) && brandActivated !== null) {
+    if (canActivate && (needsActivation || needsMatching) && brandActivated !== null) {
       ctaBlock = brandCombinedCard;
     } else if (needsMatching) {
       ctaBlock = matchingPrompt;
