@@ -44,6 +44,23 @@ interface Props {
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+const normalizeInstagram = (value: string | null | undefined) =>
+  (value || "")
+    .trim()
+    .replace(/^@+/, "")
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "");
+
+const normalizeLinkedIn = (value: string | null | undefined) =>
+  (value || "")
+    .trim()
+    .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "")
+    .replace(/^www\.linkedin\.com\/in\//i, "")
+    .replace(/^linkedin\.com\/in\//i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "");
+
 // Role color tokens
 const ROLE = {
   creator: { fill: "#4A1B0C", border: "#D85A30", text: "#F5C4B3" },
