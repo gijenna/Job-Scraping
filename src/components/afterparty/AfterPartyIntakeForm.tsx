@@ -367,6 +367,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       budget_range: form.role === "brand" ? form.budget_range || null : null,
       brand_fit_notes: form.role === "brand" ? form.brand_fit_notes || null : null,
       status: "confirmed",
+      updated_at: new Date().toISOString(),
     };
 
     let id = attendeeId;
