@@ -428,16 +428,27 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
                 Click anywhere on your card to edit
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => requestEdit(false)}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={(e) => {
+                // Don't hijack clicks on inner links (Instagram, LinkedIn, company)
+                if ((e.target as HTMLElement).closest("a")) return;
+                requestEdit(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  requestEdit(false);
+                }
+              }}
               aria-label="Edit my card"
-              className="relative block w-full max-w-[280px] text-left rounded-xl transition-transform hover:scale-[1.01] focus:outline-none focus-visible:ring-2"
+              className="relative block w-full max-w-[280px] text-left rounded-xl transition-transform hover:scale-[1.01] focus:outline-none focus-visible:ring-2 cursor-pointer"
               style={{ outlineColor: CORAL }}
             >
               <GuestCard guest={previewGuest} />
               <span
-                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-full"
+                className="absolute bottom-2 right-2 inline-flex items-center justify-center rounded-full pointer-events-none"
                 style={{
                   width: 28,
                   height: 28,
@@ -448,7 +459,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
               >
                 <Pencil className="w-3.5 h-3.5" />
               </span>
-            </button>
+            </div>
           </div>
           {sidebar && (
             <div className="hidden md:block">{sidebar}</div>
