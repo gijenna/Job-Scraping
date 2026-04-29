@@ -184,31 +184,36 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             </p>
           </div>
 
-          {/* Event info - right, inline (no box) */}
-          <div className="md:text-right text-[13px] leading-[1.6]" style={{ color: "rgba(245,230,211,0.8)" }}>
-            <div
-              className="text-[10px] uppercase mb-1.5"
-              style={{ letterSpacing: "0.18em", color: "#FAC775", fontWeight: 600 }}
-            >
-              Creator Kick-Off Party
-            </div>
-            <div style={{ color: "#F5E6D3" }}>
-              A rooftop party for outdoor industry creators &amp; brands.
-            </div>
-            <div className="mt-2">Thursday, May 28 · 7:30–9:30pm MT</div>
-            <div style={{ color: "rgba(245,230,211,0.6)" }}>
-              Denver rooftop · full address sent closer to the date
-            </div>
-            <div className="mt-2 text-[12px]" style={{ color: "rgba(245,230,211,0.55)" }}>
-              Questions?{" "}
-              <a
-                href="mailto:jenna@wearetheoutdoorindustry.com"
-                style={{ color: "#ED7660", textDecoration: "underline" }}
+          {/* Event info - right column. On the Oakley variant this is replaced
+              with a venue showcase panel for the RiNo store. */}
+          {venueShowcase === "oakley-rino" ? (
+            <OakleyRinoVenueShowcase />
+          ) : (
+            <div className="md:text-right text-[13px] leading-[1.6]" style={{ color: "rgba(245,230,211,0.8)" }}>
+              <div
+                className="text-[10px] uppercase mb-1.5"
+                style={{ letterSpacing: "0.18em", color: "#FAC775", fontWeight: 600 }}
               >
-                jenna@wearetheoutdoorindustry.com
-              </a>
+                Creator Kick-Off Party
+              </div>
+              <div style={{ color: "#F5E6D3" }}>
+                A rooftop party for outdoor industry creators &amp; brands.
+              </div>
+              <div className="mt-2">Thursday, May 28 · 7:30–9:30pm MT</div>
+              <div style={{ color: "rgba(245,230,211,0.6)" }}>
+                Denver rooftop · full address sent closer to the date
+              </div>
+              <div className="mt-2 text-[12px]" style={{ color: "rgba(245,230,211,0.55)" }}>
+                Questions?{" "}
+                <a
+                  href="mailto:jenna@wearetheoutdoorindustry.com"
+                  style={{ color: "#ED7660", textDecoration: "underline" }}
+                >
+                  jenna@wearetheoutdoorindustry.com
+                </a>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* The viewer's own card + matches at the top, when we know who they are.
