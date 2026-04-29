@@ -44,6 +44,23 @@ interface Props {
 const slugify = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+const normalizeInstagram = (value: string | null | undefined) =>
+  (value || "")
+    .trim()
+    .replace(/^@+/, "")
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "");
+
+const normalizeLinkedIn = (value: string | null | undefined) =>
+  (value || "")
+    .trim()
+    .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "")
+    .replace(/^www\.linkedin\.com\/in\//i, "")
+    .replace(/^linkedin\.com\/in\//i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+|\/+$/g, "");
+
 // Role color tokens
 const ROLE = {
   creator: { fill: "#4A1B0C", border: "#D85A30", text: "#F5C4B3" },
@@ -315,6 +332,12 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       }
       authUserId = anonData.user.id;
     }
+    const normalizedSocialLinks = {
+      ...(form.social_links || {}),
+      instagram: normalizeInstagram(form.social_links?.instagram),
+      linkedin: normalizeLinkedIn(form.social_links?.linkedin),
+    };
+
     const payload: any = {
       full_name: form.full_name.trim(),
       slug: slugify(form.full_name) + (attendeeId ? "" : `-${Date.now().toString(36).slice(-4)}`),
@@ -326,7 +349,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       ...((form.phone && form.phone.trim()) ? { phone: form.phone.trim() } : (attendeeId ? {} : { phone: null })),
       photo_url: form.photo_url || null,
       cartoon_url: form.cartoon_url || null,
-      social_links: form.social_links,
+      social_links: normalizedSocialLinks,
       show_instagram: form.show_instagram !== false,
       show_linkedin: form.show_linkedin !== false,
       role: form.role,
@@ -344,6 +367,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       budget_range: form.role === "brand" ? form.budget_range || null : null,
       brand_fit_notes: form.role === "brand" ? form.brand_fit_notes || null : null,
       status: "confirmed",
+      updated_at: new Date().toISOString(),
     };
 
     let id = attendeeId;
@@ -395,9 +419,25 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       });
     }
 
+    const { data: persisted, error: verifyErr } = id
+      ? await (supabase as any)
+          .from("afterparty_attendees")
+          .select("id, updated_at, full_name, email, phone, photo_url, cartoon_url, social_links, show_instagram, show_linkedin, role, niches, looking_for, creator_types, audience_size, platforms, brands_wishlist, mind_blowing_fact, company, company_url, company_role, brand_seeking, budget_range, brand_fit_notes, status")
+          .eq("id", id)
+          .maybeSingle()
+      : { data: null, error: null };
+
+    if (verifyErr || (id && !persisted)) {
+      toast({ title: "Save needs a retry", description: verifyErr?.message || "I could not confirm your card was saved. Please press save again.", variant: "destructive" });
+      setSaving(false);
+      return;
+    }
+
+    const persistedForm = persisted ? { ...form, ...persisted, social_links: persisted.social_links || normalizedSocialLinks } : { ...form, social_links: normalizedSocialLinks };
+    setForm(persistedForm);
     setSaving(false);
-    setSavedSnapshot(JSON.stringify(form));
-    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated." : "Look out for your matches below." });
+    setSavedSnapshot(JSON.stringify(persistedForm));
+    toast({ title: attendeeId ? "Saved ✓" : "You're in.", description: attendeeId ? "Your card is updated everywhere." : "Look out for your matches below." });
 
     const allSuggestions = [
       ...pendingNiches,
@@ -517,8 +557,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
               @
             </span>
             <Input
-              value={(form.social_links.instagram || "").replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "")}
-              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value.replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "") } })}
+              value={normalizeInstagram(form.social_links.instagram)}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: normalizeInstagram(e.target.value) } })}
               placeholder="yourhandle"
               className="border-0 rounded-none"
               style={{ ...inputStyle, border: "none" }}
@@ -544,8 +584,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
               linkedin.com/in/
             </span>
             <Input
-              value={(form.social_links.linkedin || "").replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "")}
-              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "") } })}
+              value={normalizeLinkedIn(form.social_links.linkedin)}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: normalizeLinkedIn(e.target.value) } })}
               placeholder="jennafrombasecamp"
               className="border-0 rounded-none"
               style={{ ...inputStyle, border: "none" }}

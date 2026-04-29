@@ -187,7 +187,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     setEditMode(false);
     setJustRsvped(true);
     if (wasFirstSave) {
-      navigate("/guests");
+      const slugForGuests = (data as any)?.slug || (full as any)?.slug || me?.slug;
+      if (slugForGuests) {
+        try { sessionStorage.setItem("afterparty:return_slug", slugForGuests); } catch {}
+      }
+      navigate(slugForGuests ? `/guests?slug=${slugForGuests}` : "/guests");
       return;
     }
     setTimeout(() => {

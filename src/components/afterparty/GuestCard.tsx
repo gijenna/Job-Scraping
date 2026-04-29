@@ -10,6 +10,7 @@ export interface GuestRow {
   role: string;
   display_name: string;
   company: string | null;
+  company_role?: string | null;
   company_url?: string | null;
   cartoon_url: string | null;
   niches: string[] | null;
@@ -121,7 +122,9 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                 />
               )}
-              <span className="text-[11px]" style={{ color: "rgba(245,230,211,0.85)" }}>{guest.company}</span>
+              <span className="text-[11px]" style={{ color: "rgba(245,230,211,0.85)" }}>
+                {[guest.company_role, guest.company].filter(Boolean).join(" · ")}
+              </span>
             </div>
           );
           return (
