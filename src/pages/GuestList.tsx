@@ -131,12 +131,10 @@ const GuestList = () => {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen bg-cover bg-center md:bg-[length:100%_100vh] md:bg-top"
       style={{
         backgroundColor: BG,
         backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         color: "#fff",
