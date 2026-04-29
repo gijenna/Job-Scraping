@@ -43,6 +43,33 @@ const Chip = ({ children, tone = "default" }: { children: React.ReactNode; tone?
   </span>
 );
 
+const getInstagramProfile = (value?: string | null) => {
+  const raw = (value || "").trim().replace(/^@+/, "");
+  if (!raw) return null;
+
+  const cleaned = raw
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, "")
+    .replace(/^(www\.)?instagram\.com\//i, "")
+    .split(/[/?#]/)[0]
+    .replace(/^@+/, "");
+
+  if (!cleaned) return null;
+  return { label: `@${cleaned}`, url: `https://www.instagram.com/${cleaned}/` };
+};
+
+const getLinkedInProfile = (value?: string | null) => {
+  const raw = (value || "").trim();
+  if (!raw) return null;
+
+  const cleaned = raw
+    .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "")
+    .replace(/^(www\.)?linkedin\.com\/in\//i, "")
+    .split(/[/?#]/)[0];
+
+  if (!cleaned) return null;
+  return { label: "LinkedIn", url: `https://www.linkedin.com/in/${cleaned}/` };
+};
+
 const GuestCard = ({ guest }: { guest: GuestRow }) => {
   const [expanded, setExpanded] = useState(false);
   const pill = ROLE_PILL[guest.role] || ROLE_PILL.brand;
@@ -138,40 +165,33 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
       ) : null}
 
       {(() => {
-        const ig = (guest.social_links?.instagram || "").trim().replace(/^@+/, "");
-        const li = (guest.social_links?.linkedin || "").trim();
-        const showIg = ig && (guest.show_instagram ?? true);
-        const showLi = li && (guest.show_linkedin ?? true);
+        const instagram = getInstagramProfile(guest.social_links?.instagram);
+        const linkedin = getLinkedInProfile(guest.social_links?.linkedin);
+        const showIg = instagram && (guest.show_instagram ?? true);
+        const showLi = linkedin && (guest.show_linkedin ?? true);
         if (!showIg && !showLi) return null;
         return (
           <div className="mt-2 flex items-center justify-center gap-2">
-            {showIg && (
+            {instagram && showIg && (
               <a
-                href={`https://instagram.com/${ig}`}
+                href={instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => {
-                  // Break out of the Lovable preview iframe so Instagram doesn't refuse to load
-                  e.preventDefault();
-                  window.open(`https://instagram.com/${ig}`, "_blank", "noopener,noreferrer");
-                }}
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
-                title={`@${ig} on Instagram`}
+                title={`${instagram.label} on Instagram`}
               >
                 <Instagram className="w-3 h-3" />
-                <span className="text-[11px]">@{ig}</span>
+                <span className="text-[11px]">{instagram.label}</span>
               </a>
             )}
-            {showLi && (
+            {linkedin && showLi && (
               <a
-                href={`https://linkedin.com/in/${li}`}
+                href={linkedin.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`https://linkedin.com/in/${li}`, "_blank", "noopener,noreferrer");
-                }}
+                onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
                 title="LinkedIn"
