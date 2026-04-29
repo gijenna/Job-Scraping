@@ -45,9 +45,10 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
   const [justSaved, setJustSaved] = useState(false);
   const [brandActivated, setBrandActivated] = useState<boolean | null>(null);
 
-  // For brand reps: check whether they've already submitted an activation request.
+  // For brands and industry members: check whether they've already submitted an activation request.
   useEffect(() => {
-    if (!me || (me as any).role !== "brand") { setBrandActivated(null); return; }
+    const role = (me as any)?.role;
+    if (!me || (role !== "brand" && role !== "industry_expert")) { setBrandActivated(null); return; }
     let cancelled = false;
     (async () => {
       const { data } = await (supabase as any)
