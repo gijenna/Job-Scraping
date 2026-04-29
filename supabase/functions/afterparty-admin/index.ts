@@ -15,6 +15,8 @@ const ADMIN_EMAILS = (Deno.env.get('ADMIN_EMAIL') || '')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean)
 const ADMIN_DOMAINS = ['wearetheoutdoorindustry.com']
+const AFTERPARTY_EVENT_SLUG = 'afterparty'
+const EXTRA_NICHES_SETTING_KEY = 'afterparty.extra_niches'
 
 interface MatchRow {
   attendee_id: string
@@ -100,9 +102,38 @@ Deno.serve(async (req) => {
         if (!id || !['approved', 'rejected'].includes(status)) {
           return json({ error: 'bad payload' }, 400)
         }
-        await admin.from('afterparty_suggestions')
+        const { data: suggestion, error: fetchError } = await admin.from('afterparty_suggestions')
+          .select('kind')
+          .eq('id', id)
+          .maybeSingle()
+        if (fetchError) return json({ error: fetchError.message }, 500)
+
+        const { error: updateError } = await admin.from('afterparty_suggestions')
           .update({ status, reviewed_at: new Date().toISOString() })
           .eq('id', id)
+        if (updateError) return json({ error: updateError.message }, 500)
+
+        if (suggestion?.kind === 'niche') {
+          const { data: approved, error: approvedError } = await admin.from('afterparty_suggestions')
+            .select('value, reviewed_at, created_at')
+            .eq('kind', 'niche')
+            .eq('status', 'approved')
+            .order('created_at', { ascending: false })
+          if (approvedError) return json({ error: approvedError.message }, 500)
+
+          const byLower = new Map<string, string>()
+          for (const row of approved || []) {
+            const value = String(row.value || '').trim()
+            if (value && !byLower.has(value.toLowerCase())) byLower.set(value.toLowerCase(), value)
+          }
+          const settingValue = Array.from(byLower.values()).sort((a, b) => a.localeCompare(b)).join(', ')
+          const { error: upsertError } = await admin.from('event_settings').upsert({
+            event_slug: AFTERPARTY_EVENT_SLUG,
+            setting_key: EXTRA_NICHES_SETTING_KEY,
+            setting_value: settingValue,
+          }, { onConflict: 'event_slug,setting_key' })
+          if (upsertError) return json({ error: upsertError.message }, 500)
+        }
         break
       }
       case 'list_suggestions': {
