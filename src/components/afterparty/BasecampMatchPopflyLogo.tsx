@@ -520,17 +520,26 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
             />
           ))}
 
-          {/* Existing star burst, fired AFTER lockup forms */}
+          {/* Existing star burst, fired AFTER lockup forms.
+              When `burstImages` is provided (e.g. Oakley product photos),
+              roughly half the entries become circular photo medallions instead
+              of stars, using the same orbital animation. */}
           {burstStars.map((s, i) => {
             const rad = (s.angle * Math.PI) / 180;
             const out = `${Math.cos(rad) * s.dist}vmin`;
             const outY = `${Math.sin(rad) * s.dist}vmin`;
             const mid = `${Math.cos(rad) * s.dist * 0.45}vmin`;
             const midY = `${Math.sin(rad) * s.dist * 0.45}vmin`;
+            // Alternate odd-indexed entries with photos, when available.
+            const usePhoto = !!(burstImages && burstImages.length && i % 2 === 1);
+            const photoSrc = usePhoto ? burstImages![Math.floor(i / 2) % burstImages!.length] : undefined;
+            // Photo medallions sized a bit larger than star pixels for presence,
+            // capped so they never crowd the lockup.
+            const photoSize = usePhoto ? Math.min(120, Math.max(70, s.size + 30)) : s.size;
             return (
               <div
                 key={`burst-${i}`}
-                className="bmp-burst-star"
+                className={usePhoto ? "bmp-burst-star bmp-burst-photo-wrap" : "bmp-burst-star"}
                 style={{
                   position: "fixed",
                   top: "50%",
@@ -545,7 +554,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
                   animation: `bmpStarBurst 1900ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
-                <StarSparkle tone={s.tone} variant="single" size={s.size} />
+                {usePhoto ? (
+                  <img
+                    src={photoSrc}
+                    alt=""
+                    className="bmp-burst-photo"
+                    style={{ width: photoSize, height: photoSize }}
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <StarSparkle tone={s.tone} variant="single" size={s.size} />
+                )}
               </div>
             );
           })}
