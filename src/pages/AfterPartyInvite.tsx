@@ -94,19 +94,10 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     );
     if (found) {
       setMe(found);
-      // First-time personalized greeting: only the very first time someone
-      // opens THEIR personalized link in this browser. Not on edit/back/etc.
-      // Wait for the splash animation to finish before showing it.
-      try {
-        const key = `afterparty:greeted:${found.id}`;
-        if (!localStorage.getItem(key)) {
-          localStorage.setItem(key, "1");
-          // Show greeting alongside the splash (Popfly+Basecamp solo monogram phase),
-          // physically above it. Hide it as the splash transitions out.
-          setShowPersonalGreeting(true);
-          setTimeout(() => setShowPersonalGreeting(false), 4200);
-        }
-      } catch {}
+      // Personalized greeting: show every time someone arrives via their
+      // own personalized link. Plays in sync with the splash animation.
+      setShowPersonalGreeting(true);
+      setTimeout(() => setShowPersonalGreeting(false), 4200);
     }
   }, [name, attendees, me]);
 
