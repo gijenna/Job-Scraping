@@ -127,7 +127,8 @@ Deno.serve(async (req) => {
 
     if (!top5.length) { skipped++; continue }
 
-    const inviteUrl = `${PUBLISHED_BASE}/afterparty/${slugify(me.full_name)}`
+    const slug = me.slug || slugify(me.full_name)
+    const guestsUrl = `${PUBLISHED_BASE}/guests?slug=${slug}`
     const matches = top5.map((r) => ({
       number: r.them.attendee_number,
       name: r.them.full_name + (r.them.role === 'brand' && r.them.company ? ` (${r.them.company})` : ''),
@@ -144,7 +145,7 @@ Deno.serve(async (req) => {
           recipientName: me.full_name.split(' ')[0],
           attendeeNumber: me.attendee_number,
           matches,
-          inviteUrl,
+          guestsUrl,
         },
       },
     })
