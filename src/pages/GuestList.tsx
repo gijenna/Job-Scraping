@@ -160,59 +160,9 @@ const GuestList = () => {
           );
         })()}
 
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-5 mb-10 items-start">
-          {/* Event info card - top left */}
-          <div
-            className="rounded-xl p-5"
-            style={{
-              backgroundColor: "rgba(17,17,17,0.85)",
-              border: `1px solid ${BORDER}`,
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            <div
-              className="text-[10px] uppercase mb-2"
-              style={{ letterSpacing: "0.18em", color: "#FAC775", fontWeight: 600 }}
-            >
-              Creator Kick-Off Party
-            </div>
-            <h2
-              className="font-afterparty text-[26px] sm:text-[30px] leading-[1.05] tracking-tight mb-3"
-              style={{ fontWeight: 500, color: "#F5E6D3" }}
-            >
-              A rooftop party for outdoor industry creators &amp; brands
-            </h2>
-            <div className="space-y-1.5 text-[13px]" style={{ color: "rgba(245,230,211,0.85)" }}>
-              <div>
-                <span style={{ color: "rgba(245,230,211,0.5)" }}>When · </span>
-                Thursday, May 28 · 7:30 to 9:30pm MT
-              </div>
-              <div>
-                <span style={{ color: "rgba(245,230,211,0.5)" }}>Where · </span>
-                Denver rooftop venue (full address sent via calendar invite closer to the date)
-              </div>
-              <div>
-                <span style={{ color: "rgba(245,230,211,0.5)" }}>Vibe · </span>
-                Proudly sober. Bring your card, your numbers, and your curiosity.
-              </div>
-            </div>
-            <div
-              className="mt-4 pt-3 text-[12px]"
-              style={{ borderTop: `1px solid ${BORDER}`, color: "rgba(245,230,211,0.6)" }}
-            >
-              Need help or have a question? Email{" "}
-              <a
-                href="mailto:jenna@wearetheoutdoorindustry.com"
-                style={{ color: "#ED7660", textDecoration: "underline" }}
-              >
-                jenna@wearetheoutdoorindustry.com
-              </a>
-              .
-            </div>
-          </div>
-
-          {/* Headcount header - right */}
-          <div className="relative text-left md:text-right">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-6 mb-10 items-start">
+          {/* Headcount header - left */}
+          <div className="relative">
             <h1
               className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight"
               style={{ fontWeight: 500, color: "#F5E6D3" }}
@@ -225,6 +175,32 @@ const GuestList = () => {
             <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
               Live roster. Updates as folks RSVP.
             </p>
+          </div>
+
+          {/* Event info - right, inline (no box) */}
+          <div className="md:text-right text-[13px] leading-[1.6]" style={{ color: "rgba(245,230,211,0.8)" }}>
+            <div
+              className="text-[10px] uppercase mb-1.5"
+              style={{ letterSpacing: "0.18em", color: "#FAC775", fontWeight: 600 }}
+            >
+              Creator Kick-Off Party
+            </div>
+            <div style={{ color: "#F5E6D3" }}>
+              A rooftop party for outdoor industry creators &amp; brands.
+            </div>
+            <div className="mt-2">Thursday, May 28 · 7:30–9:30pm MT</div>
+            <div style={{ color: "rgba(245,230,211,0.6)" }}>
+              Denver rooftop · full address sent closer to the date
+            </div>
+            <div className="mt-2 text-[12px]" style={{ color: "rgba(245,230,211,0.55)" }}>
+              Questions?{" "}
+              <a
+                href="mailto:jenna@wearetheoutdoorindustry.com"
+                style={{ color: "#ED7660", textDecoration: "underline" }}
+              >
+                jenna@wearetheoutdoorindustry.com
+              </a>
+            </div>
           </div>
         </div>
 
