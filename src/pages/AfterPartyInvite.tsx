@@ -78,6 +78,20 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
 
   useEffect(() => { fetchAll(); }, []);
 
+  // Preload the hero background so it's ready before first paint.
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = "/afterparty-bg.jpg";
+    link.fetchPriority = "high" as any;
+    document.head.appendChild(link);
+    // Also kick off an actual image load so the browser caches it ASAP.
+    const img = new Image();
+    img.src = "/afterparty-bg.jpg";
+    return () => { document.head.removeChild(link); };
+  }, []);
+
   // Restore session on mount
   useEffect(() => {
     (async () => {
