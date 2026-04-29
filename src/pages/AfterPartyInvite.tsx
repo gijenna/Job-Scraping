@@ -186,7 +186,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
     if (full) setMeFull(full);
     setEditMode(false);
     setJustRsvped(true);
-      if (wasFirstSave) {
+    if (wasFirstSave) {
       const slugForGuests = (data as any)?.slug || (full as any)?.slug || me?.slug;
       if (slugForGuests) {
         try { sessionStorage.setItem("afterparty:return_slug", slugForGuests); } catch {}
