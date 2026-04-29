@@ -556,8 +556,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
               @
             </span>
             <Input
-              value={(form.social_links.instagram || "").replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "")}
-              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: e.target.value.replace(/^@+/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/$/, "") } })}
+              value={normalizeInstagram(form.social_links.instagram)}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, instagram: normalizeInstagram(e.target.value) } })}
               placeholder="yourhandle"
               className="border-0 rounded-none"
               style={{ ...inputStyle, border: "none" }}
@@ -583,8 +583,8 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
               linkedin.com/in/
             </span>
             <Input
-              value={(form.social_links.linkedin || "").replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "")}
-              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: e.target.value.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "").replace(/\/$/, "") } })}
+              value={normalizeLinkedIn(form.social_links.linkedin)}
+              onChange={(e) => setForm({ ...form, social_links: { ...form.social_links, linkedin: normalizeLinkedIn(e.target.value) } })}
               placeholder="jennafrombasecamp"
               className="border-0 rounded-none"
               style={{ ...inputStyle, border: "none" }}
