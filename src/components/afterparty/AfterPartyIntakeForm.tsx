@@ -503,7 +503,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
         <div className="flex flex-wrap gap-2">
           {([
             { v: "creator", label: "Creator", c: ROLE.creator },
-            { v: "brand", label: "Brand rep", c: ROLE.brand },
+            { v: "brand", label: "Brand", c: ROLE.brand },
             { v: "industry_expert", label: "Industry expert", c: ROLE.industry_expert },
           ] as const).map((r) => (
             <button
@@ -837,14 +837,6 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
                 <button type="button" key={l} onClick={() => toggle("brand_seeking", l)} className={pillBase} style={pillStyle(form.brand_seeking.includes(l), ROLE.brand)}>{l}</button>
               ))}
             </div>
-          </div>
-
-          <div>
-            <Label>Budget range for creator work</Label>
-            <Select value={form.budget_range} onValueChange={(v) => setForm({ ...form, budget_range: v })}>
-              <SelectTrigger style={inputStyle}><SelectValue placeholder="Optional" /></SelectTrigger>
-              <SelectContent>{BUDGET_RANGES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-            </Select>
           </div>
 
           <div>
