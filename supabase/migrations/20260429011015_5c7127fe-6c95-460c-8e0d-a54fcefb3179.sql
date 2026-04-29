@@ -1,0 +1,1 @@
+ALTER VIEW public.afterparty_guest_list SET (security_invoker = on);
