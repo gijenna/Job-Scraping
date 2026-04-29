@@ -83,7 +83,7 @@ export const template = {
   previewData: {
     recipientName: "Jane",
     attendeeNumber: 42,
-    inviteUrl: "https://basecampoutdoorevents.com/afterparty/jane-doe",
+    guestsUrl: "https://basecampoutdoorevents.com/guests?slug=jane-doe",
     matches: [
       { number: 17, name: "Alex Rivera", role: "brand", reason: "They're looking for videographers, and that's you" },
       { number: 23, name: "Sam Chen", role: "creator", reason: "Both into Climbing & Hiking" },
