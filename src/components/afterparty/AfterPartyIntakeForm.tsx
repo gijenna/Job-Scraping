@@ -291,29 +291,45 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
     // Duplicate guard, only on first RSVP (no attendeeId yet).
     // If the same name OR email already exists, send the user to that
     // existing card so they can sign in via PIN instead of creating a dup.
+    // We run two separate queries (instead of .or()) so that names/emails
+    // containing commas, parentheses, apostrophes, or other PostgREST
+    // operator-syntax characters don't blow up the request.
     if (!attendeeId) {
       const nameTrim = form.full_name.trim();
       const emailTrim = (form.email || "").trim().toLowerCase();
-      const orParts: string[] = [`full_name.ilike.${nameTrim}`];
-      if (emailTrim) orParts.push(`email.ilike.${emailTrim}`);
-      const { data: existing } = await (supabase as any)
-        .from("afterparty_attendees")
-        .select("id, slug, full_name, email")
-        .or(orParts.join(","))
-        .limit(1)
-        .maybeSingle();
+      let existing: { id: string; slug: string; email: string | null } | null = null;
+      let matchedOn: "name" | "email" = "name";
+      try {
+        if (emailTrim) {
+          const { data } = await (supabase as any)
+            .from("afterparty_attendees")
+            .select("id, slug, email")
+            .ilike("email", emailTrim)
+            .limit(1)
+            .maybeSingle();
+          if (data?.slug) { existing = data; matchedOn = "email"; }
+        }
+        if (!existing && nameTrim) {
+          const { data } = await (supabase as any)
+            .from("afterparty_attendees")
+            .select("id, slug, email")
+            .ilike("full_name", nameTrim)
+            .limit(1)
+            .maybeSingle();
+          if (data?.slug) { existing = data; matchedOn = "name"; }
+        }
+      } catch (err) {
+        // Don't block RSVP on duplicate-check failure; just log and proceed.
+        console.warn("[afterparty] duplicate guard query failed", err);
+      }
       if (existing?.slug) {
         setSaving(false);
-        const matchedOn =
-          existing.email && emailTrim && existing.email.toLowerCase() === emailTrim
-            ? "email"
-            : "name";
         toast({
           title: "Card already exists",
           description: `We found a card with that ${matchedOn}. Sending you there to sign in.`,
         });
         setTimeout(() => {
-          window.location.href = `/afterparty/${existing.slug}`;
+          window.location.href = `/afterparty/${existing!.slug}`;
         }, 900);
         return;
       }
