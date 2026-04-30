@@ -1,52 +1,28 @@
-# Oakley invite refinements
+# Separate After Party admin from Expert CRM
 
-Two scoped changes, both Oakley-only (no impact on other invite variants).
+## Goal
+Make the After Party admin reachable directly via its own URL slug (`/experts/afterparty`) instead of being buried as a tab inside `/admin/experts`. Easy to type / bookmark.
 
-## 1. Opening sequence — make the glasses readable
+## Changes
 
-File: `src/components/afterparty/BasecampMatchPopflyLogo.tsx`
+### 1. New page: `src/pages/AdminAfterParty.tsx`
+- Mirror auth gate from `AdminExperts.tsx` (reject missing/anonymous sessions, redirect to `/admin`).
+- Reuse existing `<AfterPartyAdmin />` component as the body.
+- Same dark teal page chrome and header (Back button → `/events`, title "After Party Admin").
+- Add a small secondary link back to `/admin/experts` ("Expert CRM") so it's easy to bounce between the two.
 
-**Slow it down (~2x on screen)**
-- Increase the burst animation duration from `1900ms` to `3800ms` so each medallion holds visibly through its arc.
-- Push the splash-stage fade-out (`STAGE_OUT_DELAY_S`) and the reveal `setTimeout` (`8800ms`) out by ~1.9s so the lockup doesn't cover the burst mid-flight.
-- Slightly extend the burst stars' "hold" keyframe in `bmpStarBurst` so 55%→85% sits longer at full opacity before collapsing inward.
+### 2. Route registration in `src/App.tsx`
+- Import `AdminAfterParty`.
+- Add `<Route path="/experts/afterparty" element={<AdminAfterParty />} />` near the top of the `<Routes>` block (in the "Pinned to top for quick access" group, right under the `/afterparty*` routes) so the slug is easy to find in the file.
 
-**Make glasses bigger**
-- Bump `photoSize` cap: from `min(120, max(70, s.size + 30))` to `min(220, max(150, s.size + 80))`. That roughly doubles their on-screen footprint.
-- Strengthen the medallion ring/glow so they read against the dark stage at the new size.
+### 3. Cross-link in `src/pages/AdminExperts.tsx`
+- Keep the existing After Party tab in place (no behavior change there) but update its label/tooltip to note the standalone URL, OR add a small "Open standalone ↗" link next to the tab that navigates to `/experts/afterparty`. Lean toward the small link — non-destructive.
 
-**Weight photos higher than stars (~70/30)**
-- Replace the alternating `i % 2 === 1` selector with a deterministic 70% selection (e.g. every index where `i % 10 < 7` becomes a photo). With 16 burst slots this yields ~11 product photos and ~5 stars.
-- Cycle through the 8 product images so each appears at least once, with a few repeats at varied sizes.
+## Out of scope
+- No changes to `AfterPartyAdmin.tsx` itself.
+- No changes to public `/afterparty` routes.
+- No data / RLS changes.
 
-## 2. Venue showcase — horizontal carousel
-
-File: `src/components/afterparty/OakleyRinoVenueShowcase.tsx`
-
-Restructure from a tall vertical stack into a compact card the height of the "25 people coming" panel:
-
-```text
-┌──────────────────────────────────────┐
-│ THE VENUE   Oakley RiNo              │
-│ 2660 Walnut St, Unit 3 · Denver, CO  │
-├──────────────────────────────────────┤
-│  ◀  [ photo carousel — 1 visible ]  ▶│
-│         · · • · ·  (dots)            │
-├──────────────────────────────────────┤
-│ Brand-new next-gen retail hub in     │
-│ RiNo. Brutalist architecture, Prizm  │
-│ wall, rooftop lounge…                │
-└──────────────────────────────────────┘
-```
-
-- Replace the vertical `flex flex-col gap-2` photo stack with a single-photo-visible horizontal carousel (CSS opacity stacking per the project rule — no `AnimatePresence`).
-- Auto-advance every 4s; pause on hover.
-- Left/right chevron arrows + small dot indicators below for manual control.
-- Photos use `aspectRatio: 16/10` so total card height roughly matches the matches panel.
-- Reorder content: header/address → carousel → blurb (so the layout reads "25 people coming → photos → words", matching your description of the side rail).
-
-No new dependencies, no schema changes, no impact on other routes.
-
-## Files touched
-- `src/components/afterparty/BasecampMatchPopflyLogo.tsx`
-- `src/components/afterparty/OakleyRinoVenueShowcase.tsx`
+## Result
+- `/experts/afterparty` → standalone After Party admin (auth-gated).
+- `/admin/experts` → unchanged, still has the After Party tab as a fallback.

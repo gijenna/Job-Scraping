@@ -10,6 +10,7 @@ import GatherPNW from "./pages/GatherPNW";
 import AdminLogin from "./pages/AdminLogin";
 import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
+import AdminAfterParty from "./pages/AdminAfterParty";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
@@ -68,6 +69,7 @@ const App = () => (
         <LinkTracker>
         <Routes>
           {/* Pinned to top for quick access */}
+          <Route path="/experts/afterparty" element={<AdminAfterParty />} />
           <Route path="/afterparty" element={<AfterPartyInvite />} />
           <Route path="/afterparty/:name" element={<AfterPartyInvite />} />
           <Route
