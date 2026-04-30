@@ -23,6 +23,7 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [stats, setStats] = useState<ClickStat[]>([]);
   const [showTooltip, setShowTooltip] = useState<{ x: number; y: number; stat: ClickStat } | null>(null);
+  const canShowAdminStats = isAdmin && location.pathname.startsWith("/admin");
 
   // Auth check — only allow internal admin domains
   useEffect(() => {
@@ -59,7 +60,7 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
 
   // Fetch stats for admin
   useEffect(() => {
-    if (!isAdmin) { setStats([]); return; }
+    if (!canShowAdminStats) { setStats([]); return; }
     const fetchStats = async () => {
       const { data } = await (supabase as any)
         .from("link_clicks")
@@ -79,11 +80,11 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
       setStats(Array.from(map.values()).sort((a, b) => b.count - a.count));
     };
     fetchStats();
-  }, [isAdmin, location.pathname]);
+  }, [canShowAdminStats, location.pathname]);
 
   // Admin hover tooltip on links
   useEffect(() => {
-    if (!isAdmin || stats.length === 0) return;
+    if (!canShowAdminStats || stats.length === 0) return;
 
     const handleMouseOver = (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
@@ -106,7 +107,7 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
       document.removeEventListener("mouseover", handleMouseOver, true);
       document.removeEventListener("mouseout", handleMouseOut, true);
     };
-  }, [isAdmin, stats]);
+  }, [canShowAdminStats, stats]);
 
   const downloadCSV = useCallback(async () => {
     const { data } = await (supabase as any)
@@ -157,7 +158,7 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
         </div>
       )}
       {/* Admin CSV download button */}
-      {isAdmin && (
+      {canShowAdminStats && (
         <button
           onClick={downloadCSV}
           className="fixed top-1/2 -translate-y-1/2 right-2 z-[9999] flex items-center gap-1.5 bg-black/80 hover:bg-black text-white text-xs px-3 py-2 rounded-full shadow-lg transition-colors"

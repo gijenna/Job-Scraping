@@ -45,65 +45,22 @@ const OakleyRinoVenueShowcase = () => {
 
   return (
     <div
-      className="rounded-2xl overflow-hidden flex flex-col"
+      className="rounded-2xl overflow-hidden grid grid-cols-[132px_minmax(0,1fr)] sm:grid-cols-[156px_minmax(0,1fr)] items-stretch"
       style={{
         backgroundColor: "rgba(17,17,17,0.7)",
         border: "1px solid rgba(245,230,211,0.12)",
         backdropFilter: "blur(8px)",
       }}
     >
-      {/* Header — title + address (compact) */}
-      <div className="px-5 pt-5 pb-3">
-        <div
-          className="text-[10px] uppercase mb-2"
-          style={{
-            letterSpacing: "0.22em",
-            color: "#FAC775",
-            fontWeight: 600,
-          }}
-        >
-          The Venue
-        </div>
-        <h2
-          className="font-afterparty text-[22px] sm:text-[26px] leading-tight"
-          style={{ color: "#F5E6D3", fontWeight: 500 }}
-        >
-          Oakley RiNo
-        </h2>
-
-        <a
-          href={MAPS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 inline-flex items-start gap-2 text-[12.5px] group transition-colors"
-          style={{ color: "#ED7660" }}
-        >
-          <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-          <span className="leading-snug">
-            <span className="block underline-offset-2 group-hover:underline">
-              {ADDRESS_LINE_1}
-            </span>
-            <span className="block" style={{ color: "rgba(245,230,211,0.55)" }}>
-              {ADDRESS_LINE_2}
-            </span>
-          </span>
-          <ExternalLink className="w-3 h-3 mt-1 opacity-60" />
-        </a>
-      </div>
-
-      {/* Horizontal carousel — single image visible, opacity-stacked */}
+      {/* Compact carousel — single image visible, opacity-stacked */}
       <div
-        className="px-5"
+        className="relative min-h-[132px] sm:min-h-[138px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
         <div
-          className="relative rounded-xl overflow-hidden"
-          style={{
-            border: "1px solid rgba(245,230,211,0.08)",
-            backgroundColor: "rgba(8,8,8,0.4)",
-            aspectRatio: "16 / 10",
-          }}
+          className="absolute inset-0 overflow-hidden"
+          style={{ backgroundColor: "rgba(8,8,8,0.4)" }}
           aria-label="Photos of the Oakley RiNo store"
         >
           {VENUE_PHOTOS.map((photo, i) => (
@@ -121,59 +78,93 @@ const OakleyRinoVenueShowcase = () => {
             />
           ))}
 
-          {/* Arrows */}
           <button
             type="button"
             onClick={() => go(-1)}
             aria-label="Previous photo"
-            className="absolute top-1/2 left-2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            className="absolute top-1/2 left-1.5 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
             style={{
               backgroundColor: "rgba(8,8,8,0.55)",
               color: "#F5E6D3",
               border: "1px solid rgba(245,230,211,0.18)",
             }}
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <button
             type="button"
             onClick={() => go(1)}
             aria-label="Next photo"
-            className="absolute top-1/2 right-2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            className="absolute top-1/2 right-1.5 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
             style={{
               backgroundColor: "rgba(8,8,8,0.55)",
               color: "#F5E6D3",
               border: "1px solid rgba(245,230,211,0.18)",
             }}
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
-        </div>
 
-        {/* Dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-2">
-          {VENUE_PHOTOS.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-label={`Go to photo ${i + 1}`}
-              className="rounded-full transition-all"
-              style={{
-                width: i === index ? 16 : 6,
-                height: 6,
-                backgroundColor:
-                  i === index ? "#ED7660" : "rgba(245,230,211,0.3)",
-              }}
-            />
-          ))}
+          <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1.5">
+            {VENUE_PHOTOS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Go to photo ${i + 1}`}
+                className="rounded-full transition-all"
+                style={{
+                  width: i === index ? 14 : 5,
+                  height: 5,
+                  backgroundColor:
+                    i === index ? "#ED7660" : "rgba(245,230,211,0.55)",
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Blurb */}
-      <div className="px-5 pt-3 pb-5">
+      {/* Venue text, kept beside photos so this panel stays short */}
+      <div className="px-4 py-3 sm:px-5 sm:py-3.5 min-w-0">
+        <div
+          className="text-[9px] uppercase mb-1.5"
+          style={{
+            letterSpacing: "0.2em",
+            color: "#FAC775",
+            fontWeight: 600,
+          }}
+        >
+          The Venue
+        </div>
+        <h2
+          className="font-afterparty text-[20px] sm:text-[23px] leading-none"
+          style={{ color: "#F5E6D3", fontWeight: 500 }}
+        >
+          Oakley RiNo
+        </h2>
+
+        <a
+          href={MAPS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1.5 inline-flex items-start gap-1.5 text-[11px] group transition-colors"
+          style={{ color: "#ED7660" }}
+        >
+          <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
+          <span className="leading-snug">
+            <span className="block underline-offset-2 group-hover:underline">
+              {ADDRESS_LINE_1}
+            </span>
+            <span className="block" style={{ color: "rgba(245,230,211,0.55)" }}>
+              {ADDRESS_LINE_2}
+            </span>
+          </span>
+          <ExternalLink className="w-2.5 h-2.5 mt-1 opacity-60 shrink-0" />
+        </a>
+
         <p
-          className="text-[12.5px] leading-relaxed"
+          className="mt-2 text-[11px] sm:text-[11.5px] leading-snug"
           style={{ color: "rgba(245,230,211,0.75)" }}
         >
           Oakley's brand-new next-gen retail hub in Denver's River North Arts
@@ -182,7 +173,7 @@ const OakleyRinoVenueShowcase = () => {
           creators of RiNo.
         </p>
         <div
-          className="mt-2 text-[10.5px]"
+          className="mt-1.5 text-[9.5px] leading-none"
           style={{ color: "rgba(245,230,211,0.4)" }}
         >
           Open daily 10:00 AM – 6:00 PM · Photos by Oakley
