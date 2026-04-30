@@ -432,14 +432,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
         .bmp-burst-photo {
           object-fit: contain;
           object-position: center;
-          background: radial-gradient(circle, rgba(245,230,211,0.96) 0%, rgba(245,230,211,0.82) 50%, rgba(245,230,211,0) 72%);
-          padding: 18px;
-          border-radius: 28px;
-          box-shadow:
-            0 0 24px rgba(245,230,211,0.9),
-            0 0 52px rgba(225,182,36,0.65),
-            0 0 80px rgba(237,118,96,0.48),
-            0 6px 20px rgba(0,0,0,0.6);
+          background: transparent;
+          padding: 0;
+          border-radius: 0;
+          filter:
+            drop-shadow(0 0 14px rgba(245,230,211,0.55))
+            drop-shadow(0 0 28px rgba(225,182,36,0.45))
+            drop-shadow(0 6px 14px rgba(0,0,0,0.45));
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
