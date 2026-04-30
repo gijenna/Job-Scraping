@@ -40,26 +40,6 @@ import LinkTracker from "./components/LinkTracker";
 // (oakleyWhiteLogo no longer used — replaced by oakleyCreamLogo below.)
 import oakleyCreamLogo from "./assets/oakley-logo-cream.png";
 
-// Oakley product photos for the snowflake burst on /afterpartyoakley.
-import oakleyAirbrake from "./assets/oakley-products/airbrake-goggle.png";
-import oakleyFallLine from "./assets/oakley-products/fall-line-goggle.png";
-import oakleyFrontLine from "./assets/oakley-products/front-line-goggle.png";
-import oakleyMetaHstn from "./assets/oakley-products/meta-hstn.png";
-import oakleyMetaVanguard from "./assets/oakley-products/meta-vanguard.png";
-import oakleyMvdpSutro from "./assets/oakley-products/mvdp-sutro.png";
-import oakleyPlantaris from "./assets/oakley-products/plantaris-sq.png";
-import oakleyWtrHelmet from "./assets/oakley-products/wtr-icon-helmet.png";
-const OAKLEY_BURST_IMAGES: string[] = [
-  oakleyMetaHstn,
-  oakleyMetaVanguard,
-  oakleyMvdpSutro,
-  oakleyPlantaris,
-  oakleyAirbrake,
-  oakleyFallLine,
-  oakleyFrontLine,
-  oakleyWtrHelmet,
-];
-
 const OAKLEY_PRESENTER = {
   label: "@",
   sublabel: "RiNo",
@@ -88,7 +68,6 @@ const App = () => (
             element={
               <AfterPartyInvite
                 presenter={OAKLEY_PRESENTER}
-                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />
@@ -97,7 +76,6 @@ const App = () => (
             element={
               <AfterPartyInvite
                 presenter={OAKLEY_PRESENTER}
-                burstImages={OAKLEY_BURST_IMAGES}
               />
             }
           />

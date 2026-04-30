@@ -55,13 +55,9 @@ interface AfterPartyInviteProps {
     href?: string;
     creamGlow?: boolean;
   };
-  /** Optional images mixed into the snowflake/star burst at the end of the
-   *  intro sequence. Roughly half the bursting stars are swapped for round
-   *  photo medallions when this is provided. */
-  burstImages?: string[];
 }
 
-const AfterPartyInvite = ({ presenter, burstImages }: AfterPartyInviteProps = {}) => {
+const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
   const navigate = useNavigate();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
@@ -343,7 +339,6 @@ const AfterPartyInvite = ({ presenter, burstImages }: AfterPartyInviteProps = {}
           <BasecampMatchPopflyLogo
             onRevealed={() => setSplashDone(true)}
             presenter={presenter}
-            burstImages={burstImages}
           />
 
           {/* Personalized greeting sits ABOVE the splash monogram so the two

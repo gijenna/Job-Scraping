@@ -20,9 +20,6 @@ interface Props {
     /** When true, render with cream-toned neon glow (matches cream logos). */
     creamGlow?: boolean;
   };
-  /** Optional images injected into the snowflake burst. When provided, roughly
-   *  half the burst stars are swapped for round photo medallions. */
-  burstImages?: string[];
 }
 
 /**
@@ -101,7 +98,7 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) => {
+const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -428,19 +425,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
-        /* Product cutouts in the burst (Oakley glasses, goggles, helmets etc.) */
-        .bmp-burst-photo {
-          object-fit: contain;
-          object-position: center;
-          background: transparent;
-          padding: 0;
-          border-radius: 0;
-          filter:
-            drop-shadow(0 0 14px rgba(245,230,211,0.55))
-            drop-shadow(0 0 28px rgba(225,182,36,0.45))
-            drop-shadow(0 6px 14px rgba(0,0,0,0.45));
-        }
-
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
         @keyframes bmpCreamPulse {
           0%, 100% { filter: drop-shadow(0 0 10px rgba(245,230,211,0.55)) drop-shadow(0 0 20px rgba(245,230,211,0.3)); }
@@ -450,7 +434,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-burst-photo-wrap, .bmp-od-stacked { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
@@ -522,29 +506,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
             />
           ))}
 
-          {/* Existing star burst, fired AFTER lockup forms.
-              When `burstImages` is provided (e.g. Oakley product photos),
-              roughly half the entries become circular photo medallions instead
-              of stars, using the same orbital animation. */}
+          {/* Existing snowflake burst, fired AFTER lockup forms. */}
           {burstStars.map((s, i) => {
             const rad = (s.angle * Math.PI) / 180;
             const out = `${Math.cos(rad) * s.dist}vmin`;
             const outY = `${Math.sin(rad) * s.dist}vmin`;
             const mid = `${Math.cos(rad) * s.dist * 0.45}vmin`;
             const midY = `${Math.sin(rad) * s.dist * 0.45}vmin`;
-            // Weight the burst heavily toward product images so the Oakley
-            // glasses are unmistakable in the quick animation beat.
-            const usePhoto = !!(burstImages && burstImages.length && (i % 8) < 7);
-            const photoIdx = usePhoto
-              ? (burstImages ? i % burstImages.length : 0)
-              : 0;
-            const photoSrc = usePhoto ? burstImages![photoIdx] : undefined;
-            // Large uncropped cutouts so the glasses actually read.
-            const photoSize = usePhoto ? Math.min(280, Math.max(210, s.size + 130)) : s.size;
             return (
               <div
                 key={`burst-${i}`}
-                className={usePhoto ? "bmp-burst-star bmp-burst-photo-wrap" : "bmp-burst-star"}
+                className="bmp-burst-star"
                 style={{
                   position: "fixed",
                   top: "50%",
@@ -559,17 +531,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
                   animation: `bmpStarBurst 3800ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
-                {usePhoto ? (
-                  <img
-                    src={photoSrc}
-                    alt=""
-                    className="bmp-burst-photo"
-                    style={{ width: photoSize, height: photoSize }}
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <StarSparkle tone={s.tone} variant="single" size={s.size} />
-                )}
+                <StarSparkle tone={s.tone} variant="single" size={s.size} />
               </div>
             );
           })}
