@@ -51,8 +51,6 @@ const CITY_EVENT_DATA: Record<string, {
     format: [
       'Discovery Zone, your branded space to tell your story',
       'Employer tables with 5–10 min recruiter conversations',
-      'VIP hour for underrepresented communities (200 candidates)',
-      'Full festival access, Death Cab headlining Friday night',
     ],
     companies: [
       'REI', 'Patagonia', 'The North Face', 'Cotopaxi', 'Black Diamond',
