@@ -20,9 +20,6 @@ interface Props {
     /** When true, render with cream-toned neon glow (matches cream logos). */
     creamGlow?: boolean;
   };
-  /** Optional images injected into the snowflake burst. When provided, roughly
-   *  half the burst stars are swapped for round photo medallions. */
-  burstImages?: string[];
 }
 
 /**
@@ -101,7 +98,7 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) => {
+const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -426,19 +423,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
           opacity: 0;
           filter: drop-shadow(0 0 24px rgba(245,230,211,0.45));
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
-        }
-
-        /* Product cutouts in the burst (Oakley glasses, goggles, helmets etc.) */
-        .bmp-burst-photo {
-          object-fit: contain;
-          object-position: center;
-          background: transparent;
-          padding: 0;
-          border-radius: 0;
-          filter:
-            drop-shadow(0 0 14px rgba(245,230,211,0.55))
-            drop-shadow(0 0 28px rgba(225,182,36,0.45))
-            drop-shadow(0 6px 14px rgba(0,0,0,0.45));
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
