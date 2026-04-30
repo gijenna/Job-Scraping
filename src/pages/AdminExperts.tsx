@@ -103,6 +103,13 @@ const AdminExperts = () => {
             <TabsTrigger value="afterparty" className="data-[state=active]:bg-events-coral data-[state=active]:text-events-cream text-events-cream/60">
               After Party
             </TabsTrigger>
+            <a
+              href="/experts/afterparty"
+              className="ml-2 self-center text-events-cream/50 hover:text-events-cream text-xs underline"
+              title="Open standalone After Party admin"
+            >
+              open ↗
+            </a>
           </TabsList>
 
           <TabsContent value="crm">
