@@ -107,7 +107,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 8800;
+    const delay = reduced ? 0 : 10700;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
@@ -165,7 +165,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
 
   // Pacing — total runtime ~8.8s. Slower kite section, gives every beat room to breathe.
   const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_OUT_DELAY_S = 8.4;        // dark stage fades with the snowflake burst
+  const STAGE_OUT_DELAY_S = 10.3;       // hold dark stage so the burst plays out fully
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
   const PRESENTS_DELAY_S = 7.4;
   const DIVIDER_DELAY_S = 7.2;
@@ -249,9 +249,10 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
         /* ===== Existing star burst (kept) ===== */
         @keyframes bmpStarBurst {
           0%   { transform: translate(-50%, -50%) translate(0, 0) scale(0.1) rotate(0); opacity: 0; }
-          15%  { transform: translate(-50%, -50%) translate(var(--bx-mid), var(--by-mid)) scale(1.1) rotate(calc(var(--bspin) * 0.4deg)); opacity: 1; }
-          55%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 1deg)); opacity: 1; }
-          85%  { transform: translate(-50%, -50%) translate(calc(var(--bx-out) * 0.4), calc(var(--by-out) * 0.4)) scale(0.5) rotate(calc(var(--bspin) * 1.4deg)); opacity: 0.8; }
+          10%  { transform: translate(-50%, -50%) translate(var(--bx-mid), var(--by-mid)) scale(1.1) rotate(calc(var(--bspin) * 0.4deg)); opacity: 1; }
+          30%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 0.7deg)); opacity: 1; }
+          78%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 1deg)); opacity: 1; }
+          92%  { transform: translate(-50%, -50%) translate(calc(var(--bx-out) * 0.4), calc(var(--by-out) * 0.4)) scale(0.5) rotate(calc(var(--bspin) * 1.4deg)); opacity: 0.8; }
           100% { transform: translate(-50%, -50%) translate(0, 0) scale(0); opacity: 0; }
         }
 
@@ -432,11 +433,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
           border-radius: 9999px;
           object-fit: cover;
           background: #19363B;
-          border: 2px solid rgba(245,230,211,0.85);
+          border: 3px solid rgba(245,230,211,0.95);
           box-shadow:
-            0 0 12px rgba(245,230,211,0.55),
-            0 0 24px rgba(225,182,36,0.35),
-            0 4px 14px rgba(0,0,0,0.5);
+            0 0 18px rgba(245,230,211,0.7),
+            0 0 36px rgba(225,182,36,0.5),
+            0 0 60px rgba(237,118,96,0.35),
+            0 6px 20px rgba(0,0,0,0.6);
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
@@ -530,12 +532,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
             const outY = `${Math.sin(rad) * s.dist}vmin`;
             const mid = `${Math.cos(rad) * s.dist * 0.45}vmin`;
             const midY = `${Math.sin(rad) * s.dist * 0.45}vmin`;
-            // Alternate odd-indexed entries with photos, when available.
-            const usePhoto = !!(burstImages && burstImages.length && i % 2 === 1);
-            const photoSrc = usePhoto ? burstImages![Math.floor(i / 2) % burstImages!.length] : undefined;
-            // Photo medallions sized a bit larger than star pixels for presence,
-            // capped so they never crowd the lockup.
-            const photoSize = usePhoto ? Math.min(120, Math.max(70, s.size + 30)) : s.size;
+            // Weight ~70% of slots to product photos when images are provided,
+            // cycling through the full set so each glasses image appears.
+            const usePhoto = !!(burstImages && burstImages.length && (i % 10) < 7);
+            const photoIdx = usePhoto
+              ? (burstImages ? i % burstImages.length : 0)
+              : 0;
+            const photoSrc = usePhoto ? burstImages![photoIdx] : undefined;
+            // Photo medallions ~2x previous size so the glasses actually read.
+            const photoSize = usePhoto ? Math.min(220, Math.max(150, s.size + 80)) : s.size;
             return (
               <div
                 key={`burst-${i}`}
@@ -551,7 +556,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
                   ["--bx-mid" as any]: mid,
                   ["--by-mid" as any]: midY,
                   ["--bspin" as any]: s.spin,
-                  animation: `bmpStarBurst 1900ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
+                  animation: `bmpStarBurst 3800ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
                 {usePhoto ? (
