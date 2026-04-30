@@ -428,16 +428,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
-        /* Photo medallion in the burst (Oakley products etc.) */
+        /* Product cutouts in the burst (Oakley glasses, goggles, helmets etc.) */
         .bmp-burst-photo {
-          border-radius: 9999px;
-          object-fit: cover;
-          background: #19363B;
-          border: 3px solid rgba(245,230,211,0.95);
+          object-fit: contain;
+          object-position: center;
+          background: radial-gradient(circle, rgba(245,230,211,0.96) 0%, rgba(245,230,211,0.82) 50%, rgba(245,230,211,0) 72%);
+          padding: 18px;
+          border-radius: 28px;
           box-shadow:
-            0 0 18px rgba(245,230,211,0.7),
-            0 0 36px rgba(225,182,36,0.5),
-            0 0 60px rgba(237,118,96,0.35),
+            0 0 24px rgba(245,230,211,0.9),
+            0 0 52px rgba(225,182,36,0.65),
+            0 0 80px rgba(237,118,96,0.48),
             0 6px 20px rgba(0,0,0,0.6);
         }
 
@@ -532,15 +533,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
             const outY = `${Math.sin(rad) * s.dist}vmin`;
             const mid = `${Math.cos(rad) * s.dist * 0.45}vmin`;
             const midY = `${Math.sin(rad) * s.dist * 0.45}vmin`;
-            // Weight ~70% of slots to product photos when images are provided,
-            // cycling through the full set so each glasses image appears.
-            const usePhoto = !!(burstImages && burstImages.length && (i % 10) < 7);
+            // Weight the burst heavily toward product images so the Oakley
+            // glasses are unmistakable in the quick animation beat.
+            const usePhoto = !!(burstImages && burstImages.length && (i % 8) < 7);
             const photoIdx = usePhoto
               ? (burstImages ? i % burstImages.length : 0)
               : 0;
             const photoSrc = usePhoto ? burstImages![photoIdx] : undefined;
-            // Photo medallions ~2x previous size so the glasses actually read.
-            const photoSize = usePhoto ? Math.min(220, Math.max(150, s.size + 80)) : s.size;
+            // Large uncropped cutouts so the glasses actually read.
+            const photoSize = usePhoto ? Math.min(280, Math.max(210, s.size + 130)) : s.size;
             return (
               <div
                 key={`burst-${i}`}
