@@ -297,10 +297,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           position: fixed;
           inset: 0;
           background-color: #19363B;
-          background-image: linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg);
-          background-size: cover;
-          background-position: center top;
-          background-repeat: no-repeat;
+          background-image: radial-gradient(ellipse at center, #1f4248 0%, #19363B 55%, #0f2629 100%);
           z-index: 60;
           pointer-events: none;
           animation: bmpStageOut 800ms ease-out ${STAGE_OUT_DELAY_S}s forwards;
