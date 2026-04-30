@@ -139,10 +139,9 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center md:bg-top"
+      className="min-h-screen bg-cover bg-center md:bg-top afterparty-page-bg"
       style={{
         backgroundColor: BG,
-        backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         color: "#fff",

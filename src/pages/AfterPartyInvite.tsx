@@ -98,12 +98,12 @@ const AfterPartyInvite = ({ presenter, burstImages }: AfterPartyInviteProps = {}
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";
-    link.href = "/afterparty-bg.jpg";
+    link.href = window.matchMedia("(min-width: 768px)").matches ? "/afterparty-bg-desktop.jpg" : "/afterparty-bg.jpg";
     link.fetchPriority = "high" as any;
     document.head.appendChild(link);
     // Also kick off an actual image load so the browser caches it ASAP.
     const img = new Image();
-    img.src = "/afterparty-bg.jpg";
+    img.src = link.href;
     return () => { document.head.removeChild(link); };
   }, []);
 
@@ -328,10 +328,9 @@ const AfterPartyInvite = ({ presenter, burstImages }: AfterPartyInviteProps = {}
   return (
     <EditableTextProvider pageSlug="afterparty">
       <div
-        className="min-h-screen relative bg-cover bg-center md:bg-top"
+        className="min-h-screen relative bg-cover bg-center md:bg-top afterparty-page-bg"
         style={{
           backgroundColor: BG,
-          backgroundImage: `linear-gradient(rgba(8,8,8,0.25), rgba(8,8,8,0.35)), url(/afterparty-bg.jpg)`,
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           color: CREAM,
