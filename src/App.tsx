@@ -41,12 +41,23 @@ import LinkTracker from "./components/LinkTracker";
 import oakleyCreamLogo from "./assets/oakley-logo-cream.png";
 
 // Oakley product photos for the snowflake burst on /afterpartyoakley.
-// Drop sunglasses + goggles images into src/assets/oakley-products/ and
-// import them here. Roughly half the burst stars become circular medallions
-// using these images. Leave the array empty to keep the original star burst.
+import oakleyAirbrake from "./assets/oakley-products/airbrake-goggle.png";
+import oakleyFallLine from "./assets/oakley-products/fall-line-goggle.png";
+import oakleyFrontLine from "./assets/oakley-products/front-line-goggle.png";
+import oakleyMetaHstn from "./assets/oakley-products/meta-hstn.png";
+import oakleyMetaVanguard from "./assets/oakley-products/meta-vanguard.png";
+import oakleyMvdpSutro from "./assets/oakley-products/mvdp-sutro.png";
+import oakleyPlantaris from "./assets/oakley-products/plantaris-sq.png";
+import oakleyWtrHelmet from "./assets/oakley-products/wtr-icon-helmet.png";
 const OAKLEY_BURST_IMAGES: string[] = [
-  // import oakleySG1 from "./assets/oakley-products/sg-1.jpg";
-  // oakleySG1,
+  oakleyMetaHstn,
+  oakleyMetaVanguard,
+  oakleyMvdpSutro,
+  oakleyPlantaris,
+  oakleyAirbrake,
+  oakleyFallLine,
+  oakleyFrontLine,
+  oakleyWtrHelmet,
 ];
 
 const OAKLEY_PRESENTER = {
