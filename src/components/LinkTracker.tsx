@@ -24,10 +24,15 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
   const [stats, setStats] = useState<ClickStat[]>([]);
   const [showTooltip, setShowTooltip] = useState<{ x: number; y: number; stat: ClickStat } | null>(null);
 
-  // Auth check
+  // Auth check — only allow internal admin domains
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setIsAdmin(!!session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
+    const ADMIN_DOMAINS = ["@wearetheoutdoorindustry.com", "@basecampjobs.com"];
+    const checkAdmin = (session: any) => {
+      const email = session?.user?.email?.toLowerCase() || "";
+      setIsAdmin(ADMIN_DOMAINS.some((d) => email.endsWith(d)));
+    };
+    supabase.auth.getSession().then(({ data: { session } }) => checkAdmin(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => checkAdmin(session));
     return () => subscription.unsubscribe();
   }, []);
 
