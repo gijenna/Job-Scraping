@@ -249,9 +249,10 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter, burstImages }: Props) 
         /* ===== Existing star burst (kept) ===== */
         @keyframes bmpStarBurst {
           0%   { transform: translate(-50%, -50%) translate(0, 0) scale(0.1) rotate(0); opacity: 0; }
-          15%  { transform: translate(-50%, -50%) translate(var(--bx-mid), var(--by-mid)) scale(1.1) rotate(calc(var(--bspin) * 0.4deg)); opacity: 1; }
-          55%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 1deg)); opacity: 1; }
-          85%  { transform: translate(-50%, -50%) translate(calc(var(--bx-out) * 0.4), calc(var(--by-out) * 0.4)) scale(0.5) rotate(calc(var(--bspin) * 1.4deg)); opacity: 0.8; }
+          10%  { transform: translate(-50%, -50%) translate(var(--bx-mid), var(--by-mid)) scale(1.1) rotate(calc(var(--bspin) * 0.4deg)); opacity: 1; }
+          30%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 0.7deg)); opacity: 1; }
+          78%  { transform: translate(-50%, -50%) translate(var(--bx-out), var(--by-out)) scale(1) rotate(calc(var(--bspin) * 1deg)); opacity: 1; }
+          92%  { transform: translate(-50%, -50%) translate(calc(var(--bx-out) * 0.4), calc(var(--by-out) * 0.4)) scale(0.5) rotate(calc(var(--bspin) * 1.4deg)); opacity: 0.8; }
           100% { transform: translate(-50%, -50%) translate(0, 0) scale(0); opacity: 0; }
         }
 
