@@ -167,7 +167,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
           );
         })()}
 
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-6 mb-10 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] gap-5 mb-6 items-start">
           {/* Headcount header - left */}
           <div className="relative">
             <h1
