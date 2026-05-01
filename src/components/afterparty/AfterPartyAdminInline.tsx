@@ -18,14 +18,26 @@ const AfterPartyAdminInline = () => {
   const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Real admin = signed-in user with a @wearetheoutdoorindustry.com email.
+  // Anonymous Supabase sessions (created by the After Party PIN flow for any
+  // RSVP'd guest) must NOT count as admin, otherwise every guest would see
+  // this panel.
+  const isAdminUser = (user: any) => {
+    if (!user) return false;
+    if (user.is_anonymous === true) return false;
+    const email = (user.email || "").toLowerCase().trim();
+    if (!email) return false;
+    return email.endsWith("@wearetheoutdoorindustry.com");
+  };
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const { data } = await supabase.auth.getUser();
-      if (!cancelled) setAuthed(!!data.user);
+      if (!cancelled) setAuthed(isAdminUser(data.user));
     })();
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setAuthed(!!session?.user);
+      setAuthed(isAdminUser(session?.user));
     });
     return () => {
       cancelled = true;
