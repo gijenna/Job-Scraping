@@ -71,7 +71,7 @@ const TONE_FILTER: Record<string, string> = {
   green: "brightness(0) saturate(100%) invert(78%) sepia(83%) saturate(2103%) hue-rotate(57deg) brightness(106%) contrast(101%)",
 };
 
-export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false }) => {
+export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false, sunsetBackground = false, withLogo = false }) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
   const cx = width / 2;
