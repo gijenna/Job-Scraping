@@ -66,8 +66,8 @@ if (mode === "stills") {
   await renderStillFrame("lockup-buildon", 140, "/tmp/check-lockup-final.png");
 } else if (mode === "all") {
   await renderVideo("opening-full-black", "h264", "/mnt/documents/opening-full-black.mp4", { crf: 16 });
-  await renderVideo("fire-and-kite", "vp9", "/mnt/documents/fire-and-kite-transparent.webm", { pixelFormat: "yuva420p" });
-  await renderVideo("lockup-buildon", "vp9", "/mnt/documents/lockup-buildon-transparent.webm", { pixelFormat: "yuva420p" });
+  await renderVideo("fire-and-kite", "vp9", "/mnt/documents/fire-and-kite-transparent.webm", { pixelFormat: "yuva420p", imageFormat: "png" });
+  await renderVideo("lockup-buildon", "vp9", "/mnt/documents/lockup-buildon-transparent.webm", { pixelFormat: "yuva420p", imageFormat: "png" });
   await renderStillFrame("lockup-still", 140, "/mnt/documents/lockup-still-transparent.png");
 }
 
