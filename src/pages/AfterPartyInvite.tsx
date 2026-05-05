@@ -327,8 +327,11 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         className="min-h-screen relative bg-cover bg-center md:bg-top afterparty-page-bg"
         style={{
           backgroundColor: BG,
+          backgroundImage: "url('/bg-sunset.jpg')",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           color: CREAM,
           fontFamily: '"Josefin Sans", sans-serif',
           fontWeight: 300,
