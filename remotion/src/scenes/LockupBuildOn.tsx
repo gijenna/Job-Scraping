@@ -15,7 +15,7 @@ import { BasecampMatchText } from "../components/BasecampMatchText";
  *
  * Total duration ~150 frames (5s at 30fps).
  */
-export const LockupBuildOn: React.FC = () => {
+export const LockupBuildOn: React.FC<{ blackBackground?: boolean }> = ({ blackBackground = false }) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
 
