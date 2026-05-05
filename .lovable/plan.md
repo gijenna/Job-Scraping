@@ -1,54 +1,69 @@
+# Oakley Blurb + RiNo Mural Background for `/guestsoakley`
 
-# Standalone After Party Animation Clips
+## 1. Blurb copy update
 
-Rebuild the relevant pieces of the `/afterparty` intro in Remotion so we can render clean, frame-perfect 2160x2160 clips. Output goes to `/mnt/documents/` as downloadable files.
+In `src/components/afterparty/OakleyRinoVenueShowcase.tsx`, replace the current paragraph with:
 
-## Deliverables
+> The Oakley store in Denver's River North Arts District blurs the line between performance and culture, creating an immersive space built for the athletes, artists, and creators of RiNo. Designed as a premier destination for gear, storytelling, and community, the store brings the Oakley experience to life in the heart of Denver.
 
-All 2160x2160, 30fps, rendered to `/mnt/documents/`:
+(Apostrophe stays as `'`. No em dashes per project rule.)
 
-1. **`opening-full-black.mp4`** — Full opening sequence on solid black background. Fire grows in, sparks emit, hero spark launches into the popfly kite, kite flutters around the fire trailing dust motes, fire dismisses, kite flies off, snowflake/star burst plays out. ~10s, H.264 MP4.
-2. **`fire-and-kite-transparent.webm`** — Same fire + kite choreography (no star burst, no wordmarks), transparent background. WebM VP9 + alpha. ~7s.
-3. **`lockup-buildon-transparent.webm`** — New build-on for the "basecamp match × popfly" header lockup: basecamp wordmark draws in left-to-right, flame catches and starts flickering, X divider draws across, popfly kite/wordmark bounces in from the right with neon glow settling into the steady pulse. Holds the steady loop for ~2s. Transparent bg, WebM VP9 + alpha. ~5s total.
-4. **`lockup-still-transparent.png`** — Final resting frame of #3 as a high-res PNG with alpha. 2160x2160 (logo centered with generous padding).
+## 2. RiNo mural artwork — strategy
 
-## Approach
+You asked for artsy/expressive RiNo graffiti energy that fills **dead space** (especially beside "Your Matches" and outer page margins) without competing with content.
 
-### Project setup
-- Create `remotion/` directory at project root, `bun init`, install Remotion deps + musl/gnu compositor fix per skill instructions.
-- Copy existing assets (`popfly-logo-neon.png`, `popfly-kite.png`, `afterparty-star.png`, `afterparty-starset.png`) into `remotion/public/`.
-- Inline the fire SVG paths and basecamp wordmark SVG paths from the existing components into Remotion scene components.
+### Generation
+Use the Lovable AI Gateway (`google/gemini-3-pro-image-preview`) to generate **3 vertical mural panels** as transparent-edged PNGs:
 
-### Scene components
-- `FireOnly.tsx` — yellow ellipse + animated flame (outer + inner flicker) + matchstick + match head, all driven by `useCurrentFrame()` + `interpolate()`/`spring()`.
-- `Sparks.tsx` — emit sparks on a frame-driven loop (replaces CSS `@keyframes bmpSparkRise`).
-- `Kite.tsx` — popfly kite image with frame-driven flutter path around the fire, wing-fold scaleX, and neon green drop-shadow glow pulse.
-- `TrailMotes.tsx` — frame-driven dust motes that drop off the kite.
-- `StarBurst.tsx` — recreates the cream/coral/green sparkle burst using the existing star PNGs.
-- `LockupBuildOn.tsx` — basecamp wordmark with `clip-path` reveal driven by frame, animated flame catching, X divider scaleX draw-on, popfly bouncing in via spring, neon pulse loop on the popfly side.
+1. `rino-mural-left.png` — tall vertical RiNo-style spray-paint mural strip (wheatpaste textures, bold color blocks, abstracted lettering — no readable words to avoid distraction). Muted in the project palette (teal, coral, cream, mustard) so it ties to the brand.
+2. `rino-mural-right.png` — companion strip, different composition, same palette family.
+3. `rino-mural-corner.png` — small square paint-splash / sticker-bomb accent for corners.
 
-### Compositions in `Root.tsx`
-Four registered compositions, each with its own duration:
-- `opening-full-black` (background: solid #000)
-- `fire-and-kite` (background: transparent)
-- `lockup-buildon` (background: transparent)
-- `lockup-still` (a `<Still>` at the resting frame of `lockup-buildon`)
+Saved to `public/oakley-rino/` so they're served statically. (Generation runs once via a `/tmp` script; only the resulting PNGs are committed.)
 
-### Render script
-`remotion/scripts/render-all.mjs` renders all four:
-- MP4: `codec: 'h264'` for the black-background clip.
-- WebM with alpha: `codec: 'vp9'`, `pixelFormat: 'yuva420p'` for the two transparent clips.
-- PNG: `bunx remotion still` for the static lockup.
+### Placement on `/guestsoakley` (in `src/pages/GuestList.tsx`, gated by `venueShowcase === "oakley-rino"`)
 
-All outputs go directly to `/mnt/documents/`. Final step lists the files with sizes and emits `<lov-artifact>` tags so you can download them.
+Add a non-interactive decorative layer rendered behind page content:
 
-## Notes / constraints
-- Per skill rules, all motion uses `useCurrentFrame()` + `interpolate()` / `spring()` — no CSS animations carried over from the live page.
-- The kite flutter path will visually match the existing wide-around-the-fire choreography but be rebuilt as a parametric path so it stays smooth at 2160x2160.
-- Square (2160x2160) framing means the lockup will be centered with vertical padding rather than stretched — the lockup itself stays in its natural horizontal proportion.
-- I'll spot-check key frames with `bunx remotion still` before doing the full renders to catch any visual issues early.
+```text
+┌──────────────────────────────────────────────┐
+│ [mural-left]                  [mural-right]  │
+│  fixed,                          fixed,      │
+│  left edge,                      right edge, │
+│  ~30vw wide,                     ~30vw wide, │
+│  ~70vh tall,                     ~70vh tall, │
+│  opacity .35,                    opacity .35,│
+│  pointer-events:none             mix-blend:  │
+│                                  soft-light  │
+│                                              │
+│         [PAGE CONTENT — unchanged]           │
+│                                              │
+│ [corner accent]               [corner accent]│
+└──────────────────────────────────────────────┘
+```
 
-## Out of scope
-- No changes to the live `/afterparty` page — these clips are exports only.
-- No audio.
-- The Oakley variant — same source animation, so the clips work for both unless you tell me otherwise.
+Specifics:
+- Wrapped in `<div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">`.
+- Murals use `position: absolute`, anchored to outer edges with negative offsets so they bleed off-screen.
+- Hidden under `md` breakpoint (`hidden md:block`) — on a 768px viewport they'd crowd content.
+- Subtle parallax-free; pure CSS, no JS.
+- Page content already sits in centered `max-w` containers, so the murals naturally fill the dead margin including the empty space next to "Your Matches".
+
+### Tone controls (so it doesn't overpower)
+- Opacity 0.30–0.40
+- `mix-blend-mode: soft-light` so colors harmonize with the dark teal background instead of fighting it
+- Slight blur (`filter: blur(0.5px)`) to push it visually behind text
+
+## 3. Files touched
+
+- `src/components/afterparty/OakleyRinoVenueShowcase.tsx` — blurb text only
+- `src/pages/GuestList.tsx` — add decorative mural layer behind content (only when `venueShowcase === "oakley-rino"`)
+- `public/oakley-rino/rino-mural-left.png` (new, AI-generated)
+- `public/oakley-rino/rino-mural-right.png` (new, AI-generated)
+- `public/oakley-rino/rino-mural-corner.png` (new, AI-generated)
+
+## Questions / assumptions
+
+- **Scope**: Murals appear only on `/guestsoakley`, not on the standard `/guests`. Confirmed by your wording.
+- **No readable graffiti words** in the murals — keeps it abstract and avoids competing copy. If you'd rather see actual stylized words (e.g., "RiNo", "DENVER"), say the word and I'll regenerate with text.
+- **Mobile**: hidden below `md` to keep the phone view clean. Tell me if you want a lighter mobile version instead.
