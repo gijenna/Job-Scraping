@@ -7,6 +7,10 @@ interface Props {
   withStarBurst?: boolean;
   /** Render solid black background (vs transparent). */
   blackBackground?: boolean;
+  /** Render the sunset photo background. */
+  sunsetBackground?: boolean;
+  /** Render Outside Days logo overlay at the bottom. */
+  withLogo?: boolean;
 }
 
 // Timeline (at 30fps):
