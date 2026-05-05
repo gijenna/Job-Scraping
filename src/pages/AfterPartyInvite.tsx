@@ -327,7 +327,7 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
         className="min-h-screen relative bg-cover bg-center md:bg-top afterparty-page-bg"
         style={{
           backgroundColor: BG,
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('/bg-sunset.jpg')",
+          backgroundImage: "url('/bg-sunset.jpg')",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
@@ -337,6 +337,16 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
           fontWeight: 300,
         }}
       >
+        {/* Darkening overlay — starts transparent during splash, fades to dark for legibility */}
+        <div
+          aria-hidden
+          className="fixed inset-0 pointer-events-none z-0"
+          style={{
+            backgroundColor: "rgba(0,0,0,0.55)",
+            opacity: splashDone ? 1 : 0,
+            transition: "opacity 1.6s ease-in 0.2s",
+          }}
+        />
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
           <BasecampMatchPopflyLogo
