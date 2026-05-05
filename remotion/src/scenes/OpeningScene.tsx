@@ -126,6 +126,12 @@ export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBack
 
   return (
     <AbsoluteFill style={{ backgroundColor: blackBackground ? "#000000" : "transparent" }}>
+      {sunsetBackground && (
+        <Img src={staticFile("images/bg-sunset.jpg")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      )}
+      {withLogo && (
+        <Img src={staticFile("images/outside-days-logo.png")} style={{ position: "absolute", bottom: 120, left: "50%", transform: "translateX(-50%)", width: 900, height: "auto", zIndex: 50, filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.6))" }} />
+      )}
       {/* Fire */}
       <div
         style={{
