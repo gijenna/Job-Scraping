@@ -68,6 +68,15 @@ export const RemotionRoot: React.FC = () => {
         height={2160}
         defaultProps={{ blackBackground: true } as any}
       />
+      <Composition
+        id="lockup-buildon-sunset"
+        component={LockupBuildOn as any}
+        durationInFrames={150}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ sunsetBackground: true } as any}
+      />
       <Still
         id="lockup-still"
         component={LockupBuildOn}
