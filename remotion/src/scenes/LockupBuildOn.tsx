@@ -15,7 +15,7 @@ import { BasecampMatchText } from "../components/BasecampMatchText";
  *
  * Total duration ~150 frames (5s at 30fps).
  */
-export const LockupBuildOn: React.FC<{ blackBackground?: boolean }> = ({ blackBackground = false }) => {
+export const LockupBuildOn: React.FC<{ blackBackground?: boolean; sunsetBackground?: boolean }> = ({ blackBackground = false, sunsetBackground = false }) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
 
@@ -61,6 +61,9 @@ export const LockupBuildOn: React.FC<{ blackBackground?: boolean }> = ({ blackBa
 
   return (
     <AbsoluteFill style={{ backgroundColor: blackBackground ? "#000000" : "transparent" }}>
+      {sunsetBackground && (
+        <Img src={staticFile("images/bg-sunset.jpg")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      )}
       <div
         style={{
           position: "absolute",

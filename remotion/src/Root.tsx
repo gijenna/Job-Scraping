@@ -52,6 +52,15 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{ withStarBurst: false, blackBackground: true }}
       />
       <Composition
+        id="fire-and-kite-sunset"
+        component={OpeningScene as any}
+        durationInFrames={220}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ withStarBurst: false, sunsetBackground: true }}
+      />
+      <Composition
         id="lockup-buildon"
         component={LockupBuildOn}
         durationInFrames={150}
@@ -67,6 +76,15 @@ export const RemotionRoot: React.FC = () => {
         width={2160}
         height={2160}
         defaultProps={{ blackBackground: true } as any}
+      />
+      <Composition
+        id="lockup-buildon-sunset"
+        component={LockupBuildOn as any}
+        durationInFrames={150}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ sunsetBackground: true } as any}
       />
       <Still
         id="lockup-still"
