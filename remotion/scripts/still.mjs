@@ -7,7 +7,7 @@ const browser = await openBrowser("chrome", {
   chromiumOptions: { args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"] },
   chromeMode: "chrome-for-testing",
 });
-const composition = await selectComposition({ serveUrl: bundled, id: "lockup-still", puppeteerInstance: browser });
+const composition = await selectComposition({ serveUrl: bundled, id: "lockup-buildon", puppeteerInstance: browser });
 await renderStill({ composition, serveUrl: bundled, output: "/mnt/documents/lockup-still-transparent.png", frame: 140, puppeteerInstance: browser });
 await browser.close({ silent: false });
 console.log("DONE");
