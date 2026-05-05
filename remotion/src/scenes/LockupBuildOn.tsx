@@ -61,6 +61,9 @@ export const LockupBuildOn: React.FC<{ blackBackground?: boolean; sunsetBackgrou
 
   return (
     <AbsoluteFill style={{ backgroundColor: blackBackground ? "#000000" : "transparent" }}>
+      {sunsetBackground && (
+        <Img src={staticFile("images/bg-sunset.jpg")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      )}
       <div
         style={{
           position: "absolute",
