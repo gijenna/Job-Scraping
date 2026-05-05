@@ -70,7 +70,7 @@ export const LockupBuildOn: React.FC = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 60,
+          gap: 36,
         }}
       >
         {/* Basecamp side: fire + text */}
@@ -78,7 +78,7 @@ export const LockupBuildOn: React.FC = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 30,
+            gap: 18,
             filter: frame > 90 ? amberGlow : "none",
           }}
         >
