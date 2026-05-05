@@ -7,6 +7,10 @@ interface Props {
   withStarBurst?: boolean;
   /** Render solid black background (vs transparent). */
   blackBackground?: boolean;
+  /** Render the sunset photo background. */
+  sunsetBackground?: boolean;
+  /** Render Outside Days logo overlay at the bottom. */
+  withLogo?: boolean;
 }
 
 // Timeline (at 30fps):
@@ -67,7 +71,7 @@ const TONE_FILTER: Record<string, string> = {
   green: "brightness(0) saturate(100%) invert(78%) sepia(83%) saturate(2103%) hue-rotate(57deg) brightness(106%) contrast(101%)",
 };
 
-export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false }) => {
+export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false, sunsetBackground = false, withLogo = false }) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
   const cx = width / 2;
@@ -122,6 +126,12 @@ export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBack
 
   return (
     <AbsoluteFill style={{ backgroundColor: blackBackground ? "#000000" : "transparent" }}>
+      {sunsetBackground && (
+        <Img src={staticFile("images/bg-sunset.jpg")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      )}
+      {withLogo && (
+        <Img src={staticFile("images/outside-days-logo.png")} style={{ position: "absolute", bottom: 120, left: "50%", transform: "translateX(-50%)", width: 900, height: "auto", zIndex: 50, filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.6))" }} />
+      )}
       {/* Fire */}
       <div
         style={{

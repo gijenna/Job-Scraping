@@ -6,7 +6,6 @@ import { LockupBuildOn } from "./scenes/LockupBuildOn";
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* Full opening on solid black: fire, sparks, kite, dismiss, snowflake burst */}
       <Composition
         id="opening-full-black"
         component={OpeningScene as any}
@@ -16,7 +15,24 @@ export const RemotionRoot: React.FC = () => {
         height={2160}
         defaultProps={{ withStarBurst: true, blackBackground: true }}
       />
-      {/* Just the fire + kite, transparent background, no star burst */}
+      <Composition
+        id="opening-full-black-with-logo"
+        component={OpeningScene as any}
+        durationInFrames={300}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ withStarBurst: true, blackBackground: true, withLogo: true }}
+      />
+      <Composition
+        id="opening-sunset"
+        component={OpeningScene as any}
+        durationInFrames={300}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ withStarBurst: true, sunsetBackground: true, withLogo: true }}
+      />
       <Composition
         id="fire-and-kite"
         component={OpeningScene as any}
@@ -26,7 +42,15 @@ export const RemotionRoot: React.FC = () => {
         height={2160}
         defaultProps={{ withStarBurst: false, blackBackground: false }}
       />
-      {/* Lockup build-on, transparent */}
+      <Composition
+        id="fire-and-kite-black"
+        component={OpeningScene as any}
+        durationInFrames={220}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ withStarBurst: false, blackBackground: true }}
+      />
       <Composition
         id="lockup-buildon"
         component={LockupBuildOn}
@@ -35,7 +59,15 @@ export const RemotionRoot: React.FC = () => {
         width={2160}
         height={2160}
       />
-      {/* Final still of the lockup */}
+      <Composition
+        id="lockup-buildon-black"
+        component={LockupBuildOn as any}
+        durationInFrames={150}
+        fps={30}
+        width={2160}
+        height={2160}
+        defaultProps={{ blackBackground: true } as any}
+      />
       <Still
         id="lockup-still"
         component={LockupBuildOn}
