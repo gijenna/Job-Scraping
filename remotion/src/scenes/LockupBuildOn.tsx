@@ -60,7 +60,7 @@ export const LockupBuildOn: React.FC<{ blackBackground?: boolean }> = ({ blackBa
   const popflyHeight = 240;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "transparent" }}>
+    <AbsoluteFill style={{ backgroundColor: blackBackground ? "#000000" : "transparent" }}>
       <div
         style={{
           position: "absolute",
