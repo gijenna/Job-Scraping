@@ -149,7 +149,44 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         fontWeight: 300,
       }}
     >
-      <div className="mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
+      {venueShowcase === "oakley-rino" && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-0 overflow-hidden hidden md:block"
+        >
+          <img
+            src="/oakley-rino/rino-mural-left.png"
+            alt=""
+            className="absolute top-[8vh] -left-[6vw] h-[78vh] w-auto"
+            style={{
+              opacity: 0.32,
+              mixBlendMode: "soft-light",
+              filter: "blur(0.4px)",
+              maskImage:
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+            }}
+            loading="lazy"
+          />
+          <img
+            src="/oakley-rino/rino-mural-right.png"
+            alt=""
+            className="absolute top-[20vh] -right-[5vw] h-[82vh] w-auto"
+            style={{
+              opacity: 0.30,
+              mixBlendMode: "soft-light",
+              filter: "blur(0.4px)",
+              maskImage:
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+            }}
+            loading="lazy"
+          />
+        </div>
+      )}
+      <div className="relative z-10 mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
         {(() => {
           try {
             const slug = sessionStorage.getItem("afterparty:return_slug");

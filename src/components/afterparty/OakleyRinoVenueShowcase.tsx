@@ -167,10 +167,11 @@ const OakleyRinoVenueShowcase = () => {
           className="mt-2 text-[11px] sm:text-[11.5px] leading-snug"
           style={{ color: "rgba(245,230,211,0.75)" }}
         >
-          Oakley's brand-new next-gen retail hub in Denver's River North Arts
-          District. Brutalist architecture, a Chelsea Lewinsky mural, a Prizm
-          wall, and a rooftop lounge, built for the athletes, artists, and
-          creators of RiNo.
+          The Oakley store in Denver's River North Arts District blurs the
+          line between performance and culture, creating an immersive space
+          built for the athletes, artists, and creators of RiNo. Designed as
+          a premier destination for gear, storytelling, and community, the
+          store brings the Oakley experience to life in the heart of Denver.
         </p>
         <div
           className="mt-1.5 text-[9.5px] leading-none"
