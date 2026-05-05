@@ -52,12 +52,12 @@ export const LockupBuildOn: React.FC = () => {
   const amberT = (frame / 78) * Math.PI * 2 + Math.PI;
   const amberGlow = `drop-shadow(0 0 ${24 + Math.sin(amberT) * 12}px rgba(225,182,36,${0.55 + Math.sin(amberT) * 0.25})) drop-shadow(0 0 ${48 + Math.sin(amberT) * 16}px rgba(225,182,36,0.35))`;
 
-  // Sizes - lockup is large on the square canvas
-  const fireSize = 360;
-  const textWidth = 1100;
+  // Sizes - tuned so the full lockup fits within 2160 with margin
+  const fireSize = 240;
+  const textWidth = 720;
   const textHeight = (textWidth / 57) * 35;
-  const dividerW = 200;
-  const popflyHeight = 360;
+  const dividerW = 130;
+  const popflyHeight = 240;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "transparent" }}>
