@@ -510,7 +510,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
           matches={matchesWithAttendee}
           locked={!!lockedMatches}
           awaitingMatchingInfo={!hasMatchingInfo}
-          muralSrc={rinoMural ? "/oakley-rino/oakley-rino-mural-vertical.jpg" : undefined}
+          muralSrc={rinoMural ? "/oakley-rino/oakley-rino-mural-strips.jpg" : undefined}
         />
         </div>
       </div>
