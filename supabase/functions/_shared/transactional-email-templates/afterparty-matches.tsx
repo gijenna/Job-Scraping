@@ -134,3 +134,4 @@ const button = {
   margin: "8px 0",
 };
 const footer = { fontSize: "13px", color: "#888", margin: "24px 0 0" };
+const fineprint = { fontSize: "11px", color: "#999", lineHeight: "1.5", margin: "16px 0 0", fontStyle: "italic" as const };
