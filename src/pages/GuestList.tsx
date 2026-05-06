@@ -185,17 +185,21 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         />
       )}
       <div className="relative z-10 mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
-        <Link
-          to={viewerSlug ? `/afterparty?slug=${viewerSlug}` : "/afterparty"}
-          className="inline-flex items-center gap-1 text-[12px] mb-5"
-          style={{ color: "rgba(255,255,255,0.55)" }}
-        >
-          <ArrowLeft className="w-3 h-3" /> {viewerSlug ? "Back to invite" : "Back to invite & RSVP"}
-        </Link>
+        {!viewerSlug && (
+          <Link
+            to="/afterparty"
+            onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
+            className="inline-flex items-center gap-1 text-[12px] mb-5"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            <ArrowLeft className="w-3 h-3" /> Back to invite & RSVP
+          </Link>
+        )}
 
         {!viewerSlug && (
           <Link
             to="/afterparty"
+            onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
             className="block rounded-xl p-4 sm:p-5 mb-6 hover:opacity-95 transition-opacity"
             style={{
               backgroundColor: "rgba(237,118,96,0.14)",
