@@ -62,6 +62,7 @@ const App = () => (
         <Routes>
           {/* Pinned to top for quick access */}
           <Route path="/experts/afterparty" element={<AdminAfterParty />} />
+          <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
           <Route
             path="/afterparty"
             element={
