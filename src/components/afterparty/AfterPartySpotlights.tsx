@@ -124,8 +124,15 @@ const AfterPartySpotlights = () => {
         {grouped.map(({ category, list }) => (
           <div key={category}>
             <div
-              className="text-[11px] uppercase mb-2"
-              style={{ letterSpacing: "0.12em", color: CREAM_FAINT }}
+              className="inline-block text-[11px] uppercase mb-2 px-2 py-1 rounded-md backdrop-blur-sm"
+              style={{
+                letterSpacing: "0.14em",
+                color: "#ED7660",
+                fontWeight: 700,
+                backgroundColor: "rgba(8,8,8,0.55)",
+                border: "1px solid rgba(237,118,96,0.28)",
+                textShadow: "0 0 10px rgba(237,118,96,0.5)",
+              }}
             >
               {category}
             </div>
