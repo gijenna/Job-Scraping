@@ -464,7 +464,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
                       document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
                     }, 100);
                   }}
-                  className="font-afterparty text-[14px] h-11 px-8"
+                  className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
                   {me?.full_name
