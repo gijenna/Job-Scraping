@@ -92,12 +92,12 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
 
   useEffect(() => { fetchAll(); }, []);
 
-  // Preload the hero background so it's ready before first paint.
+  // Preload the sunset background used by the splash and page.
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "image";
-    link.href = window.matchMedia("(min-width: 768px)").matches ? "/afterparty-bg-desktop.jpg" : "/afterparty-bg.jpg";
+    link.href = "/bg-sunset.jpg";
     link.fetchPriority = "high" as any;
     document.head.appendChild(link);
     // Also kick off an actual image load so the browser caches it ASAP.
@@ -340,6 +340,12 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
           fontWeight: 300,
         }}
       >
+        <style>{`
+          @keyframes afterpartyBackgroundDarken {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+          }
+        `}</style>
         {/* Darkening overlay — starts transparent during splash, fades to dark for legibility */}
         <div
           aria-hidden
@@ -347,7 +353,8 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
           style={{
             backgroundColor: "rgba(0,0,0,0.55)",
             opacity: splashDone ? 1 : 0,
-            transition: "opacity 1.6s ease-in 0.2s",
+            animation: splashDone ? undefined : "afterpartyBackgroundDarken 3200ms ease-in-out 8100ms forwards",
+            transition: "opacity 0.4s ease-out",
           }}
         />
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>

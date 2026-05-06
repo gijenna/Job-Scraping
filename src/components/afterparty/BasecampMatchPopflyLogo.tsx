@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import popflyKite from "@/assets/popfly-kite.png";
 import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
@@ -100,63 +100,17 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
-  const splashLogoRef = useRef<HTMLImageElement | null>(null);
-  const homeLogoRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 11200;
+    const delay = reduced ? 0 : 12400;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
   }, [onRevealed]);
-
-  // Measure where the steady-state presenter logo lives so the splash logo
-  // can animate to that exact spot and size — a true seamless merge.
-  // Uses offsetWidth/Height + offsetParent chain so CSS transforms (the
-  // intro scale animation on the lockup) don't poison the measurement.
-  useLayoutEffect(() => {
-    if (!presenter) return;
-    const compute = () => {
-      const splash = splashLogoRef.current;
-      const home = homeLogoRef.current;
-      if (!splash || !home) return;
-      if (!home.offsetWidth || !home.offsetHeight) return;
-      let x = 0, y = 0;
-      let cur: HTMLElement | null = home;
-      while (cur) {
-        x += cur.offsetLeft;
-        y += cur.offsetTop;
-        cur = cur.offsetParent as HTMLElement | null;
-      }
-      const docCenterX = x + home.offsetWidth / 2;
-      const docCenterY = y + home.offsetHeight / 2;
-      const targetViewportX = docCenterX - window.scrollX;
-      const targetViewportY = docCenterY - window.scrollY;
-      const tx = targetViewportX - window.innerWidth / 2;
-      const ty = targetViewportY - window.innerHeight / 2;
-      const splashH = splash.offsetHeight || splash.getBoundingClientRect().height;
-      const ts = splashH > 0 ? home.offsetHeight / splashH : 0.25;
-      splash.style.setProperty("--bmp-home-tx", `${tx}px`);
-      splash.style.setProperty("--bmp-home-ty", `${ty}px`);
-      splash.style.setProperty("--bmp-home-ts", `${ts}`);
-    };
-    compute();
-    // Re-measure after the home logo image loads (in case it wasn't ready yet).
-    const home = homeLogoRef.current;
-    if (home && !home.complete) {
-      const onLoad = () => compute();
-      home.addEventListener("load", onLoad);
-      return () => home.removeEventListener("load", onLoad);
-    }
-    const r = () => compute();
-    window.addEventListener("resize", r);
-    return () => window.removeEventListener("resize", r);
-  }, [presenter]);
-
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
@@ -208,13 +162,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
   // Pacing — stage starts fully black, sunset fades up under the fire,
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
-  const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_IN_DUR_MS = 1800;         // sunset fades up from black under the fire
-  const STAGE_OUT_DELAY_S = 8.4;        // begin darkening AS snowflakes start spinning
-  const STAGE_OUT_DUR_MS = 2400;        // long, gentle cross-fade into the page
+  const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
+  const STAGE_IN_DUR_MS = 2600;         // sunset radiates up from black under the fire
+  const STAGE_OUT_DELAY_S = 8.1;        // begin darkening AS snowflakes start spinning
+  const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 8.6; // presenter logo (Oakley) blooms at its lockup spot
-  const PRESENTS_DELAY_S = 9.7;         // lockup presenter fades in (so center logo "merges" into place)
+  const PRESENTER_SPLASH_DELAY_S = 8.25; // presenter logo (Oakley) blooms at its exact lockup spot
+  const PRESENTS_DELAY_S = 8.2;          // lockup presenter fades in under the bloom for a real merge
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
@@ -351,8 +305,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           pointer-events: none;
           animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        /* Sunset image fades up from black under the fire (illuminated by it),
-           then fades out alongside the black stage. */
+        /* Sunset image reveals outward from the fire glow, then fades with the stage. */
         .bmp-splash-sunset {
           position: fixed;
           inset: 0;
@@ -362,13 +315,16 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           z-index: 60;
           pointer-events: none;
           opacity: 0;
+          clip-path: circle(0 at 50% 50%);
           animation:
-            bmpSunsetIn ${STAGE_IN_DUR_MS}ms ease-out 200ms forwards,
+            bmpSunsetIlluminate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 120ms forwards,
             bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        @keyframes bmpSunsetIn {
-          0%   { opacity: 0; }
-          100% { opacity: 1; }
+        @keyframes bmpSunsetIlluminate {
+          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.45) saturate(0.8); }
+          18%  { opacity: 0.34; clip-path: circle(10vmin at 50% 50%); filter: brightness(0.6) saturate(0.9); }
+          58%  { opacity: 0.78; clip-path: circle(58vmax at 50% 50%); filter: brightness(0.86) saturate(0.98); }
+          100% { opacity: 1; clip-path: circle(145vmax at 50% 50%); filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -490,25 +446,24 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
-        /* Presenter logo (e.g. Oakley) blooms directly at its lockup spot
-           (slightly larger than home), then settles into the lockup size and
-           cross-fades into the steady-state logo — never overlapping the title. */
-        @keyframes bmpPresenterFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 0.6)); }
-          25%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.55)); }
-          70%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.15)); }
-          100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
+        /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
+        @keyframes bmpPresenterMerge {
+          0%   { opacity: 0; transform: scale(0.78); filter: drop-shadow(0 0 6px rgba(245,230,211,0.2)); }
+          18%  { opacity: 1; transform: scale(1.42); filter: drop-shadow(0 0 18px rgba(245,230,211,0.85)) drop-shadow(0 0 42px rgba(245,230,211,0.45)); }
+          68%  { opacity: 1; transform: scale(1.12); filter: drop-shadow(0 0 16px rgba(245,230,211,0.75)) drop-shadow(0 0 34px rgba(245,230,211,0.38)); }
+          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.45)); }
         }
         .bmp-presenter-splash {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          width: min(28vh, 28vw);
-          height: auto;
-          z-index: 63;
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          z-index: 2;
           opacity: 0;
-          filter: drop-shadow(0 0 20px rgba(245,230,211,0.55)) drop-shadow(0 0 40px rgba(245,230,211,0.3));
-          animation: bmpPresenterFindHome 2200ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          pointer-events: none;
+          transform-origin: center center;
+          animation: bmpPresenterMerge 2600ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
@@ -630,17 +585,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             aria-hidden="true"
           />
 
-          {/* Presenter logo (e.g. Oakley) splash — appears center after OD leaves
-              and merges into the steady-state presenter slot below the lockup. */}
-          {presenter && (
-            <img
-              ref={splashLogoRef}
-              src={presenter.logoUrl}
-              alt=""
-              className="bmp-presenter-splash"
-              aria-hidden="true"
-            />
-          )}
         </>
       )}
 
@@ -705,12 +649,21 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                   {presenter.label}
                 </span>
               )}
-              <img
-                ref={homeLogoRef}
-                src={presenter.logoUrl}
-                alt={presenter.logoAlt}
-                className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
-              />
+              <span className="relative inline-flex h-9 sm:h-11 md:h-12 items-center justify-center">
+                <img
+                  src={presenter.logoUrl}
+                  alt={presenter.logoAlt}
+                  className={`h-full w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
+                />
+                {!revealed && (
+                  <img
+                    src={presenter.logoUrl}
+                    alt=""
+                    className="bmp-presenter-splash"
+                    aria-hidden="true"
+                  />
+                )}
+              </span>
               {presenter.sublabel && (
                 <span
                   className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.25em] mt-1"
