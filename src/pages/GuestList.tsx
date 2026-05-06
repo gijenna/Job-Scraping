@@ -118,8 +118,26 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
       }
       return true;
     });
+    const detailScore = (g: GuestRow) => {
+      const hasPhoto = !!(g.cartoon_url && g.cartoon_url.trim());
+      const fields = [
+        g.mind_blowing_fact,
+        g.niches?.length ? "x" : "",
+        g.creator_types?.length ? "x" : "",
+        g.looking_for?.length ? "x" : "",
+        g.company,
+        g.social_links?.instagram,
+        g.social_links?.linkedin,
+      ];
+      const detail = fields.filter((v) => !!(v && String(v).trim())).length;
+      return (hasPhoto ? 100 : 0) + detail * 10;
+    };
     if (sort === "newest") {
-      list = [...list].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+      list = [...list].sort((a, b) => {
+        const d = detailScore(b) - detailScore(a);
+        if (d !== 0) return d;
+        return +new Date(b.created_at) - +new Date(a.created_at);
+      });
     } else {
       list = [...list].sort((a, b) => {
         const an = (a.niches || [])[0] || "zzz";
