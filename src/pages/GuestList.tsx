@@ -188,14 +188,31 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
           <div className="relative">
             <h1
               className="font-afterparty text-[40px] sm:text-[56px] leading-[0.95] tracking-tight"
-              style={{ fontWeight: 500, color: "#F5E6D3" }}
+              style={{
+                fontWeight: 500,
+                color: "#FFF6E0",
+                textShadow:
+                  "0 0 6px rgba(255,235,180,0.95), 0 0 14px rgba(237,118,96,0.85), 0 0 28px rgba(237,118,96,0.7), 0 0 48px rgba(225,182,36,0.55)",
+              }}
             >
               {loading ? "·" : guests.length}{" "}
-              <span style={{ color: "rgba(245,230,211,0.45)" }}>
+              <span
+                style={{
+                  color: "#FFE9A8",
+                  textShadow:
+                    "0 0 6px rgba(255,225,140,0.9), 0 0 16px rgba(225,182,36,0.8), 0 0 32px rgba(225,182,36,0.55)",
+                }}
+              >
                 {guests.length === 1 ? "person" : "people"} coming
               </span>
             </h1>
-            <p className="text-[13px] mt-3" style={{ color: "rgba(245,230,211,0.5)" }}>
+            <p
+              className="text-[13px] mt-3"
+              style={{
+                color: "#FFE9A8",
+                textShadow: "0 0 8px rgba(225,182,36,0.7), 0 0 18px rgba(237,118,96,0.45)",
+              }}
+            >
               Live roster. Updates as folks RSVP.
             </p>
           </div>
