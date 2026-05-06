@@ -367,10 +367,12 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
         />
         <div className="mx-auto px-5 pt-10 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
-          <BasecampMatchPopflyLogo
-            onRevealed={() => setSplashDone(true)}
-            presenter={presenter}
-          />
+          {!skipSplash && (
+            <BasecampMatchPopflyLogo
+              onRevealed={() => setSplashDone(true)}
+              presenter={presenter}
+            />
+          )}
 
           {/* Personalized greeting sits ABOVE the splash monogram so the two
               never overlap. Appears in sync with the splash and fades out as
