@@ -490,14 +490,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
-        /* Presenter logo (e.g. Oakley) appears at center after OD leaves, then
-           travels to the EXACT position/size of the steady-state lockup logo
-           (computed via JS into --bmp-home-tx/ty/ts) and cross-fades into it. */
+        /* Presenter logo (e.g. Oakley) blooms directly at its lockup spot
+           (slightly larger than home), then settles into the lockup size and
+           cross-fades into the steady-state logo — never overlapping the title. */
         @keyframes bmpPresenterFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, 0) scale(0.6); }
-          18%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
-          55%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(0.95); }
-          88%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 0.6)); }
+          25%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.55)); }
+          70%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.15)); }
           100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
         }
         .bmp-presenter-splash {
