@@ -342,17 +342,33 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           100% { opacity: 1; transform: scale(1) rotate(0); }
         }
 
-        /* Splash dark stage */
+        /* Splash dark stage — solid black base that fades out at the end. */
         .bmp-splash-stage {
           position: fixed;
           inset: 0;
-          background-color: transparent;
+          background: #000;
+          z-index: 60;
+          pointer-events: none;
+          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+        }
+        /* Sunset image fades up from black under the fire (illuminated by it),
+           then fades out alongside the black stage. */
+        .bmp-splash-sunset {
+          position: fixed;
+          inset: 0;
           background-image: url('/bg-sunset.jpg');
           background-size: cover;
           background-position: center;
           z-index: 60;
           pointer-events: none;
-          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+          opacity: 0;
+          animation:
+            bmpSunsetIn ${STAGE_IN_DUR_MS}ms ease-out 200ms forwards,
+            bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+        }
+        @keyframes bmpSunsetIn {
+          0%   { opacity: 0; }
+          100% { opacity: 1; }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
