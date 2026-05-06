@@ -67,7 +67,7 @@ export const SocialPost: React.FC<Props> = ({ format }) => {
           transformOrigin: "center center",
         }}
       >
-        <OpeningSceneWrapper />
+        <OpeningScene withStarBurst sunsetBackground withLogo={false} canvasOverride={{ width: 2160, height: 2160 }} />
       </div>
       {/* Soft vignette for legibility once text appears */}
       <div
