@@ -139,9 +139,15 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center md:bg-top afterparty-page-bg"
+      className={`min-h-screen bg-cover bg-center md:bg-top ${venueShowcase === "oakley-rino" ? "" : "afterparty-page-bg"}`}
       style={{
         backgroundColor: BG,
+        backgroundImage:
+          venueShowcase === "oakley-rino"
+            ? "linear-gradient(rgba(8, 8, 8, 0.12), rgba(8, 8, 8, 0.58)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')"
+            : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: venueShowcase === "oakley-rino" ? "center top" : undefined,
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         color: "#fff",
@@ -149,41 +155,6 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         fontWeight: 300,
       }}
     >
-      {venueShowcase === "oakley-rino" && (
-        <div
-          aria-hidden
-          className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-        >
-          <img
-            src="/oakley-rino/rino-mural-left.png"
-            alt=""
-            className="absolute top-[2vh] -left-[3vw] h-[96vh] w-auto"
-            style={{
-              opacity: 0.9,
-              filter: "saturate(1.15) contrast(1.08)",
-              maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
-            }}
-            loading="lazy"
-          />
-          <img
-            src="/oakley-rino/rino-mural-right.png"
-            alt=""
-            className="absolute top-[8vh] -right-[2vw] h-[98vh] w-auto"
-            style={{
-              opacity: 0.86,
-              filter: "saturate(1.15) contrast(1.08)",
-              maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
-            }}
-            loading="lazy"
-          />
-        </div>
-      )}
       <div className="relative z-10 mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
         {(() => {
           try {
