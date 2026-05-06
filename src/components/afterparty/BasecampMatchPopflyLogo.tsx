@@ -426,7 +426,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation:
             bmpKiteAppear 500ms ease-out 2000ms forwards,
             bmpKiteFlutter 4200ms cubic-bezier(.45,.05,.55,.95) 2300ms 1 forwards,
-            bmpKiteDismiss 1800ms cubic-bezier(.32,.04,.42,1) 6000ms forwards;
+            bmpKiteDismiss 2000ms linear 6500ms forwards;
         }
         .bmp-kite-wings {
           width: 100%;
