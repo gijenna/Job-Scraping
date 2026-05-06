@@ -32,7 +32,7 @@ const ROLE_PILL: Record<string, { bg: string; border: string; text: string; labe
 
 const Chip = ({ children, tone = "default" }: { children: React.ReactNode; tone?: "default" | "intent" }) => (
   <span
-    className="inline-block text-[10px] px-1.5 py-0.5 rounded mr-1 mb-1"
+    className="inline-block text-[10px] px-1.5 py-0.5 rounded mr-0.5 mb-0.5"
     style={{
       backgroundColor: tone === "intent" ? "rgba(225,182,36,0.12)" : "rgba(255,255,255,0.06)",
       color: tone === "intent" ? "#FAC775" : "rgba(255,255,255,0.75)",
