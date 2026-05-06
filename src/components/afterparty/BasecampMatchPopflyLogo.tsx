@@ -485,10 +485,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
         /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
         @keyframes bmpPresenterMerge {
-          0%   { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
-          14%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
-          42%  { opacity: 1; transform: scale(1.72); filter: drop-shadow(0 0 28px rgba(245,230,211,0.9)) drop-shadow(0 0 56px rgba(245,230,211,0.48)); }
-          72%  { opacity: 1; transform: scale(1.24); filter: drop-shadow(0 0 18px rgba(245,230,211,0.72)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
+          0%   { opacity: 0; transform: scale(1.4); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
+          22%  { opacity: 0.55; transform: scale(1.78); filter: drop-shadow(0 0 22px rgba(245,230,211,0.7)) drop-shadow(0 0 50px rgba(245,230,211,0.45)); }
+          40%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
+          62%  { opacity: 1; transform: scale(1.62); filter: drop-shadow(0 0 26px rgba(245,230,211,0.85)) drop-shadow(0 0 52px rgba(245,230,211,0.45)); }
+          82%  { opacity: 1; transform: scale(1.22); filter: drop-shadow(0 0 18px rgba(245,230,211,0.7)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
           100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.35)); }
         }
         .bmp-presenter-splash {
