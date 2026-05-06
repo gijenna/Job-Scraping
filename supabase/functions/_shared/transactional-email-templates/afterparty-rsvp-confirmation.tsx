@@ -101,6 +101,9 @@ const AfterPartyRsvpConfirmationEmail = ({
           <Text style={signoff}>Jenna</Text>
 
           <Hr style={hr} />
+          <Text style={fineprint}>
+            By registering for this event, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+          </Text>
           <Text style={footer}>
             <Link href="https://basecampjobs.com" style={footerLink}>Basecamp Match</Link> 🔥 × <Link href="https://popfly.com" style={footerLink}>Popfly</Link> ✨
           </Text>
