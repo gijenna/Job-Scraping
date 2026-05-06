@@ -535,6 +535,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
       {!revealed && (
         <>
           <div className="bmp-splash-stage" aria-hidden="true" />
+          <div className="bmp-splash-sunset" aria-hidden="true" />
 
           {/* Centered fire mark */}
           <div className="bmp-splash-fire" aria-hidden="true">
