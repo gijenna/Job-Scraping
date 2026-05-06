@@ -93,6 +93,24 @@ export const RemotionRoot: React.FC = () => {
         width={2160}
         height={2160}
       />
+      <Composition
+        id="social-square"
+        component={SocialPost as any}
+        durationInFrames={360}
+        fps={30}
+        width={1080}
+        height={1080}
+        defaultProps={{ format: "square" } as any}
+      />
+      <Composition
+        id="social-story"
+        component={SocialPost as any}
+        durationInFrames={360}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{ format: "story" } as any}
+      />
     </>
   );
 };
