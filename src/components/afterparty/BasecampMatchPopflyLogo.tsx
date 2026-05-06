@@ -490,7 +490,36 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
       {!revealed && (
         <>
           <div className="bmp-splash-stage" aria-hidden="true" />
-          <div className="bmp-splash-sunset" aria-hidden="true" />
+          <svg className="bmp-splash-sunset-svg" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <clipPath id="bmp-sunset-radial-reveal" clipPathUnits="objectBoundingBox">
+                <circle cx="0.5" cy="0.5" r="0">
+                  <animate
+                    attributeName="r"
+                    from="0"
+                    to="0.92"
+                    dur={`${STAGE_IN_DUR_MS}ms`}
+                    begin="160ms"
+                    fill="freeze"
+                    calcMode="spline"
+                    keyTimes="0;0.18;0.48;0.78;1"
+                    values="0;0.08;0.28;0.58;0.92"
+                    keySplines="0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1"
+                  />
+                </circle>
+              </clipPath>
+            </defs>
+            <image
+              href="/bg-sunset.jpg"
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#bmp-sunset-radial-reveal)"
+              className="bmp-splash-sunset-image"
+            />
+          </svg>
 
           {/* Centered fire mark */}
           <div className="bmp-splash-fire" aria-hidden="true">
