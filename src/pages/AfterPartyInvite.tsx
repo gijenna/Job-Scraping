@@ -327,17 +327,14 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
   return (
     <EditableTextProvider pageSlug="afterparty">
       <div
-        className={`min-h-screen relative bg-cover ${venueShowcase === "oakley-rino" ? "bg-center" : "bg-center md:bg-top afterparty-page-bg"}`}
+        className="min-h-screen relative bg-cover bg-center md:bg-top afterparty-page-bg"
         style={{
           backgroundColor: BG,
-          backgroundImage:
-            venueShowcase === "oakley-rino"
-              ? "linear-gradient(rgba(8,8,8,0.06), rgba(8,8,8,0.5)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')"
-              : "url('/bg-sunset.jpg')",
+          backgroundImage: "url('/bg-sunset.jpg')",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
-          backgroundPosition: venueShowcase === "oakley-rino" ? "28% top" : "center",
+          backgroundPosition: "center",
           color: CREAM,
           fontFamily: '"Josefin Sans", sans-serif',
           fontWeight: 300,
