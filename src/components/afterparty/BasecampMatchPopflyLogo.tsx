@@ -305,7 +305,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           background-position: center;
           z-index: 60;
           pointer-events: none;
-          animation: bmpStageOut 800ms ease-out ${STAGE_OUT_DELAY_S}s forwards;
+          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
