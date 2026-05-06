@@ -604,7 +604,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                   ["--bx-mid" as any]: mid,
                   ["--by-mid" as any]: midY,
                   ["--bspin" as any]: s.spin,
-                  animation: `bmpStarBurst 3800ms cubic-bezier(.2,.7,.3,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
+                  animation: `bmpStarBurst 3800ms cubic-bezier(.4,0,.4,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
                 <StarSparkle tone={s.tone} variant="single" size={s.size} />
