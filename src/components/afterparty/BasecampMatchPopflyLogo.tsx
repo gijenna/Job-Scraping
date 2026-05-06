@@ -492,8 +492,28 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           <div className="bmp-splash-stage" aria-hidden="true" />
           <svg className="bmp-splash-sunset-svg" aria-hidden="true" preserveAspectRatio="none">
             <defs>
-              <clipPath id="bmp-sunset-radial-reveal" clipPathUnits="objectBoundingBox">
-                <circle cx="0.5" cy="0.5" r="0">
+              <radialGradient id="bmp-sunset-reveal-gradient" cx="50%" cy="50%" r="0%">
+                <stop offset="0%" stopColor="white" stopOpacity="1" />
+                <stop offset="58%" stopColor="white" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="black" stopOpacity="0" />
+                <animate
+                  attributeName="r"
+                  from="0%"
+                  to="105%"
+                  dur={`${STAGE_IN_DUR_MS}ms`}
+                  begin="160ms"
+                  fill="freeze"
+                  calcMode="spline"
+                  keyTimes="0;0.18;0.48;0.78;1"
+                  values="0%;9%;32%;68%;105%"
+                  keySplines="0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1"
+                />
+              </radialGradient>
+              <mask id="bmp-sunset-radial-reveal" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+                <rect x="0" y="0" width="1" height="1" fill="url(#bmp-sunset-reveal-gradient)" />
+              </mask>
+              <clipPath id="bmp-sunset-radial-cover" clipPathUnits="objectBoundingBox">
+                <circle cx="0.5" cy="0.5" r="0.001">
                   <animate
                     attributeName="r"
                     from="0"
@@ -516,7 +536,8 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
               width="100%"
               height="100%"
               preserveAspectRatio="xMidYMid slice"
-              clipPath="url(#bmp-sunset-radial-reveal)"
+              mask="url(#bmp-sunset-radial-reveal)"
+              clipPath="url(#bmp-sunset-radial-cover)"
               className="bmp-splash-sunset-image"
             />
           </svg>
