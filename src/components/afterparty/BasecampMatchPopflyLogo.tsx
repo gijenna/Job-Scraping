@@ -163,12 +163,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   // Pacing — stage starts fully black, sunset fades up under the fire,
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
   const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
-  const STAGE_IN_DUR_MS = 2800;         // sunset radiates up from black under the fire
-  const STAGE_OUT_DELAY_S = 8.1;        // begin darkening AS snowflakes start spinning
+  const STAGE_IN_DUR_MS = 3600;         // sunset radiates up from black under the fire
+  const STAGE_OUT_DELAY_S = 7.45;       // begin darkening as snowflakes and Oakley start merging
   const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 7.6; // presenter logo (Oakley) blooms earlier, merges into lockup
-  const PRESENTS_DELAY_S = 8.0;          // lockup presenter fades in under the bloom for a real merge
+  const PRESENTER_SPLASH_DELAY_S = 7.05; // presenter logo (Oakley) blooms earlier, merges into lockup
+  const PRESENTS_DELAY_S = 7.05;         // lockup presenter fades in under the bloom for a real merge
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
@@ -305,30 +305,26 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           pointer-events: none;
           animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        /* Sunset image reveals outward from the fire glow, then fades with the stage. */
-        .bmp-splash-sunset {
+        /* Sunset image is clipped by an animated SVG circle, so the reveal truly radiates from the fire. */
+        .bmp-splash-sunset-svg {
           position: fixed;
           inset: 0;
-          background-image: url('/bg-sunset.jpg');
-          background-size: cover;
-          background-position: center;
           z-index: 60;
           pointer-events: none;
+          width: 100vw;
+          height: 100vh;
+          opacity: 1;
+          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+        }
+        .bmp-splash-sunset-image {
           opacity: 0;
-          clip-path: circle(0 at 50% 50%);
-          animation:
-            bmpSunsetIlluminate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 120ms forwards,
-            bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+          animation: bmpSunsetImageWarm ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 160ms forwards;
         }
-        @media (min-width: 768px) {
-          .bmp-splash-sunset { background-position: top center; }
-        }
-        @keyframes bmpSunsetIlluminate {
-          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.4) saturate(0.75); }
-          12%  { opacity: 0.5; clip-path: circle(8vmin at 50% 50%); filter: brightness(0.55) saturate(0.85); }
-          35%  { opacity: 0.85; clip-path: circle(28vmax at 50% 50%); filter: brightness(0.78) saturate(0.95); }
-          70%  { opacity: 1;   clip-path: circle(80vmax at 50% 50%); filter: brightness(0.92) saturate(1); }
-          100% { opacity: 1;   clip-path: circle(160vmax at 50% 50%); filter: brightness(1) saturate(1); }
+        @keyframes bmpSunsetImageWarm {
+          0%   { opacity: 0; filter: brightness(0.35) saturate(0.7); }
+          18%  { opacity: 0.95; filter: brightness(0.58) saturate(0.82); }
+          58%  { opacity: 1; filter: brightness(0.86) saturate(0.96); }
+          100% { opacity: 1; filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
