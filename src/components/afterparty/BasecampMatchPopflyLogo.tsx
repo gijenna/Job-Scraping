@@ -100,17 +100,36 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
+  const [sunsetReady, setSunsetReady] = useState(false);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && !sunsetReady) return;
     const delay = reduced ? 0 : 12400;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onRevealed]);
+  }, [onRevealed, sunsetReady]);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/bg-sunset.jpg";
+    const markReady = () => setSunsetReady(true);
+    if (img.complete) {
+      markReady();
+      return;
+    }
+    img.onload = markReady;
+    img.onerror = markReady;
+    if (img.decode) img.decode().then(markReady).catch(() => undefined);
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, []);
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
@@ -163,12 +182,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   // Pacing — stage starts fully black, sunset fades up under the fire,
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
   const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
-  const STAGE_IN_DUR_MS = 2800;         // sunset radiates up from black under the fire
-  const STAGE_OUT_DELAY_S = 8.1;        // begin darkening AS snowflakes start spinning
+  const STAGE_IN_DUR_MS = 3600;         // sunset radiates up from black under the fire
+  const STAGE_OUT_DELAY_S = 7.45;       // begin darkening as snowflakes and Oakley start merging
   const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 7.6; // presenter logo (Oakley) blooms earlier, merges into lockup
-  const PRESENTS_DELAY_S = 8.0;          // lockup presenter fades in under the bloom for a real merge
+  const PRESENTER_SPLASH_DELAY_S = 7.05; // presenter logo (Oakley) blooms earlier, merges into lockup
+  const PRESENTS_DELAY_S = 7.05;         // lockup presenter fades in under the bloom for a real merge
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
@@ -176,9 +195,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const NEON_PULSE_DELAY_S = 7.6;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-10 select-none">
+    <div className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"}`}>
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
+
+        .bmp-intro-paused * {
+          animation-play-state: paused !important;
+        }
+
+        .bmp-intro-paused .bmp-splash-stage {
+          animation: none !important;
+        }
 
         /* Fire grows in smoothly — single ease-out, no mid-bounce */
         @keyframes bmpFireGrow {
@@ -301,34 +328,38 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           position: fixed;
           inset: 0;
           background: #000;
-          z-index: 60;
+          z-index: 59;
           pointer-events: none;
           animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        /* Sunset image reveals outward from the fire glow, then fades with the stage. */
+        /* Sunset image is masked by an expanding soft circle, so it truly radiates from the fire. */
         .bmp-splash-sunset {
           position: fixed;
           inset: 0;
+          z-index: 60;
+          pointer-events: none;
           background-image: url('/bg-sunset.jpg');
           background-size: cover;
           background-position: center;
-          z-index: 60;
-          pointer-events: none;
-          opacity: 0;
-          clip-path: circle(0 at 50% 50%);
+          opacity: 1;
+          -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, rgba(0,0,0,0.85) 58%, rgba(0,0,0,0.25) 70%, transparent 76%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, rgba(0,0,0,0.85) 58%, rgba(0,0,0,0.25) 70%, transparent 76%);
+          -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+          -webkit-mask-position: 50% 50%;
+          mask-position: 50% 50%;
+          -webkit-mask-size: 0vmax 0vmax;
+          mask-size: 0vmax 0vmax;
           animation:
-            bmpSunsetIlluminate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 120ms forwards,
+            bmpSunsetRadiate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 160ms forwards,
             bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        @media (min-width: 768px) {
-          .bmp-splash-sunset { background-position: top center; }
-        }
-        @keyframes bmpSunsetIlluminate {
-          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.4) saturate(0.75); }
-          12%  { opacity: 0.5; clip-path: circle(8vmin at 50% 50%); filter: brightness(0.55) saturate(0.85); }
-          35%  { opacity: 0.85; clip-path: circle(28vmax at 50% 50%); filter: brightness(0.78) saturate(0.95); }
-          70%  { opacity: 1;   clip-path: circle(80vmax at 50% 50%); filter: brightness(0.92) saturate(1); }
-          100% { opacity: 1;   clip-path: circle(160vmax at 50% 50%); filter: brightness(1) saturate(1); }
+        @keyframes bmpSunsetRadiate {
+          0%   { -webkit-mask-size: 0vmax 0vmax;   mask-size: 0vmax 0vmax;   filter: brightness(0.32) saturate(0.7); }
+          16%  { -webkit-mask-size: 18vmax 18vmax; mask-size: 18vmax 18vmax; filter: brightness(0.5) saturate(0.78); }
+          38%  { -webkit-mask-size: 58vmax 58vmax; mask-size: 58vmax 58vmax; filter: brightness(0.66) saturate(0.86); }
+          68%  { -webkit-mask-size: 126vmax 126vmax; mask-size: 126vmax 126vmax; filter: brightness(0.84) saturate(0.95); }
+          100% { -webkit-mask-size: 290vmax 290vmax; mask-size: 290vmax 290vmax; filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -452,11 +483,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
         /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
         @keyframes bmpPresenterMerge {
-          0%   { opacity: 0; transform: scale(1.4); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
-          18%  { opacity: 1; transform: scale(2.6); filter: drop-shadow(0 0 28px rgba(245,230,211,0.95)) drop-shadow(0 0 60px rgba(245,230,211,0.55)); }
-          55%  { opacity: 1; transform: scale(1.7); filter: drop-shadow(0 0 22px rgba(245,230,211,0.8)) drop-shadow(0 0 44px rgba(245,230,211,0.45)); }
-          85%  { opacity: 0.85; transform: scale(1.15); filter: drop-shadow(0 0 14px rgba(245,230,211,0.6)) drop-shadow(0 0 28px rgba(245,230,211,0.3)); }
-          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
+          0%   { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
+          14%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
+          42%  { opacity: 1; transform: scale(1.72); filter: drop-shadow(0 0 28px rgba(245,230,211,0.9)) drop-shadow(0 0 56px rgba(245,230,211,0.48)); }
+          72%  { opacity: 1; transform: scale(1.24); filter: drop-shadow(0 0 18px rgba(245,230,211,0.72)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
+          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.35)); }
         }
         .bmp-presenter-splash {
           position: absolute;
@@ -468,7 +499,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 3200ms cubic-bezier(.22,.7,.28,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 3600ms cubic-bezier(.18,.78,.18,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
