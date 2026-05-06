@@ -3,6 +3,7 @@ import { Instagram, Linkedin } from "lucide-react";
 import NumberBadge from "./NumberBadge";
 import StarSparkle from "./StarSparkle";
 import { resolveLogoSrc } from "@/lib/url-logo";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface GuestRow {
   id: string;
