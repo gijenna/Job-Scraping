@@ -1,69 +1,58 @@
-# Oakley Blurb + RiNo Mural Background for `/guestsoakley`
+## Goal
 
-## 1. Blurb copy update
+Make it feel like one continuous Oakley/RiNo graffiti mural lives behind the "Your matches" list, but is **only visible through the match bars themselves**. The dark gaps between bars stay as the page background, so the mural appears as horizontal slices, like sunlight cutting through window blinds.
 
-In `src/components/afterparty/OakleyRinoVenueShowcase.tsx`, replace the current paragraph with:
+## What gets removed
 
-> The Oakley store in Denver's River North Arts District blurs the line between performance and culture, creating an immersive space built for the athletes, artists, and creators of RiNo. Designed as a premier destination for gear, storytelling, and community, the store brings the Oakley experience to life in the heart of Denver.
+- The floating graffiti accent currently positioned to the right of the matches in `MyCardSection.tsx` (the `<img>` block with `oakley-rino-graffiti-accent.png`). The match section will no longer have a visible accent image hanging off the side.
 
-(Apostrophe stays as `'`. No em dashes per project rule.)
+## What gets added
 
-## 2. RiNo mural artwork — strategy
+### 1. A new mural image
 
-You asked for artsy/expressive RiNo graffiti energy that fills **dead space** (especially beside "Your Matches" and outer page margins) without competing with content.
+Generate one wide horizontal Oakley-vibe RiNo mural at roughly 1600x900px and save to `public/oakley-rino/oakley-rino-mural-strips.jpg`.
 
-### Generation
-Use the Lovable AI Gateway (`google/gemini-3-pro-image-preview`) to generate **3 vertical mural panels** as transparent-edged PNGs:
+Direction:
+- Spray-paint, sticker-bombed, dripping-paint RiNo wall energy
+- Tasteful nod to Oakley: motorsports/performance edges, the iconic "O" silhouette woven in subtly (not a logo slap), Thermonuclear Protection-era color hits, lens-shaped highlights catching light
+- Dominant palette pulled from the existing page: dark teal base, coral, mustard yellow, cream highlights, with grimy concrete grays so it reads as graffiti not pop art
+- Composition spread evenly top-to-bottom so any horizontal slice still feels rich (no dead bands)
 
-1. `rino-mural-left.png` — tall vertical RiNo-style spray-paint mural strip (wheatpaste textures, bold color blocks, abstracted lettering — no readable words to avoid distraction). Muted in the project palette (teal, coral, cream, mustard) so it ties to the brand.
-2. `rino-mural-right.png` — companion strip, different composition, same palette family.
-3. `rino-mural-corner.png` — small square paint-splash / sticker-bomb accent for corners.
+### 2. Bars become "windows" onto the mural
 
-Saved to `public/oakley-rino/` so they're served statically. (Generation runs once via a `/tmp` script; only the resulting PNGs are committed.)
+In `MatchesPanel.tsx`, the matches list is wrapped in a positioned container that knows its own height. Each match button (the bar) gets:
 
-### Placement on `/guestsoakley` (in `src/pages/GuestList.tsx`, gated by `venueShowcase === "oakley-rino"`)
+- The mural as `background-image`
+- `background-attachment` set so the mural appears anchored to the matches container, not to each bar individually
+- `background-size` and `background-position` calculated so all the bars together look like one image
 
-Add a non-interactive decorative layer rendered behind page content:
+Approach: wrap the list in a `relative` container, then on each bar use `background-image: url(...)` with `background-size: 100% [containerHeight]px` and `background-position: 0 -[barOffsetY]px`. The bar's own offset within the container shifts the image up by exactly that amount, so each bar reveals just its slice. The gaps between bars (the `space-y-3` gutters) show no image because they aren't part of any bar's background.
 
-```text
-┌──────────────────────────────────────────────┐
-│ [mural-left]                  [mural-right]  │
-│  fixed,                          fixed,      │
-│  left edge,                      right edge, │
-│  ~30vw wide,                     ~30vw wide, │
-│  ~70vh tall,                     ~70vh tall, │
-│  opacity .35,                    opacity .35,│
-│  pointer-events:none             mix-blend:  │
-│                                  soft-light  │
-│                                              │
-│         [PAGE CONTENT — unchanged]           │
-│                                              │
-│ [corner accent]               [corner accent]│
-└──────────────────────────────────────────────┘
-```
+A small `useLayoutEffect` measures the container height and each bar's offset on mount and on resize, then writes those numbers into inline styles. This keeps it pixel-accurate at any viewport.
 
-Specifics:
-- Wrapped in `<div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">`.
-- Murals use `position: absolute`, anchored to outer edges with negative offsets so they bleed off-screen.
-- Hidden under `md` breakpoint (`hidden md:block`) — on a 768px viewport they'd crowd content.
-- Subtle parallax-free; pure CSS, no JS.
-- Page content already sits in centered `max-w` containers, so the murals naturally fill the dead margin including the empty space next to "Your Matches".
+On top of the mural inside each bar, a dark translucent overlay (around 60-70% opacity of the existing `#111111`) keeps text legible. The mural reads as a textured glow behind the names rather than competing with them. The mutual-boost gold left border stays.
 
-### Tone controls (so it doesn't overpower)
-- Opacity 0.30–0.40
-- `mix-blend-mode: soft-light` so colors harmonize with the dark teal background instead of fighting it
-- Slight blur (`filter: blur(0.5px)`) to push it visually behind text
+### 3. Subtle edge treatment
 
-## 3. Files touched
+To make the slicing feel intentional and Oakley-crisp rather than accidental:
+- Each bar keeps its `rounded-xl` corners, so the mural slices have rounded edges — like portholes onto the wall
+- Border stays at the existing `rgba(255,255,255,0.09)` so bars still feel like cards, not raw image crops
+- A very faint inner shadow (1-2px) at the top of each bar gives a tiny sense of depth where the slice meets the dark gap
 
-- `src/components/afterparty/OakleyRinoVenueShowcase.tsx` — blurb text only
-- `src/pages/GuestList.tsx` — add decorative mural layer behind content (only when `venueShowcase === "oakley-rino"`)
-- `public/oakley-rino/rino-mural-left.png` (new, AI-generated)
-- `public/oakley-rino/rino-mural-right.png` (new, AI-generated)
-- `public/oakley-rino/rino-mural-corner.png` (new, AI-generated)
+## Files to edit
 
-## Questions / assumptions
+- `src/components/afterparty/MyCardSection.tsx` — remove the floating accent image
+- `src/components/afterparty/MatchesPanel.tsx` — accept a `muralSrc?: string` prop, add the measurement logic, apply the sliced background to each bar
+- `src/pages/GuestList.tsx` — pass `muralSrc="/oakley-rino/oakley-rino-mural-strips.jpg"` into `MatchesPanel` only when `venueShowcase === "oakley-rino"` (Note: `MatchesPanel` is rendered inside `MyCardSection`, so the prop is threaded `GuestList → MyCardSection → MatchesPanel`)
 
-- **Scope**: Murals appear only on `/guestsoakley`, not on the standard `/guests`. Confirmed by your wording.
-- **No readable graffiti words** in the murals — keeps it abstract and avoids competing copy. If you'd rather see actual stylized words (e.g., "RiNo", "DENVER"), say the word and I'll regenerate with text.
-- **Mobile**: hidden below `md` to keep the phone view clean. Tell me if you want a lighter mobile version instead.
+## New asset
+
+- `public/oakley-rino/oakley-rino-mural-strips.jpg` — the single mural image
+
+## Acceptance check
+
+- Looking at the matches list, each bar shows a different horizontal stripe of the mural; mentally stacking the bars (closing the gaps) reproduces the original mural
+- The dark page background shows through cleanly between bars
+- Names, role pills, and "why it worked" snippets remain fully legible
+- The previous floating accent on the right side of the matches section is gone
+- Non-Oakley guest lists are unchanged
