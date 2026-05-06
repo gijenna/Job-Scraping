@@ -152,35 +152,33 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
       {venueShowcase === "oakley-rino" && (
         <div
           aria-hidden
-          className="pointer-events-none fixed inset-0 z-0 overflow-hidden hidden md:block"
+          className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
         >
           <img
             src="/oakley-rino/rino-mural-left.png"
             alt=""
-            className="absolute top-[8vh] -left-[6vw] h-[78vh] w-auto"
+            className="absolute top-[4vh] -left-[8vw] h-[90vh] w-auto"
             style={{
-              opacity: 0.32,
-              mixBlendMode: "soft-light",
-              filter: "blur(0.4px)",
+              opacity: 0.7,
+              filter: "saturate(1.05)",
               maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
             }}
             loading="lazy"
           />
           <img
             src="/oakley-rino/rino-mural-right.png"
             alt=""
-            className="absolute top-[20vh] -right-[5vw] h-[82vh] w-auto"
+            className="absolute top-[14vh] -right-[7vw] h-[92vh] w-auto"
             style={{
-              opacity: 0.30,
-              mixBlendMode: "soft-light",
-              filter: "blur(0.4px)",
+              opacity: 0.65,
+              filter: "saturate(1.05)",
               maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 85%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
             }}
             loading="lazy"
           />
