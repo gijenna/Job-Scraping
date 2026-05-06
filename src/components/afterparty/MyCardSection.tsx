@@ -31,9 +31,11 @@ interface Props {
   /** Optional sidebar content (e.g. sponsor spotlights) shown beside the
    *  card preview on tablet/desktop, hidden here on mobile. */
   sidebar?: React.ReactNode;
+  /** Adds Oakley RiNo mural artwork into empty space on the Oakley guest page. */
+  rinoMural?: boolean;
 }
 
-const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
+const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = false }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [me, setMe] = useState<AfterPartyAttendee | null>(null);
   const [meFull, setMeFull] = useState<any>(null);
@@ -358,9 +360,24 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
 
   return (
     <section
-      className="mb-4 rounded-2xl p-5 sm:p-6"
-      style={{ backgroundColor: CARD, border: `1px solid ${BORDER}` }}
+      className="relative mb-4 overflow-hidden rounded-2xl p-5 sm:p-6"
+      style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.9)" : CARD, border: `1px solid ${BORDER}` }}
     >
+      {rinoMural && (
+        <img
+          aria-hidden
+          src="/oakley-rino/rino-mural-right.png"
+          alt=""
+          className="pointer-events-none absolute right-[-7%] top-[38%] z-0 hidden h-[260px] w-auto -translate-y-1/2 md:block"
+          style={{
+            opacity: 0.6,
+            filter: "saturate(1.18) contrast(1.08)",
+            maskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
+            WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
+          }}
+        />
+      )}
+      <div className="relative z-10">
       <div className="flex items-start justify-between gap-3 mb-5">
         <div>
           <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
@@ -515,6 +532,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar }: Props) => {
         onSuccess={handleVerified}
         onClose={() => setPinOpen(false)}
       />
+      </div>
     </section>
   );
 };
