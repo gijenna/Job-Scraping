@@ -106,7 +106,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
-    const delay = reduced ? 0 : 12400;
+    const delay = reduced ? 0 : 9600;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
