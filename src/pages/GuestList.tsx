@@ -144,10 +144,10 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         backgroundColor: BG,
         backgroundImage:
           venueShowcase === "oakley-rino"
-            ? "linear-gradient(rgba(8, 8, 8, 0.12), rgba(8, 8, 8, 0.58)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')"
+            ? "linear-gradient(rgba(8, 8, 8, 0.06), rgba(8, 8, 8, 0.5)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')"
             : undefined,
         backgroundSize: "cover",
-        backgroundPosition: venueShowcase === "oakley-rino" ? "center top" : undefined,
+        backgroundPosition: venueShowcase === "oakley-rino" ? "28% top" : undefined,
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         color: "#fff",
@@ -155,6 +155,17 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         fontWeight: 300,
       }}
     >
+      {venueShowcase === "oakley-rino" && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-top md:hidden"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(8, 8, 8, 0.18), rgba(8, 8, 8, 0.62)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')",
+            backgroundPosition: "left top",
+          }}
+        />
+      )}
       <div className="relative z-10 mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
         {(() => {
           try {
