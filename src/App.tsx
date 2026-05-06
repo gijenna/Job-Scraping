@@ -33,6 +33,7 @@ import TermsConditions from "./pages/TermsConditions";
 import EventMapAdmin from "./pages/EventMapAdmin";
 import PrintExpertCard from "./pages/PrintExpertCard";
 import AfterPartyInvite from "./pages/AfterPartyInvite";
+import AfterPartySplashClip from "./pages/AfterPartySplashClip";
 import GuestList from "./pages/GuestList";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
@@ -61,6 +62,7 @@ const App = () => (
         <Routes>
           {/* Pinned to top for quick access */}
           <Route path="/experts/afterparty" element={<AdminAfterParty />} />
+          <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
           <Route
             path="/afterparty"
             element={

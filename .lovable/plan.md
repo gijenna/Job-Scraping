@@ -1,43 +1,49 @@
 ## Goal
 
-Decouple share previews so:
-- **Afterparty** invites keep their current preview (Basecamp Match / Out of Office card) — no change.
-- **All Denver** brand-rep and industry-expert invites use the uploaded "Basecamp Outdoor @ Outside Days · May 28, 2026 · Denver" hero image as their share preview.
-- **Portland & Minneapolis** expert/brand-rep invites continue to use the existing auto-generated per-expert V3 01 cards.
+Two MP4s that are 1:1 the current `/afterparty` opening animation (logo splash → snowflake burst → Oakley merge → presenter lockup → "Out of Office" reveal → sparkles → "DJ ✦ Drinks ✦ Swag ✦ Food ✦ Friends" line). Nothing below that line, no greeting, no RSVP card, no spotlights — just the top portion. Two crops:
 
-## How it works today
+- **Square 1080×1080** (feed / desktop)
+- **Story 1080×1920** (Instagram / mobile)
 
-- Afterparty share link → `og-meta` edge function → reads `page_og_image` from `event_settings` (slug `afterparty`). Independent system. **Untouched.**
-- Expert / brand-rep share link → `expert-og` edge function (`supabase/functions/expert-og/index.ts`) → generates a per-expert PNG (V3 01 dark-teal card) per `(slug, city)` and caches it in storage at `og-cards/{slug}-{city}-og-card.png`.
+The previous Remotion-based "social post" outputs are scrapped because they re-implemented the animation from scratch and drifted from the live one.
 
-## Changes
+## Approach
 
-### 1. Save the Outside Days Denver hero as a static asset
-- Copy the uploaded screenshot to `public/og-denver-outside-days.png` so it serves at `https://sponsor-attract-hub.lovable.app/og-denver-outside-days.png` (a stable URL the edge function can return).
+Capture the *actual* live page through a headless browser so the animation pixels are exactly identical to what users see — zero re-implementation risk.
 
-### 2. Edit `supabase/functions/expert-og/index.ts`
-- Add a small lookup of city-level override images:
-  ```ts
-  const CITY_OG_OVERRIDE: Record<string, string> = {
-    denver: "https://sponsor-attract-hub.lovable.app/og-denver-outside-days.png",
-  };
-  ```
-- In the request handler, **before** calling `getOrGenerateOgCard`, check `CITY_OG_OVERRIDE[city]`. If set, use that URL as `ogImage` and skip generation entirely. This applies to both `industry_expert` and `brand_rep` types in Denver.
-- The redirect behavior for humans (302 to event page with `?expert=` / `?brand=` param) stays exactly the same — only the meta image crawlers see changes.
-- Portland and Minneapolis fall through to existing logic unchanged.
+### 1. Add a clip-only route — `/afterparty-clip`
+- New file `src/pages/AfterPartySplashClip.tsx` that renders ONLY:
+  - the `BasecampMatchPopflyLogo` (unchanged, so identical timing/easing)
+  - the sparkles row + the "DJ ✦ Drinks ✦ Swag ✦ Food ✦ Friends" inline row (copy-pasted from `AfterPartyInvite.tsx` lines 419–439, identical fonts/spacing)
+  - the same `bg-sunset.jpg` background and the same darkening overlay (so the fade-in look matches)
+- Nothing else — no nav, no greeting overlay, no RSVP card, no spotlights, no footer.
+- Reads `?ratio=square|story` to pick a `max-width` that matches the original mobile column on /afterparty.
+- Sets `window.__SPLASH_DONE__ = true` once `BasecampMatchPopflyLogo` fires `onRevealed`, so the recorder knows when to stop.
+- Register route in `src/App.tsx`: `<Route path="/afterparty-clip" element={<AfterPartySplashClip />} />`.
 
-### 3. Afterparty preview
-- No code touched. `og-meta` continues to serve the afterparty image from `event_settings`.
+### 2. Replace `remotion/scripts/render-social.mjs` with a Puppeteer recorder
+- Install `puppeteer-core` (Chromium is already at `/bin/chromium` in the sandbox; no download needed).
+- New script `remotion/scripts/record-afterparty-clip.mjs`:
+  - Launches `chromium` headless at viewport 1080×1080 (square) or 1080×1920 (story).
+  - Navigates to `http://localhost:8080/afterparty-clip?ratio=<square|story>`.
+  - Waits for `bg-sunset.jpg` and fonts to be ready, then waits for the splash to fully finish (`window.__SPLASH_DONE__`) plus a small tail (~1.5s) so the "DJ … Friends" line is visible at rest.
+  - Uses Chrome DevTools Protocol `Page.startScreencast` (or simpler: `page.screenshot` in a tight 30 fps loop) to capture frames into `/tmp/clip-frames-<ratio>/frame-####.png`.
+  - Pipes the frames to ffmpeg: `ffmpeg -framerate 30 -i frame-%04d.png -c:v libx264 -pix_fmt yuv420p -movflags +faststart out.mp4`.
+  - Outputs to `/mnt/documents/afterparty-clip-square.mp4` and `/mnt/documents/afterparty-clip-story.mp4`.
+- Total clip length: ~12s (matches the existing reveal timeline — splash ends around frame 10800ms, plus ~1.5s settle).
 
-## Verification
+### 3. Cleanup
+- Delete the now-obsolete Remotion outputs and the old `SocialPost.tsx`/`render-social` Remotion path so the only "social clip" pipeline is this one. (Files: `remotion/src/scenes/SocialPost.tsx`, the SocialPost composition entry in `remotion/src/Root.tsx`, and the prior MP4s.)
 
-After deploy, validate share previews with the Facebook / LinkedIn debugger or a quick `curl -A "facebookexternalhit/1.1" <share-url>`:
-- `…/functions/v1/expert-og/<slug>/denver` → `<meta property="og:image">` should be the new Outside Days Denver image.
-- `…/functions/v1/expert-og/<slug>/portland` → should still be the per-expert V3 01 generated card.
-- `/afterparty` share preview → unchanged.
+## Why this is the right approach
 
-## Notes
+- **Pixel-identical**: We're recording the real `BasecampMatchPopflyLogo` — same DOM, same CSS keyframes, same easing, same delays. No drift between web and clip.
+- **Editable in one place**: If you later tweak the animation timings on `/afterparty`, re-running the recorder picks up the changes automatically.
+- **No new framework debt**: Removes the fragile Remotion re-implementation.
 
-- No DB migration needed.
-- No cache to clear (Denver previews bypass the cached PNGs entirely; the previously generated Denver cards in storage can stay — they simply won't be referenced anymore).
-- If you later want to override Portland or MN the same way, just add another entry to `CITY_OG_OVERRIDE`.
+## Deliverables
+
+- `/mnt/documents/afterparty-clip-square.mp4` (1080×1080)
+- `/mnt/documents/afterparty-clip-story.mp4` (1080×1920)
+
+I'll surface both with `<lov-artifact>` tags after the render so you can preview/download from chat.
