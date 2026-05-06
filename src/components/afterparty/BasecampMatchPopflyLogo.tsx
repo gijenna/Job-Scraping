@@ -502,7 +502,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 3600ms cubic-bezier(.18,.78,.18,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 4400ms cubic-bezier(.22,.72,.2,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
