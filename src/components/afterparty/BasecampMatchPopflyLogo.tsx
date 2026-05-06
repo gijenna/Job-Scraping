@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import popflyKite from "@/assets/popfly-kite.png";
 import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
@@ -100,6 +100,8 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
+  const splashLogoRef = useRef<HTMLImageElement | null>(null);
+  const homeLogoRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
@@ -111,6 +113,36 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     }, delay);
     return () => clearTimeout(t);
   }, [onRevealed]);
+
+  // Measure where the steady-state presenter logo lives so the splash logo
+  // can animate to that exact spot and size — a true seamless merge.
+  useLayoutEffect(() => {
+    if (!presenter) return;
+    const compute = () => {
+      const splash = splashLogoRef.current;
+      const home = homeLogoRef.current;
+      if (!splash || !home) return;
+      const sRect = splash.getBoundingClientRect();
+      const hRect = home.getBoundingClientRect();
+      // Splash is centered via translate(-50%,-50%) at viewport center.
+      const splashCenterX = window.innerWidth / 2;
+      const splashCenterY = window.innerHeight / 2;
+      const homeCenterX = hRect.left + hRect.width / 2;
+      const homeCenterY = hRect.top + hRect.height / 2;
+      const tx = homeCenterX - splashCenterX;
+      const ty = homeCenterY - splashCenterY;
+      const ts = sRect.height > 0 ? hRect.height / sRect.height : 0.25;
+      splash.style.setProperty("--bmp-home-tx", `${tx}px`);
+      splash.style.setProperty("--bmp-home-ty", `${ty}px`);
+      splash.style.setProperty("--bmp-home-ts", `${ts}`);
+    };
+    // Run after layout + on resize.
+    compute();
+    const r = () => compute();
+    window.addEventListener("resize", r);
+    return () => window.removeEventListener("resize", r);
+  }, [presenter]);
+
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
@@ -428,14 +460,14 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         }
 
         /* Presenter logo (e.g. Oakley) appears at center after OD leaves, then
-           shrinks and drifts down toward its lockup spot, fading as the
-           steady-state presenter fades in — creating a smooth merge. */
+           travels to the EXACT position/size of the steady-state lockup logo
+           (computed via JS into --bmp-home-tx/ty/ts) and cross-fades into it. */
         @keyframes bmpPresenterFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-          18%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-          55%  { opacity: 1; transform: translate(-50%, -50%) scale(0.95); }
-          85%  { opacity: 0.85; transform: translate(-50%, calc(-50% + 18vh)) scale(0.32); }
-          100% { opacity: 0; transform: translate(-50%, calc(-50% + 22vh)) scale(0.22); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, 0) scale(0.6); }
+          18%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+          55%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(0.95); }
+          88%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
+          100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
         }
         .bmp-presenter-splash {
           position: fixed;
@@ -446,7 +478,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           z-index: 63;
           opacity: 0;
           filter: drop-shadow(0 0 20px rgba(245,230,211,0.55)) drop-shadow(0 0 40px rgba(245,230,211,0.3));
-          animation: bmpPresenterFindHome 1800ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterFindHome 2200ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
@@ -571,6 +603,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
               and merges into the steady-state presenter slot below the lockup. */}
           {presenter && (
             <img
+              ref={splashLogoRef}
               src={presenter.logoUrl}
               alt=""
               className="bmp-presenter-splash"
@@ -642,6 +675,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                 </span>
               )}
               <img
+                ref={homeLogoRef}
                 src={presenter.logoUrl}
                 alt={presenter.logoAlt}
                 className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
