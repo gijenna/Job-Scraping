@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import popflyKite from "@/assets/popfly-kite.png";
 import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
@@ -100,7 +100,6 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
-  const homeLogoRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
@@ -476,7 +475,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-sunset, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-sunset, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
@@ -652,7 +651,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
               )}
               <span className="relative inline-flex h-9 sm:h-11 md:h-12 items-center justify-center">
                 <img
-                  ref={homeLogoRef}
                   src={presenter.logoUrl}
                   alt={presenter.logoAlt}
                   className={`h-full w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
