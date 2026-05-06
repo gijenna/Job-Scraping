@@ -100,18 +100,26 @@ const AfterPartySpotlights = () => {
 
   return (
     <section className="mt-6">
-      <div className="text-[11px] uppercase mb-2" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
-        Community partners
-      </div>
-      <h2
-        className="text-[18px] mb-1"
-        style={{ fontWeight: 600, color: CREAM, letterSpacing: "-0.01em" }}
+      <div
+        className="rounded-xl px-4 py-3 sm:px-5 sm:py-4 mb-4 backdrop-blur-sm"
+        style={{ backgroundColor: "rgba(8,8,8,0.72)", border: "1px solid rgba(237,118,96,0.35)" }}
       >
-        Peak vibes, brought by these folks
-      </h2>
-      <p className="text-[12px] mb-6" style={{ color: CREAM_FAINT }}>
-        Thanks to everyone helping make the night happen.
-      </p>
+        <div
+          className="text-[11px] uppercase mb-2"
+          style={{ letterSpacing: "0.16em", color: "#ED7660", fontWeight: 700, textShadow: "0 0 10px rgba(237,118,96,0.55)" }}
+        >
+          Community partners
+        </div>
+        <h2
+          className="text-[18px] mb-1"
+          style={{ fontWeight: 700, color: "#ED7660", letterSpacing: "-0.01em", textShadow: "0 0 14px rgba(237,118,96,0.5)" }}
+        >
+          Peak vibes, brought by these folks
+        </h2>
+        <p className="text-[12px]" style={{ color: "rgba(237,118,96,0.85)" }}>
+          Thanks to everyone helping make the night happen.
+        </p>
+      </div>
       <div className="space-y-6">
         {grouped.map(({ category, list }) => (
           <div key={category}>
