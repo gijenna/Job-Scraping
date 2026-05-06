@@ -54,10 +54,21 @@ export const SocialPost: React.FC<Props> = ({ format }) => {
   const dateBottom = isStory ? height * 0.13 : height * 0.07;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      {/* Reuse the choreographed opening over sunset */}
-      <OpeningScene withStarBurst sunsetBackground withLogo={false} />
-
+    <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
+      {/* Reuse the choreographed opening over sunset, scaled from 2160 base. */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: 2160,
+          height: 2160,
+          transform: `translate(-50%, -50%) scale(${Math.max(width, height) / 2160})`,
+          transformOrigin: "center center",
+        }}
+      >
+        <OpeningSceneWrapper />
+      </div>
       {/* Soft vignette for legibility once text appears */}
       <div
         style={{
