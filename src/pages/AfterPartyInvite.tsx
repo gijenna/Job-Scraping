@@ -388,7 +388,13 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
           )}
 
 
-          <div>
+          <div
+            style={{
+              opacity: splashDone ? 1 : 0,
+              transition: "opacity 0.4s ease-out",
+              pointerEvents: splashDone ? "auto" : "none",
+            }}
+          >
           {/* Hero copy */}
           <div className="mt-2 text-center" style={{ transitionDelay: "60ms" }}>
             {/* Presenter logo is rendered inside the opening lockup
