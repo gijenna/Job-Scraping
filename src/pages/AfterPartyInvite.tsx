@@ -464,7 +464,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
                       document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
                     }, 100);
                   }}
-                  className="font-afterparty text-[14px] h-11 px-8"
+                  className="w-full font-afterparty text-[14px] h-11"
                   style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
                 >
                   {me?.full_name
@@ -522,21 +522,6 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
                   </div>
                 </div>
 
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setEditMode(true);
-                    setTimeout(() => {
-                      document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }, 100);
-                  }}
-                  className="w-full font-afterparty text-[14px] h-11"
-                  style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
-                >
-                  {me?.full_name
-                    ? `RSVP here, ${me.full_name.split(" ")[0]}`
-                    : <EditableText settingKey="cta.primary" defaultText="RSVP" />}
-                </Button>
 
                 {me?.role === "brand" && (
                   <div className="mt-3">
