@@ -603,6 +603,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
               and merges into the steady-state presenter slot below the lockup. */}
           {presenter && (
             <img
+              ref={splashLogoRef}
               src={presenter.logoUrl}
               alt=""
               className="bmp-presenter-splash"
