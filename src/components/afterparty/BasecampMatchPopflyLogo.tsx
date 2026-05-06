@@ -675,6 +675,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                 </span>
               )}
               <img
+                ref={homeLogoRef}
                 src={presenter.logoUrl}
                 alt={presenter.logoAlt}
                 className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
