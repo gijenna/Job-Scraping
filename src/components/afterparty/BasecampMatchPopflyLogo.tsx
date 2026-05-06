@@ -163,13 +163,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
   // Pacing — stage starts fully black, sunset fades up under the fire,
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
-  const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_IN_DUR_MS = 1800;         // sunset fades up from black under the fire
-  const STAGE_OUT_DELAY_S = 8.4;        // begin darkening AS snowflakes start spinning
-  const STAGE_OUT_DUR_MS = 2400;        // long, gentle cross-fade into the page
+  const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
+  const STAGE_IN_DUR_MS = 2600;         // sunset radiates up from black under the fire
+  const STAGE_OUT_DELAY_S = 8.1;        // begin darkening AS snowflakes start spinning
+  const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 8.6; // presenter logo (Oakley) blooms at its lockup spot
-  const PRESENTS_DELAY_S = 9.7;         // lockup presenter fades in (so center logo "merges" into place)
+  const PRESENTER_SPLASH_DELAY_S = 8.25; // presenter logo (Oakley) blooms at its exact lockup spot
+  const PRESENTS_DELAY_S = 8.2;          // lockup presenter fades in under the bloom for a real merge
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
