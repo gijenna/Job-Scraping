@@ -173,19 +173,20 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
         const showLi = linkedin && (guest.show_linkedin ?? true);
         if (!showIg && !showLi) return null;
         return (
-          <div className="mt-2 flex items-center justify-center gap-2">
+          <div className={`mt-2 flex items-center justify-center gap-2 ${isMobile ? "flex-col gap-1.5" : ""}`}>
             {instagram && showIg && (
               <a
                 href={instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
+                className={`inline-flex items-center justify-center hover:opacity-80 transition-opacity ${isMobile ? "w-7 h-7 rounded-full" : "gap-1 px-2 py-0.5 rounded-full"}`}
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
                 title={`${instagram.label} on Instagram`}
+                aria-label={`${instagram.label} on Instagram`}
               >
-                <Instagram className="w-3 h-3" />
-                <span className="text-[11px]">{instagram.label}</span>
+                <Instagram className={isMobile ? "w-3.5 h-3.5" : "w-3 h-3"} />
+                {!isMobile && <span className="text-[11px]">{instagram.label}</span>}
               </a>
             )}
             {linkedin && showLi && (
@@ -194,24 +195,34 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity"
+                className={`inline-flex items-center justify-center hover:opacity-80 transition-opacity ${isMobile ? "w-7 h-7 rounded-full" : "gap-1 px-2 py-0.5 rounded-full"}`}
                 style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
                 title="LinkedIn"
+                aria-label="LinkedIn"
               >
-                <Linkedin className="w-3 h-3" />
-                <span className="text-[11px]">LinkedIn</span>
+                <Linkedin className={isMobile ? "w-3.5 h-3.5" : "w-3 h-3"} />
+                {!isMobile && <span className="text-[11px]">LinkedIn</span>}
               </a>
             )}
           </div>
         );
       })()}
 
-      {(guest.niches?.length || guest.creator_types?.length) ? (
-        <div className="mt-2 -mb-1 flex flex-wrap justify-center">
-          {(guest.niches || []).map((n) => <Chip key={`n-${n}`}>{n}</Chip>)}
-          {(guest.creator_types || []).map((c) => <Chip key={`c-${c}`}>{c}</Chip>)}
-        </div>
-      ) : null}
+      {(guest.niches?.length || guest.creator_types?.length) ? (() => {
+        const allChips = [
+          ...(guest.niches || []).map((n) => ({ key: `n-${n}`, label: n })),
+          ...(guest.creator_types || []).map((c) => ({ key: `c-${c}`, label: c })),
+        ];
+        const MAX = 3;
+        const shown = allChips.slice(0, MAX);
+        const extra = allChips.length - shown.length;
+        return (
+          <div className="mt-2 -mb-0.5 flex flex-wrap justify-center">
+            {shown.map((c) => <Chip key={c.key}>{c.label}</Chip>)}
+            {extra > 0 && <Chip>+{extra}</Chip>}
+          </div>
+        );
+      })() : null}
 
       {fact ? (
         <div className="mt-3 text-[12px]" style={{ color: "rgba(245,230,211,0.7)" }}>
