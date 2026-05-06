@@ -586,17 +586,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             aria-hidden="true"
           />
 
-          {/* Presenter logo (e.g. Oakley) splash — appears center after OD leaves
-              and merges into the steady-state presenter slot below the lockup. */}
-          {presenter && (
-            <img
-              ref={splashLogoRef}
-              src={presenter.logoUrl}
-              alt=""
-              className="bmp-presenter-splash"
-              aria-hidden="true"
-            />
-          )}
         </>
       )}
 
@@ -661,12 +650,22 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                   {presenter.label}
                 </span>
               )}
-              <img
-                ref={homeLogoRef}
-                src={presenter.logoUrl}
-                alt={presenter.logoAlt}
-                className={`h-9 sm:h-11 md:h-12 w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
-              />
+              <span className="relative inline-flex h-9 sm:h-11 md:h-12 items-center justify-center">
+                <img
+                  ref={homeLogoRef}
+                  src={presenter.logoUrl}
+                  alt={presenter.logoAlt}
+                  className={`h-full w-auto object-contain ${presenter.creamGlow ? "bmp-presenter-logo" : ""}`}
+                />
+                {!revealed && (
+                  <img
+                    src={presenter.logoUrl}
+                    alt=""
+                    className="bmp-presenter-splash"
+                    aria-hidden="true"
+                  />
+                )}
+              </span>
               {presenter.sublabel && (
                 <span
                   className="font-afterparty text-[12px] sm:text-[13px] tracking-[0.25em] mt-1"
