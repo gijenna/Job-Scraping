@@ -11,6 +11,9 @@ interface Props {
   sunsetBackground?: boolean;
   /** Render Outside Days logo overlay at the bottom. */
   withLogo?: boolean;
+  /** Override canvas dimensions (defaults to composition size).
+   *  Use when embedding in a different-sized composition. */
+  canvasOverride?: { width: number; height: number };
 }
 
 // Timeline (at 30fps):
@@ -71,9 +74,12 @@ const TONE_FILTER: Record<string, string> = {
   green: "brightness(0) saturate(100%) invert(78%) sepia(83%) saturate(2103%) hue-rotate(57deg) brightness(106%) contrast(101%)",
 };
 
-export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false, sunsetBackground = false, withLogo = false }) => {
+export const OpeningScene: React.FC<Props> = ({ withStarBurst = false, blackBackground = false, sunsetBackground = false, withLogo = false, canvasOverride }) => {
   const frame = useCurrentFrame();
-  const { width, height, fps } = useVideoConfig();
+  const cfg = useVideoConfig();
+  const fps = cfg.fps;
+  const width = canvasOverride?.width ?? cfg.width;
+  const height = canvasOverride?.height ?? cfg.height;
   const cx = width / 2;
   const cy = height / 2;
 

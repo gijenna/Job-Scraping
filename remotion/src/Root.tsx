@@ -2,6 +2,7 @@ import React from "react";
 import { Composition, Still } from "remotion";
 import { OpeningScene } from "./scenes/OpeningScene";
 import { LockupBuildOn } from "./scenes/LockupBuildOn";
+import { SocialPost } from "./scenes/SocialPost";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -91,6 +92,24 @@ export const RemotionRoot: React.FC = () => {
         component={LockupBuildOn}
         width={2160}
         height={2160}
+      />
+      <Composition
+        id="social-square"
+        component={SocialPost as any}
+        durationInFrames={360}
+        fps={30}
+        width={1080}
+        height={1080}
+        defaultProps={{ format: "square" } as any}
+      />
+      <Composition
+        id="social-story"
+        component={SocialPost as any}
+        durationInFrames={360}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{ format: "story" } as any}
       />
     </>
   );
