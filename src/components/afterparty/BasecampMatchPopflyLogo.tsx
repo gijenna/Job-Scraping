@@ -106,7 +106,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
-    const delay = reduced ? 0 : 9600;
+    const delay = reduced ? 0 : 10800;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
@@ -183,8 +183,8 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
   const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
   const STAGE_IN_DUR_MS = 3600;         // sunset radiates up from black under the fire
-  const STAGE_OUT_DELAY_S = 7.45;       // begin darkening as snowflakes and Oakley start merging
-  const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
+  const STAGE_OUT_DELAY_S = 7.95;       // begin darkening as snowflakes and Oakley start merging
+  const STAGE_OUT_DUR_MS = 4200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
   const PRESENTER_SPLASH_DELAY_S = 7.05; // presenter logo (Oakley) blooms earlier, merges into lockup
   const PRESENTS_DELAY_S = 7.05;         // lockup presenter fades in under the bloom for a real merge
@@ -497,7 +497,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 4400ms cubic-bezier(.4,0,.4,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 5600ms cubic-bezier(.33,0,.2,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
@@ -604,7 +604,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
                   ["--bx-mid" as any]: mid,
                   ["--by-mid" as any]: midY,
                   ["--bspin" as any]: s.spin,
-                  animation: `bmpStarBurst 3800ms cubic-bezier(.4,0,.4,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
+                  animation: `bmpStarBurst 5200ms cubic-bezier(.33,0,.2,1) ${STAR_BURST_DELAY_MS + s.delay}ms forwards`,
                 }}
               >
                 <StarSparkle tone={s.tone} variant="single" size={s.size} />
