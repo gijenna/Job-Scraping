@@ -9,6 +9,9 @@ import StarSparkle from "./StarSparkle";
 
 interface Props {
   onRevealed?: () => void;
+  /** Fires earlier than onRevealed, right as the kick-off line settles,
+   *  so the page can fade in the rest of the invite copy in sync. */
+  onInvitePop?: () => void;
   /** Presenter logo shown under the lockup, replacing the "present" wordmark.
    *  When provided, an `@ / [logo] / RiNo` style stack is rendered. */
   presenter?: {
@@ -98,7 +101,7 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
+const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
   const [sunsetReady, setSunsetReady] = useState(false);
 
@@ -106,13 +109,26 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
-    const delay = reduced ? 0 : 9300;
+    const delay = reduced ? 0 : 10800;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
   }, [onRevealed, sunsetReady]);
+
+  // Earlier callback: fires right as the kick-off line settles so the rest
+  // of the invite copy can fade in alongside it.
+  useEffect(() => {
+    const reduced = typeof window !== "undefined"
+      && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && !sunsetReady) return;
+    const delay = reduced ? 0 : 8000;
+    const t = setTimeout(() => {
+      onInvitePop?.();
+    }, delay);
+    return () => clearTimeout(t);
+  }, [onInvitePop, sunsetReady]);
 
   useEffect(() => {
     const img = new Image();
