@@ -100,6 +100,8 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
+  const splashLogoRef = useRef<HTMLImageElement | null>(null);
+  const homeLogoRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
@@ -111,6 +113,36 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     }, delay);
     return () => clearTimeout(t);
   }, [onRevealed]);
+
+  // Measure where the steady-state presenter logo lives so the splash logo
+  // can animate to that exact spot and size — a true seamless merge.
+  useLayoutEffect(() => {
+    if (!presenter) return;
+    const compute = () => {
+      const splash = splashLogoRef.current;
+      const home = homeLogoRef.current;
+      if (!splash || !home) return;
+      const sRect = splash.getBoundingClientRect();
+      const hRect = home.getBoundingClientRect();
+      // Splash is centered via translate(-50%,-50%) at viewport center.
+      const splashCenterX = window.innerWidth / 2;
+      const splashCenterY = window.innerHeight / 2;
+      const homeCenterX = hRect.left + hRect.width / 2;
+      const homeCenterY = hRect.top + hRect.height / 2;
+      const tx = homeCenterX - splashCenterX;
+      const ty = homeCenterY - splashCenterY;
+      const ts = sRect.height > 0 ? hRect.height / sRect.height : 0.25;
+      splash.style.setProperty("--bmp-home-tx", `${tx}px`);
+      splash.style.setProperty("--bmp-home-ty", `${ty}px`);
+      splash.style.setProperty("--bmp-home-ts", `${ts}`);
+    };
+    // Run after layout + on resize.
+    compute();
+    const r = () => compute();
+    window.addEventListener("resize", r);
+    return () => window.removeEventListener("resize", r);
+  }, [presenter]);
+
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
