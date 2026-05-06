@@ -16,6 +16,10 @@ const SLUG_MAP: Record<string, string> = {
   "/events": "events",
   "/gather-pnw": "gather-pnw",
   "/gather-denver": "gather-denver",
+  "/afterparty": "afterparty",
+  "/afterpartyoakley": "afterparty",
+  "/guests": "afterparty",
+  "/guestsoakley": "afterparty",
 };
 
 Deno.serve(async (req) => {
