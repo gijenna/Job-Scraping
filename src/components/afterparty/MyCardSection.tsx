@@ -361,19 +361,17 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
   return (
     <section
       className="relative mb-4 overflow-hidden rounded-2xl p-5 sm:p-6"
-      style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.9)" : CARD, border: `1px solid ${BORDER}` }}
+      style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.86)" : CARD, border: `1px solid ${BORDER}` }}
     >
       {rinoMural && (
         <img
           aria-hidden
-          src="/oakley-rino/rino-mural-right.png"
+          src="/oakley-rino/oakley-rino-graffiti-accent.png"
           alt=""
-          className="pointer-events-none absolute right-[-7%] top-[38%] z-0 hidden h-[260px] w-auto -translate-y-1/2 md:block"
+          className="pointer-events-none absolute right-[-5%] top-[67%] z-0 h-[190px] w-auto -translate-y-1/2 sm:h-[230px] md:right-[-2%] md:top-[68%] md:h-[300px]"
           style={{
-            opacity: 0.6,
-            filter: "saturate(1.18) contrast(1.08)",
-            maskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
-            WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
+            opacity: 0.78,
+            filter: "saturate(1.16) contrast(1.08) drop-shadow(0 18px 34px rgba(0,0,0,0.35))",
           }}
         />
       )}
