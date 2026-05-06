@@ -173,20 +173,24 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
         const showLi = linkedin && (guest.show_linkedin ?? true);
         if (!showIg && !showLi) return null;
         return (
-          <div className={`mt-2 flex items-center justify-center gap-2 ${isMobile ? "flex-col gap-1.5" : ""}`}>
+          <div className="mt-2 flex items-center justify-center gap-2">
             {instagram && showIg && (
               <a
                 href={instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className={`inline-flex items-center justify-center hover:opacity-80 transition-opacity ${isMobile ? "w-7 h-7 rounded-full" : "gap-1 px-2 py-0.5 rounded-full"}`}
-                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
+                className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:opacity-90 transition-opacity"
+                style={{
+                  backgroundColor: "rgba(237,118,96,0.12)",
+                  border: "1px solid rgba(237,118,96,0.7)",
+                  color: "#ED7660",
+                  boxShadow: "0 0 8px rgba(237,118,96,0.55)",
+                }}
                 title={`${instagram.label} on Instagram`}
                 aria-label={`${instagram.label} on Instagram`}
               >
-                <Instagram className={isMobile ? "w-3.5 h-3.5" : "w-3 h-3"} />
-                {!isMobile && <span className="text-[11px]">{instagram.label}</span>}
+                <Instagram className="w-3.5 h-3.5" />
               </a>
             )}
             {linkedin && showLi && (
@@ -195,13 +199,17 @@ const GuestCard = ({ guest }: { guest: GuestRow }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className={`inline-flex items-center justify-center hover:opacity-80 transition-opacity ${isMobile ? "w-7 h-7 rounded-full" : "gap-1 px-2 py-0.5 rounded-full"}`}
-                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,230,211,0.85)" }}
+                className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:opacity-90 transition-opacity"
+                style={{
+                  backgroundColor: "rgba(225,182,36,0.14)",
+                  border: "1px solid rgba(225,182,36,0.75)",
+                  color: "#E1B624",
+                  boxShadow: "0 0 8px rgba(225,182,36,0.55)",
+                }}
                 title="LinkedIn"
                 aria-label="LinkedIn"
               >
-                <Linkedin className={isMobile ? "w-3.5 h-3.5" : "w-3 h-3"} />
-                {!isMobile && <span className="text-[11px]">LinkedIn</span>}
+                <Linkedin className="w-3.5 h-3.5" />
               </a>
             )}
           </div>
