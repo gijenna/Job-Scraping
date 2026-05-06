@@ -73,6 +73,7 @@ const getLinkedInProfile = (value?: string | null) => {
 
 const GuestCard = ({ guest }: { guest: GuestRow }) => {
   const [expanded, setExpanded] = useState(false);
+  const isMobile = useIsMobile();
   const pill = ROLE_PILL[guest.role] || ROLE_PILL.brand;
   const intents = (guest.looking_for || []).filter((v) => !/just here to vibe/i.test(v));
   const initial = guest.display_name?.charAt(0)?.toUpperCase() || "?";
