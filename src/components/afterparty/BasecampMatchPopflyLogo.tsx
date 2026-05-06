@@ -104,7 +104,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 10700;
+    const delay = reduced ? 0 : 11200;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
@@ -160,11 +160,14 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Pacing — total runtime ~8.8s. Slower kite section, gives every beat room to breathe.
+  // Pacing — total runtime ~9.5s. Stage fades earlier and longer so the snowflake
+  // burst and the sunset reveal feel simultaneous instead of sequential.
   const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_OUT_DELAY_S = 10.3;       // hold dark stage so the burst plays out fully
+  const STAGE_OUT_DELAY_S = 9.0;        // start fading the splash WHILE snowflakes are still flying
+  const STAGE_OUT_DUR_MS = 2000;        // long, gentle cross-fade
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTS_DELAY_S = 7.4;
+  const PRESENTER_SPLASH_DELAY_S = 9.2; // presenter logo (Oakley) appears in center after OD leaves
+  const PRESENTS_DELAY_S = 9.7;         // lockup presenter fades in (so center logo "merges" into place)
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
@@ -302,7 +305,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           background-position: center;
           z-index: 60;
           pointer-events: none;
-          animation: bmpStageOut 800ms ease-out ${STAGE_OUT_DELAY_S}s forwards;
+          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -424,6 +427,28 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
+        /* Presenter logo (e.g. Oakley) appears at center after OD leaves, then
+           shrinks and drifts down toward its lockup spot, fading as the
+           steady-state presenter fades in — creating a smooth merge. */
+        @keyframes bmpPresenterFindHome {
+          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+          18%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          55%  { opacity: 1; transform: translate(-50%, -50%) scale(0.95); }
+          85%  { opacity: 0.85; transform: translate(-50%, calc(-50% + 18vh)) scale(0.32); }
+          100% { opacity: 0; transform: translate(-50%, calc(-50% + 22vh)) scale(0.22); }
+        }
+        .bmp-presenter-splash {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          width: min(28vh, 28vw);
+          height: auto;
+          z-index: 63;
+          opacity: 0;
+          filter: drop-shadow(0 0 20px rgba(245,230,211,0.55)) drop-shadow(0 0 40px rgba(245,230,211,0.3));
+          animation: bmpPresenterFindHome 1800ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+        }
+
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
         @keyframes bmpCreamPulse {
           0%, 100% { filter: drop-shadow(0 0 10px rgba(245,230,211,0.55)) drop-shadow(0 0 20px rgba(245,230,211,0.3)); }
@@ -433,7 +458,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
@@ -541,6 +566,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             className="bmp-od-stacked"
             aria-hidden="true"
           />
+
+          {/* Presenter logo (e.g. Oakley) splash — appears center after OD leaves
+              and merges into the steady-state presenter slot below the lockup. */}
+          {presenter && (
+            <img
+              src={presenter.logoUrl}
+              alt=""
+              className="bmp-presenter-splash"
+              aria-hidden="true"
+            />
+          )}
         </>
       )}
 
