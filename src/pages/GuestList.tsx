@@ -157,28 +157,28 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
           <img
             src="/oakley-rino/rino-mural-left.png"
             alt=""
-            className="absolute top-[4vh] -left-[8vw] h-[90vh] w-auto"
+            className="absolute top-[2vh] -left-[3vw] h-[96vh] w-auto"
             style={{
-              opacity: 0.7,
-              filter: "saturate(1.05)",
+              opacity: 0.9,
+              filter: "saturate(1.15) contrast(1.08)",
               maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
             }}
             loading="lazy"
           />
           <img
             src="/oakley-rino/rino-mural-right.png"
             alt=""
-            className="absolute top-[14vh] -right-[7vw] h-[92vh] w-auto"
+            className="absolute top-[8vh] -right-[2vw] h-[98vh] w-auto"
             style={{
-              opacity: 0.65,
-              filter: "saturate(1.05)",
+              opacity: 0.86,
+              filter: "saturate(1.15) contrast(1.08)",
               maskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
               WebkitMaskImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 88%)",
+                "radial-gradient(ellipse at center, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 92%)",
             }}
             loading="lazy"
           />
@@ -258,6 +258,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
           slug={viewerSlug}
           onCardSaved={fetchGuests}
           sidebar={<AfterPartySpotlights />}
+          rinoMural={venueShowcase === "oakley-rino"}
         />
 
         {/* Mobile fallback: spotlights below the matches */}
