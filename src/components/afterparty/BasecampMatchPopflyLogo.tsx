@@ -301,30 +301,38 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           position: fixed;
           inset: 0;
           background: #000;
-          z-index: 60;
+          z-index: 59;
           pointer-events: none;
           animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        /* Sunset image is clipped by an animated SVG circle, so the reveal truly radiates from the fire. */
-        .bmp-splash-sunset-svg {
+        /* Sunset image is masked by an expanding soft circle, so it truly radiates from the fire. */
+        .bmp-splash-sunset {
           position: fixed;
           inset: 0;
           z-index: 60;
           pointer-events: none;
-          width: 100vw;
-          height: 100vh;
+          background-image: url('/bg-sunset.jpg');
+          background-size: cover;
+          background-position: center;
           opacity: 1;
-          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+          -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, rgba(0,0,0,0.85) 58%, rgba(0,0,0,0.25) 70%, transparent 76%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, rgba(0,0,0,0.85) 58%, rgba(0,0,0,0.25) 70%, transparent 76%);
+          -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+          -webkit-mask-position: 50% 50%;
+          mask-position: 50% 50%;
+          -webkit-mask-size: 0vmax 0vmax;
+          mask-size: 0vmax 0vmax;
+          animation:
+            bmpSunsetRadiate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 160ms forwards,
+            bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
-        .bmp-splash-sunset-image {
-          opacity: 0;
-          animation: bmpSunsetImageWarm ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 160ms forwards;
-        }
-        @keyframes bmpSunsetImageWarm {
-          0%   { opacity: 0; filter: brightness(0.35) saturate(0.7); }
-          18%  { opacity: 0.95; filter: brightness(0.58) saturate(0.82); }
-          58%  { opacity: 1; filter: brightness(0.86) saturate(0.96); }
-          100% { opacity: 1; filter: brightness(1) saturate(1); }
+        @keyframes bmpSunsetRadiate {
+          0%   { -webkit-mask-size: 0vmax 0vmax;   mask-size: 0vmax 0vmax;   filter: brightness(0.32) saturate(0.7); }
+          16%  { -webkit-mask-size: 18vmax 18vmax; mask-size: 18vmax 18vmax; filter: brightness(0.5) saturate(0.78); }
+          38%  { -webkit-mask-size: 58vmax 58vmax; mask-size: 58vmax 58vmax; filter: brightness(0.66) saturate(0.86); }
+          68%  { -webkit-mask-size: 126vmax 126vmax; mask-size: 126vmax 126vmax; filter: brightness(0.84) saturate(0.95); }
+          100% { -webkit-mask-size: 290vmax 290vmax; mask-size: 290vmax 290vmax; filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -476,7 +484,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-sunset-svg, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-sunset, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
