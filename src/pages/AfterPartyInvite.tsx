@@ -365,7 +365,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
             transition: "opacity 0.4s ease-out",
           }}
         />
-        <div className="mx-auto px-5 pt-4 pb-16 relative z-10" style={{ maxWidth: 480 }}>
+        <div className="mx-auto px-5 pt-2 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
           {!skipSplash && (
             <BasecampMatchPopflyLogo
@@ -478,7 +478,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
           {/* About the event shown when no card loaded OR when this is a
               personalized pre-RSVP shell (so invitees see event info first) */}
           {(!me || (me && isPreRsvpShell && !editMode)) && (
-            <section className="mt-6">
+            <section className="mt-3">
               <div className="px-1">
                 <h2 className="font-afterparty text-[22px] mb-3" style={{ fontWeight: 500, color: CREAM }}>
                   <EditableText settingKey="about.title" defaultText="A lil' party for outdoor industry creators & brands" />
