@@ -141,7 +141,7 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
-          <Route path="/guests" element={<GuestList />} />
+          <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
           {/* Hidden Oakley variant — same data as /guests, with the RiNo
               venue showcase replacing the event-info column. Not linked. */}
           <Route path="/guestsoakley" element={<GuestList venueShowcase="oakley-rino" />} />
