@@ -1,68 +1,43 @@
-# Polish Oakley pages + guest cards
+## Goal
 
-## 1. Community Partners — make subheaders pop
-File: `src/components/afterparty/AfterPartySpotlights.tsx`
+Decouple share previews so:
+- **Afterparty** invites keep their current preview (Basecamp Match / Out of Office card) — no change.
+- **All Denver** brand-rep and industry-expert invites use the uploaded "Basecamp Outdoor @ Outside Days · May 28, 2026 · Denver" hero image as their share preview.
+- **Portland & Minneapolis** expert/brand-rep invites continue to use the existing auto-generated per-expert V3 01 cards.
 
-The category labels ("Brands", "Beverages", "Food", "Giveaways & Swag") currently use `CREAM_FAINT` (rgba(245,230,211,0.5)) which disappears against the mural on mobile.
+## How it works today
 
-- Change category labels to neon coral `#ED7660` with bold weight (700), uppercase, and a soft text-shadow glow `0 0 10px rgba(237,118,96,0.5)`.
-- Slightly darken the section's existing translucent backdrop so the labels stay legible: bump section panel and add a per-category mini-backdrop (`rgba(8,8,8,0.55)` with `backdrop-blur-sm`, rounded, small inline padding) so each label sits on its own readable strip.
+- Afterparty share link → `og-meta` edge function → reads `page_og_image` from `event_settings` (slug `afterparty`). Independent system. **Untouched.**
+- Expert / brand-rep share link → `expert-og` edge function (`supabase/functions/expert-og/index.ts`) → generates a per-expert PNG (V3 01 dark-teal card) per `(slug, city)` and caches it in storage at `og-cards/{slug}-{city}-og-card.png`.
 
-## 2. Mural — subdue on desktop, hide on mobile
-File: `src/components/afterparty/MatchesPanel.tsx`
+## Changes
 
-- Lower mural intensity: drop filter to `saturate(1.05) contrast(1.0) brightness(0.95)` and add a subtle dark overlay tint via mask gradient stop (`linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.2) 100%)`).
-- Hide the mural strip entirely on mobile: gate the strip `<div>` and the `pr-[42%] md:pr-[47%]` padding behind a `useIsMobile()` check (or Tailwind `hidden md:block` on the strip and conditional padding `md:pr-[47%]` only).
-- Result: mobile match bars become full-width text again; desktop keeps the mural but quieter.
+### 1. Save the Outside Days Denver hero as a static asset
+- Copy the uploaded screenshot to `public/og-denver-outside-days.png` so it serves at `https://sponsor-attract-hub.lovable.app/og-denver-outside-days.png` (a stable URL the edge function can return).
 
-## 3. Revert /afterpartyoakley to sunset background (whole page)
-File: `src/pages/AfterPartyInvite.tsx`
+### 2. Edit `supabase/functions/expert-og/index.ts`
+- Add a small lookup of city-level override images:
+  ```ts
+  const CITY_OG_OVERRIDE: Record<string, string> = {
+    denver: "https://sponsor-attract-hub.lovable.app/og-denver-outside-days.png",
+  };
+  ```
+- In the request handler, **before** calling `getOrGenerateOgCard`, check `CITY_OG_OVERRIDE[city]`. If set, use that URL as `ogImage` and skip generation entirely. This applies to both `industry_expert` and `brand_rep` types in Denver.
+- The redirect behavior for humans (302 to event page with `?expert=` / `?brand=` param) stays exactly the same — only the meta image crawlers see changes.
+- Portland and Minneapolis fall through to existing logic unchanged.
 
-- Remove the `venueShowcase === "oakley-rino"` branch in the page background style block (lines ~330–340). Always use `/bg-sunset.jpg` with the existing `afterparty-page-bg` class and `bg-center md:bg-top`.
-- Keep the `venueShowcase` prop wiring intact (it still drives the venue showcase card and `rinoMural` strip in MyCardSection on desktop), just stop applying the graffiti page background.
+### 3. Afterparty preview
+- No code touched. `og-meta` continues to serve the afterparty image from `event_settings`.
 
-## 4. Stop invite content flashing before splash
-File: `src/pages/AfterPartyInvite.tsx`
+## Verification
 
-The page renders the full invite + cards immediately while the `BasecampMatchPopflyLogo` splash mounts on top, so on slow first paint users see the invite for a frame before the splash covers it.
+After deploy, validate share previews with the Facebook / LinkedIn debugger or a quick `curl -A "facebookexternalhit/1.1" <share-url>`:
+- `…/functions/v1/expert-og/<slug>/denver` → `<meta property="og:image">` should be the new Outside Days Denver image.
+- `…/functions/v1/expert-og/<slug>/portland` → should still be the per-expert V3 01 generated card.
+- `/afterparty` share preview → unchanged.
 
-- Add a `splashReady` state (default `false`) toggled `true` after the first animation frame of `BasecampMatchPopflyLogo` (or simply on its `onMounted` callback; if not present, gate via `useEffect(() => requestAnimationFrame(() => setSplashReady(true)), [])`).
-- Wrap the invite body (`<div className="mx-auto px-5 ...">` content below the splash logo) in a sibling that renders a lightweight skeleton (existing `SkeletonMatches` + a gray-ish title block on dark BG) while `!splashDone`. The splash itself stays mounted so it can run.
-- Net effect: until `splashDone` (logo finishes), users see only the splash + a neutral skeleton, never the real invite cards.
+## Notes
 
-## 5. Mobile guest card improvements
-File: `src/components/afterparty/GuestCard.tsx`
-
-Use `useIsMobile()` to gate mobile-only behaviour.
-
-a. **Social icons compact on mobile**
-- When mobile: render Instagram and LinkedIn as icon-only buttons (no `@handle`, no "LinkedIn" text), stacked vertically (`flex-col` with `gap-1`) instead of horizontal. Smaller pill (icon-only, `w-7 h-7` round button).
-- Desktop: keep current horizontal pills with labels.
-
-b. **Cap niche/creator chips**
-- Show at most 3 chips combined from `niches + creator_types`. If more, append a `+N` chip (no expansion needed).
-- Reduce chip padding slightly (`px-1 py-0.5`, `text-[10px]`) and tighten `mr-1 mb-1` → `mr-0.5 mb-0.5` so cards aren't tall and narrow.
-
-## 6. Re-sort guest list by detail richness
-File: `src/pages/GuestList.tsx`
-
-Replace the current "newest" default sort with a detail-priority sort applied to BOTH `/guestsoakley` and `/afterpartyoakley` listings (the matches panel on the invite already sorts by match score; we sort the public roster).
-
-Compute a `detailScore` per guest:
-- has photo (`cartoon_url` present) → +100
-- "detail richness" = count of populated fields among: `mind_blowing_fact`, `niches?.length`, `creator_types?.length`, `looking_for?.length`, `company`, `social_links.instagram`, `social_links.linkedin` → each non-empty +10
-
-Sort tiers (descending):
-1. Photo + most detail
-2. Photo + less detail
-3. No photo + most detail
-4. No photo + least detail
-
-Implementation: single comparator `(b.score - a.score)` where `score = (hasPhoto ? 100 : 0) + detailFieldCount * 10`. Drop the existing `attendee_number` ordering preference. Apply same comparator to the matches list in `MatchesPanel.tsx` after the existing match-score sort if needed (confirm via reading code before changing — likely matches sort is score-based already, so only the public roster changes).
-
-## Files touched
-- `src/components/afterparty/AfterPartySpotlights.tsx` — coral category labels + mini backdrops
-- `src/components/afterparty/MatchesPanel.tsx` — subdued + mobile-hidden mural strip
-- `src/pages/AfterPartyInvite.tsx` — revert hero to sunset; gate body behind splash with skeleton
-- `src/components/afterparty/GuestCard.tsx` — mobile icon-only socials stacked, capped + smaller chips
-- `src/pages/GuestList.tsx` — new detail-priority sort as default
+- No DB migration needed.
+- No cache to clear (Denver previews bypass the cached PNGs entirely; the previously generated Denver cards in storage can stay — they simply won't be referenced anymore).
+- If you later want to override Portland or MN the same way, just add another entry to `CITY_OG_OVERRIDE`.
