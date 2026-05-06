@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import popflyKite from "@/assets/popfly-kite.png";
 import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
