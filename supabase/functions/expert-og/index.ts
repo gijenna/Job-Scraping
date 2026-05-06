@@ -587,16 +587,23 @@ Deno.serve(async (req) => {
 
   console.log(`Crawler UA detected: ${ua.slice(0, 120)}`);
 
-  const ogImage = await getOrGenerateOgCard(
-    supabase,
-    expert,
-    eventTitle,
-    cityName,
-    city,
-    slug,
-    siteBase,
-    expertType
-  );
+  // City-level override: skip per-expert generation and use a fixed event hero image.
+  const CITY_OG_OVERRIDE: Record<string, string> = {
+    denver: `${siteBase}/og-denver-outside-days.png`,
+  };
+
+  const ogImage = CITY_OG_OVERRIDE[city]
+    ? CITY_OG_OVERRIDE[city]
+    : await getOrGenerateOgCard(
+        supabase,
+        expert,
+        eventTitle,
+        cityName,
+        city,
+        slug,
+        siteBase,
+        expertType
+      );
 
   const title = `${expert.full_name} — ${
     expertType === "brand_rep" ? "Brand Rep" : "Industry Expert"
