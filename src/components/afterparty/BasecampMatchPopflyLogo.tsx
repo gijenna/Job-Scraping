@@ -260,11 +260,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           0%, 100% { filter: drop-shadow(0 0 8px rgba(57,255,20,0.7)) drop-shadow(0 0 16px rgba(57,255,20,0.4)); }
           50%      { filter: drop-shadow(0 0 14px rgba(57,255,20,1)) drop-shadow(0 0 28px rgba(57,255,20,0.6)); }
         }
-        /* Kite flies fully off the page (top-right) */
+        /* Kite flies fully off the page (top-right) — long, smooth arc so it glides instead of zipping. */
         @keyframes bmpKiteDismiss {
           0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -260px) scale(1); }
-          70%  { opacity: 1; }
-          100% { opacity: 0; transform: translate(-50%, -50%) translate(120vw, -90vh) scale(0.5); }
+          25%  { opacity: 1; transform: translate(-50%, -50%) translate(18vw, -32vh) scale(0.95); }
+          55%  { opacity: 1; transform: translate(-50%, -50%) translate(48vw, -52vh) scale(0.82); }
+          85%  { opacity: 1; transform: translate(-50%, -50%) translate(82vw, -72vh) scale(0.66); }
+          100% { opacity: 0; transform: translate(-50%, -50%) translate(120vw, -92vh) scale(0.5); }
         }
 
         /* Dust trail mote — drifts outward + downward, fading as it shrinks. */
@@ -424,12 +426,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation:
             bmpKiteAppear 500ms ease-out 2000ms forwards,
             bmpKiteFlutter 4200ms cubic-bezier(.45,.05,.55,.95) 2300ms 1 forwards,
-            bmpKiteDismiss 800ms cubic-bezier(.4,.1,.3,1) 6000ms forwards;
+            bmpKiteDismiss 1800ms cubic-bezier(.32,.04,.42,1) 6000ms forwards;
         }
         .bmp-kite-wings {
           width: 100%;
           height: 100%;
-          animation: bmpKiteWingFold 850ms ease-in-out 2300ms infinite;
+          animation: bmpKiteWingFold 520ms ease-in-out 2300ms infinite;
           will-change: transform;
         }
         .bmp-kite-img {
@@ -483,10 +485,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
         /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
         @keyframes bmpPresenterMerge {
-          0%   { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
-          14%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
-          42%  { opacity: 1; transform: scale(1.72); filter: drop-shadow(0 0 28px rgba(245,230,211,0.9)) drop-shadow(0 0 56px rgba(245,230,211,0.48)); }
-          72%  { opacity: 1; transform: scale(1.24); filter: drop-shadow(0 0 18px rgba(245,230,211,0.72)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
+          0%   { opacity: 0; transform: scale(1.4); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
+          22%  { opacity: 0.55; transform: scale(1.78); filter: drop-shadow(0 0 22px rgba(245,230,211,0.7)) drop-shadow(0 0 50px rgba(245,230,211,0.45)); }
+          40%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
+          62%  { opacity: 1; transform: scale(1.62); filter: drop-shadow(0 0 26px rgba(245,230,211,0.85)) drop-shadow(0 0 52px rgba(245,230,211,0.45)); }
+          82%  { opacity: 1; transform: scale(1.22); filter: drop-shadow(0 0 18px rgba(245,230,211,0.7)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
           100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.35)); }
         }
         .bmp-presenter-splash {
@@ -499,7 +502,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 3600ms cubic-bezier(.18,.78,.18,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 4400ms cubic-bezier(.22,.72,.2,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
