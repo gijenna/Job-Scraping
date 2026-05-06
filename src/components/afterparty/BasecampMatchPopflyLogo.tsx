@@ -206,13 +206,14 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Pacing — total runtime ~9.5s. Stage fades earlier and longer so the snowflake
-  // burst and the sunset reveal feel simultaneous instead of sequential.
+  // Pacing — stage starts fully black, sunset fades up under the fire,
+  // then begins fading out as snowflakes spin so the merge feels simultaneous.
   const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_OUT_DELAY_S = 9.0;        // start fading the splash WHILE snowflakes are still flying
-  const STAGE_OUT_DUR_MS = 2000;        // long, gentle cross-fade
+  const STAGE_IN_DUR_MS = 1800;         // sunset fades up from black under the fire
+  const STAGE_OUT_DELAY_S = 8.4;        // begin darkening AS snowflakes start spinning
+  const STAGE_OUT_DUR_MS = 2400;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 9.2; // presenter logo (Oakley) appears in center after OD leaves
+  const PRESENTER_SPLASH_DELAY_S = 8.6; // presenter logo (Oakley) blooms at its lockup spot
   const PRESENTS_DELAY_S = 9.7;         // lockup presenter fades in (so center logo "merges" into place)
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
@@ -341,17 +342,33 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           100% { opacity: 1; transform: scale(1) rotate(0); }
         }
 
-        /* Splash dark stage */
+        /* Splash dark stage — solid black base that fades out at the end. */
         .bmp-splash-stage {
           position: fixed;
           inset: 0;
-          background-color: transparent;
+          background: #000;
+          z-index: 60;
+          pointer-events: none;
+          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+        }
+        /* Sunset image fades up from black under the fire (illuminated by it),
+           then fades out alongside the black stage. */
+        .bmp-splash-sunset {
+          position: fixed;
+          inset: 0;
           background-image: url('/bg-sunset.jpg');
           background-size: cover;
           background-position: center;
           z-index: 60;
           pointer-events: none;
-          animation: bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+          opacity: 0;
+          animation:
+            bmpSunsetIn ${STAGE_IN_DUR_MS}ms ease-out 200ms forwards,
+            bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
+        }
+        @keyframes bmpSunsetIn {
+          0%   { opacity: 0; }
+          100% { opacity: 1; }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -473,14 +490,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
-        /* Presenter logo (e.g. Oakley) appears at center after OD leaves, then
-           travels to the EXACT position/size of the steady-state lockup logo
-           (computed via JS into --bmp-home-tx/ty/ts) and cross-fades into it. */
+        /* Presenter logo (e.g. Oakley) blooms directly at its lockup spot
+           (slightly larger than home), then settles into the lockup size and
+           cross-fades into the steady-state logo — never overlapping the title. */
         @keyframes bmpPresenterFindHome {
-          0%   { opacity: 0; transform: translate(-50%, -50%) translate(0, 0) scale(0.6); }
-          18%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
-          55%  { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(0.95); }
-          88%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
+          0%   { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 0.6)); }
+          25%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.55)); }
+          70%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(calc(var(--bmp-home-ts, 0.3) * 1.15)); }
           100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--bmp-home-tx, 0px), var(--bmp-home-ty, 18vh)) scale(var(--bmp-home-ts, 0.3)); }
         }
         .bmp-presenter-splash {
@@ -504,7 +520,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-sunset, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
@@ -518,6 +534,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
       {!revealed && (
         <>
           <div className="bmp-splash-stage" aria-hidden="true" />
+          <div className="bmp-splash-sunset" aria-hidden="true" />
 
           {/* Centered fire mark */}
           <div className="bmp-splash-fire" aria-hidden="true">
