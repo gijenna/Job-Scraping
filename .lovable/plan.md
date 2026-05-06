@@ -1,39 +1,68 @@
-## 1. Matches mural — back to "sliced strips inside the bars," but right-side only and brighter
+# Polish Oakley pages + guest cards
 
+## 1. Community Partners — make subheaders pop
+File: `src/components/afterparty/AfterPartySpotlights.tsx`
+
+The category labels ("Brands", "Beverages", "Food", "Giveaways & Swag") currently use `CREAM_FAINT` (rgba(245,230,211,0.5)) which disappears against the mural on mobile.
+
+- Change category labels to neon coral `#ED7660` with bold weight (700), uppercase, and a soft text-shadow glow `0 0 10px rgba(237,118,96,0.5)`.
+- Slightly darken the section's existing translucent backdrop so the labels stay legible: bump section panel and add a per-category mini-backdrop (`rgba(8,8,8,0.55)` with `backdrop-blur-sm`, rounded, small inline padding) so each label sits on its own readable strip.
+
+## 2. Mural — subdue on desktop, hide on mobile
 File: `src/components/afterparty/MatchesPanel.tsx`
 
-- Keep the original horizontal `oakley-rino-mural-strips.jpg` (revert from the vertical mural). All bars together reveal one continuous mural, with gaps between bars showing the page background — exactly the first version.
-- Constrain that sliced mural to a **right-side region** of each bar (roughly the right ~45% on desktop, right ~40% on mobile) instead of spanning full bar width. Implementation:
-  - Render the mural as an absolutely-positioned `div` inside each bar, pinned to `right: 0`, `top: 0`, `bottom: 0`, with width `40%` (mobile) / `45%` (desktop).
-  - `backgroundImage: url(mural)`, `backgroundSize: ${barsListWidth}px ${totalH}px`, `backgroundPosition: right -${offsets[i]}px` so the right edge stays aligned across all bars and they collectively reveal one image.
-  - Add a soft fade on the mural's left edge: `maskImage: linear-gradient(to right, transparent 0, #000 25%, #000 100%)` so it dissolves into the dark bar instead of cutting hard.
-- Brightness boost: drop the previous `linear-gradient(rgba(17,17,17,0.78)...)` overlay on top. Use a much lighter overlay only on the bottom edge (`linear-gradient(to top, rgba(17,17,17,0.35), transparent 40%)`) for legibility of the secondary "why it worked" line if it ever creeps right. Add `filter: saturate(1.15) contrast(1.05) brightness(1.05)` on the mural div.
-- Content layout protection — guarantee the mural never sits under the number badge, avatar, name, role pill, or reason text:
-  - Wrap the existing content row in a `relative z-10` container with `pr-[42%] md:pr-[47%]` so the actual flex content is always confined to the left half. The mural strip lives in the negative space to the right of the role pill and reason text.
-  - The `truncate` already in place keeps the name and reason from spilling into the mural area.
-- Remove the `oakley-rino-mural-vertical.jpg` reference from `MyCardSection.tsx`; switch back to `/oakley-rino/oakley-rino-mural-strips.jpg`.
-- Delete the now-unused `oakley-rino-mural-vertical.jpg` asset.
+- Lower mural intensity: drop filter to `saturate(1.05) contrast(1.0) brightness(0.95)` and add a subtle dark overlay tint via mask gradient stop (`linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 18%, rgba(0,0,0,0.2) 100%)`).
+- Hide the mural strip entirely on mobile: gate the strip `<div>` and the `pr-[42%] md:pr-[47%]` padding behind a `useIsMobile()` check (or Tailwind `hidden md:block` on the strip and conditional padding `md:pr-[47%]` only).
+- Result: mobile match bars become full-width text again; desktop keeps the mural but quieter.
 
-## 2. Background mural — Oakley eyewear on the figure(s)
+## 3. Revert /afterpartyoakley to sunset background (whole page)
+File: `src/pages/AfterPartyInvite.tsx`
 
-File: `public/oakley-rino/oakley-rino-graffiti-bg.jpg`
+- Remove the `venueShowcase === "oakley-rino"` branch in the page background style block (lines ~330–340). Always use `/bg-sunset.jpg` with the existing `afterparty-page-bg` class and `bg-center md:bg-top`.
+- Keep the `venueShowcase` prop wiring intact (it still drives the venue showcase card and `rinoMural` strip in MyCardSection on desktop), just stop applying the graffiti page background.
 
-- Use `imagegen--edit_image` to subtly retouch any visible graffiti figures (the helmeted character in the screenshot, plus any other faces) so they wear Oakley sunglasses or goggles with a clear but small "O" detail on the temple. Keep the spray-paint aesthetic, palette, and composition unchanged. Same file path so all existing references keep working.
+## 4. Stop invite content flashing before splash
+File: `src/pages/AfterPartyInvite.tsx`
 
-## 3. Community partners section — neon coral with dark backdrop on Oakley pages
+The page renders the full invite + cards immediately while the `BasecampMatchPopflyLogo` splash mounts on top, so on slow first paint users see the invite for a frame before the splash covers it.
 
-Files: `src/pages/GuestList.tsx`, `src/pages/AfterPartyInvite.tsx` (and any shared community-partners component if one exists; will confirm during implementation by `rg`-ing for "community partners" / "Community Partners").
+- Add a `splashReady` state (default `false`) toggled `true` after the first animation frame of `BasecampMatchPopflyLogo` (or simply on its `onMounted` callback; if not present, gate via `useEffect(() => requestAnimationFrame(() => setSplashReady(true)), [])`).
+- Wrap the invite body (`<div className="mx-auto px-5 ...">` content below the splash logo) in a sibling that renders a lightweight skeleton (existing `SkeletonMatches` + a gray-ish title block on dark BG) while `!splashDone`. The splash itself stays mounted so it can run.
+- Net effect: until `splashDone` (logo finishes), users see only the splash + a neutral skeleton, never the real invite cards.
 
-- For both `/guestsoakley` and `/afterpartyoakley` (i.e. when `venueShowcase === "oakley-rino"`):
-  - Wrap the community partners heading + body copy in a translucent dark panel: `bg-[rgba(8,8,8,0.72)] backdrop-blur-sm rounded-xl px-4 py-3` (mobile-first, responsive `sm:px-5 sm:py-4`).
-  - Switch heading + paragraph color to neon coral: `color: #ED7660`, with a subtle text shadow for the heading (`textShadow: "0 0 12px rgba(237,118,96,0.45)"`) so it reads "neon" against the graffiti.
-  - Logo grid stays untouched.
-- Verify on mobile (375–414 px) by checking the existing layout to make sure the panel doesn't push partner logos off-screen.
+## 5. Mobile guest card improvements
+File: `src/components/afterparty/GuestCard.tsx`
+
+Use `useIsMobile()` to gate mobile-only behaviour.
+
+a. **Social icons compact on mobile**
+- When mobile: render Instagram and LinkedIn as icon-only buttons (no `@handle`, no "LinkedIn" text), stacked vertically (`flex-col` with `gap-1`) instead of horizontal. Smaller pill (icon-only, `w-7 h-7` round button).
+- Desktop: keep current horizontal pills with labels.
+
+b. **Cap niche/creator chips**
+- Show at most 3 chips combined from `niches + creator_types`. If more, append a `+N` chip (no expansion needed).
+- Reduce chip padding slightly (`px-1 py-0.5`, `text-[10px]`) and tighten `mr-1 mb-1` → `mr-0.5 mb-0.5` so cards aren't tall and narrow.
+
+## 6. Re-sort guest list by detail richness
+File: `src/pages/GuestList.tsx`
+
+Replace the current "newest" default sort with a detail-priority sort applied to BOTH `/guestsoakley` and `/afterpartyoakley` listings (the matches panel on the invite already sorts by match score; we sort the public roster).
+
+Compute a `detailScore` per guest:
+- has photo (`cartoon_url` present) → +100
+- "detail richness" = count of populated fields among: `mind_blowing_fact`, `niches?.length`, `creator_types?.length`, `looking_for?.length`, `company`, `social_links.instagram`, `social_links.linkedin` → each non-empty +10
+
+Sort tiers (descending):
+1. Photo + most detail
+2. Photo + less detail
+3. No photo + most detail
+4. No photo + least detail
+
+Implementation: single comparator `(b.score - a.score)` where `score = (hasPhoto ? 100 : 0) + detailFieldCount * 10`. Drop the existing `attendee_number` ordering preference. Apply same comparator to the matches list in `MatchesPanel.tsx` after the existing match-score sort if needed (confirm via reading code before changing — likely matches sort is score-based already, so only the public roster changes).
 
 ## Files touched
-
-- `src/components/afterparty/MatchesPanel.tsx` — restore sliced strip, constrain to right region, brighter mural, no full-bar background
-- `src/components/afterparty/MyCardSection.tsx` — `muralSrc` back to `oakley-rino-mural-strips.jpg`
-- `public/oakley-rino/oakley-rino-graffiti-bg.jpg` — AI-edited to add Oakley eyewear on visible figures
-- `public/oakley-rino/oakley-rino-mural-vertical.jpg` — deleted
-- `src/pages/GuestList.tsx`, `src/pages/AfterPartyInvite.tsx` (and any shared partners component) — neon-coral text + dark backdrop panel for the Community Partners block when on the Oakley venue
+- `src/components/afterparty/AfterPartySpotlights.tsx` — coral category labels + mini backdrops
+- `src/components/afterparty/MatchesPanel.tsx` — subdued + mobile-hidden mural strip
+- `src/pages/AfterPartyInvite.tsx` — revert hero to sunset; gate body behind splash with skeleton
+- `src/components/afterparty/GuestCard.tsx` — mobile icon-only socials stacked, capped + smaller chips
+- `src/pages/GuestList.tsx` — new detail-priority sort as default
