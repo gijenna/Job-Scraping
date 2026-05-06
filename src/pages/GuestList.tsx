@@ -185,21 +185,37 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         />
       )}
       <div className="relative z-10 mx-auto px-5 pt-8 pb-16" style={{ maxWidth: 1100 }}>
-        {(() => {
-          try {
-            const slug = sessionStorage.getItem("afterparty:return_slug");
-            if (slug) return null;
-          } catch {}
-          return (
-            <Link
-              to="/afterparty"
-              className="inline-flex items-center gap-1 text-[12px] mb-5"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+        <Link
+          to={viewerSlug ? `/afterparty?slug=${viewerSlug}` : "/afterparty"}
+          className="inline-flex items-center gap-1 text-[12px] mb-5"
+          style={{ color: "rgba(255,255,255,0.55)" }}
+        >
+          <ArrowLeft className="w-3 h-3" /> {viewerSlug ? "Back to invite" : "Back to invite & RSVP"}
+        </Link>
+
+        {!viewerSlug && (
+          <Link
+            to="/afterparty"
+            className="block rounded-xl p-4 sm:p-5 mb-6 hover:opacity-95 transition-opacity"
+            style={{
+              backgroundColor: "rgba(237,118,96,0.14)",
+              border: "1px solid #ED7660",
+            }}
+          >
+            <div
+              className="text-[11px] uppercase mb-1"
+              style={{ letterSpacing: "0.14em", color: "#ED7660", fontWeight: 700 }}
             >
-              <ArrowLeft className="w-3 h-3" /> Back to invite
-            </Link>
-          );
-        })()}
+              Not on the list yet?
+            </div>
+            <div className="text-[15px]" style={{ color: "#F5E6D3", fontWeight: 600, letterSpacing: "-0.01em" }}>
+              RSVP to the Creator Kick-Off Party →
+            </div>
+            <div className="text-[12px] mt-1" style={{ color: "rgba(245,230,211,0.7)" }}>
+              Grab your spot, then come back here to see who else is coming.
+            </div>
+          </Link>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] gap-5 mb-6 items-start">
           {/* Headcount header - left */}
