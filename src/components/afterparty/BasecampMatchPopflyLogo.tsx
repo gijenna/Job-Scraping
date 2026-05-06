@@ -566,6 +566,17 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             className="bmp-od-stacked"
             aria-hidden="true"
           />
+
+          {/* Presenter logo (e.g. Oakley) splash — appears center after OD leaves
+              and merges into the steady-state presenter slot below the lockup. */}
+          {presenter && (
+            <img
+              src={presenter.logoUrl}
+              alt=""
+              className="bmp-presenter-splash"
+              aria-hidden="true"
+            />
+          )}
         </>
       )}
 
