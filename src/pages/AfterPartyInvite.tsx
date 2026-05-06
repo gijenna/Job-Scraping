@@ -79,6 +79,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
     try { return sessionStorage.getItem("afterparty:skip_splash") === "1"; } catch { return false; }
   });
   const [splashDone, setSplashDone] = useState(skipSplash);
+  const [invitePop, setInvitePop] = useState(skipSplash);
   useEffect(() => {
     if (skipSplash) {
       try { sessionStorage.removeItem("afterparty:skip_splash"); } catch {}
@@ -370,6 +371,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
           {!skipSplash && (
             <BasecampMatchPopflyLogo
               onRevealed={() => setSplashDone(true)}
+              onInvitePop={() => setInvitePop(true)}
               presenter={presenter}
             />
           )}
@@ -407,9 +409,9 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
 
           <div
             style={{
-              opacity: splashDone ? 1 : 0,
-              transition: "opacity 0.4s ease-out",
-              pointerEvents: splashDone ? "auto" : "none",
+              opacity: invitePop ? 1 : 0,
+              transition: "opacity 0.5s ease-out",
+              pointerEvents: invitePop ? "auto" : "none",
             }}
           >
           {/* Hero copy */}
