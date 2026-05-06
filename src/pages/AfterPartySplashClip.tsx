@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import StarSparkle from "@/components/afterparty/StarSparkle";
+import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
+
+const OAKLEY_PRESENTER = {
+  label: "@",
+  sublabel: "RiNo",
+  logoUrl: oakleyCreamLogo,
+  logoAlt: "Oakley",
+  href: "https://www.oakley.com",
+  creamGlow: true,
+};
 
 const CREAM = "#F5E6D3";
 
