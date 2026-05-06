@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import popflyLogo from "@/assets/popfly-logo-neon.png";
 import popflyKite from "@/assets/popfly-kite.png";
 import outsideDaysStacked from "@/assets/outside-days-stacked.svg";
@@ -100,63 +100,18 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
-  const splashLogoRef = useRef<HTMLImageElement | null>(null);
   const homeLogoRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const delay = reduced ? 0 : 11200;
+    const delay = reduced ? 0 : 12400;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
   }, [onRevealed]);
-
-  // Measure where the steady-state presenter logo lives so the splash logo
-  // can animate to that exact spot and size — a true seamless merge.
-  // Uses offsetWidth/Height + offsetParent chain so CSS transforms (the
-  // intro scale animation on the lockup) don't poison the measurement.
-  useLayoutEffect(() => {
-    if (!presenter) return;
-    const compute = () => {
-      const splash = splashLogoRef.current;
-      const home = homeLogoRef.current;
-      if (!splash || !home) return;
-      if (!home.offsetWidth || !home.offsetHeight) return;
-      let x = 0, y = 0;
-      let cur: HTMLElement | null = home;
-      while (cur) {
-        x += cur.offsetLeft;
-        y += cur.offsetTop;
-        cur = cur.offsetParent as HTMLElement | null;
-      }
-      const docCenterX = x + home.offsetWidth / 2;
-      const docCenterY = y + home.offsetHeight / 2;
-      const targetViewportX = docCenterX - window.scrollX;
-      const targetViewportY = docCenterY - window.scrollY;
-      const tx = targetViewportX - window.innerWidth / 2;
-      const ty = targetViewportY - window.innerHeight / 2;
-      const splashH = splash.offsetHeight || splash.getBoundingClientRect().height;
-      const ts = splashH > 0 ? home.offsetHeight / splashH : 0.25;
-      splash.style.setProperty("--bmp-home-tx", `${tx}px`);
-      splash.style.setProperty("--bmp-home-ty", `${ty}px`);
-      splash.style.setProperty("--bmp-home-ts", `${ts}`);
-    };
-    compute();
-    // Re-measure after the home logo image loads (in case it wasn't ready yet).
-    const home = homeLogoRef.current;
-    if (home && !home.complete) {
-      const onLoad = () => compute();
-      home.addEventListener("load", onLoad);
-      return () => home.removeEventListener("load", onLoad);
-    }
-    const r = () => compute();
-    window.addEventListener("resize", r);
-    return () => window.removeEventListener("resize", r);
-  }, [presenter]);
-
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
