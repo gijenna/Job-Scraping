@@ -87,6 +87,7 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
               backgroundSize: `100% ${layout.totalH}px`,
               backgroundPosition: `center -${layout.offsets[i] || 0}px`,
               backgroundRepeat: "no-repeat",
+              filter: "saturate(1.2) contrast(1.08) brightness(1.1)",
             }
           : {};
 
@@ -107,20 +108,18 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
                   <>
                     <div
                       aria-hidden
-                      className="pointer-events-none absolute top-0 bottom-0 right-0 w-[64px] md:w-[84px]"
-                      style={stripStyle}
-                    />
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute top-0 bottom-0 right-[64px] md:right-[84px] w-10"
+                      className="pointer-events-none absolute top-0 bottom-0 right-0 w-[40%] md:w-[45%]"
                       style={{
-                        background:
-                          "linear-gradient(to right, #111111 0%, rgba(17,17,17,0) 100%)",
+                        ...stripStyle,
+                        WebkitMaskImage:
+                          "linear-gradient(to right, transparent 0%, #000 22%, #000 100%)",
+                        maskImage:
+                          "linear-gradient(to right, transparent 0%, #000 22%, #000 100%)",
                       }}
                     />
                   </>
                 )}
-                <div className={`flex items-center gap-3 relative z-10 ${muralSrc ? "pr-[72px] md:pr-[92px]" : ""}`}>
+                <div className={`flex items-center gap-3 relative z-10 ${muralSrc ? "pr-[42%] md:pr-[47%]" : ""}`}>
                   <NumberBadge number={attendee.attendee_number} role={attendee.role} size={46} />
                   {avatarSrc ? (
                     <img
