@@ -105,21 +105,19 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
                 }}
               >
                 {muralSrc && (
-                  <>
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute top-0 bottom-0 right-0 w-[40%] md:w-[45%]"
-                      style={{
-                        ...stripStyle,
-                        WebkitMaskImage:
-                          "linear-gradient(to right, transparent 0%, #000 22%, #000 100%)",
-                        maskImage:
-                          "linear-gradient(to right, transparent 0%, #000 22%, #000 100%)",
-                      }}
-                    />
-                  </>
+                  <div
+                    aria-hidden
+                    className="hidden md:block pointer-events-none absolute top-0 bottom-0 right-0 w-[45%]"
+                    style={{
+                      ...stripStyle,
+                      WebkitMaskImage:
+                        "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.55) 100%)",
+                      maskImage:
+                        "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.55) 100%)",
+                    }}
+                  />
                 )}
-                <div className={`flex items-center gap-3 relative z-10 ${muralSrc ? "pr-[42%] md:pr-[47%]" : ""}`}>
+                <div className={`flex items-center gap-3 relative z-10 ${muralSrc ? "md:pr-[47%]" : ""}`}>
                   <NumberBadge number={attendee.attendee_number} role={attendee.role} size={46} />
                   {avatarSrc ? (
                     <img
