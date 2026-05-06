@@ -165,3 +165,4 @@ const hr = { borderColor: "#e5e5e5", margin: "24px 0" };
 const signoff = { fontSize: "15px", color: "#ED7660", margin: "20px 0 0", fontWeight: 600 };
 const footer = { fontSize: "13px", color: "#666", margin: "0 0 6px", lineHeight: "1.5" };
 const footerLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
+const fineprint = { fontSize: "11px", color: "#888", lineHeight: "1.5", margin: "0 0 16px", fontStyle: "italic" as const };
