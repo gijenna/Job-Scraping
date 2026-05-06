@@ -498,57 +498,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
       {!revealed && (
         <>
           <div className="bmp-splash-stage" aria-hidden="true" />
-          <svg className="bmp-splash-sunset-svg" aria-hidden="true" preserveAspectRatio="none">
-            <defs>
-              <radialGradient id="bmp-sunset-reveal-gradient" cx="50%" cy="50%" r="0%">
-                <stop offset="0%" stopColor="white" stopOpacity="1" />
-                <stop offset="58%" stopColor="white" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="black" stopOpacity="0" />
-                <animate
-                  attributeName="r"
-                  from="0%"
-                  to="105%"
-                  dur={`${STAGE_IN_DUR_MS}ms`}
-                  begin="160ms"
-                  fill="freeze"
-                  calcMode="spline"
-                  keyTimes="0;0.18;0.48;0.78;1"
-                  values="0%;9%;32%;68%;105%"
-                  keySplines="0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1"
-                />
-              </radialGradient>
-              <mask id="bmp-sunset-radial-reveal" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-                <rect x="0" y="0" width="1" height="1" fill="url(#bmp-sunset-reveal-gradient)" />
-              </mask>
-              <clipPath id="bmp-sunset-radial-cover" clipPathUnits="objectBoundingBox">
-                <circle cx="0.5" cy="0.5" r="0.001">
-                  <animate
-                    attributeName="r"
-                    from="0"
-                    to="0.92"
-                    dur={`${STAGE_IN_DUR_MS}ms`}
-                    begin="160ms"
-                    fill="freeze"
-                    calcMode="spline"
-                    keyTimes="0;0.18;0.48;0.78;1"
-                    values="0;0.08;0.28;0.58;0.92"
-                    keySplines="0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1;0.16 0.84 0.32 1"
-                  />
-                </circle>
-              </clipPath>
-            </defs>
-            <image
-              href="/bg-sunset.jpg"
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid slice"
-              mask="url(#bmp-sunset-radial-reveal)"
-              clipPath="url(#bmp-sunset-radial-cover)"
-              className="bmp-splash-sunset-image"
-            />
-          </svg>
+          <div className="bmp-splash-sunset" aria-hidden="true" />
 
           {/* Centered fire mark */}
           <div className="bmp-splash-fire" aria-hidden="true">
