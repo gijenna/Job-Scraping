@@ -11,6 +11,9 @@ interface Props {
   sunsetBackground?: boolean;
   /** Render Outside Days logo overlay at the bottom. */
   withLogo?: boolean;
+  /** Override canvas dimensions (defaults to composition size).
+   *  Use when embedding in a different-sized composition. */
+  canvasOverride?: { width: number; height: number };
 }
 
 // Timeline (at 30fps):
