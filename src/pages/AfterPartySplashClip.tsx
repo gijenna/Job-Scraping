@@ -85,7 +85,7 @@ const AfterPartySplashClip = () => {
           padding: "0 24px",
         }}
       >
-        <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} />
+        <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} presenter={OAKLEY_PRESENTER} />
 
         <div
           style={{
