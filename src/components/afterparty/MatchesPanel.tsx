@@ -87,7 +87,7 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
               backgroundSize: `100% ${layout.totalH}px`,
               backgroundPosition: `center -${layout.offsets[i] || 0}px`,
               backgroundRepeat: "no-repeat",
-              filter: "saturate(1.2) contrast(1.08) brightness(1.1)",
+              filter: "saturate(1.0) contrast(1.0) brightness(0.92)",
             }
           : {};
 
