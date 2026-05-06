@@ -363,18 +363,6 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
       className="relative mb-4 overflow-hidden rounded-2xl p-5 sm:p-6"
       style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.86)" : CARD, border: `1px solid ${BORDER}` }}
     >
-      {rinoMural && (
-        <img
-          aria-hidden
-          src="/oakley-rino/oakley-rino-graffiti-accent.png"
-          alt=""
-          className="pointer-events-none absolute right-[-8%] top-[69%] z-0 h-[145px] w-auto -translate-y-1/2 sm:right-[-5%] sm:h-[190px] md:right-[-1%] md:top-[70%] md:h-[260px]"
-          style={{
-            opacity: 0.62,
-            filter: "saturate(1.16) contrast(1.08) drop-shadow(0 18px 34px rgba(0,0,0,0.35))",
-          }}
-        />
-      )}
       <div className="relative z-10">
       <div className="flex items-start justify-between gap-3 mb-5">
         <div>
@@ -534,6 +522,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
           matches={matchesWithAttendee}
           locked={!!lockedMatches}
           awaitingMatchingInfo={!hasMatchingInfo}
+          muralSrc={rinoMural ? "/oakley-rino/oakley-rino-mural-strips.jpg" : undefined}
         />
         </div>
       </div>

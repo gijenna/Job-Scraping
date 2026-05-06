@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { AfterPartyAttendee, MatchResult } from "@/lib/afterparty-matching";
 import { Sparkles } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -9,6 +10,10 @@ interface Props {
   /** True when the viewer hasn't filled in any matching info yet
    *  (no niches, intents, or "why it worked" answer). */
   awaitingMatchingInfo?: boolean;
+  /** Optional mural image. When provided, each match bar shows a horizontal
+   *  slice of the same image so all bars together reproduce one mural,
+   *  with the dark gaps between bars showing through to the page bg. */
+  muralSrc?: string;
 }
 
 const ROLE_PILL: Record<string, { bg: string; border: string; text: string; label: string }> = {
@@ -21,7 +26,37 @@ const CREAM = "#F5E6D3";
 const CREAM_MUTED = "rgba(245,230,211,0.7)";
 const CREAM_DIM = "rgba(245,230,211,0.55)";
 
-const MatchesPanel = ({ matches, locked, awaitingMatchingInfo }: Props) => {
+const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const barRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [layout, setLayout] = useState<{ totalH: number; offsets: number[] }>({
+    totalH: 0,
+    offsets: [],
+  });
+
+  useLayoutEffect(() => {
+    if (!muralSrc) return;
+    const measure = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      const containerTop = container.getBoundingClientRect().top;
+      const offsets = barRefs.current.map((el) => {
+        if (!el) return 0;
+        return el.getBoundingClientRect().top - containerTop;
+      });
+      setLayout({ totalH: container.offsetHeight, offsets });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (containerRef.current) ro.observe(containerRef.current);
+    barRefs.current.forEach((el) => el && ro.observe(el));
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [muralSrc, matches.length]);
+
   if (!matches.length) {
     return (
       <div className="text-center py-12" style={{ color: CREAM_DIM }}>
@@ -36,28 +71,41 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo }: Props) => {
   }
 
   return (
-    <div className="space-y-3">
+    <div ref={containerRef} className="space-y-3 relative">
       {locked && (
         <p className="text-[11px] uppercase" style={{ letterSpacing: "0.08em", color: "#FAC775" }}>
           Final list, locked by host
         </p>
       )}
-      {matches.map(({ match, attendee }) => {
+      {matches.map(({ match, attendee }, i) => {
         const pill = ROLE_PILL[attendee.role] || ROLE_PILL.brand;
         const avatarSrc = attendee.cartoon_url || attendee.photo_url;
+
+        const muralStyle = muralSrc && layout.totalH > 0
+          ? {
+              backgroundImage: `linear-gradient(rgba(17,17,17,0.78), rgba(17,17,17,0.82)), url('${muralSrc}')`,
+              backgroundSize: `100% 100%, 100% ${layout.totalH}px`,
+              backgroundPosition: `0 0, 0 -${layout.offsets[i] || 0}px`,
+              backgroundRepeat: "no-repeat, no-repeat",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+            }
+          : {};
+
         return (
           <Popover key={attendee.id}>
             <PopoverTrigger asChild>
               <button
+                ref={(el) => (barRefs.current[i] = el)}
                 type="button"
-                className="w-full text-left p-4 rounded-xl transition-colors"
+                className="w-full text-left p-4 rounded-xl transition-colors relative overflow-hidden"
                 style={{
                   backgroundColor: "#111111",
                   border: "1px solid rgba(255,255,255,0.09)",
                   ...(match.is_mutual_boost ? { borderLeft: "2px solid #BA7517" } : {}),
+                  ...muralStyle,
                 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 relative z-10">
                   <NumberBadge number={attendee.attendee_number} role={attendee.role} size={46} />
                   {avatarSrc ? (
                     <img
