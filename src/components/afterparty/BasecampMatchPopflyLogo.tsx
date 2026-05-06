@@ -163,12 +163,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   // Pacing — stage starts fully black, sunset fades up under the fire,
   // then begins fading out as snowflakes spin so the merge feels simultaneous.
   const STAR_BURST_DELAY_MS = 8100;     // snowflakes burst as the invite reveals
-  const STAGE_IN_DUR_MS = 2600;         // sunset radiates up from black under the fire
+  const STAGE_IN_DUR_MS = 2800;         // sunset radiates up from black under the fire
   const STAGE_OUT_DELAY_S = 8.1;        // begin darkening AS snowflakes start spinning
   const STAGE_OUT_DUR_MS = 3200;        // long, gentle cross-fade into the page
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTER_SPLASH_DELAY_S = 8.25; // presenter logo (Oakley) blooms at its exact lockup spot
-  const PRESENTS_DELAY_S = 8.2;          // lockup presenter fades in under the bloom for a real merge
+  const PRESENTER_SPLASH_DELAY_S = 7.6; // presenter logo (Oakley) blooms earlier, merges into lockup
+  const PRESENTS_DELAY_S = 8.0;          // lockup presenter fades in under the bloom for a real merge
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
@@ -320,11 +320,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             bmpSunsetIlluminate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 120ms forwards,
             bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
+        @media (min-width: 768px) {
+          .bmp-splash-sunset { background-position: top center; }
+        }
         @keyframes bmpSunsetIlluminate {
-          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.45) saturate(0.8); }
-          18%  { opacity: 0.34; clip-path: circle(10vmin at 50% 50%); filter: brightness(0.6) saturate(0.9); }
-          58%  { opacity: 0.78; clip-path: circle(58vmax at 50% 50%); filter: brightness(0.86) saturate(0.98); }
-          100% { opacity: 1; clip-path: circle(145vmax at 50% 50%); filter: brightness(1) saturate(1); }
+          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.4) saturate(0.75); }
+          12%  { opacity: 0.5; clip-path: circle(8vmin at 50% 50%); filter: brightness(0.55) saturate(0.85); }
+          35%  { opacity: 0.85; clip-path: circle(28vmax at 50% 50%); filter: brightness(0.78) saturate(0.95); }
+          70%  { opacity: 1;   clip-path: circle(80vmax at 50% 50%); filter: brightness(0.92) saturate(1); }
+          100% { opacity: 1;   clip-path: circle(160vmax at 50% 50%); filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
@@ -448,10 +452,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
         /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
         @keyframes bmpPresenterMerge {
-          0%   { opacity: 0; transform: scale(0.78); filter: drop-shadow(0 0 6px rgba(245,230,211,0.2)); }
-          18%  { opacity: 1; transform: scale(1.42); filter: drop-shadow(0 0 18px rgba(245,230,211,0.85)) drop-shadow(0 0 42px rgba(245,230,211,0.45)); }
-          68%  { opacity: 1; transform: scale(1.12); filter: drop-shadow(0 0 16px rgba(245,230,211,0.75)) drop-shadow(0 0 34px rgba(245,230,211,0.38)); }
-          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.45)); }
+          0%   { opacity: 0; transform: scale(1.4); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
+          18%  { opacity: 1; transform: scale(2.6); filter: drop-shadow(0 0 28px rgba(245,230,211,0.95)) drop-shadow(0 0 60px rgba(245,230,211,0.55)); }
+          55%  { opacity: 1; transform: scale(1.7); filter: drop-shadow(0 0 22px rgba(245,230,211,0.8)) drop-shadow(0 0 44px rgba(245,230,211,0.45)); }
+          85%  { opacity: 0.85; transform: scale(1.15); filter: drop-shadow(0 0 14px rgba(245,230,211,0.6)) drop-shadow(0 0 28px rgba(245,230,211,0.3)); }
+          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
         }
         .bmp-presenter-splash {
           position: absolute;
@@ -463,7 +468,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 2600ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 3200ms cubic-bezier(.22,.7,.28,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
