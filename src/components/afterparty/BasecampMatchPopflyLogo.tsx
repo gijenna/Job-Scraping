@@ -160,11 +160,14 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
     { angle:  76, dist: 28, tone: "cream" as const, size:  46, delay:  85, spin: -180 },
   ];
 
-  // Pacing — total runtime ~8.8s. Slower kite section, gives every beat room to breathe.
+  // Pacing — total runtime ~9.5s. Stage fades earlier and longer so the snowflake
+  // burst and the sunset reveal feel simultaneous instead of sequential.
   const STAR_BURST_DELAY_MS = 8400;     // snowflakes burst as the invite reveals
-  const STAGE_OUT_DELAY_S = 10.3;       // hold dark stage so the burst plays out fully
+  const STAGE_OUT_DELAY_S = 9.0;        // start fading the splash WHILE snowflakes are still flying
+  const STAGE_OUT_DUR_MS = 2000;        // long, gentle cross-fade
   const OD_POP_DELAY_S = 7.6;           // OD lands into the kickoff line
-  const PRESENTS_DELAY_S = 7.4;
+  const PRESENTER_SPLASH_DELAY_S = 9.2; // presenter logo (Oakley) appears in center after OD leaves
+  const PRESENTS_DELAY_S = 9.7;         // lockup presenter fades in (so center logo "merges" into place)
   const DIVIDER_DELAY_S = 7.2;
   const X_DELAY_S = 7.3;
   const TITLE_DELAY_S = 7.8;
