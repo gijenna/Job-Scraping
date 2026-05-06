@@ -427,6 +427,28 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           animation: bmpODFindHome 1900ms cubic-bezier(.2,.7,.3,1) ${OD_POP_DELAY_S}s forwards;
         }
 
+        /* Presenter logo (e.g. Oakley) appears at center after OD leaves, then
+           shrinks and drifts down toward its lockup spot, fading as the
+           steady-state presenter fades in — creating a smooth merge. */
+        @keyframes bmpPresenterFindHome {
+          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+          18%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          55%  { opacity: 1; transform: translate(-50%, -50%) scale(0.95); }
+          85%  { opacity: 0.85; transform: translate(-50%, calc(-50% + 18vh)) scale(0.32); }
+          100% { opacity: 0; transform: translate(-50%, calc(-50% + 22vh)) scale(0.22); }
+        }
+        .bmp-presenter-splash {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          width: min(28vh, 28vw);
+          height: auto;
+          z-index: 63;
+          opacity: 0;
+          filter: drop-shadow(0 0 20px rgba(245,230,211,0.55)) drop-shadow(0 0 40px rgba(245,230,211,0.3));
+          animation: bmpPresenterFindHome 1800ms cubic-bezier(.2,.7,.3,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+        }
+
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
         @keyframes bmpCreamPulse {
           0%, 100% { filter: drop-shadow(0 0 10px rgba(245,230,211,0.55)) drop-shadow(0 0 20px rgba(245,230,211,0.3)); }
