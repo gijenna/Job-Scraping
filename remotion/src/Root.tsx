@@ -2,6 +2,7 @@ import React from "react";
 import { Composition, Still } from "remotion";
 import { OpeningScene } from "./scenes/OpeningScene";
 import { LockupBuildOn } from "./scenes/LockupBuildOn";
+import { SocialPost } from "./scenes/SocialPost";
 
 export const RemotionRoot: React.FC = () => {
   return (
