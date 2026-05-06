@@ -75,7 +75,15 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
   const [updatingListing, setUpdatingListing] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [meFull, setMeFull] = useState<any>(null);
-  const [splashDone, setSplashDone] = useState(false);
+  const [skipSplash] = useState(() => {
+    try { return sessionStorage.getItem("afterparty:skip_splash") === "1"; } catch { return false; }
+  });
+  const [splashDone, setSplashDone] = useState(skipSplash);
+  useEffect(() => {
+    if (skipSplash) {
+      try { sessionStorage.removeItem("afterparty:skip_splash"); } catch {}
+    }
+  }, [skipSplash]);
   const [justRsvped, setJustRsvped] = useState(false);
   const [showPersonalGreeting, setShowPersonalGreeting] = useState(false);
   const [greetingQueued, setGreetingQueued] = useState(false);
