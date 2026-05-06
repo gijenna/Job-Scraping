@@ -199,6 +199,14 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
+        .bmp-intro-paused * {
+          animation-play-state: paused !important;
+        }
+
+        .bmp-intro-paused .bmp-splash-stage {
+          animation: none !important;
+        }
+
         /* Fire grows in smoothly — single ease-out, no mid-bounce */
         @keyframes bmpFireGrow {
           0%   { transform: translate(-50%, -50%) scale(0.08); opacity: 0; }
