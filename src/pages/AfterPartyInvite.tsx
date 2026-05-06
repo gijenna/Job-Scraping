@@ -55,9 +55,12 @@ interface AfterPartyInviteProps {
     href?: string;
     creamGlow?: boolean;
   };
+  /** When set, swaps the page background art for a venue-specific treatment.
+   *  Currently only "oakley-rino" is supported. */
+  venueShowcase?: "oakley-rino";
 }
 
-const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
+const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = {}) => {
   const { name } = useParams();
   const navigate = useNavigate();
   const [attendees, setAttendees] = useState<AfterPartyAttendee[]>([]);
@@ -324,14 +327,17 @@ const AfterPartyInvite = ({ presenter }: AfterPartyInviteProps = {}) => {
   return (
     <EditableTextProvider pageSlug="afterparty">
       <div
-        className="min-h-screen relative bg-cover bg-center md:bg-top afterparty-page-bg"
+        className={`min-h-screen relative bg-cover ${venueShowcase === "oakley-rino" ? "bg-center" : "bg-center md:bg-top afterparty-page-bg"}`}
         style={{
           backgroundColor: BG,
-          backgroundImage: "url('/bg-sunset.jpg')",
+          backgroundImage:
+            venueShowcase === "oakley-rino"
+              ? "linear-gradient(rgba(8,8,8,0.06), rgba(8,8,8,0.5)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')"
+              : "url('/bg-sunset.jpg')",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: venueShowcase === "oakley-rino" ? "28% top" : "center",
           color: CREAM,
           fontFamily: '"Josefin Sans", sans-serif',
           fontWeight: 300,

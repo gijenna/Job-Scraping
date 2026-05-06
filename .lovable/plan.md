@@ -1,58 +1,59 @@
-## Goal
+## Goals
 
-Make it feel like one continuous Oakley/RiNo graffiti mural lives behind the "Your matches" list, but is **only visible through the match bars themselves**. The dark gaps between bars stay as the page background, so the mural appears as horizontal slices, like sunlight cutting through window blinds.
+1. Make match text readable again by removing the mural from behind the text. Keep the Oakley "O" / graffiti vibe, but only in the empty zone on the right of each bar.
+2. Apply the same Oakley RiNo graffiti background to `/afterpartyoakley` (and `/afterpartyoakley/:name`), including behind the intro animations.
+3. Remove the leftover floating graffiti PNG that sits just above the matches list (under the "Edit your card" button area).
 
-## What gets removed
+---
 
-- The floating graffiti accent currently positioned to the right of the matches in `MyCardSection.tsx` (the `<img>` block with `oakley-rino-graffiti-accent.png`). The match section will no longer have a visible accent image hanging off the side.
+## 1. MatchesPanel: narrow right-side mural strip
 
-## What gets added
+File: `src/components/afterparty/MatchesPanel.tsx`
 
-### 1. A new mural image
+- Keep the dynamic measurement of total container height + per-bar offsets.
+- Stop painting the mural across the full bar width. Instead, render the mural inside a dedicated absolutely-positioned strip on the right edge of each bar:
+  - Strip width: ~64px on mobile, ~84px on desktop (≈ width of an Oakley "O").
+  - Strip sits to the right of all content (right-aligned, flush to the bar's right edge with a small inset).
+  - Content row gets `pr-[80px] md:pr-[100px]` so the name / role pill / "why it worked" line never overlaps the strip.
+- Use a *vertical* slicing strategy so the mural reads as one continuous tall image stitched together across the bars:
+  - `backgroundSize: ${stripWidth}px ${totalH}px`
+  - `backgroundPosition: 0 -${offsets[i]}px`
+  - `backgroundRepeat: no-repeat`
+- No dark overlay on the strip (brighter mural, since no text sits behind it). Add a subtle left-edge gradient (`linear-gradient(to right, #111 0%, transparent 24%)`) inside the strip so it fades into the bar instead of looking pasted on.
+- Bar itself goes back to flat `#111111` (no mural background), restoring text legibility.
 
-Generate one wide horizontal Oakley-vibe RiNo mural at roughly 1600x900px and save to `public/oakley-rino/oakley-rino-mural-strips.jpg`.
+A new tall, vertical-friendly mural asset will replace the current horizontal one:
+- New file: `public/oakley-rino/oakley-rino-mural-vertical.jpg` (portrait, ~600×2400, RiNo spray-paint palette with prominent Oakley "O" silhouettes stacked down the image so each bar reveals one O / motif).
+- Update the `muralSrc` passed from `MyCardSection` to point at this new asset.
 
-Direction:
-- Spray-paint, sticker-bombed, dripping-paint RiNo wall energy
-- Tasteful nod to Oakley: motorsports/performance edges, the iconic "O" silhouette woven in subtly (not a logo slap), Thermonuclear Protection-era color hits, lens-shaped highlights catching light
-- Dominant palette pulled from the existing page: dark teal base, coral, mustard yellow, cream highlights, with grimy concrete grays so it reads as graffiti not pop art
-- Composition spread evenly top-to-bottom so any horizontal slice still feels rich (no dead bands)
+## 2. Remove leftover graffiti accent
 
-### 2. Bars become "windows" onto the mural
+File: `src/components/afterparty/MyCardSection.tsx`
 
-In `MatchesPanel.tsx`, the matches list is wrapped in a positioned container that knows its own height. Each match button (the bar) gets:
+- Delete the `{rinoMural && <img src="/oakley-rino/oakley-rino-graffiti-accent.png" ... />}` block (lines ~478–489) that floats above the matches list. The new strip-in-bars is the only graffiti accent inside the card.
 
-- The mural as `background-image`
-- `background-attachment` set so the mural appears anchored to the matches container, not to each bar individually
-- `background-size` and `background-position` calculated so all the bars together look like one image
+## 3. Graffiti background on /afterpartyoakley
 
-Approach: wrap the list in a `relative` container, then on each bar use `background-image: url(...)` with `background-size: 100% [containerHeight]px` and `background-position: 0 -[barOffsetY]px`. The bar's own offset within the container shifts the image up by exactly that amount, so each bar reveals just its slice. The gaps between bars (the `space-y-3` gutters) show no image because they aren't part of any bar's background.
+Files: `src/pages/AfterPartyInvite.tsx`, `src/App.tsx`
 
-A small `useLayoutEffect` measures the container height and each bar's offset on mount and on resize, then writes those numbers into inline styles. This keeps it pixel-accurate at any viewport.
+- Add an optional `venueShowcase?: "oakley-rino"` prop to `AfterPartyInvite` (mirroring `GuestList`).
+- Pass `venueShowcase="oakley-rino"` from both Oakley routes in `App.tsx`.
+- In `AfterPartyInvite`, when the prop is set, render the same fixed background layer used on `GuestList`:
+  - Root wrapper gets the `linear-gradient(rgba(8,8,8,0.06), rgba(8,8,8,0.5)), url('/oakley-rino/oakley-rino-graffiti-bg.jpg')` background, `bg-cover`, `bg-center md:bg-top`.
+  - A second `fixed inset-0 -z-10` layer with the slightly darker overlay so the background persists through the intro animation (when content is animating in over a transparent foreground).
+  - Skip the existing solid page background only when `venueShowcase === "oakley-rino"`; otherwise keep current behavior intact.
+- Verify the existing intro/animation containers don't paint an opaque background that would hide the mural; if any do, switch them to transparent only inside the Oakley branch.
 
-On top of the mural inside each bar, a dark translucent overlay (around 60-70% opacity of the existing `#111111`) keeps text legible. The mural reads as a textured glow behind the names rather than competing with them. The mutual-boost gold left border stays.
+## Technical notes
 
-### 3. Subtle edge treatment
+- Strip width and content padding live in one constant in `MatchesPanel` so they can be tweaked together.
+- `useLayoutEffect` + `ResizeObserver` continues to recompute `totalH` and `offsets` so the vertical mural stays aligned when the list reflows or the viewport changes.
+- No changes to matching logic, data model, or routing other than the new prop on `AfterPartyInvite`.
 
-To make the slicing feel intentional and Oakley-crisp rather than accidental:
-- Each bar keeps its `rounded-xl` corners, so the mural slices have rounded edges — like portholes onto the wall
-- Border stays at the existing `rgba(255,255,255,0.09)` so bars still feel like cards, not raw image crops
-- A very faint inner shadow (1-2px) at the top of each bar gives a tiny sense of depth where the slice meets the dark gap
+## Files touched
 
-## Files to edit
-
-- `src/components/afterparty/MyCardSection.tsx` — remove the floating accent image
-- `src/components/afterparty/MatchesPanel.tsx` — accept a `muralSrc?: string` prop, add the measurement logic, apply the sliced background to each bar
-- `src/pages/GuestList.tsx` — pass `muralSrc="/oakley-rino/oakley-rino-mural-strips.jpg"` into `MatchesPanel` only when `venueShowcase === "oakley-rino"` (Note: `MatchesPanel` is rendered inside `MyCardSection`, so the prop is threaded `GuestList → MyCardSection → MatchesPanel`)
-
-## New asset
-
-- `public/oakley-rino/oakley-rino-mural-strips.jpg` — the single mural image
-
-## Acceptance check
-
-- Looking at the matches list, each bar shows a different horizontal stripe of the mural; mentally stacking the bars (closing the gaps) reproduces the original mural
-- The dark page background shows through cleanly between bars
-- Names, role pills, and "why it worked" snippets remain fully legible
-- The previous floating accent on the right side of the matches section is gone
-- Non-Oakley guest lists are unchanged
+- `src/components/afterparty/MatchesPanel.tsx` — strip-only mural, padding for content
+- `src/components/afterparty/MyCardSection.tsx` — remove leftover accent PNG, swap mural asset path
+- `src/pages/AfterPartyInvite.tsx` — accept `venueShowcase`, render Oakley background layers
+- `src/App.tsx` — pass `venueShowcase="oakley-rino"` to both `/afterpartyoakley` routes
+- `public/oakley-rino/oakley-rino-mural-vertical.jpg` — new tall mural asset

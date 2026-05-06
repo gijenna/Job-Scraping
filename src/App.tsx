@@ -68,6 +68,7 @@ const App = () => (
             element={
               <AfterPartyInvite
                 presenter={OAKLEY_PRESENTER}
+                venueShowcase="oakley-rino"
               />
             }
           />
@@ -76,6 +77,7 @@ const App = () => (
             element={
               <AfterPartyInvite
                 presenter={OAKLEY_PRESENTER}
+                venueShowcase="oakley-rino"
               />
             }
           />

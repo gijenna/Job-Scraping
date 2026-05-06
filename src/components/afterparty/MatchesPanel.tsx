@@ -81,13 +81,12 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
         const pill = ROLE_PILL[attendee.role] || ROLE_PILL.brand;
         const avatarSrc = attendee.cartoon_url || attendee.photo_url;
 
-        const muralStyle = muralSrc && layout.totalH > 0
+        const stripStyle = muralSrc && layout.totalH > 0
           ? {
-              backgroundImage: `linear-gradient(rgba(17,17,17,0.78), rgba(17,17,17,0.82)), url('${muralSrc}')`,
-              backgroundSize: `100% 100%, 100% ${layout.totalH}px`,
-              backgroundPosition: `0 0, 0 -${layout.offsets[i] || 0}px`,
-              backgroundRepeat: "no-repeat, no-repeat",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+              backgroundImage: `url('${muralSrc}')`,
+              backgroundSize: `100% ${layout.totalH}px`,
+              backgroundPosition: `center -${layout.offsets[i] || 0}px`,
+              backgroundRepeat: "no-repeat",
             }
           : {};
 
@@ -102,10 +101,26 @@ const MatchesPanel = ({ matches, locked, awaitingMatchingInfo, muralSrc }: Props
                   backgroundColor: "#111111",
                   border: "1px solid rgba(255,255,255,0.09)",
                   ...(match.is_mutual_boost ? { borderLeft: "2px solid #BA7517" } : {}),
-                  ...muralStyle,
                 }}
               >
-                <div className="flex items-center gap-3 relative z-10">
+                {muralSrc && (
+                  <>
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute top-0 bottom-0 right-0 w-[64px] md:w-[84px]"
+                      style={stripStyle}
+                    />
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute top-0 bottom-0 right-[64px] md:right-[84px] w-10"
+                      style={{
+                        background:
+                          "linear-gradient(to right, #111111 0%, rgba(17,17,17,0) 100%)",
+                      }}
+                    />
+                  </>
+                )}
+                <div className={`flex items-center gap-3 relative z-10 ${muralSrc ? "pr-[72px] md:pr-[92px]" : ""}`}>
                   <NumberBadge number={attendee.attendee_number} role={attendee.role} size={46} />
                   {avatarSrc ? (
                     <img
