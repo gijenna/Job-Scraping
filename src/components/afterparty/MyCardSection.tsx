@@ -361,19 +361,17 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
   return (
     <section
       className="relative mb-4 overflow-hidden rounded-2xl p-5 sm:p-6"
-      style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.9)" : CARD, border: `1px solid ${BORDER}` }}
+      style={{ backgroundColor: rinoMural ? "rgba(17,17,17,0.86)" : CARD, border: `1px solid ${BORDER}` }}
     >
       {rinoMural && (
         <img
           aria-hidden
-          src="/oakley-rino/rino-mural-right.png"
+          src="/oakley-rino/oakley-rino-graffiti-accent.png"
           alt=""
-          className="pointer-events-none absolute right-[-7%] top-[38%] z-0 hidden h-[260px] w-auto -translate-y-1/2 md:block"
+          className="pointer-events-none absolute right-[-8%] top-[69%] z-0 h-[145px] w-auto -translate-y-1/2 sm:right-[-5%] sm:h-[190px] md:right-[-1%] md:top-[70%] md:h-[260px]"
           style={{
-            opacity: 0.6,
-            filter: "saturate(1.18) contrast(1.08)",
-            maskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
-            WebkitMaskImage: "linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,1) 28%, rgba(0,0,0,1) 78%, rgba(0,0,0,0))",
+            opacity: 0.62,
+            filter: "saturate(1.16) contrast(1.08) drop-shadow(0 18px 34px rgba(0,0,0,0.35))",
           }}
         />
       )}
@@ -488,7 +486,20 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
       {ctaBlock && <div className="mb-4">{ctaBlock}</div>}
 
       {/* Matches */}
-      <div>
+      <div className="relative">
+        {rinoMural && (
+          <img
+            aria-hidden
+            src="/oakley-rino/oakley-rino-graffiti-accent.png"
+            alt=""
+            className="pointer-events-none absolute right-[-18px] top-[-36px] z-0 hidden h-[150px] w-auto md:block"
+            style={{
+              opacity: 0.94,
+              filter: "saturate(1.2) contrast(1.08) drop-shadow(0 12px 26px rgba(0,0,0,0.45))",
+            }}
+          />
+        )}
+        <div className="relative z-10">
         <div className="flex items-end justify-between gap-3 mb-3 pb-2" style={{ borderBottom: `1px solid ${BORDER}` }}>
           <div>
             <div className="text-[11px] uppercase mb-1" style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}>
@@ -524,6 +535,7 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
           locked={!!lockedMatches}
           awaitingMatchingInfo={!hasMatchingInfo}
         />
+        </div>
       </div>
 
       <PinSheet
