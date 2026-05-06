@@ -50,8 +50,8 @@ export const SocialPost: React.FC<Props> = ({ format }) => {
   // For story (9:16): logo top, scene middle, text bottom
   // For square: text overlays lower portion
   const logoTop = isStory ? height * 0.08 : height * 0.04;
-  const titleBottom = isStory ? height * 0.22 : height * 0.14;
-  const dateBottom = isStory ? height * 0.13 : height * 0.07;
+  const titleBottom = isStory ? height * 0.22 : height * 0.18;
+  const dateBottom = isStory ? height * 0.10 : height * 0.05;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
