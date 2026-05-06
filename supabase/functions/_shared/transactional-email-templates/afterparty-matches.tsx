@@ -66,6 +66,10 @@ const AfterPartyMatchesEmail = ({
           See the full guest list →
         </Button>
 
+        <Text style={fineprint}>
+          By registering for this event, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+        </Text>
+
         <Text style={footer}>Presented by Popfly × Basecamp Match</Text>
       </Container>
     </Body>
@@ -130,3 +134,4 @@ const button = {
   margin: "8px 0",
 };
 const footer = { fontSize: "13px", color: "#888", margin: "24px 0 0" };
+const fineprint = { fontSize: "11px", color: "#999", lineHeight: "1.5", margin: "16px 0 0", fontStyle: "italic" as const };

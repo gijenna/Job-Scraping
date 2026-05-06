@@ -935,15 +935,23 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
       {/* Action area */}
       {step === 1 && (!attendeeId || isPreRsvpShell) ? (
         // Step 1 (fresh RSVP): single primary CTA, takes them to step 2 next.
-        <Button
-          type="submit"
-          disabled={saving}
-          className="w-full sm:w-auto hover:opacity-90"
-          style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
-        >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-          Secure my spot →
-        </Button>
+        <div className="space-y-3">
+          <Button
+            type="submit"
+            disabled={saving}
+            className="w-full sm:w-auto hover:opacity-90"
+            style={{ backgroundColor: "#fff", color: "#080808", fontWeight: 500 }}
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+            Secure my spot →
+          </Button>
+          <p
+            className="text-[11px] leading-snug"
+            style={{ color: "rgba(255,255,255,0.55)", maxWidth: 480 }}
+          >
+            By registering, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+          </p>
+        </div>
       ) : (attendeeId || justSavedId) ? (
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           {attendeeId && !isPreRsvpShell ? (

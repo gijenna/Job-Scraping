@@ -101,6 +101,9 @@ const AfterPartyRsvpConfirmationEmail = ({
           <Text style={signoff}>Jenna</Text>
 
           <Hr style={hr} />
+          <Text style={fineprint}>
+            By registering for this event, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+          </Text>
           <Text style={footer}>
             <Link href="https://basecampjobs.com" style={footerLink}>Basecamp Match</Link> 🔥 × <Link href="https://popfly.com" style={footerLink}>Popfly</Link> ✨
           </Text>
@@ -162,3 +165,4 @@ const hr = { borderColor: "#e5e5e5", margin: "24px 0" };
 const signoff = { fontSize: "15px", color: "#ED7660", margin: "20px 0 0", fontWeight: 600 };
 const footer = { fontSize: "13px", color: "#666", margin: "0 0 6px", lineHeight: "1.5" };
 const footerLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
+const fineprint = { fontSize: "11px", color: "#888", lineHeight: "1.5", margin: "0 0 16px", fontStyle: "italic" as const };
