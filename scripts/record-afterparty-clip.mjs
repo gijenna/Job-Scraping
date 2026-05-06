@@ -43,7 +43,7 @@ await page.goto(URL, { waitUntil: "networkidle0", timeout: 30_000 });
 
 // Wait for fonts + sunset image
 await page.evaluate(async () => {
-  await (document as any).fonts?.ready;
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
   const img = new Image();
   img.src = "/bg-sunset.jpg";
   if (!img.complete) {
