@@ -100,17 +100,36 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  */
 const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const [revealed, setRevealed] = useState(false);
+  const [sunsetReady, setSunsetReady] = useState(false);
 
   useEffect(() => {
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && !sunsetReady) return;
     const delay = reduced ? 0 : 12400;
     const t = setTimeout(() => {
       setRevealed(true);
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onRevealed]);
+  }, [onRevealed, sunsetReady]);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/bg-sunset.jpg";
+    const markReady = () => setSunsetReady(true);
+    if (img.complete) {
+      markReady();
+      return;
+    }
+    img.onload = markReady;
+    img.onerror = markReady;
+    if (img.decode) img.decode().then(markReady).catch(() => undefined);
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, []);
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
@@ -176,7 +195,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
   const NEON_PULSE_DELAY_S = 7.6;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-10 select-none">
+    <div className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"}`}>
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
