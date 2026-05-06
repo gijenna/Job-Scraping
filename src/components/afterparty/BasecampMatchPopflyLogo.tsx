@@ -260,11 +260,13 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           0%, 100% { filter: drop-shadow(0 0 8px rgba(57,255,20,0.7)) drop-shadow(0 0 16px rgba(57,255,20,0.4)); }
           50%      { filter: drop-shadow(0 0 14px rgba(57,255,20,1)) drop-shadow(0 0 28px rgba(57,255,20,0.6)); }
         }
-        /* Kite flies fully off the page (top-right) */
+        /* Kite flies fully off the page (top-right) — long, smooth arc so it glides instead of zipping. */
         @keyframes bmpKiteDismiss {
           0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, -260px) scale(1); }
-          70%  { opacity: 1; }
-          100% { opacity: 0; transform: translate(-50%, -50%) translate(120vw, -90vh) scale(0.5); }
+          25%  { opacity: 1; transform: translate(-50%, -50%) translate(18vw, -32vh) scale(0.95); }
+          55%  { opacity: 1; transform: translate(-50%, -50%) translate(48vw, -52vh) scale(0.82); }
+          85%  { opacity: 1; transform: translate(-50%, -50%) translate(82vw, -72vh) scale(0.66); }
+          100% { opacity: 0; transform: translate(-50%, -50%) translate(120vw, -92vh) scale(0.5); }
         }
 
         /* Dust trail mote — drifts outward + downward, fading as it shrinks. */
