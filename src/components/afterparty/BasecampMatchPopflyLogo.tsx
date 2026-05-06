@@ -320,11 +320,15 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
             bmpSunsetIlluminate ${STAGE_IN_DUR_MS}ms cubic-bezier(.16,.84,.32,1) 120ms forwards,
             bmpStageOut ${STAGE_OUT_DUR_MS}ms ease-in-out ${STAGE_OUT_DELAY_S}s forwards;
         }
+        @media (min-width: 768px) {
+          .bmp-splash-sunset { background-position: top center; }
+        }
         @keyframes bmpSunsetIlluminate {
-          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.45) saturate(0.8); }
-          18%  { opacity: 0.34; clip-path: circle(10vmin at 50% 50%); filter: brightness(0.6) saturate(0.9); }
-          58%  { opacity: 0.78; clip-path: circle(58vmax at 50% 50%); filter: brightness(0.86) saturate(0.98); }
-          100% { opacity: 1; clip-path: circle(145vmax at 50% 50%); filter: brightness(1) saturate(1); }
+          0%   { opacity: 0; clip-path: circle(0 at 50% 50%); filter: brightness(0.4) saturate(0.75); }
+          12%  { opacity: 0.5; clip-path: circle(8vmin at 50% 50%); filter: brightness(0.55) saturate(0.85); }
+          35%  { opacity: 0.85; clip-path: circle(28vmax at 50% 50%); filter: brightness(0.78) saturate(0.95); }
+          70%  { opacity: 1;   clip-path: circle(80vmax at 50% 50%); filter: brightness(0.92) saturate(1); }
+          100% { opacity: 1;   clip-path: circle(160vmax at 50% 50%); filter: brightness(1) saturate(1); }
         }
         @keyframes bmpStageOut {
           0%   { opacity: 1; }
