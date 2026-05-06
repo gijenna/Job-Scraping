@@ -442,7 +442,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
               
               <EditableText settingKey="hero.venue" defaultText="Location revealed on RSVP" />
             </div>
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col items-center gap-3">
               <Link
                 to={me?.slug ? `/guests?slug=${me.slug}` : "/guests"}
                 onClick={() => {
@@ -455,6 +455,23 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
               >
                 See who's coming →
               </Link>
+              {(!me || (me && isPreRsvpShell && !editMode)) && (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setEditMode(true);
+                    setTimeout(() => {
+                      document.getElementById("intake-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 100);
+                  }}
+                  className="font-afterparty text-[14px] h-11 px-8"
+                  style={{ backgroundColor: CREAM, color: BG, fontWeight: 500 }}
+                >
+                  {me?.full_name
+                    ? `RSVP here, ${me.full_name.split(" ")[0]}`
+                    : <EditableText settingKey="cta.primary" defaultText="RSVP" />}
+                </Button>
+              )}
             </div>
           </div>
 
