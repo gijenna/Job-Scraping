@@ -448,11 +448,11 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
         /* Presenter logo (e.g. Oakley) blooms in-place over the real lockup logo. */
         @keyframes bmpPresenterMerge {
-          0%   { opacity: 0; transform: scale(1.4); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
-          18%  { opacity: 1; transform: scale(2.6); filter: drop-shadow(0 0 28px rgba(245,230,211,0.95)) drop-shadow(0 0 60px rgba(245,230,211,0.55)); }
-          55%  { opacity: 1; transform: scale(1.7); filter: drop-shadow(0 0 22px rgba(245,230,211,0.8)) drop-shadow(0 0 44px rgba(245,230,211,0.45)); }
-          85%  { opacity: 0.85; transform: scale(1.15); filter: drop-shadow(0 0 14px rgba(245,230,211,0.6)) drop-shadow(0 0 28px rgba(245,230,211,0.3)); }
-          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.25)); }
+          0%   { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,230,211,0.2)); }
+          14%  { opacity: 1; transform: scale(2); filter: drop-shadow(0 0 30px rgba(245,230,211,1)) drop-shadow(0 0 70px rgba(245,230,211,0.6)); }
+          42%  { opacity: 1; transform: scale(1.72); filter: drop-shadow(0 0 28px rgba(245,230,211,0.9)) drop-shadow(0 0 56px rgba(245,230,211,0.48)); }
+          72%  { opacity: 1; transform: scale(1.24); filter: drop-shadow(0 0 18px rgba(245,230,211,0.72)) drop-shadow(0 0 36px rgba(245,230,211,0.35)); }
+          100% { opacity: 0; transform: scale(1); filter: drop-shadow(0 0 10px rgba(245,230,211,0.35)); }
         }
         .bmp-presenter-splash {
           position: absolute;
@@ -464,7 +464,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
           opacity: 0;
           pointer-events: none;
           transform-origin: center center;
-          animation: bmpPresenterMerge 3200ms cubic-bezier(.22,.7,.28,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
+          animation: bmpPresenterMerge 3600ms cubic-bezier(.18,.78,.18,1) ${PRESENTER_SPLASH_DELAY_S}s forwards;
         }
 
         /* Cream neon pulse (matches cream brand color, used on the Oakley logo) */
@@ -476,7 +476,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
         .bmp-presenter-logo { animation: bmpCreamPulse 2.6s ease-in-out ${NEON_PULSE_DELAY_S}s infinite; }
 
         @media (prefers-reduced-motion: reduce) {
-          .bmp-splash-stage, .bmp-splash-sunset, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
+          .bmp-splash-stage, .bmp-splash-sunset-svg, .bmp-splash-fire, .bmp-spark, .bmp-hero-spark, .bmp-kite, .bmp-kite-wings, .bmp-trail, .bmp-burst-star, .bmp-od-stacked, .bmp-presenter-splash { display: none !important; }
           .bmp-bloom-left, .bmp-bloom-right, .bmp-divider-l, .bmp-divider-r,
           .bmp-x, .bmp-presents, .bmp-presenter, .bmp-title {
             animation: none !important;
