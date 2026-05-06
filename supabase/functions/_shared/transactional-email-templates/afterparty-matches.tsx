@@ -66,6 +66,10 @@ const AfterPartyMatchesEmail = ({
           See the full guest list →
         </Button>
 
+        <Text style={fineprint}>
+          By registering for this event, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+        </Text>
+
         <Text style={footer}>Presented by Popfly × Basecamp Match</Text>
       </Container>
     </Body>
