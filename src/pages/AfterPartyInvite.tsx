@@ -365,7 +365,7 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
             transition: "opacity 0.4s ease-out",
           }}
         />
-        <div className="mx-auto px-5 pt-4 pb-16 relative z-10" style={{ maxWidth: 480 }}>
+        <div className="mx-auto px-5 pt-2 pb-16 relative z-10" style={{ maxWidth: 480 }}>
           {/* Logo lockup (controls splash + reveal) */}
           {!skipSplash && (
             <BasecampMatchPopflyLogo
