@@ -116,28 +116,42 @@ const BasecampMatchPopflyLogo = ({ onRevealed, presenter }: Props) => {
 
   // Measure where the steady-state presenter logo lives so the splash logo
   // can animate to that exact spot and size — a true seamless merge.
+  // Uses offsetWidth/Height + offsetParent chain so CSS transforms (the
+  // intro scale animation on the lockup) don't poison the measurement.
   useLayoutEffect(() => {
     if (!presenter) return;
     const compute = () => {
       const splash = splashLogoRef.current;
       const home = homeLogoRef.current;
       if (!splash || !home) return;
-      const sRect = splash.getBoundingClientRect();
-      const hRect = home.getBoundingClientRect();
-      // Splash is centered via translate(-50%,-50%) at viewport center.
-      const splashCenterX = window.innerWidth / 2;
-      const splashCenterY = window.innerHeight / 2;
-      const homeCenterX = hRect.left + hRect.width / 2;
-      const homeCenterY = hRect.top + hRect.height / 2;
-      const tx = homeCenterX - splashCenterX;
-      const ty = homeCenterY - splashCenterY;
-      const ts = sRect.height > 0 ? hRect.height / sRect.height : 0.25;
+      if (!home.offsetWidth || !home.offsetHeight) return;
+      let x = 0, y = 0;
+      let cur: HTMLElement | null = home;
+      while (cur) {
+        x += cur.offsetLeft;
+        y += cur.offsetTop;
+        cur = cur.offsetParent as HTMLElement | null;
+      }
+      const docCenterX = x + home.offsetWidth / 2;
+      const docCenterY = y + home.offsetHeight / 2;
+      const targetViewportX = docCenterX - window.scrollX;
+      const targetViewportY = docCenterY - window.scrollY;
+      const tx = targetViewportX - window.innerWidth / 2;
+      const ty = targetViewportY - window.innerHeight / 2;
+      const splashH = splash.offsetHeight || splash.getBoundingClientRect().height;
+      const ts = splashH > 0 ? home.offsetHeight / splashH : 0.25;
       splash.style.setProperty("--bmp-home-tx", `${tx}px`);
       splash.style.setProperty("--bmp-home-ty", `${ty}px`);
       splash.style.setProperty("--bmp-home-ts", `${ts}`);
     };
-    // Run after layout + on resize.
     compute();
+    // Re-measure after the home logo image loads (in case it wasn't ready yet).
+    const home = homeLogoRef.current;
+    if (home && !home.complete) {
+      const onLoad = () => compute();
+      home.addEventListener("load", onLoad);
+      return () => home.removeEventListener("load", onLoad);
+    }
     const r = () => compute();
     window.addEventListener("resize", r);
     return () => window.removeEventListener("resize", r);
