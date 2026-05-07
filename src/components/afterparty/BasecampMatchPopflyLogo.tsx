@@ -222,14 +222,9 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekM
   const X_GLOW_DELAY_S = 8.2;
   const NEON_PULSE_DELAY_S = 7.6;
 
-  const rootStyle = isClipSeeking
-    ? ({ ["--bmp-clip-time" as any]: `${-clipSeekMs}ms` })
-    : undefined;
-
   return (
     <div
       className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"} ${isClipSeeking ? "bmp-clip-seek" : ""}`}
-      style={rootStyle}
     >
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
@@ -240,7 +235,6 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekM
         .bmp-clip-seek,
         .bmp-clip-seek * {
           animation-play-state: paused !important;
-          animation-delay: var(--bmp-clip-time) !important;
           transition: none !important;
         }
         .bmp-clip-seek .bmp-splash-stage,
