@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, ExternalLink, Trash2, Building2, Users, Pencil } from "lucide-react";
+import { Copy, ExternalLink, Trash2, Building2, Users, Pencil, Bookmark, BookmarkCheck } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertIntakeForm from "./ExpertIntakeForm";
 
