@@ -683,7 +683,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekM
       )}
 
       {/* Steady-state lockup (logos land here) */}
-      <div className="relative w-full flex flex-col items-center">
+      <div className="bmp-steady-lockup relative w-full flex flex-col items-center">
         <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4 text-center">
           <div className="bmp-bloom-left flex items-center justify-end flex-1 min-w-0">
             <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" aria-label="Basecamp Match">
