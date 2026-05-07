@@ -114,15 +114,11 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   };
 
   const copyLink = (expert: Expert, assignment: ExpertCityAssignment) => {
-    const isBrandRep = (assignment.expert_type || 'industry_expert') === 'brand_rep';
-    let url: string;
-    if (isBrandRep) {
-      const repPrefix = assignment.city_slug === 'portland' ? 'pnw' : assignment.city_slug;
-      url = `${PUBLISHED_BASE_URL}/${repPrefix}reps/${expert.slug}`;
-    } else {
-      const cityPrefix = assignment.city_slug === 'denver' ? 'Denver' : assignment.city_slug === 'portland' ? 'Portland' : 'MN';
-      url = `${PUBLISHED_BASE_URL}/${cityPrefix}experts/${expert.slug}`;
-    }
+    // Always copy the expert-og share URL so social previews are correct
+    // (the SPA route has hardcoded afterparty OG tags in index.html that crawlers see).
+    // expert-og redirects humans to the right invite page automatically.
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const url = `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expert.slug)}/${encodeURIComponent(assignment.city_slug)}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied!", description: url });
   };
