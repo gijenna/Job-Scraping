@@ -24,6 +24,19 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
+const ROW_PATTERNS: Record<number, number[]> = {
+  1: [1], 2: [2], 3: [3], 4: [4], 5: [5],
+  6: [3, 3], 7: [4, 3], 8: [4, 4], 9: [5, 4], 10: [5, 5],
+};
+function splitRepsIntoRows(n: number): number[] {
+  if (ROW_PATTERNS[n]) return ROW_PATTERNS[n];
+  const rows: number[] = [];
+  let left = n;
+  while (left > 5) { rows.push(5); left -= 5; }
+  if (left > 0) rows.push(left);
+  return rows;
+}
+
 function normalizeUrl(url: string | undefined | null): string | null {
   if (!url) return null;
   const trimmed = url.trim();
