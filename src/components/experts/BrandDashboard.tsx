@@ -189,6 +189,15 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                   <Button
                     size="sm"
                     variant="ghost"
+                    onClick={() => toggleSaved(brand.expert)}
+                    className={`h-7 w-7 p-0 ${brand.expert.saved_for_later ? 'text-events-yellow' : 'text-events-cream/40 hover:text-events-cream opacity-0 group-hover:opacity-100'} transition-opacity`}
+                    title={brand.expert.saved_for_later ? 'Move to active' : 'Save for later'}
+                  >
+                    {brand.expert.saved_for_later ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => {
                       const firstAssign = brand.assignments[0];
                       setEditCitySlug(firstAssign?.city_slug || "");
