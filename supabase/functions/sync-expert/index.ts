@@ -164,11 +164,29 @@ serve(async (req) => {
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
+        // Strip BOM, surrounding whitespace, and surrounding quotes
+        let raw = serviceAccountKeyStr.trim().replace(/^\uFEFF/, '');
+        if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+          raw = raw.slice(1, -1);
+        }
+        // Find the JSON object boundaries
+        const firstBrace = raw.indexOf('{');
+        const lastBrace = raw.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+          raw = raw.slice(firstBrace, lastBrace + 1);
+        }
         try {
-          serviceAccount = JSON.parse(serviceAccountKeyStr);
-        } catch {
-          // Try base64 decode
-          serviceAccount = JSON.parse(atob(serviceAccountKeyStr));
+          serviceAccount = JSON.parse(raw);
+        } catch (e1) {
+          try {
+            serviceAccount = JSON.parse(atob(serviceAccountKeyStr.trim()));
+          } catch (e2) {
+            throw new Error(`Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY. First chars: ${serviceAccountKeyStr.slice(0, 30)} | length: ${serviceAccountKeyStr.length} | json err: ${e1.message}`);
+          }
+        }
+        // Fix escaped newlines in private_key if needed
+        if (serviceAccount.private_key && !serviceAccount.private_key.includes('\n')) {
+          serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
         }
         console.log('Service account parsed, client_email:', serviceAccount.client_email || 'MISSING');
         const accessToken = await getGoogleAccessToken(serviceAccount);
