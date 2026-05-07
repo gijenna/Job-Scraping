@@ -1,59 +1,78 @@
-## Goal
+## 1. Archive brand partner cards in the Expert CRM
 
-Re-render the two afterparty splash clips (`/mnt/documents/afterparty-clip-square.mp4` and `afterparty-clip-story.mp4`) so that:
+Mirror how past-event experts are handled today: keep the data, just hide them from the active list with an "Archived" toggle.
 
-1. The animation plays at the **exact same speed as `/afterparty`** (not sped up).
-2. The whole splash (logo lockup, snowflakes, Oakley merge, "Out of Office", kick-off line, sparkles + "DJ ✦ Drinks ✦ Swag ✦ Food ✦ Friends") **fills the frame** instead of sitting small in the middle.
+- In `src/components/experts/BrandDashboard.tsx`, add an `archived` filter (defaulting to hiding archived brands) plus a small "Show archived" toggle and an "Archive" action on each brand card (next to the existing edit/delete).
+- Archive state stored on the brand expert row. We'll add a nullable `archived_at timestamptz` column to `experts` (covers both brands and any future expert archiving) via migration; `null` = active, timestamp = archived. Default queries on the live event pages already filter by `event_assignments`, so this only affects the CRM listing.
+- "Archive" sets `archived_at = now()`; "Restore" clears it. Existing delete stays as a hard-delete.
 
-No timing, copy, or visual changes to `/afterparty` itself. Only the recorder + the standalone `/afterparty-clip` route are touched.
+This way you can stash brands from past events without losing their reps or contact info, just like archiving a person.
 
-## Why the current clips look sped up
+## 2. Even spacing on the live "Meet the Teams" rep grid
 
-`scripts/record-afterparty-clip.mjs` captures screenshots on a real wall-clock loop. Each `Page.captureScreenshot` call takes ~80–150 ms in headless Chromium, so the loop can't keep up with 30 fps. The recorder still tags those frames as 1/30 s apart at encode time, which compresses ~10.8 s of animation into ~5–6 s of video. Result: animation looks ~2× too fast.
+Current behavior: `BrandUmbrellaSection.tsx` line 145 uses a fixed `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5` grid, so 1–4 reps cling to the left and 5 looks correct only by accident.
 
-The fix is to drive Chromium with **CDP virtual time** (`Emulation.setVirtualTimePolicy`), which freezes the page clock between captures. Each frame then represents exactly 1/30 s of in-page time regardless of how long the screenshot itself takes — output matches `/afterparty` 1:1.
+Replace the fixed grid with a count-aware layout (desktop ≥ md):
 
-## Changes
+| Reps | Layout |
+|------|--------|
+| 1 | 1 centered |
+| 2 | 2 evenly spaced |
+| 3 | 3 evenly spaced |
+| 4 | 4 evenly spaced |
+| 5 | 5 across (current squished look) |
+| 6 | 3 + 3 |
+| 7 | 4 + 3 |
+| 8 | 4 + 4 |
+| 9 | 5 + 4 |
+| 10 | 5 + 5 |
+| 11+ | 5 per row, last row centered |
 
-### 1. `scripts/record-afterparty-clip.mjs` — real-time virtual clock capture
+Implementation: a small helper `splitRepsIntoRows(count)` returns an array of row sizes; render one flex row per group with `justify-center` and a fixed card width (`w-[160px] md:w-[180px]`) so spacing stays even regardless of count. Mobile (<md) keeps a simple 2-column grid so cards don't get tiny.
 
-- After page load + font/image readiness, switch the page into paused virtual time:
-  - `Emulation.setVirtualTimePolicy { policy: "pause" }` once.
-  - For each frame i: `Emulation.setVirtualTimePolicy { policy: "advance", budget: 1000/FPS, waitForNavigation: false }`, await the `Emulation.virtualTimeBudgetExpired` event, then capture the screenshot.
-- Remove the wall-clock `setTimeout` pacing loop.
-- Keep total duration = 10800 ms splash + 1500 ms tail + 200 ms head buffer (≈ 375 frames @ 30 fps).
-- Keep ffmpeg encode settings (libx264, yuv420p, crf 18, faststart).
-- Output paths unchanged: `/mnt/documents/afterparty-clip-square.mp4` and `/mnt/documents/afterparty-clip-story.mp4`.
+No changes to card visuals, expand/collapse, or the bubble logos above.
 
-### 2. `src/pages/AfterPartySplashClip.tsx` — scale-to-fill wrapper
+## 3. Brand rep submissions → Google Sheet (new spreadsheet, existing tab)
 
-Wrap the existing inner content (`BasecampMatchPopflyLogo` + sparkles + "DJ ✦ Drinks ✦ Swag ✦ Food ✦ Friends" row) in a fixed-size "design" container (e.g. 560 × 720 for story, 720 × 560 for square — chosen to match the natural aspect of the lockup), then apply `transform: scale(<viewport-fit-ratio>)` on a parent so the whole thing scales up uniformly until it fills the 1080×1080 / 1080×1920 frame with a small safe-area margin (~5%).
+You confirmed a different spreadsheet entirely. Two things I need from you before I wire this up:
 
-- Square (1080×1080): scale ≈ 1.4×, vertically centered, full frame width minus 5% padding.
-- Story (1080×1920): scale ≈ 1.7×, vertically centered, taller breathing room top/bottom.
-- Use `transform-origin: center center` so the snowflake burst, Oakley cross-fade, and sunset-darkening overlay all stay correctly composed.
-- Sunset background overlay + `apClipBgDarken` keyframe stay exactly as-is (they're on the outer fixed-inset layer, not inside the scaled container, so the dark overlay still covers the full frame).
-- No font-size hardcoding for the bottom line — it scales with the parent transform, so it'll grow proportionally with the rest of the lockup.
+1. **Spreadsheet ID** of the new sheet (the long string in the URL between `/d/` and `/edit`). I'll store it as a new secret `GOOGLE_SPREADSHEET_ID_BRAND_REPS`.
+2. **Tab name** to append into (e.g. `BrandReps` or `Submissions`). I'll add it as a constant in the function — easy to change later.
 
-### 3. Re-run the recorder for both ratios
+Also: please share the sheet with the existing service account email (the one used by `sync-expert`) as **Editor** so it has write access. If you're not sure of that email, I can pull it from the `GOOGLE_SERVICE_ACCOUNT_KEY` secret and tell you.
 
-After the two file edits, run:
+Once you confirm those, I'll:
 
-```
-node scripts/record-afterparty-clip.mjs square
-node scripts/record-afterparty-clip.mjs story
-```
+- Update `supabase/functions/sync-expert/index.ts` so when the submitted expert `is_brand_rep === true`, it appends to `${GOOGLE_SPREADSHEET_ID_BRAND_REPS}` / `<tab>!A1:append` instead of (or in addition to — your call) the per-city sheet.
+- Match the column order to whatever headers already exist in that tab. If you tell me the column headers, I'll map them exactly; otherwise I'll mirror the existing expert sync columns.
 
-(sequentially, since they share `/tmp/clip-frames-*` dirs only by name but Chromium reuse is cleaner sequentially)
+### Question before I proceed
+For brand rep submissions, do you want them to **only** go to the new brand-reps sheet, or **both** the city sheet AND the brand-reps sheet? Default I'd pick: **only the brand-reps sheet** so the city tabs stay clean.
 
-Then deliver both MP4s as artifacts.
+## Technical notes
 
-## What stays untouched
+- Migration: `ALTER TABLE experts ADD COLUMN archived_at timestamptz;` (nullable, no backfill needed).
+- `BrandDashboard` filters: `brandEntries.filter(b => showArchived ? true : !b.expert.archived_at)`.
+- Row-splitter pseudocode:
+  ```ts
+  const ROW_PATTERNS: Record<number, number[]> = {
+    1:[1], 2:[2], 3:[3], 4:[4], 5:[5],
+    6:[3,3], 7:[4,3], 8:[4,4], 9:[5,4], 10:[5,5],
+  };
+  function splitReps(n: number) {
+    if (ROW_PATTERNS[n]) return ROW_PATTERNS[n];
+    const rows = []; let left = n;
+    while (left > 5) { rows.push(5); left -= 5; }
+    rows.push(left);
+    return rows;
+  }
+  ```
+- New secret needed: `GOOGLE_SPREADSHEET_ID_BRAND_REPS` (added via add_secret tool after you give me the ID).
 
-- `/afterparty` page, `BasecampMatchPopflyLogo.tsx`, `AfterPartyInvite.tsx`, all keyframes, all timings.
-- The 8000 ms `onInvitePop` / 10800 ms `onRevealed` callbacks — clip route uses only `onRevealed`.
-- All copy.
+## Files touched
+- `supabase/migrations/<new>.sql` — add `archived_at` column
+- `src/components/experts/BrandDashboard.tsx` — archive toggle + actions
+- `src/components/event/BrandUmbrellaSection.tsx` — even-spacing row layout
+- `supabase/functions/sync-expert/index.ts` — brand-rep sheet branch
 
-## Deliverables
-
-Two refreshed MP4s in `/mnt/documents/`, played back at true real-time speed, with the lockup + bottom text filling the square and 9:16 frames respectively.
+Please reply with: **(a) the new spreadsheet ID, (b) the tab name, (c) only-new-sheet vs both sheets** and I'll execute.
