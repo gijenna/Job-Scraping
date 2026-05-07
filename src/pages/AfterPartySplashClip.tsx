@@ -20,11 +20,9 @@ const CREAM = "#F5E6D3";
  * MP4 social posts. Renders ONLY:
  *   • the BasecampMatchPopflyLogo splash (identical to /afterparty)
  *   • the sparkles + "DJ ✦ Drinks ✦ Swag ✦ Food ✦ Friends" row
- * Nothing else from the invite is shown.
  *
- * Query params:
- *   ?ratio=square   → square framing (PC / feed)
- *   ?ratio=story    → 9:16 framing (Instagram story / mobile) - default
+ * The whole lockup lives in a fixed-size design container that gets
+ * uniformly scaled up to fill the recording frame (square or 9:16).
  */
 const AfterPartySplashClip = () => {
   const [params] = useSearchParams();
@@ -36,6 +34,21 @@ const AfterPartySplashClip = () => {
       (window as { __SPLASH_DONE__?: boolean }).__SPLASH_DONE__ = true;
     }
   }, [splashDone]);
+
+  // Design container: a fixed natural size that the lockup looks great in.
+  // Then we scale it to fill the recording viewport.
+  const DESIGN_WIDTH = ratio === "square" ? 620 : 540;
+  const DESIGN_HEIGHT = ratio === "square" ? 540 : 820;
+
+  // Recording viewports
+  const FRAME_W = 1080;
+  const FRAME_H = ratio === "square" ? 1080 : 1920;
+
+  // 92% safe area
+  const scale = Math.min(
+    (FRAME_W * 0.92) / DESIGN_WIDTH,
+    (FRAME_H * 0.92) / DESIGN_HEIGHT,
+  );
 
   return (
     <div
@@ -76,64 +89,71 @@ const AfterPartySplashClip = () => {
           pointerEvents: "none",
         }}
       />
+      {/* Scale wrapper */}
       <div
         style={{
           position: "relative",
           zIndex: 10,
-          width: "100%",
-          maxWidth: ratio === "square" ? 720 : 560,
-          padding: "0 24px",
+          width: DESIGN_WIDTH,
+          height: DESIGN_HEIGHT,
+          transform: `scale(${scale})`,
+          transformOrigin: "center center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} presenter={OAKLEY_PRESENTER} />
+        <div style={{ width: "100%" }}>
+          <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} presenter={OAKLEY_PRESENTER} />
 
-        <div
-          style={{
-            opacity: splashDone ? 1 : 0,
-            transition: "opacity 0.4s ease-out",
-            textAlign: "center",
-            marginTop: 8,
-          }}
-        >
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 12,
-              marginBottom: 12,
-              marginTop: 4,
-            }}
-            aria-hidden="true"
-          >
-            <StarSparkle tone="coral" size={18} />
-            <StarSparkle tone="cream" size={26} />
-            <StarSparkle tone="green" size={20} />
-            <StarSparkle tone="cream" size={14} />
-            <StarSparkle tone="coral" size={22} />
-          </div>
-          <div
-            className="font-afterparty"
-            style={{
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              whiteSpace: "nowrap",
-              fontSize: ratio === "square" ? 22 : 18,
-              color: CREAM,
+              opacity: splashDone ? 1 : 0,
+              transition: "opacity 0.4s ease-out",
+              textAlign: "center",
+              marginTop: 12,
             }}
           >
-            <span>DJ</span>
-            <StarSparkle tone="green" size={10} />
-            <span>Drinks</span>
-            <StarSparkle tone="coral" size={10} />
-            <span>Swag</span>
-            <StarSparkle tone="cream" size={10} />
-            <span>Food</span>
-            <StarSparkle tone="green" size={10} />
-            <span>Friends</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 14,
+                marginBottom: 14,
+                marginTop: 4,
+              }}
+              aria-hidden="true"
+            >
+              <StarSparkle tone="coral" size={20} />
+              <StarSparkle tone="cream" size={28} />
+              <StarSparkle tone="green" size={22} />
+              <StarSparkle tone="cream" size={16} />
+              <StarSparkle tone="coral" size={24} />
+            </div>
+            <div
+              className="font-afterparty"
+              style={{
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                whiteSpace: "nowrap",
+                fontSize: 26,
+                color: CREAM,
+              }}
+            >
+              <span>DJ</span>
+              <StarSparkle tone="green" size={11} />
+              <span>Drinks</span>
+              <StarSparkle tone="coral" size={11} />
+              <span>Swag</span>
+              <StarSparkle tone="cream" size={11} />
+              <span>Food</span>
+              <StarSparkle tone="green" size={11} />
+              <span>Friends</span>
+            </div>
           </div>
         </div>
       </div>
