@@ -45,24 +45,8 @@ await page.setViewport({ width: WIDTH, height: HEIGHT, deviceScaleFactor: 1 });
 
 const client = await page.target().createCDPSession();
 
-// Pause virtual time BEFORE navigation so the page clock starts paused.
-await client.send("Emulation.setVirtualTimePolicy", { policy: "pause" });
-
 console.log(`Loading ${URL} ...`);
-await page.goto(URL, { waitUntil: "networkidle0", timeout: 30_000 });
-
-// Let fonts + sunset image load (advance some virtual time briefly).
-await new Promise(async (resolve) => {
-  const onExpired = () => {
-    client.off("Emulation.virtualTimeBudgetExpired", onExpired);
-    resolve();
-  };
-  client.on("Emulation.virtualTimeBudgetExpired", onExpired);
-  await client.send("Emulation.setVirtualTimePolicy", {
-    policy: "pauseIfNetworkFetchesPending",
-    budget: 500,
-  });
-});
+await page.goto(URL, { waitUntil: "networkidle0", timeout: 60_000 });
 
 await page.evaluate(async () => {
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
