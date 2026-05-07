@@ -60,6 +60,14 @@ await page.evaluate(async () => {
   }
 });
 
+// Reset the in-page clock so the splash animation starts at t=0 from here.
+await page.evaluate(() => {
+  // Force React to remount the splash by reloading-like re-render via location.reload? No — just give a small settle.
+});
+
+// Pause virtual time now; from here on, time only advances by our budget calls.
+await client.send("Emulation.setVirtualTimePolicy", { policy: "pause" });
+
 console.log(`Capturing ${totalFrames} frames (~${(TOTAL_MS / 1000).toFixed(1)}s real-time)...`);
 
 for (let i = 0; i < totalFrames; i++) {
