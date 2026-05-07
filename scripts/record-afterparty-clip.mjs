@@ -66,13 +66,15 @@ await page.evaluate(async () => {
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
 });
 
-// 2. Pause virtual time, then re-navigate so all timers/animations start
-//    at virtual t=0 with the clock paused.
+// 2. Park on about:blank, then pause virtual time and navigate back so the
+//    page boots with a paused clock (animations start at virtual t=0).
+await page.goto("about:blank");
 await client.send("Emulation.setVirtualTimePolicy", { policy: "pause" });
-await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60_000 });
-
-// 3. Let React mount + first paint by ticking ~80ms of virtual time.
-await advance(80);
+// Kick off navigation but DON'T await — virtual time is paused, so navigation
+// completion events won't fire until we advance time.
+page.goto(URL, { waitUntil: "domcontentloaded", timeout: 120_000 }).catch(() => {});
+// Advance enough virtual time for React to mount + first paint (assets cached).
+await advance(500);
 
 console.log(`Capturing ${totalFrames} frames (~${(TOTAL_MS / 1000).toFixed(1)}s real-time)...`);
 
