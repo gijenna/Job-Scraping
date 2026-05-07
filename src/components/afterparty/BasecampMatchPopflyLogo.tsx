@@ -222,12 +222,50 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekM
   const X_GLOW_DELAY_S = 8.2;
   const NEON_PULSE_DELAY_S = 7.6;
 
+  const rootStyle = isClipSeeking
+    ? ({ ["--bmp-clip-time" as any]: `${-clipSeekMs}ms` })
+    : undefined;
+
   return (
-    <div className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"}`}>
+    <div
+      className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"} ${isClipSeeking ? "bmp-clip-seek" : ""}`}
+      style={rootStyle}
+    >
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
         .bmp-intro-paused * {
+          animation-play-state: paused !important;
+        }
+        .bmp-clip-seek,
+        .bmp-clip-seek * {
+          animation-play-state: paused !important;
+          animation-delay: var(--bmp-clip-time) !important;
+          transition: none !important;
+        }
+        .bmp-clip-seek .bmp-splash-stage,
+        .bmp-clip-seek .bmp-splash-sunset,
+        .bmp-clip-seek .bmp-splash-fire,
+        .bmp-clip-seek .bmp-spark,
+        .bmp-clip-seek .bmp-hero-spark,
+        .bmp-clip-seek .bmp-kite,
+        .bmp-clip-seek .bmp-kite-wings,
+        .bmp-clip-seek .bmp-kite-img,
+        .bmp-clip-seek .bmp-trail,
+        .bmp-clip-seek .bmp-burst-star,
+        .bmp-clip-seek .bmp-od-stacked,
+        .bmp-clip-seek .bmp-presenter-splash,
+        .bmp-clip-seek .bmp-bloom-left,
+        .bmp-clip-seek .bmp-bloom-right,
+        .bmp-clip-seek .bmp-divider-l,
+        .bmp-clip-seek .bmp-divider-r,
+        .bmp-clip-seek .bmp-x,
+        .bmp-clip-seek .bmp-presents,
+        .bmp-clip-seek .bmp-presenter,
+        .bmp-clip-seek .bmp-presenter-logo,
+        .bmp-clip-seek .bmp-title,
+        .bmp-clip-seek .bmp-flame-outer,
+        .bmp-clip-seek .bmp-flame-inner {
           animation-play-state: paused !important;
         }
 
