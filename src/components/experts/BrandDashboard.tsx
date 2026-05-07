@@ -295,6 +295,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           );
         })}
       </div>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={!!editingExpert} onOpenChange={(open) => !open && setEditingExpert(null)}>
