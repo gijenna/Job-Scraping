@@ -191,7 +191,7 @@ serve(async (req) => {
         ];
 
         const appendRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName)}!A1:append?valueInputOption=USER_ENTERED`,
           {
             method: 'POST',
             headers: {
