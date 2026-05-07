@@ -12,6 +12,8 @@ interface Props {
   /** Fires earlier than onRevealed, right as the kick-off line settles,
    *  so the page can fade in the rest of the invite copy in sync. */
   onInvitePop?: () => void;
+  /** Recording-only: drive the splash from an exact timeline position. */
+  clipSeekMs?: number;
   /** Presenter logo shown under the lockup, replacing the "present" wordmark.
    *  When provided, an `@ / [logo] / RiNo` style stack is rendered. */
   presenter?: {
@@ -101,11 +103,19 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) => {
-  const [revealed, setRevealed] = useState(false);
-  const [sunsetReady, setSunsetReady] = useState(false);
+const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekMs }: Props) => {
+  const isClipSeeking = typeof clipSeekMs === "number";
+  const [revealed, setRevealed] = useState(isClipSeeking && clipSeekMs >= 10800);
+  const [sunsetReady, setSunsetReady] = useState(isClipSeeking);
 
   useEffect(() => {
+    if (!isClipSeeking) return;
+    setSunsetReady(true);
+    setRevealed(clipSeekMs >= 10800);
+  }, [clipSeekMs, isClipSeeking]);
+
+  useEffect(() => {
+    if (isClipSeeking) return;
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
@@ -115,11 +125,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onRevealed, sunsetReady]);
+  }, [isClipSeeking, onRevealed, sunsetReady]);
 
   // Earlier callback: fires right as the kick-off line settles so the rest
   // of the invite copy can fade in alongside it.
   useEffect(() => {
+    if (isClipSeeking) return;
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
@@ -128,9 +139,10 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       onInvitePop?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onInvitePop, sunsetReady]);
+  }, [isClipSeeking, onInvitePop, sunsetReady]);
 
   useEffect(() => {
+    if (isClipSeeking) return;
     const img = new Image();
     img.src = "/bg-sunset.jpg";
     const markReady = () => setSunsetReady(true);
@@ -145,7 +157,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       img.onload = null;
       img.onerror = null;
     };
-  }, []);
+  }, [isClipSeeking]);
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
