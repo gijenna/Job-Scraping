@@ -160,7 +160,7 @@ serve(async (req) => {
     const spreadsheetId = isBrandRep
       ? brandRepsSheetId
       : (sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID'));
-    const sheetTabName = isBrandRep ? 'Brand Reps' : 'Sheet1';
+    const sheetTabName = isBrandRep ? 'Brand Reps ' : 'Sheet1';
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
@@ -209,7 +209,7 @@ serve(async (req) => {
         ];
 
         const appendRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName)}!A1:append?valueInputOption=USER_ENTERED`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
           {
             method: 'POST',
             headers: {
@@ -221,7 +221,7 @@ serve(async (req) => {
         );
 
         const appendData = await appendRes.json();
-        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, data: appendData };
+        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
