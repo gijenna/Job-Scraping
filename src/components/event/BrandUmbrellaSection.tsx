@@ -24,6 +24,19 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
+const ROW_PATTERNS: Record<number, number[]> = {
+  1: [1], 2: [2], 3: [3], 4: [4], 5: [5],
+  6: [3, 3], 7: [4, 3], 8: [4, 4], 9: [5, 4], 10: [5, 5],
+};
+function splitRepsIntoRows(n: number): number[] {
+  if (ROW_PATTERNS[n]) return ROW_PATTERNS[n];
+  const rows: number[] = [];
+  let left = n;
+  while (left > 5) { rows.push(5); left -= 5; }
+  if (left > 0) rows.push(left);
+  return rows;
+}
+
 function normalizeUrl(url: string | undefined | null): string | null {
   if (!url) return null;
   const trimmed = url.trim();
@@ -142,14 +155,40 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-3 md:px-4 pb-3 md:pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                    {group.experts.map((expert) => (
-                      <ExpertCardMinimal
-                        key={expert.id}
-                        expert={expert}
-                        autoExpand={highlightBrandRep === expert.slug}
-                      />
-                    ))}
+                  <div className="px-3 md:px-4 pb-3 md:pb-4">
+                    {/* Mobile: simple 2-col grid */}
+                    <div className="grid grid-cols-2 gap-3 md:hidden">
+                      {group.experts.map((expert) => (
+                        <ExpertCardMinimal
+                          key={expert.id}
+                          expert={expert}
+                          autoExpand={highlightBrandRep === expert.slug}
+                        />
+                      ))}
+                    </div>
+                    {/* Desktop: count-aware rows, evenly spaced */}
+                    <div className="hidden md:flex md:flex-col md:gap-4">
+                      {(() => {
+                        const rows = splitRepsIntoRows(group.experts.length);
+                        let cursor = 0;
+                        return rows.map((rowSize, rowIdx) => {
+                          const rowExperts = group.experts.slice(cursor, cursor + rowSize);
+                          cursor += rowSize;
+                          return (
+                            <div key={rowIdx} className="flex justify-center gap-4 flex-wrap">
+                              {rowExperts.map((expert) => (
+                                <div key={expert.id} className="w-[180px]">
+                                  <ExpertCardMinimal
+                                    expert={expert}
+                                    autoExpand={highlightBrandRep === expert.slug}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
                   </div>
                 </motion.div>
               )}

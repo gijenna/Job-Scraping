@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, ExternalLink, Trash2, Building2, Users, Pencil } from "lucide-react";
+import { Copy, ExternalLink, Trash2, Building2, Users, Pencil, Bookmark, BookmarkCheck } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import ExpertIntakeForm from "./ExpertIntakeForm";
 
@@ -27,6 +27,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
   const { toast } = useToast();
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
+  const [showSaved, setShowSaved] = useState(false);
 
   // Find brand entries: only brand SHELL records (admin-created), not individual people
   // Brand shells have a slug derived from the company/brand name
@@ -78,6 +79,20 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
     onRefresh();
   };
 
+  const toggleSaved = async (expert: Expert) => {
+    const newVal = !expert.saved_for_later;
+    const { error } = await supabase
+      .from('industry_experts')
+      .update({ saved_for_later: newVal } as any)
+      .eq('id', expert.id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: newVal ? 'Brand saved for later' : 'Brand moved to active' });
+    onRefresh();
+  };
+
   // Find people who filled out forms as brand reps for each brand
   const getBrandPeople = (brandName: string, brandExpertId: string) => {
     return experts.filter(
@@ -94,6 +109,12 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
     confirmed: 'bg-green-500/20 text-green-300 border-green-500/30',
   };
 
+  const visibleEntries = brandEntries.filter((b) =>
+    showSaved ? !!b.expert.saved_for_later : !b.expert.saved_for_later
+  );
+  const savedCount = brandEntries.filter((b) => b.expert.saved_for_later).length;
+  const activeCount = brandEntries.length - savedCount;
+
   if (brandEntries.length === 0) {
     return (
       <div className="bg-events-card rounded-lg border border-events-cream/10 p-8 text-center">
@@ -105,18 +126,43 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <Building2 className="w-5 h-5 text-events-yellow" />
           <h3 className="font-display text-lg font-bold text-events-cream">
             Brand Partners
           </h3>
-          <span className="text-events-cream/40 text-sm">({brandEntries.length})</span>
+          <span className="text-events-cream/40 text-sm">({visibleEntries.length})</span>
+        </div>
+        <div className="flex items-center gap-1 bg-events-card border border-events-cream/10 rounded-lg p-1">
+          <Button
+            size="sm"
+            variant={!showSaved ? "secondary" : "ghost"}
+            onClick={() => setShowSaved(false)}
+            className="h-7 text-xs"
+          >
+            Active ({activeCount})
+          </Button>
+          <Button
+            size="sm"
+            variant={showSaved ? "secondary" : "ghost"}
+            onClick={() => setShowSaved(true)}
+            className="h-7 text-xs"
+          >
+            <Bookmark className="w-3 h-3 mr-1" /> Saved ({savedCount})
+          </Button>
         </div>
       </div>
 
+      {visibleEntries.length === 0 ? (
+        <div className="bg-events-card rounded-lg border border-events-cream/10 p-8 text-center">
+          <p className="text-events-cream/40 text-sm">
+            {showSaved ? "No brands saved for later." : "All brands are saved for later."}
+          </p>
+        </div>
+      ) : (
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {brandEntries.map((brand) => {
+        {visibleEntries.map((brand) => {
           const brandPeople = getBrandPeople(brand.brandName, brand.expert.id);
           return (
             <div
@@ -140,6 +186,15 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => toggleSaved(brand.expert)}
+                    className={`h-7 w-7 p-0 ${brand.expert.saved_for_later ? 'text-events-yellow' : 'text-events-cream/40 hover:text-events-cream opacity-0 group-hover:opacity-100'} transition-opacity`}
+                    title={brand.expert.saved_for_later ? 'Move to active' : 'Save for later'}
+                  >
+                    {brand.expert.saved_for_later ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                  </Button>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -240,6 +295,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           );
         })}
       </div>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={!!editingExpert} onOpenChange={(open) => !open && setEditingExpert(null)}>
