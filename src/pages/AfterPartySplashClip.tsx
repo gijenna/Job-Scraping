@@ -27,28 +27,25 @@ const CREAM = "#F5E6D3";
 const AfterPartySplashClip = () => {
   const [params] = useSearchParams();
   const ratio = params.get("ratio") === "square" ? "square" : "story";
-  const [splashDone, setSplashDone] = useState(false);
+  const [clipSeekMs, setClipSeekMs] = useState<number | undefined>(
+    params.has("seek") ? Number(params.get("seek")) || 0 : undefined,
+  );
+  const [liveSplashDone, setLiveSplashDone] = useState(false);
+  const splashDone = typeof clipSeekMs === "number" ? clipSeekMs >= 10800 : liveSplashDone;
+
+  useEffect(() => {
+    const clipWindow = window as typeof window & { __SET_AFTERPARTY_CLIP_TIME__?: (ms: number) => void };
+    clipWindow.__SET_AFTERPARTY_CLIP_TIME__ = setClipSeekMs;
+    return () => {
+      delete clipWindow.__SET_AFTERPARTY_CLIP_TIME__;
+    };
+  }, []);
 
   useEffect(() => {
     if (splashDone) {
       (window as { __SPLASH_DONE__?: boolean }).__SPLASH_DONE__ = true;
     }
   }, [splashDone]);
-
-  // Design container: a fixed natural size that the lockup looks great in.
-  // Then we scale it to fill the recording viewport.
-  const DESIGN_WIDTH = ratio === "square" ? 620 : 540;
-  const DESIGN_HEIGHT = ratio === "square" ? 540 : 820;
-
-  // Recording viewports
-  const FRAME_W = 1080;
-  const FRAME_H = ratio === "square" ? 1080 : 1920;
-
-  // 92% safe area
-  const scale = Math.min(
-    (FRAME_W * 0.92) / DESIGN_WIDTH,
-    (FRAME_H * 0.92) / DESIGN_HEIGHT,
-  );
 
   return (
     <div
@@ -74,6 +71,21 @@ const AfterPartySplashClip = () => {
           0% { opacity: 0; }
           100% { opacity: 1; }
         }
+        .ap-clip-frame .bmp-steady-lockup {
+          transform: scale(${ratio === "square" ? 1.18 : 1.24});
+          transform-origin: center center;
+        }
+        .ap-clip-frame .bmp-splash-fire {
+          width: min(48vh, 48vw) !important;
+          height: min(48vh, 48vw) !important;
+        }
+        .ap-clip-frame .bmp-kite {
+          width: min(17vh, 17vw) !important;
+          height: min(17vh, 17vw) !important;
+        }
+        .ap-clip-frame .bmp-od-stacked {
+          width: min(34vh, 34vw) !important;
+        }
       `}</style>
       <div
         aria-hidden
@@ -89,22 +101,21 @@ const AfterPartySplashClip = () => {
           pointerEvents: "none",
         }}
       />
-      {/* Scale wrapper */}
       <div
+        className="ap-clip-frame"
         style={{
           position: "relative",
           zIndex: 10,
-          width: DESIGN_WIDTH,
-          height: DESIGN_HEIGHT,
-          transform: `scale(${scale})`,
-          transformOrigin: "center center",
+          width: "100%",
+          minHeight: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          padding: ratio === "square" ? "72px" : "120px 64px",
         }}
       >
         <div style={{ width: "100%" }}>
-          <BasecampMatchPopflyLogo onRevealed={() => setSplashDone(true)} presenter={OAKLEY_PRESENTER} />
+          <BasecampMatchPopflyLogo clipSeekMs={clipSeekMs} onRevealed={() => setLiveSplashDone(true)} presenter={OAKLEY_PRESENTER} />
 
           <div
             style={{
