@@ -60,13 +60,23 @@ await page.evaluate(async () => {
   }
 });
 
-// Reset the in-page clock so the splash animation starts at t=0 from here.
-await page.evaluate(() => {
-  // Force React to remount the splash by reloading-like re-render via location.reload? No — just give a small settle.
-});
-
-// Pause virtual time now; from here on, time only advances by our budget calls.
+// Pause virtual time and reload — this guarantees all React effects /
+// setTimeouts inside the splash start at virtual t=0 with the clock paused.
 await client.send("Emulation.setVirtualTimePolicy", { policy: "pause" });
+await page.reload({ waitUntil: "domcontentloaded", timeout: 60_000 });
+
+// Advance a tiny budget to let React mount + first paint settle (assets cached).
+await new Promise(async (resolve) => {
+  const onExpired = () => {
+    client.off("Emulation.virtualTimeBudgetExpired", onExpired);
+    resolve();
+  };
+  client.on("Emulation.virtualTimeBudgetExpired", onExpired);
+  await client.send("Emulation.setVirtualTimePolicy", {
+    policy: "pauseIfNetworkFetchesPending",
+    budget: 50,
+  });
+});
 
 console.log(`Capturing ${totalFrames} frames (~${(TOTAL_MS / 1000).toFixed(1)}s real-time)...`);
 
