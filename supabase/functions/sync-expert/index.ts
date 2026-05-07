@@ -157,10 +157,14 @@ serve(async (req) => {
       denver: Deno.env.get('GOOGLE_SPREADSHEET_ID_DENVER'),
       portland: Deno.env.get('GOOGLE_SPREADSHEET_ID_PORTLAND'),
     };
-    const spreadsheetId = isBrandRep
+    // Denver industry experts go to the same workbook as brand reps, in the "Industry Experts" tab
+    const isDenverIndustryExpert = !isBrandRep && citySlug === 'denver';
+    const spreadsheetId = (isBrandRep || isDenverIndustryExpert)
       ? brandRepsSheetId
       : (sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID'));
-    const sheetTabName = isBrandRep ? 'Brand Reps ' : 'Sheet1';
+    const sheetTabName = isBrandRep
+      ? 'Brand Reps '
+      : (isDenverIndustryExpert ? 'Industry Experts' : 'Sheet1');
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
