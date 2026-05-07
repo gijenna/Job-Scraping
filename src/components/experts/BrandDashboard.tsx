@@ -27,6 +27,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
   const { toast } = useToast();
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
+  const [showSaved, setShowSaved] = useState(false);
 
   // Find brand entries: only brand SHELL records (admin-created), not individual people
   // Brand shells have a slug derived from the company/brand name
