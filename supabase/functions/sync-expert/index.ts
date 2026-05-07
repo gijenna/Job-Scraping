@@ -160,7 +160,7 @@ serve(async (req) => {
     const spreadsheetId = isBrandRep
       ? brandRepsSheetId
       : (sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID'));
-    const sheetTabName = isBrandRep ? 'Brand Reps' : 'Sheet1';
+    const sheetTabName = isBrandRep ? 'Brand Reps ' : 'Sheet1';
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
