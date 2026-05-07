@@ -79,6 +79,20 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
     onRefresh();
   };
 
+  const toggleSaved = async (expert: Expert) => {
+    const newVal = !expert.saved_for_later;
+    const { error } = await supabase
+      .from('industry_experts')
+      .update({ saved_for_later: newVal } as any)
+      .eq('id', expert.id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: newVal ? 'Brand saved for later' : 'Brand moved to active' });
+    onRefresh();
+  };
+
   // Find people who filled out forms as brand reps for each brand
   const getBrandPeople = (brandName: string, brandExpertId: string) => {
     return experts.filter(
