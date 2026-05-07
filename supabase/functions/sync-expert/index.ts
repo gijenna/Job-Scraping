@@ -208,6 +208,14 @@ serve(async (req) => {
           expert.ask_me_about || '',
         ];
 
+        // Debug: list all sheet tabs in the spreadsheet
+        const metaRes = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties.title`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
+        );
+        const metaData = await metaRes.json();
+        const tabs = (metaData.sheets || []).map((s: any) => s.properties?.title);
+
         const appendRes = await fetch(
           `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
           {
@@ -221,7 +229,7 @@ serve(async (req) => {
         );
 
         const appendData = await appendRes.json();
-        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, data: appendData };
+        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, tabs, attemptedTab: sheetTabName, data: appendData };
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
