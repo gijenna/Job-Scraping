@@ -155,14 +155,40 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-3 md:px-4 pb-3 md:pb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                    {group.experts.map((expert) => (
-                      <ExpertCardMinimal
-                        key={expert.id}
-                        expert={expert}
-                        autoExpand={highlightBrandRep === expert.slug}
-                      />
-                    ))}
+                  <div className="px-3 md:px-4 pb-3 md:pb-4">
+                    {/* Mobile: simple 2-col grid */}
+                    <div className="grid grid-cols-2 gap-3 md:hidden">
+                      {group.experts.map((expert) => (
+                        <ExpertCardMinimal
+                          key={expert.id}
+                          expert={expert}
+                          autoExpand={highlightBrandRep === expert.slug}
+                        />
+                      ))}
+                    </div>
+                    {/* Desktop: count-aware rows, evenly spaced */}
+                    <div className="hidden md:flex md:flex-col md:gap-4">
+                      {(() => {
+                        const rows = splitRepsIntoRows(group.experts.length);
+                        let cursor = 0;
+                        return rows.map((rowSize, rowIdx) => {
+                          const rowExperts = group.experts.slice(cursor, cursor + rowSize);
+                          cursor += rowSize;
+                          return (
+                            <div key={rowIdx} className="flex justify-center gap-4 flex-wrap">
+                              {rowExperts.map((expert) => (
+                                <div key={expert.id} className="w-[180px]">
+                                  <ExpertCardMinimal
+                                    expert={expert}
+                                    autoExpand={highlightBrandRep === expert.slug}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
                   </div>
                 </motion.div>
               )}
