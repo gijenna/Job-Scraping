@@ -109,6 +109,12 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
     confirmed: 'bg-green-500/20 text-green-300 border-green-500/30',
   };
 
+  const visibleEntries = brandEntries.filter((b) =>
+    showSaved ? !!b.expert.saved_for_later : !b.expert.saved_for_later
+  );
+  const savedCount = brandEntries.filter((b) => b.expert.saved_for_later).length;
+  const activeCount = brandEntries.length - savedCount;
+
   if (brandEntries.length === 0) {
     return (
       <div className="bg-events-card rounded-lg border border-events-cream/10 p-8 text-center">
@@ -120,18 +126,43 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <Building2 className="w-5 h-5 text-events-yellow" />
           <h3 className="font-display text-lg font-bold text-events-cream">
             Brand Partners
           </h3>
-          <span className="text-events-cream/40 text-sm">({brandEntries.length})</span>
+          <span className="text-events-cream/40 text-sm">({visibleEntries.length})</span>
+        </div>
+        <div className="flex items-center gap-1 bg-events-card border border-events-cream/10 rounded-lg p-1">
+          <Button
+            size="sm"
+            variant={!showSaved ? "secondary" : "ghost"}
+            onClick={() => setShowSaved(false)}
+            className="h-7 text-xs"
+          >
+            Active ({activeCount})
+          </Button>
+          <Button
+            size="sm"
+            variant={showSaved ? "secondary" : "ghost"}
+            onClick={() => setShowSaved(true)}
+            className="h-7 text-xs"
+          >
+            <Bookmark className="w-3 h-3 mr-1" /> Saved ({savedCount})
+          </Button>
         </div>
       </div>
 
+      {visibleEntries.length === 0 ? (
+        <div className="bg-events-card rounded-lg border border-events-cream/10 p-8 text-center">
+          <p className="text-events-cream/40 text-sm">
+            {showSaved ? "No brands saved for later." : "All brands are saved for later."}
+          </p>
+        </div>
+      ) : (
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {brandEntries.map((brand) => {
+        {visibleEntries.map((brand) => {
           const brandPeople = getBrandPeople(brand.brandName, brand.expert.id);
           return (
             <div
