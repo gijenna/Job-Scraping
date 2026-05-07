@@ -12,6 +12,8 @@ interface Props {
   /** Fires earlier than onRevealed, right as the kick-off line settles,
    *  so the page can fade in the rest of the invite copy in sync. */
   onInvitePop?: () => void;
+  /** Recording-only: drive the splash from an exact timeline position. */
+  clipSeekMs?: number;
   /** Presenter logo shown under the lockup, replacing the "present" wordmark.
    *  When provided, an `@ / [logo] / RiNo` style stack is rendered. */
   presenter?: {
@@ -101,11 +103,19 @@ const BasecampFireOnly = ({ className = "" }: { className?: string }) => (
  *   5.8s+      Existing star burst, "presents" wordmark, "Out of Office"
  *              title, and Outside Days kick-off pop play unchanged
  */
-const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) => {
-  const [revealed, setRevealed] = useState(false);
-  const [sunsetReady, setSunsetReady] = useState(false);
+const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekMs }: Props) => {
+  const isClipSeeking = typeof clipSeekMs === "number";
+  const [revealed, setRevealed] = useState(isClipSeeking && clipSeekMs >= 10800);
+  const [sunsetReady, setSunsetReady] = useState(isClipSeeking);
 
   useEffect(() => {
+    if (!isClipSeeking) return;
+    setSunsetReady(true);
+    setRevealed(clipSeekMs >= 10800);
+  }, [clipSeekMs, isClipSeeking]);
+
+  useEffect(() => {
+    if (isClipSeeking) return;
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
@@ -115,11 +125,12 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       onRevealed?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onRevealed, sunsetReady]);
+  }, [isClipSeeking, onRevealed, sunsetReady]);
 
   // Earlier callback: fires right as the kick-off line settles so the rest
   // of the invite copy can fade in alongside it.
   useEffect(() => {
+    if (isClipSeeking) return;
     const reduced = typeof window !== "undefined"
       && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!reduced && !sunsetReady) return;
@@ -128,9 +139,10 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       onInvitePop?.();
     }, delay);
     return () => clearTimeout(t);
-  }, [onInvitePop, sunsetReady]);
+  }, [isClipSeeking, onInvitePop, sunsetReady]);
 
   useEffect(() => {
+    if (isClipSeeking) return;
     const img = new Image();
     img.src = "/bg-sunset.jpg";
     const markReady = () => setSunsetReady(true);
@@ -145,7 +157,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       img.onload = null;
       img.onerror = null;
     };
-  }, []);
+  }, [isClipSeeking]);
 
   // Sparks emitted from the fire. Each has an angle, distance, size, color, and delay.
   // They arc outward like real embers. Tightened window to keep pacing snappy.
@@ -211,11 +223,43 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
   const NEON_PULSE_DELAY_S = 7.6;
 
   return (
-    <div className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"}`}>
+    <div
+      className={`w-full flex flex-col items-center justify-center py-10 select-none ${sunsetReady ? "bmp-intro-ready" : "bmp-intro-paused"} ${isClipSeeking ? "bmp-clip-seek" : ""}`}
+    >
       <style>{`
         /* ===== NEW: Fire / spark / kite splash ===== */
 
         .bmp-intro-paused * {
+          animation-play-state: paused !important;
+        }
+        .bmp-clip-seek,
+        .bmp-clip-seek * {
+          animation-play-state: paused !important;
+          transition: none !important;
+        }
+        .bmp-clip-seek .bmp-splash-stage,
+        .bmp-clip-seek .bmp-splash-sunset,
+        .bmp-clip-seek .bmp-splash-fire,
+        .bmp-clip-seek .bmp-spark,
+        .bmp-clip-seek .bmp-hero-spark,
+        .bmp-clip-seek .bmp-kite,
+        .bmp-clip-seek .bmp-kite-wings,
+        .bmp-clip-seek .bmp-kite-img,
+        .bmp-clip-seek .bmp-trail,
+        .bmp-clip-seek .bmp-burst-star,
+        .bmp-clip-seek .bmp-od-stacked,
+        .bmp-clip-seek .bmp-presenter-splash,
+        .bmp-clip-seek .bmp-bloom-left,
+        .bmp-clip-seek .bmp-bloom-right,
+        .bmp-clip-seek .bmp-divider-l,
+        .bmp-clip-seek .bmp-divider-r,
+        .bmp-clip-seek .bmp-x,
+        .bmp-clip-seek .bmp-presents,
+        .bmp-clip-seek .bmp-presenter,
+        .bmp-clip-seek .bmp-presenter-logo,
+        .bmp-clip-seek .bmp-title,
+        .bmp-clip-seek .bmp-flame-outer,
+        .bmp-clip-seek .bmp-flame-inner {
           animation-play-state: paused !important;
         }
 
@@ -639,7 +683,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter }: Props) 
       )}
 
       {/* Steady-state lockup (logos land here) */}
-      <div className="relative w-full flex flex-col items-center">
+      <div className="bmp-steady-lockup relative w-full flex flex-col items-center">
         <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-3xl px-4 text-center">
           <div className="bmp-bloom-left flex items-center justify-end flex-1 min-w-0">
             <a href="https://basecampjobs.com" target="_blank" rel="noopener noreferrer" aria-label="Basecamp Match">
