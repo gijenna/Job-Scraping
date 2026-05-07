@@ -147,14 +147,20 @@ serve(async (req) => {
       }
     }
 
-    // --- Google Sheets sync (city-specific) ---
+    // --- Google Sheets sync ---
+    // Brand reps go to a dedicated brand-reps sheet/tab; everyone else to the city sheet.
     const serviceAccountKeyStr = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_KEY');
     const citySlug = (expert.city_slug || '').toLowerCase();
+    const isBrandRep = expert.is_brand_rep === true || expert.expert_type === 'brand_rep';
+    const brandRepsSheetId = Deno.env.get('GOOGLE_SPREADSHEET_ID_BRAND_REPS');
     const sheetIdMap: Record<string, string | undefined> = {
       denver: Deno.env.get('GOOGLE_SPREADSHEET_ID_DENVER'),
       portland: Deno.env.get('GOOGLE_SPREADSHEET_ID_PORTLAND'),
     };
-    const spreadsheetId = sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID');
+    const spreadsheetId = isBrandRep
+      ? brandRepsSheetId
+      : (sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID'));
+    const sheetTabName = isBrandRep ? 'Brand Reps' : 'Sheet1';
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
@@ -185,7 +191,7 @@ serve(async (req) => {
         ];
 
         const appendRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName)}!A1:append?valueInputOption=USER_ENTERED`,
           {
             method: 'POST',
             headers: {
