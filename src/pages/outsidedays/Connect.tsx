@@ -24,11 +24,11 @@ const Connect = () => {
     (async () => {
       try {
         const { session } = await candidateMe();
-        if (session?.subject) { setMe(session.subject); setMode("signed_in"); }
+        if (session?.subject) { nav("/outsidedays26/connect/home"); return; }
       } catch {}
       setLoading(false);
     })();
-  }, []);
+  }, [nav]);
 
   if (loading) return <div className="min-h-screen bg-events-teal text-events-cream flex items-center justify-center font-body">Loading...</div>;
 
@@ -39,10 +39,9 @@ const Connect = () => {
           <h1 className="font-afterparty text-4xl md:text-5xl text-events-cream mb-2 text-center">Outside Days</h1>
           <p className="text-center font-body text-events-cream/70 mb-8 text-sm">Career fair connections, Denver 26.</p>
 
-          {mode === "signed_in" && me && <SignedIn me={me} onEdit={() => nav("/outsidedays26/connect/profile")} />}
           {mode === "choice" && <Choice onNew={() => setMode("new")} onReturning={() => setMode("returning")} />}
-          {mode === "new" && <NewSignup toast={toast} onDone={(c) => { setMe(c); setMode("signed_in"); }} onBack={() => setMode("choice")} />}
-          {mode === "returning" && <Returning toast={toast} onDone={(c) => { setMe(c); setMode("signed_in"); }} onBack={() => setMode("choice")} />}
+          {mode === "new" && <NewSignup toast={toast} onDone={() => nav("/outsidedays26/connect/home")} onBack={() => setMode("choice")} />}
+          {mode === "returning" && <Returning toast={toast} onDone={() => nav("/outsidedays26/connect/home")} onBack={() => setMode("choice")} />}
         </div>
       </div>
     </ImpersonationGate>

@@ -14,6 +14,7 @@ import {
   JOB_TYPES, REMOTE_PREFERENCES, WORKPLACE_TYPES,
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
+import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
@@ -159,6 +160,17 @@ const ConnectProfile = () => {
               <Field label="Where to?"><Input value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholder="e.g. PNW, CO, anywhere" /></Field>
             </Row>
             <Field label="Min pay rate (optional)"><Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" /></Field>
+          </Section>
+
+          <Section title="Dream companies">
+            <p className="text-xs font-body text-events-cream/60 -mt-1">Type a company name. Brands at this event show first.</p>
+            <BubbleLogoPicker
+              value={(c.dream_companies?.names) || []}
+              domains={(c.dream_companies?.domains) || {}}
+              suggestionEventSlug="denver26"
+              onChange={(names, domains) => set("dream_companies", { names, domains })}
+              placeholder="Patagonia, Yeti, REI..."
+            />
           </Section>
 
           <Section title="Resume">

@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload } from "lucide-react";
 import ExpertLivePreview from "./ExpertLivePreview";
 import ShareCardButtons from "./ShareCardButtons";
+import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 
 interface ExpertIntakeFormProps {
   expertId?: string;
@@ -611,30 +612,16 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
 
           <div className="space-y-2">
             <Label className="text-events-cream">Previous Companies</Label>
-            <p className="text-events-cream/40 text-xs">Comma separated, we'll show their logos. Add a domain below if the logo doesn't load.</p>
-            <Input value={form.previous_companies} onChange={e => update('previous_companies', e.target.value)}
-              className="bg-events-card border-events-cream/20 text-events-cream" placeholder="Nike, REI, Patagonia" />
-            {form.previous_companies && form.previous_companies.split(',').map(c => c.trim()).filter(Boolean).map(company => (
-              <div key={company} className="flex items-center gap-2">
-                <img
-                  src={getCompanyLogoUrl(company, form.company_domains)}
-                  alt=""
-                  className="w-5 h-5 rounded-sm bg-white object-contain shrink-0"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  onLoad={(e) => { (e.target as HTMLImageElement).style.display = 'block'; }}
-                />
-                <span className="text-events-cream/60 text-xs shrink-0 w-20 truncate">{company}</span>
-                <Input
-                  value={form.company_domains[company] || ''}
-                  onChange={e => {
-                    const domains = { ...form.company_domains, [company]: e.target.value };
-                    update('company_domains', domains);
-                  }}
-                  className="bg-events-card border-events-cream/20 text-events-cream text-xs h-8"
-                  placeholder={`Domain (e.g. ${company.toLowerCase().replace(/\s/g, '')}.com)`}
-                />
-              </div>
-            ))}
+            <p className="text-events-cream/40 text-xs">Type a company. Logos load automatically. Click ⚙ on a chip to override the URL.</p>
+            <BubbleLogoPicker
+              value={form.previous_companies ? form.previous_companies.split(',').map((c: string) => c.trim()).filter(Boolean) : []}
+              domains={form.company_domains || {}}
+              onChange={(names, domains) => {
+                update('previous_companies', names.join(', '));
+                update('company_domains', domains);
+              }}
+              placeholder="Nike, REI, Patagonia..."
+            />
           </div>
 
           <div className="space-y-2">
