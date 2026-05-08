@@ -42,6 +42,7 @@ const ConnectHome = () => {
   const [view, setView] = useState<View>(() => (getCookie(VIEW_COOKIE) === "list" ? "list" : "map"));
   const [selected, setSelected] = useState<MapBrand | null>(null);
   const [showExpertList, setShowExpertList] = useState(false);
+  const [logExpert, setLogExpert] = useState<any | null>(null);
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
   const { layouts } = useEventMapLayouts(EVENT_SLUG, "live");
@@ -89,6 +90,14 @@ const ConnectHome = () => {
                 </button>
               ))}
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => nav("/outsidedays26/connect/connections")}
+              className="text-events-cream/80 text-xs"
+            >
+              Connections
+            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -142,8 +151,8 @@ const ConnectHome = () => {
           )}
         </main>
 
-        {/* Brand modal (existing component, read-only by design) */}
-        <MapBrandPanel brand={selected} onClose={() => setSelected(null)} />
+        {/* Brand modal (candidate mode for tap-to-log) */}
+        <MapBrandPanel brand={selected} onClose={() => setSelected(null)} candidateMode />
 
         {/* Expert zone list */}
         {showExpertList && (
@@ -153,14 +162,17 @@ const ConnectHome = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="sticky top-0 bg-events-teal/95 backdrop-blur px-4 py-3 border-b border-events-cream/10 flex items-center justify-between">
-                <h2 className="font-display text-lg">Industry Expert Zone</h2>
+                <div>
+                  <h2 className="font-display text-lg">Industry Expert Zone</h2>
+                  <p className="text-[11px] font-body text-events-cream/60">Tap a face to log a connection.</p>
+                </div>
                 <button onClick={() => setShowExpertList(false)} className="w-8 h-8 rounded-full bg-events-cream/10 flex items-center justify-center">
                   <X className="w-4 h-4" />
                 </button>
               </div>
               <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {experts.map((e) => (
-                  <ExpertCardMinimal key={e.id} expert={e} />
+                  <ExpertCardMinimal key={e.id} expert={e} disableExpand onClick={() => setLogExpert(e)} />
                 ))}
                 {experts.length === 0 && (
                   <p className="col-span-full text-center text-events-cream/50 font-body text-sm py-12">
