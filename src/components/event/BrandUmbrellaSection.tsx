@@ -48,7 +48,26 @@ function normalizeUrl(url: string | undefined | null): string | null {
 const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "pnw26", highlightBrandRep }: BrandUmbrellaSectionProps) => {
   const [expandedBrands, setExpandedBrands] = useState<Set<string>>(new Set());
   const { isAdmin, settings } = useEditableTextContext();
+  const { brands: mapBrands, addBrand, updateBrand } = useEventMapBrands(eventSlug);
   const highlightRef = useRef<HTMLDivElement>(null);
+
+  const findMapBrand = (company: string): MapBrand | undefined => {
+    const norm = company.trim().toLowerCase();
+    return mapBrands.find((b) => b.name.trim().toLowerCase() === norm);
+  };
+
+  const persistHiringField = async (
+    company: string,
+    field: "offers_remote" | "currently_hiring" | "culture_blurb",
+    value: string | null,
+  ) => {
+    const existing = findMapBrand(company);
+    if (existing) {
+      await updateBrand(existing.id, { [field]: value } as any);
+    } else {
+      await addBrand({ name: company, [field]: value } as any);
+    }
+  };
 
   // Group by company
   const groups: BrandGroup[] = [];
