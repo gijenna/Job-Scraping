@@ -145,6 +145,17 @@ const ConnectProfile = () => {
             <Field label="Portfolio URL"><Input value={c.portfolio_url || ""} onChange={(e) => set("portfolio_url", e.target.value)} placeholder="https://..." /></Field>
           </Section>
 
+          <Section title="Skills & niches">
+            <SkillsPicker
+              value={Array.isArray(c.areas_of_expertise) ? c.areas_of_expertise : []}
+              onChange={(v) => set("areas_of_expertise", v)}
+            />
+            <NichePicker
+              value={Array.isArray(c.niche_experience) ? c.niche_experience : []}
+              onChange={(v) => set("niche_experience", v)}
+            />
+          </Section>
+
           <Section title="Looking for">
             <Field label="Dream role title"><Input value={c.dream_role_title || ""} onChange={(e) => set("dream_role_title", e.target.value)} /></Field>
             <Field label="Job types open to">
