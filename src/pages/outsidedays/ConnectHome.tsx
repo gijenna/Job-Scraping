@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { X } from "lucide-react";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
+import { candidateMe } from "@/lib/connect-session";
 import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import { useDenverExperts } from "@/hooks/useDenverExperts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
