@@ -784,7 +784,7 @@ const BasecampMatchPopflyLogo = ({ onRevealed, onInvitePop, presenter, clipSeekM
             Out of Office
           </h2>
           <div className="bmp-title mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm sm:text-base italic tracking-wide" style={{ color: "#F5E6D3", opacity: 0.9 }}>
-            <span>An official</span>
+            <span>An</span>
             <img
               src={outsideDaysLogo}
               alt="Outside Days"
