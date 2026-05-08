@@ -22,6 +22,9 @@ const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   portland: { image: heroPortland },
 };
 
+const normalizeDenverBrandName = (value: string, slug: string) =>
+  slug === 'denver' ? value.replace(/\bUC\s+Health\b/g, 'UCHealth') : value;
+
 const CITY_EVENT_DATA: Record<string, {
   tagline: string;
   yearNote: string;
@@ -179,7 +182,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
   const cityName = city?.name || 'Your City';
   const eventTitle = city?.event_title || 'GATHER';
   const heroMedia = CITY_HEROES[citySlug];
-  const brandName = expert?.current_company || 'Your Company';
+  const brandName = normalizeDenverBrandName(expert?.current_company || 'Your Company', citySlug);
   // If full_name differs from current_company, we have a known rep
   const hasKnownRep = expert && expert.full_name && expert.current_company && expert.full_name !== expert.current_company;
   const repFirstName = hasKnownRep ? expert.full_name.split(' ')[0] : '';
