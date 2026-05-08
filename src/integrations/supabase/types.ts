@@ -539,36 +539,45 @@ export type Database = {
       event_map_brands: {
         Row: {
           created_at: string
+          culture_blurb: string | null
+          currently_hiring: string | null
           description: string | null
           event_slug: string
           id: string
           is_activation: boolean
           logo_url: string | null
           name: string
+          offers_remote: string | null
           sponsor_brand_id: string | null
           table_count: number
           website_url: string | null
         }
         Insert: {
           created_at?: string
+          culture_blurb?: string | null
+          currently_hiring?: string | null
           description?: string | null
           event_slug?: string
           id?: string
           is_activation?: boolean
           logo_url?: string | null
           name: string
+          offers_remote?: string | null
           sponsor_brand_id?: string | null
           table_count?: number
           website_url?: string | null
         }
         Update: {
           created_at?: string
+          culture_blurb?: string | null
+          currently_hiring?: string | null
           description?: string | null
           event_slug?: string
           id?: string
           is_activation?: boolean
           logo_url?: string | null
           name?: string
+          offers_remote?: string | null
           sponsor_brand_id?: string | null
           table_count?: number
           website_url?: string | null

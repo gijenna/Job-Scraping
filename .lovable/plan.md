@@ -1,78 +1,46 @@
-## 1. Archive brand partner cards in the Expert CRM
+## Goal
+Add three new fields (`offers_remote`, `currently_hiring`, `culture_blurb`) to brands so they can be edited from BOTH the admin map (`/admin/event-map`) and the "Meet the Teams" section on `/outsidedays26`. Edits in one place reflect in the other. Candidate-facing display is admin-only for now (visible to public only once an admin fills them in - actually, per spec, "remain only viewable to admin unless/until I edit them" - i.e. once filled, they show publicly).
 
-Mirror how past-event experts are handled today: keep the data, just hide them from the active list with an "Archived" toggle.
+## Storage (single source of truth)
+Use the existing `event_map_brands` table (denver26 rows already match the brands shown on Meet the Teams). Add three nullable columns via migration:
 
-- In `src/components/experts/BrandDashboard.tsx`, add an `archived` filter (defaulting to hiding archived brands) plus a small "Show archived" toggle and an "Archive" action on each brand card (next to the existing edit/delete).
-- Archive state stored on the brand expert row. We'll add a nullable `archived_at timestamptz` column to `experts` (covers both brands and any future expert archiving) via migration; `null` = active, timestamp = archived. Default queries on the live event pages already filter by `event_assignments`, so this only affects the CRM listing.
-- "Archive" sets `archived_at = now()`; "Restore" clears it. Existing delete stays as a hard-delete.
+- `offers_remote text` (allowed values: 'Fully remote', 'Hybrid', 'In-office only', 'Varies by role')
+- `currently_hiring text` (allowed values: 'Yes, actively hiring', 'Not actively hiring', 'Always open to great people')
+- `culture_blurb text` (max 280 chars enforced in UI)
 
-This way you can stash brands from past events without losing their reps or contact info, just like archiving a person.
+No CHECK constraints (per project rules - validate in UI). No new RLS needed (table already has auth update policy).
 
-## 2. Even spacing on the live "Meet the Teams" rep grid
+## Admin Map edit form (`src/pages/EventMapAdmin.tsx`)
+In the existing brand edit row, after the Sponsor cell and before Actions, the row already wraps. Instead of adding columns, expand the edit UI by appending a "Hiring info" sub-row that appears below the brand row when `isEditing === brand.id`, spanning all columns via a `<TableRow>` with a `colSpan` cell containing:
+- Label "Hiring info"
+- Select for `offers_remote` with the 4 options + "(none)"
+- Helper: "What is your remote work policy?"
+- Select for `currently_hiring` with the 3 options + "(none)"
+- Helper: "What's your current hiring status?"
+- Textarea (maxLength 280) for `culture_blurb` with live char counter (`{n}/280`)
+- Helper: "One or two sentences about your culture or what you offer. Candidates will see this on your brand card."
 
-Current behavior: `BrandUmbrellaSection.tsx` line 145 uses a fixed `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5` grid, so 1–4 reps cling to the left and 5 looks correct only by accident.
+`editFields` initializer (line 203) and `saveEdit` already pass through arbitrary fields, so just add the three keys.
 
-Replace the fixed grid with a count-aware layout (desktop ≥ md):
+## Meet the Teams editing (`src/components/event/BrandUmbrellaSection.tsx`)
+Pass `mapBrands` from `EventOutsideDays26.tsx` (already fetched as `mapBrands`) down through `FeaturedTeamsSection` to `BrandUmbrellaSection`. For each group, match by case-insensitive company name to a `MapBrand` row.
 
-| Reps | Layout |
-|------|--------|
-| 1 | 1 centered |
-| 2 | 2 evenly spaced |
-| 3 | 3 evenly spaced |
-| 4 | 4 evenly spaced |
-| 5 | 5 across (current squished look) |
-| 6 | 3 + 3 |
-| 7 | 4 + 3 |
-| 8 | 4 + 4 |
-| 9 | 5 + 4 |
-| 10 | 5 + 5 |
-| 11+ | 5 per row, last row centered |
+Replace the current ad-hoc per-brand `event_settings` careers/blurb editor with the canonical fields:
+- If the matched map brand has any of the three values, show them on the card header (small text under company name): a "Hiring" badge, remote-policy chip, and the blurb.
+- For admin: show inline editors (a small dropdown + dropdown + textarea) right under the header, persisting via `supabase.from('event_map_brands').update(...).eq('id', mapBrand.id)`. If no matching row exists, show a "Add hiring info" button that inserts a new row (`event_slug: 'denver26'`, `name: group.company`, the field) so subsequent edits update it.
+- Use `useEventMapBrands('denver26')` inside the component (or pass setter from parent) so updates refresh both views. Simplest: pass `mapBrands` + an `onUpdateBrand(id, patch)` callback through from the page, which already has access to the hook.
 
-Implementation: a small helper `splitRepsIntoRows(count)` returns an array of row sizes; render one flex row per group with `justify-center` and a fixed card width (`w-[160px] md:w-[180px]`) so spacing stays even regardless of count. Mobile (<md) keeps a simple 2-column grid so cards don't get tiny.
-
-No changes to card visuals, expand/collapse, or the bubble logos above.
-
-## 3. Brand rep submissions → Google Sheet (new spreadsheet, existing tab)
-
-You confirmed a different spreadsheet entirely. Two things I need from you before I wire this up:
-
-1. **Spreadsheet ID** of the new sheet (the long string in the URL between `/d/` and `/edit`). I'll store it as a new secret `GOOGLE_SPREADSHEET_ID_BRAND_REPS`.
-2. **Tab name** to append into (e.g. `BrandReps` or `Submissions`). I'll add it as a constant in the function — easy to change later.
-
-Also: please share the sheet with the existing service account email (the one used by `sync-expert`) as **Editor** so it has write access. If you're not sure of that email, I can pull it from the `GOOGLE_SERVICE_ACCOUNT_KEY` secret and tell you.
-
-Once you confirm those, I'll:
-
-- Update `supabase/functions/sync-expert/index.ts` so when the submitted expert `is_brand_rep === true`, it appends to `${GOOGLE_SPREADSHEET_ID_BRAND_REPS}` / `<tab>!A1:append` instead of (or in addition to — your call) the per-city sheet.
-- Match the column order to whatever headers already exist in that tab. If you tell me the column headers, I'll map them exactly; otherwise I'll mirror the existing expert sync columns.
-
-### Question before I proceed
-For brand rep submissions, do you want them to **only** go to the new brand-reps sheet, or **both** the city sheet AND the brand-reps sheet? Default I'd pick: **only the brand-reps sheet** so the city tabs stay clean.
-
-## Technical notes
-
-- Migration: `ALTER TABLE experts ADD COLUMN archived_at timestamptz;` (nullable, no backfill needed).
-- `BrandDashboard` filters: `brandEntries.filter(b => showArchived ? true : !b.expert.archived_at)`.
-- Row-splitter pseudocode:
-  ```ts
-  const ROW_PATTERNS: Record<number, number[]> = {
-    1:[1], 2:[2], 3:[3], 4:[4], 5:[5],
-    6:[3,3], 7:[4,3], 8:[4,4], 9:[5,4], 10:[5,5],
-  };
-  function splitReps(n: number) {
-    if (ROW_PATTERNS[n]) return ROW_PATTERNS[n];
-    const rows = []; let left = n;
-    while (left > 5) { rows.push(5); left -= 5; }
-    rows.push(left);
-    return rows;
-  }
-  ```
-- New secret needed: `GOOGLE_SPREADSHEET_ID_BRAND_REPS` (added via add_secret tool after you give me the ID).
+Public visibility rule: render each of the three values only if non-empty. Admin always sees the editor.
 
 ## Files touched
-- `supabase/migrations/<new>.sql` — add `archived_at` column
-- `src/components/experts/BrandDashboard.tsx` — archive toggle + actions
-- `src/components/event/BrandUmbrellaSection.tsx` — even-spacing row layout
-- `supabase/functions/sync-expert/index.ts` — brand-rep sheet branch
+- New migration: add 3 columns to `event_map_brands`.
+- `src/hooks/useEventMapBrands.ts` - no change (already exposes `updateBrand`, `addBrand`).
+- `src/pages/EventMapAdmin.tsx` - add Hiring info sub-row in edit mode + extend `editFields` init.
+- `src/pages/EventOutsideDays26.tsx` - pass `mapBrands` and `updateBrand`/`addBrand` into `FeaturedTeamsSection`.
+- `src/components/event/FeaturedTeamsSection.tsx` - forward props to `BrandUmbrellaSection`.
+- `src/components/event/BrandUmbrellaSection.tsx` - lookup map brand by company name; render values; admin inline editor wired to `updateBrand`/`addBrand`.
 
-Please reply with: **(a) the new spreadsheet ID, (b) the tab name, (c) only-new-sheet vs both sheets** and I'll execute.
+## Notes
+- No em dashes in any new copy.
+- Existing brand card visual structure (logo, name, table count, website, reps grid) is untouched.
+- The legacy `event_settings`-based `brand_*_careers_url` / `brand_*_hiring_blurb` editors are kept as-is to avoid disturbing the existing "website link" workflow you mentioned.
