@@ -1,179 +1,110 @@
-# Phase 2 — Taxonomies, Bubble Logo Selector, Map/List View
+## Phase 3 — Connections Flow
 
-## Scope
+Extend the brand modal and expert card with tap-to-log entry points, build a mobile-first 3-step connection form, add a "My Connections" view, and back it with a `connections` edge function. Reuses existing `MapBrandPanel`, `ExpertCard`, brand bubble, and polaroid styling. No new schema (the `connections` table already exists with all needed columns).
 
-Three deliverables, all reusing existing infrastructure:
+### 1. Backend — `supabase/functions/connections/index.ts` (new)
 
-1. Expand `src/lib/taxonomies.ts` with the full Phase 2 lists.
-2. Extract the existing inline "company + logo" pattern (currently embedded in `ExpertIntakeForm.tsx`) into one reusable `BubbleLogoPicker` component. Use it in the candidate profile (`dream_companies`) and swap the existing inline usage in the expert form to it (no visual change).
-3. Build the candidate-facing home screen at `/outsidedays26/connect/home` with Map/List toggle, reusing `EventMapCanvas`, `MapBrandPanel`, and the existing expert card components.
+Service-role function gated by the candidate session cookie (reuses `_shared/connect-session.ts`). Actions:
 
-No new tables, no schema changes, no rebuilding of brand cards, brand modal, expert cards, or map canvas.
+- `list` — returns the current candidate's connections, newest first, joined with brand (`event_map_brands`) and expert/rep (`industry_experts`) for display.
+- `create` — inserts a row in `public.connections` with `candidate_id` from the session. Accepts `brand_id`, `brand_rep_id` (industry_experts.id), `expert_id` (industry_experts.id), `private_notes`, `follow_up_direction`, `contact_info_received`, `role_flagged`, `message_to_brand`, `would_want_as_mentor`, `mentor_topics`, `also_talked_to` (stored in private_notes prefix line, since no column exists). Sets `message_sent_at` if `message_to_brand` provided AND client flag `send_now=true`.
+- `update` — partial patch by id, scoped to the candidate. Used to send a deferred note or edit notes later.
+- `delete` — by id, scoped to the candidate.
 
-## 1. Taxonomies (src/lib/taxonomies.ts)
+Validation with zod-style manual checks: caps (`private_notes` 500, `message_to_brand` 500, `follow_up_direction`/`contact_info_received`/`role_flagged`/`mentor_topics` 280). `would_want_as_mentor` boolean. At least one of `brand_id`, `brand_rep_id`, `expert_id` required.
 
-Replace the placeholder `FOCUSES_BY_FIELD` with the full 23-field ladder from the brief. Add:
+Note on schema: the existing `connections` table has no `also_talked_to` column. We'll prepend "Also met: ..." into `private_notes` rather than add a column for now; we can promote it to a real column in a later migration if needed.
 
-- `NICHES` — 28 entries (alphabetical, as listed).
-- `SKILL_CATEGORIES` — 22 category keys with their entries (full 370-skill list pulled from the linked Google Doc; if the doc is inaccessible at build time, ship the 22 category keys with empty arrays and a `TODO` for Jenna to paste in via admin later. **Decision needed — see open question below.**).
-- Keep existing `POACHABLE_STATUS`, `CAREER_STAGE`, `JOB_TYPES`, `REMOTE_PREFERENCES`, `WORKPLACE_TYPES`.
+### 2. Client helper — extend `src/lib/connect-session.ts`
 
-All exported as `as const` arrays / `Record<string, readonly string[]>` so they can drive typed multi-selects.
+Add: `connectionsList()`, `connectionsCreate(payload)`, `connectionsUpdate(id, patch)`, `connectionsDelete(id)`.
 
-No taxonomies table — kept as constants for now (faster, matches brief's "constants OR table" language). If Jenna later needs admin editing, we lift to a table in a future phase.
+### 3. Brand modal updates — `src/components/event/MapBrandPanel.tsx`
 
-## 2. Reusable BubbleLogoPicker
+Reuse the existing modal. Add (only when wrapped by `ImpersonationGate` / inside the candidate flow — gated by a new optional prop `candidateMode?: boolean` so admin/public uses are unchanged):
 
-**New file:** `src/components/connect/BubbleLogoPicker.tsx`
+- Top-of-modal cream instruction line: *"Tap a person below to log a connection, or tap the brand logo to log a brand-level note."*
+- Badges row beneath brand name:
+  - "Currently hiring" pill when `currently_hiring` is `Yes, actively hiring` or `Always open to great people` (events-coral bg).
+  - "Featured" pill when `is_featured` (subtle yellow border).
+  - Remote indicator (Wifi icon + label) from `offers_remote` when present.
+- `culture_blurb` rendered as a left-bordered quote block in cream/70.
+- Brand logo button → opens `<ConnectionForm mode="brand" brand={brand} />`.
+- Each rep tile becomes a button → opens `<ConnectionForm mode="brand_rep" brand={brand} rep={expert} />`.
 
-Behavior (mirrors the existing inline pattern in `ExpertIntakeForm.tsx` lines 615–635):
+### 4. Expert card updates — `src/components/experts/ExpertCard.tsx`
 
-- Controlled component: `value: string[]` (company names) + `domains: Record<string,string>` + `onChange`.
-- Text input with autocomplete suggestions. Suggestions are pre-populated from `event_map_brands` for the current event slug (queried once on mount), shown at the top of the dropdown.
-- On commit (Enter or pick), append to `value`; logo loads via existing `getCompanyLogoUrl(name, domains)` from `src/lib/url-logo.ts`.
-- Each selected company renders as a circular bubble (matches existing visual). Hovering shows an "x" remove and a small URL override input (same UX as the expert form's per-company domain override).
-- If logo fails to load, show text-only chip (already how `getCompanyLogoUrl` falls back).
+Add optional `candidateMode?: boolean` + `onLogConnection?: (expert) => void` props. When set:
+- Render a top instruction line: *"Tap {first name}'s photo to log a connection."*
+- Wrap the polaroid in a `<button>` that calls `onLogConnection(expert)`.
 
-**Refactor:** Replace the inline JSX in `ExpertIntakeForm.tsx` (the "Previously worked at" block, lines ~613–640) with `<BubbleLogoPicker />`. Wire `previous_companies` (comma-string) ↔ `string[]` with a small adapter so the DB shape stays the same. No visual change for admins/experts.
+`ConnectHome.tsx` Expert Zone list passes these props and renders `<ConnectionForm mode="expert" expert={expert} />` on click.
 
-**Used in:** the candidate profile editor (`ConnectProfile.tsx`) for the `dream_companies` field, replacing whatever placeholder is there now.
+### 5. New component — `src/components/connect/ConnectionForm.tsx`
 
-## 3. Candidate Home: Map / List view
+Mobile-first multi-step Sheet (uses existing `@/components/ui/sheet` for bottom-up presentation on mobile, falls back to dialog on md+). Props: `mode: "brand" | "brand_rep" | "expert"`, optional `brand`, `rep`, `expert`, `onClose`, `onSaved`.
 
-**New route:** `/outsidedays26/connect/home` → new page `src/pages/outsidedays/ConnectHome.tsx`. Registered in `App.tsx`. Wrapped in `ImpersonationGate` like the other connect pages. After login, candidates land here (update redirect in `Connect.tsx`).
+Steps (progress bar at top using `Progress` component):
 
-**Top of page:**
+- **Step 1 — Who and what**
+  - Pre-filled, read-only header chip showing the brand/rep/expert.
+  - "Who else did you talk to here?" (Input, optional).
+  - "What did you talk about? (For your eyes only)" (Textarea, 500). Helper: *"This is your private memory aid. Brand will never see this."*
+- **Step 2 — Follow-up**
+  - "How should you follow up?" (Textarea, 280). Helper: *"Email next week? Apply to a specific role? DM on LinkedIn?"*
+  - "Did they give you contact info?" (Textarea, 280). Helper: *"Phone number, email, LinkedIn, business card details, anything you got."*
+  - "Are you applying to a specific role?" (Input, 280). Helper: *"Type the role title here so they can look out for your application."*
+- **Step 3 — branches by mode**
+  - **Brand / brand_rep**: "Leave a trail for {brand.name}". Body copy verbatim from spec (no em dashes already). Textarea 500, two buttons: *Send now* (saves with `message_sent_at = now`) / *I'll write this later* (saves without).
+  - **Expert**: "Mentor potential?". `Yes` / `No` toggle for `would_want_as_mentor`. If Yes, show `mentor_topics` (Textarea, 280). Single *Save* button.
 
-- A two-button toggle: `[Map] [List]`. Persisted per session in the existing `connect-session` cookie via a new `view_pref` field (NOT localStorage — brief forbids it). Implementation: extend `src/lib/connect-session.ts` with a `setViewPref` / `getViewPref` helper that writes to a non-httpOnly companion cookie `od_view`. Default = `Map`.
+After save → toast "Connection logged" and `onSaved()` closes the sheet.
 
-**Map view:**
+Copy rule: every helper string and button label hand-checked for em dashes (none used).
 
-- Render `<EventMapCanvas brands={brands} layouts={layouts} interactive={false} expertZoneExperts={...} onClick={handleBrandClick} />` for `event_slug = "denver26"` (matches admin).
-- `interactive={false}` already disables drag/edit handles in the existing canvas.
-- Wrap in a pinch-to-zoom container. Use `react-zoom-pan-pinch` (small, well-maintained). One new dep.
-- `handleBrandClick(brand)`:
-  - If `brand.name === "Industry Expert Zone"` → open a full-screen sheet listing all experts for the zone using the existing `ExpertCard` grid pattern (reuse `ExpertGrid` if signature matches, otherwise map over `ExpertCard`).
-  - Else → open the existing `MapBrandPanel` (already a side panel/modal pattern used in admin) in read-only mode. Confirms with `MapBrandPanel`'s existing props; if it has admin-only edit affordances, pass a `readOnly` prop (add the prop if missing — small, additive change).
+### 6. New page — `src/pages/outsidedays/ConnectConnections.tsx` at `/outsidedays26/connect/connections`
 
-**List view:**
+Wrapped in `ImpersonationGate`. Header matches `ConnectHome`. Body:
 
-- Alphabetical grid of brand bubble logos (`event_map_brands` for `denver26`, sorted by name). Tap → same `handleBrandClick`. Expert Zone bubble pinned at the bottom.
-- Mobile-first: 3-column grid at 375px, scaling up.
+- Empty state: cream illustration text "No connections yet. Tap a brand or expert on the map to log your first one." with a coral CTA back to `/outsidedays26/connect/home`.
+- List, newest first. Each row: avatar (brand logo OR expert/rep photo polaroid-mini), title line ("{Brand}" or "{Brand} · {Rep name}" or "{Expert name}"), relative time ("2h ago"), 2-line truncated `private_notes`, status chip:
+  - Brand connections: "Note sent" (coral) or "Note not yet sent" (cream/40).
+  - Expert connections: "Mentor flagged" yellow chip when `would_want_as_mentor`.
+- Tap → expands inline editor (reuses `ConnectionForm` in "edit" mode, prefilled with current values; supports send-deferred-note for brand connections, save for all).
 
-**Data hooks reused as-is:** `useEventMapBrands("denver26")`, `useEventMapLayouts("denver26", "published")` (use `published` layout, not `draft`, for candidate view), and the same expert-fetch query used in `EventMapAdmin.tsx` (extracted into a small `useDenverExperts()` hook in `src/hooks/` to avoid duplication).
+### 7. Wiring
 
-## File changes
+- `App.tsx`: register `/outsidedays26/connect/connections`.
+- `ConnectHome.tsx` header: add a "My Connections" pill button (coral) next to Profile.
+- `ConnectHome.tsx` map view: pass `candidateMode` to `MapBrandPanel`. Expert zone modal: pass `candidateMode` + `onLogConnection` to `ExpertCardMinimal` (extend that small component too — same prop shape).
+- Use `consumeImpersonationToken()` semantics already handled by `ImpersonationGate`.
 
-```text
-NEW   src/components/connect/BubbleLogoPicker.tsx
-NEW   src/pages/outsidedays/ConnectHome.tsx
-NEW   src/hooks/useDenverExperts.ts
-EDIT  src/lib/taxonomies.ts                 (full ladders, NICHES, SKILL_CATEGORIES)
-EDIT  src/lib/connect-session.ts            (view pref cookie helpers)
-EDIT  src/components/experts/ExpertIntakeForm.tsx  (swap inline picker for BubbleLogoPicker)
-EDIT  src/pages/outsidedays/ConnectProfile.tsx     (use BubbleLogoPicker for dream_companies)
-EDIT  src/pages/outsidedays/Connect.tsx            (post-login redirect → /connect/home)
-EDIT  src/App.tsx                                  (register /connect/home route)
-EDIT  src/components/event/MapBrandPanel.tsx       (add optional readOnly prop if needed)
-```
+### 8. Files to create / modify
 
-New dep: `react-zoom-pan-pinch`.
+**New**
+- `supabase/functions/connections/index.ts`
+- `src/components/connect/ConnectionForm.tsx`
+- `src/pages/outsidedays/ConnectConnections.tsx`
 
-## Out of scope (later phases)
+**Modified**
+- `src/lib/connect-session.ts` — add connections client.
+- `src/components/event/MapBrandPanel.tsx` — badges, culture quote, instruction line, tappable logo + reps gated by `candidateMode`.
+- `src/components/experts/ExpertCard.tsx` — `candidateMode` + `onLogConnection`.
+- `src/components/experts/ExpertCardMinimal.tsx` — same opt-in props.
+- `src/pages/outsidedays/ConnectHome.tsx` — pass `candidateMode`, "My Connections" link.
+- `src/App.tsx` — new route.
 
-- Connections / journal entries
-- Brand rep filtering, candidate database, follow-up dashboard
-- Email notifications
-- Skills picker UI on the candidate profile (taxonomy ships now; UI lands when we expand the profile editor)
+### 9. Out of scope for this phase
 
-## Open question for Jenna
+- Brand-side viewing of connections / sent notes (phase 4).
+- Sending the deferred-note prompt email to candidates (queued in phase 4).
+- Post-event analytics dashboard.
 
-The 370-skill list lives in a Google Doc. I can't fetch private Google Docs at build time. Two options — please pick one before I start:
+### Open question
 
-**Option A:** You paste the full list into the chat (or share it as plain text), I bake all 370 into `taxonomies.ts`.
+The spec says step 1 has an "also talked to" free-text field but the `connections` table has no matching column. Two choices for this phase:
 
-**Option B:** I ship the 22 category keys with empty skill arrays now, and we build a tiny admin screen later to paste/edit skills in a `taxonomies` DB table.
+- **A (proposed):** Prepend `"Also met: …\n\n"` into `private_notes`. Zero schema change.
+- **B:** Add an `also_talked_to text` column on `public.connections` via migration and store it cleanly.
 
-Recommendation: **Option A** for speed — taxonomies rarely change, constants are simpler, and we can always migrate to a table later.  
-  
-OPTION A: Here are all 370 skills:   
-  
-MARKETING & COMMUNICATIONS
-
-Brand marketing Brand strategy Brand partnerships Branding Communications Content creation Content strategy Copywriting Crisis management Digital marketing Direct mail Email marketing Experiential marketing Field marketing Go-to-market strategy Growth marketing Influencer marketing Integrated marketing Lifecycle marketing Marketing automation Marketing operations Marketing strategy Media buying Paid media Performance marketing PR Product marketing Recruitment marketing Retail marketing SEM SEO Social media management Social media marketing Sports marketing Storytelling Trade shows
-
-## CREATIVE & DESIGN
-
-3D design Activewear design Animation Apparel design Art/Artist Brand voice CAD design Color design Color grading Creative direction Creative production Drawing Editorial (publication) Film photography Footwear design Graphic design Illustration Industrial design Infographics Interior design Lettering Logo design Motion design Mural Outerwear design Package design Packaging design Painting Pattern design Photography Print Print design Product design Sketching Soft goods design Surface pattern design Technical apparel design Technical outerwear design Textile design Typography UX design Video production Visual communication Web design
-
-## SALES & BUSINESS DEVELOPMENT
-
-Account management B2B sales Brand ambassador Business development Channel sales Cold calling Consumer marketing Customer success Direct response Inside sales Key account management Outside sales Prospecting Retail sales Sales Sales enablement Sales management Software sales Territory sales Third party sales Upselling
-
-## CUSTOMER EXPERIENCE
-
-Client experience Customer engagement Customer service Customer service management Guest relations Guest services Help desk Loyalty Reservations Technical support
-
-## PEOPLE, HR & CULTURE
-
-Benefits administration Coaching Compensation DEI Employer branding Facilitation HR HRIS Internal communications Internal investigations Labor relations Leadership coaching Leadership development Mentoring Organizational development Payroll People & culture People management Performance management Recruiting Size inclusion work Talent management Team building Team leadership Training & development
-
-## OPERATIONS & PROJECT MANAGEMENT
-
-Agile Change management Cross functional collaboration Implementation Operational risk Operations management Process improvement Process management Process optimization Program management Project management Property management Resource management Scheduling Scrum Site management SOP development Standard operating procedures Stakeholder management Strategic planning Systems and processes Workflow optimization
-
-## FINANCE & LEGAL
-
-Accounting Audit Bookkeeping Budget management Compliance Contract management Copyright & trademarks Corporate development Demand planning Finance Financial reporting Forecasting Government affairs Insurance and claims Intellectual property (IP) Legal Pricing Risk management Tax Treasury
-
-## TECH & ENGINEERING
-
-AWS Backend development Business intelligence Coding CRM CRM management CSS Cybersecurity Data analysis Data engineering Data modeling Data science Data warehousing Database management DevOps ERP software ETL building Figma Frontend development GraphQL HTML Information architecture IT Java JavaScript Linux Machine learning Mobile app design MySQL NetSuite Oracle PHP PLM Power BI Product management Python Quality assurance React Ruby on Rails SaaS Salesforce SAP Shopify Software development SolidWorks SQL development System administration Tableau Technology architecture Typescript Web development Wireframing
-
-## TOOLS & SOFTWARE
-
-Adobe Illustrator Adobe Suite Airtable Asana Canva Excel Google Ads Google Analytics Google Suite Hubspot InDesign Jira Klaviyo Lightroom Mailchimp Microsoft Office Miro Notion Photoshop PowerPoint Premiere Pro Procreate Quickbooks Salesforce Marketing Cloud SharePoint Sketchup Squarespace Trello Wordpress Zendesk Zoom
-
-## PRODUCT & MANUFACTURING
-
-Apparel development Bill of materials Color development Costing Inventory management Manufacturing Material sourcing Materials testing Patternmaking Procurement Product development Product launch Production Prototyping Quality control Raw material development Regenerative supply development Research and development (R&D) Sewing Sourcing Supply chain Sustainable design practices Technical pack development Vendor management Wholesale
-
-## RETAIL & E-COMMERCE
-
-Assortment planning Buying E-commerce Merchandising Outdoor retail Retail design Retail management Visual merchandising
-
-## WRITING, EDITING & JOURNALISM
-
-Blogging Climate writing Copyediting Copywriting Editing Editorial Fact-checking Freelance writing Ghostwriting Journalism Longform content Proofreading Publishing Script writing SEO copywriting Technical writing Travel writing Writing
-
-## EDUCATION & TRAINING
-
-Adult learning Career coaching Classroom management Coaching Conservation education Curriculum development Environmental education Experiential education Instructional design Learning design LMS Outdoor education Place-based education Public speaking Recreational program development Teaching Trauma-informed work Working with adults Working with children Youth development Youth programming
-
-## OUTDOOR SKILLS & ACTIVITIES
-
-Adaptive recreation Adventure guiding Aiare 1 (avalanche cert) Avalanche forecasting Backcountry guiding Backcountry skills Backpacking Backpacking instructor Camping Canoeing Climbing Cross country guiding Expedition leading Fishing Fishing guiding Gear testing GPS navigation Guiding Hiking Hunting Interpretive guiding Kayak guiding Kayaking Leave No Trace Mountain bike guiding Mountain biking Mountaineering NAI certified Orienteering Outdoor adventure Outdoor leadership Overlanding Paddling Rafting Rock climbing Sea kayaking Search and rescue Skiing Ski instructor Snowboarding Snowboard instructor Trail work Trip leading Whitewater paddling Wilderness first aid (WFA) Wilderness First Responder (WFR) Wilderness guiding Wilderness medicine Wilderness navigation Wilderness skills Wilderness travel
-
-## CONSERVATION, SCIENCE & SUSTAINABILITY
-
-Air and water quality research Archaeology Biology Cartography Citizen science Climate adaptation Conservation Earth science Ecology Environmental engineering Environmental policy Environmental science ESG Field research Forestry Geology GIS Habitat restoration Invasive species removal Land stewardship Marine biology Meteorology Native plants Natural resource management Naturalist Nutrition Public health Sustainability Wildlife
-
-## ADVOCACY, POLICY & NONPROFIT
-
-Advocacy Coalition building Community engagement Corporate philanthropy Corporate social responsibility Fundraising Grant writing Lobbying Nonprofit management Policy Social impact Volunteer management
-
-## HOSPITALITY, TOURISM & EVENTS
-
-Adventure programming Event management Event marketing Event production Heritage tourism Hospitality Hospitality management Hotel management Nature tourism Restaurant management Tour operations Tourism Travel coordination Travel planning
-
-## HEALTH, WELLNESS & RECREATION
-
-Childcare Energy work Fitness Health and wellness Massage therapy Meditation Mental health Mindfulness Nursing Personal trainer Wellness Yoga Yoga instructor
-
-## FIELD & MANUAL WORK
-
-Animal care Animal handling Camp operations Carpentry Chainsaw certified Construction Farming Field work Gardening Horticulture Landscaping Manual labor Outfitting Permitting Prescribed fire management Trip logistics
-
-## LANGUAGES
-
-Bilingual Spanish Other (specify)
+Defaulting to **A** to keep this phase schema-free, easy to promote later if Jenna wants it surfaced separately on the brand-side view.
