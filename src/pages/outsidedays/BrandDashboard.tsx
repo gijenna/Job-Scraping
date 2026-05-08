@@ -7,6 +7,7 @@ import {
   brandRepMe, brandRepLookup, brandRepAddPhoneAndLogin, brandRepLogin, brandRepLogout,
 } from "@/lib/connect-session";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
+import DashboardWorkspace from "@/components/connect/dashboard/DashboardWorkspace";
 
 type Mode = "loading" | "lookup" | "add_phone" | "login" | "signed_in";
 
