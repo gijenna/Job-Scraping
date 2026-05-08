@@ -200,7 +200,7 @@ const EventMapAdmin = () => {
 
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
-    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url });
+    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url, offers_remote: brand.offers_remote ?? null, currently_hiring: brand.currently_hiring ?? null, culture_blurb: brand.culture_blurb ?? null });
   };
 
   const saveEdit = async () => {
