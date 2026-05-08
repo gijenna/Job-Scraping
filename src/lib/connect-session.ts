@@ -65,6 +65,34 @@ export async function candidateAttachUpload(kind: "photo" | "resume", storage_pa
   });
 }
 
+// ---- Connections ----
+export interface ConnectionPayload {
+  brand_id?: string | null;
+  brand_rep_id?: string | null;
+  expert_id?: string | null;
+  also_talked_to?: string;
+  private_notes?: string;
+  follow_up_direction?: string;
+  contact_info_received?: string;
+  role_flagged?: string;
+  message_to_brand?: string;
+  send_now?: boolean;
+  would_want_as_mentor?: boolean | null;
+  mentor_topics?: string;
+}
+export async function connectionsList() {
+  return call<{ connections: any[] }>("connections", { action: "list" });
+}
+export async function connectionsCreate(payload: ConnectionPayload) {
+  return call<{ connection: any }>("connections", { action: "create", ...payload });
+}
+export async function connectionsUpdate(id: string, patch: Partial<ConnectionPayload>, send_now?: boolean) {
+  return call<{ connection: any }>("connections", { action: "update", id, patch, send_now });
+}
+export async function connectionsDelete(id: string) {
+  return call("connections", { action: "delete", id });
+}
+
 // ---- Brand rep auth ----
 export async function brandRepLookup(input: { first_name: string; last_name: string }) {
   return call<{ found: boolean; needs_phone?: boolean; rep_id?: string; ambiguous?: boolean }>(
