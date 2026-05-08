@@ -1,0 +1,1 @@
+UPDATE public.event_map_brands SET name = 'UDisc' WHERE name ILIKE 'udisc';
