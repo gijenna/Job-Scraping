@@ -7,6 +7,7 @@ import {
   brandRepMe, brandRepLookup, brandRepAddPhoneAndLogin, brandRepLogin, brandRepLogout,
 } from "@/lib/connect-session";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
+import DashboardWorkspace from "@/components/connect/dashboard/DashboardWorkspace";
 
 type Mode = "loading" | "lookup" | "add_phone" | "login" | "signed_in";
 
@@ -68,6 +69,26 @@ const BrandDashboard = () => {
     setBusy(false);
   };
 
+  if (mode === "signed_in" && me) {
+    return (
+      <ImpersonationGate>
+        <div className="min-h-screen bg-events-teal text-events-cream px-4 py-6 md:py-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="font-afterparty text-2xl md:text-3xl">Brand Dashboard</h1>
+              <Button
+                variant="ghost" size="sm"
+                onClick={async () => { await brandRepLogout(); setMe(null); setMode("lookup"); }}
+                className="text-events-cream/70 hover:text-events-cream"
+              >Sign out</Button>
+            </div>
+            <DashboardWorkspace rep={me} />
+          </div>
+        </div>
+      </ImpersonationGate>
+    );
+  }
+
   return (
     <ImpersonationGate>
       <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-16">
@@ -102,17 +123,6 @@ const BrandDashboard = () => {
                 <Input inputMode="numeric" maxLength={4} value={last4} onChange={(e) => setLast4(e.target.value.replace(/[^0-9]/g, ""))} />
               </Field>
               <Button onClick={doLogin} disabled={busy || last4.length !== 4} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream">Sign in</Button>
-            </Card>
-          )}
-
-          {mode === "signed_in" && me && (
-            <Card>
-              <p className="font-display text-xl">Welcome, {me.full_name}.</p>
-              <p className="text-sm font-body text-events-cream/70">{me.current_company || "Brand rep"} - {me.job_title || ""}</p>
-              <div className="bg-events-cream/5 border border-events-cream/10 rounded-xl p-4 text-sm font-body text-events-cream/70">
-                Your full dashboard (candidate browse, filters, starring, notes) ships in the next phase. You're signed in and ready.
-              </div>
-              <Button variant="ghost" onClick={async () => { await brandRepLogout(); setMe(null); setMode("lookup"); }} className="w-full text-events-cream/70">Sign out</Button>
             </Card>
           )}
         </div>

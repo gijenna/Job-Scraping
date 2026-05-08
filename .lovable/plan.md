@@ -1,110 +1,70 @@
-## Phase 3 — Connections Flow
+# Phase 4 — Brand Dashboard
 
-Extend the brand modal and expert card with tap-to-log entry points, build a mobile-first 3-step connection form, add a "My Connections" view, and back it with a `connections` edge function. Reuses existing `MapBrandPanel`, `ExpertCard`, brand bubble, and polaroid styling. No new schema (the `connections` table already exists with all needed columns).
+Build the post-login experience at `/outsidedays26/dashboard`. Brand reps already authenticate via the existing `BrandDashboard.tsx` shell (lookup → phone → last4 → signed in); right now once signed in they see a placeholder card. We replace that placeholder with the real dashboard.
 
-### 1. Backend — `supabase/functions/connections/index.ts` (new)
+## What to build
 
-Service-role function gated by the candidate session cookie (reuses `_shared/connect-session.ts`). Actions:
+### 1. Backend — new edge function `supabase/functions/brand-dashboard/index.ts`
 
-- `list` — returns the current candidate's connections, newest first, joined with brand (`event_map_brands`) and expert/rep (`industry_experts`) for display.
-- `create` — inserts a row in `public.connections` with `candidate_id` from the session. Accepts `brand_id`, `brand_rep_id` (industry_experts.id), `expert_id` (industry_experts.id), `private_notes`, `follow_up_direction`, `contact_info_received`, `role_flagged`, `message_to_brand`, `would_want_as_mentor`, `mentor_topics`, `also_talked_to` (stored in private_notes prefix line, since no column exists). Sets `message_sent_at` if `message_to_brand` provided AND client flag `send_now=true`.
-- `update` — partial patch by id, scoped to the candidate. Used to send a deferred note or edit notes later.
-- `delete` — by id, scoped to the candidate.
+Service-role function gated by the existing `od_sid` brand_rep session cookie (reuses `_shared/connect-session.ts`). Resolves the rep's brand by looking up the rep's `current_company` and matching it against `event_map_brands.name` for `denver26` (case-insensitive); falls back to first brand the rep is assigned to. Actions:
 
-Validation with zod-style manual checks: caps (`private_notes` 500, `message_to_brand` 500, `follow_up_direction`/`contact_info_received`/`role_flagged`/`mentor_topics` 280). `would_want_as_mentor` boolean. At least one of `brand_id`, `brand_rep_id`, `expert_id` required.
+- `summary` → returns `{ brand, rep, totals: { registered, visited, sent_note, starred, flagged } }`. `registered` = count of `candidates`. `visited` / `sent_note` / `flagged` = counts from `connections` filtered by `brand_id`. `starred` = count from `candidate_starred_brands`.
+- `list` → input: `filters` (object), `search` (string), `sort` (enum), `page` (int), `page_size` (default 50). Returns paged candidate rows + per-candidate engagement flags (visited, sent_note, role_flagged, starred, note text, last_activity_at). Server-side filter logic for every chip in the spec; full-text search across `first_name`, `last_name`, `the_hook`, `the_pitch`, `dream_role_title`, `areas_of_expertise`, `niche_experience`. Also writes one row to `filter_logs` per call (brand_rep_id, filters_applied, keyword_search, results_count).
+- `candidate` → input: `id`. Returns the full candidate row plus all connections this brand has with that candidate, plus a short-lived signed URL for `resume_url` if present.
+- `wishlist` → input: `query`. Inserts a `filter_logs` row with `wishlist_query` populated, no other fields.
 
-Note on schema: the existing `connections` table has no `also_talked_to` column. We'll prepend "Also met: ..." into `private_notes` rather than add a column for now; we can promote it to a real column in a later migration if needed.
+All responses follow the existing CORS / cookie pattern in `brand-rep-auth`.
 
-### 2. Client helper — extend `src/lib/connect-session.ts`
+### 2. Client helpers — extend `src/lib/connect-session.ts`
 
-Add: `connectionsList()`, `connectionsCreate(payload)`, `connectionsUpdate(id, patch)`, `connectionsDelete(id)`.
+Add `dashboardSummary()`, `dashboardList(params)`, `dashboardCandidate(id)`, `dashboardWishlist(query)`.
 
-### 3. Brand modal updates — `src/components/event/MapBrandPanel.tsx`
+### 3. Replace the placeholder in `src/pages/outsidedays/BrandDashboard.tsx`
 
-Reuse the existing modal. Add (only when wrapped by `ImpersonationGate` / inside the candidate flow — gated by a new optional prop `candidateMode?: boolean` so admin/public uses are unchanged):
+When `mode === "signed_in"`, render the new `<DashboardWorkspace rep={me} />` instead of the current "ships in the next phase" card. Keep all the auth flow above it untouched.
 
-- Top-of-modal cream instruction line: *"Tap a person below to log a connection, or tap the brand logo to log a brand-level note."*
-- Badges row beneath brand name:
-  - "Currently hiring" pill when `currently_hiring` is `Yes, actively hiring` or `Always open to great people` (events-coral bg).
-  - "Featured" pill when `is_featured` (subtle yellow border).
-  - Remote indicator (Wifi icon + label) from `offers_remote` when present.
-- `culture_blurb` rendered as a left-bordered quote block in cream/70.
-- Brand logo button → opens `<ConnectionForm mode="brand" brand={brand} />`.
-- Each rep tile becomes a button → opens `<ConnectionForm mode="brand_rep" brand={brand} rep={expert} />`.
+### 4. New components in `src/components/connect/dashboard/`
 
-### 4. Expert card updates — `src/components/experts/ExpertCard.tsx`
+- `DashboardWorkspace.tsx` — top-level layout. Desktop: 320px sticky filter sidebar on the left, list+detail on the right. Mobile: filter chips collapse into a sticky `<Sheet>` triggered by a "Filters" button. Header strip shows brand logo + name, rep avatar + name, and the four metric pills from `summary`.
+- `DashboardFilters.tsx` — every filter from the spec rendered as named clickable chips (using existing `Badge`/`Toggle` styling), with `Slider` for ranges, `Select` only where laddered (field → focus). Search bar at top. "Wishlist query" textarea + Send button at the bottom in muted styling. Filter state lives in a single typed object passed up via `onChange`. Debounced 300ms.
+- `CandidateCard.tsx` — the hero scan card per spec: large cream Hook, polaroid photo, name/stage/location/years, full Pitch, niche/expertise pill badges, engagement badges ("Visited my table", "Sent you a note", "Flagged a role"), quoted note block when present, resume download button. Tap opens `<CandidateProfileDrawer>`.
+- `CandidateProfileDrawer.tsx` — `Sheet` (mobile) / `Dialog` (desktop, max-w-3xl) showing every candidate field read-only. Sections: Header (photo, hook, contact incl. LinkedIn link, resume button), Pitch, Career (current + `prior_careers`), Looking for (job types, location, remote, relocation, pay, workplace types), Expertise (areas + niches as bubbles), Outdoor / Management experience, DEI block (only the fields they filled in), Connections-with-this-brand block.
+- `VirtualCandidateList.tsx` — uses `@tanstack/react-virtual` (already in lock; if not, install) to render only ~50 cards in DOM. Triggers next page from `dashboardList` on scroll-near-bottom. Sort dropdown lives in the list header.
 
-Add optional `candidateMode?: boolean` + `onLogConnection?: (expert) => void` props. When set:
-- Render a top instruction line: *"Tap {first name}'s photo to log a connection."*
-- Wrap the polaroid in a `<button>` that calls `onLogConnection(expert)`.
+### 5. UX details
 
-`ConnectHome.tsx` Expert Zone list passes these props and renders `<ConnectionForm mode="expert" expert={expert} />` on click.
+- Default sort: `most_recent_activity` desc using `GREATEST(updated_at, created_at)`.
+- Pre-event mode: nothing special in code. Engagement counts are just zero until connections roll in. The "Visited my table" filter shows a small "(0 so far)" hint when summary.visited === 0.
+- Wishlist Send → toast "Thanks. We're using this to make search smarter." (no em dash).
+- All copy hand-checked for em dashes; use periods/commas/parentheses instead.
+- Mobile: filter sheet, single-column card list, drawer slides up. Desktop ≥ md: two-column.
 
-### 5. New component — `src/components/connect/ConnectionForm.tsx`
-
-Mobile-first multi-step Sheet (uses existing `@/components/ui/sheet` for bottom-up presentation on mobile, falls back to dialog on md+). Props: `mode: "brand" | "brand_rep" | "expert"`, optional `brand`, `rep`, `expert`, `onClose`, `onSaved`.
-
-Steps (progress bar at top using `Progress` component):
-
-- **Step 1 — Who and what**
-  - Pre-filled, read-only header chip showing the brand/rep/expert.
-  - "Who else did you talk to here?" (Input, optional).
-  - "What did you talk about? (For your eyes only)" (Textarea, 500). Helper: *"This is your private memory aid. Brand will never see this."*
-- **Step 2 — Follow-up**
-  - "How should you follow up?" (Textarea, 280). Helper: *"Email next week? Apply to a specific role? DM on LinkedIn?"*
-  - "Did they give you contact info?" (Textarea, 280). Helper: *"Phone number, email, LinkedIn, business card details, anything you got."*
-  - "Are you applying to a specific role?" (Input, 280). Helper: *"Type the role title here so they can look out for your application."*
-- **Step 3 — branches by mode**
-  - **Brand / brand_rep**: "Leave a trail for {brand.name}". Body copy verbatim from spec (no em dashes already). Textarea 500, two buttons: *Send now* (saves with `message_sent_at = now`) / *I'll write this later* (saves without).
-  - **Expert**: "Mentor potential?". `Yes` / `No` toggle for `would_want_as_mentor`. If Yes, show `mentor_topics` (Textarea, 280). Single *Save* button.
-
-After save → toast "Connection logged" and `onSaved()` closes the sheet.
-
-Copy rule: every helper string and button label hand-checked for em dashes (none used).
-
-### 6. New page — `src/pages/outsidedays/ConnectConnections.tsx` at `/outsidedays26/connect/connections`
-
-Wrapped in `ImpersonationGate`. Header matches `ConnectHome`. Body:
-
-- Empty state: cream illustration text "No connections yet. Tap a brand or expert on the map to log your first one." with a coral CTA back to `/outsidedays26/connect/home`.
-- List, newest first. Each row: avatar (brand logo OR expert/rep photo polaroid-mini), title line ("{Brand}" or "{Brand} · {Rep name}" or "{Expert name}"), relative time ("2h ago"), 2-line truncated `private_notes`, status chip:
-  - Brand connections: "Note sent" (coral) or "Note not yet sent" (cream/40).
-  - Expert connections: "Mentor flagged" yellow chip when `would_want_as_mentor`.
-- Tap → expands inline editor (reuses `ConnectionForm` in "edit" mode, prefilled with current values; supports send-deferred-note for brand connections, save for all).
-
-### 7. Wiring
-
-- `App.tsx`: register `/outsidedays26/connect/connections`.
-- `ConnectHome.tsx` header: add a "My Connections" pill button (coral) next to Profile.
-- `ConnectHome.tsx` map view: pass `candidateMode` to `MapBrandPanel`. Expert zone modal: pass `candidateMode` + `onLogConnection` to `ExpertCardMinimal` (extend that small component too — same prop shape).
-- Use `consumeImpersonationToken()` semantics already handled by `ImpersonationGate`.
-
-### 8. Files to create / modify
+## Files
 
 **New**
-- `supabase/functions/connections/index.ts`
-- `src/components/connect/ConnectionForm.tsx`
-- `src/pages/outsidedays/ConnectConnections.tsx`
+- `supabase/functions/brand-dashboard/index.ts`
+- `src/components/connect/dashboard/DashboardWorkspace.tsx`
+- `src/components/connect/dashboard/DashboardFilters.tsx`
+- `src/components/connect/dashboard/CandidateCard.tsx`
+- `src/components/connect/dashboard/CandidateProfileDrawer.tsx`
+- `src/components/connect/dashboard/VirtualCandidateList.tsx`
 
 **Modified**
-- `src/lib/connect-session.ts` — add connections client.
-- `src/components/event/MapBrandPanel.tsx` — badges, culture quote, instruction line, tappable logo + reps gated by `candidateMode`.
-- `src/components/experts/ExpertCard.tsx` — `candidateMode` + `onLogConnection`.
-- `src/components/experts/ExpertCardMinimal.tsx` — same opt-in props.
-- `src/pages/outsidedays/ConnectHome.tsx` — pass `candidateMode`, "My Connections" link.
-- `src/App.tsx` — new route.
+- `src/lib/connect-session.ts` (add dashboard helpers)
+- `src/pages/outsidedays/BrandDashboard.tsx` (mount workspace when signed in)
 
-### 9. Out of scope for this phase
+## Out of scope for this phase
 
-- Brand-side viewing of connections / sent notes (phase 4).
-- Sending the deferred-note prompt email to candidates (queued in phase 4).
-- Post-event analytics dashboard.
+- Brand-side "send follow-up email back to candidate" (queued for phase 5).
+- Editing a candidate profile (read-only by design).
+- Cross-brand admin analytics dashboard.
+- Saved filter presets.
 
-### Open question
+## Open question
 
-The spec says step 1 has an "also talked to" free-text field but the `connections` table has no matching column. Two choices for this phase:
+The brand → rep mapping today is heuristic (rep's `current_company` matches `event_map_brands.name`). For Denver this works because the company strings are clean, but a multi-rep brand with messy strings could mis-resolve. Two options:
 
-- **A (proposed):** Prepend `"Also met: …\n\n"` into `private_notes`. Zero schema change.
-- **B:** Add an `also_talked_to text` column on `public.connections` via migration and store it cleanly.
+- **A (proposed):** Ship with the heuristic now. If it mis-resolves for any rep at the event, we add a tiny admin override field (`event_map_brands.rep_ids uuid[]`) in phase 5.
+- **B:** Add the `rep_ids` column now via migration and an admin picker on the map. Adds scope but removes ambiguity.
 
-Defaulting to **A** to keep this phase schema-free, easy to promote later if Jenna wants it surfaced separately on the brand-side view.
+Defaulting to **A** unless you say otherwise.
