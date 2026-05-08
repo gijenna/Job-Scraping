@@ -1,15 +1,15 @@
 // Brand dashboard edge function. Gated by brand_rep session cookie.
-import { admin, corsHeaders, json, readSession } from "../_shared/connect-session.ts";
+import { admin, corsHeadersFor, jsonFor, readSession } from "../_shared/connect-session.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
   let body: any;
-  try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return jsonFor(req, { error: "Invalid JSON" }, { status: 400 }); }
 
   const sess = await readSession(req);
   if (!sess || sess.subject_type !== "brand_rep") {
-    return json({ error: "Not signed in" }, { status: 401 });
+    return jsonFor(req, { error: "Not signed in" }, { status: 401 });
   }
   const sb = admin();
   const repId = sess.subject_id;
@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
   const { data: rep } = await sb.from("industry_experts")
     .select("id, full_name, photo_url, current_company, job_title, email")
     .eq("id", repId).maybeSingle();
-  if (!rep) return json({ error: "Rep not found" }, { status: 404 });
+  if (!rep) return jsonFor(req, { error: "Rep not found" }, { status: 404 });
 
   let brand: any = null;
   if (rep.current_company) {
@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
           .select("id", { count: "exact", head: true }).eq("brand_id", brand.id);
         totals.starred = starCount || 0;
       }
-      return json({ rep, brand, totals });
+      return jsonFor(req, { rep, brand, totals });
     }
 
     if (body.action === "list") {
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
       q = q.range(page * pageSize, page * pageSize + pageSize - 1);
 
       let { data: rows, count, error } = await q;
-      if (error) return json({ error: error.message }, { status: 400 });
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
       let list = rows || [];
 
       // Engagement-only filters (post-filter)
@@ -156,14 +156,14 @@ Deno.serve(async (req) => {
         results_count: count || result.length,
       }).then(() => {});
 
-      return json({ candidates: result, total: count || result.length, page, page_size: pageSize });
+      return jsonFor(req, { candidates: result, total: count || result.length, page, page_size: pageSize });
     }
 
     if (body.action === "candidate") {
       const { id } = body;
-      if (!id) return json({ error: "id required" }, { status: 400 });
+      if (!id) return jsonFor(req, { error: "id required" }, { status: 400 });
       const { data: cand, error } = await sb.from("candidates").select("*").eq("id", id).maybeSingle();
-      if (error || !cand) return json({ error: "Not found" }, { status: 404 });
+      if (error || !cand) return jsonFor(req, { error: "Not found" }, { status: 404 });
 
       let conns: any[] = [];
       if (brand) {
@@ -189,20 +189,20 @@ Deno.serve(async (req) => {
           photo_signed_url = data?.signedUrl || null;
         } catch {}
       }
-      return json({ candidate: cand, connections: conns, resume_signed_url, photo_signed_url });
+      return jsonFor(req, { candidate: cand, connections: conns, resume_signed_url, photo_signed_url });
     }
 
     if (body.action === "wishlist") {
       const { query } = body;
-      if (!query || !String(query).trim()) return json({ error: "query required" }, { status: 400 });
+      if (!query || !String(query).trim()) return jsonFor(req, { error: "query required" }, { status: 400 });
       await sb.from("filter_logs").insert({
         brand_rep_id: repId, wishlist_query: String(query).slice(0, 1000),
       });
-      return json({ ok: true });
+      return jsonFor(req, { ok: true });
     }
 
-    return json({ error: "Unknown action" }, { status: 400 });
+    return jsonFor(req, { error: "Unknown action" }, { status: 400 });
   } catch (e) {
-    return json({ error: (e as Error).message }, { status: 500 });
+    return jsonFor(req, { error: (e as Error).message }, { status: 500 });
   }
 });

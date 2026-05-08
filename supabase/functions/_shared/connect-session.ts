@@ -3,10 +3,16 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, cookie",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Allow-Credentials": "true",
+  "Vary": "Origin",
 };
+
+export function corsHeadersFor(req: Request) {
+  const origin = req.headers.get("Origin") || "*";
+  return { ...corsHeaders, "Access-Control-Allow-Origin": origin };
+}
 
 export const SESSION_COOKIE = "od_sid";
 export const SESSION_DAYS = 30;
@@ -55,6 +61,13 @@ export function json(body: any, init: ResponseInit = {}) {
   return new Response(JSON.stringify(body), {
     ...init,
     headers: { ...corsHeaders, "Content-Type": "application/json", ...(init.headers || {}) },
+  });
+}
+
+export function jsonFor(req: Request, body: any, init: ResponseInit = {}) {
+  return new Response(JSON.stringify(body), {
+    ...init,
+    headers: { ...corsHeadersFor(req), "Content-Type": "application/json", ...(init.headers || {}) },
   });
 }
 
