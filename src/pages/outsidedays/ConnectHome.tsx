@@ -43,7 +43,7 @@ const ConnectHome = () => {
   const [showExpertList, setShowExpertList] = useState(false);
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
-  const { layouts } = useEventMapLayouts(EVENT_SLUG, "published");
+  const { layouts } = useEventMapLayouts(EVENT_SLUG, "live");
   const { experts } = useDenverExperts();
 
   useEffect(() => { setCookie(VIEW_COOKIE, view); }, [view]);
