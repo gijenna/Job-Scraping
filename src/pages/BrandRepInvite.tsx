@@ -22,6 +22,9 @@ const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   portland: { image: heroPortland },
 };
 
+const normalizeDenverBrandName = (value: string, slug: string) =>
+  slug === 'denver' ? value.replace(/\bUC\s+Health\b/g, 'UCHealth') : value;
+
 const CITY_EVENT_DATA: Record<string, {
   tagline: string;
   yearNote: string;
@@ -112,13 +115,17 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
     if (cityData) setCity(cityData as unknown as ExpertCity);
 
     if (name) {
+      const requestedSlug = citySlug === 'denver' && name.toLowerCase() === 'uc-health' ? 'uchealth' : name;
       const { data: expertData } = await supabase
         .from('industry_experts').select('*').eq('slug', name).single();
-      if (expertData) {
-        setExpert(expertData as unknown as Expert);
-        if (expertData.status === 'invited') {
+      const resolvedExpert = expertData || (requestedSlug !== name
+        ? (await supabase.from('industry_experts').select('*').eq('slug', requestedSlug).single()).data
+        : null);
+      if (resolvedExpert) {
+        setExpert(resolvedExpert as unknown as Expert);
+        if (resolvedExpert.status === 'invited') {
           await supabase.from('industry_experts')
-            .update({ status: 'viewed' }).eq('id', expertData.id);
+            .update({ status: 'viewed' }).eq('id', resolvedExpert.id);
         }
       }
     }
@@ -134,7 +141,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
     setShowConfetti(true);
     // Reset form state for a fresh person, only pre-fill the brand's company name
     setFormExpertId(undefined);
-    setFormExistingData({ current_company: expert?.current_company || '' });
+    setFormExistingData({ current_company: normalizeDenverBrandName(expert?.current_company || '', citySlug) });
     setTimeout(() => setShowForm(true), 800);
     setTimeout(() => setShowConfetti(false), 4500);
   };
@@ -161,7 +168,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       } else {
         // New person, pre-fill company from the brand shell, and the name they typed
         setFormExpertId(undefined);
-        setFormExistingData({ current_company: expert?.current_company || '', full_name: lookupName.trim() });
+        setFormExistingData({ current_company: normalizeDenverBrandName(expert?.current_company || '', citySlug), full_name: lookupName.trim() });
         setReturning(false);
         setShowForm(true);
       }
@@ -179,7 +186,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
   const cityName = city?.name || 'Your City';
   const eventTitle = city?.event_title || 'GATHER';
   const heroMedia = CITY_HEROES[citySlug];
-  const brandName = expert?.current_company || 'Your Company';
+  const brandName = normalizeDenverBrandName(expert?.current_company || 'Your Company', citySlug);
   // If full_name differs from current_company, we have a known rep
   const hasKnownRep = expert && expert.full_name && expert.current_company && expert.full_name !== expert.current_company;
   const repFirstName = hasKnownRep ? expert.full_name.split(' ')[0] : '';
