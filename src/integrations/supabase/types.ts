@@ -547,6 +547,7 @@ export type Database = {
           dream_role_title: string | null
           email: string
           field: string
+          field_other: string | null
           first_name: string
           focus: string
           id: string
@@ -570,6 +571,7 @@ export type Database = {
           relocation_locations: string | null
           remote_preference: string | null
           resume_url: string | null
+          signup_mode: string | null
           the_hook: string
           the_pitch: string | null
           total_years_professional: number | null
@@ -593,6 +595,7 @@ export type Database = {
           dream_role_title?: string | null
           email: string
           field: string
+          field_other?: string | null
           first_name: string
           focus: string
           id?: string
@@ -616,6 +619,7 @@ export type Database = {
           relocation_locations?: string | null
           remote_preference?: string | null
           resume_url?: string | null
+          signup_mode?: string | null
           the_hook: string
           the_pitch?: string | null
           total_years_professional?: number | null
@@ -639,6 +643,7 @@ export type Database = {
           dream_role_title?: string | null
           email?: string
           field?: string
+          field_other?: string | null
           first_name?: string
           focus?: string
           id?: string
@@ -662,6 +667,7 @@ export type Database = {
           relocation_locations?: string | null
           remote_preference?: string | null
           resume_url?: string | null
+          signup_mode?: string | null
           the_hook?: string
           the_pitch?: string | null
           total_years_professional?: number | null
