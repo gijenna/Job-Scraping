@@ -7,6 +7,7 @@ import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import EditableText from "@/components/EditableText";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
 import AnchorCopyButton from "@/components/event/AnchorCopyButton";
+import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
 
 interface BrandGroup {
   company: string;
@@ -47,7 +48,26 @@ function normalizeUrl(url: string | undefined | null): string | null {
 const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "pnw26", highlightBrandRep }: BrandUmbrellaSectionProps) => {
   const [expandedBrands, setExpandedBrands] = useState<Set<string>>(new Set());
   const { isAdmin, settings } = useEditableTextContext();
+  const { brands: mapBrands, addBrand, updateBrand } = useEventMapBrands(eventSlug);
   const highlightRef = useRef<HTMLDivElement>(null);
+
+  const findMapBrand = (company: string): MapBrand | undefined => {
+    const norm = company.trim().toLowerCase();
+    return mapBrands.find((b) => b.name.trim().toLowerCase() === norm);
+  };
+
+  const persistHiringField = async (
+    company: string,
+    field: "offers_remote" | "currently_hiring" | "culture_blurb",
+    value: string | null,
+  ) => {
+    const existing = findMapBrand(company);
+    if (existing) {
+      await updateBrand(existing.id, { [field]: value } as any);
+    } else {
+      await addBrand({ name: company, [field]: value } as any);
+    }
+  };
 
   // Group by company
   const groups: BrandGroup[] = [];
@@ -95,6 +115,10 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
         const hiringBlurb = settings[hiringKey] || "";
         const normalizedCareersUrl = normalizeUrl(careersUrl);
         const hasHighlightedExpert = highlightBrandRep && group.experts.some(e => e.slug === highlightBrandRep);
+        const mapBrand = findMapBrand(group.company);
+        const offersRemote = mapBrand?.offers_remote || null;
+        const currentlyHiring = mapBrand?.currently_hiring || null;
+        const cultureBlurb = mapBrand?.culture_blurb || null;
 
         const brandAnchor = `brand-${slug}`;
         return (
@@ -137,6 +161,63 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
                   <div className="flex flex-col gap-0.5 mt-1" onClick={(e) => e.stopPropagation()}>
                     <EditableText settingKey={careersKey} defaultText="(click to set careers URL)" as="span" className="text-xs text-events-coral/60" />
                     <EditableText settingKey={hiringKey} defaultText="(click to set hiring blurb)" as="span" className="text-xs text-events-yellow/60" multiline />
+                  </div>
+                )}
+
+                {/* Hiring info (synced with /admin/event-map) */}
+                {(currentlyHiring || offersRemote || cultureBlurb) && (
+                  <div className="mt-1.5 flex flex-col items-center md:items-start gap-1">
+                    <div className="flex flex-wrap gap-1.5 justify-center md:justify-start">
+                      {currentlyHiring && (
+                        <span className="text-[9px] md:text-[10px] font-body font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ backgroundColor: `${accentColor}26`, color: accentColor }}>
+                          {currentlyHiring}
+                        </span>
+                      )}
+                      {offersRemote && (
+                        <span className="text-[9px] md:text-[10px] font-body uppercase tracking-wider px-2 py-0.5 rounded-full bg-events-cream/10 text-events-cream/70">
+                          {offersRemote}
+                        </span>
+                      )}
+                    </div>
+                    {cultureBlurb && (
+                      <p className="text-events-cream/60 text-[10px] md:text-xs italic line-clamp-3">{cultureBlurb}</p>
+                    )}
+                  </div>
+                )}
+
+                {isAdmin && (
+                  <div className="mt-2 flex flex-col gap-1.5 text-left" onClick={(e) => e.stopPropagation()}>
+                    <p className="text-[9px] uppercase tracking-wider text-events-coral/80 font-body font-semibold">Hiring info (admin)</p>
+                    <select
+                      value={offersRemote || ""}
+                      onChange={(e) => persistHiringField(group.company, "offers_remote", e.target.value || null)}
+                      className="bg-black/30 border border-white/20 text-events-cream text-[10px] rounded h-6 px-1"
+                    >
+                      <option value="">Remote policy: (none)</option>
+                      <option value="Fully remote">Fully remote</option>
+                      <option value="Hybrid">Hybrid</option>
+                      <option value="In-office only">In-office only</option>
+                      <option value="Varies by role">Varies by role</option>
+                    </select>
+                    <select
+                      value={currentlyHiring || ""}
+                      onChange={(e) => persistHiringField(group.company, "currently_hiring", e.target.value || null)}
+                      className="bg-black/30 border border-white/20 text-events-cream text-[10px] rounded h-6 px-1"
+                    >
+                      <option value="">Hiring status: (none)</option>
+                      <option value="Yes, actively hiring">Yes, actively hiring</option>
+                      <option value="Not actively hiring">Not actively hiring</option>
+                      <option value="Always open to great people">Always open to great people</option>
+                    </select>
+                    <textarea
+                      value={cultureBlurb || ""}
+                      onChange={(e) => persistHiringField(group.company, "culture_blurb", e.target.value.slice(0, 280) || null)}
+                      maxLength={280}
+                      rows={2}
+                      placeholder="Culture blurb (max 280 chars)"
+                      className="bg-black/30 border border-white/20 text-events-cream text-[10px] rounded px-1.5 py-1 resize-y"
+                    />
+                    <p className="text-[9px] text-events-cream/40 font-body">{(cultureBlurb || "").length}/280 . Edits sync to /admin/event-map</p>
                   </div>
                 )}
               </div>
