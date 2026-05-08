@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateLogout, candidateUpdateProfile,
@@ -12,6 +15,7 @@ import {
 import {
   POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD,
   JOB_TYPES, REMOTE_PREFERENCES, WORKPLACE_TYPES,
+  SKILL_CATEGORIES, SKILL_CATEGORY_KEYS, NICHES,
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
