@@ -347,7 +347,7 @@ const EventMapAdmin = () => {
                   const logoSrc = (isEditing ? editFields.logo_url : brand.logo_url) || (brand.website_url ? (() => { try { return `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128`; } catch { return null; } })() : null);
 
                   return (
-                    <FragmentWithKey key={brand.id}>
+                    <Fragment key={brand.id}>
                     <TableRow className="border-white/10 hover:bg-white/5">
                       <TableCell>
                         <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
@@ -492,7 +492,7 @@ const EventMapAdmin = () => {
                         </TableCell>
                       </TableRow>
                     )}
-                    </FragmentWithKey>
+                    </Fragment>
                   );
                 })}
                 {brands.length === 0 && (
