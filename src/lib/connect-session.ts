@@ -112,6 +112,24 @@ export async function brandRepLogout() {
   return call("brand-rep-auth", { action: "logout" });
 }
 
+// ---- Brand dashboard ----
+export async function dashboardSummary() {
+  return call<{ rep: any; brand: any; totals: { registered: number; visited: number; sent_note: number; starred: number; flagged: number } }>(
+    "brand-dashboard", { action: "summary" },
+  );
+}
+export async function dashboardList(params: { filters?: any; search?: string; sort?: string; page?: number; page_size?: number }) {
+  return call<{ candidates: any[]; total: number; page: number; page_size: number }>("brand-dashboard", { action: "list", ...params });
+}
+export async function dashboardCandidate(id: string) {
+  return call<{ candidate: any; connections: any[]; resume_signed_url: string | null; photo_signed_url: string | null }>(
+    "brand-dashboard", { action: "candidate", id },
+  );
+}
+export async function dashboardWishlist(query: string) {
+  return call("brand-dashboard", { action: "wishlist", query });
+}
+
 // ---- Admin impersonation ----
 // Called by admin tools. Returns a one-time URL that includes ?as=<token>.
 export async function adminMintImpersonation(input: { subject_type: SubjectType; lookup: string }) {
