@@ -137,7 +137,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
     setShowConfetti(true);
     // Reset form state for a fresh person, only pre-fill the brand's company name
     setFormExpertId(undefined);
-    setFormExistingData({ current_company: expert?.current_company || '' });
+    setFormExistingData({ current_company: normalizeDenverBrandName(expert?.current_company || '', citySlug) });
     setTimeout(() => setShowForm(true), 800);
     setTimeout(() => setShowConfetti(false), 4500);
   };
@@ -164,7 +164,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
       } else {
         // New person, pre-fill company from the brand shell, and the name they typed
         setFormExpertId(undefined);
-        setFormExistingData({ current_company: expert?.current_company || '', full_name: lookupName.trim() });
+        setFormExistingData({ current_company: normalizeDenverBrandName(expert?.current_company || '', citySlug), full_name: lookupName.trim() });
         setReturning(false);
         setShowForm(true);
       }
