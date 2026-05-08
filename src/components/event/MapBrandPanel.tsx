@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
-import { X, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase } from "lucide-react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert } from "@/lib/expert-types";
-import { getCompanyLogoUrl } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
+import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MapBrandPanelProps {
   brand: MapBrand | null;
   onClose: () => void;
+  candidateMode?: boolean;
 }
 
-const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
+const MapBrandPanel = ({ brand, onClose, candidateMode = false }: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
+  const [logging, setLogging] = useState<{ mode: ConnectionMode; rep?: Expert } | null>(null);
 
   useEffect(() => {
     if (!brand) { setExperts([]); return; }
@@ -40,6 +42,9 @@ const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
   if (!brand) return null;
 
   const logoSrc = brand.logo_url || (brand.website_url ? `https://logo.clearbit.com/${new URL(brand.website_url).hostname}` : null);
+  const hiringActive =
+    brand.currently_hiring === "Yes, actively hiring" ||
+    brand.currently_hiring === "Always open to great people";
 
   return (
     <>
@@ -58,17 +63,38 @@ const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
 
           {/* Brand header */}
           <div className="p-6">
+            {candidateMode && (
+              <p className="text-[11px] font-body text-events-cream/70 mb-3 leading-snug">
+                Tap a person below to log a connection, or tap the brand logo to log a brand-level note.
+              </p>
+            )}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0">
-                {logoSrc ? (
-                  <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
-                ) : (
-                  <span className="font-display font-bold text-xl text-events-teal">
-                    {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                  </span>
-                )}
-              </div>
-              <div>
+              {candidateMode ? (
+                <button
+                  onClick={() => setLogging({ mode: "brand" })}
+                  className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0 ring-2 ring-events-coral/0 hover:ring-events-coral transition-all active:scale-95"
+                  aria-label={`Log connection with ${brand.name}`}
+                >
+                  {logoSrc ? (
+                    <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
+                  ) : (
+                    <span className="font-display font-bold text-xl text-events-teal">
+                      {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                    </span>
+                  )}
+                </button>
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0">
+                  {logoSrc ? (
+                    <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
+                  ) : (
+                    <span className="font-display font-bold text-xl text-events-teal">
+                      {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="min-w-0">
                 <h3 className="font-headline font-bold text-xl text-events-cream">{brand.name}</h3>
                 {brand.is_activation && (
                   <span className="text-[10px] uppercase tracking-wider text-events-yellow font-body">Activation</span>
@@ -90,6 +116,31 @@ const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
                 </div>
               </div>
             </div>
+
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {hiringActive && (
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral text-events-cream px-2.5 py-1 rounded-full">
+                  <Briefcase className="w-3 h-3" /> Currently hiring
+                </span>
+              )}
+              {brand.is_featured && (
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display border border-events-yellow text-events-yellow px-2.5 py-1 rounded-full">
+                  <Sparkles className="w-3 h-3" /> Featured
+                </span>
+              )}
+              {brand.offers_remote && brand.offers_remote.toLowerCase() !== "no" && (
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-cream/10 text-events-cream/80 px-2.5 py-1 rounded-full">
+                  <Wifi className="w-3 h-3" /> {brand.offers_remote}
+                </span>
+              )}
+            </div>
+
+            {brand.culture_blurb && (
+              <blockquote className="mt-4 border-l-2 border-events-coral/60 pl-3 text-sm text-events-cream/70 font-body italic">
+                {brand.culture_blurb}
+              </blockquote>
+            )}
 
             {brand.description && (
               <p className="text-sm text-events-cream/70 font-body mt-4">{brand.description}</p>
@@ -119,9 +170,19 @@ const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 grid grid-cols-3 sm:grid-cols-4 gap-4">
-                      {experts.map((expert) => (
-                        <ExpertCardMinimal key={expert.id} expert={expert} />
-                      ))}
+                      {experts.map((expert) =>
+                        candidateMode ? (
+                          <button
+                            key={expert.id}
+                            onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
+                            className="text-left active:scale-95 transition-transform"
+                          >
+                            <ExpertCardMinimal expert={expert} disableExpand />
+                          </button>
+                        ) : (
+                          <ExpertCardMinimal key={expert.id} expert={expert} />
+                        ),
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -130,6 +191,16 @@ const MapBrandPanel = ({ brand, onClose }: MapBrandPanelProps) => {
           )}
         </div>
       </div>
+
+      {logging && (
+        <ConnectionForm
+          open
+          mode={logging.mode}
+          brand={{ id: brand.id, name: brand.name, logo_url: brand.logo_url, website_url: brand.website_url }}
+          rep={logging.rep ? { id: logging.rep.id, full_name: logging.rep.full_name, photo_url: logging.rep.photo_url } : null}
+          onClose={() => setLogging(null)}
+        />
+      )}
     </>
   );
 };
