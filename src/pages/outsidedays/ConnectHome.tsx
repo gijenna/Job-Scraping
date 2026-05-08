@@ -45,7 +45,7 @@ const ConnectHome = () => {
   const [logExpert, setLogExpert] = useState<any | null>(null);
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
-  const { layouts } = useEventMapLayouts(EVENT_SLUG, "live");
+  const { layouts } = useEventMapLayouts(EVENT_SLUG, "draft");
   const { experts } = useDenverExperts();
 
   useEffect(() => { setCookie(VIEW_COOKIE, view); }, [view]);
