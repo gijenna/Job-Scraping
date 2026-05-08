@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateSignupLookup, candidateSignupCreate, candidateLogin,
+  candidateUploadSignedUrl, candidateAttachUpload,
 } from "@/lib/connect-session";
 import { POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
@@ -98,14 +99,38 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     first_name: "", last_name: "", email: "", phone: "",
     poachable_status: "", career_stage: "", field: "", focus: "", years_in_current_field: 0, the_hook: "",
   });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const selfieRef = useRef<HTMLInputElement>(null);
+  const uploadRef = useRef<HTMLInputElement>(null);
   const set = (k: string, v: any) => setD((p: any) => ({ ...p, [k]: v }));
+
+  useEffect(() => {
+    return () => { if (photoPreview) URL.revokeObjectURL(photoPreview); };
+  }, [photoPreview]);
+
+  const onPhotoPicked = (file: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Image required", description: "Please choose a photo file.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Photo too large", description: "Please choose an image under 5MB.", variant: "destructive" });
+      return;
+    }
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
 
   const stepValid = () => {
     if (step === 0) return d.first_name && d.last_name && /\S+@\S+\.\S+/.test(d.email);
     if (step === 1) return d.phone.replace(/[^0-9]/g, "").length >= 10;
-    if (step === 2) return d.poachable_status && d.career_stage;
-    if (step === 3) return d.field && d.focus && d.years_in_current_field >= 0;
-    if (step === 4) return d.the_hook && d.the_hook.length <= 100;
+    if (step === 2) return true; // photo optional
+    if (step === 3) return d.poachable_status && d.career_stage;
+    if (step === 4) return d.field && d.focus && d.years_in_current_field >= 0;
+    if (step === 5) return d.the_hook && d.the_hook.length <= 100;
     return true;
   };
   const next = async () => {
@@ -120,10 +145,20 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
       } catch (e: any) { toast({ title: "Error", description: e.message, variant: "destructive" }); setBusy(false); return; }
       setBusy(false);
     }
-    if (step < 4) { setStep(step + 1); return; }
+    if (step < 5) { setStep(step + 1); return; }
     setBusy(true);
     try {
       const { session } = await candidateSignupCreate(d);
+      if (photoFile) {
+        try {
+          const { upload_url, storage_path } = await candidateUploadSignedUrl("photo", photoFile.name, photoFile.type);
+          const putRes = await fetch(upload_url, { method: "PUT", headers: { "Content-Type": photoFile.type }, body: photoFile });
+          if (!putRes.ok) throw new Error("upload failed");
+          await candidateAttachUpload("photo", storage_path);
+        } catch {
+          toast({ title: "Photo upload failed", description: "You can add it from your profile.", variant: "destructive" });
+        }
+      }
       onDone(session.subject);
     } catch (e: any) { toast({ title: "Signup failed", description: e.message, variant: "destructive" }); }
     setBusy(false);
@@ -132,7 +167,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
   return (
     <div className="space-y-4 bg-events-cream/5 border border-events-cream/10 rounded-2xl p-5">
       <div className="flex gap-1">
-        {[0,1,2,3,4].map((i) => (
+        {[0,1,2,3,4,5].map((i) => (
           <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-events-coral" : "bg-events-cream/15"}`} />
         ))}
       </div>
@@ -152,6 +187,38 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
         </>
       )}
       {step === 2 && (
+        <div className="space-y-4">
+          <div>
+            <p className="font-display text-lg text-events-cream">Add your photo</p>
+            <p className="text-sm text-events-cream/70 font-body mt-1">
+              Snap a quick selfie or upload a headshot. Recruiters meet 600 people in one day. A face makes you 10 times more memorable.
+            </p>
+          </div>
+          {photoPreview && (
+            <div className="flex justify-center">
+              <img src={photoPreview} alt="Your selected photo" className="w-20 h-20 rounded-full object-cover border border-events-cream/20" />
+            </div>
+          )}
+          <input ref={selfieRef} type="file" accept="image/*" capture="user" className="hidden"
+            onChange={(e) => onPhotoPicked(e.target.files?.[0] || null)} />
+          <input ref={uploadRef} type="file" accept="image/*" className="hidden"
+            onChange={(e) => onPhotoPicked(e.target.files?.[0] || null)} />
+          <div className="space-y-2">
+            <Button type="button" onClick={() => selfieRef.current?.click()} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream">
+              {photoFile ? "Retake selfie" : "Take selfie"}
+            </Button>
+            <Button type="button" variant="secondary" onClick={() => uploadRef.current?.click()} className="w-full">
+              {photoFile ? "Choose a different photo" : "Upload from device"}
+            </Button>
+            {!photoFile && (
+              <Button type="button" variant="ghost" onClick={() => setStep(step + 1)} className="w-full text-events-cream/60">
+                Skip for now
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+      {step === 3 && (
         <>
           <Field label="Poachable status">
             <SelectBox value={d.poachable_status} onChange={(v) => set("poachable_status", v)} options={POACHABLE_STATUS as any} />
@@ -161,7 +228,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
           </Field>
         </>
       )}
-      {step === 3 && (
+      {step === 4 && (
         <>
           <Field label="Field">
             <SelectBox value={d.field} onChange={(v) => { set("field", v); set("focus", ""); }} options={FIELDS} />
@@ -176,7 +243,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
           </Field>
         </>
       )}
-      {step === 4 && (
+      {step === 5 && (
         <Field label="The Hook" hint={`One sentence that makes recruiters remember you. ${100 - (d.the_hook?.length || 0)} chars left.`}>
           <Textarea value={d.the_hook} onChange={(e) => set("the_hook", e.target.value.slice(0, 100))} maxLength={100} rows={3} />
         </Field>
@@ -185,7 +252,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
       <div className="flex gap-2 pt-2">
         <Button variant="ghost" onClick={() => (step === 0 ? onBack() : setStep(step - 1))} className="flex-1 text-events-cream/70">Back</Button>
         <Button onClick={next} disabled={busy || !stepValid()} className="flex-1 bg-events-coral hover:bg-events-coral/90 text-events-cream">
-          {step < 4 ? "Continue" : "Create account"}
+          {step < 5 ? "Continue" : "Create account"}
         </Button>
       </div>
     </div>
