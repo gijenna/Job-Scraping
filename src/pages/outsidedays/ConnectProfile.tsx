@@ -14,6 +14,7 @@ import {
   JOB_TYPES, REMOTE_PREFERENCES, WORKPLACE_TYPES,
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
+import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
