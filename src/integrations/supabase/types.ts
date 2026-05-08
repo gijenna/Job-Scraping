@@ -416,6 +416,302 @@ export type Database = {
           },
         ]
       }
+      brand_starred_attendee: {
+        Row: {
+          brand_id: string
+          candidate_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          brand_id: string
+          candidate_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          brand_id?: string
+          candidate_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_starred_attendee_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_starred_attendee_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      candidate_starred_brands: {
+        Row: {
+          brand_id: string
+          candidate_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          brand_id: string
+          candidate_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          brand_id?: string
+          candidate_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "candidate_starred_brands_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "candidate_starred_brands_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      candidates: {
+        Row: {
+          areas_of_expertise: string[] | null
+          career_stage: string
+          created_at: string
+          current_company: string | null
+          current_location: string | null
+          current_title: string | null
+          dei_disability: string | null
+          dei_gender: string | null
+          dei_lgbtq: string | null
+          dei_race_ethnicity: string[] | null
+          dei_veteran: string | null
+          dream_companies: Json | null
+          dream_role_title: string | null
+          email: string
+          field: string
+          first_name: string
+          focus: string
+          id: string
+          job_types_seeking: string[] | null
+          last_name: string
+          linkedin_url: string | null
+          management_experience: boolean | null
+          management_years: number | null
+          min_pay_rate: string | null
+          niche_experience: Json | null
+          open_to_relocation: boolean | null
+          outdoor_industry_experience: boolean | null
+          outdoor_industry_years: number | null
+          phone: string
+          phone_last_four: string | null
+          photo_url: string | null
+          poachable_status: string
+          portfolio_url: string | null
+          prior_careers: Json | null
+          profile_completeness_score: number | null
+          relocation_locations: string | null
+          remote_preference: string | null
+          resume_url: string | null
+          the_hook: string
+          the_pitch: string | null
+          total_years_professional: number | null
+          updated_at: string
+          workplace_type_preference: string[] | null
+          years_in_current_field: number
+        }
+        Insert: {
+          areas_of_expertise?: string[] | null
+          career_stage: string
+          created_at?: string
+          current_company?: string | null
+          current_location?: string | null
+          current_title?: string | null
+          dei_disability?: string | null
+          dei_gender?: string | null
+          dei_lgbtq?: string | null
+          dei_race_ethnicity?: string[] | null
+          dei_veteran?: string | null
+          dream_companies?: Json | null
+          dream_role_title?: string | null
+          email: string
+          field: string
+          first_name: string
+          focus: string
+          id?: string
+          job_types_seeking?: string[] | null
+          last_name: string
+          linkedin_url?: string | null
+          management_experience?: boolean | null
+          management_years?: number | null
+          min_pay_rate?: string | null
+          niche_experience?: Json | null
+          open_to_relocation?: boolean | null
+          outdoor_industry_experience?: boolean | null
+          outdoor_industry_years?: number | null
+          phone: string
+          phone_last_four?: string | null
+          photo_url?: string | null
+          poachable_status: string
+          portfolio_url?: string | null
+          prior_careers?: Json | null
+          profile_completeness_score?: number | null
+          relocation_locations?: string | null
+          remote_preference?: string | null
+          resume_url?: string | null
+          the_hook: string
+          the_pitch?: string | null
+          total_years_professional?: number | null
+          updated_at?: string
+          workplace_type_preference?: string[] | null
+          years_in_current_field?: number
+        }
+        Update: {
+          areas_of_expertise?: string[] | null
+          career_stage?: string
+          created_at?: string
+          current_company?: string | null
+          current_location?: string | null
+          current_title?: string | null
+          dei_disability?: string | null
+          dei_gender?: string | null
+          dei_lgbtq?: string | null
+          dei_race_ethnicity?: string[] | null
+          dei_veteran?: string | null
+          dream_companies?: Json | null
+          dream_role_title?: string | null
+          email?: string
+          field?: string
+          first_name?: string
+          focus?: string
+          id?: string
+          job_types_seeking?: string[] | null
+          last_name?: string
+          linkedin_url?: string | null
+          management_experience?: boolean | null
+          management_years?: number | null
+          min_pay_rate?: string | null
+          niche_experience?: Json | null
+          open_to_relocation?: boolean | null
+          outdoor_industry_experience?: boolean | null
+          outdoor_industry_years?: number | null
+          phone?: string
+          phone_last_four?: string | null
+          photo_url?: string | null
+          poachable_status?: string
+          portfolio_url?: string | null
+          prior_careers?: Json | null
+          profile_completeness_score?: number | null
+          relocation_locations?: string | null
+          remote_preference?: string | null
+          resume_url?: string | null
+          the_hook?: string
+          the_pitch?: string | null
+          total_years_professional?: number | null
+          updated_at?: string
+          workplace_type_preference?: string[] | null
+          years_in_current_field?: number
+        }
+        Relationships: []
+      }
+      connections: {
+        Row: {
+          brand_id: string | null
+          brand_rep_id: string | null
+          candidate_id: string
+          contact_info_received: string | null
+          created_at: string
+          expert_id: string | null
+          follow_up_direction: string | null
+          id: string
+          mentor_topics: string | null
+          message_sent_at: string | null
+          message_to_brand: string | null
+          private_notes: string | null
+          role_flagged: string | null
+          updated_at: string
+          would_want_as_mentor: boolean | null
+        }
+        Insert: {
+          brand_id?: string | null
+          brand_rep_id?: string | null
+          candidate_id: string
+          contact_info_received?: string | null
+          created_at?: string
+          expert_id?: string | null
+          follow_up_direction?: string | null
+          id?: string
+          mentor_topics?: string | null
+          message_sent_at?: string | null
+          message_to_brand?: string | null
+          private_notes?: string | null
+          role_flagged?: string | null
+          updated_at?: string
+          would_want_as_mentor?: boolean | null
+        }
+        Update: {
+          brand_id?: string | null
+          brand_rep_id?: string | null
+          candidate_id?: string
+          contact_info_received?: string | null
+          created_at?: string
+          expert_id?: string | null
+          follow_up_direction?: string | null
+          id?: string
+          mentor_topics?: string | null
+          message_sent_at?: string | null
+          message_to_brand?: string | null
+          private_notes?: string | null
+          role_flagged?: string | null
+          updated_at?: string
+          would_want_as_mentor?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_brand_rep_id_fkey"
+            columns: ["brand_rep_id"]
+            isOneToOne: false
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "connections_expert_id_fkey"
+            columns: ["expert_id"]
+            isOneToOne: false
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -476,6 +772,65 @@ export type Database = {
           send_delay_ms?: number
           transactional_email_ttl_minutes?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      email_template_versions: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          subject: string | null
+          template_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          subject?: string | null
+          template_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          subject?: string | null
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_template_versions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_templates: {
+        Row: {
+          body: string | null
+          id: string
+          subject: string | null
+          template_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          body?: string | null
+          id?: string
+          subject?: string | null
+          template_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          body?: string | null
+          id?: string
+          subject?: string | null
+          template_key?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -545,6 +900,7 @@ export type Database = {
           event_slug: string
           id: string
           is_activation: boolean
+          is_featured: boolean
           logo_url: string | null
           name: string
           offers_remote: string | null
@@ -560,6 +916,7 @@ export type Database = {
           event_slug?: string
           id?: string
           is_activation?: boolean
+          is_featured?: boolean
           logo_url?: string | null
           name: string
           offers_remote?: string | null
@@ -575,6 +932,7 @@ export type Database = {
           event_slug?: string
           id?: string
           is_activation?: boolean
+          is_featured?: boolean
           logo_url?: string | null
           name?: string
           offers_remote?: string | null
@@ -839,6 +1197,44 @@ export type Database = {
           },
         ]
       }
+      filter_logs: {
+        Row: {
+          brand_rep_id: string | null
+          created_at: string
+          filters_applied: Json | null
+          id: string
+          keyword_search: string | null
+          results_count: number | null
+          wishlist_query: string | null
+        }
+        Insert: {
+          brand_rep_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          keyword_search?: string | null
+          results_count?: number | null
+          wishlist_query?: string | null
+        }
+        Update: {
+          brand_rep_id?: string | null
+          created_at?: string
+          filters_applied?: Json | null
+          id?: string
+          keyword_search?: string | null
+          results_count?: number | null
+          wishlist_query?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filter_logs_brand_rep_id_fkey"
+            columns: ["brand_rep_id"]
+            isOneToOne: false
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       industry_experts: {
         Row: {
           ask_me_about: string | null
@@ -854,6 +1250,8 @@ export type Database = {
           job_title: string | null
           linkedin_url: string | null
           niche_interests: string[] | null
+          phone: string | null
+          phone_last_four: string | null
           photo_url: string | null
           previous_companies: string | null
           saved_for_later: boolean | null
@@ -877,6 +1275,8 @@ export type Database = {
           job_title?: string | null
           linkedin_url?: string | null
           niche_interests?: string[] | null
+          phone?: string | null
+          phone_last_four?: string | null
           photo_url?: string | null
           previous_companies?: string | null
           saved_for_later?: boolean | null
@@ -900,6 +1300,8 @@ export type Database = {
           job_title?: string | null
           linkedin_url?: string | null
           niche_interests?: string[] | null
+          phone?: string | null
+          phone_last_four?: string | null
           photo_url?: string | null
           previous_companies?: string | null
           saved_for_later?: boolean | null
@@ -959,6 +1361,36 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          last_seen_at: string
+          subject_id: string
+          subject_type: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          last_seen_at?: string
+          subject_id: string
+          subject_type: string
+          token: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_seen_at?: string
+          subject_id?: string
+          subject_type?: string
+          token?: string
         }
         Relationships: []
       }
