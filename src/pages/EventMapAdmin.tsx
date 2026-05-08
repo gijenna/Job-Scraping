@@ -347,6 +347,7 @@ const EventMapAdmin = () => {
                   const logoSrc = (isEditing ? editFields.logo_url : brand.logo_url) || (brand.website_url ? (() => { try { return `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128`; } catch { return null; } })() : null);
 
                   return (
+                    <>
                     <TableRow key={brand.id} className="border-white/10 hover:bg-white/5">
                       <TableCell>
                         <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden">
@@ -437,6 +438,61 @@ const EventMapAdmin = () => {
                         </div>
                       </TableCell>
                     </TableRow>
+                    {isEditing && (
+                      <TableRow key={`${brand.id}-hiring`} className="border-white/10 bg-white/[0.02]">
+                        <TableCell colSpan={8} className="py-3">
+                          <div className="space-y-3">
+                            <p className="text-xs uppercase tracking-wider text-events-coral font-body font-semibold">Hiring info</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-xs text-white/80 font-body block mb-1">Remote work policy</label>
+                                <select
+                                  value={editFields.offers_remote || ""}
+                                  onChange={(e) => setEditFields((p) => ({ ...p, offers_remote: e.target.value || null }))}
+                                  className="bg-white/10 border border-white/20 text-white text-xs rounded h-8 px-2 w-full"
+                                >
+                                  <option value="">(no selection)</option>
+                                  <option value="Fully remote">Fully remote</option>
+                                  <option value="Hybrid">Hybrid</option>
+                                  <option value="In-office only">In-office only</option>
+                                  <option value="Varies by role">Varies by role</option>
+                                </select>
+                                <p className="text-[10px] text-white/40 mt-1 font-body">What is your remote work policy?</p>
+                              </div>
+                              <div>
+                                <label className="text-xs text-white/80 font-body block mb-1">Currently hiring</label>
+                                <select
+                                  value={editFields.currently_hiring || ""}
+                                  onChange={(e) => setEditFields((p) => ({ ...p, currently_hiring: e.target.value || null }))}
+                                  className="bg-white/10 border border-white/20 text-white text-xs rounded h-8 px-2 w-full"
+                                >
+                                  <option value="">(no selection)</option>
+                                  <option value="Yes, actively hiring">Yes, actively hiring</option>
+                                  <option value="Not actively hiring">Not actively hiring</option>
+                                  <option value="Always open to great people">Always open to great people</option>
+                                </select>
+                                <p className="text-[10px] text-white/40 mt-1 font-body">What's your current hiring status?</p>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-xs text-white/80 font-body block mb-1">Culture blurb</label>
+                              <textarea
+                                value={editFields.culture_blurb || ""}
+                                onChange={(e) => setEditFields((p) => ({ ...p, culture_blurb: e.target.value.slice(0, 280) || null }))}
+                                maxLength={280}
+                                rows={3}
+                                className="bg-white/10 border border-white/20 text-white text-xs rounded px-2 py-1.5 w-full resize-y"
+                              />
+                              <div className="flex justify-between mt-1">
+                                <p className="text-[10px] text-white/40 font-body">One or two sentences about your culture or what you offer. Candidates will see this on your brand card.</p>
+                                <p className="text-[10px] text-white/40 font-body">{(editFields.culture_blurb || "").length}/280</p>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    </>
                   );
                 })}
                 {brands.length === 0 && (
