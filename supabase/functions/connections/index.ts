@@ -1,18 +1,18 @@
 // Connections edge function for the Outside Days career fair.
 // Gated by the candidate session cookie. Service-role writes to public.connections.
 
-import { admin, corsHeaders, json, readSession } from "../_shared/connect-session.ts";
+import { admin, corsHeadersFor, jsonFor, readSession } from "../_shared/connect-session.ts";
 
 const cap = (s: any, n: number) => (typeof s === "string" ? s.slice(0, n) : null);
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
   let body: any;
-  try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return jsonFor(req, { error: "Invalid JSON" }, { status: 400 }); }
 
   const sess = await readSession(req);
-  if (!sess || sess.subject_type !== "candidate") return json({ error: "Not signed in" }, { status: 401 });
+  if (!sess || sess.subject_type !== "candidate") return jsonFor(req, { error: "Not signed in" }, { status: 401 });
 
   const sb = admin();
   const candidateId = sess.subject_id;
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       const brandMap = Object.fromEntries((brands || []).map((b: any) => [b.id, b]));
       const expertMap = Object.fromEntries((experts || []).map((e: any) => [e.id, e]));
 
-      return json({
+      return jsonFor(req, {
         connections: list.map((r) => ({
           ...r,
           brand: r.brand_id ? brandMap[r.brand_id] || null : null,
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
       } = body;
 
       if (!brand_id && !brand_rep_id && !expert_id) {
-        return json({ error: "Must specify a brand, brand rep, or expert." }, { status: 400 });
+        return jsonFor(req, { error: "Must specify a brand, brand rep, or expert." }, { status: 400 });
       }
 
       // "Who else did you talk to" gets prepended into private_notes for now.
@@ -87,13 +87,13 @@ Deno.serve(async (req) => {
       };
 
       const { data, error } = await sb.from("connections").insert(insert).select("*").single();
-      if (error) return json({ error: error.message }, { status: 400 });
-      return json({ connection: data });
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      return jsonFor(req, { connection: data });
     }
 
     if (body.action === "update") {
       const { id, patch = {}, send_now } = body;
-      if (!id) return json({ error: "id required" }, { status: 400 });
+      if (!id) return jsonFor(req, { error: "id required" }, { status: 400 });
 
       const allowed = [
         "private_notes", "follow_up_direction", "contact_info_received", "role_flagged",
@@ -115,20 +115,20 @@ Deno.serve(async (req) => {
       }
       const { data, error } = await sb.from("connections")
         .update(update).eq("id", id).eq("candidate_id", candidateId).select("*").single();
-      if (error) return json({ error: error.message }, { status: 400 });
-      return json({ connection: data });
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      return jsonFor(req, { connection: data });
     }
 
     if (body.action === "delete") {
       const { id } = body;
-      if (!id) return json({ error: "id required" }, { status: 400 });
+      if (!id) return jsonFor(req, { error: "id required" }, { status: 400 });
       const { error } = await sb.from("connections").delete().eq("id", id).eq("candidate_id", candidateId);
-      if (error) return json({ error: error.message }, { status: 400 });
-      return json({ ok: true });
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      return jsonFor(req, { ok: true });
     }
 
-    return json({ error: "Unknown action" }, { status: 400 });
+    return jsonFor(req, { error: "Unknown action" }, { status: 400 });
   } catch (e) {
-    return json({ error: (e as Error).message }, { status: 500 });
+    return jsonFor(req, { error: (e as Error).message }, { status: 500 });
   }
 });

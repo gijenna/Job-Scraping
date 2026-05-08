@@ -1,13 +1,13 @@
 import {
-  admin, corsHeaders, json, readSession, createSession, setSessionCookieHeader,
+  admin, corsHeadersFor, jsonFor, readSession, createSession, setSessionCookieHeader,
   clearSessionCookieHeader, lastFour,
 } from "../_shared/connect-session.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
   let body: any;
-  try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, { status: 400 }); }
+  try { body = await req.json(); } catch { return jsonFor(req, { error: "Invalid JSON" }, { status: 400 }); }
   const { action } = body || {};
   const sb = admin();
 
@@ -33,66 +33,66 @@ Deno.serve(async (req) => {
 
     if (action === "lookup") {
       const { first_name, last_name } = body;
-      if (!first_name || !last_name) return json({ error: "first_name and last_name required" }, { status: 400 });
+      if (!first_name || !last_name) return jsonFor(req, { error: "first_name and last_name required" }, { status: 400 });
       const reps = await findReps(first_name, last_name);
-      if (reps.length === 0) return json({ found: false });
+      if (reps.length === 0) return jsonFor(req, { found: false });
       if (reps.length === 1) {
         const rep = reps[0];
-        if (!rep.phone) return json({ found: true, needs_phone: true, rep_id: rep.id });
-        return json({ found: true, needs_phone: false, rep_id: rep.id });
+        if (!rep.phone) return jsonFor(req, { found: true, needs_phone: true, rep_id: rep.id });
+        return jsonFor(req, { found: true, needs_phone: false, rep_id: rep.id });
       }
       // Multiple reps with same name: still ok if all have phones (login uses last4)
       const anyMissing = reps.some((r: any) => !r.phone);
-      if (anyMissing) return json({ found: true, needs_phone: true, ambiguous: true, rep_id: reps.find((r: any) => !r.phone)!.id });
-      return json({ found: true, needs_phone: false, ambiguous: true });
+      if (anyMissing) return jsonFor(req, { found: true, needs_phone: true, ambiguous: true, rep_id: reps.find((r: any) => !r.phone)!.id });
+      return jsonFor(req, { found: true, needs_phone: false, ambiguous: true });
     }
 
     if (action === "add_phone") {
       const { rep_id, phone } = body;
-      if (!rep_id || !phone) return json({ error: "rep_id and phone required" }, { status: 400 });
+      if (!rep_id || !phone) return jsonFor(req, { error: "rep_id and phone required" }, { status: 400 });
       const cleaned = phone.replace(/[^0-9+]/g, "");
-      if (cleaned.replace(/[^0-9]/g, "").length < 10) return json({ error: "Phone number too short" }, { status: 400 });
+      if (cleaned.replace(/[^0-9]/g, "").length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
       const { data: rep, error } = await sb
         .from("industry_experts")
         .update({ phone: cleaned })
         .eq("id", rep_id)
         .select("*")
         .single();
-      if (error) return json({ error: error.message }, { status: 400 });
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
       const token = await createSession("brand_rep", rep.id);
-      return json({ session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "login") {
       const { first_name, last_name, phone_last_four } = body;
       if (!first_name || !last_name || !phone_last_four) {
-        return json({ error: "first_name, last_name, phone_last_four required" }, { status: 400 });
+        return jsonFor(req, { error: "first_name, last_name, phone_last_four required" }, { status: 400 });
       }
       const reps = await findReps(first_name, last_name);
       const matches = reps.filter((r: any) => r.phone_last_four === lastFour(phone_last_four));
-      if (matches.length === 0) return json({ session: null });
-      if (matches.length > 1) return json({ ambiguous: true });
+      if (matches.length === 0) return jsonFor(req, { session: null });
+      if (matches.length > 1) return jsonFor(req, { ambiguous: true });
       const rep = matches[0];
       const token = await createSession("brand_rep", rep.id);
-      return json({ session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "me") {
       const sess = await readSession(req);
-      if (!sess || sess.subject_type !== "brand_rep") return json({ session: null });
+      if (!sess || sess.subject_type !== "brand_rep") return jsonFor(req, { session: null });
       const { data } = await sb.from("industry_experts").select("*").eq("id", sess.subject_id).maybeSingle();
-      if (!data) return json({ session: null });
-      return json({ session: { subject_type: "brand_rep", subject: data } });
+      if (!data) return jsonFor(req, { session: null });
+      return jsonFor(req, { session: { subject_type: "brand_rep", subject: data } });
     }
 
     if (action === "logout") {
       const sess = await readSession(req);
       if (sess) await sb.from("user_sessions").delete().eq("id", sess.id);
-      return json({ ok: true }, { headers: clearSessionCookieHeader() });
+      return jsonFor(req, { ok: true }, { headers: clearSessionCookieHeader() });
     }
 
-    return json({ error: "Unknown action" }, { status: 400 });
+    return jsonFor(req, { error: "Unknown action" }, { status: 400 });
   } catch (e) {
-    return json({ error: (e as Error).message }, { status: 500 });
+    return jsonFor(req, { error: (e as Error).message }, { status: 500 });
   }
 });
