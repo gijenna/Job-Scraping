@@ -164,13 +164,24 @@ const ConnectProfile = () => {
 
           <Section title="Dream companies">
             <p className="text-xs font-body text-events-cream/60 -mt-1">Type a company name. Brands at this event show first.</p>
-            <BubbleLogoPicker
-              value={(c.dream_companies?.names) || []}
-              domains={(c.dream_companies?.domains) || {}}
-              suggestionEventSlug="denver26"
-              onChange={(names, domains) => set("dream_companies", { names, domains })}
-              placeholder="Patagonia, Yeti, REI..."
-            />
+            {(() => {
+              const dc = c.dream_companies;
+              const names: string[] = Array.isArray(dc)
+                ? dc.map((x: any) => (typeof x === "string" ? x : x?.name)).filter(Boolean)
+                : (dc?.names || []);
+              const domains: Record<string, string> = Array.isArray(dc)
+                ? Object.fromEntries(dc.filter((x: any) => x?.name && x?.domain).map((x: any) => [x.name, x.domain]))
+                : (dc?.domains || {});
+              return (
+                <BubbleLogoPicker
+                  value={names}
+                  domains={domains}
+                  suggestionEventSlug="denver26"
+                  onChange={(n, d) => set("dream_companies", n.map((name) => ({ name, domain: d[name] || null })))}
+                  placeholder="Patagonia, Yeti, REI..."
+                />
+              );
+            })()}
           </Section>
 
           <Section title="Resume">
