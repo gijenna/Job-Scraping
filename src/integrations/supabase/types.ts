@@ -158,6 +158,48 @@ export type Database = {
         }
         Relationships: []
       }
+      afterparty_interest: {
+        Row: {
+          attendee_type: string
+          company: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          notes: string | null
+          reason: string
+          reviewed_at: string | null
+          role_title: string
+          status: string
+        }
+        Insert: {
+          attendee_type: string
+          company: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          reason: string
+          reviewed_at?: string | null
+          role_title: string
+          status?: string
+        }
+        Update: {
+          attendee_type?: string
+          company?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          reason?: string
+          reviewed_at?: string | null
+          role_title?: string
+          status?: string
+        }
+        Relationships: []
+      }
       afterparty_matches: {
         Row: {
           attendee_id: string

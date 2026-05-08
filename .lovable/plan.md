@@ -1,43 +1,84 @@
-## Add a photo capture step to the candidate signup wizard
+## Goal
 
-Edit only `src/pages/outsidedays/Connect.tsx`. No backend, schema, or other-page changes. The Background section was already implemented in the previous turn so it is not part of this plan.
+Public press-release friendly version of the After Party that does NOT allow direct RSVP. Visitors submit interest, get a thank-you screen, Jenna gets an alert email, and the submission is appended to a Google Sheet tab.
 
-### Where it goes
-Insert a new step between current step 1 (phone) and current step 2 (poachable + career stage). Steps reindex from 5 total to 6 total:
-- 0: name + email
-- 1: phone
-- 2: **photo (new)**
-- 3: poachable + career stage
-- 4: field + focus + years
-- 5: the hook
+## New route
 
-Update the progress-bar `[0,1,2,3,4]` to `[0,1,2,3,4,5]`, the `stepValid()` step indices, the `next()` boundary check (`step < 5`), the final-step button label condition, and shift step bodies accordingly.
+- Add `/afterparty-interest` route in `src/App.tsx` mapped to a new `AfterPartyInterest` page.
+- Existing `/afterparty`, `/afterparty/:name`, `/afterpartyoakley*` routes stay untouched (direct invitees still RSVP).
 
-### Step 2 UI
-- Title: "Add your photo"
-- Body: "Snap a quick selfie or upload a headshot. Recruiters meet 600 people in one day. A face makes you 10 times more memorable."
-- Three stacked buttons:
-  - **Take selfie** → triggers a hidden `<input type="file" accept="image/*" capture="user">`
-  - **Upload from device** → triggers a hidden `<input type="file" accept="image/*">`
-  - **Skip for now** → calls `setStep(step + 1)` without changing data
-- After a file is chosen, show a small circular preview (~80px) using `URL.createObjectURL`
-- Step is always valid (file optional). Continue button reads "Continue" as on other steps.
-- No camera-permission prompt is invoked directly; the OS handles `capture="user"` and silently falls back to the gallery if the camera is denied, satisfying the graceful-fallback requirement (the second "Upload from device" button is always available).
+## Page: `src/pages/AfterPartyInterest.tsx`
 
-### File handling (deferred upload)
-The signup edge function and the `candidate-photos` storage bucket both require an authenticated session, so the actual upload must happen after `candidateSignupCreate` succeeds.
-- Hold the chosen `File` in local state: `const [photoFile, setPhotoFile] = useState<File | null>(null)` plus `photoPreview` (object URL, revoked on cleanup/replace).
-- Validate on selection: must be `image/*`, ≤ 5MB. On failure, toast and don't store.
-- In `next()` after the existing `candidateSignupCreate(d)` call, if `photoFile` is set:
-  1. `candidateUploadSignedUrl("photo", photoFile.name, photoFile.type)`
-  2. `fetch(upload_url, { method: "PUT", headers: { "Content-Type": photoFile.type }, body: photoFile })`
-  3. `candidateAttachUpload("photo", storage_path)`
-  4. Wrap in try/catch; on failure show a non-blocking toast ("Photo upload failed, you can add it from your profile") and still navigate to home so the account isn't lost.
+Single-screen layout reusing the After Party visual system (Dark Teal / Coral / Yellow / Cream, Josefin Sans, Unbounded for hero):
 
-### Imports to add
-`useRef` from react, no new lib imports beyond `candidateUploadSignedUrl` and `candidateAttachUpload` from `@/lib/connect-session` (already exported).
+1. Hero with the existing `BasecampMatchPopflyLogo` lockup (no "official" line, already cleaned).
+2. Headline: "An evening for the outdoor industry, May 28 in Denver."
+3. Capacity gate copy: **"Due to venue capacity, please submit your interest by May 25."**
+4. Primary CTA card containing the form:
+   - Full name (required)
+   - Email (required)
+   - Company (required)
+   - Role / title (required)
+   - "I'm coming as a..." single-select chips: **Brand**, **Creator**, **Industry member** (required)
+   - "Why you want to come" textarea, max 500 chars (required)
+   - Submit button labeled **"I wanna come"**
+5. Below form: light fine print referencing Oakley host + photography opt-in (mirrors current RSVP fineprint).
+6. After submit: replace form with a thank-you state ("You're on the list to be considered. We'll be in touch by May 26.") and a quiet link back to `/events`.
 
-### Out of scope
-- No edits to other steps, other pages, edge functions, taxonomies, storage buckets, or DB schema.
-- No DEI/demographics fields, no Background section work (already done).
-- No em dashes anywhere in new copy.
+All copy goes through `EditableText` / `EditableTextProvider` (page slug `afterparty-interest`) so Jenna can edit later, per project memory.
+
+## Storage: new `afterparty_interest` table
+
+Migration creates:
+
+```text
+id uuid pk
+created_at timestamptz default now()
+full_name text not null
+email text not null
+company text not null
+role_title text not null
+attendee_type text not null check in ('brand','creator','industry')
+reason text not null
+status text not null default 'new'   -- new | approved | declined | waitlist
+reviewed_at timestamptz
+notes text
+```
+
+RLS:
+- Public/anon `INSERT` allowed (so the form works without auth).
+- `SELECT` / `UPDATE` / `DELETE` restricted to authenticated admins (mirrors `brand_activation_requests`).
+
+## Submission flow
+
+New edge function `submit-afterparty-interest` (verify_jwt off):
+
+1. Zod-validate the body (trim, length caps, email format, enum on `attendee_type`).
+2. Insert into `afterparty_interest` with service-role client.
+3. Fire-and-forget two side effects (don't block the user response):
+   - **Alert email to Jenna** via existing `send-transactional-email` using a new template `afterparty-interest-alert.tsx` registered in `_shared/transactional-email-templates/registry.ts`. Subject: `New After Party interest: {full_name} ({attendee_type})`. Body lists every field cleanly. To: `jenna@wearetheoutdoorindustry.com`.
+   - **Append row to Google Sheet** tab `After Party Interest` in `GOOGLE_SPREADSHEET_ID` using existing `GOOGLE_SERVICE_ACCOUNT_KEY` secret (JWT → access token → `values:append` API). Columns: Timestamp, Name, Email, Company, Role, Type, Reason. If the tab is missing, the function logs the error but still returns success to the client.
+4. Returns `{ ok: true }` on success.
+
+The frontend calls the function via `supabase.functions.invoke('submit-afterparty-interest', ...)` and shows the thank-you state.
+
+## Admin (lightweight, optional add to `/experts/afterparty`)
+
+Add a small "Interest Requests" panel to `AfterPartyAdmin.tsx` listing rows from `afterparty_interest` newest-first with status dropdown (`new`/`approved`/`declined`/`waitlist`). Out of scope for v1 if you want to ship the public side first — Google Sheet + email already covers triage.
+
+## Files touched
+
+- `src/App.tsx` — add route
+- `src/pages/AfterPartyInterest.tsx` — new
+- `supabase/migrations/<ts>_afterparty_interest.sql` — new table + RLS
+- `supabase/functions/submit-afterparty-interest/index.ts` — new
+- `supabase/functions/_shared/transactional-email-templates/afterparty-interest-alert.tsx` — new
+- `supabase/functions/_shared/transactional-email-templates/registry.ts` — register template
+- (Optional) `src/components/afterparty/AfterPartyAdmin.tsx` — admin panel
+
+## Notes / constraints honored
+
+- No em dashes anywhere in copy.
+- All visible strings wrapped in `EditableText` for admin editing.
+- Existing `/afterparty` direct-RSVP flow is untouched.
+- Reuses existing secrets (`GOOGLE_SPREADSHEET_ID`, `GOOGLE_SERVICE_ACCOUNT_KEY`) — nothing new for you to configure.
