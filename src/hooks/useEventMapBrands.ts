@@ -16,6 +16,7 @@ export interface MapBrand {
   offers_remote?: string | null;
   currently_hiring?: string | null;
   culture_blurb?: string | null;
+  is_featured?: boolean | null;
 }
 
 export function useEventMapBrands(eventSlug: string) {

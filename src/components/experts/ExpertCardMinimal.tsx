@@ -9,16 +9,18 @@ interface ExpertCardMinimalProps {
   expert: Expert;
   autoExpand?: boolean;
   className?: string;
+  disableExpand?: boolean;
+  onClick?: () => void;
 }
 
-const ExpertCardMinimal = ({ expert, autoExpand = false, className = "" }: ExpertCardMinimalProps) => {
+const ExpertCardMinimal = ({ expert, autoExpand = false, className = "", disableExpand = false, onClick }: ExpertCardMinimalProps) => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    if (autoExpand) setExpanded(true);
-  }, [autoExpand]);
+    if (autoExpand && !disableExpand) setExpanded(true);
+  }, [autoExpand, disableExpand]);
 
-  if (expanded) {
+  if (expanded && !disableExpand) {
     return (
       <>
         <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setExpanded(false)} />
@@ -40,7 +42,7 @@ const ExpertCardMinimal = ({ expert, autoExpand = false, className = "" }: Exper
   return (
     <div
       className={`flex flex-col items-center text-center gap-2 cursor-pointer group ${className}`}
-      onClick={() => setExpanded(true)}
+      onClick={() => { if (onClick) onClick(); else if (!disableExpand) setExpanded(true); }}
     >
       <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 shadow-md group-hover:ring-2 group-hover:ring-events-coral/40 transition-all">
         {expert.photo_url ? (
