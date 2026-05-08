@@ -7,6 +7,7 @@ import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import EditableText from "@/components/EditableText";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
 import AnchorCopyButton from "@/components/event/AnchorCopyButton";
+import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
 
 interface BrandGroup {
   company: string;
