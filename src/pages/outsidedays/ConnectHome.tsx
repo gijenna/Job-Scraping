@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { X } from "lucide-react";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
+import { candidateMe } from "@/lib/connect-session";
 import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import { useDenverExperts } from "@/hooks/useDenverExperts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
@@ -43,6 +44,15 @@ const ConnectHome = () => {
   const [selected, setSelected] = useState<MapBrand | null>(null);
   const [showExpertList, setShowExpertList] = useState(false);
   const [logExpert, setLogExpert] = useState<any | null>(null);
+  const [completeness, setCompleteness] = useState<number | null>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  useEffect(() => {
+    candidateMe().then((r) => {
+      const score = r?.session?.subject?.profile_completeness_score;
+      if (typeof score === "number") setCompleteness(score);
+    }).catch(() => {});
+  }, []);
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
   const { layouts } = useEventMapLayouts(EVENT_SLUG, "draft");
@@ -108,6 +118,28 @@ const ConnectHome = () => {
             </Button>
           </div>
         </header>
+
+        {/* Profile completeness banner */}
+        {completeness !== null && completeness < 80 && !bannerDismissed && (
+          <div className="px-4 py-3 bg-events-coral text-events-teal flex items-center gap-3">
+            <p className="flex-1 font-body text-sm">
+              Brands filter on full profiles. Yours is {completeness}% complete.
+            </p>
+            <button
+              onClick={() => nav("/outsidedays26/connect/full")}
+              className="font-display text-xs uppercase tracking-wider px-3 py-1.5 rounded-full bg-events-teal text-events-cream hover:bg-events-teal/90"
+            >
+              Complete it
+            </button>
+            <button
+              onClick={() => setBannerDismissed(true)}
+              aria-label="Dismiss"
+              className="w-7 h-7 rounded-full bg-events-teal/10 hover:bg-events-teal/20 flex items-center justify-center"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         {/* Body */}
         <main className="flex-1">
