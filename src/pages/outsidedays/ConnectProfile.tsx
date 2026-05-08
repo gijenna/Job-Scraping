@@ -177,6 +177,53 @@ const ConnectProfile = () => {
             <Field label="Min pay rate (optional)"><Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" /></Field>
           </Section>
 
+          <Section title="Background">
+            <Field label="Total years of professional experience" hint="Across your whole career, all fields combined.">
+              <Input type="number" min={0} value={c.total_years_professional ?? ""} onChange={(e) => set("total_years_professional", e.target.value === "" ? null : Number(e.target.value))} />
+            </Field>
+            <PriorCareersPicker
+              value={Array.isArray(c.prior_careers) ? c.prior_careers : []}
+              onChange={(v) => set("prior_careers", v)}
+            />
+            <div className="pt-2 border-t border-events-cream/10 space-y-3">
+              <Field label="Outdoor industry experience">
+                <Select
+                  value={c.outdoor_industry_experience === true ? "Yes" : c.outdoor_industry_experience === false ? "No" : ""}
+                  onChange={(v) => {
+                    const yes = v === "Yes";
+                    set("outdoor_industry_experience", yes);
+                    if (!yes) set("outdoor_industry_years", null);
+                  }}
+                  options={["Yes", "No"]}
+                />
+              </Field>
+              {c.outdoor_industry_experience === true && (
+                <Field label="Years in outdoor industry">
+                  <Input type="number" min={0} value={c.outdoor_industry_years ?? ""} onChange={(e) => set("outdoor_industry_years", e.target.value === "" ? null : Number(e.target.value))} />
+                </Field>
+              )}
+              <p className="text-[11px] text-events-cream/50 font-body">Outdoor brands care if you've worked in the industry before.</p>
+            </div>
+            <div className="pt-2 border-t border-events-cream/10 space-y-3">
+              <Field label="Management experience">
+                <Select
+                  value={c.management_experience === true ? "Yes" : c.management_experience === false ? "No" : ""}
+                  onChange={(v) => {
+                    const yes = v === "Yes";
+                    set("management_experience", yes);
+                    if (!yes) set("management_years", null);
+                  }}
+                  options={["Yes", "No"]}
+                />
+              </Field>
+              {c.management_experience === true && (
+                <Field label="Years managing people">
+                  <Input type="number" min={0} value={c.management_years ?? ""} onChange={(e) => set("management_years", e.target.value === "" ? null : Number(e.target.value))} />
+                </Field>
+              )}
+            </div>
+          </Section>
+
           <Section title="Dream companies">
             <p className="text-xs font-body text-events-cream/60 -mt-1">Type a company name. Brands at this event show first.</p>
             {(() => {
@@ -360,6 +407,54 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
         })}
       </div>
       <p className="text-[11px] text-events-cream/50 font-body">Outdoor brands care a lot about niche experience. Years are optional but helpful.</p>
+    </div>
+  );
+};
+
+type PriorCareer = { field: string; focus: string; years: number | null };
+
+const PriorCareersPicker = ({ value, onChange }: { value: PriorCareer[]; onChange: (v: PriorCareer[]) => void }) => {
+  const entries: PriorCareer[] = value.map((e: any) => ({
+    field: e?.field || "",
+    focus: e?.focus || "",
+    years: e?.years ?? null,
+  }));
+  const update = (i: number, patch: Partial<PriorCareer>) => {
+    const next = entries.map((e, idx) => (idx === i ? { ...e, ...patch } : e));
+    onChange(next);
+  };
+  const remove = (i: number) => onChange(entries.filter((_, idx) => idx !== i));
+  const add = () => {
+    if (entries.length >= 3) return;
+    onChange([...entries, { field: "", focus: "", years: null }]);
+  };
+  return (
+    <div className="space-y-3 pt-2 border-t border-events-cream/10">
+      <div>
+        <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">Prior careers</Label>
+        <p className="text-[11px] text-events-cream/60 font-body">Worked in multiple fields? Add up to 3 prior careers so brands see your full story. A senior salesperson transitioning to marketing is way more valuable than '1 year of marketing.'</p>
+      </div>
+      {entries.map((e, i) => (
+        <div key={i} className="relative bg-events-cream/5 border border-events-cream/10 rounded-lg p-3 pr-10 space-y-2">
+          <button type="button" onClick={() => remove(i)} aria-label="Remove" className="absolute top-2 right-2 text-events-cream/60 hover:text-events-coral">
+            <X className="w-4 h-4" />
+          </button>
+          <Row>
+            <Field label="Field">
+              <Select value={e.field} onChange={(v) => update(i, { field: v, focus: "" })} options={FIELDS} />
+            </Field>
+            <Field label="Focus">
+              <Select value={e.focus} onChange={(v) => update(i, { focus: v })} options={(FOCUSES_BY_FIELD[e.field] || [])} />
+            </Field>
+          </Row>
+          <Field label="Years">
+            <Input type="number" min={0} value={e.years ?? ""} onChange={(ev) => update(i, { years: ev.target.value === "" ? null : Number(ev.target.value) })} />
+          </Field>
+        </div>
+      ))}
+      <Button type="button" variant="secondary" onClick={add} disabled={entries.length >= 3}>
+        Add another prior career
+      </Button>
     </div>
   );
 };
