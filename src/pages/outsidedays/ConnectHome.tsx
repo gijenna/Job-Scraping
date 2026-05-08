@@ -44,6 +44,15 @@ const ConnectHome = () => {
   const [selected, setSelected] = useState<MapBrand | null>(null);
   const [showExpertList, setShowExpertList] = useState(false);
   const [logExpert, setLogExpert] = useState<any | null>(null);
+  const [completeness, setCompleteness] = useState<number | null>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  useEffect(() => {
+    candidateMe().then((r) => {
+      const score = r?.session?.subject?.profile_completeness_score;
+      if (typeof score === "number") setCompleteness(score);
+    }).catch(() => {});
+  }, []);
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
   const { layouts } = useEventMapLayouts(EVENT_SLUG, "draft");
