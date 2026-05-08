@@ -39,6 +39,21 @@ Deno.serve(async (req) => {
       if (typeof patch.the_pitch === "string" && patch.the_pitch.length > 500) {
         return jsonFor(req, { error: "The Pitch must be 500 chars or less" }, { status: 400 });
       }
+      // Normalize jsonb array columns. The UI sometimes sends dream_companies
+      // as { names: [], domains: {} }; the DB requires a JSON array (a generated
+      // column calls jsonb_array_length on it).
+      const normalizeCompanies = (v: any) => {
+        if (Array.isArray(v)) return v;
+        if (v && Array.isArray(v.names)) {
+          const domains = v.domains || {};
+          return v.names.map((n: string) => ({ name: n, domain: domains[n] || null }));
+        }
+        return [];
+      };
+      if ("dream_companies" in patch) patch.dream_companies = normalizeCompanies(patch.dream_companies);
+      for (const k of ["niche_experience", "prior_careers"]) {
+        if (k in patch && !Array.isArray(patch[k])) patch[k] = [];
+      }
       const { data, error } = await sb
         .from("candidates").update(patch).eq("id", candidateId).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
