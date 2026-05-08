@@ -64,6 +64,13 @@ export function json(body: any, init: ResponseInit = {}) {
   });
 }
 
+export function jsonFor(req: Request, body: any, init: ResponseInit = {}) {
+  return new Response(JSON.stringify(body), {
+    ...init,
+    headers: { ...corsHeadersFor(req), "Content-Type": "application/json", ...(init.headers || {}) },
+  });
+}
+
 export async function readSession(req: Request) {
   const token = readCookie(req, SESSION_COOKIE);
   if (!token) return null;
