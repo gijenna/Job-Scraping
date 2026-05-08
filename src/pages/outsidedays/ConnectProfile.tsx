@@ -162,6 +162,17 @@ const ConnectProfile = () => {
             <Field label="Min pay rate (optional)"><Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" /></Field>
           </Section>
 
+          <Section title="Dream companies">
+            <p className="text-xs font-body text-events-cream/60 -mt-1">Type a company name. Brands at this event show first.</p>
+            <BubbleLogoPicker
+              value={(c.dream_companies?.names) || []}
+              domains={(c.dream_companies?.domains) || {}}
+              suggestionEventSlug="denver26"
+              onChange={(names, domains) => set("dream_companies", { names, domains })}
+              placeholder="Patagonia, Yeti, REI..."
+            />
+          </Section>
+
           <Section title="Resume">
             <div className="flex items-center gap-3 flex-wrap">
               {c.resume_url ? (
