@@ -16,6 +16,7 @@ import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
 import Connect from "./pages/outsidedays/Connect";
 import ConnectProfile from "./pages/outsidedays/ConnectProfile";
+import ConnectHome from "./pages/outsidedays/ConnectHome";
 import BrandDashboard from "./pages/outsidedays/BrandDashboard";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
@@ -113,6 +114,7 @@ const App = () => (
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}
           <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/connect/home" element={<ConnectHome />} />
           <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
           <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
           {/* Secondary routes */}
