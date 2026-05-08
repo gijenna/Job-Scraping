@@ -183,6 +183,15 @@ const ConnectHome = () => {
             </div>
           </div>
         )}
+
+        {logExpert && (
+          <ConnectionForm
+            open
+            mode="expert"
+            expert={{ id: logExpert.id, full_name: logExpert.full_name, photo_url: logExpert.photo_url }}
+            onClose={() => setLogExpert(null)}
+          />
+        )}
       </div>
     </ImpersonationGate>
   );
