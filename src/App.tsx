@@ -15,6 +15,7 @@ import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
 import Connect from "./pages/outsidedays/Connect";
+import ConnectFull from "./pages/outsidedays/ConnectFull";
 import ConnectProfile from "./pages/outsidedays/ConnectProfile";
 import ConnectHome from "./pages/outsidedays/ConnectHome";
 import ConnectConnections from "./pages/outsidedays/ConnectConnections";
@@ -117,6 +118,7 @@ const App = () => (
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}
           <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/connect/full" element={<ConnectFull />} />
           <Route path="/outsidedays26/connect/home" element={<ConnectHome />} />
           <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
           <Route path="/outsidedays26/connect/connections" element={<ConnectConnections />} />
