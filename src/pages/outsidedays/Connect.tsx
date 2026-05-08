@@ -7,18 +7,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateSignupLookup, candidateSignupCreate, candidateLogin,
-  candidateUploadSignedUrl, candidateAttachUpload,
+  candidateUploadSignedUrl, candidateAttachUpload, candidateUpdateProfile,
 } from "@/lib/connect-session";
 import { POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
+import ConnectShell from "@/components/connect/ConnectShell";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
+import EditableText from "@/components/EditableText";
+import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 
-type Mode = "choice" | "new" | "returning" | "signed_in";
+type Mode = "branch" | "choice" | "new" | "returning" | "done";
 
 const Connect = () => {
   const nav = useNavigate();
   const { toast } = useToast();
-  const [mode, setMode] = useState<Mode>("choice");
-  const [me, setMe] = useState<any>(null);
+  const [mode, setMode] = useState<Mode>("branch");
+  const [createdCandidate, setCreatedCandidate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,36 +35,150 @@ const Connect = () => {
     })();
   }, [nav]);
 
-  if (loading) return <div className="min-h-screen bg-events-teal text-events-cream flex items-center justify-center font-body">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-events-teal text-events-cream flex items-center justify-center font-body">
+        Loading...
+      </div>
+    );
+  }
 
   return (
-    <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-16">
-        <div className="max-w-md mx-auto">
-          <h1 className="font-afterparty text-4xl md:text-5xl text-events-cream mb-2 text-center">Outside Days</h1>
-          <p className="text-center font-body text-events-cream/70 mb-8 text-sm">Career fair connections, Denver 26.</p>
-
-          {mode === "choice" && <Choice onNew={() => setMode("new")} onReturning={() => setMode("returning")} />}
-          {mode === "new" && <NewSignup toast={toast} onDone={() => nav("/outsidedays26/connect/home")} onBack={() => setMode("choice")} />}
-          {mode === "returning" && <Returning toast={toast} onDone={() => nav("/outsidedays26/connect/home")} onBack={() => setMode("choice")} />}
-        </div>
-      </div>
-    </ImpersonationGate>
+    <EditableTextProvider pageSlug="outsidedays26-connect">
+      <ImpersonationGate>
+        <ConnectShell maxWidth="md">
+          {mode === "branch" && (
+            <BranchPicker
+              onFull={() => nav("/outsidedays26/connect/full")}
+              onEssentials={() => setMode("choice")}
+              onReturning={() => setMode("returning")}
+            />
+          )}
+          {mode === "choice" && (
+            <NewSignup
+              toast={toast}
+              onDone={(c: any) => { setCreatedCandidate(c); setMode("done"); }}
+              onBack={() => setMode("branch")}
+            />
+          )}
+          {mode === "returning" && (
+            <Returning
+              toast={toast}
+              onDone={() => nav("/outsidedays26/connect/home")}
+              onBack={() => setMode("branch")}
+            />
+          )}
+          {mode === "done" && (
+            <CompletionScreen
+              candidate={createdCandidate}
+              onAddRest={() => nav("/outsidedays26/connect/full")}
+              onSkip={() => nav("/outsidedays26/connect/home")}
+            />
+          )}
+        </ConnectShell>
+      </ImpersonationGate>
+    </EditableTextProvider>
   );
 };
 
-const SignedIn = ({ me, onEdit }: any) => (
-  <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-6 space-y-4 text-center">
-    <p className="font-display text-xl">Welcome back, {me.first_name}.</p>
-    <p className="text-sm text-events-cream/60 font-body">Profile completeness: {me.profile_completeness_score || 0} optional fields.</p>
-    <Button onClick={onEdit} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream">Edit your profile</Button>
+const BranchPicker = ({ onFull, onEssentials, onReturning }: any) => (
+  <div className="space-y-5">
+    <div className="text-center space-y-2">
+      <EditableText
+        settingKey="branch_title"
+        defaultText="How much time do you have right now?"
+        as="h1"
+        className="font-afterparty text-3xl md:text-4xl text-events-cream"
+      />
+      <EditableText
+        settingKey="branch_subtitle"
+        defaultText="Either way, you can edit and add more anytime."
+        as="p"
+        className="font-body text-sm text-events-cream/70"
+      />
+    </div>
+
+    <button
+      onClick={onFull}
+      className="w-full text-left bg-events-coral hover:bg-events-coral/90 text-events-cream rounded-2xl p-5 transition-colors shadow-lg"
+    >
+      <div className="text-3xl mb-1">📋</div>
+      <EditableText
+        settingKey="branch_full_heading"
+        defaultText="I'll do the full profile"
+        as="h2"
+        className="font-display text-xl mb-1"
+      />
+      <EditableText
+        settingKey="branch_full_subtext"
+        defaultText="About 5 to 7 minutes. Brands can fully filter and find you."
+        as="p"
+        className="text-sm font-body text-events-cream/90"
+      />
+    </button>
+
+    <button
+      onClick={onEssentials}
+      className="w-full text-left bg-events-cream/10 hover:bg-events-cream/15 border border-events-cream/20 text-events-cream rounded-2xl p-5 transition-colors"
+    >
+      <div className="text-3xl mb-1">⚡</div>
+      <EditableText
+        settingKey="branch_essentials_heading"
+        defaultText="Just the essentials for now"
+        as="h2"
+        className="font-display text-xl mb-1"
+      />
+      <EditableText
+        settingKey="branch_essentials_subtext"
+        defaultText="About 90 seconds. You'll come back and finish later."
+        as="p"
+        className="text-sm font-body text-events-cream/80"
+      />
+    </button>
+
+    <div className="text-center pt-2">
+      <button
+        onClick={onReturning}
+        className="text-events-cream/70 hover:text-events-cream font-body text-sm underline underline-offset-4"
+      >
+        <EditableText
+          settingKey="branch_returning_link"
+          defaultText="I already have an account"
+          as="span"
+        />
+      </button>
+    </div>
   </div>
 );
 
-const Choice = ({ onNew, onReturning }: any) => (
-  <div className="space-y-3">
-    <Button onClick={onNew} className="w-full h-14 bg-events-coral hover:bg-events-coral/90 text-events-cream text-base">Create my account</Button>
-    <Button onClick={onReturning} variant="secondary" className="w-full h-14 text-base">I already have an account</Button>
+const CompletionScreen = ({ candidate, onAddRest, onSkip }: any) => (
+  <div className="space-y-5 bg-events-cream/5 border border-events-cream/10 rounded-2xl p-6 text-center">
+    <EditableText
+      settingKey="essentials_done_title"
+      defaultText="You're in! 🎉"
+      as="h1"
+      className="font-afterparty text-3xl md:text-4xl text-events-cream"
+    />
+    <EditableText
+      settingKey="essentials_done_body"
+      defaultText="You can head to the map now. Brands are way more likely to follow up if your profile is complete though. Want to add the rest now?"
+      as="p"
+      className="font-body text-events-cream/80"
+    />
+    <div className="space-y-2 pt-2">
+      <Button
+        onClick={onAddRest}
+        className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream"
+      >
+        <EditableText settingKey="essentials_done_primary" defaultText="Add the rest now" as="span" />
+      </Button>
+      <Button onClick={onSkip} variant="ghost" className="w-full text-events-cream/70">
+        <EditableText settingKey="essentials_done_secondary" defaultText="Take me to the map" as="span" />
+      </Button>
+    </div>
+    {candidate?.first_name && (
+      <p className="text-xs text-events-cream/50 font-body">Logged in as {candidate.first_name}.</p>
+    )}
   </div>
 );
 
@@ -92,17 +210,22 @@ const Returning = ({ toast, onDone, onBack }: any) => {
   );
 };
 
+const TOTAL_STEPS = 7; // 0..6: name -> phone -> career -> poachable -> field -> hook -> photo
+
 const NewSignup = ({ toast, onDone, onBack }: any) => {
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
   const [d, setD] = useState<any>({
     first_name: "", last_name: "", email: "", phone: "",
-    poachable_status: "", career_stage: "", field: "", focus: "", years_in_current_field: 0, the_hook: "",
+    poachable_status: "", career_stage: "", field: "", focus: "", field_other: "",
+    years_in_current_field: 0, the_hook: "",
+    signup_mode: "essentials",
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const selfieRef = useRef<HTMLInputElement>(null);
   const uploadRef = useRef<HTMLInputElement>(null);
+  const [hookFocused, setHookFocused] = useState(false);
   const set = (k: string, v: any) => setD((p: any) => ({ ...p, [k]: v }));
 
   useEffect(() => {
@@ -127,29 +250,29 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
   const stepValid = () => {
     if (step === 0) return d.first_name && d.last_name && /\S+@\S+\.\S+/.test(d.email);
     if (step === 1) return d.phone.replace(/[^0-9]/g, "").length >= 10;
-    if (step === 2) return true; // photo optional
-    if (step === 3) return d.poachable_status && d.career_stage;
-    if (step === 4) return d.field && d.focus && d.years_in_current_field >= 0;
-    if (step === 5) return d.the_hook && d.the_hook.length <= 100;
+    if (step === 2) return !!d.career_stage;
+    if (step === 3) return !!d.poachable_status;
+    if (step === 4) {
+      if (!d.field || !d.focus || d.years_in_current_field < 0) return false;
+      if (d.field === "Other" && !d.field_other?.trim()) return false;
+      return true;
+    }
+    if (step === 5) {
+      const v = (d.the_hook || "").trim();
+      return v.length > 0 && v !== HOOK_EXAMPLE_PLACEHOLDER && v.length <= 100;
+    }
+    if (step === 6) return true; // photo optional
     return true;
   };
-  const next = async () => {
-    if (step === 0) {
-      setBusy(true);
-      try {
-        const { exists } = await candidateSignupLookup({ first_name: d.first_name, last_name: d.last_name, email: d.email });
-        if (exists) {
-          toast({ title: "Account exists", description: "An account with that email exists. Try signing in instead." });
-          setBusy(false); return;
-        }
-      } catch (e: any) { toast({ title: "Error", description: e.message, variant: "destructive" }); setBusy(false); return; }
-      setBusy(false);
-    }
-    if (step < 5) { setStep(step + 1); return; }
+
+  const submit = async (createdAlreadyPhoto?: boolean) => {
     setBusy(true);
     try {
-      const { session } = await candidateSignupCreate(d);
-      if (photoFile) {
+      const payload = { ...d };
+      // If user never edited the example hook, it shouldn't be saved as their answer
+      if (payload.the_hook === HOOK_EXAMPLE_PLACEHOLDER) payload.the_hook = "";
+      const { session } = await candidateSignupCreate(payload);
+      if (photoFile && !createdAlreadyPhoto) {
         try {
           const { upload_url, storage_path } = await candidateUploadSignedUrl("photo", photoFile.name, photoFile.type);
           const putRes = await fetch(upload_url, { method: "PUT", headers: { "Content-Type": photoFile.type }, body: photoFile });
@@ -164,35 +287,142 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     setBusy(false);
   };
 
+  const next = async () => {
+    if (step === 0) {
+      setBusy(true);
+      try {
+        const { exists } = await candidateSignupLookup({ first_name: d.first_name, last_name: d.last_name, email: d.email });
+        if (exists) {
+          toast({ title: "Account exists", description: "An account with that email exists. Try signing in instead." });
+          setBusy(false); return;
+        }
+      } catch (e: any) { toast({ title: "Error", description: e.message, variant: "destructive" }); setBusy(false); return; }
+      setBusy(false);
+    }
+    if (step < TOTAL_STEPS - 1) { setStep(step + 1); return; }
+    await submit();
+  };
+
   return (
     <div className="space-y-4 bg-events-cream/5 border border-events-cream/10 rounded-2xl p-5">
       <div className="flex gap-1">
-        {[0,1,2,3,4,5].map((i) => (
+        {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-events-coral" : "bg-events-cream/15"}`} />
         ))}
       </div>
 
       {step === 0 && (
         <>
-          <Field label="First name"><Input value={d.first_name} onChange={(e) => set("first_name", e.target.value)} /></Field>
-          <Field label="Last name"><Input value={d.last_name} onChange={(e) => set("last_name", e.target.value)} /></Field>
-          <Field label="Email"><Input type="email" value={d.email} onChange={(e) => set("email", e.target.value)} /></Field>
-        </>
-      )}
-      {step === 1 && (
-        <>
-          <Field label="Phone (full number)" hint="Hidden from everyone except admin. Used to verify it's you when you log in.">
-            <Input inputMode="tel" value={d.phone} onChange={(e) => set("phone", e.target.value)} placeholder="555 123 4567" />
+          <Field label={<EditableText settingKey="quiz_first_name" defaultText="First name" as="span" />}>
+            <Input value={d.first_name} onChange={(e) => set("first_name", e.target.value)} />
+          </Field>
+          <Field label={<EditableText settingKey="quiz_last_name" defaultText="Last name" as="span" />}>
+            <Input value={d.last_name} onChange={(e) => set("last_name", e.target.value)} />
+          </Field>
+          <Field label={<EditableText settingKey="quiz_email" defaultText="Email" as="span" />}>
+            <Input type="email" value={d.email} onChange={(e) => set("email", e.target.value)} />
           </Field>
         </>
       )}
+      {step === 1 && (
+        <Field
+          label={<EditableText settingKey="quiz_phone_label" defaultText="Phone (full number)" as="span" />}
+          hint={<EditableText settingKey="quiz_phone_hint" defaultText="Hidden from everyone except admin. Used to verify it's you when you log in." as="span" />}
+        >
+          <Input inputMode="tel" value={d.phone} onChange={(e) => set("phone", e.target.value)} placeholder="555 123 4567" />
+        </Field>
+      )}
       {step === 2 && (
+        <Field label={<EditableText settingKey="quiz_career_stage" defaultText="Career stage" as="span" />}>
+          <SelectBox value={d.career_stage} onChange={(v) => set("career_stage", v)} options={CAREER_STAGE as any} />
+        </Field>
+      )}
+      {step === 3 && (
+        <Field label={<EditableText settingKey="quiz_poachable" defaultText="Poachable status" as="span" />}>
+          <SelectBox value={d.poachable_status} onChange={(v) => set("poachable_status", v)} options={POACHABLE_STATUS as any} />
+        </Field>
+      )}
+      {step === 4 && (
+        <>
+          <Field label={<EditableText settingKey="quiz_field" defaultText="Field" as="span" />}>
+            <SelectBox value={d.field} onChange={(v) => { set("field", v); set("focus", ""); }} options={FIELDS} />
+          </Field>
+          {d.field === "Other" && (
+            <Field
+              label={<EditableText settingKey="quiz_field_other" defaultText="Tell us what you do" as="span" />}
+              hint={<EditableText settingKey="quiz_field_other_hint" defaultText="A few words is fine. Brands can search this." as="span" />}
+            >
+              <Input value={d.field_other} onChange={(e) => set("field_other", e.target.value)} placeholder="e.g. Outdoor industrial design" />
+            </Field>
+          )}
+          {d.field && d.field !== "Other" && (
+            <Field label={<EditableText settingKey="quiz_focus" defaultText="Focus" as="span" />}>
+              <SelectBox value={d.focus} onChange={(v) => set("focus", v)} options={FOCUSES_BY_FIELD[d.field] || []} />
+            </Field>
+          )}
+          {d.field === "Other" && (
+            <Field label={<EditableText settingKey="quiz_focus" defaultText="Focus" as="span" />}>
+              <SelectBox value={d.focus} onChange={(v) => set("focus", v)} options={["Other"]} />
+            </Field>
+          )}
+          <Field label={<EditableText settingKey="quiz_years" defaultText="Years in your current field" as="span" />}>
+            <Input type="number" min={0} value={d.years_in_current_field} onChange={(e) => set("years_in_current_field", Number(e.target.value || 0))} />
+          </Field>
+        </>
+      )}
+      {step === 5 && (
+        <div className="space-y-2">
+          <Field
+            label={<EditableText settingKey="quiz_hook_label" defaultText="The Hook" as="span" />}
+            hint={
+              <EditableText
+                settingKey="quiz_hook_prompt"
+                defaultText="In one sentence, why should a brand hire you ASAP?"
+                as="span"
+              />
+            }
+          >
+            <Textarea
+              value={d.the_hook || HOOK_EXAMPLE_PLACEHOLDER}
+              onFocus={(e) => {
+                if (!hookFocused) {
+                  setHookFocused(true);
+                  if (!d.the_hook) {
+                    set("the_hook", HOOK_EXAMPLE_PLACEHOLDER);
+                    setTimeout(() => e.target.select(), 0);
+                  }
+                }
+              }}
+              onChange={(e) => set("the_hook", e.target.value.slice(0, 100))}
+              maxLength={100}
+              rows={3}
+              className={d.the_hook && d.the_hook !== HOOK_EXAMPLE_PLACEHOLDER ? "" : "italic text-events-cream/60"}
+            />
+            <p className="text-[11px] text-events-cream/50 mt-1 font-body">
+              {100 - (d.the_hook?.length || 0)} chars left. Write over the example.
+            </p>
+          </Field>
+          <HookExamples
+            onPick={(t) => { set("the_hook", t.slice(0, 100)); setHookFocused(true); }}
+            maxLen={100}
+          />
+        </div>
+      )}
+      {step === 6 && (
         <div className="space-y-4">
           <div>
-            <p className="font-display text-lg text-events-cream">Add your photo</p>
-            <p className="text-sm text-events-cream/70 font-body mt-1">
-              Snap a quick selfie or upload a headshot. Recruiters meet 600 people in one day. A face makes you 10 times more memorable.
-            </p>
+            <EditableText
+              settingKey="quiz_photo_title"
+              defaultText="Add your photo"
+              as="p"
+              className="font-display text-lg text-events-cream"
+            />
+            <EditableText
+              settingKey="quiz_photo_body"
+              defaultText="Snap a quick selfie or upload a headshot. Recruiters meet 600 people in one day. A face makes you 10 times more memorable."
+              as="p"
+              className="text-sm text-events-cream/70 font-body mt-1"
+            />
           </div>
           {photoPreview && (
             <div className="flex justify-center">
@@ -210,49 +440,14 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
             <Button type="button" variant="secondary" onClick={() => uploadRef.current?.click()} className="w-full">
               {photoFile ? "Choose a different photo" : "Upload from device"}
             </Button>
-            {!photoFile && (
-              <Button type="button" variant="ghost" onClick={() => setStep(step + 1)} className="w-full text-events-cream/60">
-                Skip for now
-              </Button>
-            )}
           </div>
         </div>
-      )}
-      {step === 3 && (
-        <>
-          <Field label="Poachable status">
-            <SelectBox value={d.poachable_status} onChange={(v) => set("poachable_status", v)} options={POACHABLE_STATUS as any} />
-          </Field>
-          <Field label="Career stage">
-            <SelectBox value={d.career_stage} onChange={(v) => set("career_stage", v)} options={CAREER_STAGE as any} />
-          </Field>
-        </>
-      )}
-      {step === 4 && (
-        <>
-          <Field label="Field">
-            <SelectBox value={d.field} onChange={(v) => { set("field", v); set("focus", ""); }} options={FIELDS} />
-          </Field>
-          {d.field && (
-            <Field label="Focus">
-              <SelectBox value={d.focus} onChange={(v) => set("focus", v)} options={FOCUSES_BY_FIELD[d.field] || []} />
-            </Field>
-          )}
-          <Field label="Years in your current field">
-            <Input type="number" min={0} value={d.years_in_current_field} onChange={(e) => set("years_in_current_field", Number(e.target.value || 0))} />
-          </Field>
-        </>
-      )}
-      {step === 5 && (
-        <Field label="The Hook" hint={`One sentence that makes recruiters remember you. ${100 - (d.the_hook?.length || 0)} chars left.`}>
-          <Textarea value={d.the_hook} onChange={(e) => set("the_hook", e.target.value.slice(0, 100))} maxLength={100} rows={3} />
-        </Field>
       )}
 
       <div className="flex gap-2 pt-2">
         <Button variant="ghost" onClick={() => (step === 0 ? onBack() : setStep(step - 1))} className="flex-1 text-events-cream/70">Back</Button>
         <Button onClick={next} disabled={busy || !stepValid()} className="flex-1 bg-events-coral hover:bg-events-coral/90 text-events-cream">
-          {step < 5 ? "Continue" : "Create account"}
+          {step < TOTAL_STEPS - 1 ? "Continue" : (photoFile ? "Create account" : "Skip and create account")}
         </Button>
       </div>
     </div>
