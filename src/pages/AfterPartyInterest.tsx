@@ -5,6 +5,10 @@ import { useToast } from "@/hooks/use-toast";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import StarSparkle from "@/components/afterparty/StarSparkle";
+import OakleyRinoVenueShowcase from "@/components/afterparty/OakleyRinoVenueShowcase";
+import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
 
 const OAKLEY_PRESENTER = {
@@ -15,6 +19,13 @@ const OAKLEY_PRESENTER = {
   href: "https://www.oakley.com",
   creamGlow: true,
 };
+
+const BG = "#080808";
+const CREAM = "#F5E6D3";
+const CREAM_MUTED = "rgba(245,230,211,0.7)";
+const CREAM_DIM = "rgba(245,230,211,0.55)";
+const CREAM_FAINT = "rgba(245,230,211,0.45)";
+const BORDER = "rgba(255,255,255,0.09)";
 
 type AttendeeType = "brand" | "creator" | "industry";
 
@@ -83,7 +94,6 @@ const AfterPartyInterest = () => {
     });
     const idem = `afterparty-interest-${payload.email}-${Date.now()}`;
 
-    // Fire-and-forget: alert email to Jenna
     supabase.functions.invoke("send-transactional-email", {
       body: {
         templateName: "afterparty-interest-alert",
@@ -102,7 +112,6 @@ const AfterPartyInterest = () => {
       },
     });
 
-    // Fire-and-forget: append to Google Sheet
     supabase.functions.invoke("append-afterparty-interest-sheet", {
       body: payload,
     });
@@ -111,57 +120,98 @@ const AfterPartyInterest = () => {
     setSubmitting(false);
   };
 
+  const showActivation = done && (attendeeType === "brand" || attendeeType === "industry");
+
   return (
     <EditableTextProvider pageSlug="afterparty-interest">
-      <main className="min-h-screen bg-[#19363B] text-[#F5E6D3] flex flex-col">
-        {/* Hero / lockup */}
-        <section className="relative flex flex-col items-center justify-center px-6 pt-10 pb-6">
-          <div className="w-full max-w-[640px]">
-            <BasecampMatchPopflyLogo presenter={OAKLEY_PRESENTER} />
-          </div>
-        </section>
+      <div
+        className="min-h-screen relative bg-cover bg-center md:bg-top"
+        style={{
+          backgroundColor: BG,
+          backgroundImage: "url('/bg-sunset.jpg')",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: CREAM,
+          fontFamily: '"Josefin Sans", sans-serif',
+          fontWeight: 300,
+        }}
+      >
+        {/* Darkening overlay */}
+        <div
+          aria-hidden
+          className="fixed inset-0 pointer-events-none z-0"
+          style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+        />
 
-        {/* Body */}
-        <section className="px-6 pb-16">
-          <div className="container mx-auto max-w-xl">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-center"
+        <div className="mx-auto px-5 pt-2 pb-16 relative z-10" style={{ maxWidth: 520 }}>
+          {/* Lockup */}
+          <BasecampMatchPopflyLogo presenter={OAKLEY_PRESENTER} />
+
+          {/* Sparkle row + tagline pill */}
+          <div className="mt-4 text-center">
+            <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
+              <StarSparkle tone="coral" size={18} />
+              <StarSparkle tone="cream" size={26} />
+              <StarSparkle tone="green" size={20} />
+              <StarSparkle tone="cream" size={14} />
+              <StarSparkle tone="coral" size={22} />
+            </div>
+            <div
+              className="font-afterparty font-bold flex items-center justify-center gap-1.5 sm:gap-2 mb-4 whitespace-nowrap text-[13px] sm:text-base"
+              style={{ color: CREAM }}
             >
-              <p
-                className="text-[11px] tracking-[0.3em] uppercase mb-4 text-[#E1B624]"
-                style={{ fontFamily: "'Josefin Sans', sans-serif" }}
-              >
-                <EditableText
-                  settingKey="interest_eyebrow"
-                  defaultText="May 28 · Denver · Outside Days"
-                  as="span"
-                />
-              </p>
-              <h1
-                className="text-3xl md:text-5xl font-light tracking-tight mb-6 leading-[1.1]"
-                style={{ fontFamily: "'Unbounded', sans-serif" }}
-              >
-                <EditableText
-                  settingKey="interest_headline"
-                  defaultText="An evening for the outdoor industry."
-                  as="span"
-                />
-              </h1>
-              <p
-                className="text-base md:text-lg text-[#F5E6D3]/85 mb-8 leading-relaxed"
-                style={{ fontFamily: "'Josefin Sans', sans-serif" }}
-              >
-                <EditableText
-                  settingKey="interest_capacity_copy"
-                  defaultText="Due to venue capacity, please submit your interest by May 25."
-                  as="span"
-                />
-              </p>
+              <span>DJ</span>
+              <StarSparkle tone="green" size={10} />
+              <span>Drinks</span>
+              <StarSparkle tone="coral" size={10} />
+              <span>Food</span>
+              <StarSparkle tone="cream" size={10} />
+              <span>Fun</span>
+            </div>
+          </div>
 
-              {!showForm && !done && (
+          {/* About the event */}
+          <section className="mt-2 px-1">
+            <h2
+              className="font-afterparty text-[22px] mb-3 text-center"
+              style={{ fontWeight: 500, color: CREAM }}
+            >
+              <EditableText
+                settingKey="about.title"
+                defaultText="A lil' party for outdoor industry creators & brands"
+              />
+            </h2>
+            <p
+              className="text-[14px] leading-[1.55] mb-5 text-center"
+              style={{ color: CREAM_MUTED }}
+            >
+              <EditableText
+                settingKey="about.body"
+                defaultText="200 of the industry's hottest creators and brands coming together for food, fun, a DJ, and drinks. Proudly sober optional, professional networking guaranteed."
+                multiline
+              />
+            </p>
+
+            {/* Capacity gate */}
+            <div
+              className="rounded-xl px-4 py-3 mb-5 text-center text-[13px]"
+              style={{
+                backgroundColor: "rgba(237,118,96,0.10)",
+                border: "1px solid rgba(237,118,96,0.45)",
+                color: CREAM,
+              }}
+            >
+              <EditableText
+                settingKey="interest_capacity_copy"
+                defaultText="Due to venue capacity, please submit your interest by May 25."
+                as="span"
+              />
+            </div>
+
+            {!showForm && !done && (
+              <div className="flex justify-center">
                 <motion.button
                   onClick={() => setShowForm(true)}
                   whileHover={{ scale: 1.03 }}
@@ -175,95 +225,95 @@ const AfterPartyInterest = () => {
                     as="span"
                   />
                 </motion.button>
-              )}
-            </motion.div>
+              </div>
+            )}
+          </section>
 
-            <AnimatePresence mode="wait">
-              {showForm && !done && (
-                <motion.form
-                  key="form"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  onSubmit={handleSubmit}
-                  className="mt-10 bg-[#F5E6D3]/[0.06] border border-[#F5E6D3]/15 rounded-2xl p-6 md:p-8 space-y-5 backdrop-blur-sm"
-                  style={{ fontFamily: "'Josefin Sans', sans-serif" }}
-                >
-                  <Field label="Full name" value={fullName} onChange={setFullName} />
-                  <Field label="Email" type="email" value={email} onChange={setEmail} />
-                  <Field label="Company" value={company} onChange={setCompany} />
-                  <Field label="Role / title" value={roleTitle} onChange={setRoleTitle} />
+          <AnimatePresence mode="wait">
+            {showForm && !done && (
+              <motion.form
+                key="form"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                onSubmit={handleSubmit}
+                className="mt-8 bg-[#F5E6D3]/[0.06] border border-[#F5E6D3]/15 rounded-2xl p-6 md:p-8 space-y-5 backdrop-blur-sm"
+                style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+              >
+                <Field label="Full name" value={fullName} onChange={setFullName} />
+                <Field label="Email" type="email" value={email} onChange={setEmail} />
+                <Field label="Company" value={company} onChange={setCompany} />
+                <Field label="Role / title" value={roleTitle} onChange={setRoleTitle} />
 
-                  <div>
-                    <Label>I'm coming as a...</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {TYPE_OPTIONS.map((opt) => {
-                        const active = attendeeType === opt.value;
-                        return (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setAttendeeType(opt.value)}
-                            className={`px-4 py-2 rounded-full border text-sm font-semibold transition ${
-                              active
-                                ? "bg-[#E1B624] text-[#19363B] border-[#E1B624]"
-                                : "bg-transparent text-[#F5E6D3] border-[#F5E6D3]/30 hover:border-[#E1B624]"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        );
-                      })}
-                    </div>
+                <div>
+                  <Label>I'm coming as a...</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {TYPE_OPTIONS.map((opt) => {
+                      const active = attendeeType === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setAttendeeType(opt.value)}
+                          className={`px-4 py-2 rounded-full border text-sm font-semibold transition ${
+                            active
+                              ? "bg-[#E1B624] text-[#19363B] border-[#E1B624]"
+                              : "bg-transparent text-[#F5E6D3] border-[#F5E6D3]/30 hover:border-[#E1B624]"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  <div>
-                    <Label>Why you want to come</Label>
-                    <textarea
-                      value={reason}
-                      onChange={(e) => setReason(e.target.value.slice(0, 500))}
-                      rows={4}
-                      className="w-full bg-[#19363B]/40 border border-[#F5E6D3]/20 rounded-lg px-4 py-3 text-[#F5E6D3] placeholder:text-[#F5E6D3]/40 focus:outline-none focus:border-[#E1B624]"
-                      placeholder="A sentence or two is plenty."
-                    />
-                    <p className="text-[11px] text-[#F5E6D3]/50 mt-1">
-                      {reason.length}/500
-                    </p>
-                  </div>
+                <div>
+                  <Label>Why you want to come</Label>
+                  <textarea
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value.slice(0, 500))}
+                    rows={4}
+                    className="w-full bg-[#19363B]/40 border border-[#F5E6D3]/20 rounded-lg px-4 py-3 text-[#F5E6D3] placeholder:text-[#F5E6D3]/40 focus:outline-none focus:border-[#E1B624]"
+                    placeholder="A sentence or two is plenty."
+                  />
+                  <p className="text-[11px] text-[#F5E6D3]/50 mt-1">{reason.length}/500</p>
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={!canSubmit || submitting}
-                    className="w-full px-6 py-4 rounded-xl bg-[#ED7660] text-[#19363B] font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition hover:bg-[#ED7660]/90"
-                  >
-                    {submitting ? "Sending..." : "I wanna come"}
-                  </button>
-
-                  <p className="text-[11px] text-[#F5E6D3]/55 leading-relaxed pt-2">
-                    <EditableText
-                      settingKey="interest_fineprint"
-                      defaultText="By submitting, you're cool with Oakley sending you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event."
-                      as="span"
-                    />
-                  </p>
-                </motion.form>
-              )}
-
-              {done && (
-                <motion.div
-                  key="done"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-10 bg-[#F5E6D3]/[0.06] border border-[#F5E6D3]/15 rounded-2xl p-8 text-center"
-                  style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+                <button
+                  type="submit"
+                  disabled={!canSubmit || submitting}
+                  className="w-full px-6 py-4 rounded-xl bg-[#ED7660] text-[#19363B] font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition hover:bg-[#ED7660]/90"
                 >
+                  {submitting ? "Sending..." : "I wanna come"}
+                </button>
+
+                <p className="text-[11px] text-[#F5E6D3]/55 leading-relaxed pt-2">
+                  <EditableText
+                    settingKey="interest_fineprint"
+                    defaultText="By submitting, you're cool with Oakley sending you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event."
+                    as="span"
+                  />
+                </p>
+              </motion.form>
+            )}
+
+            {done && (
+              <motion.div
+                key="done"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 space-y-6"
+                style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+              >
+                <div className="bg-[#F5E6D3]/[0.06] border border-[#F5E6D3]/15 rounded-2xl p-8 text-center">
                   <h2
                     className="text-2xl md:text-3xl font-light mb-4 text-[#E1B624]"
                     style={{ fontFamily: "'Unbounded', sans-serif" }}
                   >
                     <EditableText
                       settingKey="interest_thanks_headline"
-                      defaultText="You're on the list to be considered."
+                      defaultText="You're on the waitlist."
                       as="span"
                     />
                   </h2>
@@ -274,18 +324,43 @@ const AfterPartyInterest = () => {
                       as="span"
                     />
                   </p>
-                  <a
-                    href="/events"
-                    className="inline-block mt-6 text-sm text-[#ED7660] underline underline-offset-4 hover:text-[#E1B624]"
-                  >
-                    Back to events
-                  </a>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+
+                {showActivation && (
+                  <div>
+                    <BrandActivateButton
+                      fullName={fullName}
+                      company={company}
+                      email={email}
+                      variant="full"
+                    />
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Oakley RiNo gallery */}
+          <div className="mt-12">
+            <OakleyRinoVenueShowcase />
           </div>
-        </section>
-      </main>
+
+          {/* Sponsors */}
+          <div className="mt-10">
+            <AfterPartySpotlights />
+          </div>
+
+          <div className="mt-8 text-center text-[12px]" style={{ color: CREAM_DIM, borderTop: `1px solid ${BORDER}`, paddingTop: 16 }}>
+            Questions?{" "}
+            <a
+              href="mailto:jenna@wearetheoutdoorindustry.com"
+              style={{ color: "#ED7660", textDecoration: "underline" }}
+            >
+              jenna@wearetheoutdoorindustry.com
+            </a>
+          </div>
+        </div>
+      </div>
     </EditableTextProvider>
   );
 };
