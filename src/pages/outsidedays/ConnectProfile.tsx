@@ -258,4 +258,110 @@ const MultiPills = ({ value, options, onChange }: { value: string[]; options: st
   );
 };
 
+type NicheEntry = { niche: string; years: number | null };
+
+const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) => {
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState<Record<string, boolean>>({});
+  const selected = new Set(value);
+  const toggle = (skill: string) => {
+    if (selected.has(skill)) onChange(value.filter((s) => s !== skill));
+    else onChange([...value, skill]);
+  };
+  const q = search.trim().toLowerCase();
+  const filteredCats = useMemo(() => {
+    return SKILL_CATEGORY_KEYS.map((cat) => {
+      const skills = SKILL_CATEGORIES[cat].filter((s) => !q || s.toLowerCase().includes(q));
+      return { cat, skills };
+    }).filter((c) => c.skills.length > 0);
+  }, [q]);
+
+  return (
+    <div className="space-y-3">
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {value.map((s) => (
+            <button type="button" key={s} onClick={() => toggle(s)}
+              className="px-3 py-1.5 rounded-full text-xs font-body border bg-events-coral text-events-cream border-events-coral inline-flex items-center gap-1.5">
+              {s}<X className="w-3 h-3" />
+            </button>
+          ))}
+        </div>
+      )}
+      <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search skills..." />
+      <div className="space-y-1.5">
+        {filteredCats.map(({ cat, skills }) => {
+          const count = skills.filter((s) => selected.has(s)).length;
+          const isOpen = !!q || open[cat];
+          return (
+            <Collapsible key={cat} open={isOpen} onOpenChange={(o) => setOpen((p) => ({ ...p, [cat]: o }))}>
+              <CollapsibleTrigger className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10 text-sm font-body text-events-cream hover:bg-events-cream/10">
+                <span>{cat} {count > 0 && <span className="text-events-coral">({count})</span>}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 px-3 py-2">
+                  {skills.map((s) => (
+                    <label key={s} className="flex items-center gap-2 text-sm font-body text-events-cream/80 cursor-pointer py-1">
+                      <Checkbox checked={selected.has(s)} onCheckedChange={() => toggle(s)} />
+                      <span>{s}</span>
+                    </label>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          );
+        })}
+      </div>
+      <p className="text-[11px] text-events-cream/50 font-body">Select the skills that describe what you do best. Brands will filter on these.</p>
+    </div>
+  );
+};
+
+const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: NicheEntry[]) => void }) => {
+  const map = new Map<string, number | null>();
+  for (const e of value) {
+    if (e && typeof e === "object" && e.niche) map.set(e.niche, e.years ?? null);
+  }
+  const setEntries = (m: Map<string, number | null>) => {
+    onChange(Array.from(m.entries()).map(([niche, years]) => ({ niche, years })));
+  };
+  const toggle = (n: string) => {
+    const m = new Map(map);
+    if (m.has(n)) m.delete(n); else m.set(n, null);
+    setEntries(m);
+  };
+  const setYears = (n: string, raw: string) => {
+    const m = new Map(map);
+    if (raw === "") m.set(n, null);
+    else {
+      const y = parseInt(raw, 10);
+      m.set(n, Number.isFinite(y) && y >= 0 ? y : null);
+    }
+    setEntries(m);
+  };
+  return (
+    <div className="space-y-2 pt-2 border-t border-events-cream/10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+        {NICHES.map((n) => {
+          const on = map.has(n);
+          return (
+            <div key={n} className="flex items-center gap-2 py-1">
+              <label className="flex items-center gap-2 text-sm font-body text-events-cream/80 cursor-pointer flex-1">
+                <Checkbox checked={on} onCheckedChange={() => toggle(n)} />
+                <span>{n}</span>
+              </label>
+              {on && (
+                <Input type="number" min={0} value={map.get(n) ?? ""} onChange={(e) => setYears(n, e.target.value)}
+                  placeholder="yrs" className="w-20 h-8 text-sm" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-[11px] text-events-cream/50 font-body">Outdoor brands care a lot about niche experience. Years are optional but helpful.</p>
+    </div>
+  );
+};
+
 export default ConnectProfile;
