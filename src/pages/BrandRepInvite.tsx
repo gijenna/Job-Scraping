@@ -115,13 +115,17 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
     if (cityData) setCity(cityData as unknown as ExpertCity);
 
     if (name) {
+      const requestedSlug = citySlug === 'denver' && name.toLowerCase() === 'uc-health' ? 'uchealth' : name;
       const { data: expertData } = await supabase
         .from('industry_experts').select('*').eq('slug', name).single();
-      if (expertData) {
-        setExpert(expertData as unknown as Expert);
-        if (expertData.status === 'invited') {
+      const resolvedExpert = expertData || (requestedSlug !== name
+        ? (await supabase.from('industry_experts').select('*').eq('slug', requestedSlug).single()).data
+        : null);
+      if (resolvedExpert) {
+        setExpert(resolvedExpert as unknown as Expert);
+        if (resolvedExpert.status === 'invited') {
           await supabase.from('industry_experts')
-            .update({ status: 'viewed' }).eq('id', expertData.id);
+            .update({ status: 'viewed' }).eq('id', resolvedExpert.id);
         }
       }
     }
