@@ -115,6 +115,10 @@ const BrandUmbrellaSection = ({ experts, accentColor = "#FEE123", eventSlug = "p
         const hiringBlurb = settings[hiringKey] || "";
         const normalizedCareersUrl = normalizeUrl(careersUrl);
         const hasHighlightedExpert = highlightBrandRep && group.experts.some(e => e.slug === highlightBrandRep);
+        const mapBrand = findMapBrand(group.company);
+        const offersRemote = mapBrand?.offers_remote || null;
+        const currentlyHiring = mapBrand?.currently_hiring || null;
+        const cultureBlurb = mapBrand?.culture_blurb || null;
 
         const brandAnchor = `brand-${slug}`;
         return (
