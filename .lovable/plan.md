@@ -1,33 +1,39 @@
-## Add "Skills & niches" section to ConnectProfile.tsx
+## Add "Background" section to ConnectProfile.tsx
 
-Insert a new `<Section title="Skills & niches">` between the existing "Current role" section (ends line 142) and "Looking for" section (begins line 144). No other files change.
+Insert one new `<Section title="Background">` immediately after the "Looking for" section and before "Dream companies" in `src/pages/outsidedays/ConnectProfile.tsx`. No other files touched. No schema changes.
 
-### Imports
-Update the taxonomies import to also pull `SKILL_CATEGORIES`, `SKILL_CATEGORY_KEYS`, and `NICHES`. Also import `Checkbox` from `@/components/ui/checkbox` and `Collapsible`/`CollapsibleTrigger`/`CollapsibleContent` from `@/components/ui/collapsible` (both already exist). Add `X` and `ChevronDown` from `lucide-react`.
+### Field 1: Total years of professional experience
+- `<Field label="Total years of professional experience" hint="Across your whole career, all fields combined.">`
+- Numeric `<Input type="number" min={0}>` bound to `c.total_years_professional`
+- Empty string clears to `null`; otherwise `Number(value)`
 
-### Subsection 1: Areas of expertise
-Backed by `c.areas_of_expertise` (text[]).
+### Field 2: Prior careers (repeater, max 3)
+- New inline component `PriorCareersPicker` (kept local to file, matching the pattern of `SkillsPicker` / `NichePicker`)
+- Reads/writes `c.prior_careers` as `Array<{ field: string; focus: string; years: number | null }>`, normalized on read with `Array.isArray` guard
+- Helper text above the list: "Worked in multiple fields? Add up to 3 prior careers so brands see your full story. A senior salesperson transitioning to marketing is way more valuable than '1 year of marketing.'"
+- Each entry rendered as a bordered card with a `Row` of:
+  - Field `<Select options={FIELDS}>` (changing field clears focus for that entry)
+  - Focus `<Select options={FOCUSES_BY_FIELD[entry.field] || []}>`
+  - Years `<Input type="number" min={0}>`
+  - A small `X` remove button (top-right of card)
+- "Add another prior career" `<Button variant="secondary">` below the list
+  - Disabled when `entries.length >= 3`
+  - Appends `{ field: "", focus: "", years: null }`
 
-- Local state: `skillSearch` (string), `openCategories` (Set<string>).
-- Selected chips row at top: maps over `c.areas_of_expertise`, each pill renders skill name + an X button that removes it via `set("areas_of_expertise", arr.filter(s => s !== skill))`.
-- Search input below chips filters skills across all categories (case-insensitive substring match). When search is non-empty, all matching categories auto-expand and only matching skills render.
-- Categories list: iterate `SKILL_CATEGORY_KEYS`. For each, render a `Collapsible` with a trigger row showing `{category} ({selectedCountInCategory})` and a chevron. Content is a wrapped grid of skill items; each item is a small Checkbox + label. Toggling adds/removes from `areas_of_expertise`.
-- Helper text: "Select the skills that describe what you do best. Brands will filter on these."
+### Field 3: Outdoor industry experience
+- Yes/No via existing `<Select options={["Yes","No"]}>` pattern (matches the relocation toggle already in the file)
+- Bound to `c.outdoor_industry_experience` (boolean, `""` when null)
+- When `true`, reveal `<Field label="Years in outdoor industry"><Input type="number" min={0}></Field>` bound to `c.outdoor_industry_years`
+- When toggled to No/empty, clear `outdoor_industry_years` to `null`
+- Helper text under the toggle: "Outdoor brands care if you've worked in the industry before."
 
-### Subsection 2: Niche experience
-Backed by `c.niche_experience` (jsonb array of `{niche, years}`).
-
-- Normalize on read: support both array of objects and possible legacy shape; map to `{ [niche]: years|null }` for quick lookup.
-- Render all 28 `NICHES` as rows: Checkbox + niche name. When checked, a small numeric `Input` (w-20, type=number, min=0) appears to the right for years.
-- Toggle adds/removes `{niche, years: null}`. Years onChange updates that entry's years (parse to integer, blank -> null).
-- Persist back as `set("niche_experience", arrayOfObjects)`.
-- Helper text: "Outdoor brands care a lot about niche experience. Years are optional but helpful."
-
-### Styling
-Match existing dark teal aesthetic: `bg-events-cream/5`, coral accents for selected chips (reuse the `MultiPills` chip style for selected-skill chips), `font-body` everywhere. No em dashes in any copy.
+### Field 4: Management experience
+- Same Yes/No pattern, bound to `c.management_experience`
+- When `true`, reveal numeric input bound to `c.management_years`
+- When toggled off, clear `management_years` to `null`
 
 ### Out of scope
-- No DB schema changes.
-- No DEI/demographics fields.
-- No edits to signup, dashboard, or other pages.
-- No edits to the edge function (existing `candidate-profile` already passes through `areas_of_expertise` and `niche_experience`).
+- No DEI/demographics fields
+- No DB migrations, no edge function changes (the existing `candidate-profile` function passes these fields through)
+- No edits to signup, dashboard, or any other component
+- No em dashes in any new copy

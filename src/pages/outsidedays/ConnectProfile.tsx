@@ -177,6 +177,53 @@ const ConnectProfile = () => {
             <Field label="Min pay rate (optional)"><Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" /></Field>
           </Section>
 
+          <Section title="Background">
+            <Field label="Total years of professional experience" hint="Across your whole career, all fields combined.">
+              <Input type="number" min={0} value={c.total_years_professional ?? ""} onChange={(e) => set("total_years_professional", e.target.value === "" ? null : Number(e.target.value))} />
+            </Field>
+            <PriorCareersPicker
+              value={Array.isArray(c.prior_careers) ? c.prior_careers : []}
+              onChange={(v) => set("prior_careers", v)}
+            />
+            <div className="pt-2 border-t border-events-cream/10 space-y-3">
+              <Field label="Outdoor industry experience">
+                <Select
+                  value={c.outdoor_industry_experience === true ? "Yes" : c.outdoor_industry_experience === false ? "No" : ""}
+                  onChange={(v) => {
+                    const yes = v === "Yes";
+                    set("outdoor_industry_experience", yes);
+                    if (!yes) set("outdoor_industry_years", null);
+                  }}
+                  options={["Yes", "No"]}
+                />
+              </Field>
+              {c.outdoor_industry_experience === true && (
+                <Field label="Years in outdoor industry">
+                  <Input type="number" min={0} value={c.outdoor_industry_years ?? ""} onChange={(e) => set("outdoor_industry_years", e.target.value === "" ? null : Number(e.target.value))} />
+                </Field>
+              )}
+              <p className="text-[11px] text-events-cream/50 font-body">Outdoor brands care if you've worked in the industry before.</p>
+            </div>
+            <div className="pt-2 border-t border-events-cream/10 space-y-3">
+              <Field label="Management experience">
+                <Select
+                  value={c.management_experience === true ? "Yes" : c.management_experience === false ? "No" : ""}
+                  onChange={(v) => {
+                    const yes = v === "Yes";
+                    set("management_experience", yes);
+                    if (!yes) set("management_years", null);
+                  }}
+                  options={["Yes", "No"]}
+                />
+              </Field>
+              {c.management_experience === true && (
+                <Field label="Years managing people">
+                  <Input type="number" min={0} value={c.management_years ?? ""} onChange={(e) => set("management_years", e.target.value === "" ? null : Number(e.target.value))} />
+                </Field>
+              )}
+            </div>
+          </Section>
+
           <Section title="Dream companies">
             <p className="text-xs font-body text-events-cream/60 -mt-1">Type a company name. Brands at this event show first.</p>
             {(() => {
