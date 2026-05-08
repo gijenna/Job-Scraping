@@ -14,6 +14,9 @@ import AdminAfterParty from "./pages/AdminAfterParty";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
+import Connect from "./pages/outsidedays/Connect";
+import ConnectProfile from "./pages/outsidedays/ConnectProfile";
+import BrandDashboard from "./pages/outsidedays/BrandDashboard";
 import GatherPNWExport from "./pages/GatherPNWExport";
 import GatherDenverExport from "./pages/GatherDenverExport";
 import OldStuffByJenna from "./pages/OldStuffByJenna";
@@ -108,6 +111,10 @@ const App = () => (
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
+          {/* Outside Days connect (career fair) */}
+          <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
+          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
           {/* Secondary routes */}
           <Route path="/Gatheroverview" element={<Index />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
