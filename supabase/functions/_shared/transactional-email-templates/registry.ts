@@ -15,6 +15,7 @@ import { template as afterpartyPin } from './afterparty-pin.tsx'
 import { template as afterpartyRsvpConfirmation } from './afterparty-rsvp-confirmation.tsx'
 import { template as brandActivationAlert } from './brand-activation-alert.tsx'
 import { template as brandActivationConfirmation } from './brand-activation-confirmation.tsx'
+import { template as afterpartyInterestAlert } from './afterparty-interest-alert.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-matches': afterpartyMatches,
@@ -23,4 +24,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-rsvp-confirmation': afterpartyRsvpConfirmation,
   'brand-activation-alert': brandActivationAlert,
   'brand-activation-confirmation': brandActivationConfirmation,
+  'afterparty-interest-alert': afterpartyInterestAlert,
 }
