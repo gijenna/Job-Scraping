@@ -492,7 +492,7 @@ const EventMapAdmin = () => {
                         </TableCell>
                       </TableRow>
                     )}
-                    </>
+                    </FragmentWithKey>
                   );
                 })}
                 {brands.length === 0 && (
