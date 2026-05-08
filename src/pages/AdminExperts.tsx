@@ -118,6 +118,7 @@ const AdminExperts = () => {
               <p className="text-events-cream/40 text-center py-12">Loading...</p>
             ) : (
               <div className="space-y-10">
+                <ImpersonatePanel />
                 <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
                 <div>
                   <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
