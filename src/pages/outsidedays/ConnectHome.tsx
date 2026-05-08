@@ -15,6 +15,7 @@ import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { Button } from "@/components/ui/button";
 import { faviconFromUrl } from "@/lib/url-logo";
+import ConnectionForm from "@/components/connect/ConnectionForm";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
