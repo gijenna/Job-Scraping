@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateSignupLookup, candidateSignupCreate, candidateLogin,
+  candidateUploadSignedUrl, candidateAttachUpload,
 } from "@/lib/connect-session";
 import { POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";

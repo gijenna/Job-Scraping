@@ -1,39 +1,43 @@
-## Add "Background" section to ConnectProfile.tsx
+## Add a photo capture step to the candidate signup wizard
 
-Insert one new `<Section title="Background">` immediately after the "Looking for" section and before "Dream companies" in `src/pages/outsidedays/ConnectProfile.tsx`. No other files touched. No schema changes.
+Edit only `src/pages/outsidedays/Connect.tsx`. No backend, schema, or other-page changes. The Background section was already implemented in the previous turn so it is not part of this plan.
 
-### Field 1: Total years of professional experience
-- `<Field label="Total years of professional experience" hint="Across your whole career, all fields combined.">`
-- Numeric `<Input type="number" min={0}>` bound to `c.total_years_professional`
-- Empty string clears to `null`; otherwise `Number(value)`
+### Where it goes
+Insert a new step between current step 1 (phone) and current step 2 (poachable + career stage). Steps reindex from 5 total to 6 total:
+- 0: name + email
+- 1: phone
+- 2: **photo (new)**
+- 3: poachable + career stage
+- 4: field + focus + years
+- 5: the hook
 
-### Field 2: Prior careers (repeater, max 3)
-- New inline component `PriorCareersPicker` (kept local to file, matching the pattern of `SkillsPicker` / `NichePicker`)
-- Reads/writes `c.prior_careers` as `Array<{ field: string; focus: string; years: number | null }>`, normalized on read with `Array.isArray` guard
-- Helper text above the list: "Worked in multiple fields? Add up to 3 prior careers so brands see your full story. A senior salesperson transitioning to marketing is way more valuable than '1 year of marketing.'"
-- Each entry rendered as a bordered card with a `Row` of:
-  - Field `<Select options={FIELDS}>` (changing field clears focus for that entry)
-  - Focus `<Select options={FOCUSES_BY_FIELD[entry.field] || []}>`
-  - Years `<Input type="number" min={0}>`
-  - A small `X` remove button (top-right of card)
-- "Add another prior career" `<Button variant="secondary">` below the list
-  - Disabled when `entries.length >= 3`
-  - Appends `{ field: "", focus: "", years: null }`
+Update the progress-bar `[0,1,2,3,4]` to `[0,1,2,3,4,5]`, the `stepValid()` step indices, the `next()` boundary check (`step < 5`), the final-step button label condition, and shift step bodies accordingly.
 
-### Field 3: Outdoor industry experience
-- Yes/No via existing `<Select options={["Yes","No"]}>` pattern (matches the relocation toggle already in the file)
-- Bound to `c.outdoor_industry_experience` (boolean, `""` when null)
-- When `true`, reveal `<Field label="Years in outdoor industry"><Input type="number" min={0}></Field>` bound to `c.outdoor_industry_years`
-- When toggled to No/empty, clear `outdoor_industry_years` to `null`
-- Helper text under the toggle: "Outdoor brands care if you've worked in the industry before."
+### Step 2 UI
+- Title: "Add your photo"
+- Body: "Snap a quick selfie or upload a headshot. Recruiters meet 600 people in one day. A face makes you 10 times more memorable."
+- Three stacked buttons:
+  - **Take selfie** → triggers a hidden `<input type="file" accept="image/*" capture="user">`
+  - **Upload from device** → triggers a hidden `<input type="file" accept="image/*">`
+  - **Skip for now** → calls `setStep(step + 1)` without changing data
+- After a file is chosen, show a small circular preview (~80px) using `URL.createObjectURL`
+- Step is always valid (file optional). Continue button reads "Continue" as on other steps.
+- No camera-permission prompt is invoked directly; the OS handles `capture="user"` and silently falls back to the gallery if the camera is denied, satisfying the graceful-fallback requirement (the second "Upload from device" button is always available).
 
-### Field 4: Management experience
-- Same Yes/No pattern, bound to `c.management_experience`
-- When `true`, reveal numeric input bound to `c.management_years`
-- When toggled off, clear `management_years` to `null`
+### File handling (deferred upload)
+The signup edge function and the `candidate-photos` storage bucket both require an authenticated session, so the actual upload must happen after `candidateSignupCreate` succeeds.
+- Hold the chosen `File` in local state: `const [photoFile, setPhotoFile] = useState<File | null>(null)` plus `photoPreview` (object URL, revoked on cleanup/replace).
+- Validate on selection: must be `image/*`, ≤ 5MB. On failure, toast and don't store.
+- In `next()` after the existing `candidateSignupCreate(d)` call, if `photoFile` is set:
+  1. `candidateUploadSignedUrl("photo", photoFile.name, photoFile.type)`
+  2. `fetch(upload_url, { method: "PUT", headers: { "Content-Type": photoFile.type }, body: photoFile })`
+  3. `candidateAttachUpload("photo", storage_path)`
+  4. Wrap in try/catch; on failure show a non-blocking toast ("Photo upload failed, you can add it from your profile") and still navigate to home so the account isn't lost.
+
+### Imports to add
+`useRef` from react, no new lib imports beyond `candidateUploadSignedUrl` and `candidateAttachUpload` from `@/lib/connect-session` (already exported).
 
 ### Out of scope
-- No DEI/demographics fields
-- No DB migrations, no edge function changes (the existing `candidate-profile` function passes these fields through)
-- No edits to signup, dashboard, or any other component
-- No em dashes in any new copy
+- No edits to other steps, other pages, edge functions, taxonomies, storage buckets, or DB schema.
+- No DEI/demographics fields, no Background section work (already done).
+- No em dashes anywhere in new copy.
