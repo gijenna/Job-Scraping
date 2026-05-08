@@ -111,6 +111,10 @@ const App = () => (
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
+          {/* Outside Days connect (career fair) */}
+          <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
+          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
           {/* Secondary routes */}
           <Route path="/Gatheroverview" element={<Index />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
