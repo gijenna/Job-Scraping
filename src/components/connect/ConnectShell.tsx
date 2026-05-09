@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
-import heroMountains from "@/assets/hero-denver-mountains.jpg";
-import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
-import outsideDaysLogo from "@/assets/outside-days-logo.png";
+import heroEvent from "@/assets/connect-hero-event.jpg";
+import connectLogo from "@/assets/connect-basecamp-outside-days.png";
 import EditableText from "@/components/EditableText";
 
 interface ConnectShellProps {
@@ -24,22 +23,24 @@ const ConnectShell = ({ children, hero = true, maxWidth = "md" }: ConnectShellPr
     {hero && (
       <div className="relative w-full overflow-hidden">
         <img
-          src={heroMountains}
-          alt="Outside Days at Auraria Campus, Denver"
+          src={heroEvent}
+          alt="Basecamp Outdoor at Outside Days"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-events-teal/70" />
+        {/* Dark overlay for logo legibility */}
+        <div className="absolute inset-0 bg-events-teal/75" />
+        <div className="absolute inset-0 bg-gradient-to-b from-events-teal/40 via-transparent to-events-teal/80" />
         <div className="relative px-4 pt-8 pb-10 md:pt-12 md:pb-14 flex flex-col items-center text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <img src={basecampLogo} alt="Basecamp Outdoor" className="h-12 w-auto drop-shadow-md" />
-            <span className="font-body text-events-cream/90 text-2xl md:text-3xl font-light">@</span>
-            <img src={outsideDaysLogo} alt="Outside Days" className="h-14 md:h-20 w-auto drop-shadow-md" />
-          </div>
+          <img
+            src={connectLogo}
+            alt="Basecamp Outdoor at Outside Days"
+            className="h-32 md:h-44 w-auto drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+          />
           <EditableText
             settingKey="connect_hero_subtitle"
             defaultText="Career fair connections. Denver, May 28."
             as="p"
-            className="font-body text-events-cream/80 text-sm md:text-base"
+            className="font-body text-events-cream/90 text-sm md:text-base mt-3"
           />
         </div>
       </div>
