@@ -112,37 +112,16 @@ const MapBrandPanel = ({
 
           {/* Brand header */}
           <div className="p-6">
-            {candidateMode && (
-              <p className="text-[11px] font-body text-events-cream/70 mb-3 leading-snug">
-                Tap a person below to log a connection, or tap the brand logo to log a brand-level note.
-              </p>
-            )}
             <div className="flex items-center gap-4">
-              {candidateMode ? (
-                <button
-                  onClick={() => setLogging({ mode: "brand" })}
-                  className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0 ring-2 ring-events-coral/0 hover:ring-events-coral transition-all active:scale-95"
-                  aria-label={`Log connection with ${brand.name}`}
-                >
-                  {logoSrc ? (
-                    <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
-                  ) : (
-                    <span className="font-display font-bold text-xl text-events-teal">
-                      {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                    </span>
-                  )}
-                </button>
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0">
-                  {logoSrc ? (
-                    <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
-                  ) : (
-                    <span className="font-display font-bold text-xl text-events-teal">
-                      {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                    </span>
-                  )}
-                </div>
-              )}
+              <div className="w-16 h-16 rounded-full bg-events-cream flex items-center justify-center overflow-hidden shadow-md border-2 border-white shrink-0">
+                {logoSrc ? (
+                  <img src={logoSrc} alt={brand.name} className="w-12 h-12 object-contain" />
+                ) : (
+                  <span className="font-display font-bold text-xl text-events-teal">
+                    {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                  </span>
+                )}
+              </div>
               <div className="min-w-0">
                 <h3 className="font-headline font-bold text-xl text-events-cream">{brand.name}</h3>
                 {brand.is_activation && (
@@ -165,6 +144,16 @@ const MapBrandPanel = ({
                 </div>
               </div>
             </div>
+
+            {/* Visited toggle (during/post event only) */}
+            {candidateMode && mode !== "pre_event" && (
+              <div className="mt-4">
+                <BrandVisitToggle
+                  brand={{ id: brand.id, name: brand.name }}
+                  reps={experts}
+                />
+              </div>
+            )}
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mt-4">
@@ -219,46 +208,19 @@ const MapBrandPanel = ({
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 grid grid-cols-3 sm:grid-cols-4 gap-4">
-                      {experts.map((expert) => {
-                        const hasNote = !!noteRecipientIds?.has(expert.id);
-                        return candidateMode ? (
-                          <div key={expert.id} className="space-y-1.5">
-                            <button
-                              onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
-                              className="block w-full text-left active:scale-95 transition-transform relative"
-                            >
-                              <ExpertCardMinimal expert={expert} disableExpand />
-                              {hasNote && (
-                                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow">
-                                  <Check className="w-3 h-3" />
-                                </span>
-                              )}
-                            </button>
-                            {mode !== "during_event" && onSendNote && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onSendNote({
-                                    recipient_type: "brand_rep",
-                                    recipient_id: expert.id,
-                                    full_name: expert.full_name,
-                                    photo_url: expert.photo_url,
-                                    job_title: expert.job_title,
-                                    current_company: expert.current_company,
-                                    ask_me_about: expert.ask_me_about,
-                                  });
-                                }}
-                                className="w-full inline-flex items-center justify-center gap-1 text-[10px] font-display uppercase tracking-wider text-events-coral hover:text-events-cream"
-                              >
-                                <Mail className="w-3 h-3" />
-                                {hasNote ? "Note sent" : "Send a note"}
-                              </button>
-                            )}
-                          </div>
+                      {experts.map((expert) => (
+                        candidateMode ? (
+                          <button
+                            key={expert.id}
+                            onClick={() => setPersonSheet(expert)}
+                            className="block w-full text-left active:scale-95 transition-transform relative"
+                          >
+                            <ExpertCardMinimal expert={expert} disableExpand />
+                          </button>
                         ) : (
                           <ExpertCardMinimal key={expert.id} expert={expert} />
-                        );
-                      })}
+                        )
+                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -268,13 +230,18 @@ const MapBrandPanel = ({
         </div>
       </div>
 
-      {logging && (
-        <ConnectionForm
+      {personSheet && (
+        <ConnectPersonSheet
           open
-          mode={logging.mode}
+          expert={personSheet}
+          subjectType="brand_rep"
           brand={{ id: brand.id, name: brand.name, logo_url: brand.logo_url, website_url: brand.website_url }}
-          rep={logging.rep ? { id: logging.rep.id, full_name: logging.rep.full_name, photo_url: logging.rep.photo_url } : null}
-          onClose={() => setLogging(null)}
+          onClose={() => setPersonSheet(null)}
+          onNoteChanged={(rid, has) => {
+            if (onSendNote) {
+              // parent tracks note recipients via its own list refresh
+            }
+          }}
         />
       )}
     </>
