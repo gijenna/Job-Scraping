@@ -267,7 +267,59 @@ const ConnectHome = () => {
         </main>
 
         {/* Brand modal (candidate mode for tap-to-log) */}
-        <MapBrandPanel brand={selected} onClose={() => setSelected(null)} candidateMode />
+        <MapBrandPanel
+          brand={selected}
+          onClose={() => setSelected(null)}
+          candidateMode
+          starredBrandIds={starred}
+          onStarChanged={(brandId, isStarred) => {
+            setStarred((prev) => {
+              const next = new Set(prev);
+              if (isStarred) next.add(brandId); else next.delete(brandId);
+              return next;
+            });
+          }}
+          onSendNote={(rec) => setNoteTarget(rec)}
+          noteRecipientIds={noteRecipientIds}
+        />
+
+        <NoteComposer
+          open={!!noteTarget}
+          recipient={noteTarget}
+          onClose={() => setNoteTarget(null)}
+          onSaved={(rid, hasNote) => {
+            setNoteRecipientIds((prev) => {
+              const next = new Set(prev);
+              if (hasNote) next.add(rid); else next.delete(rid);
+              return next;
+            });
+          }}
+        />
+
+        {/* First-time intro modal */}
+        {showIntro && (
+          <div className="fixed inset-0 z-[55] bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={dismissIntro}>
+            <div
+              className="bg-events-teal text-events-cream rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="font-afterparty text-3xl">{introCopy.title}</h2>
+              <p className="font-body text-events-cream/80">{introCopy.body}</p>
+              <div className="flex gap-2 pt-2">
+                <Button onClick={dismissIntro} className="flex-1 bg-events-coral hover:bg-events-coral/90 text-events-cream">
+                  Got it
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => { dismissIntro(); nav("/outsidedays26/connect/how-it-works"); }}
+                  className="text-events-cream/70"
+                >
+                  Learn more
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Expert zone list */}
         {showExpertList && (
