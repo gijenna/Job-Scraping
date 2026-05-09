@@ -209,6 +209,22 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
             )}
 
             <div className="space-y-2">
+              <Label className="text-events-teal font-semibold">
+                Mobile Phone <span className="text-events-teal/40 font-normal">(recommended — used to sign in)</span>
+              </Label>
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                inputMode="tel"
+                className="bg-events-teal/5 border-events-teal/15 text-events-teal h-12 text-base"
+                placeholder="555 123 4567"
+              />
+              <p className="text-events-teal/40 text-xs">
+                Saved with last 4 digits so {isBrandRep ? 'reps' : 'experts'} can sign in to their dashboard.
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label className="text-events-teal font-semibold">Event Location</Label>
               <div className="grid grid-cols-2 gap-3">
                 {cities.filter(c => isBrandRep ? (c.slug === 'denver' || c.slug === 'portland') : true).map((city) => (
