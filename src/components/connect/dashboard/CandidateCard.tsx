@@ -1,6 +1,12 @@
-import { Download } from "lucide-react";
+import { Download, Mail, Linkedin, Mailbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const TIMING_LABEL: Record<string, string> = {
+  pre_event: "Pre-event note",
+  during_event: "Note from event",
+  post_event: "Post-event note",
+};
 
 function Badge({ children, tone = "default" }: { children: any; tone?: "default" | "coral" | "yellow" }) {
   const colors = {
@@ -52,14 +58,52 @@ export default function CandidateCard({ candidate, onClick }: { candidate: any; 
 
       <div className="flex flex-wrap gap-1.5 mt-3">
         {eng?.visited && <Badge tone="coral">Visited my table</Badge>}
-        {eng?.sent_note && <Badge tone="coral">Sent you a note</Badge>}
+        {candidate.connect_note && (
+          <Badge tone="coral">{TIMING_LABEL[candidate.connect_note.note_timing] || "Sent a note"}</Badge>
+        )}
+        {eng?.sent_note && !candidate.connect_note && <Badge tone="coral">Logged a note</Badge>}
         {eng?.role_flagged && <Badge tone="yellow">Flagged a role</Badge>}
         {candidate.starred_brand && <Badge tone="yellow">Starred your brand</Badge>}
         {areas.map((a) => <Badge key={a}>{a}</Badge>)}
         {niches.slice(0, 3).map((n) => <Badge key={n}>{n}</Badge>)}
       </div>
 
-      {eng?.sent_note && eng.note && (
+      {candidate.connect_note && (
+        <div className="mt-4 rounded-xl border border-events-coral/30 bg-events-coral/5 p-3">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider font-display text-events-coral mb-1">
+            <Mailbox className="w-3 h-3" />
+            {TIMING_LABEL[candidate.connect_note.note_timing] || "Note"}
+            <span className="text-events-cream/40 normal-case font-body">
+              · {new Date(candidate.connect_note.sent_at).toLocaleDateString()}
+            </span>
+          </div>
+          <p className="text-events-cream/85 font-body italic text-sm leading-relaxed">
+            "{candidate.connect_note.message}"
+          </p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {candidate.email && (
+              <Button
+                variant="ghost" size="sm"
+                onClick={(e) => { e.stopPropagation(); window.location.href = `mailto:${candidate.email}`; }}
+                className="text-events-coral hover:text-events-cream h-7 px-2"
+              >
+                <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
+              </Button>
+            )}
+            {candidate.linkedin_url && (
+              <Button
+                variant="ghost" size="sm"
+                onClick={(e) => { e.stopPropagation(); window.open(candidate.linkedin_url, "_blank", "noopener"); }}
+                className="text-events-coral hover:text-events-cream h-7 px-2"
+              >
+                <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!candidate.connect_note && eng?.sent_note && eng.note && (
         <blockquote className="mt-4 pl-3 border-l-2 border-events-coral text-events-cream/70 font-body italic text-sm">
           "{eng.note}"
         </blockquote>
