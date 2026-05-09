@@ -11,6 +11,7 @@ import AdminLogin from "./pages/AdminLogin";
 import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
 import AdminAfterParty from "./pages/AdminAfterParty";
+import AdminConnect from "./pages/AdminConnect";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
