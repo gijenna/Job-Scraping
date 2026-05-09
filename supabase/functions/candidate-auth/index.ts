@@ -19,6 +19,32 @@ Deno.serve(async (req) => {
       return jsonFor(req, { exists: !!data });
     }
 
+    if (action === "signup_create_basics") {
+      // Lightweight signup. Only the four basics. Lets candidate save and
+      // upload a photo before completing the full required profile.
+      const required = ["first_name", "last_name", "email", "phone"];
+      for (const k of required) {
+        if (!body[k] || String(body[k]).trim() === "") {
+          return jsonFor(req, { error: `Missing required field: ${k}` }, { status: 400 });
+        }
+      }
+      const { data: existing } = await sb.from("candidates").select("id").ilike("email", body.email).maybeSingle();
+      if (existing) return jsonFor(req, { error: "Email already registered. Try signing in." }, { status: 409 });
+
+      const insertable: any = {
+        first_name: body.first_name,
+        last_name: body.last_name,
+        email: body.email,
+        phone: body.phone,
+        signup_mode: "basics",
+      };
+      const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
+      if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+
+      const token = await createSession("candidate", data.id);
+      return jsonFor(req, { session: { subject_type: "candidate", subject: data } }, { headers: setSessionCookieHeader(token) });
+    }
+
     if (action === "signup_create") {
       const required = ["first_name","last_name","email","phone","poachable_status","career_stage","field","focus","years_in_current_field","the_hook"];
       for (const k of required) {
