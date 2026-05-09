@@ -1,22 +1,53 @@
 import { useState, useEffect } from "react";
-import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase } from "lucide-react";
+import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase, Star, Mail, Check } from "lucide-react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
 import { motion, AnimatePresence } from "framer-motion";
+import { candidateToggleStar } from "@/lib/connect-session";
+import { useEventMode } from "@/lib/connect-event-mode";
+import { useToast } from "@/hooks/use-toast";
+import type { NoteRecipient } from "@/components/connect/NoteComposer";
 
 interface MapBrandPanelProps {
   brand: MapBrand | null;
   onClose: () => void;
   candidateMode?: boolean;
+  starredBrandIds?: Set<string>;
+  onStarChanged?: (brandId: string, isStarred: boolean) => void;
+  noteRecipientIds?: Set<string>;
+  onSendNote?: (recipient: NoteRecipient) => void;
 }
 
-const MapBrandPanel = ({ brand, onClose, candidateMode = false }: MapBrandPanelProps) => {
+const MapBrandPanel = ({
+  brand, onClose, candidateMode = false,
+  starredBrandIds, onStarChanged, noteRecipientIds, onSendNote,
+}: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
   const [logging, setLogging] = useState<{ mode: ConnectionMode; rep?: Expert } | null>(null);
+  const [starBusy, setStarBusy] = useState(false);
+  const mode = useEventMode();
+  const { toast } = useToast();
+  const isStarred = !!(brand && starredBrandIds?.has(brand.id));
+
+  const toggleStar = async () => {
+    if (!brand || starBusy) return;
+    setStarBusy(true);
+    const optimistic = !isStarred;
+    onStarChanged?.(brand.id, optimistic);
+    try {
+      const r = await candidateToggleStar(brand.id);
+      if (r.starred !== optimistic) onStarChanged?.(brand.id, r.starred);
+    } catch (e: any) {
+      onStarChanged?.(brand.id, !optimistic);
+      toast({ title: "Could not save", description: e.message, variant: "destructive" });
+    } finally {
+      setStarBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (!brand) { setExperts([]); return; }
@@ -54,12 +85,27 @@ const MapBrandPanel = ({ brand, onClose, candidateMode = false }: MapBrandPanelP
           className="relative w-full max-w-lg max-h-[85vh] bg-events-teal rounded-xl shadow-2xl overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/20 text-events-cream flex items-center justify-center hover:bg-black/40 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+            {candidateMode && (
+              <button
+                onClick={toggleStar}
+                disabled={starBusy}
+                aria-label={isStarred ? "Remove from shortlist" : "Add to shortlist"}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  isStarred ? "bg-events-coral text-events-cream" : "bg-black/20 text-events-cream hover:bg-black/40"
+                }`}
+              >
+                <Star className={`w-4 h-4 ${isStarred ? "fill-current" : ""}`} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-black/20 text-events-cream flex items-center justify-center hover:bg-black/40 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Brand header */}
           <div className="p-6">
@@ -170,19 +216,46 @@ const MapBrandPanel = ({ brand, onClose, candidateMode = false }: MapBrandPanelP
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 grid grid-cols-3 sm:grid-cols-4 gap-4">
-                      {experts.map((expert) =>
-                        candidateMode ? (
-                          <button
-                            key={expert.id}
-                            onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
-                            className="text-left active:scale-95 transition-transform"
-                          >
-                            <ExpertCardMinimal expert={expert} disableExpand />
-                          </button>
+                      {experts.map((expert) => {
+                        const hasNote = !!noteRecipientIds?.has(expert.id);
+                        return candidateMode ? (
+                          <div key={expert.id} className="space-y-1.5">
+                            <button
+                              onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
+                              className="block w-full text-left active:scale-95 transition-transform relative"
+                            >
+                              <ExpertCardMinimal expert={expert} disableExpand />
+                              {hasNote && (
+                                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow">
+                                  <Check className="w-3 h-3" />
+                                </span>
+                              )}
+                            </button>
+                            {mode !== "during_event" && onSendNote && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onSendNote({
+                                    recipient_type: "brand_rep",
+                                    recipient_id: expert.id,
+                                    full_name: expert.full_name,
+                                    photo_url: expert.photo_url,
+                                    job_title: expert.job_title,
+                                    current_company: expert.current_company,
+                                    ask_me_about: expert.ask_me_about,
+                                  });
+                                }}
+                                className="w-full inline-flex items-center justify-center gap-1 text-[10px] font-display uppercase tracking-wider text-events-coral hover:text-events-cream"
+                              >
+                                <Mail className="w-3 h-3" />
+                                {hasNote ? "Note sent" : "Send a note"}
+                              </button>
+                            )}
+                          </div>
                         ) : (
                           <ExpertCardMinimal key={expert.id} expert={expert} />
-                        ),
-                      )}
+                        );
+                      })}
                     </div>
                   </motion.div>
                 )}
