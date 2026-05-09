@@ -1,0 +1,7 @@
+ALTER TABLE public.candidates
+  ALTER COLUMN poachable_status DROP NOT NULL,
+  ALTER COLUMN career_stage DROP NOT NULL,
+  ALTER COLUMN field DROP NOT NULL,
+  ALTER COLUMN focus DROP NOT NULL,
+  ALTER COLUMN the_hook DROP NOT NULL,
+  ALTER COLUMN years_in_current_field DROP NOT NULL;

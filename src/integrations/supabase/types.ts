@@ -533,7 +533,7 @@ export type Database = {
       candidates: {
         Row: {
           areas_of_expertise: string[] | null
-          career_stage: string
+          career_stage: string | null
           created_at: string
           current_company: string | null
           current_location: string | null
@@ -546,10 +546,10 @@ export type Database = {
           dream_companies: Json | null
           dream_role_title: string | null
           email: string
-          field: string
+          field: string | null
           field_other: string | null
           first_name: string
-          focus: string
+          focus: string | null
           has_seen_map_intro: boolean
           id: string
           job_types_seeking: string[] | null
@@ -565,7 +565,7 @@ export type Database = {
           phone: string
           phone_last_four: string | null
           photo_url: string | null
-          poachable_status: string
+          poachable_status: string | null
           portfolio_url: string | null
           prior_careers: Json | null
           profile_completeness_score: number | null
@@ -573,16 +573,16 @@ export type Database = {
           remote_preference: string | null
           resume_url: string | null
           signup_mode: string | null
-          the_hook: string
+          the_hook: string | null
           the_pitch: string | null
           total_years_professional: number | null
           updated_at: string
           workplace_type_preference: string[] | null
-          years_in_current_field: number
+          years_in_current_field: number | null
         }
         Insert: {
           areas_of_expertise?: string[] | null
-          career_stage: string
+          career_stage?: string | null
           created_at?: string
           current_company?: string | null
           current_location?: string | null
@@ -595,10 +595,10 @@ export type Database = {
           dream_companies?: Json | null
           dream_role_title?: string | null
           email: string
-          field: string
+          field?: string | null
           field_other?: string | null
           first_name: string
-          focus: string
+          focus?: string | null
           has_seen_map_intro?: boolean
           id?: string
           job_types_seeking?: string[] | null
@@ -614,7 +614,7 @@ export type Database = {
           phone: string
           phone_last_four?: string | null
           photo_url?: string | null
-          poachable_status: string
+          poachable_status?: string | null
           portfolio_url?: string | null
           prior_careers?: Json | null
           profile_completeness_score?: number | null
@@ -622,16 +622,16 @@ export type Database = {
           remote_preference?: string | null
           resume_url?: string | null
           signup_mode?: string | null
-          the_hook: string
+          the_hook?: string | null
           the_pitch?: string | null
           total_years_professional?: number | null
           updated_at?: string
           workplace_type_preference?: string[] | null
-          years_in_current_field?: number
+          years_in_current_field?: number | null
         }
         Update: {
           areas_of_expertise?: string[] | null
-          career_stage?: string
+          career_stage?: string | null
           created_at?: string
           current_company?: string | null
           current_location?: string | null
@@ -644,10 +644,10 @@ export type Database = {
           dream_companies?: Json | null
           dream_role_title?: string | null
           email?: string
-          field?: string
+          field?: string | null
           field_other?: string | null
           first_name?: string
-          focus?: string
+          focus?: string | null
           has_seen_map_intro?: boolean
           id?: string
           job_types_seeking?: string[] | null
@@ -663,7 +663,7 @@ export type Database = {
           phone?: string
           phone_last_four?: string | null
           photo_url?: string | null
-          poachable_status?: string
+          poachable_status?: string | null
           portfolio_url?: string | null
           prior_careers?: Json | null
           profile_completeness_score?: number | null
@@ -671,12 +671,12 @@ export type Database = {
           remote_preference?: string | null
           resume_url?: string | null
           signup_mode?: string | null
-          the_hook?: string
+          the_hook?: string | null
           the_pitch?: string | null
           total_years_professional?: number | null
           updated_at?: string
           workplace_type_preference?: string[] | null
-          years_in_current_field?: number
+          years_in_current_field?: number | null
         }
         Relationships: []
       }
