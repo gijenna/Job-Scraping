@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 
 interface EditableTextContextValue {
   settings: Record<string, string>;
@@ -47,10 +48,10 @@ export const EditableTextProvider = ({ pageSlug, children }: EditableTextProvide
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     return () => subscription.unsubscribe();
   }, []);
