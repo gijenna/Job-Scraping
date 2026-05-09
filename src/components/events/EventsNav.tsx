@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, Shield, ChevronDown, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
@@ -31,10 +32,10 @@ const EventsNav = ({ onFilterSelect, onScrollToPartner }: EventsNavProps) => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      setIsAdmin(!!data.session);
+      setIsAdmin(isAdminUser(data.session?.user));
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     return () => subscription.unsubscribe();
   }, []);

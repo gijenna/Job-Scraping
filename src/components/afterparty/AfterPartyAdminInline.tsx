@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
 import AfterPartySuggestionsAdmin from "./AfterPartySuggestionsAdmin";
 import { ChevronDown, ChevronRight, Lock } from "lucide-react";
@@ -12,23 +13,12 @@ const CREAM_DIM = "rgba(245,230,211,0.55)";
 /**
  * Inline admin panel for editing the global partners (bubble logos) and brand
  * spotlights from inside /afterparty and /afterparty/{slug}. Only renders when
- * an admin is signed in.
+ * an admin is signed in (real @wearetheoutdoorindustry.com email, never an
+ * anonymous PIN-flow guest session).
  */
 const AfterPartyAdminInline = () => {
   const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState(false);
-
-  // Real admin = signed-in user with a @wearetheoutdoorindustry.com email.
-  // Anonymous Supabase sessions (created by the After Party PIN flow for any
-  // RSVP'd guest) must NOT count as admin, otherwise every guest would see
-  // this panel.
-  const isAdminUser = (user: any) => {
-    if (!user) return false;
-    if (user.is_anonymous === true) return false;
-    const email = (user.email || "").toLowerCase().trim();
-    if (!email) return false;
-    return email.endsWith("@wearetheoutdoorindustry.com");
-  };
 
   useEffect(() => {
     let cancelled = false;

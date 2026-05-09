@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import { useEventLogos, EventLogo } from "@/hooks/useEventLogos";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -260,8 +261,8 @@ const AdminLogoManager = ({ lists }: AdminLogoManagerProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(isAdminUser(data.session?.user)));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(isAdminUser(session?.user)));
     return () => subscription.unsubscribe();
   }, []);
 
