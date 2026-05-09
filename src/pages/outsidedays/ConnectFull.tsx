@@ -23,18 +23,19 @@ import ConnectShell from "@/components/connect/ConnectShell";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
+import { useEventSettings } from "@/hooks/useEventSettings";
 
 // ----- Required-field map -----
-const REQUIRED: { key: string; section: string; label: string }[] = [
-  { key: "first_name", section: "about", label: "First name" },
-  { key: "last_name", section: "about", label: "Last name" },
-  { key: "email", section: "about", label: "Email" },
-  { key: "phone", section: "about", label: "Phone" },
-  { key: "career_stage", section: "about", label: "Career stage" },
-  { key: "poachable_status", section: "about", label: "Poachable status" },
-  { key: "field", section: "what", label: "Field" },
-  { key: "focus", section: "what", label: "Focus" },
-  { key: "the_hook", section: "hook", label: "The Hook" },
+const REQUIRED: { key: string; section: string; label: string; labelKey: string }[] = [
+  { key: "first_name", section: "about", label: "First name", labelKey: "full_first_name_label" },
+  { key: "last_name", section: "about", label: "Last name", labelKey: "full_last_name_label" },
+  { key: "email", section: "about", label: "Email", labelKey: "full_email_label" },
+  { key: "phone", section: "about", label: "Phone", labelKey: "full_phone_label" },
+  { key: "career_stage", section: "about", label: "Career stage", labelKey: "full_career_stage_label" },
+  { key: "poachable_status", section: "about", label: "Poachable status", labelKey: "full_poachable_status_label" },
+  { key: "field", section: "what", label: "Field", labelKey: "full_field_label" },
+  { key: "focus", section: "what", label: "Focus", labelKey: "full_focus_label" },
+  { key: "the_hook", section: "hook", label: "The Hook", labelKey: "full_hook_label" },
 ];
 
 const CompletenessBar = ({ pct }: { pct: number }) => (
