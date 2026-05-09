@@ -34,16 +34,16 @@ const MAX = 500;
 
 const GUIDANCE: Record<string, { heading: string; body: string }> = {
   pre_event: {
-    heading: "Send a pre-event note",
-    body: "A short note helps the rep know to look for you. Mention what drew you to them and one thing you'd love to chat about.",
+    heading: "Save a pre-event note",
+    body: "A short note helps the rep know to look for you. Mention what drew you to them and one thing you'd love to chat about. They'll see it with their Connect follow-up.",
   },
   post_event: {
-    heading: "Send a thank-you note",
-    body: "Quickly remind them where you met, then say what stuck with you and what you'd love to do next.",
+    heading: "Save a thank-you note",
+    body: "Quickly remind them where you met, what stuck with you, and what you'd love to do next. They'll see it with their Connect follow-up.",
   },
   during_event: {
     heading: "Notes are paused during the event",
-    body: "Walk up and say hi instead. You can send a follow-up note as soon as the event wraps.",
+    body: "Walk up and say hi instead. You can save a follow-up note as soon as the event wraps.",
   },
 };
 
@@ -85,7 +85,7 @@ const NoteComposer = ({ open, recipient, onClose, onSaved }: Props) => {
         recipient_id: recipient.recipient_id,
         message: message.trim().slice(0, MAX),
       });
-      toast({ title: existingId ? "Note updated" : "Note sent", description: `${recipient.full_name} will get an email.` });
+      toast({ title: existingId ? "Note updated" : "Note saved", description: `Saved for ${recipient.full_name}. They'll see it in their Connect follow-up.` });
       onSaved?.(recipient.recipient_id, true);
       onClose();
     } catch (e: any) {
@@ -190,7 +190,7 @@ const NoteComposer = ({ open, recipient, onClose, onSaved }: Props) => {
               className="flex-1 min-w-[140px] bg-events-coral hover:bg-events-coral/90 text-events-cream"
             >
               <Send className="w-4 h-4 mr-2" />
-              {existingId ? "Update note" : "Send note"}
+              {existingId ? "Update note" : "Save note"}
             </Button>
             {existingId && (
               <Button

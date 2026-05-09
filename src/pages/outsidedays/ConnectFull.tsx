@@ -700,26 +700,53 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
     else { const y = parseInt(raw, 10); m.set(n, Number.isFinite(y) && y >= 0 ? y : null); }
     setEntries(m);
   };
+  const selected = Array.from(map.keys());
   return (
-    <div className="space-y-2 pt-2 border-t border-events-cream/10">
-      <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">Niche experience</Label>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+    <div className="space-y-3 pt-2 border-t border-events-cream/10">
+      <div>
+        <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">Niche work experience</Label>
+        <p className="text-[11px] text-events-cream/55 font-body mt-1">
+          Tap niches you have actual paid work experience in (not just interests). Add years for each.
+        </p>
+      </div>
+      {/* Compact chip grid, fits all options on one phone screen */}
+      <div className="flex flex-wrap gap-1.5">
         {NICHES.map((n) => {
           const on = map.has(n);
           return (
-            <div key={n} className="flex items-center gap-2 py-1">
-              <label className="flex items-center gap-2 text-sm font-body text-events-cream/80 cursor-pointer flex-1">
-                <Checkbox checked={on} onCheckedChange={() => toggle(n)} />
-                <span>{n}</span>
-              </label>
-              {on && (
-                <Input type="number" min={0} value={map.get(n) ?? ""} onChange={(e) => setYears(n, e.target.value)}
-                  placeholder="yrs" className="w-20 h-8 text-sm" />
-              )}
-            </div>
+            <button
+              type="button"
+              key={n}
+              onClick={() => toggle(n)}
+              className={`px-2.5 py-1 rounded-full text-[11px] font-body border transition leading-tight ${
+                on
+                  ? "bg-events-coral text-events-cream border-events-coral"
+                  : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"
+              }`}
+            >
+              {n}
+            </button>
           );
         })}
       </div>
+      {selected.length > 0 && (
+        <div className="space-y-1.5 pt-1">
+          <Label className="text-events-cream/60 text-[10px] font-body uppercase tracking-wider block">Years of experience</Label>
+          {selected.map((n) => (
+            <div key={n} className="flex items-center gap-2">
+              <span className="text-xs font-body text-events-cream/80 flex-1 truncate">{n}</span>
+              <Input
+                type="number"
+                min={0}
+                value={map.get(n) ?? ""}
+                onChange={(e) => setYears(n, e.target.value)}
+                placeholder="yrs"
+                className="w-16 h-7 text-xs"
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
