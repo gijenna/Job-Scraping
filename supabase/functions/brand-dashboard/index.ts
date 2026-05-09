@@ -64,6 +64,7 @@ Deno.serve(async (req) => {
       // Engagement maps for this brand
       let engagement: Record<string, any> = {};
       let starred: Set<string> = new Set();
+      let connectNotes: Record<string, any> = {};
       if (brand) {
         const { data: conns } = await sb.from("connections")
           .select("candidate_id, message_to_brand, message_sent_at, role_flagged, created_at")
@@ -79,6 +80,16 @@ Deno.serve(async (req) => {
         const { data: stars } = await sb.from("candidate_starred_brands")
           .select("candidate_id").eq("brand_id", brand.id);
         starred = new Set((stars || []).map((s: any) => s.candidate_id));
+
+        // Connect-notes addressed to any rep at this brand
+        const { data: notes } = await sb.from("connect_notes")
+          .select("candidate_id, message, note_timing, created_at")
+          .eq("brand_id", brand.id).eq("is_active", true).order("created_at", { ascending: false });
+        for (const n of notes || []) {
+          if (!connectNotes[n.candidate_id]) {
+            connectNotes[n.candidate_id] = { message: n.message, note_timing: n.note_timing, sent_at: n.created_at };
+          }
+        }
       }
 
       // Fetch candidate page
