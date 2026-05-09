@@ -64,7 +64,18 @@ export default function BrandAliasMatcher({ experts, assignments, cities }: Prop
       if (!expertAssigns.length) continue;
 
       for (const a of expertAssigns) {
-        const cityBrands = brands.filter((b) => b.event_slug === a.city_slug);
+        // City slugs (e.g. "denver", "portland") don't always match brand
+        // event_slugs (e.g. "denver26", "pnw26"). Match by prefix or stripped
+        // digits so a Denver expert lines up with denver26 brands.
+        const stripDigits = (s: string) => s.replace(/\d+$/, "");
+        const cityBrands = brands.filter((b) => {
+          const bs = b.event_slug || "";
+          return (
+            bs === a.city_slug ||
+            stripDigits(bs) === a.city_slug ||
+            bs.startsWith(a.city_slug)
+          );
+        });
         if (!cityBrands.length) continue;
 
         const matched = cityBrands.find((b) => {
