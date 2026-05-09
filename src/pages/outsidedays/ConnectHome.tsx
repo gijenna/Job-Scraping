@@ -5,9 +5,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { X } from "lucide-react";
+import { X, HelpCircle, Star } from "lucide-react";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
-import { candidateMe } from "@/lib/connect-session";
+import {
+  candidateMe, candidateListStars, candidateMarkSeenIntro,
+  connectNotesListMine,
+} from "@/lib/connect-session";
 import { useEventMapLayouts } from "@/hooks/useEventMapLayouts";
 import { useDenverExperts } from "@/hooks/useDenverExperts";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
@@ -17,6 +20,8 @@ import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { Button } from "@/components/ui/button";
 import { faviconFromUrl } from "@/lib/url-logo";
 import ConnectionForm from "@/components/connect/ConnectionForm";
+import NoteComposer, { NoteRecipient } from "@/components/connect/NoteComposer";
+import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -46,13 +51,33 @@ const ConnectHome = () => {
   const [logExpert, setLogExpert] = useState<any | null>(null);
   const [completeness, setCompleteness] = useState<number | null>(null);
   const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [starred, setStarred] = useState<Set<string>>(new Set());
+  const [noteRecipientIds, setNoteRecipientIds] = useState<Set<string>>(new Set());
+  const [showIntro, setShowIntro] = useState(false);
+  const [headerStripDismissed, setHeaderStripDismissed] = useState(false);
+  const [noteTarget, setNoteTarget] = useState<NoteRecipient | null>(null);
+
+  const mode = useEventMode();
+  const headerCopy = MODE_HEADER_COPY[mode];
+  const introCopy = MODE_INTRO_COPY[mode];
 
   useEffect(() => {
     candidateMe().then((r) => {
-      const score = r?.session?.subject?.profile_completeness_score;
+      const subj = r?.session?.subject;
+      const score = subj?.profile_completeness_score;
       if (typeof score === "number") setCompleteness(score);
+      if (subj && subj.has_seen_map_intro === false) setShowIntro(true);
+    }).catch(() => {});
+    candidateListStars().then((r) => setStarred(new Set(r.starred_brand_ids || []))).catch(() => {});
+    connectNotesListMine().then((r) => {
+      setNoteRecipientIds(new Set((r.notes || []).map((n) => n.recipient_id)));
     }).catch(() => {});
   }, []);
+
+  const dismissIntro = async () => {
+    setShowIntro(false);
+    try { await candidateMarkSeenIntro(); } catch {}
+  };
 
   const { brands } = useEventMapBrands(EVENT_SLUG);
   const { layouts } = useEventMapLayouts(EVENT_SLUG, "draft");
