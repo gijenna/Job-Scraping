@@ -741,6 +741,7 @@ const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: stri
 
 type NicheEntry = { niche: string; years: number | null };
 const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: NicheEntry[]) => void }) => {
+  const { settings, isAdmin } = useEditableTextContext();
   const map = new Map<string, number | null>();
   for (const e of value) if (e?.niche) map.set(e.niche, e.years ?? null);
   const setEntries = (m: Map<string, number | null>) =>
@@ -756,10 +757,15 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
   return (
     <div className="space-y-3 pt-2 border-t border-events-cream/10">
       <div>
-        <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">Niche work experience</Label>
-        <p className="text-[11px] text-events-cream/55 font-body mt-1">
-          Tap niches you have actual paid work experience in (not just interests). Add years for each.
-        </p>
+        <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">
+          <EditableText settingKey="full_niche_experience_label" defaultText="Niche work experience" as="span" />
+        </Label>
+        <EditableText
+          settingKey="full_niche_experience_hint"
+          defaultText="Tap niches you have actual paid work experience in (not just interests). Add years for each."
+          as="p"
+          className="text-[11px] text-events-cream/55 font-body mt-1"
+        />
       </div>
       {/* Compact chip grid, fits all options on one phone screen */}
       <div className="flex flex-wrap gap-1.5">
@@ -776,23 +782,32 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
                   : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"
               }`}
             >
-              {n}
+              {settings[`full_niche_option_${slugifyKey(n)}`] || n}
             </button>
           );
         })}
       </div>
+      {isAdmin && (
+        <div className="flex flex-wrap gap-1.5 rounded-md border border-events-cream/10 bg-events-cream/5 p-2">
+          {NICHES.map((n) => (
+            <EditableText key={n} settingKey={`full_niche_option_${slugifyKey(n)}`} defaultText={n} as="span" className="px-2 py-1 rounded-full border border-events-cream/15 text-[10px] normal-case tracking-normal text-events-cream/75" />
+          ))}
+        </div>
+      )}
       {selected.length > 0 && (
         <div className="space-y-1.5 pt-1">
-          <Label className="text-events-cream/60 text-[10px] font-body uppercase tracking-wider block">Years of experience</Label>
+          <Label className="text-events-cream/60 text-[10px] font-body uppercase tracking-wider block">
+            <EditableText settingKey="full_niche_years_label" defaultText="Years of experience" as="span" />
+          </Label>
           {selected.map((n) => (
             <div key={n} className="flex items-center gap-2">
-              <span className="text-xs font-body text-events-cream/80 flex-1 truncate">{n}</span>
+              <span className="text-xs font-body text-events-cream/80 flex-1 truncate">{settings[`full_niche_option_${slugifyKey(n)}`] || n}</span>
               <Input
                 type="number"
                 min={0}
                 value={map.get(n) ?? ""}
                 onChange={(e) => setYears(n, e.target.value)}
-                placeholder="yrs"
+                placeholder={settings.full_years_placeholder || "yrs"}
                 className="w-16 h-7 text-xs"
               />
             </div>
