@@ -634,19 +634,31 @@ const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: strin
   );
 };
 
-const MultiPills = ({ value, options, onChange }: { value: string[]; options: string[]; onChange: (v: string[]) => void }) => {
+const MultiPills = ({ value, options, onChange, optionKeyPrefix }: { value: string[]; options: string[]; onChange: (v: string[]) => void; optionKeyPrefix?: string }) => {
+  const { settings, isAdmin } = useEditableTextContext();
   const toggle = (o: string) => onChange(value.includes(o) ? value.filter((x) => x !== o) : [...value, o]);
+  const optionKey = (o: string) => `${optionKeyPrefix || "full_pill_option"}_${slugifyKey(o)}`;
+  const labelFor = (o: string) => (optionKeyPrefix ? settings[optionKey(o)] || o : o);
   return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((o) => {
-        const on = value.includes(o);
-        return (
-          <button type="button" key={o} onClick={() => toggle(o)}
-            className={`px-3 py-1.5 rounded-full text-xs font-body border transition ${on ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"}`}>
-            {o}
-          </button>
-        );
-      })}
+    <div className="space-y-2">
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => {
+          const on = value.includes(o);
+          return (
+            <button type="button" key={o} onClick={() => toggle(o)}
+              className={`px-3 py-1.5 rounded-full text-xs font-body border transition ${on ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"}`}>
+              {labelFor(o)}
+            </button>
+          );
+        })}
+      </div>
+      {isAdmin && optionKeyPrefix && options.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 rounded-md border border-events-cream/10 bg-events-cream/5 p-2">
+          {options.map((o) => (
+            <EditableText key={o} settingKey={optionKey(o)} defaultText={o} as="span" className="px-2 py-1 rounded-full border border-events-cream/15 text-[10px] normal-case tracking-normal text-events-cream/75" />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
