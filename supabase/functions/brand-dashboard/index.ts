@@ -136,6 +136,9 @@ Deno.serve(async (req) => {
       if (filters.sent_note) list = list.filter((c: any) => engagement[c.id]?.sent_note);
       if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
       if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
+      if (filters.has_connect_note) list = list.filter((c: any) => !!connectNotes[c.id]);
+      if (filters.pre_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "pre_event");
+      if (filters.post_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "post_event");
 
       // Min pay (text field — best-effort numeric parse)
       if (filters.min_pay != null) {
@@ -150,6 +153,7 @@ Deno.serve(async (req) => {
         ...c,
         engagement: engagement[c.id] || null,
         starred_brand: starred.has(c.id),
+        connect_note: connectNotes[c.id] || null,
       }));
 
       // Sort by connected/note first
@@ -157,6 +161,12 @@ Deno.serve(async (req) => {
         result.sort((a: any, b: any) => Number(!!b.engagement?.visited) - Number(!!a.engagement?.visited));
       } else if (sort === "note_first") {
         result.sort((a: any, b: any) => Number(!!b.engagement?.sent_note) - Number(!!a.engagement?.sent_note));
+      } else if (sort === "pre_event_first") {
+        result.sort((a: any, b: any) => {
+          const ap = a.connect_note?.note_timing === "pre_event" ? new Date(a.connect_note.sent_at).getTime() : 0;
+          const bp = b.connect_note?.note_timing === "pre_event" ? new Date(b.connect_note.sent_at).getTime() : 0;
+          return bp - ap;
+        });
       }
 
       // Log filter activity (fire and forget)
