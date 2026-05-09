@@ -20,7 +20,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 import ConnectShell from "@/components/connect/ConnectShell";
-import { EditableTextProvider } from "@/components/EditableTextProvider";
+import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 
@@ -42,6 +42,8 @@ const CompletenessBar = ({ pct }: { pct: number }) => (
     <div className="h-full bg-events-coral transition-all" style={{ width: `${Math.min(100, pct)}%` }} />
   </div>
 );
+
+const slugifyKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 
 const ConnectFull = () => {
   const nav = useNavigate();
