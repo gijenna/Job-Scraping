@@ -368,7 +368,7 @@ const ConnectFull = () => {
                 <Input value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholder="e.g. Outdoor industrial design" />
               </FieldRow>
             )}
-            <FieldRow label="Years in current field *">
+            <FieldRow label={label("full_years_current_field_label", "Years in current field *")}>
               <Input type="number" min={0} value={c.years_in_current_field ?? 0}
                 onChange={(e) => set("years_in_current_field", Number(e.target.value || 0))} />
             </FieldRow>
@@ -378,45 +378,46 @@ const ConnectFull = () => {
 
           {/* Section 3: Where you're going */}
           <SectionBlock keyId="going" titleKey="full_s3_title" defaultTitle="Where you're going">
-            <FieldRow label="Dream role title">
+            <FieldRow label={label("full_dream_role_title_label", "Dream role title")}>
               <Input value={c.dream_role_title || ""} onChange={(e) => set("dream_role_title", e.target.value)} />
             </FieldRow>
-            <FieldRow label="Job types open to">
-              <MultiPills value={c.job_types_seeking || []} options={JOB_TYPES as any} onChange={(v) => set("job_types_seeking", v)} />
+            <FieldRow label={label("full_job_types_label", "Job types open to")}>
+              <MultiPills value={c.job_types_seeking || []} options={JOB_TYPES as any} onChange={(v) => set("job_types_seeking", v)} optionKeyPrefix="full_job_type_option" />
             </FieldRow>
             <Row>
-              <FieldRow label="Min pay rate">
+              <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
                 <Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" />
               </FieldRow>
-              <FieldRow label="Current location">
+              <FieldRow label={label("full_current_location_label", "Current location")}>
                 <Input value={c.current_location || ""} onChange={(e) => set("current_location", e.target.value)} />
               </FieldRow>
             </Row>
             <Row>
-              <FieldRow label="Open to relocation?">
+              <FieldRow label={label("full_open_relocation_label", "Open to relocation?")}>
                 <SelectBox
                   value={c.open_to_relocation === true ? "Yes" : c.open_to_relocation === false ? "No" : ""}
                   onChange={(v) => set("open_to_relocation", v === "Yes")}
                   options={["Yes", "No"]}
+                  optionKeyPrefix="full_yes_no_option"
                 />
               </FieldRow>
               {c.open_to_relocation === true && (
-                <FieldRow label="Where to?">
+                <FieldRow label={label("full_relocation_where_label", "Where to?")}>
                   <Input value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholder="e.g. PNW, CO, anywhere" />
                 </FieldRow>
               )}
             </Row>
-            <FieldRow label="Remote preference">
-              <SelectBox value={c.remote_preference || ""} onChange={(v) => set("remote_preference", v)} options={REMOTE_PREFERENCES as any} />
+            <FieldRow label={label("full_remote_preference_label", "Remote preference")}>
+              <SelectBox value={c.remote_preference || ""} onChange={(v) => set("remote_preference", v)} options={REMOTE_PREFERENCES as any} optionKeyPrefix="full_remote_preference_option" />
             </FieldRow>
-            <FieldRow label="Workplace types open to">
-              <MultiPills value={c.workplace_type_preference || []} options={WORKPLACE_TYPES as any} onChange={(v) => set("workplace_type_preference", v)} />
+            <FieldRow label={label("full_workplace_types_label", "Workplace types open to")}>
+              <MultiPills value={c.workplace_type_preference || []} options={WORKPLACE_TYPES as any} onChange={(v) => set("workplace_type_preference", v)} optionKeyPrefix="full_workplace_type_option" />
             </FieldRow>
           </SectionBlock>
 
           {/* Section 4: Your story */}
           <SectionBlock keyId="story" titleKey="full_s4_title" defaultTitle="Your story">
-            <FieldRow label="Total years professional experience" hint="Across your whole career, all fields combined.">
+            <FieldRow label={label("full_total_years_label", "Total years professional experience")} hint={<EditableText settingKey="full_total_years_hint" defaultText="Across your whole career, all fields combined." as="span" />}>
               <Input type="number" min={0} value={c.total_years_professional ?? ""}
                 onChange={(e) => set("total_years_professional", e.target.value === "" ? null : Number(e.target.value))} />
             </FieldRow>
