@@ -1,0 +1,2 @@
+ALTER TABLE public.event_map_brands ADD COLUMN IF NOT EXISTS aliases text[] NOT NULL DEFAULT '{}';
+CREATE INDEX IF NOT EXISTS idx_event_map_brands_aliases ON public.event_map_brands USING GIN (aliases);
