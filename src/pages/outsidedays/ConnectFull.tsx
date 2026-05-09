@@ -9,7 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
-  candidateMe, candidateSignupCreate, candidateSignupLookup,
+  candidateMe, candidateSignupCreate, candidateSignupLookup, candidateSignupCreateBasics,
   candidateUpdateProfile, candidateUploadSignedUrl, candidateAttachUpload,
 } from "@/lib/connect-session";
 import {
@@ -136,9 +136,41 @@ const ConnectFull = () => {
     return out;
   };
 
+  const saveBasics = async () => {
+    const errs: Record<string, string> = {};
+    if (!c.first_name?.trim()) errs.first_name = "First name is required.";
+    if (!c.last_name?.trim()) errs.last_name = "Last name is required.";
+    if (!c.email || !/\S+@\S+\.\S+/.test(c.email)) errs.email = "Use a valid email.";
+    if (!c.phone || c.phone.replace(/[^0-9]/g, "").length < 10) errs.phone = "Phone needs 10+ digits.";
+    setErrors(errs);
+    const firstErr = Object.keys(errs)[0];
+    if (firstErr) {
+      const el = fieldRefs.current[firstErr];
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      toast({ title: "Almost there", description: errs[firstErr], variant: "destructive" });
+      return;
+    }
+    try {
+      const { exists } = await candidateSignupLookup({ first_name: c.first_name, last_name: c.last_name, email: c.email });
+      if (exists) {
+        toast({ title: "Account exists", description: "Try signing in from the start screen.", variant: "destructive" });
+        return;
+      }
+      const { session } = await candidateSignupCreateBasics({
+        first_name: c.first_name, last_name: c.last_name, email: c.email, phone: c.phone,
+      });
+      setHasAccount(true);
+      setSavedAt(new Date());
+      setC((prev: any) => ({ ...prev, ...session.subject }));
+      toast({ title: "Basics saved", description: "You can now upload a photo or resume." });
+    } catch (e: any) {
+      toast({ title: "Couldn't save", description: e.message, variant: "destructive" });
+    }
+  };
+
   const upload = async (kind: "photo" | "resume", file: File) => {
     if (!hasAccount) {
-      toast({ title: "Save your basics first", description: "Fill in name, email and phone, then we can attach files." });
+      toast({ title: "Save your basics first", description: "Tap Save basics under your phone number, then upload." });
       return;
     }
     if (kind === "resume" && file.type !== "application/pdf") {
