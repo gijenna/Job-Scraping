@@ -609,13 +609,27 @@ const FieldRow = ({ label, hint, error, children, refSetter }: any) => (
   </div>
 );
 
-const SelectBox = ({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) => (
-  <select value={value} onChange={(e) => onChange(e.target.value)}
-    className="w-full bg-events-cream/5 border border-events-cream/15 text-events-cream rounded-md h-10 px-3 text-sm font-body">
-    <option value="">Select...</option>
-    {options.map((o) => (<option key={o} value={o}>{o}</option>))}
-  </select>
-);
+const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: string; onChange: (v: string) => void; options: string[]; optionKeyPrefix?: string }) => {
+  const { settings, isAdmin } = useEditableTextContext();
+  const optionKey = (o: string) => `${optionKeyPrefix || "full_select_option"}_${slugifyKey(o)}`;
+  const labelFor = (o: string) => (optionKeyPrefix ? settings[optionKey(o)] || o : o);
+  return (
+    <div className="space-y-2">
+      <select value={value} onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-events-cream/5 border border-events-cream/15 text-events-cream rounded-md h-10 px-3 text-sm font-body">
+        <option value="">{settings.full_select_placeholder || "Select..."}</option>
+        {options.map((o) => (<option key={o} value={o}>{labelFor(o)}</option>))}
+      </select>
+      {isAdmin && optionKeyPrefix && options.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 rounded-md border border-events-cream/10 bg-events-cream/5 p-2">
+          {options.map((o) => (
+            <EditableText key={o} settingKey={optionKey(o)} defaultText={o} as="span" className="px-2 py-1 rounded-full border border-events-cream/15 text-[10px] normal-case tracking-normal text-events-cream/75" />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const MultiPills = ({ value, options, onChange }: { value: string[]; options: string[]; onChange: (v: string[]) => void }) => {
   const toggle = (o: string) => onChange(value.includes(o) ? value.filter((x) => x !== o) : [...value, o]);
