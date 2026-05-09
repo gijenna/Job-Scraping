@@ -304,6 +304,24 @@ const ConnectFull = () => {
             >
               <Input inputMode="tel" value={c.phone || ""} onChange={(e) => set("phone", e.target.value)} placeholder="555 123 4567" />
             </FieldRow>
+            {!hasAccount && (
+              <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center gap-3">
+                <p className="text-xs font-body text-events-cream/80 flex-1">
+                  <EditableText
+                    settingKey="full_save_basics_hint"
+                    defaultText="Save your basics so you can upload a photo or resume right away. You can finish the rest of your profile after."
+                    as="span"
+                  />
+                </p>
+                <Button
+                  type="button"
+                  onClick={saveBasics}
+                  className="bg-events-coral hover:bg-events-coral/90 text-events-cream shrink-0"
+                >
+                  <EditableText settingKey="full_save_basics_button" defaultText="Save basics" as="span" />
+                </Button>
+              </div>
+            )}
             <div>
               <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">Photo</Label>
               <div className="flex items-center gap-4">
