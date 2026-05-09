@@ -85,7 +85,7 @@ const NoteComposer = ({ open, recipient, onClose, onSaved }: Props) => {
         recipient_id: recipient.recipient_id,
         message: message.trim().slice(0, MAX),
       });
-      toast({ title: existingId ? "Note updated" : "Note sent", description: `${recipient.full_name} will get an email.` });
+      toast({ title: existingId ? "Note updated" : "Note saved", description: `Saved for ${recipient.full_name}. They'll see it in their Connect follow-up.` });
       onSaved?.(recipient.recipient_id, true);
       onClose();
     } catch (e: any) {
