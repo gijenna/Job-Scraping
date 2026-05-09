@@ -1,22 +1,53 @@
 import { useState, useEffect } from "react";
-import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase } from "lucide-react";
+import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase, Star, Mail, Check } from "lucide-react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
 import { motion, AnimatePresence } from "framer-motion";
+import { candidateToggleStar } from "@/lib/connect-session";
+import { useEventMode } from "@/lib/connect-event-mode";
+import { useToast } from "@/hooks/use-toast";
+import type { NoteRecipient } from "@/components/connect/NoteComposer";
 
 interface MapBrandPanelProps {
   brand: MapBrand | null;
   onClose: () => void;
   candidateMode?: boolean;
+  starredBrandIds?: Set<string>;
+  onStarChanged?: (brandId: string, isStarred: boolean) => void;
+  noteRecipientIds?: Set<string>;
+  onSendNote?: (recipient: NoteRecipient) => void;
 }
 
-const MapBrandPanel = ({ brand, onClose, candidateMode = false }: MapBrandPanelProps) => {
+const MapBrandPanel = ({
+  brand, onClose, candidateMode = false,
+  starredBrandIds, onStarChanged, noteRecipientIds, onSendNote,
+}: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
   const [logging, setLogging] = useState<{ mode: ConnectionMode; rep?: Expert } | null>(null);
+  const [starBusy, setStarBusy] = useState(false);
+  const mode = useEventMode();
+  const { toast } = useToast();
+  const isStarred = !!(brand && starredBrandIds?.has(brand.id));
+
+  const toggleStar = async () => {
+    if (!brand || starBusy) return;
+    setStarBusy(true);
+    const optimistic = !isStarred;
+    onStarChanged?.(brand.id, optimistic);
+    try {
+      const r = await candidateToggleStar(brand.id);
+      if (r.starred !== optimistic) onStarChanged?.(brand.id, r.starred);
+    } catch (e: any) {
+      onStarChanged?.(brand.id, !optimistic);
+      toast({ title: "Could not save", description: e.message, variant: "destructive" });
+    } finally {
+      setStarBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (!brand) { setExperts([]); return; }
