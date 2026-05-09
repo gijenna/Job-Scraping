@@ -53,13 +53,23 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
       let expertId: string;
 
+      const cleanedPhone = phone.replace(/[^0-9+]/g, "");
+      const phoneDigits = cleanedPhone.replace(/[^0-9]/g, "");
+      const phonePatch: any = {};
+      if (phoneDigits.length >= 10) {
+        phonePatch.phone = cleanedPhone;
+        phonePatch.phone_last_four = phoneDigits.slice(-4);
+      }
+
       if (existing) {
         expertId = existing.id;
         // Update company name for brand reps
         if (isBrandRep) {
           await supabase.from('industry_experts')
-            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim(), slug })
+            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim(), slug, ...phonePatch })
             .eq('id', expertId);
+        } else if (Object.keys(phonePatch).length) {
+          await supabase.from('industry_experts').update(phonePatch).eq('id', expertId);
         }
       } else {
         const insertData: any = {
@@ -67,6 +77,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
           slug,
           status: 'invited' as const,
           created_by: user.user?.id || null,
+          ...phonePatch,
         };
         if (isBrandRep) {
           insertData.current_company = name.trim();
