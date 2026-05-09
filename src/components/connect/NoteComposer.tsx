@@ -190,7 +190,7 @@ const NoteComposer = ({ open, recipient, onClose, onSaved }: Props) => {
               className="flex-1 min-w-[140px] bg-events-coral hover:bg-events-coral/90 text-events-cream"
             >
               <Send className="w-4 h-4 mr-2" />
-              {existingId ? "Update note" : "Send note"}
+              {existingId ? "Update note" : "Save note"}
             </Button>
             {existingId && (
               <Button
