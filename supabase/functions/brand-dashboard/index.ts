@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
     if (body.action === "list") {
       const filters = body.filters || {};
       const search = (body.search || "").trim();
-      const sort = body.sort || "most_recent_activity";
+      const sort = body.sort || "newest";
       const page = Math.max(0, body.page | 0);
       const pageSize = Math.min(100, body.page_size || 50);
 
@@ -86,7 +86,8 @@ Deno.serve(async (req) => {
           .eq("brand_id", brand.id);
         for (const c of conns || []) {
           const cur = engagement[c.candidate_id] || { visited: false, sent_note: false, role_flagged: null, note: null, last: null };
-          cur.visited = true;
+          // Only mark visited if connection was logged at/after event start
+          if (visitedAt(c.created_at)) cur.visited = true;
           if (c.message_sent_at) { cur.sent_note = true; cur.note = c.message_to_brand; }
           if (c.role_flagged) cur.role_flagged = c.role_flagged;
           if (!cur.last || c.created_at > cur.last) cur.last = c.created_at;
