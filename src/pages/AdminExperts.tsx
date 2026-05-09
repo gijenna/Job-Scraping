@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import { Expert, ExpertCity, ExpertCityAssignment, ExpertQuestion } from "@/lib/expert-types";
 import ExpertCRM from "@/components/experts/ExpertCRM";
 import BrandDashboard from "@/components/experts/BrandDashboard";
@@ -33,12 +34,8 @@ const AdminExperts = () => {
 
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    // Reject missing OR anonymous sessions (the After Party PIN flow uses
-    // signInAnonymously, so a logged-in card holder is NOT an admin).
-    const isAnon = (user as any)?.is_anonymous === true || !user?.email;
-    if (!user || isAnon) {
-      // Sign out the anonymous session so the admin login form is clean.
-      if (user && isAnon) await supabase.auth.signOut();
+    if (!isAdminUser(user)) {
+      if (user) await supabase.auth.signOut();
       navigate('/admin');
       return;
     }

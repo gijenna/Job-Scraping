@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import AfterPartyAdmin from "@/components/afterparty/AfterPartyAdmin";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -12,9 +13,8 @@ const AdminAfterParty = () => {
   useEffect(() => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      const isAnon = (user as any)?.is_anonymous === true || !user?.email;
-      if (!user || isAnon) {
-        if (user && isAnon) await supabase.auth.signOut();
+      if (!isAdminUser(user)) {
+        if (user) await supabase.auth.signOut();
         navigate('/admin');
         return;
       }

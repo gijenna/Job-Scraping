@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, Fragment } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,11 +49,16 @@ const EventMapAdmin = () => {
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) navigate("/admin");
-      else setAuthed(true);
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!isAdminUser(user)) {
+        if (user) await supabase.auth.signOut();
+        navigate("/admin");
+      } else {
+        setAuthed(true);
+      }
       setLoading(false);
-    });
+    })();
   }, [navigate]);
 
   // Fetch all Denver experts for the zone
