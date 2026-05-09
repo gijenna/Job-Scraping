@@ -245,7 +245,13 @@ const ConnectFull = () => {
   })();
 
   if (loading) {
-    return <div className="min-h-screen bg-events-teal text-events-cream flex items-center justify-center font-body">Loading...</div>;
+    return (
+      <EditableTextProvider pageSlug="outsidedays26-connect">
+        <div className="min-h-screen bg-events-teal text-events-cream flex items-center justify-center font-body">
+          <EditableText settingKey="full_loading_label" defaultText="Loading..." as="span" />
+        </div>
+      </EditableTextProvider>
+    );
   }
 
   const setRef = (key: string) => (el: HTMLDivElement | null) => { fieldRefs.current[key] = el; };
