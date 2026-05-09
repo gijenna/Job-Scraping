@@ -117,6 +117,7 @@ const AdminExperts = () => {
             ) : (
               <div className="space-y-10">
                 <ImpersonatePanel />
+                <BrandAliasMatcher experts={experts} assignments={assignments} cities={cities} />
                 <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
                 <div>
                   <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
