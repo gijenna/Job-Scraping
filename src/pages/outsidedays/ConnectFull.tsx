@@ -307,7 +307,7 @@ const ConnectFull = () => {
               error={errors.phone}
               hint={<EditableText settingKey="full_phone_hint" defaultText="Hidden from everyone except admin. Used to verify it's you when you log in." as="span" />}
             >
-              <Input inputMode="tel" value={c.phone || ""} onChange={(e) => set("phone", e.target.value)} placeholder="555 123 4567" />
+              <EditableInput inputMode="tel" value={c.phone || ""} onChange={(e) => set("phone", e.target.value)} placeholderKey="full_phone_placeholder" defaultPlaceholder="555 123 4567" />
             </FieldRow>
             {!hasAccount && (
               <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center gap-3">
@@ -365,7 +365,7 @@ const ConnectFull = () => {
             </Row>
             {c.field === "Other" && (
               <FieldRow refSetter={setRef("field_other")} label={label("full_field_other_label", "Tell us what you do *")} error={errors.field_other}>
-                <Input value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholder="e.g. Outdoor industrial design" />
+                <EditableInput value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholderKey="full_field_other_placeholder" defaultPlaceholder="e.g. Outdoor industrial design" />
               </FieldRow>
             )}
             <FieldRow label={label("full_years_current_field_label", "Years in current field *")}>
@@ -386,7 +386,7 @@ const ConnectFull = () => {
             </FieldRow>
             <Row>
               <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
-                <Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" />
+                <EditableInput value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholderKey="full_min_pay_rate_placeholder" defaultPlaceholder="e.g. 85k or 45/hr" />
               </FieldRow>
               <FieldRow label={label("full_current_location_label", "Current location")}>
                 <Input value={c.current_location || ""} onChange={(e) => set("current_location", e.target.value)} />
@@ -403,7 +403,7 @@ const ConnectFull = () => {
               </FieldRow>
               {c.open_to_relocation === true && (
                 <FieldRow label={label("full_relocation_where_label", "Where to?")}>
-                  <Input value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholder="e.g. PNW, CO, anywhere" />
+                  <EditableInput value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholderKey="full_relocation_where_placeholder" defaultPlaceholder="e.g. PNW, CO, anywhere" />
                 </FieldRow>
               )}
             </Row>
@@ -530,10 +530,10 @@ const ConnectFull = () => {
               <FieldRow label={label("full_current_company_label", "Current company")}><Input value={c.current_company || ""} onChange={(e) => set("current_company", e.target.value)} /></FieldRow>
             </Row>
             <FieldRow label={label("full_linkedin_url_label", "LinkedIn URL")}>
-              <Input value={c.linkedin_url || ""} onChange={(e) => set("linkedin_url", e.target.value)} placeholder="https://linkedin.com/in/..." />
+              <EditableInput value={c.linkedin_url || ""} onChange={(e) => set("linkedin_url", e.target.value)} placeholderKey="full_linkedin_placeholder" defaultPlaceholder="https://linkedin.com/in/..." />
             </FieldRow>
             <FieldRow label={label("full_portfolio_url_label", "Portfolio URL")}>
-              <Input value={c.portfolio_url || ""} onChange={(e) => set("portfolio_url", e.target.value)} placeholder="https://..." />
+              <EditableInput value={c.portfolio_url || ""} onChange={(e) => set("portfolio_url", e.target.value)} placeholderKey="full_portfolio_placeholder" defaultPlaceholder="https://..." />
             </FieldRow>
             <div>
               <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block"><EditableText settingKey="full_dream_companies_label" defaultText="Dream companies" as="span" /></Label>
