@@ -125,6 +125,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const handleReset = () => {
     setName("");
     setCompanyRep("");
+    setPhone("");
     setCitySlug("");
     setGeneratedUrl("");
     setCopied(false);
