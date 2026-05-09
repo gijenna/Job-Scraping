@@ -5,6 +5,7 @@
 import { Mail, ClipboardList, Eye, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EventMode } from "@/lib/connect-event-mode";
+import EditableText from "@/components/EditableText";
 
 interface Props {
   mode: EventMode;
@@ -25,7 +26,9 @@ const ConnectActionFooter = ({
         onClick={onSendNote}
         className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display uppercase tracking-wider"
       >
-        {hasNote ? <><CheckCircle2 className="w-4 h-4 mr-2" /> Edit your note</> : <><Mail className="w-4 h-4 mr-2" /> Send a note</>}
+        {hasNote
+          ? <><CheckCircle2 className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_edit_note" defaultText="Edit your note" as="span" /></>
+          : <><Mail className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_send_note" defaultText="Send a note" as="span" /></>}
       </Button>
     );
   }
@@ -36,7 +39,9 @@ const ConnectActionFooter = ({
         onClick={hasConnection ? onViewConnection : onLogConnection}
         className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display uppercase tracking-wider"
       >
-        {hasConnection ? <><Eye className="w-4 h-4 mr-2" /> View your notes</> : <><ClipboardList className="w-4 h-4 mr-2" /> Log a connection</>}
+        {hasConnection
+          ? <><Eye className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_view_notes" defaultText="View your notes" as="span" /></>
+          : <><ClipboardList className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_log_connection" defaultText="Log a connection" as="span" /></>}
       </Button>
     );
   }
@@ -48,7 +53,9 @@ const ConnectActionFooter = ({
         onClick={onSendNote}
         className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display uppercase tracking-wider"
       >
-        {hasNote ? <><CheckCircle2 className="w-4 h-4 mr-2" /> Edit your note</> : <><Mail className="w-4 h-4 mr-2" /> Send a note</>}
+        {hasNote
+          ? <><CheckCircle2 className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_edit_note" defaultText="Edit your note" as="span" /></>
+          : <><Mail className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_send_note" defaultText="Send a note" as="span" /></>}
       </Button>
       {hasConnection && (
         <Button
@@ -56,7 +63,7 @@ const ConnectActionFooter = ({
           variant="ghost"
           className="w-full h-11 text-events-cream/80 hover:text-events-cream border border-events-cream/15"
         >
-          <Eye className="w-4 h-4 mr-2" /> View / edit connection
+          <Eye className="w-4 h-4 mr-2" /> <EditableText settingKey="footer_view_edit_connection" defaultText="View / edit connection" as="span" />
         </Button>
       )}
     </div>
