@@ -36,6 +36,19 @@ Deno.serve(async (req) => {
     }
   }
 
+  // Resolve event start (gates "visited my table" pre-event).
+  let eventStartMs = 0;
+  {
+    const { data: city } = await sb.from("expert_cities")
+      .select("event_date").eq("slug", "denver26").maybeSingle();
+    if (city?.event_date) eventStartMs = new Date(city.event_date).getTime();
+  }
+  const eventStarted = eventStartMs > 0 && Date.now() >= eventStartMs;
+  const visitedAt = (createdAt: string) => {
+    if (!eventStartMs) return eventStarted; // no date set: allow
+    return new Date(createdAt).getTime() >= eventStartMs;
+  };
+
   try {
     if (body.action === "summary") {
       const totals = { registered: 0, visited: 0, sent_note: 0, starred: 0, flagged: 0 };
@@ -43,8 +56,9 @@ Deno.serve(async (req) => {
       totals.registered = regCount || 0;
       if (brand) {
         const { data: conns } = await sb.from("connections")
-          .select("id, message_sent_at, role_flagged").eq("brand_id", brand.id);
-        totals.visited = (conns || []).length;
+          .select("id, message_sent_at, role_flagged, created_at").eq("brand_id", brand.id);
+        const visitedConns = (conns || []).filter((c: any) => visitedAt(c.created_at));
+        totals.visited = visitedConns.length;
         totals.sent_note = (conns || []).filter((c: any) => c.message_sent_at).length;
         totals.flagged = (conns || []).filter((c: any) => c.role_flagged).length;
         const { count: starCount } = await sb.from("candidate_starred_brands")
@@ -54,10 +68,11 @@ Deno.serve(async (req) => {
       return jsonFor(req, { rep, brand, totals });
     }
 
+
     if (body.action === "list") {
       const filters = body.filters || {};
       const search = (body.search || "").trim();
-      const sort = body.sort || "most_recent_activity";
+      const sort = body.sort || "newest";
       const page = Math.max(0, body.page | 0);
       const pageSize = Math.min(100, body.page_size || 50);
 
@@ -71,7 +86,8 @@ Deno.serve(async (req) => {
           .eq("brand_id", brand.id);
         for (const c of conns || []) {
           const cur = engagement[c.candidate_id] || { visited: false, sent_note: false, role_flagged: null, note: null, last: null };
-          cur.visited = true;
+          // Only mark visited if connection was logged at/after event start
+          if (visitedAt(c.created_at)) cur.visited = true;
           if (c.message_sent_at) { cur.sent_note = true; cur.note = c.message_to_brand; }
           if (c.role_flagged) cur.role_flagged = c.role_flagged;
           if (!cur.last || c.created_at > cur.last) cur.last = c.created_at;
@@ -121,7 +137,7 @@ Deno.serve(async (req) => {
         );
       }
 
-      // Sort
+      // Sort (DB-level)
       if (sort === "most_complete") q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
       else q = q.order("updated_at", { ascending: false });
 
@@ -157,16 +173,18 @@ Deno.serve(async (req) => {
         connect_note: connectNotes[c.id] || null,
       }));
 
-      // Sort by connected/note first
-      if (sort === "connected_first") {
-        result.sort((a: any, b: any) => Number(!!b.engagement?.visited) - Number(!!a.engagement?.visited));
-      } else if (sort === "note_first") {
-        result.sort((a: any, b: any) => Number(!!b.engagement?.sent_note) - Number(!!a.engagement?.sent_note));
-      } else if (sort === "pre_event_first") {
+      // Engagement-based sorts (post-fetch)
+      if (sort === "visited") {
         result.sort((a: any, b: any) => {
-          const ap = a.connect_note?.note_timing === "pre_event" ? new Date(a.connect_note.sent_at).getTime() : 0;
-          const bp = b.connect_note?.note_timing === "pre_event" ? new Date(b.connect_note.sent_at).getTime() : 0;
-          return bp - ap;
+          const av = a.engagement?.visited ? new Date(a.engagement.last || 0).getTime() : -1;
+          const bv = b.engagement?.visited ? new Date(b.engagement.last || 0).getTime() : -1;
+          return bv - av;
+        });
+      } else if (sort === "wrote_note") {
+        result.sort((a: any, b: any) => {
+          const an = a.connect_note ? new Date(a.connect_note.sent_at || 0).getTime() : -1;
+          const bn = b.connect_note ? new Date(b.connect_note.sent_at || 0).getTime() : -1;
+          return bn - an;
         });
       }
 

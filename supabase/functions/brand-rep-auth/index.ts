@@ -31,6 +31,8 @@ Deno.serve(async (req) => {
       return experts.filter((e: any) => repIds.has(e.id));
     }
 
+    const isMissing = (r: any) => !r.phone || !r.phone_last_four;
+
     if (action === "lookup") {
       const { first_name, last_name } = body;
       if (!first_name || !last_name) return jsonFor(req, { error: "first_name and last_name required" }, { status: 400 });
@@ -38,12 +40,12 @@ Deno.serve(async (req) => {
       if (reps.length === 0) return jsonFor(req, { found: false });
       if (reps.length === 1) {
         const rep = reps[0];
-        if (!rep.phone) return jsonFor(req, { found: true, needs_phone: true, rep_id: rep.id });
+        if (isMissing(rep)) return jsonFor(req, { found: true, needs_phone: true, rep_id: rep.id });
         return jsonFor(req, { found: true, needs_phone: false, rep_id: rep.id });
       }
-      // Multiple reps with same name: still ok if all have phones (login uses last4)
-      const anyMissing = reps.some((r: any) => !r.phone);
-      if (anyMissing) return jsonFor(req, { found: true, needs_phone: true, ambiguous: true, rep_id: reps.find((r: any) => !r.phone)!.id });
+      // Multiple reps with same name: still ok if all have phones + last4
+      const anyMissing = reps.some(isMissing);
+      if (anyMissing) return jsonFor(req, { found: true, needs_phone: true, ambiguous: true, rep_id: reps.find(isMissing)!.id });
       return jsonFor(req, { found: true, needs_phone: false, ambiguous: true });
     }
 
@@ -51,10 +53,11 @@ Deno.serve(async (req) => {
       const { rep_id, phone } = body;
       if (!rep_id || !phone) return jsonFor(req, { error: "rep_id and phone required" }, { status: 400 });
       const cleaned = phone.replace(/[^0-9+]/g, "");
-      if (cleaned.replace(/[^0-9]/g, "").length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
+      const digits = cleaned.replace(/[^0-9]/g, "");
+      if (digits.length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
       const { data: rep, error } = await sb
         .from("industry_experts")
-        .update({ phone: cleaned })
+        .update({ phone: cleaned, phone_last_four: digits.slice(-4) })
         .eq("id", rep_id)
         .select("*")
         .single();

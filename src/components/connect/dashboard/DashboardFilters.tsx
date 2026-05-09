@@ -131,7 +131,7 @@ export default function DashboardFilters({
             Visited my table {!hasVisited && "(0 so far)"}
           </Chip>
           <Chip active={!!filters.sent_note} onClick={() => set({ sent_note: !filters.sent_note })}>Sent me a note</Chip>
-          <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role</Chip>
+          <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
           <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand</Chip>
           <Chip active={!!filters.pre_event_note} onClick={() => set({ pre_event_note: !filters.pre_event_note })}>Pre-event note</Chip>
           <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>

@@ -20,6 +20,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [companyRep, setCompanyRep] = useState("");
+  const [phone, setPhone] = useState("");
   const [citySlug, setCitySlug] = useState("");
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState("");
@@ -52,13 +53,23 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
       let expertId: string;
 
+      const cleanedPhone = phone.replace(/[^0-9+]/g, "");
+      const phoneDigits = cleanedPhone.replace(/[^0-9]/g, "");
+      const phonePatch: any = {};
+      if (phoneDigits.length >= 10) {
+        phonePatch.phone = cleanedPhone;
+        phonePatch.phone_last_four = phoneDigits.slice(-4);
+      }
+
       if (existing) {
         expertId = existing.id;
         // Update company name for brand reps
         if (isBrandRep) {
           await supabase.from('industry_experts')
-            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim(), slug })
+            .update({ current_company: name.trim(), full_name: companyRep.trim() || name.trim(), slug, ...phonePatch })
             .eq('id', expertId);
+        } else if (Object.keys(phonePatch).length) {
+          await supabase.from('industry_experts').update(phonePatch).eq('id', expertId);
         }
       } else {
         const insertData: any = {
@@ -66,6 +77,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
           slug,
           status: 'invited' as const,
           created_by: user.user?.id || null,
+          ...phonePatch,
         };
         if (isBrandRep) {
           insertData.current_company = name.trim();
@@ -113,6 +125,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const handleReset = () => {
     setName("");
     setCompanyRep("");
+    setPhone("");
     setCitySlug("");
     setGeneratedUrl("");
     setCopied(false);
@@ -194,6 +207,22 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
                 </p>
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label className="text-events-teal font-semibold">
+                Mobile Phone <span className="text-events-teal/40 font-normal">(recommended, used to sign in)</span>
+              </Label>
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                inputMode="tel"
+                className="bg-events-teal/5 border-events-teal/15 text-events-teal h-12 text-base"
+                placeholder="555 123 4567"
+              />
+              <p className="text-events-teal/40 text-xs">
+                Saved with last 4 digits so {isBrandRep ? 'reps' : 'experts'} can sign in to their dashboard.
+              </p>
+            </div>
 
             <div className="space-y-2">
               <Label className="text-events-teal font-semibold">Event Location</Label>
