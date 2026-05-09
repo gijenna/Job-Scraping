@@ -20,6 +20,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [companyRep, setCompanyRep] = useState("");
+  const [phone, setPhone] = useState("");
   const [citySlug, setCitySlug] = useState("");
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState("");
