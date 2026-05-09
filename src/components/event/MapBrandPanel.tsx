@@ -62,10 +62,14 @@ const MapBrandPanel = ({
         .eq("published", true);
 
       if (!data) return;
+      const brandNames = [brand.name, ...((brand as any).aliases || [])]
+        .map((n: string) => n?.toLowerCase().trim())
+        .filter(Boolean);
       const matched = data
         .filter((d: any) => {
           const exp = d.industry_experts;
-          return exp && exp.current_company?.toLowerCase() === brand.name.toLowerCase();
+          const co = exp?.current_company?.toLowerCase().trim();
+          return co && brandNames.includes(co);
         })
         .map((d: any) => d.industry_experts as Expert);
       setExperts(matched);

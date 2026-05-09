@@ -986,6 +986,7 @@ export type Database = {
       }
       event_map_brands: {
         Row: {
+          aliases: string[]
           created_at: string
           culture_blurb: string | null
           currently_hiring: string | null
@@ -1002,6 +1003,7 @@ export type Database = {
           website_url: string | null
         }
         Insert: {
+          aliases?: string[]
           created_at?: string
           culture_blurb?: string | null
           currently_hiring?: string | null
@@ -1018,6 +1020,7 @@ export type Database = {
           website_url?: string | null
         }
         Update: {
+          aliases?: string[]
           created_at?: string
           culture_blurb?: string | null
           currently_hiring?: string | null
