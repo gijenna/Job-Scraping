@@ -247,6 +247,9 @@ const ConnectFull = () => {
   }
 
   const setRef = (key: string) => (el: HTMLDivElement | null) => { fieldRefs.current[key] = el; };
+  const label = (settingKey: string, defaultText: string) => (
+    <EditableText settingKey={settingKey} defaultText={defaultText} as="span" />
+  );
 
   return (
     <EditableTextProvider pageSlug="outsidedays26-connect">
@@ -286,19 +289,19 @@ const ConnectFull = () => {
           {/* Section 1: About you */}
           <SectionBlock keyId="about" titleKey="full_s1_title" defaultTitle="About you *">
             <Row>
-              <FieldRow refSetter={setRef("first_name")} label="First name *" error={errors.first_name}>
+              <FieldRow refSetter={setRef("first_name")} label={label("full_first_name_label", "First name *")} error={errors.first_name}>
                 <Input value={c.first_name || ""} onChange={(e) => set("first_name", e.target.value)} />
               </FieldRow>
-              <FieldRow refSetter={setRef("last_name")} label="Last name *" error={errors.last_name}>
+              <FieldRow refSetter={setRef("last_name")} label={label("full_last_name_label", "Last name *")} error={errors.last_name}>
                 <Input value={c.last_name || ""} onChange={(e) => set("last_name", e.target.value)} />
               </FieldRow>
             </Row>
-            <FieldRow refSetter={setRef("email")} label="Email *" error={errors.email}>
+            <FieldRow refSetter={setRef("email")} label={label("full_email_label", "Email *")} error={errors.email}>
               <Input type="email" value={c.email || ""} onChange={(e) => set("email", e.target.value)} />
             </FieldRow>
             <FieldRow
               refSetter={setRef("phone")}
-              label="Phone *"
+              label={label("full_phone_label", "Phone *")}
               error={errors.phone}
               hint={<EditableText settingKey="full_phone_hint" defaultText="Hidden from everyone except admin. Used to verify it's you when you log in." as="span" />}
             >
@@ -323,37 +326,39 @@ const ConnectFull = () => {
               </div>
             )}
             <div>
-              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">Photo</Label>
+              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">
+                <EditableText settingKey="full_photo_label" defaultText="Photo" as="span" />
+              </Label>
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 rounded-full bg-events-cream/10 overflow-hidden flex items-center justify-center text-events-cream/40 font-body text-xs">
-                  {c.photo_url ? <img src={c.photo_url} alt="You" className="w-full h-full object-cover" /> : "No photo"}
+                  {c.photo_url ? <img src={c.photo_url} alt="You" className="w-full h-full object-cover" /> : <EditableText settingKey="full_no_photo_label" defaultText="No photo" as="span" />}
                 </div>
                 <div className="space-y-1">
                   <input ref={photoInput} type="file" accept="image/*" capture="user" hidden
                     onChange={(e) => e.target.files?.[0] && upload("photo", e.target.files[0])} />
                   <Button type="button" onClick={() => photoInput.current?.click()} className="bg-events-coral hover:bg-events-coral/90 text-events-cream">
-                    {c.photo_url ? "Replace photo" : "Upload photo"}
+                    {c.photo_url ? <EditableText settingKey="full_replace_photo_button" defaultText="Replace photo" as="span" /> : <EditableText settingKey="full_upload_photo_button" defaultText="Upload photo" as="span" />}
                   </Button>
-                  <p className="text-[11px] text-events-cream/50 font-body">A face makes you 10 times more memorable on the floor.</p>
+                  <EditableText settingKey="full_photo_hint" defaultText="A face makes you 10 times more memorable on the floor." as="p" className="text-[11px] text-events-cream/50 font-body" />
                 </div>
               </div>
             </div>
-            <FieldRow refSetter={setRef("career_stage")} label="Career stage *" error={errors.career_stage}>
-              <SelectBox value={c.career_stage || ""} onChange={(v) => set("career_stage", v)} options={CAREER_STAGE as any} />
+            <FieldRow refSetter={setRef("career_stage")} label={label("full_career_stage_label", "Career stage *")} error={errors.career_stage}>
+              <SelectBox value={c.career_stage || ""} onChange={(v) => set("career_stage", v)} options={CAREER_STAGE as any} optionKeyPrefix="full_career_stage_option" />
             </FieldRow>
-            <FieldRow refSetter={setRef("poachable_status")} label="Poachable status *" error={errors.poachable_status}>
-              <SelectBox value={c.poachable_status || ""} onChange={(v) => set("poachable_status", v)} options={POACHABLE_STATUS as any} />
+            <FieldRow refSetter={setRef("poachable_status")} label={label("full_poachable_status_label", "Poachable status *")} error={errors.poachable_status}>
+              <SelectBox value={c.poachable_status || ""} onChange={(v) => set("poachable_status", v)} options={POACHABLE_STATUS as any} optionKeyPrefix="full_poachable_status_option" />
             </FieldRow>
           </SectionBlock>
 
           {/* Section 2: What you do */}
           <SectionBlock keyId="what" titleKey="full_s2_title" defaultTitle="What you do *">
             <Row>
-              <FieldRow refSetter={setRef("field")} label="Field *" error={errors.field}>
-                <SelectBox value={c.field || ""} onChange={(v) => { set("field", v); set("focus", ""); }} options={FIELDS} />
+              <FieldRow refSetter={setRef("field")} label={label("full_field_label", "Field *")} error={errors.field}>
+                <SelectBox value={c.field || ""} onChange={(v) => { set("field", v); set("focus", ""); }} options={FIELDS} optionKeyPrefix="full_field_option" />
               </FieldRow>
-              <FieldRow refSetter={setRef("focus")} label="Focus *" error={errors.focus}>
-                <SelectBox value={c.focus || ""} onChange={(v) => set("focus", v)} options={c.field === "Other" ? ["Other"] : (FOCUSES_BY_FIELD[c.field] || [])} />
+              <FieldRow refSetter={setRef("focus")} label={label("full_focus_label", "Focus *")} error={errors.focus}>
+                <SelectBox value={c.focus || ""} onChange={(v) => set("focus", v)} options={c.field === "Other" ? ["Other"] : (FOCUSES_BY_FIELD[c.field] || [])} optionKeyPrefix="full_focus_option" />
               </FieldRow>
             </Row>
             {c.field === "Other" && (
