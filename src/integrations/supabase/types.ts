@@ -688,6 +688,7 @@ export type Database = {
           id: string
           is_active: boolean
           message: string
+          note_cta: string | null
           note_timing: string
           recipient_id: string
           recipient_type: string
@@ -700,6 +701,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           message: string
+          note_cta?: string | null
           note_timing: string
           recipient_id: string
           recipient_type: string
@@ -712,6 +714,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           message?: string
+          note_cta?: string | null
           note_timing?: string
           recipient_id?: string
           recipient_type?: string
