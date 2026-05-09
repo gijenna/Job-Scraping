@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import type { Tables } from "@/integrations/supabase/types";
 import EventsNav from "@/components/events/EventsNav";
 import CalendarGrid from "@/components/events/CalendarGrid";
@@ -22,10 +23,10 @@ const EventCalendar = () => {
   useEffect(() => {
     fetchEvents();
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     return () => subscription.unsubscribe();
   }, []);

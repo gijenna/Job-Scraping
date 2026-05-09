@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import type { Tables } from "@/integrations/supabase/types";
 import EventsNav from "@/components/events/EventsNav";
 import EventsHero from "@/components/events/EventsHero";
@@ -38,10 +39,10 @@ const Events = () => {
   useEffect(() => {
     fetchEvents();
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAdmin(!!session);
+      setIsAdmin(isAdminUser(session?.user));
     });
     return () => subscription.unsubscribe();
   }, []);

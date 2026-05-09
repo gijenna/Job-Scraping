@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isAdminUser } from "@/lib/admin-auth";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { LayoutGrid, List, Circle } from "lucide-react";
 
@@ -22,8 +23,8 @@ const CardStylePicker = ({ eventSlug, settingKey = "card_style", label, onStyleC
   const currentStyle = settings[settingKey] || "polaroid";
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setIsAdmin(!!data.session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(!!session));
+    supabase.auth.getSession().then(({ data }) => setIsAdmin(isAdminUser(data.session?.user)));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setIsAdmin(isAdminUser(session?.user)));
     return () => subscription.unsubscribe();
   }, []);
 
