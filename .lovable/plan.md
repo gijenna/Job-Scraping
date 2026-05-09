@@ -1,92 +1,61 @@
-## Goal
+# Lock all admin/edit gates to @wearetheoutdoorindustry.com only
 
-Rebuild the Connect interaction flow so candidates always see the full, existing rep/expert card before any action, then act through a sticky mode-aware footer. Replace the 3-step connection wizard with a single-screen form, fork it for experts vs reps, add a universal "I visited this brand" toggle, support inline note-sending with a CTA chip, and surface all of this on the brand dashboard.
+## The bug
 
-## Scope summary
+Most edit and admin UI on the site decides "is admin?" by simply checking that any Supabase session exists (`!!session`). Since the after‑party PIN flow signs every RSVP'd guest into Supabase (often as an anonymous user), any after‑party guest currently sees inline edit controls (EditableText pencils, EditableLink editors, hide/show section toggles, logo manager, card style picker, events nav admin button, etc.) on every page that uses `EditableTextProvider` or those components.
 
-- Reuse `ExpertCard.tsx` (already used for both experts and brand reps via shared shape) inside Connect. No redesign.
-- New wrapper: `ConnectPersonSheet` that mounts the existing card and adds a sticky mode-aware action footer.
-- Rewrite `ConnectionForm.tsx` from a 3-step wizard to a single-screen form with two variants (rep, expert) plus a separate brand-level form (`BrandVisitForm`).
-- Add universal "I visited this brand" toggle inside `MapBrandPanel`.
-- Schema: add `note_cta` to `connect_notes`, allow `during_event` value in `note_timing`.
-- Brand dashboard: add `during_event` filter chip, render CTA chip on note display.
+The only place that already does it correctly is `AfterPartyAdminInline.tsx`, which checks:
+- session user is not anonymous
+- email ends with `@wearetheoutdoorindustry.com`
 
-## Files to change
+We will apply that same check everywhere.
 
-### New
-- `src/components/connect/ConnectPersonSheet.tsx` — bottom-sheet wrapper that renders the existing `ExpertCard` (used for reps too) inside a scrollable Sheet with a sticky `<ConnectActionFooter>` at the bottom. Mode-aware footer logic lives here.
-- `src/components/connect/ConnectActionFooter.tsx` — pure presentation: renders 1 or 2 buttons based on `mode`, `hasNote`, `hasConnection`, `subjectType`. Pre: "Send a note" / "Edit your note ✓". During: "Log a connection" / "View your notes". Post: "Send a note" + optional "View / edit connection".
-- `src/components/connect/BrandVisitForm.tsx` — brand-level form. Toggle "I visited" creates an empty brand-only `connections` row immediately. The expandable form has: rep multi-select bubbles (creates an empty per-rep `connections` row on save for each selected), private "what did you talk about", "how should you follow up". No note option.
-- `src/components/connect/BrandVisitToggle.tsx` — the prominent toggle button + "Visited ✓" state + remove-confirm dialog. Wraps `BrandVisitForm` expansion.
-- `src/components/connect/NoteCTAChips.tsx` — reusable single-select chips for the 4 CTA values, used inside the new `ConnectionForm` and inside `NoteComposer`.
+## Approach
 
-### Rewritten
-- `src/components/connect/ConnectionForm.tsx` — single-screen form, two variants:
-  - `rep` variant: private notes, follow-up direction, contact info, role flagged, collapsible note composer (with `NoteCTAChips`).
-  - `expert` variant: private notes, follow-up direction, contact info, mentor Y/N (required), mentor topics if Yes, collapsible note composer.
-  - Save button text is conditional on note section being expanded + filled.
-  - Edit-mode prefill from existing connection + existing note.
+Create one shared helper and route every existing gate through it. No UI changes, no copy changes, no new routes.
 
-### Edited
-- `src/components/event/MapBrandPanel.tsx` — replace direct rep-tap → `ConnectionForm` flow with rep-tap → `ConnectPersonSheet`. Mount `BrandVisitToggle` at the top of the modal (during/post-event only).
-- `src/pages/outsidedays/ConnectHome.tsx` — expert-tap inside Expert Zone now opens `ConnectPersonSheet` (expert variant) instead of jumping straight to the wizard.
-- `src/pages/outsidedays/ConnectConnections.tsx` — "edit" entry points open `ConnectPersonSheet` first, which then routes to the new `ConnectionForm` in edit mode.
-- `src/components/connect/dashboard/CandidateCard.tsx` — render `during_event` timing label "Note from event"; render CTA chip below the note text using the mapping in spec; keep email/LinkedIn buttons.
-- `src/components/connect/dashboard/DashboardFilters.tsx` — add a `during_event_note` filter chip.
-- `src/components/connect/NoteComposer.tsx` — keep as the standalone pre/post composer (entry points from sticky footer), but also accept an `initialCTA` and render the new `NoteCTAChips`. The "during_event" disabled branch is preserved (for safety) but the sticky footer in during-event mode routes to `ConnectionForm` instead of opening this composer.
-- `src/lib/connect-session.ts` — extend `connectNotesUpsert` and `connectionsCreate/Update` payloads to include `note_cta`. Add `connectVisitBrand` / `connectUnvisitBrand` helpers.
+### 1. New file: `src/lib/admin-auth.ts`
 
-### Backend
-- `supabase/functions/connect-notes/index.ts` — accept and persist `note_cta`; permit `note_timing = "during_event"` writes.
-- `supabase/functions/connections/index.ts` — accept brand-only "visit" rows (brand_id only, no rep/expert); include logic to bulk-insert empty per-rep rows when `rep_ids: []` is passed from `BrandVisitForm`.
-- `supabase/functions/brand-dashboard/index.ts` — extend filter to support `during_event_note`; pass `note_cta` through in the candidate payload.
+Exports:
+- `isAdminUser(user)` — `user` is non‑null, `user.is_anonymous !== true`, and `user.email` (lowercased, trimmed) ends with `@wearetheoutdoorindustry.com`.
+- `useIsAdmin()` — React hook that wires `supabase.auth.getUser()` + `onAuthStateChange`, returns a boolean. Replaces the duplicated pattern.
 
-### Migration
-- Add column `note_cta text` to `connect_notes` (nullable; values constrained via CHECK to: `follow_up`, `look_out_for_application`, `grab_coffee`, `memorable_only`).
-- If `note_timing` is constrained by CHECK, update the CHECK to include `during_event`. (No enum type — it's a text column today, so this may be a no-op.)
+### 2. Replace weak gates
 
-## Mode logic (single source of truth)
+Swap each `setIsAdmin(!!session)` / `setAuthed(true)` site below to use `isAdminUser(session?.user)` (or `useIsAdmin()` where it cleans up the component):
 
-Reuse `useEventMode()` from `src/lib/connect-event-mode.ts`. Footer decision matrix:
+Editing surfaces (drives EditableText, EditableLink, HideableSection, PageMetaEditor, AnchorCopyButton across every public page):
+- `src/components/EditableTextProvider.tsx` (lines 49–53)
 
-```text
-mode         hasNote  hasConn   primary                   secondary
-pre          no       *         Send a note               -
-pre          yes      *         Edit your note ✓          -
-during       *        no        Log a connection          -
-during       *        yes       View your notes           -
-post         *        no        Send a note               -
-post         *        yes       Send a note               View / edit connection
-```
+Inline admin controls on event/landing pages:
+- `src/components/event/AdminLogoManager.tsx` (263–264)
+- `src/components/event/CardStylePicker.tsx` (25–26)
+- `src/components/events/EventsNav.tsx` (33–37) — gates the "Add event" / admin link in the nav
+- `src/pages/Events.tsx` (40–44)
+- `src/pages/EventCalendar.tsx` (24–28)
+- `src/pages/GenerateCards.tsx` (391–395)
 
-`hasConnection` excludes brand-level visit rows when computed for a rep card; it only counts rows where `brand_rep_id` (or `expert_id`) matches.
+Admin route pages — currently only check that *some* session exists, so any anonymous after‑party session passes. Add email check; if not admin, sign out and `navigate("/admin")`:
+- `src/pages/AdminAfterParty.tsx` (around 21)
+- `src/pages/AdminConnect.tsx` (around 37)
+- `src/pages/AdminExperts.tsx` (around 45)
+- `src/pages/EventMapAdmin.tsx` (around 51–53)
 
-## Visited-brand semantics
+### 3. Sweep for any other component that calls `getSession`/`onAuthStateChange` and decides admin status
 
-- Brand-level visit = a `connections` row with `brand_id` set and both `brand_rep_id` and `expert_id` null.
-- Per-rep selection in `BrandVisitForm` creates one empty `connections` row per selected rep with `brand_id` + `brand_rep_id`. These are independently editable later from each rep's `ConnectPersonSheet`.
-- Brand dashboard "Visited my table" badge already triggers on any connection row for the brand. No change needed to that aggregation; verify in `brand-dashboard/index.ts`.
-
-## Removals
-
-- 3-step wizard markup, `Progress`, step state, "STEP 1 OF 3" copy, "Leave a trail" / "Send now or write later" footer in `ConnectionForm.tsx`. Replaced inline.
-- Direct rep-tap → wizard wiring in `MapBrandPanel.tsx`.
-
-## Testing checklist mapping
-
-Each item from the spec's Testing Checklist maps to a manual verification at preview viewport 390x692:
-- Rep card pre/during/post footer behavior — `ConnectPersonSheet` + `ConnectActionFooter`.
-- Expert card flow — same wrapper, `subjectType=expert`.
-- "I visited" toggle — `BrandVisitToggle` inside `MapBrandPanel`.
-- Connection form (rep, expert): single screen, collapsible note, save text changes — new `ConnectionForm`.
-- Brand-level multi-select creates empty rep rows — `BrandVisitForm` + `connections` edge function.
-- Dashboard candidate card shows CTA chip + during-event label — `CandidateCard.tsx` + `DashboardFilters.tsx`.
-- No em dashes anywhere in new copy.
+Run a final `rg "!!session|!!data.session|setIsAdmin|setAuthed"` pass and convert any remaining hits to `isAdminUser`. Known clean spots to leave alone:
+- `LinkTracker.tsx` — already checks domain.
+- `AfterPartyAdminInline.tsx` — already checks domain (will be refactored to call shared helper for consistency).
+- `AdminLogin.tsx` — login page itself, already enforces `ALLOWED_DOMAINS`.
+- Connect/brand‑rep/candidate session flows in `connect-session.ts` and the after‑party PIN flow — these intentionally create non‑admin sessions and stay untouched.
 
 ## Out of scope
 
-- Rep/expert card visual redesign.
-- Brand modal layout (logo/name/reps grid/link/hiring) beyond inserting the visit toggle.
-- Existing standalone pre/post NoteComposer flows beyond adding CTA chips.
-- Brand dashboard filter system structure beyond adding the new chip.
-- Taxonomies.
+- No changes to RLS, edge functions, or DB. (Edge functions that need admin checks already validate the email server‑side; this PR is purely a UI gating fix so non‑admins stop seeing edit affordances. Server still rejects writes.)
+- No new login flow, no UI redesign, no copy changes.
+
+## Acceptance
+
+- Sign in via after‑party PIN as a guest → no pencils, no Edit buttons, no hide/show section chips, no admin nav link, no logo manager, no card style picker on any page. `/admin/*` routes bounce back to `/admin`.
+- Sign in at `/admin` with an `@wearetheoutdoorindustry.com` email → all of the above appear and work exactly as before.
+- Signed out → unchanged (already hidden).
