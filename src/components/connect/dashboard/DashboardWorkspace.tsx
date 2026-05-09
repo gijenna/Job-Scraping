@@ -109,15 +109,14 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
 function SortSelect({ sort, setSort }: { sort: string; setSort: (s: string) => void }) {
   return (
     <Select value={sort} onValueChange={setSort}>
-      <SelectTrigger className="w-[220px] bg-events-cream/5 border-events-cream/20 text-events-cream">
-        <SelectValue />
+      <SelectTrigger className="w-[180px] max-w-[55vw] bg-events-cream/5 border-events-cream/20 text-events-cream">
+        <SelectValue className="truncate" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="most_recent_activity">Most recent activity</SelectItem>
-        <SelectItem value="most_complete">Most complete profile</SelectItem>
-        <SelectItem value="connected_first">Connected with my brand first</SelectItem>
-        <SelectItem value="note_first">Sent a note first</SelectItem>
-        <SelectItem value="pre_event_first">Pre-event reached out first</SelectItem>
+        <SelectItem value="newest">Newest</SelectItem>
+        <SelectItem value="most_complete">Most complete profiles</SelectItem>
+        <SelectItem value="visited">Visited my table</SelectItem>
+        <SelectItem value="wrote_note">Wrote me a note</SelectItem>
       </SelectContent>
     </Select>
   );
