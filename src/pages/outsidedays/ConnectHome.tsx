@@ -128,6 +128,15 @@ const ConnectHome = () => {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => nav("/outsidedays26/connect/how-it-works")}
+              aria-label="How this works"
+              className="text-events-cream/70 text-xs hidden sm:inline-flex"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => nav("/outsidedays26/connect/connections")}
               className="text-events-cream/80 text-xs"
             >
@@ -143,6 +152,55 @@ const ConnectHome = () => {
             </Button>
           </div>
         </header>
+
+        {/* Mode-aware header strip */}
+        {!headerStripDismissed && (
+          <div className="border-l-4 border-events-coral bg-events-cream/5 px-4 py-2.5 flex items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="font-display text-sm text-events-cream">{headerCopy.title}</div>
+              <div className="font-body text-[12px] text-events-cream/70 leading-snug">{headerCopy.body}</div>
+            </div>
+            <button
+              onClick={() => setHeaderStripDismissed(true)}
+              aria-label="Dismiss"
+              className="w-7 h-7 rounded-full bg-events-cream/10 hover:bg-events-cream/20 flex items-center justify-center shrink-0"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Your shortlist */}
+        {starred.size > 0 && (
+          <div className="px-4 py-3 border-b border-events-cream/10">
+            <div className="flex items-center gap-2 mb-2">
+              <Star className="w-3.5 h-3.5 fill-events-coral text-events-coral" />
+              <span className="font-display text-[11px] uppercase tracking-wider text-events-cream/70">
+                Your shortlist ({starred.size})
+              </span>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {brands.filter((b) => starred.has(b.id)).map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => handleBrandClick(b)}
+                  className="shrink-0 flex flex-col items-center gap-1 w-14"
+                >
+                  <div className="w-12 h-12 rounded-full bg-events-cream overflow-hidden flex items-center justify-center border-2 border-events-coral shadow-sm">
+                    {brandLogo(b) ? (
+                      <img src={brandLogo(b)!} alt={b.name} className="w-9 h-9 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    ) : (
+                      <span className="font-display text-[10px] text-events-teal">
+                        {b.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[9px] font-body text-events-cream/70 line-clamp-1">{b.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Profile completeness banner */}
         {completeness !== null && completeness < 80 && !bannerDismissed && (
