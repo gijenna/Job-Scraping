@@ -210,7 +210,7 @@ const AddExpertDialog = ({ cities, onAdded, type = 'industry_expert' }: AddExper
 
             <div className="space-y-2">
               <Label className="text-events-teal font-semibold">
-                Mobile Phone <span className="text-events-teal/40 font-normal">(recommended — used to sign in)</span>
+                Mobile Phone <span className="text-events-teal/40 font-normal">(recommended, used to sign in)</span>
               </Label>
               <Input
                 value={phone}
