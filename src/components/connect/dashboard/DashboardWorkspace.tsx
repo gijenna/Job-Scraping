@@ -22,7 +22,7 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
   const [filters, setFilters] = useState<Filters>({});
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [sort, setSort] = useState("most_recent_activity");
+  const [sort, setSort] = useState("newest");
   const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => { dashboardSummary().then(setSummary).catch(() => {}); }, []);
