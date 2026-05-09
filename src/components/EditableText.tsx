@@ -34,7 +34,8 @@ const EditableText = ({
     }
   }, [editing]);
 
-  const handleSave = async () => {
+  const handleSave = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const trimmed = draft.trim();
     if (trimmed && trimmed !== displayText) {
       await setSetting(settingKey, trimmed);
@@ -42,7 +43,8 @@ const EditableText = ({
     setEditing(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setEditing(false);
   };
 
@@ -67,7 +69,8 @@ const EditableText = ({
           <textarea
             ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             className="w-full bg-black/20 border border-events-coral/50 rounded px-2 py-1 text-inherit font-inherit resize-y min-h-[60px]"
             style={{ fontSize: "inherit", fontFamily: "inherit", lineHeight: "inherit", color: "inherit" }}
@@ -76,6 +79,7 @@ const EditableText = ({
           <input
             ref={inputRef as React.RefObject<HTMLInputElement>}
             value={draft}
+            onClick={(e) => e.stopPropagation()}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             className="w-full bg-black/20 border border-events-coral/50 rounded px-2 py-1 text-inherit font-inherit"
@@ -104,7 +108,8 @@ const EditableText = ({
     <span
       className={`group/edit relative inline cursor-pointer ${className}`}
       style={style}
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         setDraft(displayText);
         setEditing(true);
       }}
