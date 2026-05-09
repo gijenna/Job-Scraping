@@ -550,6 +550,7 @@ export type Database = {
           field_other: string | null
           first_name: string
           focus: string
+          has_seen_map_intro: boolean
           id: string
           job_types_seeking: string[] | null
           last_name: string
@@ -598,6 +599,7 @@ export type Database = {
           field_other?: string | null
           first_name: string
           focus: string
+          has_seen_map_intro?: boolean
           id?: string
           job_types_seeking?: string[] | null
           last_name: string
@@ -646,6 +648,7 @@ export type Database = {
           field_other?: string | null
           first_name?: string
           focus?: string
+          has_seen_map_intro?: boolean
           id?: string
           job_types_seeking?: string[] | null
           last_name?: string
@@ -674,6 +677,45 @@ export type Database = {
           updated_at?: string
           workplace_type_preference?: string[] | null
           years_in_current_field?: number
+        }
+        Relationships: []
+      }
+      connect_notes: {
+        Row: {
+          brand_id: string | null
+          candidate_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          message: string
+          note_timing: string
+          recipient_id: string
+          recipient_type: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          candidate_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message: string
+          note_timing: string
+          recipient_id: string
+          recipient_type: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          message?: string
+          note_timing?: string
+          recipient_id?: string
+          recipient_type?: string
+          updated_at?: string
         }
         Relationships: []
       }

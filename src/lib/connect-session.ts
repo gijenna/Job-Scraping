@@ -64,6 +64,44 @@ export async function candidateAttachUpload(kind: "photo" | "resume", storage_pa
     action: "attach_upload", kind, storage_path,
   });
 }
+export async function candidateToggleStar(brand_id: string) {
+  return call<{ starred: boolean }>("candidate-profile", { action: "toggle_star", brand_id });
+}
+export async function candidateListStars() {
+  return call<{ starred_brand_ids: string[] }>("candidate-profile", { action: "list_stars" });
+}
+export async function candidateMarkSeenIntro() {
+  return call("candidate-profile", { action: "mark_seen_intro" });
+}
+
+// ---- Connect Notes ----
+export interface ConnectNote {
+  id: string;
+  candidate_id: string;
+  recipient_type: "brand_rep" | "expert";
+  recipient_id: string;
+  brand_id: string | null;
+  message: string;
+  note_timing: "pre_event" | "during_event" | "post_event";
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+export async function connectNotesListMine() {
+  return call<{ notes: ConnectNote[] }>("connect-notes", { action: "list_mine" });
+}
+export async function connectNotesGetMine(recipient_id: string) {
+  return call<{ note: ConnectNote | null }>("connect-notes", { action: "get_mine", recipient_id });
+}
+export async function connectNotesUpsert(input: { recipient_type: "brand_rep" | "expert"; recipient_id: string; message: string }) {
+  return call<{ note: ConnectNote }>("connect-notes", { action: "upsert", ...input });
+}
+export async function connectNotesRetract(recipient_id: string) {
+  return call("connect-notes", { action: "retract", recipient_id });
+}
+export async function connectNotesListForRep(brand_wide = true) {
+  return call<{ notes: ConnectNote[] }>("connect-notes", { action: "list_for_rep", brand_wide });
+}
 
 // ---- Connections ----
 export interface ConnectionPayload {

@@ -1,42 +1,84 @@
-## Goal
-Make `/afterparty-interest` mirror the OG invite visually and content-wise (minus the date/time and the old RSVP CTA), while keeping the existing waitlist flow.
+# Basecamp Connect — Messaging, Stars, Mode-Aware UX
 
-## Changes to `src/pages/AfterPartyInterest.tsx`
+A large coordinated build. Will deliver in phased commits so each piece is testable.
 
-### 1. Background + chrome
-- Apply the same `/bg-sunset.jpg` cover background + dark overlay used in `AfterPartyInvite` (cream text on dark teal/black).
-- Wrap content in the same max-width 480 column on mobile, scaled up on desktop.
-- Keep the `BasecampMatchPopflyLogo` Oakley lockup at the top.
+## Event mode constants (shared util)
+Create `src/lib/connect-event-mode.ts`:
+- `EVENT_START` (Denver Outside Days 26 start) and `POST_EVENT_START = 2026-05-28T19:00:00-06:00` (7pm MT).
+- `getEventMode()` → `"pre_event" | "during_event" | "post_event"`.
+- Used by header strip, composer gating, onboarding modal, note timing.
 
-### 2. Restore lost party details (no date/time)
-Below the lockup, mirror the OG invite's hero:
-- Sparkle row + DJ · Drinks · Swag · Food · Friends pill row (`StarSparkle` already used on the invite).
-- About section: "A lil' party for outdoor industry creators & brands" and the line about "200 creators × brands coming together for food, fun, DJ & drinks" (admin-editable via `EditableText`, page slug `afterparty-interest`).
-- Remove the existing "May 28 · Denver" eyebrow and any date/time bullets.
+## Phase 1 — Database
 
-### 3. Capacity gate + CTA (unchanged behavior)
-- Keep the "Due to venue capacity, please submit your interest by May 25." line.
-- Keep the coral "I wanna come" button. Clicking still opens the interest form inline.
+Migration:
+- `notes` table: id, created_at, updated_at, candidate_id, recipient_type ('brand_rep'|'expert'), recipient_id, brand_id (nullable), message (text, ≤500 enforced via trigger), note_timing ('pre_event'|'during_event'|'post_event'), is_active (bool default true).
+  - Unique partial index on `(candidate_id, recipient_id) where is_active = true`.
+  - RLS: service-role full access (mirrors `connections` pattern; Edge Functions handle auth).
+- `candidates`: add `has_seen_map_intro boolean default false`.
+- Stars: project already has `candidate_starred_brands` join table — use it (skip the array column).
+- Add 2 rows to `email_templates`: `candidate_note_received_pre_event`, `candidate_note_received_post_event`.
 
-### 4. Brand activation pop-up after submission
-- After form submit succeeds, if `attendee_type` is `brand` or `industry`, show the existing `BrandActivateButton` (variant `full`) inline above the thank-you card, pre-filled with the user's `fullName`, `company`, `email`. It will hit the `brand_activation_requests` table + alert + confirmation emails through the same path as the invite page.
-- For `creator`, skip the activation card.
+## Phase 2 — Edge functions
 
-### 5. Final text change
-- Change thank-you headline from "You're on the list to be considered." to "You're on the waitlist." (still admin-editable).
+New `supabase/functions/notes/index.ts` (CORS, candidate session auth via existing `_shared/connect-session.ts`):
+- `GET ?recipient_id=…` → my active note to that recipient.
+- `GET ?mine=1` → all my active notes.
+- `GET ?brand_id=…` (brand-rep auth) → notes for any rep at that brand, joined w/ candidate basics.
+- `POST { recipient_type, recipient_id, message }` → upsert active note. Reject if `during_event`. Sets `note_timing` server-side. Resolves `brand_id` from rep. Enqueues `candidate_note_received_pre_event` or `_post_event` email via existing `send-transactional-email`.
+- `POST { action: 'retract', recipient_id }` → set `is_active=false`.
 
-### 6. Sponsors + Oakley gallery at the bottom
-- Render `<OakleyRinoVenueShowcase />` (the Oakley RiNo gallery used on `/guests`).
-- Render `<AfterPartySpotlights />` so sponsors keep visibility.
-- Both sit below everything else, regardless of whether the form is open or submitted.
+Extend `candidate-profile` (or new `stars` function): toggle starred brand in `candidate_starred_brands`; return `starred_brand_ids` in `candidateMe()`.
+
+Extend `brand-dashboard` to also return per-candidate `note` (text, timing, sent_at) and a `has_visited` flag derived from `connections`.
+
+Add 2 templates to `_shared/transactional-email-templates/` and register in `registry.ts`.
+
+## Phase 3 — Candidate UI
+
+**Shared**
+- `useEventMode()` hook.
+- `useMyNotes()` + `useMyStars()` hooks (single fetch, cached on `ConnectShell`).
+- Add small "How this works" link to top-right of `ConnectShell` header.
+
+**`/outsidedays26/connect` (branching screen)** — replace welcome block with new headline/one-liner/sub-text + "How does this work?" link.
+
+**`/outsidedays26/connect/full`** — add muted-cream description line under each of the 7 section headers.
+
+**`/outsidedays26/connect/how-it-works`** — new public page, sections 1–5 verbatim, primary CTA back to `/outsidedays26/connect`. Add route in `App.tsx`.
+
+**`ConnectHome` (map view)**
+- Remove existing profile-completeness banner.
+- Add mode-aware header strip (coral left bar, sticky, dismissible per session) with the 3 copy variants.
+- Add "Your shortlist" mini-bubbles section above map listing starred brands (empty-state copy included).
+- Pass `myStars`, `myNoteRecipientIds`, `myConnectionBrandIds` into `EventMapCanvas` so bubbles can render ⭐/✉️/✓ corner indicators.
+- First-time onboarding modal: gated on `has_seen_map_intro`, content varies by mode, dismiss writes flag via `candidate-profile`.
+- Same indicators applied in `ListView` bubble tiles + "Starred only" filter chip.
+
+**Brand modal (`MapBrandPanel`)**
+- Star button top-right next to close X (toggles via stars endpoint, optimistic).
+- Each rep card gets "Send a note" / "Note sent ✓" link (hidden in `during_event`). Tap opens composer.
+
+**Expert card (`ExpertCardMinimal` candidate context)** — same "Send a note" link below name (pre/post only).
+
+**Note composer** (`src/components/connect/NoteComposer.tsx`, full-screen on mobile, centered card desktop):
+- Recipient summary (avatar/name/title/company), mode-aware heading + guidance copy block (full text from spec, no em dashes), 500-char textarea w/ live counter, optional "Ask me about" inspiration card from rep/expert profile, Send/Update + Cancel + Retract (when editing). Confirmation toast w/ 4s auto-dismiss.
+
+**Profile completeness banner** — relocate to top of `ConnectProfile` page (already on `/full`).
+
+## Phase 4 — Brand Dashboard updates
+
+In `CandidateCard` + `CandidateProfileDrawer`:
+- Two independent badges: "Visited" (coral star) when connection exists; "Pre-event note" / "Post-event note" / "Note from event" envelope badge.
+- Quote-block of note text with 💌 timing label, sent date, inline `Email them` (mailto) and `LinkedIn` (only if `linkedin_url`) action buttons (coral accent).
+
+In `DashboardFilters`: add chips "Sent me a note", "Pre-event interest", "Post-event interest" (stack with existing). Add sort option "Pre-event reached out first".
+
+## Phase 5 — Admin analytics
+
+Extend admin analytics page (or add section to `AdminAfterParty`/Connect admin) reading from `notes` + `candidate_starred_brands` for the metrics listed in Change 14. Read-only queries via `supabase.rpc`/edge function.
 
 ## Out of scope
-- No DB/schema changes.
-- No edge-function changes (reuses `send-transactional-email`, `append-afterparty-interest-sheet`, `brand_activation_requests` insert).
-- No changes to the OG `/afterparty/...` flow.
+Connection-logging flow, recap view structure, taxonomies, real-time/threading/notifications, brand-side outreach UI, brand_starred_attendee UI.
 
-## Files touched
-- `src/pages/AfterPartyInterest.tsx` (only)
-
-## Note on memory rule
-All new copy strings (party details, waitlist headline, etc.) wrapped in `EditableText` with the `afterparty-interest` page slug, no em dashes.
+## Validation
+After each phase: smoke-test via preview at 375px, run linter, hit edge functions with `curl_edge_functions`. Final pass against the testing checklist in the spec.
