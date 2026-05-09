@@ -22,6 +22,8 @@ import { faviconFromUrl } from "@/lib/url-logo";
 import ConnectionForm from "@/components/connect/ConnectionForm";
 import NoteComposer, { NoteRecipient } from "@/components/connect/NoteComposer";
 import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
+import EditableText from "@/components/EditableText";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -103,13 +105,14 @@ const ConnectHome = () => {
   };
 
   return (
+    <EditableTextProvider pageSlug="outsidedays26-connect">
     <ImpersonationGate>
       <div className="min-h-screen bg-events-teal text-events-cream flex flex-col">
         {/* Header */}
         <header className="px-4 py-3 border-b border-events-cream/10 flex items-center justify-between gap-3 sticky top-0 bg-events-teal/95 backdrop-blur z-30">
           <div>
-            <h1 className="font-afterparty text-2xl leading-none">Outside Days</h1>
-            <p className="text-[11px] font-body text-events-cream/60">Denver 26</p>
+            <EditableText settingKey="home_header_title" defaultText="Outside Days" as="h1" className="font-afterparty text-2xl leading-none" />
+            <EditableText settingKey="home_header_subtitle" defaultText="Denver 26" as="p" className="text-[11px] font-body text-events-cream/60" />
           </div>
           <div className="flex items-center gap-2">
             <div className="flex bg-events-cream/10 border border-events-cream/15 rounded-full p-0.5">
@@ -140,7 +143,7 @@ const ConnectHome = () => {
               onClick={() => nav("/outsidedays26/connect/connections")}
               className="text-events-cream/80 text-xs"
             >
-              Connections
+              <EditableText settingKey="home_nav_connections" defaultText="Connections" as="span" />
             </Button>
             <Button
               variant="ghost"
@@ -148,7 +151,7 @@ const ConnectHome = () => {
               onClick={() => nav("/outsidedays26/connect/profile")}
               className="text-events-cream/80 text-xs"
             >
-              Profile
+              <EditableText settingKey="home_nav_profile" defaultText="Profile" as="span" />
             </Button>
           </div>
         </header>
@@ -363,6 +366,7 @@ const ConnectHome = () => {
         )}
       </div>
     </ImpersonationGate>
+    </EditableTextProvider>
   );
 };
 
