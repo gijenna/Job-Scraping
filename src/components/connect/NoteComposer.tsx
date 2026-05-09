@@ -34,16 +34,16 @@ const MAX = 500;
 
 const GUIDANCE: Record<string, { heading: string; body: string }> = {
   pre_event: {
-    heading: "Send a pre-event note",
-    body: "A short note helps the rep know to look for you. Mention what drew you to them and one thing you'd love to chat about.",
+    heading: "Save a pre-event note",
+    body: "A short note helps the rep know to look for you. Mention what drew you to them and one thing you'd love to chat about. They'll see it with their Connect follow-up.",
   },
   post_event: {
-    heading: "Send a thank-you note",
-    body: "Quickly remind them where you met, then say what stuck with you and what you'd love to do next.",
+    heading: "Save a thank-you note",
+    body: "Quickly remind them where you met, what stuck with you, and what you'd love to do next. They'll see it with their Connect follow-up.",
   },
   during_event: {
     heading: "Notes are paused during the event",
-    body: "Walk up and say hi instead. You can send a follow-up note as soon as the event wraps.",
+    body: "Walk up and say hi instead. You can save a follow-up note as soon as the event wraps.",
   },
 };
 
