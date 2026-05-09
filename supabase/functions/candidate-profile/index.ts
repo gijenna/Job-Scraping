@@ -26,7 +26,33 @@ Deno.serve(async (req) => {
   try {
     if (body.action === "get") {
       const { data } = await sb.from("candidates").select("*").eq("id", candidateId).maybeSingle();
-      return jsonFor(req, { candidate: data });
+      const { data: stars } = await sb.from("candidate_starred_brands")
+        .select("brand_id").eq("candidate_id", candidateId);
+      return jsonFor(req, { candidate: data, starred_brand_ids: (stars || []).map((s: any) => s.brand_id) });
+    }
+
+    if (body.action === "toggle_star") {
+      const { brand_id } = body;
+      if (!brand_id) return jsonFor(req, { error: "brand_id required" }, { status: 400 });
+      const { data: existing } = await sb.from("candidate_starred_brands")
+        .select("id").eq("candidate_id", candidateId).eq("brand_id", brand_id).maybeSingle();
+      if (existing) {
+        await sb.from("candidate_starred_brands").delete().eq("id", existing.id);
+        return jsonFor(req, { starred: false });
+      }
+      await sb.from("candidate_starred_brands").insert({ candidate_id: candidateId, brand_id });
+      return jsonFor(req, { starred: true });
+    }
+
+    if (body.action === "list_stars") {
+      const { data } = await sb.from("candidate_starred_brands")
+        .select("brand_id").eq("candidate_id", candidateId);
+      return jsonFor(req, { starred_brand_ids: (data || []).map((s: any) => s.brand_id) });
+    }
+
+    if (body.action === "mark_seen_intro") {
+      await sb.from("candidates").update({ has_seen_map_intro: true }).eq("id", candidateId);
+      return jsonFor(req, { ok: true });
     }
 
     if (body.action === "update") {
