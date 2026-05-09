@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase, Star, Mail, Check } from "lucide-react";
+import { X, ExternalLink, ChevronDown, ChevronUp, Wifi, Sparkles, Briefcase, Star } from "lucide-react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { supabase } from "@/integrations/supabase/client";
 import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
-import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
+import ConnectionForm from "@/components/connect/ConnectionForm";
+import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
+import BrandVisitToggle from "@/components/connect/BrandVisitToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { candidateToggleStar } from "@/lib/connect-session";
 import { useEventMode } from "@/lib/connect-event-mode";
@@ -27,7 +29,8 @@ const MapBrandPanel = ({
 }: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
-  const [logging, setLogging] = useState<{ mode: ConnectionMode; rep?: Expert } | null>(null);
+  const [logging, setLogging] = useState<{ brand: true } | null>(null);
+  const [personSheet, setPersonSheet] = useState<Expert | null>(null);
   const [starBusy, setStarBusy] = useState(false);
   const mode = useEventMode();
   const { toast } = useToast();

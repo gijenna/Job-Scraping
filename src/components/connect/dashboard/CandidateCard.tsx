@@ -80,6 +80,17 @@ export default function CandidateCard({ candidate, onClick }: { candidate: any; 
           <p className="text-events-cream/85 font-body italic text-sm leading-relaxed">
             "{candidate.connect_note.message}"
           </p>
+          {candidate.connect_note.note_cta && candidate.connect_note.note_cta !== "memorable_only" && (
+            <div className="mt-2">
+              <span className="inline-block text-[10px] font-display uppercase tracking-wider bg-events-coral text-events-cream px-2 py-0.5 rounded-full">
+                {({
+                  follow_up: "📩 Wants follow-up",
+                  look_out_for_application: "👀 Applying to a role",
+                  grab_coffee: "☕ Wants coffee",
+                } as Record<string, string>)[candidate.connect_note.note_cta]}
+              </span>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2 mt-3">
             {candidate.email && (
               <Button
