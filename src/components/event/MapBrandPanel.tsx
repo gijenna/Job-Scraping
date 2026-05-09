@@ -216,19 +216,46 @@ const MapBrandPanel = ({
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 grid grid-cols-3 sm:grid-cols-4 gap-4">
-                      {experts.map((expert) =>
-                        candidateMode ? (
-                          <button
-                            key={expert.id}
-                            onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
-                            className="text-left active:scale-95 transition-transform"
-                          >
-                            <ExpertCardMinimal expert={expert} disableExpand />
-                          </button>
+                      {experts.map((expert) => {
+                        const hasNote = !!noteRecipientIds?.has(expert.id);
+                        return candidateMode ? (
+                          <div key={expert.id} className="space-y-1.5">
+                            <button
+                              onClick={() => setLogging({ mode: "brand_rep", rep: expert })}
+                              className="block w-full text-left active:scale-95 transition-transform relative"
+                            >
+                              <ExpertCardMinimal expert={expert} disableExpand />
+                              {hasNote && (
+                                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow">
+                                  <Check className="w-3 h-3" />
+                                </span>
+                              )}
+                            </button>
+                            {mode !== "during_event" && onSendNote && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onSendNote({
+                                    recipient_type: "brand_rep",
+                                    recipient_id: expert.id,
+                                    full_name: expert.full_name,
+                                    photo_url: expert.photo_url,
+                                    job_title: expert.job_title,
+                                    current_company: expert.current_company,
+                                    ask_me_about: expert.ask_me_about,
+                                  });
+                                }}
+                                className="w-full inline-flex items-center justify-center gap-1 text-[10px] font-display uppercase tracking-wider text-events-coral hover:text-events-cream"
+                              >
+                                <Mail className="w-3 h-3" />
+                                {hasNote ? "Note sent" : "Send a note"}
+                              </button>
+                            )}
+                          </div>
                         ) : (
                           <ExpertCardMinimal key={expert.id} expert={expert} />
-                        ),
-                      )}
+                        );
+                      })}
                     </div>
                   </motion.div>
                 )}
