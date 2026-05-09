@@ -61,10 +61,7 @@ Deno.serve(async (req) => {
 
       if (action === "upsert") {
         const mode = getMode();
-        if (mode === "during_event") {
-          return jsonFor(req, { error: "Notes can't be sent during the event. Use the connection logger instead." }, { status: 400 });
-        }
-        const { recipient_type, recipient_id, message } = body;
+        const { recipient_type, recipient_id, message, note_cta } = body;
         if (recipient_type !== "brand_rep" && recipient_type !== "expert") {
           return jsonFor(req, { error: "recipient_type must be brand_rep or expert" }, { status: 400 });
         }
@@ -73,53 +70,59 @@ Deno.serve(async (req) => {
         if (!text) return jsonFor(req, { error: "Message can't be empty" }, { status: 400 });
         if (text.length > MAX_LEN) return jsonFor(req, { error: `Max ${MAX_LEN} characters` }, { status: 400 });
 
+        const validCtas = ["follow_up","look_out_for_application","grab_coffee","memorable_only"];
+        const cleanCta = note_cta && validCtas.includes(note_cta) ? note_cta : null;
+
         const brand_id = recipient_type === "brand_rep" ? await resolveBrandIdForRep(sb, recipient_id) : null;
 
         // Upsert via existing-active lookup
         const { data: existing } = await sb.from("connect_notes")
-          .select("id").eq("candidate_id", candidateId).eq("recipient_id", recipient_id)
+          .select("id, note_timing").eq("candidate_id", candidateId).eq("recipient_id", recipient_id)
           .eq("is_active", true).maybeSingle();
 
         let saved: any = null;
         if (existing) {
+          // Preserve original timing on edit (per spec): don't shift timing on update.
           const { data, error } = await sb.from("connect_notes")
-            .update({ message: text, note_timing: mode, brand_id, recipient_type })
+            .update({ message: text, brand_id, recipient_type, note_cta: cleanCta })
             .eq("id", existing.id).select("*").single();
           if (error) return jsonFor(req, { error: error.message }, { status: 400 });
           saved = data;
         } else {
           const { data, error } = await sb.from("connect_notes").insert({
             candidate_id: candidateId, recipient_type, recipient_id, brand_id,
-            message: text, note_timing: mode, is_active: true,
+            message: text, note_timing: mode, note_cta: cleanCta, is_active: true,
           }).select("*").single();
           if (error) return jsonFor(req, { error: error.message }, { status: 400 });
           saved = data;
         }
 
-        // Send confirmation email to candidate (best-effort)
-        try {
-          const [{ data: cand }, { data: rep }, { data: brand }] = await Promise.all([
-            sb.from("candidates").select("first_name, email").eq("id", candidateId).maybeSingle(),
-            sb.from("industry_experts").select("full_name, current_company").eq("id", recipient_id).maybeSingle(),
-            brand_id ? sb.from("event_map_brands").select("name").eq("id", brand_id).maybeSingle() : Promise.resolve({ data: null }),
-          ]);
-          if (cand?.email) {
-            const templateName = mode === "pre_event" ? "candidate-note-received-pre-event" : "candidate-note-received-post-event";
-            await sb.functions.invoke("send-transactional-email", {
-              body: {
-                templateName,
-                recipientEmail: cand.email,
-                idempotencyKey: `connect-note-${saved.id}-${mode}`,
-                templateData: {
-                  first_name: cand.first_name,
-                  rep_name: rep?.full_name || "the rep",
-                  brand_name: brand?.name || rep?.current_company || "their team",
+        // Send confirmation email to candidate (best-effort) — only for pre/post.
+        if (saved.note_timing !== "during_event") {
+          try {
+            const [{ data: cand }, { data: rep }, { data: brand }] = await Promise.all([
+              sb.from("candidates").select("first_name, email").eq("id", candidateId).maybeSingle(),
+              sb.from("industry_experts").select("full_name, current_company").eq("id", recipient_id).maybeSingle(),
+              brand_id ? sb.from("event_map_brands").select("name").eq("id", brand_id).maybeSingle() : Promise.resolve({ data: null }),
+            ]);
+            if (cand?.email) {
+              const templateName = saved.note_timing === "pre_event" ? "candidate-note-received-pre-event" : "candidate-note-received-post-event";
+              await sb.functions.invoke("send-transactional-email", {
+                body: {
+                  templateName,
+                  recipientEmail: cand.email,
+                  idempotencyKey: `connect-note-${saved.id}-${saved.note_timing}`,
+                  templateData: {
+                    first_name: cand.first_name,
+                    rep_name: rep?.full_name || "the rep",
+                    brand_name: brand?.name || rep?.current_company || "their team",
+                  },
                 },
-              },
-            });
+              });
+            }
+          } catch (e) {
+            console.error("Confirmation email failed:", e);
           }
-        } catch (e) {
-          console.error("Confirmation email failed:", e);
         }
 
         return jsonFor(req, { note: saved });
