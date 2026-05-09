@@ -83,11 +83,11 @@ Deno.serve(async (req) => {
 
         // Connect-notes addressed to any rep at this brand
         const { data: notes } = await sb.from("connect_notes")
-          .select("candidate_id, message, note_timing, created_at")
+          .select("candidate_id, message, note_timing, note_cta, created_at")
           .eq("brand_id", brand.id).eq("is_active", true).order("created_at", { ascending: false });
         for (const n of notes || []) {
           if (!connectNotes[n.candidate_id]) {
-            connectNotes[n.candidate_id] = { message: n.message, note_timing: n.note_timing, sent_at: n.created_at };
+            connectNotes[n.candidate_id] = { message: n.message, note_timing: n.note_timing, note_cta: n.note_cta, sent_at: n.created_at };
           }
         }
       }
@@ -138,6 +138,7 @@ Deno.serve(async (req) => {
       if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
       if (filters.has_connect_note) list = list.filter((c: any) => !!connectNotes[c.id]);
       if (filters.pre_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "pre_event");
+      if (filters.during_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "during_event");
       if (filters.post_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "post_event");
 
       // Min pay (text field — best-effort numeric parse)
