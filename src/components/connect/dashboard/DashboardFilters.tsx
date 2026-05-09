@@ -13,6 +13,9 @@ export type Filters = {
   sent_note?: boolean;
   role_flagged?: boolean;
   starred_brand?: boolean;
+  has_connect_note?: boolean;
+  pre_event_note?: boolean;
+  post_event_note?: boolean;
   career_stage?: string[];
   poachable_status?: string[];
   field?: string;

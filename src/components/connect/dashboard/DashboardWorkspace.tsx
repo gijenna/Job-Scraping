@@ -117,6 +117,7 @@ function SortSelect({ sort, setSort }: { sort: string; setSort: (s: string) => v
         <SelectItem value="most_complete">Most complete profile</SelectItem>
         <SelectItem value="connected_first">Connected with my brand first</SelectItem>
         <SelectItem value="note_first">Sent a note first</SelectItem>
+        <SelectItem value="pre_event_first">Pre-event reached out first</SelectItem>
       </SelectContent>
     </Select>
   );
