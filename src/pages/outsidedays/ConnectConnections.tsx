@@ -132,10 +132,8 @@ const ConnectConnections = () => {
               follow_up_direction: editing.follow_up_direction || "",
               contact_info_received: editing.contact_info_received || "",
               role_flagged: editing.role_flagged || "",
-              message_to_brand: editing.message_to_brand || "",
               would_want_as_mentor: editing.would_want_as_mentor,
               mentor_topics: editing.mentor_topics || "",
-              also_talked_to: "",
             }}
             onClose={() => setEditing(null)}
             onSaved={load}

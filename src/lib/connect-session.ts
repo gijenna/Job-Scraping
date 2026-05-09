@@ -75,6 +75,7 @@ export async function candidateMarkSeenIntro() {
 }
 
 // ---- Connect Notes ----
+export type NoteCTAValue = "follow_up" | "look_out_for_application" | "grab_coffee" | "memorable_only" | null;
 export interface ConnectNote {
   id: string;
   candidate_id: string;
@@ -83,6 +84,7 @@ export interface ConnectNote {
   brand_id: string | null;
   message: string;
   note_timing: "pre_event" | "during_event" | "post_event";
+  note_cta: NoteCTAValue;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -93,7 +95,7 @@ export async function connectNotesListMine() {
 export async function connectNotesGetMine(recipient_id: string) {
   return call<{ note: ConnectNote | null }>("connect-notes", { action: "get_mine", recipient_id });
 }
-export async function connectNotesUpsert(input: { recipient_type: "brand_rep" | "expert"; recipient_id: string; message: string }) {
+export async function connectNotesUpsert(input: { recipient_type: "brand_rep" | "expert"; recipient_id: string; message: string; note_cta?: NoteCTAValue }) {
   return call<{ note: ConnectNote }>("connect-notes", { action: "upsert", ...input });
 }
 export async function connectNotesRetract(recipient_id: string) {
