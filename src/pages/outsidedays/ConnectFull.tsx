@@ -820,6 +820,7 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
 
 type PriorCareer = { field: string; focus: string; years: number | null };
 const PriorCareersPicker = ({ value, onChange }: { value: PriorCareer[]; onChange: (v: PriorCareer[]) => void }) => {
+  const { settings } = useEditableTextContext();
   const entries = value.map((e: any) => ({ field: e?.field || "", focus: e?.focus || "", years: e?.years ?? null }));
   const update = (i: number, patch: Partial<PriorCareer>) =>
     onChange(entries.map((e, idx) => (idx === i ? { ...e, ...patch } : e)));
@@ -827,24 +828,26 @@ const PriorCareersPicker = ({ value, onChange }: { value: PriorCareer[]; onChang
   const add = () => { if (entries.length < 3) onChange([...entries, { field: "", focus: "", years: null }]); };
   return (
     <div className="space-y-3 pt-2 border-t border-events-cream/10">
-      <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">Prior careers</Label>
-      <p className="text-[11px] text-events-cream/55 font-body">Add up to 3 prior careers so brands see your full story.</p>
+      <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">
+        <EditableText settingKey="full_prior_careers_label" defaultText="Prior careers" as="span" />
+      </Label>
+      <EditableText settingKey="full_prior_careers_hint" defaultText="Add up to 3 prior careers so brands see your full story." as="p" className="text-[11px] text-events-cream/55 font-body" />
       {entries.map((e, i) => (
         <div key={i} className="relative bg-events-cream/5 border border-events-cream/10 rounded-lg p-3 pr-10 space-y-2">
-          <button type="button" onClick={() => remove(i)} aria-label="Remove" className="absolute top-2 right-2 text-events-cream/60 hover:text-events-coral">
+          <button type="button" onClick={() => remove(i)} aria-label={settings.full_remove_prior_career_label || "Remove"} className="absolute top-2 right-2 text-events-cream/60 hover:text-events-coral">
             <X className="w-4 h-4" />
           </button>
           <Row>
-            <FieldRow label="Field"><SelectBox value={e.field} onChange={(v) => update(i, { field: v, focus: "" })} options={FIELDS} /></FieldRow>
-            <FieldRow label="Focus"><SelectBox value={e.focus} onChange={(v) => update(i, { focus: v })} options={FOCUSES_BY_FIELD[e.field] || []} /></FieldRow>
+            <FieldRow label={<EditableText settingKey="full_prior_field_label" defaultText="Field" as="span" />}><SelectBox value={e.field} onChange={(v) => update(i, { field: v, focus: "" })} options={FIELDS} optionKeyPrefix="full_field_option" /></FieldRow>
+            <FieldRow label={<EditableText settingKey="full_prior_focus_label" defaultText="Focus" as="span" />}><SelectBox value={e.focus} onChange={(v) => update(i, { focus: v })} options={FOCUSES_BY_FIELD[e.field] || []} optionKeyPrefix="full_focus_option" /></FieldRow>
           </Row>
-          <FieldRow label="Years">
+          <FieldRow label={<EditableText settingKey="full_prior_years_label" defaultText="Years" as="span" />}>
             <Input type="number" min={0} value={e.years ?? ""} onChange={(ev) => update(i, { years: ev.target.value === "" ? null : Number(ev.target.value) })} />
           </FieldRow>
         </div>
       ))}
       <Button type="button" variant="secondary" onClick={add} disabled={entries.length >= 3}>
-        Add another prior career
+        <EditableText settingKey="full_add_prior_career_button" defaultText="Add another prior career" as="span" />
       </Button>
     </div>
   );
