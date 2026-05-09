@@ -173,16 +173,18 @@ Deno.serve(async (req) => {
         connect_note: connectNotes[c.id] || null,
       }));
 
-      // Sort by connected/note first
-      if (sort === "connected_first") {
-        result.sort((a: any, b: any) => Number(!!b.engagement?.visited) - Number(!!a.engagement?.visited));
-      } else if (sort === "note_first") {
-        result.sort((a: any, b: any) => Number(!!b.engagement?.sent_note) - Number(!!a.engagement?.sent_note));
-      } else if (sort === "pre_event_first") {
+      // Engagement-based sorts (post-fetch)
+      if (sort === "visited") {
         result.sort((a: any, b: any) => {
-          const ap = a.connect_note?.note_timing === "pre_event" ? new Date(a.connect_note.sent_at).getTime() : 0;
-          const bp = b.connect_note?.note_timing === "pre_event" ? new Date(b.connect_note.sent_at).getTime() : 0;
-          return bp - ap;
+          const av = a.engagement?.visited ? new Date(a.engagement.last || 0).getTime() : -1;
+          const bv = b.engagement?.visited ? new Date(b.engagement.last || 0).getTime() : -1;
+          return bv - av;
+        });
+      } else if (sort === "wrote_note") {
+        result.sort((a: any, b: any) => {
+          const an = a.connect_note ? new Date(a.connect_note.sent_at || 0).getTime() : -1;
+          const bn = b.connect_note ? new Date(b.connect_note.sent_at || 0).getTime() : -1;
+          return bn - an;
         });
       }
 
