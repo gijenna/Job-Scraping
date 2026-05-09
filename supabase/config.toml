@@ -35,3 +35,5 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.afterparty-admin]
     verify_jwt = false
+  [functions.connect-admin]
+    verify_jwt = false
