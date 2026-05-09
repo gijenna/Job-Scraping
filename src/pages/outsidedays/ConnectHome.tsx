@@ -262,6 +262,8 @@ const ConnectHome = () => {
               brands={sortedBrands}
               expertZoneBrand={expertZoneBrand}
               onBrandClick={handleBrandClick}
+              starred={starred}
+              noteBrandIds={noteRecipientIds}
             />
           )}
         </main>
@@ -365,39 +367,75 @@ const ConnectHome = () => {
 };
 
 const ListView = ({
-  brands, expertZoneBrand, onBrandClick,
-}: { brands: MapBrand[]; expertZoneBrand: MapBrand | null; onBrandClick: (b: MapBrand) => void }) => (
-  <div className="px-4 py-5">
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-      {brands.map((b) => (
-        <BubbleTile key={b.id} brand={b} onClick={() => onBrandClick(b)} />
-      ))}
-    </div>
-    {expertZoneBrand && (
-      <div className="mt-8">
-        <h2 className="font-display text-sm uppercase tracking-wider text-events-cream/60 mb-3">Also at the event</h2>
+  brands, expertZoneBrand, onBrandClick, starred, noteBrandIds,
+}: {
+  brands: MapBrand[]; expertZoneBrand: MapBrand | null; onBrandClick: (b: MapBrand) => void;
+  starred: Set<string>; noteBrandIds: Set<string>;
+}) => {
+  const [starredOnly, setStarredOnly] = useState(false);
+  const visible = starredOnly ? brands.filter((b) => starred.has(b.id)) : brands;
+  return (
+    <div className="px-4 py-5">
+      <div className="flex items-center gap-2 mb-3">
         <button
-          onClick={() => onBrandClick(expertZoneBrand)}
-          className="w-full bg-events-cream/5 hover:bg-events-cream/10 border border-events-cream/15 rounded-2xl p-5 flex items-center gap-4 transition-colors text-left"
+          onClick={() => setStarredOnly((v) => !v)}
+          className={`px-3 py-1.5 rounded-full text-[11px] font-display uppercase tracking-wider border transition-colors ${
+            starredOnly
+              ? "bg-events-coral text-events-cream border-events-coral"
+              : "bg-events-cream/5 text-events-cream/70 border-events-cream/15 hover:border-events-cream/40"
+          }`}
         >
-          <div className="w-14 h-14 rounded-full bg-events-coral/20 flex items-center justify-center font-display text-events-coral text-xs uppercase">
-            Zone
-          </div>
-          <div>
-            <div className="font-display text-events-cream">Industry Expert Zone</div>
-            <div className="text-xs font-body text-events-cream/60">Tap to meet the experts.</div>
-          </div>
+          <Star className={`w-3 h-3 inline mr-1 -mt-0.5 ${starredOnly ? "fill-current" : ""}`} />
+          Starred only
         </button>
+        {starredOnly && (
+          <span className="text-[10px] font-body text-events-cream/50">{visible.length} shown</span>
+        )}
       </div>
-    )}
-  </div>
-);
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+        {visible.map((b) => (
+          <BubbleTile
+            key={b.id}
+            brand={b}
+            onClick={() => onBrandClick(b)}
+            starred={starred.has(b.id)}
+            hasNote={noteBrandIds.has(b.id)}
+          />
+        ))}
+        {visible.length === 0 && (
+          <p className="col-span-full text-center text-events-cream/50 font-body text-sm py-8">
+            Star a few brands to build your shortlist.
+          </p>
+        )}
+      </div>
+      {expertZoneBrand && !starredOnly && (
+        <div className="mt-8">
+          <h2 className="font-display text-sm uppercase tracking-wider text-events-cream/60 mb-3">Also at the event</h2>
+          <button
+            onClick={() => onBrandClick(expertZoneBrand)}
+            className="w-full bg-events-cream/5 hover:bg-events-cream/10 border border-events-cream/15 rounded-2xl p-5 flex items-center gap-4 transition-colors text-left"
+          >
+            <div className="w-14 h-14 rounded-full bg-events-coral/20 flex items-center justify-center font-display text-events-coral text-xs uppercase">
+              Zone
+            </div>
+            <div>
+              <div className="font-display text-events-cream">Industry Expert Zone</div>
+              <div className="text-xs font-body text-events-cream/60">Tap to meet the experts.</div>
+            </div>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
-const BubbleTile = ({ brand, onClick }: { brand: MapBrand; onClick: () => void }) => {
+const BubbleTile = ({
+  brand, onClick, starred, hasNote,
+}: { brand: MapBrand; onClick: () => void; starred: boolean; hasNote: boolean }) => {
   const src = brandLogo(brand);
   return (
     <button onClick={onClick} className="flex flex-col items-center gap-1.5 group">
-      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-events-cream overflow-hidden flex items-center justify-center shadow-md border-2 border-white group-active:scale-95 transition-transform">
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-events-cream overflow-hidden flex items-center justify-center shadow-md border-2 border-white group-active:scale-95 transition-transform">
         {src ? (
           <img
             src={src}
@@ -408,6 +446,16 @@ const BubbleTile = ({ brand, onClick }: { brand: MapBrand; onClick: () => void }
         ) : (
           <span className="font-display font-bold text-events-teal text-sm">
             {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+          </span>
+        )}
+        {starred && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow ring-2 ring-events-teal">
+            <Star className="w-2.5 h-2.5 fill-current" />
+          </span>
+        )}
+        {hasNote && (
+          <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-events-yellow text-events-teal flex items-center justify-center shadow ring-2 ring-events-teal text-[10px]">
+            ✉
           </span>
         )}
       </div>
