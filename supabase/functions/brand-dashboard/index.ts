@@ -36,6 +36,19 @@ Deno.serve(async (req) => {
     }
   }
 
+  // Resolve event start (gates "visited my table" pre-event).
+  let eventStartMs = 0;
+  {
+    const { data: city } = await sb.from("expert_cities")
+      .select("event_date").eq("slug", "denver26").maybeSingle();
+    if (city?.event_date) eventStartMs = new Date(city.event_date).getTime();
+  }
+  const eventStarted = eventStartMs > 0 && Date.now() >= eventStartMs;
+  const visitedAt = (createdAt: string) => {
+    if (!eventStartMs) return eventStarted; // no date set: allow
+    return new Date(createdAt).getTime() >= eventStartMs;
+  };
+
   try {
     if (body.action === "summary") {
       const totals = { registered: 0, visited: 0, sent_note: 0, starred: 0, flagged: 0 };
@@ -43,8 +56,9 @@ Deno.serve(async (req) => {
       totals.registered = regCount || 0;
       if (brand) {
         const { data: conns } = await sb.from("connections")
-          .select("id, message_sent_at, role_flagged").eq("brand_id", brand.id);
-        totals.visited = (conns || []).length;
+          .select("id, message_sent_at, role_flagged, created_at").eq("brand_id", brand.id);
+        const visitedConns = (conns || []).filter((c: any) => visitedAt(c.created_at));
+        totals.visited = visitedConns.length;
         totals.sent_note = (conns || []).filter((c: any) => c.message_sent_at).length;
         totals.flagged = (conns || []).filter((c: any) => c.role_flagged).length;
         const { count: starCount } = await sb.from("candidate_starred_brands")
@@ -53,6 +67,7 @@ Deno.serve(async (req) => {
       }
       return jsonFor(req, { rep, brand, totals });
     }
+
 
     if (body.action === "list") {
       const filters = body.filters || {};
