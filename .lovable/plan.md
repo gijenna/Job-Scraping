@@ -1,49 +1,39 @@
-## Plan
+I’ll make these focused fixes across the Connect flow:
 
-1. **Replace Connect app branding assets**
-   - Copy the uploaded transparent Basecamp Outdoor @ Outside Days logo into the project assets.
-   - Copy the uploaded real event photo into the project assets.
-   - Update `ConnectShell` so all Connect entry/profile pages use the new logo and real event photo instead of the current missing logo/mountain image.
-   - Add a dark teal/coral overlay layer behind the logo so the transparent cream logo stays legible on the photo.
+1. **Fix Save basics immediately**
+   - Update the candidate signup backend so a basics-only account can be created with just first name, last name, email, and phone.
+   - Remove the dependency on `poachable_status` and other full-profile fields for this basics save path.
+   - Keep full-profile submit validation separate so users can still complete the fuller profile later.
 
-2. **Fix the profile save and photo-upload blocker**
-   - On `/outsidedays26/connect/full`, add a clear **Save basics** button directly under first name, last name, email, and phone.
-   - This button will only validate name, email, and phone, then create the candidate record/session using a lightweight “basics first” path.
-   - After that succeeds, photo and resume upload will work immediately without requiring career stage.
-   - Keep the existing **Submit and see the map** behavior for the full required profile completion flow.
-   - Update the upload toast copy so it points to the new save button.
+2. **Make Connect text genuinely admin-editable**
+   - Wrap remaining visible Connect-page headings, labels, helper text, button text, option labels, placeholders, empty states, and modal copy with the existing `EditableText` / `event_settings` system.
+   - Cover the pages/components currently still hardcoded, including map/home, profile/full signup, how-it-works, note composer, connection forms/sheets, and related Connect UI.
+   - Add an admin-visible note or clear behavior so if you do not see edit pencils, it is clear you are not signed in as admin.
+   - Do this without any AI or credit-based text generation.
 
-3. **Add backend support for saving basics only**
-   - Update the candidate auth function to support a `signup_create_basics` action requiring only first name, last name, email, and phone.
-   - Reuse the existing duplicate-email check and session cookie creation.
-   - Add a matching `candidateSignupCreateBasics` helper in `src/lib/connect-session.ts`.
-   - Do not loosen the full `signup_create` requirements, so map access still requires the full profile.
+3. **Correct note wording**
+   - Change “Jenna Celmer will get an email” and related explainer text to accurate language that does not overpromise delivery.
+   - Use wording like “Note saved for follow-up” or “Your note is saved and will be included with their Connect follow-up when applicable.”
+   - Make that text editable too.
 
-4. **Make Connect text admin-editable**
-   - Wrap hardcoded Connect app text in `EditableText` across these areas:
-     - `/outsidedays26/connect`
-     - `/outsidedays26/connect/full`
-     - `/outsidedays26/connect/profile`
-     - `/outsidedays26/connect/home`
-     - `/outsidedays26/connect/how-it-works`
-     - `/outsidedays26/connect/connections`
-     - shared Connect components such as `ConnectionForm`, `ConnectActionFooter`, `NoteComposer`, and picker labels/help text.
-   - Include button labels, option labels like “Select...”, helper text, empty states, modal titles, and CTA copy.
-   - Keep dynamic user data, typed form values, candidate names, brand names, expert names, and taxonomy arrays as data, not editable page copy.
+4. **Adjust hero photo/logo composition**
+   - Reposition the hero image object-position on mobile/desktop so the person’s face sits beside the logo rather than behind it.
+   - Keep the dark overlay so the logo stays legible.
 
-5. **Ensure admin-only editing remains locked down**
-   - Keep all editable copy behind the existing `EditableTextProvider` admin gate.
-   - Do not expose edit controls to candidate sessions or anonymous PIN sessions.
-   - Add providers where missing on Connect pages so admin-editable text loads and saves consistently.
+5. **Improve niche experience UX and wording**
+   - Replace the current single-column mobile niche list with a compact grid/chip UX that fits all niche options on one phone screen more cleanly.
+   - Update the helper copy to explain this is real work experience in those niches, not interests.
+   - Preserve selected niches and years of experience, with a compact way to add/edit years.
 
-6. **Remove em dashes everywhere**
-   - Replace all em dash characters in app source, backend functions, comments, and docs with commas, periods, colons, parentheses, or hyphens as appropriate.
-   - Specifically fix visible copy like “Got it — take me to Connect”.
-   - Re-scan the repo for the em dash character and remove remaining occurrences.
+6. **Filter industry experts correctly on the map**
+   - Update the Denver experts hook and map/list usage so the Industry Expert Zone only shows published Denver assignments that are not `brand_rep` and not marked as brand reps.
+   - Keep brand-rep cards attached to brand tiles only.
 
-7. **Verify the requested flows**
-   - Confirm the uploaded logo and real event photo render on Connect pages with enough overlay contrast.
-   - Confirm non-admin users see no editable controls.
-   - Confirm an admin `@wearetheoutdoorindustry.com` user can edit Connect page text, buttons, and helper copy.
-   - Confirm the full profile page allows saving basics before career stage, then allows photo upload.
-   - Confirm the final em dash scan returns no matches.
+7. **Remove duplicate close controls in expanded cards**
+   - Adjust the Connect sheet/card composition so the expanded expert or brand card has one clean close button, not duplicative X controls.
+   - Keep the close button placement consistent and mobile-friendly.
+
+8. **Verify the reported paths**
+   - Check the failing `signup_create_basics` path after the backend fix.
+   - Inspect the mobile Connect full page layout at the current 390px viewport for hero/logo and niche UX.
+   - Confirm map expert filtering uses Denver-only non-brand-rep assignments.
