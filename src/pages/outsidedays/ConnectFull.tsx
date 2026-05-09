@@ -49,6 +49,7 @@ const slugifyKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g,
 const ConnectFull = () => {
   const nav = useNavigate();
   const { toast } = useToast();
+  const { settings: copy } = useEventSettings("outsidedays26-connect");
   const [loading, setLoading] = useState(true);
   const [c, setC] = useState<any>({
     signup_mode: "full",
@@ -202,7 +203,7 @@ const ConnectFull = () => {
     for (const r of REQUIRED) {
       const v = (c as any)[r.key];
       const isEmpty = v === undefined || v === null || v === "" || (Array.isArray(v) && v.length === 0);
-      if (isEmpty) errs[r.key] = `${r.label} is required.`;
+      if (isEmpty) errs[r.key] = `${cleanCopy(copy[r.labelKey] || r.label)} is required.`;
       if (r.key === "the_hook" && v === HOOK_EXAMPLE_PLACEHOLDER) errs[r.key] = "Make The Hook your own.";
     }
     if (c.field === "Other" && !c.field_other?.trim()) errs.field_other = "Tell us what you do.";
