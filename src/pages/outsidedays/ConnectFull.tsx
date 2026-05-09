@@ -423,7 +423,7 @@ const ConnectFull = () => {
             </FieldRow>
             <PriorCareersPicker value={Array.isArray(c.prior_careers) ? c.prior_careers : []} onChange={(v) => set("prior_careers", v)} />
             <Row>
-              <FieldRow label="Outdoor industry experience">
+              <FieldRow label={label("full_outdoor_experience_label", "Outdoor industry experience")}>
                 <SelectBox
                   value={c.outdoor_industry_experience === true ? "Yes" : c.outdoor_industry_experience === false ? "No" : ""}
                   onChange={(v) => {
@@ -432,17 +432,18 @@ const ConnectFull = () => {
                     if (!yes) set("outdoor_industry_years", null);
                   }}
                   options={["Yes", "No"]}
+                  optionKeyPrefix="full_yes_no_option"
                 />
               </FieldRow>
               {c.outdoor_industry_experience === true && (
-                <FieldRow label="Years in outdoor industry">
+                <FieldRow label={label("full_outdoor_years_label", "Years in outdoor industry")}>
                   <Input type="number" min={0} value={c.outdoor_industry_years ?? ""}
                     onChange={(e) => set("outdoor_industry_years", e.target.value === "" ? null : Number(e.target.value))} />
                 </FieldRow>
               )}
             </Row>
             <Row>
-              <FieldRow label="Management experience">
+              <FieldRow label={label("full_management_experience_label", "Management experience")}>
                 <SelectBox
                   value={c.management_experience === true ? "Yes" : c.management_experience === false ? "No" : ""}
                   onChange={(v) => {
@@ -451,10 +452,11 @@ const ConnectFull = () => {
                     if (!yes) set("management_years", null);
                   }}
                   options={["Yes", "No"]}
+                  optionKeyPrefix="full_yes_no_option"
                 />
               </FieldRow>
               {c.management_experience === true && (
-                <FieldRow label="Years managing people">
+                <FieldRow label={label("full_management_years_label", "Years managing people")}>
                   <Input type="number" min={0} value={c.management_years ?? ""}
                     onChange={(e) => set("management_years", e.target.value === "" ? null : Number(e.target.value))} />
                 </FieldRow>
@@ -466,7 +468,7 @@ const ConnectFull = () => {
           <SectionBlock keyId="hook" titleKey="full_s5_title" defaultTitle="The Hook *">
             <FieldRow
               refSetter={setRef("the_hook")}
-              label="The Hook *"
+              label={label("full_hook_label", "The Hook *")}
               error={errors.the_hook}
               hint={<EditableText settingKey="full_hook_prompt" defaultText="In one sentence, why should a brand hire you ASAP?" as="span" />}
             >
@@ -486,7 +488,9 @@ const ConnectFull = () => {
                 rows={3}
                 className={c.the_hook && c.the_hook !== HOOK_EXAMPLE_PLACEHOLDER ? "" : "italic text-events-cream/60"}
               />
-              <p className="text-[11px] text-events-cream/50 mt-1 font-body">{100 - (c.the_hook?.length || 0)} chars left. Write over the example.</p>
+              <p className="text-[11px] text-events-cream/50 mt-1 font-body">
+                {100 - (c.the_hook?.length || 0)} <EditableText settingKey="full_hook_chars_left" defaultText="chars left. Write over the example." as="span" />
+              </p>
             </FieldRow>
             <HookExamples onPick={(t) => { set("the_hook", t.slice(0, 100)); setHookFocused(true); }} maxLen={100} />
           </SectionBlock>
@@ -494,7 +498,7 @@ const ConnectFull = () => {
           {/* Section 6: The Pitch */}
           <SectionBlock keyId="pitch" titleKey="full_s6_title" defaultTitle="The Pitch">
             <FieldRow
-              label="The Pitch"
+              label={label("full_pitch_label", "The Pitch")}
               hint={<EditableText settingKey="full_pitch_prompt" defaultText="A few sentences brands can read before they meet you. What do you do, what's working, what are you looking for?" as="span" />}
             >
               <Textarea
@@ -513,25 +517,27 @@ const ConnectFull = () => {
                 rows={6}
                 className={c.the_pitch && c.the_pitch !== PITCH_EXAMPLE_PLACEHOLDER ? "" : "italic text-events-cream/60"}
               />
-              <p className="text-[11px] text-events-cream/50 mt-1 font-body">{500 - (c.the_pitch?.length || 0)} chars left.</p>
+              <p className="text-[11px] text-events-cream/50 mt-1 font-body">
+                {500 - (c.the_pitch?.length || 0)} <EditableText settingKey="full_pitch_chars_left" defaultText="chars left." as="span" />
+              </p>
             </FieldRow>
           </SectionBlock>
 
           {/* Section 7: Round it out */}
           <SectionBlock keyId="extras" titleKey="full_s7_title" defaultTitle="Round it out">
             <Row>
-              <FieldRow label="Current title"><Input value={c.current_title || ""} onChange={(e) => set("current_title", e.target.value)} /></FieldRow>
-              <FieldRow label="Current company"><Input value={c.current_company || ""} onChange={(e) => set("current_company", e.target.value)} /></FieldRow>
+              <FieldRow label={label("full_current_title_label", "Current title")}><Input value={c.current_title || ""} onChange={(e) => set("current_title", e.target.value)} /></FieldRow>
+              <FieldRow label={label("full_current_company_label", "Current company")}><Input value={c.current_company || ""} onChange={(e) => set("current_company", e.target.value)} /></FieldRow>
             </Row>
-            <FieldRow label="LinkedIn URL">
+            <FieldRow label={label("full_linkedin_url_label", "LinkedIn URL")}>
               <Input value={c.linkedin_url || ""} onChange={(e) => set("linkedin_url", e.target.value)} placeholder="https://linkedin.com/in/..." />
             </FieldRow>
-            <FieldRow label="Portfolio URL">
+            <FieldRow label={label("full_portfolio_url_label", "Portfolio URL")}>
               <Input value={c.portfolio_url || ""} onChange={(e) => set("portfolio_url", e.target.value)} placeholder="https://..." />
             </FieldRow>
             <div>
-              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">Dream companies</Label>
-              <p className="text-[11px] text-events-cream/55 font-body mb-2">Type a company name. Brands at this event show first.</p>
+              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block"><EditableText settingKey="full_dream_companies_label" defaultText="Dream companies" as="span" /></Label>
+              <EditableText settingKey="full_dream_companies_hint" defaultText="Type a company name. Brands at this event show first." as="p" className="text-[11px] text-events-cream/55 font-body mb-2" />
               {(() => {
                 const dc = c.dream_companies;
                 const names: string[] = Array.isArray(dc)
@@ -552,14 +558,14 @@ const ConnectFull = () => {
               })()}
             </div>
             <div>
-              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block">Resume (PDF, 5MB max)</Label>
+              <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider mb-1.5 block"><EditableText settingKey="full_resume_label" defaultText="Resume (PDF, 5MB max)" as="span" /></Label>
               <div className="flex items-center gap-3 flex-wrap">
                 {c.resume_url ? (
-                  <a href={c.resume_url} target="_blank" rel="noreferrer" className="text-events-coral underline font-body text-sm">View current resume</a>
-                ) : <span className="text-events-cream/50 font-body text-sm">No resume uploaded.</span>}
+                  <a href={c.resume_url} target="_blank" rel="noreferrer" className="text-events-coral underline font-body text-sm"><EditableText settingKey="full_view_resume_link" defaultText="View current resume" as="span" /></a>
+                ) : <span className="text-events-cream/50 font-body text-sm"><EditableText settingKey="full_no_resume_label" defaultText="No resume uploaded." as="span" /></span>}
                 <input ref={resumeInput} type="file" accept="application/pdf" hidden
                   onChange={(e) => e.target.files?.[0] && upload("resume", e.target.files[0])} />
-                <Button variant="secondary" onClick={() => resumeInput.current?.click()}>Upload PDF</Button>
+                <Button variant="secondary" onClick={() => resumeInput.current?.click()}><EditableText settingKey="full_upload_pdf_button" defaultText="Upload PDF" as="span" /></Button>
               </div>
             </div>
           </SectionBlock>
