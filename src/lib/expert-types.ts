@@ -115,6 +115,7 @@ const COMPANY_DOMAINS: Record<string, string> = {
 };
 
 export function getCompanyLogoUrl(company: string, domainOverrides?: Record<string, string> | null): string | null {
+  if (!company) return null;
   const key = company.toLowerCase().trim();
   if (domainOverrides) {
     const overrideKey = Object.keys(domainOverrides).find(k => k.toLowerCase().trim() === key);
@@ -127,7 +128,11 @@ export function getCompanyLogoUrl(company: string, domainOverrides?: Record<stri
   if (domain) {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   }
-  return null;
+  // Fallback: guess domain from company name (matches BubbleLogoPicker behavior).
+  // CompanyLogoWithFallback's onError handler swaps to initials if this 404s.
+  const guessed = key.replace(/[^a-z0-9]/g, '');
+  if (!guessed) return null;
+  return `https://www.google.com/s2/favicons?domain=${guessed}.com&sz=128`;
 }
 
 export function nameToSlug(name: string): string {
