@@ -547,12 +547,13 @@ const ConnectFull = () => {
                   ? Object.fromEntries(dc.filter((x: any) => x?.name && x?.domain).map((x: any) => [x.name, x.domain]))
                   : (dc?.domains || {});
                 return (
-                  <BubbleLogoPicker
+                  <EditableBubbleLogoPicker
                     value={names}
                     domains={domains}
                     suggestionEventSlug="denver26"
                     onChange={(n, d) => set("dream_companies", n.map((name) => ({ name, domain: d[name] || null })))}
-                    placeholder="Patagonia, Yeti, REI..."
+                    placeholderKey="full_dream_companies_placeholder"
+                    defaultPlaceholder="Patagonia, Yeti, REI..."
                   />
                 );
               })()}
@@ -618,6 +619,26 @@ const FieldRow = ({ label, hint, error, children, refSetter }: any) => (
   </div>
 );
 
+const EditableInput = ({ placeholderKey, defaultPlaceholder, ...props }: any) => {
+  const { settings, isAdmin } = useEditableTextContext();
+  return (
+    <div className="space-y-1">
+      <Input {...props} placeholder={settings[placeholderKey] || defaultPlaceholder} />
+      {isAdmin && <EditableText settingKey={placeholderKey} defaultText={defaultPlaceholder} as="span" className="inline-block text-[10px] text-events-cream/50" />}
+    </div>
+  );
+};
+
+const EditableBubbleLogoPicker = ({ placeholderKey, defaultPlaceholder, ...props }: any) => {
+  const { settings, isAdmin } = useEditableTextContext();
+  return (
+    <div className="space-y-1">
+      <BubbleLogoPicker {...props} placeholder={settings[placeholderKey] || defaultPlaceholder} />
+      {isAdmin && <EditableText settingKey={placeholderKey} defaultText={defaultPlaceholder} as="span" className="inline-block text-[10px] text-events-cream/50" />}
+    </div>
+  );
+};
+
 const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: string; onChange: (v: string) => void; options: string[]; optionKeyPrefix?: string }) => {
   const { settings, isAdmin } = useEditableTextContext();
   const optionKey = (o: string) => `${optionKeyPrefix || "full_select_option"}_${slugifyKey(o)}`;
@@ -629,6 +650,7 @@ const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: strin
         <option value="">{settings.full_select_placeholder || "Select..."}</option>
         {options.map((o) => (<option key={o} value={o}>{labelFor(o)}</option>))}
       </select>
+      {isAdmin && <EditableText settingKey="full_select_placeholder" defaultText="Select..." as="span" className="inline-block text-[10px] text-events-cream/50" />}
       {isAdmin && optionKeyPrefix && options.length > 0 && (
         <div className="flex flex-wrap gap-1.5 rounded-md border border-events-cream/10 bg-events-cream/5 p-2">
           {options.map((o) => (
