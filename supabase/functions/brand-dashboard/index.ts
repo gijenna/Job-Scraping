@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
         );
       }
 
-      // Sort
+      // Sort (DB-level)
       if (sort === "most_complete") q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
       else q = q.order("updated_at", { ascending: false });
 
