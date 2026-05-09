@@ -85,12 +85,27 @@ const MapBrandPanel = ({
           className="relative w-full max-w-lg max-h-[85vh] bg-events-teal rounded-xl shadow-2xl overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/20 text-events-cream flex items-center justify-center hover:bg-black/40 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+            {candidateMode && (
+              <button
+                onClick={toggleStar}
+                disabled={starBusy}
+                aria-label={isStarred ? "Remove from shortlist" : "Add to shortlist"}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  isStarred ? "bg-events-coral text-events-cream" : "bg-black/20 text-events-cream hover:bg-black/40"
+                }`}
+              >
+                <Star className={`w-4 h-4 ${isStarred ? "fill-current" : ""}`} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-black/20 text-events-cream flex items-center justify-center hover:bg-black/40 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Brand header */}
           <div className="p-6">
