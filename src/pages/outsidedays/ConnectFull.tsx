@@ -45,6 +45,7 @@ const CompletenessBar = ({ pct }: { pct: number }) => (
 );
 
 const slugifyKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+const cleanCopy = (value: string) => value.replace(/\s*\*\s*$/, "").trim();
 
 const ConnectFull = () => {
   const nav = useNavigate();
