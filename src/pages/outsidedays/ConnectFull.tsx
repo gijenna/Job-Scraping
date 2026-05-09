@@ -364,7 +364,7 @@ const ConnectFull = () => {
               </FieldRow>
             </Row>
             {c.field === "Other" && (
-              <FieldRow refSetter={setRef("field_other")} label="Tell us what you do *" error={errors.field_other}>
+              <FieldRow refSetter={setRef("field_other")} label={label("full_field_other_label", "Tell us what you do *")} error={errors.field_other}>
                 <Input value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholder="e.g. Outdoor industrial design" />
               </FieldRow>
             )}
@@ -670,6 +670,7 @@ const MultiPills = ({ value, options, onChange, optionKeyPrefix }: { value: stri
 };
 
 const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) => {
+  const { settings, isAdmin } = useEditableTextContext();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const selected = new Set(value);
@@ -687,18 +688,21 @@ const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: stri
 
   return (
     <div className="space-y-3 pt-2 border-t border-events-cream/10">
-      <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">Areas of expertise</Label>
+      <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">
+        <EditableText settingKey="full_areas_expertise_label" defaultText="Areas of expertise" as="span" />
+      </Label>
       {value.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {value.map((s) => (
             <button type="button" key={s} onClick={() => toggle(s)}
               className="px-3 py-1.5 rounded-full text-xs font-body border bg-events-coral text-events-cream border-events-coral inline-flex items-center gap-1.5">
-              {s}<X className="w-3 h-3" />
+              {settings[`full_skill_option_${slugifyKey(s)}`] || s}<X className="w-3 h-3" />
             </button>
           ))}
         </div>
       )}
-      <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search skills..." />
+      <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={settings.full_search_skills_placeholder || "Search skills..."} />
+      {isAdmin && <EditableText settingKey="full_search_skills_placeholder" defaultText="Search skills..." as="span" className="inline-block text-[10px] text-events-cream/50" />}
       <div className="space-y-1.5">
         {filteredCats.map(({ cat, skills }) => {
           const count = skills.filter((s) => selected.has(s)).length;
@@ -706,7 +710,7 @@ const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: stri
           return (
             <Collapsible key={cat} open={isOpen} onOpenChange={(o) => setOpen((p) => ({ ...p, [cat]: o }))}>
               <CollapsibleTrigger className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-events-cream/5 border border-events-cream/10 text-sm font-body text-events-cream hover:bg-events-cream/10">
-                <span>{cat} {count > 0 && <span className="text-events-coral">({count})</span>}</span>
+                <span>{settings[`full_skill_category_${slugifyKey(cat)}`] || cat} {count > 0 && <span className="text-events-coral">({count})</span>}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -714,10 +718,18 @@ const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: stri
                   {skills.map((s) => (
                     <label key={s} className="flex items-center gap-2 text-sm font-body text-events-cream/80 cursor-pointer py-1">
                       <Checkbox checked={selected.has(s)} onCheckedChange={() => toggle(s)} />
-                      <span>{s}</span>
+                      <span>{settings[`full_skill_option_${slugifyKey(s)}`] || s}</span>
                     </label>
                   ))}
                 </div>
+                {isAdmin && (
+                  <div className="flex flex-wrap gap-1.5 px-3 pb-3">
+                    <EditableText settingKey={`full_skill_category_${slugifyKey(cat)}`} defaultText={cat} as="span" className="px-2 py-1 rounded-full border border-events-coral/30 text-[10px] normal-case tracking-normal text-events-coral" />
+                    {skills.map((s) => (
+                      <EditableText key={s} settingKey={`full_skill_option_${slugifyKey(s)}`} defaultText={s} as="span" className="px-2 py-1 rounded-full border border-events-cream/15 text-[10px] normal-case tracking-normal text-events-cream/75" />
+                    ))}
+                  </div>
+                )}
               </CollapsibleContent>
             </Collapsible>
           );
