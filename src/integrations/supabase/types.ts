@@ -458,6 +458,36 @@ export type Database = {
           },
         ]
       }
+      brand_lead_responses: {
+        Row: {
+          brand_id: string
+          candidate_id: string
+          created_at: string
+          id: string
+          question_text: string
+          response_value: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id: string
+          candidate_id: string
+          created_at?: string
+          id?: string
+          question_text: string
+          response_value: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          question_text?: string
+          response_value?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       brand_starred_attendee: {
         Row: {
           brand_id: string
