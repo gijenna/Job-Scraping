@@ -72,7 +72,8 @@ Deno.serve(async (req) => {
         return jsonFor(req, { error: "first_name, last_name, phone_last_four required" }, { status: 400 });
       }
       const reps = await findReps(first_name, last_name);
-      const matches = reps.filter((r: any) => r.phone_last_four === lastFour(phone_last_four));
+      const wanted = lastFour(phone_last_four);
+      const matches = reps.filter((r: any) => lastFour(String(r.phone_last_four ?? "")) === wanted);
       if (matches.length === 0) return jsonFor(req, { session: null });
       if (matches.length > 1) return jsonFor(req, { ambiguous: true });
       const rep = matches[0];
