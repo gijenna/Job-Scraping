@@ -6,7 +6,10 @@ import { SlidersHorizontal } from "lucide-react";
 import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
+import LeadsPanel from "./LeadsPanel";
 import { dashboardSummary } from "@/lib/connect-session";
+
+type Tab = "candidates" | "leads";
 
 function MetricPill({ label, value }: { label: string; value: number }) {
   return (
@@ -24,6 +27,7 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("candidates");
 
   useEffect(() => { dashboardSummary().then(setSummary).catch(() => {}); }, []);
   useEffect(() => {
