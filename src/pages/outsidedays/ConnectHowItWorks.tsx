@@ -58,7 +58,7 @@ const ConnectHowItWorks = () => {
           <ConnectTopNav />
         </header>
 
-        <main className="px-5 py-8 max-w-2xl mx-auto space-y-8">
+        <main className="px-5 py-8 pb-28 sm:pb-8 max-w-2xl mx-auto space-y-8">
           <div className="space-y-2">
             <EditableText
               settingKey="how_title"
