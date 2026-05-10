@@ -381,7 +381,9 @@ const ConnectHome = () => {
           open={!!sheetExpert}
           expert={sheetExpert}
           subjectType="expert"
-          onClose={() => setSheetExpert(null)}
+          sponsorContext={sponsorOpen ? "expert_zone_header" : undefined}
+          sponsorBrand={sponsorOpen ? edgesFirstBrand : null}
+          onClose={() => { setSheetExpert(null); setSponsorOpen(false); }}
           onNoteChanged={(rid, hasNote) => {
             setNoteRecipientIds((prev) => {
               const next = new Set(prev);
