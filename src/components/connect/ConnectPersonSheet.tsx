@@ -88,6 +88,30 @@ const ConnectPersonSheet = ({
           </div>
           <div className="flex-1 overflow-y-auto px-3 pt-2 pb-4">
             <ExpertCard expert={expert} autoExpand />
+            {sponsorContext === "expert_zone_header" && sponsorBrand && (
+              <div className="mt-5 mx-1 rounded-2xl border border-events-coral/40 bg-events-cream/5 p-4 space-y-2">
+                <div className="flex items-center gap-3">
+                  {sponsorBrand.logo_url ? (
+                    <img src={sponsorBrand.logo_url} alt={sponsorBrand.name} className="w-10 h-10 rounded-full bg-events-cream object-contain p-1" />
+                  ) : null}
+                  <div className="font-display text-events-cream text-sm">
+                    Industry experts brought to you by {sponsorBrand.name}
+                  </div>
+                </div>
+                <p className="font-body text-[12px] text-events-cream/70 leading-snug">
+                  {sponsorBrand.name} sponsors the Industry Expert Zone so candidates can get advice from people who have walked the path.
+                </p>
+                {sponsorBrand.website_url && (
+                  <a
+                    href={sponsorBrand.website_url.startsWith("http") ? sponsorBrand.website_url : `https://${sponsorBrand.website_url}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-block text-events-coral text-xs font-display uppercase tracking-wider hover:underline"
+                  >
+                    Learn more about {sponsorBrand.name}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">
