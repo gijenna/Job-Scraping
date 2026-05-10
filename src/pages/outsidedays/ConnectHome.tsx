@@ -98,6 +98,15 @@ const ConnectHome = () => {
     () => [...brands].filter((b) => b.name !== EXPERT_ZONE_NAME).sort((a, b) => a.name.localeCompare(b.name)),
     [brands],
   );
+  const edgesFirstBrand = useMemo(
+    () => brands.find((b) => b.name.toLowerCase().includes("edges first")) || null,
+    [brands],
+  );
+  const kellyExpert = useMemo(() => {
+    const byCompany = experts.find((e) => (e.current_company || "").toLowerCase().includes("edges first"));
+    if (byCompany) return byCompany;
+    return experts.find((e) => (e.full_name || "").toLowerCase().startsWith("kelly")) || null;
+  }, [experts]);
 
   const handleBrandClick = (brand: MapBrand) => {
     if (brand.name === EXPERT_ZONE_NAME) {
