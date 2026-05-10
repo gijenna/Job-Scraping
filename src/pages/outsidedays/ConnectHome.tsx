@@ -60,6 +60,7 @@ const ConnectHome = () => {
   const [showIntro, setShowIntro] = useState(false);
   const [headerStripDismissed, setHeaderStripDismissed] = useState(false);
   const [noteTarget, setNoteTarget] = useState<NoteRecipient | null>(null);
+  const [sponsorOpen, setSponsorOpen] = useState(false);
 
   const mode = useEventMode();
   const headerCopy = MODE_HEADER_COPY[mode];
@@ -97,6 +98,15 @@ const ConnectHome = () => {
     () => [...brands].filter((b) => b.name !== EXPERT_ZONE_NAME).sort((a, b) => a.name.localeCompare(b.name)),
     [brands],
   );
+  const edgesFirstBrand = useMemo(
+    () => brands.find((b) => b.name.toLowerCase().includes("edges first")) || null,
+    [brands],
+  );
+  const kellyExpert = useMemo(() => {
+    const byCompany = experts.find((e) => (e.current_company || "").toLowerCase().includes("edges first"));
+    if (byCompany) return byCompany;
+    return experts.find((e) => (e.full_name || "").toLowerCase().startsWith("kelly")) || null;
+  }, [experts]);
 
   const handleBrandClick = (brand: MapBrand) => {
     if (brand.name === EXPERT_ZONE_NAME) {
@@ -270,7 +280,12 @@ const ConnectHome = () => {
             <ListView
               brands={sortedBrands}
               expertZoneBrand={expertZoneBrand}
+              experts={experts}
+              sponsorBrand={edgesFirstBrand}
+              kellyExpert={kellyExpert}
               onBrandClick={handleBrandClick}
+              onExpertClick={(e) => setSheetExpert(e)}
+              onSponsorClick={() => { if (kellyExpert) { setSponsorOpen(true); setSheetExpert(kellyExpert); } }}
               starred={starred}
               noteBrandIds={noteRecipientIds}
             />
@@ -366,7 +381,9 @@ const ConnectHome = () => {
           open={!!sheetExpert}
           expert={sheetExpert}
           subjectType="expert"
-          onClose={() => setSheetExpert(null)}
+          sponsorContext={sponsorOpen ? "expert_zone_header" : undefined}
+          sponsorBrand={sponsorOpen ? edgesFirstBrand : null}
+          onClose={() => { setSheetExpert(null); setSponsorOpen(false); }}
           onNoteChanged={(rid, hasNote) => {
             setNoteRecipientIds((prev) => {
               const next = new Set(prev);
@@ -383,13 +400,19 @@ const ConnectHome = () => {
 };
 
 const ListView = ({
-  brands, expertZoneBrand, onBrandClick, starred, noteBrandIds,
+  brands, expertZoneBrand, experts, sponsorBrand, kellyExpert,
+  onBrandClick, onExpertClick, onSponsorClick, starred, noteBrandIds,
 }: {
-  brands: MapBrand[]; expertZoneBrand: MapBrand | null; onBrandClick: (b: MapBrand) => void;
+  brands: MapBrand[]; expertZoneBrand: MapBrand | null;
+  experts: any[]; sponsorBrand: MapBrand | null; kellyExpert: any | null;
+  onBrandClick: (b: MapBrand) => void;
+  onExpertClick: (e: any) => void;
+  onSponsorClick: () => void;
   starred: Set<string>; noteBrandIds: Set<string>;
 }) => {
   const [starredOnly, setStarredOnly] = useState(false);
   const visible = starredOnly ? brands.filter((b) => starred.has(b.id)) : brands;
+  const sponsorLogo = sponsorBrand ? brandLogo(sponsorBrand) : null;
   return (
     <div className="px-4 py-5">
       <div className="flex items-center gap-2 mb-3">
@@ -424,21 +447,42 @@ const ListView = ({
           </p>
         )}
       </div>
-      {expertZoneBrand && !starredOnly && (
-        <div className="mt-8">
-          <h2 className="font-display text-sm uppercase tracking-wider text-events-cream/60 mb-3">Also at the event</h2>
-          <button
-            onClick={() => onBrandClick(expertZoneBrand)}
-            className="w-full bg-events-cream/5 hover:bg-events-cream/10 border border-events-cream/15 rounded-2xl p-5 flex items-center gap-4 transition-colors text-left"
-          >
-            <div className="w-14 h-14 rounded-full bg-events-coral/20 flex items-center justify-center font-display text-events-coral text-xs uppercase">
-              Zone
-            </div>
-            <div>
-              <div className="font-display text-events-cream">Industry Expert Zone</div>
-              <div className="text-xs font-body text-events-cream/60">Tap to meet the experts.</div>
-            </div>
-          </button>
+      {!starredOnly && (
+        <div className="mt-10">
+          <h2 className="font-display text-sm uppercase tracking-wider text-events-cream/60 mb-3">
+            Industry Expert Zone
+          </h2>
+          {sponsorBrand && (
+            <button
+              onClick={onSponsorClick}
+              disabled={!kellyExpert}
+              className="w-full mb-4 flex items-center gap-3 bg-events-cream/5 hover:bg-events-cream/10 border border-events-cream/15 rounded-2xl p-3 text-left transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <div className="w-12 h-12 rounded-full bg-events-cream overflow-hidden flex items-center justify-center border-2 border-events-coral shrink-0">
+                {sponsorLogo ? (
+                  <img src={sponsorLogo} alt={sponsorBrand.name} className="w-9 h-9 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                ) : (
+                  <span className="font-display text-[10px] text-events-teal">EF</span>
+                )}
+              </div>
+              <EditableText
+                settingKey="connect_expert_zone_sponsor_credit"
+                defaultText={`Industry experts brought to you by ${sponsorBrand.name}`}
+                as="span"
+                className="text-xs font-body text-events-cream/80 leading-snug"
+              />
+            </button>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {experts.map((e) => (
+              <ExpertCardMinimal key={e.id} expert={e} disableExpand onClick={() => onExpertClick(e)} />
+            ))}
+            {experts.length === 0 && (
+              <p className="col-span-full text-center text-events-cream/50 font-body text-sm py-8">
+                Experts will appear here once published.
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>
