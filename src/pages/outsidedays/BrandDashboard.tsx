@@ -8,6 +8,9 @@ import {
 } from "@/lib/connect-session";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import DashboardWorkspace from "@/components/connect/dashboard/DashboardWorkspace";
+import connectLogo from "@/assets/connect-basecamp-outside-days.png";
+import EditableText from "@/components/EditableText";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
 
 type Mode = "loading" | "lookup" | "add_phone" | "login" | "signed_in";
 
