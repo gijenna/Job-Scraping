@@ -3,6 +3,7 @@
 // flows when a candidate taps a rep face or an expert in the zone.
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Expert } from "@/lib/expert-types";
 import ExpertCard from "@/components/experts/ExpertCard";
