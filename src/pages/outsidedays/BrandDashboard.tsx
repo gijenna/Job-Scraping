@@ -93,11 +93,33 @@ const BrandDashboard = () => {
   }
 
   return (
+    <EditableTextProvider pageSlug="outsidedays26-brand-dashboard">
     <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-16">
-        <div className="max-w-md mx-auto">
-          <h1 className="font-afterparty text-4xl text-center mb-2">Brand Rep</h1>
-          <p className="text-center font-body text-events-cream/70 text-sm mb-8">Outside Days, Denver 26</p>
+      <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-14">
+        <div className="max-w-md mx-auto space-y-6">
+          {/* Branded header */}
+          <div className="flex flex-col items-center text-center space-y-4">
+            <img src={connectLogo} alt="Outside Days" className="h-20 w-auto" />
+            {/* TODO: replace with admin-uploaded image at event_settings key dashboard_signin_photo_url */}
+            <div className="w-full max-w-[260px] aspect-[4/3] bg-gradient-to-br from-events-coral/30 via-events-cream/10 to-events-teal/40 border-[6px] border-events-cream/90 rounded-sm shadow-lg p-4 flex items-end justify-center rotate-[-1deg]">
+              <span className="font-body italic text-events-cream/70 text-xs">Event photo coming soon</span>
+            </div>
+            <div className="space-y-1">
+              <h1 className="font-afterparty text-4xl">Brand Dashboard</h1>
+              <EditableText
+                settingKey="brand_dashboard_subtitle"
+                defaultText="Denver Outside Days 26"
+                as="p"
+                className="font-body text-events-cream/70 text-sm"
+              />
+            </div>
+            <EditableText
+              settingKey="brand_dashboard_signin_body"
+              defaultText="Sign in to view candidates, see who visited your table, and read notes from people who reached out. Your dashboard goes live with the full database after the event."
+              as="p"
+              className="font-body text-events-cream/80 text-sm leading-relaxed max-w-sm"
+            />
+          </div>
 
           {mode === "loading" && <div className="text-center font-body text-events-cream/60">Loading...</div>}
 
@@ -128,9 +150,19 @@ const BrandDashboard = () => {
               <Button onClick={doLogin} disabled={busy || last4.length !== 4} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream">Sign in</Button>
             </Card>
           )}
+
+          {mode !== "loading" && (
+            <EditableText
+              settingKey="brand_dashboard_phone_reassurance"
+              defaultText="Your phone number is private. We use the last 4 digits to verify it's you. We never text reps and never share your number."
+              as="p"
+              className="font-body text-events-cream/55 text-[11px] text-center leading-relaxed px-2"
+            />
+          )}
         </div>
       </div>
     </ImpersonationGate>
+    </EditableTextProvider>
   );
 };
 
