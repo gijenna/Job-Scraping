@@ -60,6 +60,7 @@ const ConnectHome = () => {
   const [showIntro, setShowIntro] = useState(false);
   const [headerStripDismissed, setHeaderStripDismissed] = useState(false);
   const [noteTarget, setNoteTarget] = useState<NoteRecipient | null>(null);
+  const [sponsorOpen, setSponsorOpen] = useState(false);
 
   const mode = useEventMode();
   const headerCopy = MODE_HEADER_COPY[mode];
