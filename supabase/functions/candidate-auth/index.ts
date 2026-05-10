@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
 
       const token = await createSession("candidate", data.id);
-      return jsonFor(req, { session: { subject_type: "candidate", subject: data } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "candidate", subject: data }, token }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "signup_create") {
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
 
       const token = await createSession("candidate", data.id);
-      return jsonFor(req, { session: { subject_type: "candidate", subject: data } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "candidate", subject: data }, token }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "login") {
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
 
       const candidate = data[0];
       const token = await createSession("candidate", candidate.id);
-      return jsonFor(req, { session: { subject_type: "candidate", subject: candidate } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "candidate", subject: candidate }, token }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "me") {
