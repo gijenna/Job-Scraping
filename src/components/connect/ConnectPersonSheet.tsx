@@ -20,9 +20,12 @@ import {
 interface Props {
   open: boolean;
   expert: Expert | null;
-  // "brand_rep" or "expert" — controls how the connection form is wired
+  // "brand_rep" or "expert" controls how the connection form is wired
   subjectType: "brand_rep" | "expert";
   brand?: { id: string; name: string; logo_url?: string | null; website_url?: string | null } | null;
+  /** When set, render an inline sponsor credit section in the card body. */
+  sponsorContext?: "expert_zone_header";
+  sponsorBrand?: { id: string; name: string; logo_url?: string | null; website_url?: string | null } | null;
   onClose: () => void;
   onNoteChanged?: (recipientId: string, hasNote: boolean) => void;
   onConnectionSaved?: () => void;
@@ -30,6 +33,7 @@ interface Props {
 
 const ConnectPersonSheet = ({
   open, expert, subjectType, brand,
+  sponsorContext, sponsorBrand,
   onClose, onNoteChanged, onConnectionSaved,
 }: Props) => {
   const mode = useEventMode();
