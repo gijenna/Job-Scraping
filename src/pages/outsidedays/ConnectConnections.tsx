@@ -122,25 +122,14 @@ const ConnectConnections = () => {
         </main>
 
         {editing && (
-          <ConnectionForm
-            open
+          <ConnectionSummary
+            connection={editing}
             mode={modeFor(editing)}
-            editingId={editing.id}
-            brand={editing.brand}
-            rep={editing.rep}
-            expert={editing.expert}
-            initial={{
-              private_notes: editing.private_notes || "",
-              follow_up_direction: editing.follow_up_direction || "",
-              contact_info_received: editing.contact_info_received || "",
-              role_flagged: editing.role_flagged || "",
-              would_want_as_mentor: editing.would_want_as_mentor,
-              mentor_topics: editing.mentor_topics || "",
-            }}
             onClose={() => setEditing(null)}
-            onSaved={load}
+            onChanged={load}
           />
         )}
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
   );
