@@ -270,7 +270,12 @@ const ConnectHome = () => {
             <ListView
               brands={sortedBrands}
               expertZoneBrand={expertZoneBrand}
+              experts={experts}
+              sponsorBrand={edgesFirstBrand}
+              kellyExpert={kellyExpert}
               onBrandClick={handleBrandClick}
+              onExpertClick={(e) => setSheetExpert(e)}
+              onSponsorClick={() => { if (kellyExpert) { setSponsorOpen(true); setSheetExpert(kellyExpert); } }}
               starred={starred}
               noteBrandIds={noteRecipientIds}
             />
