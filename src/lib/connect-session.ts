@@ -89,7 +89,8 @@ export async function candidateMe() {
   return call<{ session: SessionInfo | null }>("candidate-auth", { action: "me" });
 }
 export async function candidateLogout() {
-  return call("candidate-auth", { action: "logout" });
+  try { return await call("candidate-auth", { action: "logout" }); }
+  finally { clearOdSidToken(); }
 }
 export async function candidateUpdateProfile(patch: Record<string, any>) {
   return call<{ candidate: any }>("candidate-profile", { action: "update", patch });
@@ -189,7 +190,8 @@ export async function brandRepMe() {
   return call<{ session: SessionInfo | null }>("brand-rep-auth", { action: "me" });
 }
 export async function brandRepLogout() {
-  return call("brand-rep-auth", { action: "logout" });
+  try { return await call("brand-rep-auth", { action: "logout" }); }
+  finally { clearOdSidToken(); }
 }
 
 // ---- Brand dashboard ----
