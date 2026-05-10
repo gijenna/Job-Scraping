@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { faviconFromUrl } from "@/lib/url-logo";
 import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import NoteComposer, { NoteRecipient } from "@/components/connect/NoteComposer";
+import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
@@ -374,6 +375,7 @@ const ConnectHome = () => {
             });
           }}
         />
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
     </EditableTextProvider>

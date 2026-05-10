@@ -70,6 +70,7 @@ const ConnectPersonSheet = ({
       <Sheet open={open && !composerOpen && !formOpen} onOpenChange={(o) => !o && onClose()}>
         <SheetContent
           side="bottom"
+          hideClose
           className="bg-events-teal border-events-cream/10 text-events-cream p-0 h-[92vh] sm:max-w-lg sm:mx-auto sm:rounded-t-2xl flex flex-col"
         >
           <div className="sticky top-0 z-10 flex justify-end px-2 py-2 bg-events-teal/95 backdrop-blur border-b border-events-cream/10">

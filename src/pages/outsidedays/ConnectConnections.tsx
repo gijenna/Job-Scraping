@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { connectionsList } from "@/lib/connect-session";
-import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
+import ConnectionSummary from "@/components/connect/ConnectionSummary";
+import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
 
 const relativeTime = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
@@ -37,17 +38,18 @@ const ConnectConnections = () => {
   };
   useEffect(() => { load(); }, []);
 
-  const modeFor = (r: any): ConnectionMode =>
+  const modeFor = (r: any): "brand" | "brand_rep" | "expert" =>
     r.expert_id ? "expert" : r.brand_rep_id ? "brand_rep" : "brand";
 
   return (
     <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream">
+      <div className="min-h-screen bg-events-teal text-events-cream pb-24 sm:pb-0">
         <header className="px-4 py-3 border-b border-events-cream/10 flex items-center gap-3 sticky top-0 bg-events-teal/95 backdrop-blur z-30">
-          <button onClick={() => nav("/outsidedays26/connect/home")} className="text-events-cream/80 -ml-1 p-1">
+          <button onClick={() => nav("/outsidedays26/connect/home")} className="text-events-cream/80 -ml-1 p-1 sm:hidden">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-afterparty text-2xl leading-none">My Connections</h1>
+          <h1 className="font-afterparty text-2xl leading-none flex-1">My Connections</h1>
+          <ConnectTopNav />
         </header>
 
         <main className="px-4 py-5 max-w-2xl mx-auto">
@@ -120,25 +122,14 @@ const ConnectConnections = () => {
         </main>
 
         {editing && (
-          <ConnectionForm
-            open
+          <ConnectionSummary
+            connection={editing}
             mode={modeFor(editing)}
-            editingId={editing.id}
-            brand={editing.brand}
-            rep={editing.rep}
-            expert={editing.expert}
-            initial={{
-              private_notes: editing.private_notes || "",
-              follow_up_direction: editing.follow_up_direction || "",
-              contact_info_received: editing.contact_info_received || "",
-              role_flagged: editing.role_flagged || "",
-              would_want_as_mentor: editing.would_want_as_mentor,
-              mentor_topics: editing.mentor_topics || "",
-            }}
             onClose={() => setEditing(null)}
-            onSaved={load}
+            onChanged={load}
           />
         )}
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
   );

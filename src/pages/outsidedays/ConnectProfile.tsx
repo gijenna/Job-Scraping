@@ -19,6 +19,7 @@ import {
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
+import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
@@ -81,7 +82,12 @@ const ConnectProfile = () => {
 
   return (
     <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-12">
+      <div className="min-h-screen bg-events-teal text-events-cream pb-24 sm:pb-0">
+        <header className="hidden sm:flex px-4 py-3 border-b border-events-cream/10 items-center justify-between sticky top-0 bg-events-teal/95 backdrop-blur z-30">
+          <h1 className="font-afterparty text-2xl">Your profile</h1>
+          <ConnectTopNav />
+        </header>
+        <div className="px-4 py-8 md:py-12">
         <div className="max-w-2xl mx-auto space-y-6">
           <header className="flex items-center justify-between">
             <div>
@@ -262,6 +268,8 @@ const ConnectProfile = () => {
             </Button>
           </div>
         </div>
+        </div>
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
   );

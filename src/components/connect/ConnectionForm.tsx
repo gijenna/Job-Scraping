@@ -138,6 +138,7 @@ const ConnectionForm = ({
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent
         side="bottom"
+        hideClose
         className="bg-events-teal border-events-cream/10 text-events-cream p-0 h-[92vh] sm:h-[90vh] sm:max-w-lg sm:mx-auto sm:rounded-t-2xl flex flex-col"
       >
         {/* Header */}
