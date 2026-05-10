@@ -150,7 +150,7 @@ const MapBrandGroup = ({
 
       {/* Logo bubble + name, always upright (no rotation) */}
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
-        <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white">
+        <div className={`relative w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white ${brand.is_featured ? "featured-bubble-glow" : ""}`}>
           {logoSrc ? (
             <img src={logoSrc} alt={brand.name} className="w-8 h-8 object-contain" />
           ) : (
