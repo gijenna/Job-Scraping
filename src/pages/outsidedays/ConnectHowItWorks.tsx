@@ -103,6 +103,7 @@ const ConnectHowItWorks = () => {
             </Button>
           </div>
         </main>
+        <ConnectBottomNav />
       </div>
     </EditableTextProvider>
   );
