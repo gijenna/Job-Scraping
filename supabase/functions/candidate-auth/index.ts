@@ -85,13 +85,15 @@ Deno.serve(async (req) => {
         return jsonFor(req, { error: "first_name, last_name, phone_last_four required" }, { status: 400 });
       }
       const last4 = lastFour(phone_last_four);
-      const { data, error } = await sb
+      const { data: rows, error } = await sb
         .from("candidates")
         .select("*")
         .ilike("first_name", first_name.trim())
-        .ilike("last_name", last_name.trim())
-        .eq("phone_last_four", last4);
+        .ilike("last_name", last_name.trim());
       if (error) return jsonFor(req, { error: error.message }, { status: 500 });
+      // Normalize stored value with lastFour as well so legacy rows missing
+      // a leading zero (e.g. "217") still match against "0217".
+      const data = (rows || []).filter((c: any) => lastFour(String(c.phone_last_four ?? c.phone ?? "")) === last4);
       if (!data || data.length === 0) return jsonFor(req, { session: null });
       if (data.length > 1) return jsonFor(req, { ambiguous: true });
 
