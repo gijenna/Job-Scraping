@@ -71,8 +71,18 @@ export function jsonFor(req: Request, body: any, init: ResponseInit = {}) {
   });
 }
 
+export function readBearer(req: Request): string | null {
+  const auth = req.headers.get("authorization") || req.headers.get("Authorization") || "";
+  const m = auth.match(/^Bearer\s+(.+)$/i);
+  if (!m) return null;
+  const tok = m[1].trim();
+  // Ignore Supabase JWTs (they start with "ey"); we only want our od_sid token (hex).
+  if (!/^[a-f0-9]{32,}$/i.test(tok)) return null;
+  return tok;
+}
+
 export async function readSession(req: Request) {
-  const token = readCookie(req, SESSION_COOKIE);
+  const token = readCookie(req, SESSION_COOKIE) || readBearer(req);
   if (!token) return null;
   const sb = admin();
   const { data } = await sb
