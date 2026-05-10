@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
 
 const SECTIONS: { key: string; titleDefault: string; bodyDefault: string }[] = [
   {
