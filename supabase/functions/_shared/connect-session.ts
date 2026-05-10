@@ -54,7 +54,10 @@ export function newToken(): string {
 }
 
 export function lastFour(phone: string): string {
-  return (phone || "").replace(/[^0-9]/g, "").slice(-4);
+  // Preserve leading zeros: take the last 4 digit characters as a string,
+  // and left-pad with "0" if fewer than 4 digits were provided. Never cast to number.
+  const digits = String(phone ?? "").replace(/[^0-9]/g, "");
+  return digits.slice(-4).padStart(4, "0");
 }
 
 export function json(body: any, init: ResponseInit = {}) {
