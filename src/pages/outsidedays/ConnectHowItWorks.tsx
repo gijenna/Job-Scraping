@@ -46,7 +46,7 @@ const ConnectHowItWorks = () => {
   return (
     <EditableTextProvider pageSlug="outsidedays26-connect">
       <div className="min-h-screen bg-events-teal text-events-cream">
-        <header className="px-4 py-3 border-b border-events-cream/10 flex items-center gap-2">
+        <header className="px-4 py-3 border-b border-events-cream/10 flex items-center justify-between gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -55,6 +55,7 @@ const ConnectHowItWorks = () => {
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> <EditableText settingKey="how_back" defaultText="Back" as="span" />
           </Button>
+          <ConnectTopNav />
         </header>
 
         <main className="px-5 py-8 max-w-2xl mx-auto space-y-8">
