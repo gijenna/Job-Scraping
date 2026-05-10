@@ -245,6 +245,8 @@ export async function consumeImpersonationToken(): Promise<boolean> {
     },
     body: JSON.stringify({ token }),
   });
+  // Mirror token locally so future calls work even when the cookie is dropped.
+  setOdSidToken(token);
   params.delete("as");
   const newUrl = window.location.pathname + (params.toString() ? `?${params}` : "") + window.location.hash;
   window.history.replaceState({}, "", newUrl);
