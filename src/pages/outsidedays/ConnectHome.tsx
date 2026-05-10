@@ -3,7 +3,7 @@
 // (NOT localStorage). Mobile-first: 375px target.
 
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { X, HelpCircle, Star, Users, User } from "lucide-react";
 import connectLogo from "@/assets/connect-basecamp-outside-days.png";
