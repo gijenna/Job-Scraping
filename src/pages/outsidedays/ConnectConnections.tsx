@@ -38,17 +38,18 @@ const ConnectConnections = () => {
   };
   useEffect(() => { load(); }, []);
 
-  const modeFor = (r: any): ConnectionMode =>
+  const modeFor = (r: any): "brand" | "brand_rep" | "expert" =>
     r.expert_id ? "expert" : r.brand_rep_id ? "brand_rep" : "brand";
 
   return (
     <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream">
+      <div className="min-h-screen bg-events-teal text-events-cream pb-24 sm:pb-0">
         <header className="px-4 py-3 border-b border-events-cream/10 flex items-center gap-3 sticky top-0 bg-events-teal/95 backdrop-blur z-30">
-          <button onClick={() => nav("/outsidedays26/connect/home")} className="text-events-cream/80 -ml-1 p-1">
+          <button onClick={() => nav("/outsidedays26/connect/home")} className="text-events-cream/80 -ml-1 p-1 sm:hidden">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-afterparty text-2xl leading-none">My Connections</h1>
+          <h1 className="font-afterparty text-2xl leading-none flex-1">My Connections</h1>
+          <ConnectTopNav />
         </header>
 
         <main className="px-4 py-5 max-w-2xl mx-auto">
