@@ -6,6 +6,7 @@ import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import ConnectionForm from "@/components/connect/ConnectionForm";
 import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
+import BrandLeadCapture from "@/components/connect/BrandLeadCapture";
 import BrandVisitToggle from "@/components/connect/BrandVisitToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { candidateToggleStar } from "@/lib/connect-session";
@@ -114,6 +115,15 @@ const MapBrandPanel = ({
             </button>
           </div>
 
+          {/* Featured sponsor callout */}
+          {brand.is_featured && (
+            <div className="mx-6 mt-4 rounded-xl border-l-4 border-events-coral bg-events-coral/15 px-4 py-3">
+              <p className="font-body text-events-cream text-[13px] leading-snug">
+                The industry expert activation is sponsored by {brand.name}. Kelly makes sure that small outdoor and conservation orgs get the beautiful websites their missions deserve at THEIR budget.
+              </p>
+            </div>
+          )}
+
           {/* Brand header */}
           <div className="p-6">
             <div className="flex items-center gap-4">
@@ -186,6 +196,10 @@ const MapBrandPanel = ({
 
             {brand.description && (
               <p className="text-sm text-events-cream/70 font-body mt-4">{brand.description}</p>
+            )}
+
+            {brand.is_featured && candidateMode && (
+              <BrandLeadCapture brandId={brand.id} />
             )}
           </div>
 

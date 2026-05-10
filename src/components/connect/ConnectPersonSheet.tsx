@@ -10,6 +10,7 @@ import ExpertCard from "@/components/experts/ExpertCard";
 import ConnectActionFooter from "./ConnectActionFooter";
 import ConnectionForm from "./ConnectionForm";
 import NoteComposer, { NoteRecipient } from "./NoteComposer";
+import BrandLeadCapture from "./BrandLeadCapture";
 import { useEventMode } from "@/lib/connect-event-mode";
 import {
   connectNotesGetMine,
@@ -26,6 +27,8 @@ interface Props {
   /** When set, render an inline sponsor credit section in the card body. */
   sponsorContext?: "expert_zone_header";
   sponsorBrand?: { id: string; name: string; logo_url?: string | null; website_url?: string | null } | null;
+  /** When set, render the brand-level lead capture under the card. */
+  leadCaptureBrandId?: string | null;
   onClose: () => void;
   onNoteChanged?: (recipientId: string, hasNote: boolean) => void;
   onConnectionSaved?: () => void;
@@ -34,6 +37,7 @@ interface Props {
 const ConnectPersonSheet = ({
   open, expert, subjectType, brand,
   sponsorContext, sponsorBrand,
+  leadCaptureBrandId,
   onClose, onNoteChanged, onConnectionSaved,
 }: Props) => {
   const mode = useEventMode();
@@ -112,6 +116,7 @@ const ConnectPersonSheet = ({
                 )}
               </div>
             )}
+            {leadCaptureBrandId && <BrandLeadCapture brandId={leadCaptureBrandId} />}
           </div>
 
           <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">

@@ -383,6 +383,9 @@ const ConnectHome = () => {
           subjectType="expert"
           sponsorContext={sponsorOpen ? "expert_zone_header" : undefined}
           sponsorBrand={sponsorOpen ? edgesFirstBrand : null}
+          leadCaptureBrandId={
+            kellyExpert && sheetExpert?.id === kellyExpert.id && edgesFirstBrand ? edgesFirstBrand.id : null
+          }
           onClose={() => { setSheetExpert(null); setSponsorOpen(false); }}
           onNoteChanged={(rid, hasNote) => {
             setNoteRecipientIds((prev) => {
@@ -465,12 +468,20 @@ const ListView = ({
                   <span className="font-display text-[10px] text-events-teal">EF</span>
                 )}
               </div>
-              <EditableText
-                settingKey="connect_expert_zone_sponsor_credit"
-                defaultText={`Industry experts brought to you by ${sponsorBrand.name}`}
-                as="span"
-                className="text-xs font-body text-events-cream/80 leading-snug"
-              />
+              <div className="flex-1 min-w-0">
+                <EditableText
+                  settingKey="connect_expert_zone_sponsor_credit"
+                  defaultText={`Industry experts brought to you by ${sponsorBrand.name}`}
+                  as="span"
+                  className="block text-xs font-body text-events-cream/80 leading-snug"
+                />
+                <EditableText
+                  settingKey="connect_expert_zone_sponsor_cta"
+                  defaultText="SAY THANK YOU!"
+                  as="span"
+                  className="block mt-1 font-display font-bold text-[11px] uppercase tracking-wider text-events-coral"
+                />
+              </div>
             </button>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
