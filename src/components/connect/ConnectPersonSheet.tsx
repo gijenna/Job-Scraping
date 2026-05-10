@@ -3,6 +3,7 @@
 // flows when a candidate taps a rep face or an expert in the zone.
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Expert } from "@/lib/expert-types";
 import ExpertCard from "@/components/experts/ExpertCard";
@@ -71,7 +72,16 @@ const ConnectPersonSheet = ({
           side="bottom"
           className="bg-events-teal border-events-cream/10 text-events-cream p-0 h-[92vh] sm:max-w-lg sm:mx-auto sm:rounded-t-2xl flex flex-col"
         >
-          <div className="flex-1 overflow-y-auto px-3 pt-10 pb-4">
+          <div className="sticky top-0 z-10 flex justify-end px-2 py-2 bg-events-teal/95 backdrop-blur border-b border-events-cream/10">
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="w-11 h-11 rounded-full bg-events-cream/10 hover:bg-events-cream/20 flex items-center justify-center text-events-cream transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-3 pt-2 pb-4">
             <ExpertCard expert={expert} autoExpand />
           </div>
 

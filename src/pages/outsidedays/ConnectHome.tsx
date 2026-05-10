@@ -5,7 +5,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { X, HelpCircle, Star } from "lucide-react";
+import { X, HelpCircle, Star, Users, User } from "lucide-react";
+import connectLogo from "@/assets/connect-basecamp-outside-days.png";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
 import {
   candidateMe, candidateListStars, candidateMarkSeenIntro,
@@ -109,18 +110,18 @@ const ConnectHome = () => {
     <ImpersonationGate>
       <div className="min-h-screen bg-events-teal text-events-cream flex flex-col">
         {/* Header */}
-        <header className="px-4 py-3 border-b border-events-cream/10 flex items-center justify-between gap-3 sticky top-0 bg-events-teal/95 backdrop-blur z-30">
-          <div>
-            <EditableText settingKey="home_header_title" defaultText="Outside Days" as="h1" className="font-afterparty text-2xl leading-none" />
-            <EditableText settingKey="home_header_subtitle" defaultText="Denver 26" as="p" className="text-[11px] font-body text-events-cream/60" />
+        <header className="px-3 sm:px-4 py-3 border-b border-events-cream/10 flex items-center justify-between gap-1.5 sm:gap-3 sticky top-0 bg-events-teal/95 backdrop-blur z-30">
+          <div className="flex items-center gap-2 min-w-0">
+            <img src={connectLogo} alt="Outside Days" className="h-8 sm:h-10 w-auto shrink-0" />
+            <EditableText settingKey="home_header_subtitle" defaultText="Denver 26" as="p" className="hidden sm:block text-[11px] font-body text-events-cream/60" />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <div className="flex bg-events-cream/10 border border-events-cream/15 rounded-full p-0.5">
               {(["map", "list"] as View[]).map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-display uppercase tracking-wider transition-colors ${
+                  className={`px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-display uppercase tracking-wider transition-colors ${
                     view === v ? "bg-events-coral text-events-cream" : "text-events-cream/70"
                   }`}
                 >
@@ -133,7 +134,7 @@ const ConnectHome = () => {
               size="sm"
               onClick={() => nav("/outsidedays26/connect/how-it-works")}
               aria-label="How this works"
-              className="text-events-cream/70 text-xs hidden sm:inline-flex"
+              className="text-events-cream/70 w-10 h-10 p-0"
             >
               <HelpCircle className="w-4 h-4" />
             </Button>
@@ -141,17 +142,21 @@ const ConnectHome = () => {
               variant="ghost"
               size="sm"
               onClick={() => nav("/outsidedays26/connect/connections")}
-              className="text-events-cream/80 text-xs"
+              aria-label="Connections"
+              className="text-events-cream/80 text-xs w-10 h-10 sm:w-auto sm:h-auto p-0 sm:px-3 sm:py-2"
             >
-              <EditableText settingKey="home_nav_connections" defaultText="Connections" as="span" />
+              <Users className="w-4 h-4 sm:hidden" />
+              <EditableText settingKey="home_nav_connections" defaultText="Connections" as="span" className="hidden sm:inline" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => nav("/outsidedays26/connect/profile")}
-              className="text-events-cream/80 text-xs"
+              aria-label="Profile"
+              className="text-events-cream/80 text-xs w-10 h-10 sm:w-auto sm:h-auto p-0 sm:px-3 sm:py-2"
             >
-              <EditableText settingKey="home_nav_profile" defaultText="Profile" as="span" />
+              <User className="w-4 h-4 sm:hidden" />
+              <EditableText settingKey="home_nav_profile" defaultText="Profile" as="span" className="hidden sm:inline" />
             </Button>
           </div>
         </header>
