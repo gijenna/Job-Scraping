@@ -19,6 +19,7 @@ import {
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
+import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
