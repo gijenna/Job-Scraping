@@ -1,51 +1,80 @@
-# Mobile UX Fixes
+## Four UX fixes to candidate Connect flow + brand rep sign-in
 
-Three layout-only changes. No backend, schema, or data changes.
+### Fix 1: Shared bottom nav across all candidate Connect pages
 
-## 1. ConnectPersonSheet close button (top-right, sticky, 44x44)
+Create `src/components/connect/ConnectBottomNav.tsx` that renders a sticky bottom nav (mobile) and inline top-right nav buttons (desktop) with four destinations:
 
-File: `src/components/connect/ConnectPersonSheet.tsx`
+- Map (route `/outsidedays26/connect/home?view=map`)
+- List (same route, `?view=list`)
+- Connections (`/outsidedays26/connect/connections`)
+- Profile (`/outsidedays26/connect/profile`)
+- How (`/outsidedays26/connect/how-it-works`)
 
-- Add a sticky header bar inside `SheetContent` that stays pinned to the top of the sheet (not the scrolling card content).
-- Inside it, render an X button positioned top-right.
-  - Tap target: `w-11 h-11` (44px), rounded full, `bg-events-cream/10 hover:bg-events-cream/20`.
-  - Icon: `X` from lucide, `w-5 h-5`, `text-events-cream` for contrast on dark teal.
-  - `aria-label="Close"`, calls `onClose`.
-- Remove the existing `pt-10` padding on the scroll container since the sticky bar now reserves the space.
-- Sticky bar uses `sticky top-0 z-10 bg-events-teal/95 backdrop-blur` and lives above the scroll area (or as a `sticky` first child inside it).
-- Applies to both `subjectType="brand_rep"` and `subjectType="expert"` since the same component is used.
+Visually highlight the active item using `useLocation()` plus the `view` cookie/query for Map vs List.
 
-## 2. ConnectHome mobile top nav fits 375px
+Wire `ConnectHome.tsx` to read/write `?view=` (so Map/List toggle is selectable from other pages), keep its existing top header on desktop, and mount `ConnectBottomNav` on mobile.
 
-File: `src/pages/outsidedays/ConnectHome.tsx` (header block only, lines ~112-157)
+Mount `ConnectBottomNav` on `ConnectProfile.tsx`, `ConnectConnections.tsx`, and `ConnectHowItWorks.tsx`. Add bottom padding (`pb-24`) so content is not hidden behind it.
 
-Approach: keep desktop layout intact; on mobile, collapse secondary items into icons and rely on a bottom area only if needed. Simpler: switch to compact icon-only buttons for Connections / Profile / How-it-works on mobile, full text on `sm:` and up.
+### Fix 2: Industry Expert Zone in list view, default open + Edges First sponsor credit
 
-Changes:
-- Map/List toggle: shrink padding on mobile (`px-3` instead of `px-4`), keep visible.
-- Connections button: icon-only on mobile (`Users` icon from lucide, `w-4 h-4`), text label hidden via `hidden sm:inline` span; full label on `sm:` and up. Tap target `w-10 h-10`.
-- Profile button: icon-only on mobile (`User` icon), text on `sm:`+. Tap target `w-10 h-10`.
-- How this works: currently `hidden sm:inline-flex`. Make it visible on mobile too as a small icon-only button (`HelpCircle`, `w-10 h-10`).
-- Header container: tighten `gap-3` to `gap-1.5` on mobile (`gap-1.5 sm:gap-3`), reduce horizontal `px-4` to `px-3 sm:px-4`.
-- Title block: shrink to `text-xl` on mobile and truncate subtitle if needed so the right cluster always fits.
+In `ConnectHome.tsx`'s `ListView`:
 
-Verification at 375px: all four controls (Map/List, Connections, Profile, How) visible without horizontal scroll, each at least 40px tap target. Desktop unchanged because all changes are mobile-prefixed.
+- Replace the collapsed "Also at the event" card with an always-expanded section: `Industry Expert Zone` heading, sponsor row, then a grid of `ExpertCardMinimal` thumbnails (same component used in the existing modal). Tapping a face opens `ConnectPersonSheet` for that expert (lift `setSheetExpert` up to `ListView` via prop, identical to current modal behavior).
+- Sponsor credit row: small bubble logo of the brand named `Edges First` (look up by name in `brands` from `useEventMapBrands`, use the existing `brandLogo` helper). Tapping opens Kelly's expert card via `ConnectPersonSheet` with a new prop `sponsorContext: "expert_zone_header"`.
+- Beside the bubble: small text "Industry experts brought to you by Edges First".
+- Resolve "Kelly" by first-name match on the `experts` list filtered to current_company `Edges First` (fallback: name `Kelly`), to avoid hardcoded ids.
 
-## 3. Replace "Outside Days" wordmark with the proper logo image
+In `ConnectPersonSheet.tsx`:
 
-File: `src/pages/outsidedays/ConnectHome.tsx`
+- Accept optional `sponsorContext?: "expert_zone_header"` prop. When set, append a styled section at the bottom of the card body (above the action footer) with the sponsor copy and a "Learn more about Edges First" link pulled from the `Edges First` brand `website_url`. Do not render this section in any other entry point.
+- Pass the brand record down so the link is dynamic.
 
-- Import `connectLogo from "@/assets/connect-basecamp-outside-days.png"` (same asset used by `ConnectShell` on `/connect/full`).
-- Replace the `EditableText` h1 ("Outside Days") + subtitle block in the header with an `<img src={connectLogo} alt="Outside Days" className="h-8 sm:h-10 w-auto" />`.
-- Keep the subtitle "Denver 26" small text or remove if it crowds the bar at 375px (remove on mobile via `hidden sm:block`).
+### Fix 3: Connection summary view (read-only) with single close X
 
-## Verification
+Today, tapping a connections list row opens `ConnectionForm` directly. Replace with a new component `src/components/connect/ConnectionSummary.tsx` that renders a Sheet-based summary, with exactly one close X in the top-right (header bar matching `ConnectPersonSheet`).
 
-- 375px viewport: open `/outsidedays26/connect` (map view) — logo visible top-left, all 4 nav controls fit without scroll.
-- Tap a brand bubble → ConnectPersonSheet opens → X visible top-right, scroll content, X stays pinned, tap closes.
-- Open Industry Expert Zone → tap an expert → same X behavior.
-- Desktop ≥768px: header looks the same as before with text labels.
+Branching by `mode`:
 
-## Out of scope
+- `brand`: brand logo + name, "You marked yourself as visiting this brand", date logged, private notes block, list of reps the candidate noted talking to (parse from a multi-select if present in the brand-mode form, otherwise omit), Edit Connection button, plus "Send a note" buttons next to each rep at this brand (look up reps from the brand record via existing brand fetch path used by `MapBrandPanel`).
+- `brand_rep`: rep avatar/name/brand/title at top, private notes, follow-up direction, contact info received, role flagged. If a note exists for this rep, show a quote block: `Your note to {rep first name}: {message}` + the CTA chip + sent date. Edit Connection and Edit/Send Note buttons.
+- `expert`: same as rep, plus "Mentor flagged" + mentor topics if filled.
 
-DB schema, edge functions, auth, the map component, card content, badge labels, dashboard.
+Visual divider between "your private notes" and "the note you sent them" so they're not confused.
+
+Edit buttons open `ConnectionForm` (and `NoteComposer` for note edits) as today, replacing the summary.
+
+Update `ConnectConnections.tsx` to open `ConnectionSummary` instead of `ConnectionForm`, fetching note + brand reps as needed via existing helpers (`connectNotesGetMine`, `mapBrand` reps endpoint).
+
+Audit `ConnectionForm.tsx` for the second X. The Sheet ships with its own close affordance and the form likely renders an additional manual X. Remove the manual one so only the Sheet close remains. This keeps editing usable but with one X.
+
+### Fix 4: Brand rep sign-in branding
+
+Rebuild the unauthenticated portion of `BrandDashboard.tsx` (the `mode !== "signed_in"` branch) into a single branded shell that wraps each step's form:
+
+- Header block (always visible regardless of step):
+  - Outside Days 26 event logo at top (reuse `connectLogo` from `@/assets/connect-basecamp-outside-days.png` already imported elsewhere, or pull `home_header_subtitle`-equivalent setting).
+  - Event photo placeholder: a polaroid-style cream-bordered box with a soft coral/teal gradient and small italic caption "Event photo coming soon" (Jenna will swap via admin later, leave a TODO note pointing at `event_settings` key `dashboard_signin_photo_url` so a follow-up admin can wire the upload).
+  - Heading "Brand Dashboard" (font-afterparty)
+  - Subtitle "Denver Outside Days 26"
+  - Body copy: "Sign in to view candidates, see who visited your table, and read notes from people who reached out. Your dashboard goes live with the full database after the event."
+- Step-specific form card below (existing lookup / add_phone / login forms unchanged in logic).
+- Below the form: small reassurance text "Your phone number is private. We use the last 4 digits to verify it's you. We never text reps and never share your number."
+- Apply existing palette: dark teal background, cream and coral accents, polaroid/bubble treatments consistent with rest of app.
+
+No changes to `brandRepLookup`, `brandRepAddPhoneAndLogin`, `brandRepLogin`, edge functions, or any auth wiring.
+
+### Constraints
+
+- No DB schema changes, no edge function changes, no auth flow changes.
+- No em dashes anywhere.
+- All new copy strings used in user-facing places should be wrapped with `EditableText` against `event_settings` so Jenna can edit (sponsor credit text, sign-in body, reassurance line, "Industry experts brought to you by Edges First", sponsor card paragraph).
+- Use existing semantic tokens (`bg-events-teal`, `text-events-cream`, `bg-events-coral`, etc).
+
+### Verification
+
+- Resize to 375px: bottom nav visible on Profile, Connections, How, and Home (both views), active item highlighted, all destinations reachable.
+- Desktop (1136px): existing top nav continues to render on Home; the same nav appears in a desktop-appropriate slot on the other pages.
+- List view scrolls to expert grid by default, faces visible, sponsor bubble tappable, Kelly's card shows the sponsor section only when opened from the header sponsor bubble.
+- Connections list row opens summary with one X, shows sent note text + recipient + private notes; Edit opens the form.
+- `/outsidedays26/dashboard` shows logo, photo placeholder, heading/subtitle/body, then form, then reassurance text at all three steps.
