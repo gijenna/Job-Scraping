@@ -375,6 +375,7 @@ const ConnectHome = () => {
             });
           }}
         />
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
     </EditableTextProvider>
