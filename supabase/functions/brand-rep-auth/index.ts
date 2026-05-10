@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
       return experts.filter((e: any) => repIds.has(e.id));
     }
 
-    const isMissing = (r: any) => !r.phone || !r.phone_last_four;
+    const isMissing = (r: any) => !r.phone || !r.phone_last_four || String(r.phone_last_four).trim() === "";
 
     if (action === "lookup") {
       const { first_name, last_name } = body;
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
         .single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
       const token = await createSession("brand_rep", rep.id);
-      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep }, token }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "login") {
@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
       if (matches.length > 1) return jsonFor(req, { ambiguous: true });
       const rep = matches[0];
       const token = await createSession("brand_rep", rep.id);
-      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep } }, { headers: setSessionCookieHeader(token) });
+      return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep }, token }, { headers: setSessionCookieHeader(token) });
     }
 
     if (action === "me") {

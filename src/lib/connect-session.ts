@@ -15,14 +15,47 @@ export interface SessionInfo {
   impersonated?: boolean;
 }
 
+// ---- od_sid bearer token store ----
+// Cookie path is unreliable cross-origin (Safari/ITP, embedded webviews drop
+// SameSite=None third-party cookies). We mirror the session token in
+// sessionStorage and send it as Authorization: Bearer on every call so the
+// backend can authenticate us even when the cookie is missing.
+const TOKEN_KEY = "od_sid";
+let tokenInMemory: string | null = null;
+
+function safeSession(): Storage | null {
+  try { return typeof window !== "undefined" ? window.sessionStorage : null; } catch { return null; }
+}
+export function bootstrapToken() {
+  if (tokenInMemory) return tokenInMemory;
+  const s = safeSession();
+  try { tokenInMemory = s?.getItem(TOKEN_KEY) || null; } catch { tokenInMemory = null; }
+  return tokenInMemory;
+}
+export function getOdSidToken(): string | null { return tokenInMemory ?? bootstrapToken(); }
+export function setOdSidToken(t: string | null) {
+  tokenInMemory = t || null;
+  const s = safeSession();
+  try {
+    if (t) s?.setItem(TOKEN_KEY, t);
+    else s?.removeItem(TOKEN_KEY);
+  } catch {/* sessionStorage blocked; in-memory still works for this tab */}
+}
+export function clearOdSidToken() { setOdSidToken(null); }
+
+bootstrapToken();
+
 async function call<T = any>(fn: string, body: any): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) || "",
+  };
+  const tok = getOdSidToken();
+  if (tok) headers["Authorization"] = `Bearer ${tok}`;
   const res = await fetch(`${FN_BASE}/${fn}`, {
     method: "POST",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) || "",
-    },
+    headers,
     body: JSON.stringify(body),
   });
   const text = await res.text();
@@ -31,6 +64,10 @@ async function call<T = any>(fn: string, body: any): Promise<T> {
   if (!res.ok) {
     const msg = data?.error || data?.message || `HTTP ${res.status}`;
     throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
+  }
+  // Capture token from any successful auth response.
+  if (data && typeof data.token === "string" && data.token) {
+    setOdSidToken(data.token);
   }
   return data as T;
 }
@@ -52,7 +89,8 @@ export async function candidateMe() {
   return call<{ session: SessionInfo | null }>("candidate-auth", { action: "me" });
 }
 export async function candidateLogout() {
-  return call("candidate-auth", { action: "logout" });
+  try { return await call("candidate-auth", { action: "logout" }); }
+  finally { clearOdSidToken(); }
 }
 export async function candidateUpdateProfile(patch: Record<string, any>) {
   return call<{ candidate: any }>("candidate-profile", { action: "update", patch });
@@ -152,7 +190,8 @@ export async function brandRepMe() {
   return call<{ session: SessionInfo | null }>("brand-rep-auth", { action: "me" });
 }
 export async function brandRepLogout() {
-  return call("brand-rep-auth", { action: "logout" });
+  try { return await call("brand-rep-auth", { action: "logout" }); }
+  finally { clearOdSidToken(); }
 }
 
 // ---- Brand dashboard ----
@@ -206,6 +245,8 @@ export async function consumeImpersonationToken(): Promise<boolean> {
     },
     body: JSON.stringify({ token }),
   });
+  // Mirror token locally so future calls work even when the cookie is dropped.
+  setOdSidToken(token);
   params.delete("as");
   const newUrl = window.location.pathname + (params.toString() ? `?${params}` : "") + window.location.hash;
   window.history.replaceState({}, "", newUrl);

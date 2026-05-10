@@ -19,7 +19,7 @@ import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { Button } from "@/components/ui/button";
 import { faviconFromUrl } from "@/lib/url-logo";
-import ConnectionForm from "@/components/connect/ConnectionForm";
+import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import NoteComposer, { NoteRecipient } from "@/components/connect/NoteComposer";
 import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
@@ -50,7 +50,7 @@ const ConnectHome = () => {
   const [view, setView] = useState<View>(() => (getCookie(VIEW_COOKIE) === "list" ? "list" : "map"));
   const [selected, setSelected] = useState<MapBrand | null>(null);
   const [showExpertList, setShowExpertList] = useState(false);
-  const [logExpert, setLogExpert] = useState<any | null>(null);
+  const [sheetExpert, setSheetExpert] = useState<any | null>(null);
   const [completeness, setCompleteness] = useState<number | null>(null);
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [starred, setStarred] = useState<Set<string>>(new Set());
@@ -336,7 +336,7 @@ const ConnectHome = () => {
               <div className="sticky top-0 bg-events-teal/95 backdrop-blur px-4 py-3 border-b border-events-cream/10 flex items-center justify-between">
                 <div>
                   <h2 className="font-display text-lg">Industry Expert Zone</h2>
-                  <p className="text-[11px] font-body text-events-cream/60">Tap a face to log a connection.</p>
+                  <p className="text-[11px] font-body text-events-cream/60">Tap a face to view their card.</p>
                 </div>
                 <button onClick={() => setShowExpertList(false)} className="w-8 h-8 rounded-full bg-events-cream/10 flex items-center justify-center">
                   <X className="w-4 h-4" />
@@ -344,7 +344,7 @@ const ConnectHome = () => {
               </div>
               <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {experts.map((e) => (
-                  <ExpertCardMinimal key={e.id} expert={e} disableExpand onClick={() => setLogExpert(e)} />
+                  <ExpertCardMinimal key={e.id} expert={e} disableExpand onClick={() => setSheetExpert(e)} />
                 ))}
                 {experts.length === 0 && (
                   <p className="col-span-full text-center text-events-cream/50 font-body text-sm py-12">
@@ -356,14 +356,19 @@ const ConnectHome = () => {
           </div>
         )}
 
-        {logExpert && (
-          <ConnectionForm
-            open
-            mode="expert"
-            expert={{ id: logExpert.id, full_name: logExpert.full_name, photo_url: logExpert.photo_url }}
-            onClose={() => setLogExpert(null)}
-          />
-        )}
+        <ConnectPersonSheet
+          open={!!sheetExpert}
+          expert={sheetExpert}
+          subjectType="expert"
+          onClose={() => setSheetExpert(null)}
+          onNoteChanged={(rid, hasNote) => {
+            setNoteRecipientIds((prev) => {
+              const next = new Set(prev);
+              if (hasNote) next.add(rid); else next.delete(rid);
+              return next;
+            });
+          }}
+        />
       </div>
     </ImpersonationGate>
     </EditableTextProvider>
