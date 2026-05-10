@@ -73,37 +73,65 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 md:items-start">
-        {/* Mobile filter trigger */}
-        <div className="md:hidden flex items-center justify-between gap-2">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="bg-events-cream/5 border-events-cream/20 text-events-cream">
-                <SlidersHorizontal className="w-4 h-4 mr-2" /> Filters & search
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[88vw] sm:w-[400px] bg-events-teal border-events-cream/10 overflow-y-auto">
-              <div className="pt-4">{filterPanel}</div>
-            </SheetContent>
-          </Sheet>
-          <SortSelect sort={sort} setSort={setSort} />
-        </div>
+      {/* Tabs */}
+      <div className="flex items-center gap-1.5 mb-4">
+        {([
+          { v: "candidates", label: "Candidates" },
+          { v: "leads", label: "Leads" },
+        ] as { v: Tab; label: string }[]).map((t) => (
+          <button
+            key={t.v}
+            onClick={() => setTab(t.v)}
+            className={`px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider border transition-colors ${
+              tab === t.v
+                ? "bg-events-coral text-events-cream border-events-coral"
+                : "bg-events-cream/5 text-events-cream/70 border-events-cream/15 hover:border-events-cream/40"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
 
-        {/* Desktop sidebar */}
-        <aside className="hidden md:block w-[320px] shrink-0 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 sticky top-4">
-          {filterPanel}
-        </aside>
-
-        <main className="flex-1 min-w-0 md:max-h-[calc(100vh-220px)]">
-          <div className="hidden md:flex justify-end mb-2">
+      {tab === "candidates" ? (
+        <div className="flex flex-col md:flex-row gap-4 md:items-start">
+          {/* Mobile filter trigger */}
+          <div className="md:hidden flex items-center justify-between gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="bg-events-cream/5 border-events-cream/20 text-events-cream">
+                  <SlidersHorizontal className="w-4 h-4 mr-2" /> Filters & search
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[88vw] sm:w-[400px] bg-events-teal border-events-cream/10 overflow-y-auto">
+                <div className="pt-4">{filterPanel}</div>
+              </SheetContent>
+            </Sheet>
             <SortSelect sort={sort} setSort={setSort} />
           </div>
-          <VirtualCandidateList
-            filters={filters} search={debouncedSearch} sort={sort}
-            onOpen={setOpenId}
-          />
-        </main>
-      </div>
+
+          {/* Desktop sidebar */}
+          <aside className="hidden md:block w-[320px] shrink-0 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 sticky top-4">
+            {filterPanel}
+          </aside>
+
+          <main className="flex-1 min-w-0 md:max-h-[calc(100vh-220px)]">
+            <div className="hidden md:flex justify-end mb-2">
+              <SortSelect sort={sort} setSort={setSort} />
+            </div>
+            <VirtualCandidateList
+              filters={filters} search={debouncedSearch} sort={sort}
+              onOpen={setOpenId}
+            />
+          </main>
+        </div>
+      ) : brand ? (
+        <LeadsPanel brandId={brand.id} brandName={brand.name} />
+      ) : (
+        <div className="py-12 text-center text-events-cream/60 font-body text-sm">
+          Leads will show up here once your brand is linked.
+        </div>
+      )}
 
       <CandidateProfileDrawer id={openId} open={!!openId} onClose={() => setOpenId(null)} />
     </div>
