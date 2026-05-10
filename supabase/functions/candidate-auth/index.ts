@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
         last_name: body.last_name,
         email: body.email,
         phone: body.phone,
+        phone_last_four: lastFour(body.phone),
         signup_mode: "basics",
       };
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
