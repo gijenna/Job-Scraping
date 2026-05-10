@@ -268,6 +268,8 @@ const ConnectProfile = () => {
             </Button>
           </div>
         </div>
+        </div>
+        <ConnectBottomNav />
       </div>
     </ImpersonationGate>
   );
