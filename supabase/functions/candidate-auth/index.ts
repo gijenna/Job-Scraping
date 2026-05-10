@@ -36,7 +36,6 @@ Deno.serve(async (req) => {
         last_name: body.last_name,
         email: body.email,
         phone: body.phone,
-        phone_last_four: lastFour(body.phone),
         signup_mode: "basics",
       };
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
@@ -70,7 +69,7 @@ Deno.serve(async (req) => {
         "management_years","min_pay_rate","portfolio_url","workplace_type_preference",
         "signup_mode","field_other",
       ]) if (body[k] !== undefined) insertable[k] = body[k];
-      if (body.phone) insertable.phone_last_four = lastFour(body.phone);
+      
 
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });

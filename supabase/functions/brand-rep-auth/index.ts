@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       if (digits.length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
       const { data: rep, error } = await sb
         .from("industry_experts")
-        .update({ phone: cleaned, phone_last_four: lastFour(digits) })
+        .update({ phone: cleaned })
         .eq("id", rep_id)
         .select("*")
         .single();
