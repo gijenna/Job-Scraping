@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { connectionsList } from "@/lib/connect-session";
-import ConnectionForm, { ConnectionMode } from "@/components/connect/ConnectionForm";
+import ConnectionSummary from "@/components/connect/ConnectionSummary";
+import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
 
 const relativeTime = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
