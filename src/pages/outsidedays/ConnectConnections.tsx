@@ -56,17 +56,7 @@ const ConnectConnections = () => {
           {loading ? (
             <p className="text-events-cream/50 font-body text-sm text-center py-12">Loading.</p>
           ) : rows.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="font-body text-events-cream/70 mb-6">
-                No connections yet. Tap a brand or expert on the map to log your first one.
-              </p>
-              <Link
-                to="/outsidedays26/connect/home"
-                className="inline-block bg-events-coral text-events-cream px-5 py-2.5 rounded-full font-display uppercase tracking-wider text-xs"
-              >
-                Open the map
-              </Link>
-            </div>
+            <EmptyConnectionsState />
           ) : (
             <ul className="space-y-3">
               {rows.map((r) => {
