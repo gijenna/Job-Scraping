@@ -196,7 +196,7 @@ export async function brandRepLogout() {
 
 // ---- Brand dashboard ----
 export async function dashboardSummary() {
-  return call<{ rep: any; brand: any; totals: { registered: number; visited: number; sent_note: number; starred: number; flagged: number } }>(
+  return call<{ rep: any; brand: any; totals: { registered: number; visited: number; sent_note: number; starred: number; flagged: number }; edit_card_url?: string }>(
     "brand-dashboard", { action: "summary" },
   );
 }
