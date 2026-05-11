@@ -15,6 +15,7 @@ import ConnectShell from "@/components/connect/ConnectShell";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
+import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 
 type Mode = "branch" | "choice" | "new" | "returning" | "done";
 
