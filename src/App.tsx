@@ -118,6 +118,7 @@ const App = () => (
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
+          <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}
