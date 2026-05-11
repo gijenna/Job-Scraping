@@ -333,18 +333,22 @@ const ConnectFull = () => {
               <EditableInput inputMode="tel" value={c.phone || ""} onChange={(e) => set("phone", e.target.value)} placeholderKey="full_phone_placeholder" defaultPlaceholder="555 123 4567" />
             </FieldRow>
             {!hasAccount && (
-              <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center gap-3">
-                <p className="text-xs font-body text-events-cream/80 flex-1">
+              <div className="bg-events-coral/10 border border-events-coral/30 rounded-xl p-3 flex flex-col gap-3">
+                <p className="text-xs font-body text-events-cream/80">
                   <EditableText
                     settingKey="full_save_basics_hint"
                     defaultText="Save your basics so you can upload a photo or resume right away. You can finish the rest of your profile after."
                     as="span"
                   />
                 </p>
+                <BrandContactConsentCheckbox
+                  checked={!!c.brand_contact_consent}
+                  onChange={(v) => set("brand_contact_consent", v)}
+                />
                 <Button
                   type="button"
                   onClick={saveBasics}
-                  className="bg-events-coral hover:bg-events-coral/90 text-events-cream shrink-0"
+                  className="bg-events-coral hover:bg-events-coral/90 text-events-cream self-start"
                 >
                   <EditableText settingKey="full_save_basics_button" defaultText="Save basics" as="span" />
                 </Button>
@@ -607,10 +611,6 @@ const ConnectFull = () => {
 
           {/* Submit */}
           <div className="sticky bottom-16 sm:bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
-            <BrandContactConsentCheckbox
-              checked={!!c.brand_contact_consent}
-              onChange={(v) => set("brand_contact_consent", v)}
-            />
             <label className="flex items-start gap-2 text-[11px] text-events-cream/70 font-body cursor-pointer">
               <input
                 type="checkbox"
