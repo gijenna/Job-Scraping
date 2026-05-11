@@ -25,7 +25,7 @@ export default function RepEditModal({ open, onClose, rep, citySlug = "denver", 
         .select("expert_type, city_slug")
         .eq("expert_id", rep.id);
       const a = (data || []).find((x: any) => x.city_slug === citySlug) || (data || [])[0];
-      if (a?.expert_type) setExpertType(a.expert_type);
+      if (a?.expert_type === 'industry_expert' || a?.expert_type === 'brand_rep') setExpertType(a.expert_type);
     })();
   }, [open, rep?.id, citySlug]);
 
