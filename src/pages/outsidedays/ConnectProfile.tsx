@@ -20,6 +20,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
+import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
@@ -260,6 +261,13 @@ const ConnectProfile = () => {
               <input ref={resumeInput} type="file" accept="application/pdf" hidden onChange={(e) => e.target.files?.[0] && upload("resume", e.target.files[0])} />
               <Button variant="secondary" onClick={() => resumeInput.current?.click()}>Upload PDF</Button>
             </div>
+          </Section>
+
+          <Section title="Contact preferences">
+            <BrandContactConsentCheckbox
+              checked={!!c.brand_contact_consent}
+              onChange={(v) => set("brand_contact_consent", v)}
+            />
           </Section>
 
           <div className="sticky bottom-0 -mx-4 px-4 py-3 bg-events-teal/95 border-t border-events-cream/10 backdrop-blur">

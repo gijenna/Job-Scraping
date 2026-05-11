@@ -69,6 +69,9 @@ Deno.serve(async (req) => {
       if (body.open_to_retail === true || body.open_to_retail === false) {
         insertable.open_to_retail = body.open_to_retail;
       }
+      if (body.brand_contact_consent === true || body.brand_contact_consent === false) {
+        insertable.brand_contact_consent = body.brand_contact_consent;
+      }
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
 
@@ -104,7 +107,7 @@ Deno.serve(async (req) => {
         "niche_experience","the_pitch","resume_url","prior_careers","total_years_professional",
         "outdoor_industry_experience","outdoor_industry_years","management_experience",
         "management_years","min_pay_rate","portfolio_url","workplace_type_preference",
-        "signup_mode","field_other","data_portability_consent","open_to_retail",
+        "signup_mode","field_other","data_portability_consent","open_to_retail","brand_contact_consent",
       ]) if (body[k] !== undefined) insertable[k] = body[k];
 
 

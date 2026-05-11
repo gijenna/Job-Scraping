@@ -223,14 +223,15 @@ export interface BrandLeadResponse {
   response_value: string;
   response_label?: string | null;
   question_text: string;
+  share_contact_info?: boolean;
   created_at: string;
   updated_at: string;
 }
 export async function brandLeadGetMine(brand_id: string) {
   return call<{ response: BrandLeadResponse | null }>("brand-leads", { action: "me", brand_id });
 }
-export async function brandLeadUpsert(brand_id: string, response_value: string, question_text: string, response_label?: string) {
-  return call<{ response: BrandLeadResponse }>("brand-leads", { action: "upsert", brand_id, response_value, question_text, response_label });
+export async function brandLeadUpsert(brand_id: string, response_value: string, question_text: string, response_label?: string, share_contact_info?: boolean) {
+  return call<{ response: BrandLeadResponse }>("brand-leads", { action: "upsert", brand_id, response_value, question_text, response_label, share_contact_info });
 }
 export async function brandLeadClear(brand_id: string) {
   return call<{ ok: true }>("brand-leads", { action: "clear", brand_id });

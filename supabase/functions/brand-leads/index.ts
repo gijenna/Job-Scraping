@@ -35,9 +35,19 @@ Deno.serve(async (req) => {
       if (!brand_id || !response_value || !question_text) {
         return jsonFor(req, { error: "Invalid input" }, { status: 400 });
       }
+      // Determine share_contact_info default: explicit body value wins, else
+      // fall back to candidate's global brand_contact_consent.
+      let share_contact_info: boolean;
+      if (typeof body.share_contact_info === "boolean") {
+        share_contact_info = body.share_contact_info;
+      } else {
+        const { data: cand } = await sb.from("candidates")
+          .select("brand_contact_consent").eq("id", sess.subject_id).maybeSingle();
+        share_contact_info = !!cand?.brand_contact_consent;
+      }
       const { data, error } = await sb.from("brand_lead_responses")
         .upsert(
-          { candidate_id: sess.subject_id, brand_id, response_value, response_label, question_text, updated_at: new Date().toISOString() },
+          { candidate_id: sess.subject_id, brand_id, response_value, response_label, question_text, share_contact_info, updated_at: new Date().toISOString() },
           { onConflict: "candidate_id,brand_id" },
         )
         .select().maybeSingle();
@@ -77,7 +87,7 @@ Deno.serve(async (req) => {
       }
 
       const { data: leads } = await sb.from("brand_lead_responses")
-        .select("id, candidate_id, response_value, response_label, question_text, created_at, updated_at")
+        .select("id, candidate_id, response_value, response_label, question_text, share_contact_info, created_at, updated_at")
         .eq("brand_id", brand_id)
         .order("updated_at", { ascending: false });
 
@@ -85,7 +95,7 @@ Deno.serve(async (req) => {
       let candMap: Record<string, any> = {};
       if (ids.length) {
         const { data: cands } = await sb.from("candidates")
-          .select("id, first_name, last_name, email, linkedin_url, current_title, current_company, photo_url")
+          .select("id, first_name, last_name, email, linkedin_url, current_title, current_company, photo_url, brand_contact_consent")
           .in("id", ids);
         for (const c of cands || []) candMap[c.id] = c;
       }

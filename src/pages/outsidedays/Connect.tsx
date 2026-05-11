@@ -15,6 +15,7 @@ import ConnectShell from "@/components/connect/ConnectShell";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
+import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 
 type Mode = "branch" | "choice" | "new" | "returning" | "done";
 
@@ -251,6 +252,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     years_in_current_field: 0, the_hook: "",
     signup_mode: "essentials",
     data_portability_consent: false,
+    brand_contact_consent: false,
     open_to_retail: null,
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -514,6 +516,14 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
             </span>
           </label>
         </div>
+      )}
+
+      {step === TOTAL_STEPS - 1 && (
+        <BrandContactConsentCheckbox
+          checked={!!d.brand_contact_consent}
+          onChange={(v) => set("brand_contact_consent", v)}
+          className="pt-3 border-t border-events-cream/10"
+        />
       )}
 
       <div className="flex gap-2 pt-2">
