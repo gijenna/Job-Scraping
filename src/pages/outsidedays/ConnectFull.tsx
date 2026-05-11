@@ -20,6 +20,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 import ConnectShell from "@/components/connect/ConnectShell";
+import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
@@ -428,6 +429,17 @@ const ConnectFull = () => {
                 </FieldRow>
               )}
             </Row>
+            <FieldRow
+              label={label("full_open_to_retail_label", "Open to retail work?")}
+              hint={<EditableText settingKey="full_open_to_retail_hint" defaultText="Retail roles in stores or showrooms. Includes ambassador, sales, and in-person customer-facing work." as="span" />}
+            >
+              <SelectBox
+                value={c.open_to_retail === true ? "Yes" : c.open_to_retail === false ? "No" : ""}
+                onChange={(v) => set("open_to_retail", v === "Yes")}
+                options={["Yes", "No"]}
+                optionKeyPrefix="full_yes_no_option"
+              />
+            </FieldRow>
             <FieldRow label={label("full_remote_preference_label", "Remote preference")}>
               <SelectBox value={c.remote_preference || ""} onChange={(v) => set("remote_preference", v)} options={REMOTE_PREFERENCES as any} optionKeyPrefix="full_remote_preference_option" />
             </FieldRow>
@@ -593,7 +605,7 @@ const ConnectFull = () => {
           </SectionBlock>
 
           {/* Submit */}
-          <div className="sticky bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
+          <div className="sticky bottom-16 sm:bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
             <label className="flex items-start gap-2 text-[11px] text-events-cream/70 font-body cursor-pointer">
               <input
                 type="checkbox"
@@ -623,6 +635,7 @@ const ConnectFull = () => {
             />
           </div>
         </ConnectShell>
+        <ConnectBottomNav />
       </ImpersonationGate>
     </EditableTextProvider>
   );

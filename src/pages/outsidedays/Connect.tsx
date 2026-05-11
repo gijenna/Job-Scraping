@@ -251,6 +251,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     years_in_current_field: 0, the_hook: "",
     signup_mode: "essentials",
     data_portability_consent: false,
+    open_to_retail: null,
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -398,6 +399,31 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
           )}
           <Field label={<EditableText settingKey="quiz_years" defaultText="Years in your current field" as="span" />}>
             <Input type="number" min={0} value={d.years_in_current_field} onChange={(e) => set("years_in_current_field", Number(e.target.value || 0))} />
+          </Field>
+          <Field
+            label={<EditableText settingKey="quiz_open_to_retail" defaultText="Open to retail work?" as="span" />}
+            hint={<EditableText settingKey="quiz_open_to_retail_hint" defaultText="Retail roles in stores or showrooms. Includes ambassador, sales, and in-person customer-facing work." as="span" />}
+          >
+            <div className="flex gap-2">
+              {["Yes", "No"].map((opt) => {
+                const isYes = opt === "Yes";
+                const selected = d.open_to_retail === isYes;
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => set("open_to_retail", isYes)}
+                    className={`flex-1 py-2 rounded-lg font-body text-sm border transition-colors ${
+                      selected
+                        ? "bg-events-coral text-events-cream border-events-coral"
+                        : "bg-events-cream/5 text-events-cream/80 border-events-cream/20 hover:bg-events-cream/10"
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
           </Field>
         </>
       )}

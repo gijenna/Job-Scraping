@@ -122,6 +122,7 @@ Deno.serve(async (req) => {
       if (filters.remote?.length) q = q.in("remote_preference", filters.remote);
       if (filters.relocation === "yes") q = q.eq("open_to_relocation", true);
       if (filters.relocation === "no") q = q.eq("open_to_relocation", false);
+      if (filters.open_to_retail === true) q = q.eq("open_to_retail", true);
       if (filters.outdoor === "yes") q = q.eq("outdoor_industry_experience", true);
       if (filters.outdoor === "no") q = q.eq("outdoor_industry_experience", false);
       if (filters.outdoor_min_years != null) q = q.gte("outdoor_industry_years", filters.outdoor_min_years);
