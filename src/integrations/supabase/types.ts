@@ -568,6 +568,7 @@ export type Database = {
           current_company: string | null
           current_location: string | null
           current_title: string | null
+          data_portability_consent: boolean
           dei_disability: string | null
           dei_gender: string | null
           dei_lgbtq: string | null
@@ -617,6 +618,7 @@ export type Database = {
           current_company?: string | null
           current_location?: string | null
           current_title?: string | null
+          data_portability_consent?: boolean
           dei_disability?: string | null
           dei_gender?: string | null
           dei_lgbtq?: string | null
@@ -666,6 +668,7 @@ export type Database = {
           current_company?: string | null
           current_location?: string | null
           current_title?: string | null
+          data_portability_consent?: boolean
           dei_disability?: string | null
           dei_gender?: string | null
           dei_lgbtq?: string | null
@@ -934,6 +937,7 @@ export type Database = {
         Row: {
           body: string | null
           id: string
+          preview_text: string | null
           subject: string | null
           template_key: string
           updated_at: string
@@ -942,6 +946,7 @@ export type Database = {
         Insert: {
           body?: string | null
           id?: string
+          preview_text?: string | null
           subject?: string | null
           template_key: string
           updated_at?: string
@@ -950,6 +955,7 @@ export type Database = {
         Update: {
           body?: string | null
           id?: string
+          preview_text?: string | null
           subject?: string | null
           template_key?: string
           updated_at?: string
@@ -1384,6 +1390,7 @@ export type Database = {
           slug: string
           status: Database["public"]["Enums"]["expert_status"] | null
           updated_at: string | null
+          welcome_email_sent_at: string | null
           years_in_city: number | null
           years_in_industry: number | null
         }
@@ -1409,6 +1416,7 @@ export type Database = {
           slug: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null
+          welcome_email_sent_at?: string | null
           years_in_city?: number | null
           years_in_industry?: number | null
         }
@@ -1434,6 +1442,7 @@ export type Database = {
           slug?: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null
+          welcome_email_sent_at?: string | null
           years_in_city?: number | null
           years_in_industry?: number | null
         }
