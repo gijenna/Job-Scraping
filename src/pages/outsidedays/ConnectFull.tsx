@@ -290,10 +290,22 @@ const ConnectFull = () => {
               className="font-afterparty text-3xl md:text-5xl text-events-cream"
             />
             <EditableText
-              settingKey="full_subtitle"
-              defaultText="The more brands know, the better matches you'll get. Required fields are marked with an asterisk. Everything else is optional but helpful."
+              settingKey="full_intro_p1"
+              defaultText="Brands have hundreds of candidates to look at. They'll filter by specific things, like field, experience, and what kind of role you want. The more your profile says, the more filters you show up in."
               as="p"
               className="font-body text-sm md:text-base text-events-cream/75 max-w-xl mx-auto"
+            />
+            <EditableText
+              settingKey="full_intro_p2"
+              defaultText="Required fields have an asterisk. The rest is up to you."
+              as="p"
+              className="font-body text-sm md:text-base text-events-cream/75 max-w-xl mx-auto"
+            />
+            <EditableText
+              settingKey="full_intro_p3"
+              defaultText="But blanks aren't searchable."
+              as="p"
+              className="font-body text-sm md:text-base text-events-cream/90 italic max-w-xl mx-auto pt-1"
             />
           </header>
 
@@ -581,7 +593,22 @@ const ConnectFull = () => {
           </SectionBlock>
 
           {/* Submit */}
-          <div className="sticky bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-2">
+          <div className="sticky bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
+            <label className="flex items-start gap-2 text-[11px] text-events-cream/70 font-body cursor-pointer">
+              <input
+                type="checkbox"
+                checked={!!c.data_portability_consent}
+                onChange={(e) => set("data_portability_consent", e.target.checked)}
+                className="mt-0.5 accent-events-cream/60"
+              />
+              <span>
+                I'm interested in{" "}
+                <a href="https://basecampjobs.com" target="_blank" rel="noreferrer" className="underline hover:text-events-cream">
+                  Basecamp Jobs
+                </a>
+                {" "}when it launches. You can use my profile data here so I don't have to start from scratch.
+              </span>
+            </label>
             <Button
               onClick={submit}
               className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream"

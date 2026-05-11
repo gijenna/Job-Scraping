@@ -3,6 +3,33 @@ import {
   clearSessionCookieHeader, lastFour,
 } from "../_shared/connect-session.ts";
 
+const CONNECT_URL = "https://basecampoutdoorevents.com/outsidedays26/connect";
+
+async function fireWelcomeEmail(candidate: { id: string; first_name: string; email: string | null }) {
+  if (!candidate?.email) return;
+  try {
+    const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-db-template-email`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({
+        template_key: "candidate_welcome",
+        to: candidate.email,
+        variables: {
+          first_name: candidate.first_name || "there",
+          connect_url: CONNECT_URL,
+          idempotency_key: `candidate_welcome:${candidate.id}`,
+        },
+      }),
+    });
+  } catch (e) {
+    console.error("candidate welcome email failed", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
@@ -37,9 +64,16 @@ Deno.serve(async (req) => {
         email: body.email,
         phone: body.phone,
         signup_mode: "basics",
+        data_portability_consent: !!body.data_portability_consent,
       };
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+
+      // Fire welcome email asynchronously, never block signup.
+      // @ts-ignore EdgeRuntime is available in Supabase edge runtime
+      const wait = (globalThis as any).EdgeRuntime?.waitUntil;
+      const p = fireWelcomeEmail({ id: data.id, first_name: data.first_name, email: data.email });
+      if (wait) wait(p); else p.catch(() => {});
 
       const token = await createSession("candidate", data.id);
       return jsonFor(req, { session: { subject_type: "candidate", subject: data }, token }, { headers: setSessionCookieHeader(token) });
@@ -67,12 +101,18 @@ Deno.serve(async (req) => {
         "niche_experience","the_pitch","resume_url","prior_careers","total_years_professional",
         "outdoor_industry_experience","outdoor_industry_years","management_experience",
         "management_years","min_pay_rate","portfolio_url","workplace_type_preference",
-        "signup_mode","field_other",
+        "signup_mode","field_other","data_portability_consent",
       ]) if (body[k] !== undefined) insertable[k] = body[k];
-      
+
 
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+
+      // Fire welcome email asynchronously, never block signup.
+      // @ts-ignore EdgeRuntime is available in Supabase edge runtime
+      const wait = (globalThis as any).EdgeRuntime?.waitUntil;
+      const p = fireWelcomeEmail({ id: data.id, first_name: data.first_name, email: data.email });
+      if (wait) wait(p); else p.catch(() => {});
 
       const token = await createSession("candidate", data.id);
       return jsonFor(req, { session: { subject_type: "candidate", subject: data }, token }, { headers: setSessionCookieHeader(token) });

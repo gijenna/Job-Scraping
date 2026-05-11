@@ -78,6 +78,34 @@ Deno.serve(async (req) => {
       if (matches.length > 1) return jsonFor(req, { ambiguous: true });
       const rep = matches[0];
       const token = await createSession("brand_rep", rep.id);
+
+      // Fire welcome email once on first successful login (Denver assignments).
+      const fullRep = await sb.from("industry_experts").select("id, full_name, email, welcome_email_sent_at").eq("id", rep.id).maybeSingle();
+      if (fullRep.data && !fullRep.data.welcome_email_sent_at && fullRep.data.email) {
+        const denver = await sb.from("expert_city_assignments").select("id").eq("expert_id", rep.id).eq("expert_type", "brand_rep").eq("city_slug", "denver").limit(1);
+        if (denver.data && denver.data.length > 0) {
+          await sb.from("industry_experts").update({ welcome_email_sent_at: new Date().toISOString() }).eq("id", rep.id);
+          const firstName = (fullRep.data.full_name || "").split(" ")[0] || "there";
+          const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-db-template-email`;
+          const p = fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
+            body: JSON.stringify({
+              template_key: "brand_rep_welcome",
+              to: fullRep.data.email,
+              variables: {
+                first_name: firstName,
+                dashboard_url: "https://basecampoutdoorevents.com/outsidedays26/dashboard",
+                idempotency_key: `brand_rep_welcome:${rep.id}`,
+              },
+            }),
+          }).catch((e) => { console.error("brand_rep welcome email failed", e); });
+          // @ts-ignore EdgeRuntime is available in Supabase edge runtime
+          const wait = (globalThis as any).EdgeRuntime?.waitUntil;
+          if (wait) wait(p);
+        }
+      }
+
       return jsonFor(req, { session: { subject_type: "brand_rep", subject: rep }, token }, { headers: setSessionCookieHeader(token) });
     }
 
