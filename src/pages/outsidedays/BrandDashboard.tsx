@@ -77,13 +77,29 @@ const BrandDashboard = () => {
       <ImpersonationGate>
         <div className="min-h-screen bg-events-teal text-events-cream px-4 py-6 md:py-10">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <h1 className="font-afterparty text-2xl md:text-3xl">Brand Dashboard</h1>
-              <Button
-                variant="ghost" size="sm"
-                onClick={async () => { await brandRepLogout(); setMe(null); setMode("lookup"); }}
-                className="text-events-cream/70 hover:text-events-cream"
-              >Sign out</Button>
+              <div className="flex items-center gap-3 text-xs">
+                <a
+                  href="/outsidedays26"
+                  target="_blank" rel="noopener noreferrer"
+                  className="font-body text-events-cream/70 hover:text-events-coral transition-colors"
+                >
+                  View event map
+                </a>
+                <a
+                  href={`https://sponsor-attract-hub.lovable.app/denverreps/${(me as any)?.slug || ""}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="font-body text-events-cream/70 hover:text-events-coral transition-colors"
+                >
+                  Edit my card
+                </a>
+                <Button
+                  variant="ghost" size="sm"
+                  onClick={async () => { await brandRepLogout(); setMe(null); setMode("lookup"); }}
+                  className="text-events-cream/70 hover:text-events-cream"
+                >Sign out</Button>
+              </div>
             </div>
             <DashboardWorkspace rep={me} />
           </div>

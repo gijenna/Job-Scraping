@@ -73,25 +73,65 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
         </div>
       </div>
 
+      {/* Card preview + Edit my card */}
+      {brand && (
+        <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            {rep?.photo_url ? (
+              <img src={rep.photo_url} alt={rep.full_name} className="w-14 h-14 rounded-full object-cover shrink-0" />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-events-cream/10 flex items-center justify-center font-display text-events-cream shrink-0">
+                {rep?.full_name?.[0]}
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="font-display text-events-cream truncate">{rep?.full_name}</p>
+              <p className="text-events-cream/60 text-xs font-body truncate">
+                {[rep?.job_title, brand?.name].filter(Boolean).join(" · ")}
+              </p>
+            </div>
+          </div>
+          <div className="sm:text-right">
+            <a
+              href={`https://sponsor-attract-hub.lovable.app/denverreps/${rep?.slug || ""}`}
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
+            >
+              Edit my card
+            </a>
+            <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
+              Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Tabs */}
-      <div className="flex items-center gap-1.5 mb-4">
-        {([
-          { v: "candidates", label: "Candidates" },
-          { v: "leads", label: "Leads" },
-        ] as { v: Tab; label: string }[]).map((t) => (
-          <button
-            key={t.v}
-            onClick={() => setTab(t.v)}
-            className={`px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider border transition-colors ${
-              tab === t.v
-                ? "bg-events-coral text-events-cream border-events-coral"
-                : "bg-events-cream/5 text-events-cream/70 border-events-cream/15 hover:border-events-cream/40"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      {(() => {
+        const leadsActive = !!brand?.lead_question_active;
+        const leadsVisible = brand?.lead_capture_visible_to_brand !== false;
+        const showLeadsTab = !leadsActive || leadsVisible; // hide only when active && !visible
+        return (
+          <div className="flex items-center gap-1.5 mb-4">
+            {([
+              { v: "candidates", label: "Candidates" },
+              ...(showLeadsTab ? [{ v: "leads", label: "Leads" } as const] : []),
+            ] as { v: Tab; label: string }[]).map((t) => (
+              <button
+                key={t.v}
+                onClick={() => setTab(t.v)}
+                className={`px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider border transition-colors ${
+                  tab === t.v
+                    ? "bg-events-coral text-events-cream border-events-coral"
+                    : "bg-events-cream/5 text-events-cream/70 border-events-cream/15 hover:border-events-cream/40"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        );
+      })()}
 
       {tab === "candidates" ? (
         <div className="flex flex-col md:flex-row gap-4 md:items-start">
@@ -126,7 +166,7 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
           </main>
         </div>
       ) : brand ? (
-        <LeadsPanel brandId={brand.id} brandName={brand.name} />
+        <LeadsPanel brand={brand} />
       ) : (
         <div className="py-12 text-center text-events-cream/60 font-body text-sm">
           Leads will show up here once your brand is linked.

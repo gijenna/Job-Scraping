@@ -1,71 +1,77 @@
+## Bundle: 7 surgical updates
 
-## Status of Updates 1-4
+Note on schema: there is no `brands` table — the event brands live in `event_map_brands`. All "ALTER TABLE brands" statements in your spec map to `event_map_brands`. Confirming that's the intended target before I migrate.
 
-Already shipped in the previous loop (verified in code):
-- Update 1 — "Stand out before you walk in." section in `Connect.tsx` ✓
-- Update 2 — Three `build_intro_p1/p2/p3` paragraphs in `ConnectFull.tsx` ✓
-- Update 3 — `email_templates.preview_text`, `candidate_welcome` row, `send-db-template-email` edge function (functionally equivalent to spec name `send-template-email` — keeping existing name to avoid breaking the deployed trigger), candidate-auth fire-and-forget, `AdminEmailTemplates.tsx` at `/admin/email-templates` ✓
-- Update 4 — `data_portability_consent` column, checkbox on essentials final step (Connect.tsx) and ConnectFull sticky submit, plumbed through candidate-auth ✓
+---
 
-Remaining: admin CSV export column for `data_portability_consent` is not yet added — will include in this bundle.
+### 1. Hide Court 3 by default (admin toggle)
 
-## Update 5: Edges First glow intensity
+- Use `event_settings` (key/value table already in use). Add row `event_slug='outsidedays26'`, `setting_key='show_court_3'`, `setting_value='false'`.
+- `EventMapCanvas.tsx` + `MapBrandGroup.tsx`: read setting via `useEventSettings`, render `COURTS = showCourt3 ? 3 : 2`, recompute `TOTAL_W = COURT_W * visibleCourts`. Brands placed past x > 2*COURT_W still render (so admin can see and reassign) but are flagged in the admin sidebar with a "Court 3 hidden" pill.
+- Admin: add a toggle in `AdminConnect.tsx` (or `EventMapAdmin.tsx`, whichever Jenna uses) that writes to `event_settings`. Default off.
 
-`src/index.css` — boost `featured-bubble-pulse` keyframes:
-- Inner glow radius ~2× current (e.g. base shadow `0 0 36px 8px`, peak `0 0 56px 20px`)
-- Higher alpha (0.7 base / 0.85 peak) and add an outer expanding ring (`0 0 0 12px → 0 0 0 22px` fading)
-- Pulse duration 1.6s (down from 2.6s)
-- Saturate coral hue slightly toward `13 90% 62%`
+### 2. Generalize lead capture
 
-No JSX changes; gated by existing `is_featured` check in `MapBrandGroup.tsx`.
+Migration on `event_map_brands`:
+- `lead_question_text text`, `lead_question_intro text`, `lead_question_option_1 text`, `lead_question_option_2 text`, `lead_question_option_3 text`
+- `lead_question_active boolean default false`
+- `lead_capture_visible_to_brand boolean default true`
 
-## Update 6: Connections empty state (pre/post event)
+Migration on `brand_lead_responses`:
+- `response_label text` (actual option text)
 
-File: `src/pages/outsidedays/ConnectConnections.tsx`
+Update `BrandLeadCapture.tsx`:
+- Accept the brand row; render only when `lead_question_active`.
+- Render `lead_question_intro` (optional), generic heading "A quick question", `lead_question_text`, then options 1/2/3 (skip nulls). Always append a "Not interested" option that maps to clear (existing behavior).
+- On select: store `response_value` = stable slug ("option_1" / "option_2" / "option_3") and `response_label` = the actual text. Kelly's existing rows ("soon"/"eventually") stay untouched; map them in the brand-leads function so her dashboard still shows the same labels.
+- Mount points already exist (Kelly expert sheet, Edges First brand modal). Add same mount on every brand card/modal where `lead_question_active`.
 
-- Add constant `EVENT_END = new Date('2026-05-29T01:00:00Z')` (May 28 7pm Mountain).
-- When `connections.length === 0`:
-  - If `now < EVENT_END` → render new pre-event educational empty state component with the exact headings, two bulleted sections, and emphasized closing line from spec.
-  - If `now >= EVENT_END` → render simpler post-event copy with an "Add a connection" CTA that opens the existing add flow (or routes to `/outsidedays26/connect/home` if no add flow exists; will reuse whatever current "add" entry point is).
-- All copy wrapped in `EditableText` with new keys `conn_empty_pre_*` and `conn_empty_post_*`.
-- Styling: cream on dark teal, `space-y-4`, `px-4 py-8`, headings in `font-afterparty`, bullets with coral checkmarks for parity with the landing value-prop.
+Backfill Edges First (data insert) with the exact strings provided, mapping option_1 → "soon", option_2 → "eventually" so legacy reads stay consistent.
 
-## Update 7: Profile page navigation
+### 3. Basecamp lead question
 
-`src/pages/outsidedays/ConnectFull.tsx` is the profile/edit page and currently does not render `ConnectBottomNav`.
+Data insert: update Basecamp row in `event_map_brands` with the four strings, `lead_question_active=true`, `lead_capture_visible_to_brand=true`. No code change beyond #2.
 
-- Import and render `<ConnectBottomNav active="profile" />` (or whichever prop key the component uses) inside the page wrapper, matching how `ConnectProfile.tsx` and `ConnectHome.tsx` mount it.
-- Verify the same nav is present on `ConnectConnections.tsx` and `ConnectHowItWorks.tsx` (spot-check; both already import it per grep).
-- No changes to nav items or behavior.
+### 4. Oakley brand + admin-only leads
 
-## Update 8: "Open to retail work?" field + filter
+- Insert new `event_map_brands` row "Oakley", `is_featured=true`, `lead_capture_visible_to_brand=false`, `lead_question_active=true`, with the supplied intro/question/options. Logo: pull official Oakley wordmark SVG.
+- Insert `event_map_layouts` row placing Oakley at an open spot on Court 1 (Jenna can drag in admin).
+- No `brand_reps` row created. The brand modal already hides the reps section when none exist; verify and adjust if needed.
+- New admin page `src/pages/AdminLeads.tsx` at `/admin/leads`:
+  - New edge function `admin-leads` (service role) returns all `brand_lead_responses` joined with brand + candidate, regardless of `lead_capture_visible_to_brand`.
+  - Filter dropdown by brand. Per-brand "Export CSV" button. Add link from `AdminConnect.tsx` header.
 
-Schema (migration): `ALTER TABLE candidates ADD COLUMN open_to_retail boolean;`
+### 5. Leads tab CTA logic
 
-Form additions (label, Yes/No tri-toggle, helper text exactly as specified):
-- `ConnectFull.tsx` — add a `FieldRow` directly after the existing "Open to relocation?" row inside the same section.
-- `Connect.tsx` essentials multi-step — add a compact Yes/No row on the same step that already houses career/field choices (least-disruptive insertion: step 4 footer, above Continue button), with helper text below.
+`LeadsPanel.tsx`:
+- Always render the tab.
+- Branch on the brand row:
+  - `active && visible_to_brand` → existing list, subtitle becomes `Candidates who answered: {lead_question_text}`.
+  - `!active` → render new CTA card: heading, body, and button `Email Jenna →` with mailto including `Lead gen beta — {brand_name}`.
+  - `active && !visible_to_brand` → hide the tab entirely (Oakley case).
+- `brand-dashboard` edge function: include the lead question fields on the brand payload so the panel can branch.
 
-Plumbing:
-- Add `open_to_retail` to `candidate-auth/index.ts` insert maps for `signup_create_basics` and `signup_create`.
-- Add to `candidate-profile/index.ts` allow-list so ConnectFull can save it.
-- Include in `sanitizeForSave` passthrough (already generic).
+### 6. "View event map" header link
 
-Brand dashboard filter chip:
-- `DashboardFilters.tsx` — add `open_to_retail?: boolean` to `Filters` type; render a `TriToggle` (or simple boolean chip) labeled "Open to retail work" near "Open to relocation".
-- `DashboardWorkspace.tsx` — extend the Supabase query / in-memory filter to apply `candidates.open_to_retail = true` when the chip is on.
+In `BrandDashboard.tsx` header row, add small `<a href="/outsidedays26" target="_blank" rel="noopener">View event map</a>` — cream, coral on hover, placed left of "Sign out".
 
-## Update 4 leftover: CSV export column
+### 7. Edit my card affordances
 
-`AdminConnect.tsx` candidate CSV export — add `data_portability_consent` column (boolean → "Yes"/"No"). The on-screen admin candidate list already shows the column or can omit; spec only requires the CSV change.
+Brand rep dashboard (`BrandDashboard.tsx`):
+- Header: small "Edit my card" link next to Sign out / View event map → opens `https://sponsor-attract-hub.lovable.app/denverreps/{brand-slug}` new tab. Slug derived from `brand.name` via existing slugify or stored `brand.slug` if present (otherwise compute lowercase-hyphen).
+- Top of dashboard: render existing Card Option B preview component (locate in `src/components/event/BrandRepCardsSection.tsx` or `CardStylePicker.tsx` — confirm during build) bound to the logged-in rep, then a primary button "Edit my card" with helper text exactly as specified.
 
-## Out of scope
-Auth, taxonomies, dashboard sort dropdown, profile completeness meter, brand_rep_welcome (follow-up), `welcome_email_sent_at`, page structure, navigation items, existing form fields. No em dashes anywhere.
+Industry expert dashboard: same pattern — Card Option B preview at top + "Edit my card" → existing expert edit URL (locate via `ExpertInvite.tsx` route).
 
-## Verification
-1. Map: Edges First bubble visibly larger and brighter pulse, faster cadence
-2. `/outsidedays26/connect/connections` with zero connections shows new pre-event empty state today; rolls over to post-event copy after May 28 7pm MT
-3. `/outsidedays26/connect/full` shows the bottom nav with Profile highlighted
-4. Both signup forms collect `open_to_retail` and persist to DB
-5. Brand dashboard chip "Open to retail work" filters list to `open_to_retail = true`
-6. CSV export from admin includes `data_portability_consent`
+Edit flow itself is untouched.
+
+---
+
+### Verification checklist
+Court 3 hidden by default, toggle works, courts 1/2 fill canvas; Basecamp + Oakley show new questions; selecting saves both `response_value` slug and `response_label` text; `/admin/leads` shows everything incl Oakley; Edges First leads still work for Kelly; non-Edges brand dashboards see CTA; Oakley dashboard tab hidden (n/a since no reps); header link + Edit my card buttons present in both dashboards. No em dashes.
+
+### Out of scope (per your DO NOT list)
+Candidate signup, welcome email, portability checkbox, connections empty state, profile nav, glow, retail field, auth, taxonomies, dashboard filter logic, sort dropdown.
+
+### Question before I migrate
+Confirm: lead_question_* columns go on `event_map_brands` (the only brand table in this project), not a separate `brands` table — yes?

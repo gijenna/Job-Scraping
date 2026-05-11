@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { MapBrand } from "@/hooks/useEventMapBrands";
 import { MapLayout } from "@/hooks/useEventMapLayouts";
-import MapBrandGroup, { COURT_W, COURT_H, COURTS } from "./MapBrandGroup";
+import MapBrandGroup, { COURT_W, COURT_H, COURTS as MAX_COURTS } from "./MapBrandGroup";
 import MapExpertZoneGroup from "./MapExpertZoneGroup";
 import { MapExpert } from "./MapExpertZone";
+import { useEventSettings } from "@/hooks/useEventSettings";
 import basecampMatchLogo from "@/assets/basecamp-match-logo.svg";
 
 interface EventMapCanvasProps {
@@ -24,7 +25,6 @@ interface EventMapCanvasProps {
 }
 
 // Courts join side-by-side horizontally
-const TOTAL_W = COURT_W * COURTS;
 const TOTAL_H = COURT_H;
 const PADDING = 40;
 
@@ -42,6 +42,12 @@ const EventMapCanvas = ({
   expertZoneBrandName = "Industry Expert Zone",
   expertZoneExperts = [],
 }: EventMapCanvasProps) => {
+  const { settings } = useEventSettings("outsidedays26");
+  // Admin can re-show Court 3; default hidden in print/admin we still show all.
+  const COURTS = printMode || interactive
+    ? MAX_COURTS
+    : (settings.show_court_3 === "true" ? MAX_COURTS : 2);
+  const TOTAL_W = COURT_W * COURTS;
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const handleDragOver = (e: React.DragEvent) => {

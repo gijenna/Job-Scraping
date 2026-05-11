@@ -1,31 +1,36 @@
-// Lead-capture block rendered on Kelly's expert sheet and on the Edges First
-// brand modal. Writes one row per (candidate_id, brand_id) to brand_lead_responses.
-// "Not interested" / unselected = no row (deletes if previously set).
+// Brand lead-capture block. Reads question + options from the brand row
+// (event_map_brands.lead_question_*) and stores response_value (slug) +
+// response_label (the chosen text) per (candidate_id, brand_id).
+// Renders nothing if the brand has no active lead question.
 import { useEffect, useState } from "react";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import {
   brandLeadGetMine, brandLeadUpsert, brandLeadClear,
   candidateMe,
 } from "@/lib/connect-session";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   brandId: string;
 }
 
-const QUESTION_TEXT = "Want to remember Kelly for future web work?";
-const HEADING = "Web work for outdoor or conservation orgs?";
-const BODY =
-  "Kelly's a women-led dev shop building beautiful sites for small orgs that help people get outside. She works with all budgets.";
+type BrandConfig = {
+  id: string;
+  name: string;
+  lead_question_intro: string | null;
+  lead_question_text: string | null;
+  lead_question_option_1: string | null;
+  lead_question_option_2: string | null;
+  lead_question_option_3: string | null;
+  lead_question_active: boolean;
+};
 
-type Choice = "soon" | "eventually" | "not_interested";
+type Choice = "option_1" | "option_2" | "option_3" | "not_interested" | "soon" | "eventually";
 
-const OPTIONS: { value: Choice; label: string }[] = [
-  { value: "soon", label: "Yes, and I'll need something soon" },
-  { value: "eventually", label: "Yes, and I'll need something eventually" },
-  { value: "not_interested", label: "Not interested" },
-];
+const SECTION_HEADING = "A quick question";
 
 const BrandLeadCapture = ({ brandId }: Props) => {
+  const [brand, setBrand] = useState<BrandConfig | null>(null);
   const [choice, setChoice] = useState<Choice | null>(null);
   const [busy, setBusy] = useState(true);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
@@ -36,11 +41,24 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     (async () => {
       setBusy(true);
       try {
+        // Load brand config first; bail out if no active question.
+        const { data: b } = await (supabase as any).from("event_map_brands")
+          .select("id, name, lead_question_intro, lead_question_text, lead_question_option_1, lead_question_option_2, lead_question_option_3, lead_question_active")
+          .eq("id", brandId).maybeSingle();
+        if (cancelled) return;
+        if (!b || !b.lead_question_active || !b.lead_question_text) {
+          setBrand(null);
+          setBusy(false);
+          return;
+        }
+        setBrand(b as BrandConfig);
+
         const me = await candidateMe();
         const isCand = me?.session?.subject_type === "candidate";
         if (cancelled) return;
         setSignedIn(isCand);
         if (!isCand) { setBusy(false); return; }
+
         const r = await brandLeadGetMine(brandId);
         if (cancelled) return;
         if (r.response) setChoice(r.response.response_value as Choice);
@@ -53,17 +71,17 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     return () => { cancelled = true; };
   }, [brandId]);
 
-  const select = async (next: Choice) => {
-    if (busy) return;
+  const select = async (value: Choice, label: string) => {
+    if (busy || !brand) return;
     setBusy(true);
     const prev = choice;
-    setChoice(next);
+    setChoice(value);
     try {
-      if (next === "not_interested") {
+      if (value === "not_interested") {
         await brandLeadClear(brandId);
         setSavedAt(null);
       } else {
-        await brandLeadUpsert(brandId, next, QUESTION_TEXT);
+        await brandLeadUpsert(brandId, value, brand.lead_question_text || "", label);
         setSavedAt(Date.now());
       }
     } catch {
@@ -73,25 +91,43 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     }
   };
 
+  if (!brand) return null;
   if (signedIn === false) return null;
+
+  // Build option list. Edges First (legacy) keeps "soon"/"eventually" slugs so
+  // existing dashboards stay readable; everything else uses option_1/2/3.
+  const isEdgesFirst = (brand.name || "").toLowerCase().includes("edges first");
+  const opts: { value: Choice; label: string }[] = [];
+  if (brand.lead_question_option_1) {
+    opts.push({ value: isEdgesFirst ? "soon" : "option_1", label: brand.lead_question_option_1 });
+  }
+  if (brand.lead_question_option_2) {
+    opts.push({ value: isEdgesFirst ? "eventually" : "option_2", label: brand.lead_question_option_2 });
+  }
+  if (brand.lead_question_option_3) {
+    opts.push({ value: "option_3", label: brand.lead_question_option_3 });
+  }
+  opts.push({ value: "not_interested", label: "Not interested" });
 
   return (
     <section className="mt-6 mx-1 rounded-2xl border border-events-coral/40 bg-events-cream/5 p-4 space-y-3">
       <div>
-        <h3 className="font-display text-events-cream text-sm">{HEADING}</h3>
-        <p className="font-body text-[12px] text-events-cream/70 leading-snug mt-1">{BODY}</p>
+        <h3 className="font-display text-events-cream text-sm">{SECTION_HEADING}</h3>
+        {brand.lead_question_intro && (
+          <p className="font-body text-[12px] text-events-cream/70 leading-snug mt-1">{brand.lead_question_intro}</p>
+        )}
       </div>
       <div>
-        <p className="font-body text-events-cream text-sm mb-2">{QUESTION_TEXT}</p>
+        <p className="font-body text-events-cream text-sm mb-2">{brand.lead_question_text}</p>
         <div className="space-y-2">
-          {OPTIONS.map((opt) => {
+          {opts.map((opt) => {
             const active = choice === opt.value;
             return (
               <button
-                key={opt.value}
+                key={opt.value + opt.label}
                 type="button"
                 disabled={busy}
-                onClick={() => select(opt.value)}
+                onClick={() => select(opt.value, opt.label)}
                 className={`w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-colors ${
                   active
                     ? "border-events-coral bg-events-coral/15 text-events-cream"
@@ -111,14 +147,14 @@ const BrandLeadCapture = ({ brandId }: Props) => {
           })}
         </div>
       </div>
-      {(choice === "soon" || choice === "eventually") && (
+      {choice && choice !== "not_interested" && (
         <div className="flex items-center gap-2 text-events-coral font-body text-[12px]">
           {busy && savedAt === null ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
           ) : (
             <CheckCircle2 className="w-3.5 h-3.5" />
           )}
-          <span>Got it. Kelly will see you on her leads list.</span>
+          <span>Got it. {brand.name} will see your response.</span>
         </div>
       )}
     </section>

@@ -217,7 +217,8 @@ export interface BrandLeadResponse {
   id: string;
   candidate_id: string;
   brand_id: string;
-  response_value: "soon" | "eventually";
+  response_value: string;
+  response_label?: string | null;
   question_text: string;
   created_at: string;
   updated_at: string;
@@ -225,8 +226,8 @@ export interface BrandLeadResponse {
 export async function brandLeadGetMine(brand_id: string) {
   return call<{ response: BrandLeadResponse | null }>("brand-leads", { action: "me", brand_id });
 }
-export async function brandLeadUpsert(brand_id: string, response_value: "soon" | "eventually", question_text: string) {
-  return call<{ response: BrandLeadResponse }>("brand-leads", { action: "upsert", brand_id, response_value, question_text });
+export async function brandLeadUpsert(brand_id: string, response_value: string, question_text: string, response_label?: string) {
+  return call<{ response: BrandLeadResponse }>("brand-leads", { action: "upsert", brand_id, response_value, question_text, response_label });
 }
 export async function brandLeadClear(brand_id: string) {
   return call<{ ok: true }>("brand-leads", { action: "clear", brand_id });

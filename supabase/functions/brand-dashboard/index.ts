@@ -20,16 +20,17 @@ Deno.serve(async (req) => {
     .eq("id", repId).maybeSingle();
   if (!rep) return jsonFor(req, { error: "Rep not found" }, { status: 404 });
 
+  const BRAND_COLS = "*";
   let brand: any = null;
   if (rep.current_company) {
     const { data } = await sb.from("event_map_brands")
-      .select("*").eq("event_slug", "denver26").ilike("name", rep.current_company).limit(1);
+      .select(BRAND_COLS).eq("event_slug", "denver26").ilike("name", rep.current_company).limit(1);
     if (data && data.length) brand = data[0];
   }
   if (!brand) {
     // fallback: any brand whose name appears in the rep's company
     const { data: all } = await sb.from("event_map_brands")
-      .select("*").eq("event_slug", "denver26");
+      .select(BRAND_COLS).eq("event_slug", "denver26");
     if (all && rep.current_company) {
       const lc = rep.current_company.toLowerCase();
       brand = all.find((b: any) => lc.includes(b.name.toLowerCase()) || b.name.toLowerCase().includes(lc)) || null;
