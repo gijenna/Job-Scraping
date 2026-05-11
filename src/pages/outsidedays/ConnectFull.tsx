@@ -624,6 +624,7 @@ const ConnectFull = () => {
             />
           </div>
         </ConnectShell>
+        <ConnectBottomNav />
       </ImpersonationGate>
     </EditableTextProvider>
   );
