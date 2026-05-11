@@ -31,15 +31,21 @@ function csvEscape(s: any) {
 
 function downloadCsv(brandSlug: string, rows: Lead[]) {
   const header = [
-    "First name", "Last name", "Email", "LinkedIn", "Current title",
+    "First name", "Last name", "Contact shared", "Email", "LinkedIn", "Current title",
     "Current company", "Response", "Date answered",
   ].join(",");
-  const lines = rows.map((l) => [
-    l.candidate?.first_name, l.candidate?.last_name, l.candidate?.email,
-    l.candidate?.linkedin_url, l.candidate?.current_title, l.candidate?.current_company,
-    l.response_label || l.response_value,
-    new Date(l.updated_at).toISOString().slice(0, 10),
-  ].map(csvEscape).join(","));
+  const lines = rows.map((l) => {
+    const shared = !!l.share_contact_info;
+    return [
+      l.candidate?.first_name, l.candidate?.last_name,
+      shared ? "Yes" : "No",
+      shared ? l.candidate?.email : "",
+      shared ? l.candidate?.linkedin_url : "",
+      l.candidate?.current_title, l.candidate?.current_company,
+      l.response_label || l.response_value,
+      new Date(l.updated_at).toISOString().slice(0, 10),
+    ].map(csvEscape).join(",");
+  });
   const today = new Date().toISOString().slice(0, 10);
   const blob = new Blob([header + "\n" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -211,21 +217,29 @@ export default function LeadsPanel({ brand }: Props) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-1 mt-3">
-                {c.email && (
-                  <Button variant="ghost" size="sm"
-                    onClick={() => { window.location.href = `mailto:${c.email}`; }}
-                    className="text-events-coral hover:text-events-cream h-7 px-2"
-                  >
-                    <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
-                  </Button>
-                )}
-                {c.linkedin_url && (
-                  <Button variant="ghost" size="sm"
-                    onClick={() => window.open(c.linkedin_url, "_blank", "noopener")}
-                    className="text-events-coral hover:text-events-cream h-7 px-2"
-                  >
-                    <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
-                  </Button>
+                {l.share_contact_info ? (
+                  <>
+                    {c.email && (
+                      <Button variant="ghost" size="sm"
+                        onClick={() => { window.location.href = `mailto:${c.email}`; }}
+                        className="text-events-coral hover:text-events-cream h-7 px-2"
+                      >
+                        <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
+                      </Button>
+                    )}
+                    {c.linkedin_url && (
+                      <Button variant="ghost" size="sm"
+                        onClick={() => window.open(c.linkedin_url, "_blank", "noopener")}
+                        className="text-events-coral hover:text-events-cream h-7 px-2"
+                      >
+                        <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-[11px] font-body text-events-cream/50 italic self-center">
+                    Contact info not shared
+                  </span>
                 )}
                 <Button variant="ghost" size="sm"
                   onClick={() => setOpenId(c.id)}

@@ -92,23 +92,31 @@ export default function CandidateCard({ candidate, onClick }: { candidate: any; 
             </div>
           )}
           <div className="flex flex-wrap gap-2 mt-3">
-            {candidate.email && (
-              <Button
-                variant="ghost" size="sm"
-                onClick={(e) => { e.stopPropagation(); window.location.href = `mailto:${candidate.email}`; }}
-                className="text-events-coral hover:text-events-cream h-7 px-2"
-              >
-                <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
-              </Button>
-            )}
-            {candidate.linkedin_url && (
-              <Button
-                variant="ghost" size="sm"
-                onClick={(e) => { e.stopPropagation(); window.open(candidate.linkedin_url, "_blank", "noopener"); }}
-                className="text-events-coral hover:text-events-cream h-7 px-2"
-              >
-                <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
-              </Button>
+            {candidate.brand_contact_consent ? (
+              <>
+                {candidate.email && (
+                  <Button
+                    variant="ghost" size="sm"
+                    onClick={(e) => { e.stopPropagation(); window.location.href = `mailto:${candidate.email}`; }}
+                    className="text-events-coral hover:text-events-cream h-7 px-2"
+                  >
+                    <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
+                  </Button>
+                )}
+                {candidate.linkedin_url && (
+                  <Button
+                    variant="ghost" size="sm"
+                    onClick={(e) => { e.stopPropagation(); window.open(candidate.linkedin_url, "_blank", "noopener"); }}
+                    className="text-events-coral hover:text-events-cream h-7 px-2"
+                  >
+                    <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
+                  </Button>
+                )}
+              </>
+            ) : (
+              <span className="text-[11px] font-body text-events-cream/50 italic">
+                Contact info not shared
+              </span>
             )}
           </div>
         </div>
