@@ -1051,6 +1051,7 @@ export type Database = {
           sponsor_callout_text: string | null
           table_count: number
           website_url: string | null
+          why_visit_text: string | null
         }
         Insert: {
           aliases?: string[]
@@ -1076,6 +1077,7 @@ export type Database = {
           sponsor_callout_text?: string | null
           table_count?: number
           website_url?: string | null
+          why_visit_text?: string | null
         }
         Update: {
           aliases?: string[]
@@ -1101,6 +1103,7 @@ export type Database = {
           sponsor_callout_text?: string | null
           table_count?: number
           website_url?: string | null
+          why_visit_text?: string | null
         }
         Relationships: [
           {
