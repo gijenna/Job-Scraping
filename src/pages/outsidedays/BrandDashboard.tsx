@@ -24,6 +24,7 @@ const BrandDashboard = () => {
   const [phone, setPhone] = useState("");
   const [repId, setRepId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [editCardUrl, setEditCardUrl] = useState<string>("https://basecampoutdoorevents.com/denverreps/");
 
   useEffect(() => {
     (async () => {
@@ -88,7 +89,7 @@ const BrandDashboard = () => {
                   View event map
                 </a>
                 <a
-                  href={`https://sponsor-attract-hub.lovable.app/denverreps/${(me as any)?.slug || ""}`}
+                  href={editCardUrl}
                   target="_blank" rel="noopener noreferrer"
                   className="font-body text-events-cream/70 hover:text-events-coral transition-colors"
                 >
@@ -101,7 +102,7 @@ const BrandDashboard = () => {
                 >Sign out</Button>
               </div>
             </div>
-            <DashboardWorkspace rep={me} />
+            <DashboardWorkspace rep={me} onEditCardUrl={setEditCardUrl} />
           </div>
         </div>
       </ImpersonationGate>

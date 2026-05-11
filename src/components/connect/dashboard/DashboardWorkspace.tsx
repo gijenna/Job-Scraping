@@ -7,6 +7,7 @@ import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
 import LeadsPanel from "./LeadsPanel";
+import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import { dashboardSummary } from "@/lib/connect-session";
 
 type Tab = "candidates" | "leads";
@@ -20,7 +21,7 @@ function MetricPill({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function DashboardWorkspace({ rep }: { rep: any }) {
+export default function DashboardWorkspace({ rep, onEditCardUrl }: { rep: any; onEditCardUrl?: (url: string) => void }) {
   const [summary, setSummary] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({});
   const [search, setSearch] = useState("");
@@ -29,7 +30,7 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("candidates");
 
-  useEffect(() => { dashboardSummary().then(setSummary).catch(() => {}); }, []);
+  useEffect(() => { dashboardSummary().then((s) => { setSummary(s); if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url); }).catch(() => {}); }, []);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(t);
@@ -76,24 +77,12 @@ export default function DashboardWorkspace({ rep }: { rep: any }) {
       {/* Card preview + Edit my card */}
       {brand && (
         <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            {rep?.photo_url ? (
-              <img src={rep.photo_url} alt={rep.full_name} className="w-14 h-14 rounded-full object-cover shrink-0" />
-            ) : (
-              <div className="w-14 h-14 rounded-full bg-events-cream/10 flex items-center justify-center font-display text-events-cream shrink-0">
-                {rep?.full_name?.[0]}
-              </div>
-            )}
-            <div className="min-w-0">
-              <p className="font-display text-events-cream truncate">{rep?.full_name}</p>
-              <p className="text-events-cream/60 text-xs font-body truncate">
-                {[rep?.job_title, brand?.name].filter(Boolean).join(" · ")}
-              </p>
-            </div>
+          <div className="flex-1 min-w-0 max-w-md">
+            <ExpertCardCompact expert={rep as any} />
           </div>
           <div className="sm:text-right">
             <a
-              href={`https://sponsor-attract-hub.lovable.app/denverreps/${rep?.slug || ""}`}
+              href={summary?.edit_card_url || "https://basecampoutdoorevents.com/denverreps/"}
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
             >
