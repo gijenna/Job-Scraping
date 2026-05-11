@@ -48,11 +48,14 @@ const Connect = () => {
       <ImpersonationGate>
         <ConnectShell maxWidth="md">
           {mode === "branch" && (
-            <BranchPicker
-              onFull={() => nav("/outsidedays26/connect/full")}
-              onEssentials={() => setMode("choice")}
-              onReturning={() => setMode("returning")}
-            />
+            <>
+              <ValueProp />
+              <BranchPicker
+                onFull={() => nav("/outsidedays26/connect/full")}
+                onEssentials={() => setMode("choice")}
+                onReturning={() => setMode("returning")}
+              />
+            </>
           )}
           {mode === "choice" && (
             <NewSignup
