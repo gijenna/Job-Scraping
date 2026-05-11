@@ -3,6 +3,33 @@ import {
   clearSessionCookieHeader, lastFour,
 } from "../_shared/connect-session.ts";
 
+const CONNECT_URL = "https://basecampoutdoorevents.com/outsidedays26/connect";
+
+async function fireWelcomeEmail(candidate: { id: string; first_name: string; email: string | null }) {
+  if (!candidate?.email) return;
+  try {
+    const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-db-template-email`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({
+        template_key: "candidate_welcome",
+        to: candidate.email,
+        variables: {
+          first_name: candidate.first_name || "there",
+          connect_url: CONNECT_URL,
+          idempotency_key: `candidate_welcome:${candidate.id}`,
+        },
+      }),
+    });
+  } catch (e) {
+    console.error("candidate welcome email failed", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
