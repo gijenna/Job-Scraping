@@ -24,6 +24,7 @@ import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
+import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 import { useEventSettings } from "@/hooks/useEventSettings";
 
 // ----- Required-field map -----
