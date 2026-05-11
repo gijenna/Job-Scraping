@@ -211,6 +211,9 @@ export async function dashboardCandidate(id: string) {
 export async function dashboardWishlist(query: string) {
   return call("brand-dashboard", { action: "wishlist", query });
 }
+export async function dashboardSaveCard(input: { rep_patch: Record<string, any>; brand_patch: Record<string, any> }) {
+  return call<{ ok: true; rep: any; brand: any | null }>("brand-dashboard", { action: "save_card", ...input });
+}
 
 // ---- Brand lead capture ----
 export interface BrandLeadResponse {

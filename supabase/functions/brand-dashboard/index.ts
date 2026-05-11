@@ -250,6 +250,56 @@ Deno.serve(async (req) => {
       return jsonFor(req, { candidate: cand, connections: conns, resume_signed_url, photo_signed_url });
     }
 
+    if (body.action === "save_card") {
+      const rep_patch = body.rep_patch || {};
+      const brand_patch = body.brand_patch || {};
+
+      // Whitelist personal rep fields the rep can edit
+      const repAllowed = [
+        "photo_url", "job_title", "ask_me_about", "niche_interests",
+        "linkedin_url", "previous_companies", "favorite_media",
+        "field_of_work", "years_in_industry",
+      ];
+      const repClean: Record<string, any> = {};
+      for (const k of repAllowed) if (k in rep_patch) repClean[k] = rep_patch[k];
+      if (Object.keys(repClean).length > 0) {
+        repClean.updated_at = new Date().toISOString();
+        const { error: repErr } = await sb.from("industry_experts").update(repClean).eq("id", repId);
+        if (repErr) return jsonFor(req, { error: repErr.message }, { status: 400 });
+      }
+
+      // Brand-level fields, only if rep has a linked brand and is a brand_rep
+      if (brand && Object.keys(brand_patch).length > 0) {
+        const { data: assigns } = await sb.from("expert_city_assignments")
+          .select("expert_type").eq("expert_id", repId).eq("city_slug", "denver");
+        const isBrandRep = (assigns || []).some((a: any) => a.expert_type === "brand_rep");
+        if (isBrandRep) {
+          const brandAllowed = [
+            "website_url", "offers_remote", "currently_hiring", "why_visit_text",
+            "lead_question_intro", "lead_question_text",
+            "lead_question_option_1", "lead_question_option_2", "lead_question_option_3",
+            "lead_question_active",
+          ];
+          const brandClean: Record<string, any> = {};
+          for (const k of brandAllowed) if (k in brand_patch) brandClean[k] = brand_patch[k];
+          if (Object.keys(brandClean).length > 0) {
+            const { error: bErr } = await sb.from("event_map_brands").update(brandClean).eq("id", brand.id);
+            if (bErr) return jsonFor(req, { error: bErr.message }, { status: 400 });
+          }
+        }
+      }
+
+      // Return refreshed rep + brand
+      const { data: freshRep } = await sb.from("industry_experts")
+        .select("*").eq("id", repId).maybeSingle();
+      let freshBrand: any = null;
+      if (brand) {
+        const { data } = await sb.from("event_map_brands").select("*").eq("id", brand.id).maybeSingle();
+        freshBrand = data;
+      }
+      return jsonFor(req, { ok: true, rep: freshRep, brand: freshBrand });
+    }
+
     if (body.action === "wishlist") {
       const { query } = body;
       if (!query || !String(query).trim()) return jsonFor(req, { error: "query required" }, { status: 400 });

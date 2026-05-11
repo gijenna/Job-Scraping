@@ -25,6 +25,7 @@ const BrandDashboard = () => {
   const [repId, setRepId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [editCardUrl, setEditCardUrl] = useState<string>("https://basecampoutdoorevents.com/denverreps/");
+  const [editSignal, setEditSignal] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -88,13 +89,12 @@ const BrandDashboard = () => {
                 >
                   View event map
                 </a>
-                <a
-                  href={editCardUrl}
-                  target="_blank" rel="noopener noreferrer"
-                  className="font-body text-events-cream/70 hover:text-events-coral transition-colors"
+                <button
+                  onClick={() => setEditSignal((n) => n + 1)}
+                  className="font-body text-events-cream/70 hover:text-events-coral transition-colors bg-transparent border-0 p-0 cursor-pointer"
                 >
                   Edit my card
-                </a>
+                </button>
                 <Button
                   variant="ghost" size="sm"
                   onClick={async () => { await brandRepLogout(); setMe(null); setMode("lookup"); }}
@@ -102,7 +102,7 @@ const BrandDashboard = () => {
                 >Sign out</Button>
               </div>
             </div>
-            <DashboardWorkspace rep={me} onEditCardUrl={setEditCardUrl} />
+            <DashboardWorkspace rep={me} onEditCardUrl={setEditCardUrl} openEditSignal={editSignal} />
           </div>
         </div>
       </ImpersonationGate>

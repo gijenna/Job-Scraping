@@ -1,0 +1,2 @@
+ALTER TABLE public.event_map_brands ADD COLUMN IF NOT EXISTS why_visit_text text;
+UPDATE public.event_map_brands SET why_visit_text = culture_blurb WHERE why_visit_text IS NULL AND culture_blurb IS NOT NULL;

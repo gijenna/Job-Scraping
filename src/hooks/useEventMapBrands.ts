@@ -17,6 +17,15 @@ export interface MapBrand {
   currently_hiring?: string | null;
   culture_blurb?: string | null;
   is_featured?: boolean | null;
+  why_visit_text?: string | null;
+  sponsor_callout_text?: string | null;
+  lead_question_active?: boolean | null;
+  lead_question_intro?: string | null;
+  lead_question_text?: string | null;
+  lead_question_option_1?: string | null;
+  lead_question_option_2?: string | null;
+  lead_question_option_3?: string | null;
+  lead_capture_visible_to_brand?: boolean | null;
 }
 
 export function useEventMapBrands(eventSlug: string) {

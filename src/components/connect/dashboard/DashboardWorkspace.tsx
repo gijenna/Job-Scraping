@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useImperativeHandle, useState, forwardRef } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
 import LeadsPanel from "./LeadsPanel";
+import EditMyCardModal from "./EditMyCardModal";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import { dashboardSummary } from "@/lib/connect-session";
 
@@ -21,7 +22,7 @@ function MetricPill({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function DashboardWorkspace({ rep, onEditCardUrl }: { rep: any; onEditCardUrl?: (url: string) => void }) {
+export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal }: { rep: any; onEditCardUrl?: (url: string) => void; openEditSignal?: number }) {
   const [summary, setSummary] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({});
   const [search, setSearch] = useState("");
@@ -29,8 +30,19 @@ export default function DashboardWorkspace({ rep, onEditCardUrl }: { rep: any; o
   const [sort, setSort] = useState("newest");
   const [openId, setOpenId] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("candidates");
+  const [editOpen, setEditOpen] = useState(false);
+  const [currentRep, setCurrentRep] = useState<any>(rep);
+  const [isBrandRep, setIsBrandRep] = useState(true);
 
-  useEffect(() => { dashboardSummary().then((s) => { setSummary(s); if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url); }).catch(() => {}); }, []);
+  useEffect(() => { dashboardSummary().then((s) => {
+    setSummary(s);
+    if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url);
+    // edit_card_url shape /denverreps/... means brand_rep, /Denverexperts/... means industry expert
+    setIsBrandRep(!(s?.edit_card_url || "").includes("/Denverexperts/"));
+  }).catch(() => {}); }, []);
+  useEffect(() => {
+    if (openEditSignal && openEditSignal > 0) setEditOpen(true);
+  }, [openEditSignal]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(t);
@@ -75,25 +87,35 @@ export default function DashboardWorkspace({ rep, onEditCardUrl }: { rep: any; o
       </div>
 
       {/* Card preview + Edit my card */}
-      {brand && (
-        <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1 min-w-0 max-w-md">
-            <ExpertCardCompact expert={rep as any} />
-          </div>
-          <div className="sm:text-right">
-            <a
-              href={summary?.edit_card_url || "https://basecampoutdoorevents.com/denverreps/"}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
-            >
-              Edit my card
-            </a>
-            <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
-              Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
-            </p>
-          </div>
+      <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex-1 min-w-0 max-w-md">
+          <ExpertCardCompact expert={(currentRep || rep) as any} />
         </div>
-      )}
+        <div className="sm:text-right">
+          <button
+            onClick={() => setEditOpen(true)}
+            className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
+          >
+            Edit my card
+          </button>
+          <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
+            Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
+          </p>
+        </div>
+      </div>
+
+      <EditMyCardModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        rep={currentRep || rep}
+        brand={brand}
+        isBrandRep={isBrandRep && !!brand}
+        onSaved={(newRep, newBrand) => {
+          if (newRep) setCurrentRep(newRep);
+          if (newBrand) setSummary((s: any) => ({ ...s, brand: newBrand }));
+        }}
+      />
+
 
       {/* Tabs */}
       {(() => {
