@@ -506,26 +506,34 @@ const BubbleTile = ({
   const src = brandLogo(brand);
   return (
     <button onClick={onClick} className="flex flex-col items-center gap-1.5 group">
-      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-events-cream overflow-hidden flex items-center justify-center shadow-md border-2 border-white group-active:scale-95 transition-transform">
-        {src ? (
-          <img
-            src={src}
-            alt={brand.name}
-            className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+        {brand.is_featured && (
+          <span
+            aria-hidden
+            className="absolute inset-0 rounded-full pointer-events-none featured-bubble-list-glow"
           />
-        ) : (
-          <span className="font-display font-bold text-events-teal text-sm">
-            {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-          </span>
         )}
+        <div className="relative w-full h-full rounded-full bg-events-cream overflow-hidden flex items-center justify-center shadow-md border-2 border-white group-active:scale-95 transition-transform">
+          {src ? (
+            <img
+              src={src}
+              alt={brand.name}
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          ) : (
+            <span className="font-display font-bold text-events-teal text-sm">
+              {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+            </span>
+          )}
+        </div>
         {starred && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow ring-2 ring-events-teal">
+          <span className="absolute top-0 right-0 w-5 h-5 rounded-full bg-events-coral text-events-cream flex items-center justify-center shadow ring-2 ring-events-teal z-10">
             <Star className="w-2.5 h-2.5 fill-current" />
           </span>
         )}
         {hasNote && (
-          <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-events-yellow text-events-teal flex items-center justify-center shadow ring-2 ring-events-teal text-[10px]">
+          <span className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-events-yellow text-events-teal flex items-center justify-center shadow ring-2 ring-events-teal text-[10px] z-10">
             ✉
           </span>
         )}
@@ -533,11 +541,6 @@ const BubbleTile = ({
       <span className="text-[10px] sm:text-xs text-events-cream/80 text-center font-body line-clamp-2 leading-tight">
         {brand.name}
       </span>
-      {brand.is_featured && (
-        <span className="inline-flex items-center gap-1 text-[8px] uppercase tracking-wider font-display border border-events-yellow text-events-yellow px-1.5 py-0.5 rounded-full leading-none">
-          Featured
-        </span>
-      )}
     </button>
   );
 };
