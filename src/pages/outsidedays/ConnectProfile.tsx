@@ -20,6 +20,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
+import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 
 const ConnectProfile = () => {
   const nav = useNavigate();
