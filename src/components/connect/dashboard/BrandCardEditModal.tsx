@@ -1,9 +1,11 @@
 // Wraps BrandCardForm in a dialog for the brand dashboard. Persists via the
 // edge function (whitelisted brand fields, scoped to the rep's brand).
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import BrandCardForm, { BrandFormValues } from "@/components/event/BrandCardForm";
 import { dashboardSaveCard } from "@/lib/connect-session";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   open: boolean;
@@ -14,7 +16,19 @@ interface Props {
 
 export default function BrandCardEditModal({ open, onClose, brand, onSaved }: Props) {
   const { toast } = useToast();
+  const [fullBrand, setFullBrand] = useState<any>(null);
+
+  useEffect(() => {
+    if (!open || !brand?.id) { setFullBrand(null); return; }
+    setFullBrand(null);
+    (async () => {
+      const { data } = await supabase.from("event_map_brands").select("*").eq("id", brand.id).maybeSingle();
+      setFullBrand(data || brand);
+    })();
+  }, [open, brand?.id]);
+
   if (!brand) return null;
+  const src = fullBrand || brand;
 
   const initial: BrandFormValues = {
     website_url: brand.website_url || "",
