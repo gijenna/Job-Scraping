@@ -1048,6 +1048,7 @@ export type Database = {
           name: string
           offers_remote: string | null
           sponsor_brand_id: string | null
+          sponsor_callout_text: string | null
           table_count: number
           website_url: string | null
         }
@@ -1072,6 +1073,7 @@ export type Database = {
           name: string
           offers_remote?: string | null
           sponsor_brand_id?: string | null
+          sponsor_callout_text?: string | null
           table_count?: number
           website_url?: string | null
         }
@@ -1096,6 +1098,7 @@ export type Database = {
           name?: string
           offers_remote?: string | null
           sponsor_brand_id?: string | null
+          sponsor_callout_text?: string | null
           table_count?: number
           website_url?: string | null
         }

@@ -1,0 +1,1 @@
+ALTER TABLE public.event_map_brands ADD COLUMN IF NOT EXISTS sponsor_callout_text text;
