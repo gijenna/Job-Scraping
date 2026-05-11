@@ -69,6 +69,9 @@ Deno.serve(async (req) => {
       if (body.open_to_retail === true || body.open_to_retail === false) {
         insertable.open_to_retail = body.open_to_retail;
       }
+      if (body.brand_contact_consent === true || body.brand_contact_consent === false) {
+        insertable.brand_contact_consent = body.brand_contact_consent;
+      }
       const { data, error } = await sb.from("candidates").insert(insertable).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
 
