@@ -188,9 +188,9 @@ const MapBrandPanel = ({
               )}
             </div>
 
-            {brand.culture_blurb && (
-              <blockquote className="mt-4 border-l-2 border-events-coral/60 pl-3 text-sm text-events-cream/70 font-body italic">
-                {brand.culture_blurb}
+            {(brand as any).why_visit_text && (
+              <blockquote className="mt-4 border-l-2 border-events-coral/60 pl-3 text-sm text-events-cream/80 font-body">
+                {(brand as any).why_visit_text}
               </blockquote>
             )}
 
