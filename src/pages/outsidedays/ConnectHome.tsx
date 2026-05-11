@@ -533,6 +533,11 @@ const BubbleTile = ({
       <span className="text-[10px] sm:text-xs text-events-cream/80 text-center font-body line-clamp-2 leading-tight">
         {brand.name}
       </span>
+      {brand.is_featured && (
+        <span className="inline-flex items-center gap-1 text-[8px] uppercase tracking-wider font-display border border-events-yellow text-events-yellow px-1.5 py-0.5 rounded-full leading-none">
+          Featured
+        </span>
+      )}
     </button>
   );
 };

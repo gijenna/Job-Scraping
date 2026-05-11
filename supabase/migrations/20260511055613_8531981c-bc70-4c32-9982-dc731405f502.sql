@@ -1,0 +1,1 @@
+ALTER TABLE public.brand_lead_responses DROP CONSTRAINT IF EXISTS brand_lead_responses_response_value_check;

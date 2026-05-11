@@ -25,7 +25,7 @@ type BrandConfig = {
   lead_question_active: boolean;
 };
 
-type Choice = "option_1" | "option_2" | "option_3" | "not_interested" | "soon" | "eventually";
+type Choice = "option_1" | "option_2" | "option_3" | "soon" | "eventually";
 
 const SECTION_HEADING = "A quick question";
 
@@ -77,15 +77,22 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     const prev = choice;
     setChoice(value);
     try {
-      if (value === "not_interested") {
-        await brandLeadClear(brandId);
-        setSavedAt(null);
-      } else {
-        await brandLeadUpsert(brandId, value, brand.lead_question_text || "", label);
-        setSavedAt(Date.now());
-      }
+      await brandLeadUpsert(brandId, value, brand.lead_question_text || "", label);
+      setSavedAt(Date.now());
     } catch {
       setChoice(prev);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const clearAnswer = async () => {
+    if (busy || !brand) return;
+    setBusy(true);
+    try {
+      await brandLeadClear(brandId);
+      setChoice(null);
+      setSavedAt(null);
     } finally {
       setBusy(false);
     }
@@ -107,7 +114,6 @@ const BrandLeadCapture = ({ brandId }: Props) => {
   if (brand.lead_question_option_3) {
     opts.push({ value: "option_3", label: brand.lead_question_option_3 });
   }
-  opts.push({ value: "not_interested", label: "Not interested" });
 
   return (
     <section className="mt-6 mx-1 rounded-2xl border border-events-coral/40 bg-events-cream/5 p-4 space-y-3">
@@ -147,14 +153,24 @@ const BrandLeadCapture = ({ brandId }: Props) => {
           })}
         </div>
       </div>
-      {choice && choice !== "not_interested" && (
-        <div className="flex items-center gap-2 text-events-coral font-body text-[12px]">
-          {busy && savedAt === null ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <CheckCircle2 className="w-3.5 h-3.5" />
-          )}
-          <span>Got it. {brand.name} will see your response.</span>
+      {choice && (
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-events-coral font-body text-[12px]">
+            {busy && savedAt === null ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            )}
+            <span>Got it. {brand.name} will see your response.</span>
+          </div>
+          <button
+            type="button"
+            onClick={clearAnswer}
+            disabled={busy}
+            className="text-[11px] font-body text-events-cream/70 hover:text-events-coral underline-offset-2 hover:underline shrink-0"
+          >
+            Clear my answer
+          </button>
         </div>
       )}
     </section>
