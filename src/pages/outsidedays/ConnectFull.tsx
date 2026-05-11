@@ -20,6 +20,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
 import ConnectShell from "@/components/connect/ConnectShell";
+import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
