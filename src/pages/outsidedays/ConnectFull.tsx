@@ -611,10 +611,6 @@ const ConnectFull = () => {
 
           {/* Submit */}
           <div className="sticky bottom-16 sm:bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
-            <BrandContactConsentCheckbox
-              checked={!!c.brand_contact_consent}
-              onChange={(v) => set("brand_contact_consent", v)}
-            />
             <label className="flex items-start gap-2 text-[11px] text-events-cream/70 font-body cursor-pointer">
               <input
                 type="checkbox"
