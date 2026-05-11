@@ -250,6 +250,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     poachable_status: "", career_stage: "", field: "", focus: "", field_other: "",
     years_in_current_field: 0, the_hook: "",
     signup_mode: "essentials",
+    data_portability_consent: false,
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -471,6 +472,21 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
               {photoFile ? "Choose a different photo" : "Upload from device"}
             </Button>
           </div>
+          <label className="flex items-start gap-2 pt-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={!!d.data_portability_consent}
+              onChange={(e) => set("data_portability_consent", e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-events-cream/30 bg-transparent accent-events-coral"
+            />
+            <span className="text-xs text-events-cream/70 font-body leading-relaxed">
+              I'd like my profile to be portable to{" "}
+              <a href="https://basecampjobs.com" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-events-cream">
+                Basecamp Jobs
+              </a>{" "}
+              so brands can find me year-round.
+            </span>
+          </label>
         </div>
       )}
 

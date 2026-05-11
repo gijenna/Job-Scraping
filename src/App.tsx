@@ -12,6 +12,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
 import AdminAfterParty from "./pages/AdminAfterParty";
 import AdminConnect from "./pages/AdminConnect";
+import AdminEmailTemplates from "./pages/AdminEmailTemplates";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
@@ -117,6 +118,7 @@ const App = () => (
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
+          <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}

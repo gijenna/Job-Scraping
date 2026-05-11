@@ -59,6 +59,9 @@ export default function AdminConnect() {
               Connect <span className="text-events-coral">Analytics</span>
             </h1>
           </div>
+          <Button variant="ghost" size="sm" onClick={() => navigate("/admin/email-templates")} className="text-events-cream/70 hover:text-events-cream">
+            <Mail className="w-4 h-4 mr-1" /> Email templates
+          </Button>
         </div>
       </div>
 
