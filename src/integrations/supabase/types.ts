@@ -591,6 +591,7 @@ export type Database = {
           min_pay_rate: string | null
           niche_experience: Json | null
           open_to_relocation: boolean | null
+          open_to_retail: boolean | null
           outdoor_industry_experience: boolean | null
           outdoor_industry_years: number | null
           phone: string
@@ -641,6 +642,7 @@ export type Database = {
           min_pay_rate?: string | null
           niche_experience?: Json | null
           open_to_relocation?: boolean | null
+          open_to_retail?: boolean | null
           outdoor_industry_experience?: boolean | null
           outdoor_industry_years?: number | null
           phone: string
@@ -691,6 +693,7 @@ export type Database = {
           min_pay_rate?: string | null
           niche_experience?: Json | null
           open_to_relocation?: boolean | null
+          open_to_retail?: boolean | null
           outdoor_industry_experience?: boolean | null
           outdoor_industry_years?: number | null
           phone?: string
