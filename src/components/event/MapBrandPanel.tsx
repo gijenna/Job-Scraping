@@ -117,7 +117,7 @@ const MapBrandPanel = ({
 
           {/* Sponsor callout (per-brand text, decoupled from is_featured) */}
           {(brand as any).sponsor_callout_text && (
-            <div className="mx-6 mt-4 rounded-xl border-l-4 border-events-coral bg-events-coral/15 px-4 py-3">
+            <div className="mx-6 mt-4 mr-24 rounded-xl border-l-4 border-events-coral bg-events-coral/15 px-4 py-3">
               <p className="font-body text-events-cream text-[13px] leading-snug">
                 {(brand as any).sponsor_callout_text}
               </p>
