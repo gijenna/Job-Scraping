@@ -7,8 +7,11 @@ import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
 import LeadsPanel from "./LeadsPanel";
-import EditMyCardModal from "./EditMyCardModal";
+import RepEditModal from "./RepEditModal";
+import BrandCardEditModal from "./BrandCardEditModal";
+import BrandCardPreview from "./BrandCardPreview";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
+import { Pencil } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
 
 type Tab = "candidates" | "leads";
@@ -30,18 +33,16 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
   const [sort, setSort] = useState("newest");
   const [openId, setOpenId] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("candidates");
-  const [editOpen, setEditOpen] = useState(false);
+  const [repEditOpen, setRepEditOpen] = useState(false);
+  const [brandEditOpen, setBrandEditOpen] = useState(false);
   const [currentRep, setCurrentRep] = useState<any>(rep);
-  const [isBrandRep, setIsBrandRep] = useState(true);
 
   useEffect(() => { dashboardSummary().then((s) => {
     setSummary(s);
     if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url);
-    // edit_card_url shape /denverreps/... means brand_rep, /Denverexperts/... means industry expert
-    setIsBrandRep(!(s?.edit_card_url || "").includes("/Denverexperts/"));
   }).catch(() => {}); }, []);
   useEffect(() => {
-    if (openEditSignal && openEditSignal > 0) setEditOpen(true);
+    if (openEditSignal && openEditSignal > 0) setRepEditOpen(true);
   }, [openEditSignal]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
