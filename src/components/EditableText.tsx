@@ -62,6 +62,13 @@ const EditableText = ({
     return createElement(Tag, { className, style }, displayText);
   }
 
+  const startEditing = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setDraft(displayText);
+    setEditing(true);
+  };
+
   if (editing) {
     return (
       <div className="relative inline-flex items-start gap-1 w-full">
