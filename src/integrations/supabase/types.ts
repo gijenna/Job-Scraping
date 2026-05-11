@@ -465,6 +465,7 @@ export type Database = {
           created_at: string
           id: string
           question_text: string
+          response_label: string | null
           response_value: string
           updated_at: string
         }
@@ -474,6 +475,7 @@ export type Database = {
           created_at?: string
           id?: string
           question_text: string
+          response_label?: string | null
           response_value: string
           updated_at?: string
         }
@@ -483,6 +485,7 @@ export type Database = {
           created_at?: string
           id?: string
           question_text?: string
+          response_label?: string | null
           response_value?: string
           updated_at?: string
         }
@@ -1034,6 +1037,13 @@ export type Database = {
           id: string
           is_activation: boolean
           is_featured: boolean
+          lead_capture_visible_to_brand: boolean
+          lead_question_active: boolean
+          lead_question_intro: string | null
+          lead_question_option_1: string | null
+          lead_question_option_2: string | null
+          lead_question_option_3: string | null
+          lead_question_text: string | null
           logo_url: string | null
           name: string
           offers_remote: string | null
@@ -1051,6 +1061,13 @@ export type Database = {
           id?: string
           is_activation?: boolean
           is_featured?: boolean
+          lead_capture_visible_to_brand?: boolean
+          lead_question_active?: boolean
+          lead_question_intro?: string | null
+          lead_question_option_1?: string | null
+          lead_question_option_2?: string | null
+          lead_question_option_3?: string | null
+          lead_question_text?: string | null
           logo_url?: string | null
           name: string
           offers_remote?: string | null
@@ -1068,6 +1085,13 @@ export type Database = {
           id?: string
           is_activation?: boolean
           is_featured?: boolean
+          lead_capture_visible_to_brand?: boolean
+          lead_question_active?: boolean
+          lead_question_intro?: string | null
+          lead_question_option_1?: string | null
+          lead_question_option_2?: string | null
+          lead_question_option_3?: string | null
+          lead_question_text?: string | null
           logo_url?: string | null
           name?: string
           offers_remote?: string | null
