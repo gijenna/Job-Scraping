@@ -87,25 +87,35 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
       </div>
 
       {/* Card preview + Edit my card */}
-      {brand && (
-        <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1 min-w-0 max-w-md">
-            <ExpertCardCompact expert={rep as any} />
-          </div>
-          <div className="sm:text-right">
-            <a
-              href={summary?.edit_card_url || "https://basecampoutdoorevents.com/denverreps/"}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
-            >
-              Edit my card
-            </a>
-            <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
-              Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
-            </p>
-          </div>
+      <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex-1 min-w-0 max-w-md">
+          <ExpertCardCompact expert={(currentRep || rep) as any} />
         </div>
-      )}
+        <div className="sm:text-right">
+          <button
+            onClick={() => setEditOpen(true)}
+            className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
+          >
+            Edit my card
+          </button>
+          <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
+            Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
+          </p>
+        </div>
+      </div>
+
+      <EditMyCardModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        rep={currentRep || rep}
+        brand={brand}
+        isBrandRep={isBrandRep && !!brand}
+        onSaved={(newRep, newBrand) => {
+          if (newRep) setCurrentRep(newRep);
+          if (newBrand) setSummary((s: any) => ({ ...s, brand: newBrand }));
+        }}
+      />
+
 
       {/* Tabs */}
       {(() => {
