@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
 
   // Resolve rep + brand.
   const { data: rep } = await sb.from("industry_experts")
-    .select("id, full_name, photo_url, current_company, job_title, email, slug, linkedin_url, previous_companies, company_domains")
+    .select("*")
     .eq("id", repId).maybeSingle();
   if (!rep) return jsonFor(req, { error: "Rep not found" }, { status: 404 });
 
