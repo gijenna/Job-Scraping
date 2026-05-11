@@ -250,6 +250,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     poachable_status: "", career_stage: "", field: "", focus: "", field_other: "",
     years_in_current_field: 0, the_hook: "",
     signup_mode: "essentials",
+    data_portability_consent: false,
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
