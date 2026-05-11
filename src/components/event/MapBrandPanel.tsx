@@ -115,11 +115,11 @@ const MapBrandPanel = ({
             </button>
           </div>
 
-          {/* Featured sponsor callout */}
-          {brand.is_featured && (
+          {/* Sponsor callout (per-brand text, decoupled from is_featured) */}
+          {(brand as any).sponsor_callout_text && (
             <div className="mx-6 mt-4 rounded-xl border-l-4 border-events-coral bg-events-coral/15 px-4 py-3">
               <p className="font-body text-events-cream text-[13px] leading-snug">
-                The industry expert activation is sponsored by {brand.name}. Kelly makes sure that small outdoor and conservation orgs get the beautiful websites their missions deserve at THEIR budget.
+                {(brand as any).sponsor_callout_text}
               </p>
             </div>
           )}

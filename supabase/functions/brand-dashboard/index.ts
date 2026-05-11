@@ -16,9 +16,11 @@ Deno.serve(async (req) => {
 
   // Resolve rep + brand.
   const { data: rep } = await sb.from("industry_experts")
-    .select("id, full_name, photo_url, current_company, job_title, email")
+    .select("id, full_name, photo_url, current_company, job_title, email, slug, linkedin_url, previous_companies, company_domains")
     .eq("id", repId).maybeSingle();
   if (!rep) return jsonFor(req, { error: "Rep not found" }, { status: 404 });
+
+  const slugify = (s: string) => (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
   const BRAND_COLS = "*";
   let brand: any = null;
@@ -66,7 +68,21 @@ Deno.serve(async (req) => {
           .select("id", { count: "exact", head: true }).eq("brand_id", brand.id);
         totals.starred = starCount || 0;
       }
-      return jsonFor(req, { rep, brand, totals });
+      // Determine edit_card_url based on rep's assignments in denver.
+      const BASE = "https://basecampoutdoorevents.com";
+      let editCardUrl = `${BASE}/denverreps/`;
+      try {
+        const { data: assigns } = await sb.from("expert_city_assignments")
+          .select("expert_type").eq("expert_id", repId).eq("city_slug", "denver");
+        const types = new Set((assigns || []).map((a: any) => a.expert_type));
+        if (types.has("brand_rep")) {
+          const brandSlug = brand?.name ? slugify(brand.name) : "";
+          editCardUrl = brandSlug ? `${BASE}/denverreps/${brandSlug}` : `${BASE}/denverreps/`;
+        } else if (types.has("industry_expert")) {
+          editCardUrl = `${BASE}/Denverexperts/${rep.slug || ""}`;
+        }
+      } catch {}
+      return jsonFor(req, { rep, brand, totals, edit_card_url: editCardUrl });
     }
 
 
