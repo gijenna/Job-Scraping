@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminUser } from "@/lib/admin-auth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Mail, Star, Users, MessageSquare } from "lucide-react";
+import { ArrowLeft, Mail, Star, Users, MessageSquare, Inbox } from "lucide-react";
 
 type Analytics = {
   totals: {
@@ -59,9 +59,14 @@ export default function AdminConnect() {
               Connect <span className="text-events-coral">Analytics</span>
             </h1>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate("/admin/email-templates")} className="text-events-cream/70 hover:text-events-cream">
-            <Mail className="w-4 h-4 mr-1" /> Email templates
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/admin/leads")} className="text-events-cream/70 hover:text-events-cream">
+              <Inbox className="w-4 h-4 mr-1" /> All leads
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/admin/email-templates")} className="text-events-cream/70 hover:text-events-cream">
+              <Mail className="w-4 h-4 mr-1" /> Email templates
+            </Button>
+          </div>
         </div>
       </div>
 
