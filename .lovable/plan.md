@@ -1,19 +1,36 @@
-## Problem
+## Wipe Connect candidate data
 
-As an admin, the entire EditableText element is clickable, which intercepts clicks meant for buttons, links, and navigation. The pencil icon also only appears on hover, so on touch devices it's invisible.
+Delete in this order (children first, parent last) so nothing is orphaned. All other tables (brand_reps sessions, experts, afterparty_*, admin, brands, taxonomies, email templates, schema) are untouched.
 
-## Fix
+### Current row counts
+- candidates: 7
+- brand_lead_responses: 0
+- candidate_starred_brands: 4
+- brand_starred_attendee: 0
+- connections: 1
+- connect_notes: 3
+- filter_logs: 141
+- user_sessions where subject_type='candidate': 11
 
-Update `src/components/EditableText.tsx` so that:
+### Deletion sequence (single SQL transaction)
+1. `DELETE FROM brand_lead_responses` (0)
+2. `DELETE FROM candidate_starred_brands` (4)
+3. `DELETE FROM brand_starred_attendee` (0, brand-side stars on candidates)
+4. `DELETE FROM connections` (1) — all rows are candidate-owned
+5. `DELETE FROM connect_notes` (3) — Connect notes only; afterparty has its own tables
+6. `DELETE FROM filter_logs` (141) — candidate-related filter activity
+7. `DELETE FROM user_sessions WHERE subject_type = 'candidate'` (11) — leaves brand_rep + expert sessions intact
+8. `DELETE FROM candidates` (7) — table preserved, just emptied
 
-1. The text span itself is **not** a click target. Render the text normally (no `cursor-pointer`, no `onClick` on the wrapper, no `group/edit` swallowing clicks). The text behaves exactly as it does for non-admins, so underlying buttons, links, and navigation work normally.
-2. The **pencil icon** becomes the sole edit trigger. It sits next to the text (inline, small, absolutely or inline-positioned so it doesn't disrupt layout), is always visible to admins (not hover-only), and has its own `onClick` that calls `setDraft(displayText); setEditing(true)` plus `stopPropagation` so clicking the pencil doesn't also trigger the underlying button/link.
-3. Pencil styling stays subtle: small coral icon, low opacity by default, full opacity on hover, with a tooltip "Edit". Keep it inside an inline button so it's keyboard-accessible.
-4. Editing UI (textarea/input + save/cancel) remains unchanged.
+### Not touched
+- `brand_reps`, `industry_experts`, `event_map_brands`, `event_settings`
+- All `afterparty_*` tables
+- `user_sessions` rows where `subject_type` in ('brand_rep') and any expert sessions
+- Auth users, admin tables, email templates, taxonomies, storage buckets
 
-No other components or behavior change. Non-admin rendering is unchanged. This is a single-file edit.
+### Verification after run
+- Re-count all 8 tables above (candidates = 0, candidate sessions = 0, others = 0)
+- Spot check: `SELECT count(*) FROM user_sessions WHERE subject_type='brand_rep'` is unchanged
+- Spot check: `SELECT count(*) FROM industry_experts` and `afterparty_attendees` unchanged
 
-## Out of scope
-
-- `EditableLink` (separate component, not mentioned by the user; can be done in a follow-up if it has the same issue).
-- Any layout, content, routing, auth, schema, or edge function changes.
+Approve and I will execute the deletes via the data tool and report final counts.
