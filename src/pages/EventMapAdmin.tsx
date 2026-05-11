@@ -206,12 +206,17 @@ const EventMapAdmin = () => {
 
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
-    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url, offers_remote: brand.offers_remote ?? null, currently_hiring: brand.currently_hiring ?? null, culture_blurb: brand.culture_blurb ?? null });
+    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url, offers_remote: brand.offers_remote ?? null, currently_hiring: brand.currently_hiring ?? null, why_visit_text: (brand as any).why_visit_text ?? brand.culture_blurb ?? null, lead_question_intro: (brand as any).lead_question_intro ?? null, lead_question_text: (brand as any).lead_question_text ?? null, lead_question_option_1: (brand as any).lead_question_option_1 ?? null, lead_question_option_2: (brand as any).lead_question_option_2 ?? null, lead_question_option_3: (brand as any).lead_question_option_3 ?? null });
   };
 
   const saveEdit = async () => {
     if (!editingId) return;
-    await updateBrand(editingId, editFields);
+    const f: any = editFields;
+    // Auto-derive lead_question_active from text + option 1 (no manual toggle).
+    const text = (f.lead_question_text || "").trim();
+    const opt1 = (f.lead_question_option_1 || "").trim();
+    const patch: any = { ...editFields, lead_question_active: !!(text && opt1) };
+    await updateBrand(editingId, patch);
     setEditingId(null);
     setEditFields({});
   };
@@ -481,18 +486,62 @@ const EventMapAdmin = () => {
                               </div>
                             </div>
                             <div>
-                              <label className="text-xs text-white/80 font-body block mb-1">Culture blurb</label>
+                              <label className="text-xs text-white/80 font-body block mb-1">Why visit our table</label>
                               <textarea
-                                value={editFields.culture_blurb || ""}
-                                onChange={(e) => setEditFields((p) => ({ ...p, culture_blurb: e.target.value.slice(0, 280) || null }))}
+                                value={(editFields as any).why_visit_text || ""}
+                                onChange={(e) => setEditFields((p: any) => ({ ...p, why_visit_text: e.target.value.slice(0, 280) || null }))}
                                 maxLength={280}
                                 rows={3}
                                 className="bg-white/10 border border-white/20 text-white text-xs rounded px-2 py-1.5 w-full resize-y"
                               />
                               <div className="flex justify-between mt-1">
-                                <p className="text-[10px] text-white/40 font-body">One or two sentences about your culture or what you offer. Candidates will see this on your brand card.</p>
-                                <p className="text-[10px] text-white/40 font-body">{(editFields.culture_blurb || "").length}/280</p>
+                                <p className="text-[10px] text-white/40 font-body">Examples: 'Actively hiring marketers' / 'Opening a new store in Boulder soon' / 'Seeking ambassadors and IT positions'</p>
+                                <p className="text-[10px] text-white/40 font-body">{((editFields as any).why_visit_text || "").length}/280</p>
                               </div>
+                            </div>
+                            <div className="space-y-2 pt-3 border-t border-white/10">
+                              <p className="text-xs uppercase tracking-wider text-events-coral font-body font-semibold">Lead question (optional)</p>
+                              <p className="text-[10px] text-white/50 font-body">
+                                Add a custom question to capture leads from candidates interested in something specific. Examples: 'Interested in our new retail store?' / 'Want to be considered for ambassador roles?'
+                              </p>
+                              <div>
+                                <label className="text-[10px] text-white/60 font-body block mb-1">Intro text (optional, 200 chars)</label>
+                                <textarea
+                                  value={(editFields as any).lead_question_intro || ""}
+                                  onChange={(e) => setEditFields((p: any) => ({ ...p, lead_question_intro: e.target.value.slice(0, 200) || null }))}
+                                  maxLength={200} rows={2}
+                                  className="bg-white/10 border border-white/20 text-white text-xs rounded px-2 py-1.5 w-full resize-y"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-white/60 font-body block mb-1">Question (150 chars)</label>
+                                <Input value={(editFields as any).lead_question_text || ""}
+                                  onChange={(e) => setEditFields((p: any) => ({ ...p, lead_question_text: e.target.value.slice(0, 150) || null }))}
+                                  className="bg-white/10 border-white/20 text-white h-8 text-xs" />
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Option 1</label>
+                                  <Input value={(editFields as any).lead_question_option_1 || ""}
+                                    onChange={(e) => setEditFields((p: any) => ({ ...p, lead_question_option_1: e.target.value.slice(0, 100) || null }))}
+                                    className="bg-white/10 border-white/20 text-white h-8 text-xs" />
+                                </div>
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Option 2 (optional)</label>
+                                  <Input value={(editFields as any).lead_question_option_2 || ""}
+                                    onChange={(e) => setEditFields((p: any) => ({ ...p, lead_question_option_2: e.target.value.slice(0, 100) || null }))}
+                                    className="bg-white/10 border-white/20 text-white h-8 text-xs" />
+                                </div>
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Option 3 (optional)</label>
+                                  <Input value={(editFields as any).lead_question_option_3 || ""}
+                                    onChange={(e) => setEditFields((p: any) => ({ ...p, lead_question_option_3: e.target.value.slice(0, 100) || null }))}
+                                    className="bg-white/10 border-white/20 text-white h-8 text-xs" />
+                                </div>
+                              </div>
+                              <p className="text-[10px] text-white/40 font-body italic">
+                                Appears on the candidate card automatically once both Question and Option 1 are filled. Past responses are preserved.
+                              </p>
                             </div>
                           </div>
                         </TableCell>

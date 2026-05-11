@@ -7,8 +7,11 @@ import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
 import LeadsPanel from "./LeadsPanel";
-import EditMyCardModal from "./EditMyCardModal";
+import RepEditModal from "./RepEditModal";
+import BrandCardEditModal from "./BrandCardEditModal";
+import BrandCardPreview from "./BrandCardPreview";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
+import { Pencil } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
 
 type Tab = "candidates" | "leads";
@@ -30,18 +33,16 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
   const [sort, setSort] = useState("newest");
   const [openId, setOpenId] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("candidates");
-  const [editOpen, setEditOpen] = useState(false);
+  const [repEditOpen, setRepEditOpen] = useState(false);
+  const [brandEditOpen, setBrandEditOpen] = useState(false);
   const [currentRep, setCurrentRep] = useState<any>(rep);
-  const [isBrandRep, setIsBrandRep] = useState(true);
 
   useEffect(() => { dashboardSummary().then((s) => {
     setSummary(s);
     if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url);
-    // edit_card_url shape /denverreps/... means brand_rep, /Denverexperts/... means industry expert
-    setIsBrandRep(!(s?.edit_card_url || "").includes("/Denverexperts/"));
   }).catch(() => {}); }, []);
   useEffect(() => {
-    if (openEditSignal && openEditSignal > 0) setEditOpen(true);
+    if (openEditSignal && openEditSignal > 0) setRepEditOpen(true);
   }, [openEditSignal]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
@@ -86,36 +87,38 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
         </div>
       </div>
 
-      {/* Card preview + Edit my card */}
-      <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex-1 min-w-0 max-w-md">
-          <ExpertCardCompact expert={(currentRep || rep) as any} />
+      {/* Two-up preview row: rep card (always) + brand card (if linked) */}
+      <div className={`grid gap-4 mb-4 ${brand ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
+        <div
+          onClick={() => setRepEditOpen(true)}
+          className="cursor-pointer group relative bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/60 rounded-2xl p-4 transition-colors"
+        >
+          <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
+            <Pencil className="w-2.5 h-2.5" /> Edit my card
+          </span>
+          <div className="pt-7">
+            <ExpertCardCompact expert={(currentRep || rep) as any} />
+          </div>
         </div>
-        <div className="sm:text-right">
-          <button
-            onClick={() => setEditOpen(true)}
-            className="inline-flex items-center px-4 py-2 rounded-full text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream transition-colors"
-          >
-            Edit my card
-          </button>
-          <p className="text-events-cream/50 text-[11px] font-body mt-1.5 max-w-xs">
-            Update your photo, Ask Me About, and details. Changes show up on the event map in real time.
-          </p>
-        </div>
+        {brand && (
+          <BrandCardPreview brand={brand} onClick={() => setBrandEditOpen(true)} />
+        )}
       </div>
 
-      <EditMyCardModal
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
+      <RepEditModal
+        open={repEditOpen}
+        onClose={() => setRepEditOpen(false)}
         rep={currentRep || rep}
-        brand={brand}
-        isBrandRep={isBrandRep && !!brand}
-        onSaved={(newRep, newBrand) => {
-          if (newRep) setCurrentRep(newRep);
-          if (newBrand) setSummary((s: any) => ({ ...s, brand: newBrand }));
-        }}
+        onSaved={(newRep) => { if (newRep) setCurrentRep(newRep); }}
       />
-
+      {brand && (
+        <BrandCardEditModal
+          open={brandEditOpen}
+          onClose={() => setBrandEditOpen(false)}
+          brand={brand}
+          onSaved={(newBrand) => { if (newBrand) setSummary((s: any) => ({ ...s, brand: newBrand })); }}
+        />
+      )}
 
       {/* Tabs */}
       {(() => {
