@@ -217,21 +217,29 @@ export default function LeadsPanel({ brand }: Props) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-1 mt-3">
-                {c.email && (
-                  <Button variant="ghost" size="sm"
-                    onClick={() => { window.location.href = `mailto:${c.email}`; }}
-                    className="text-events-coral hover:text-events-cream h-7 px-2"
-                  >
-                    <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
-                  </Button>
-                )}
-                {c.linkedin_url && (
-                  <Button variant="ghost" size="sm"
-                    onClick={() => window.open(c.linkedin_url, "_blank", "noopener")}
-                    className="text-events-coral hover:text-events-cream h-7 px-2"
-                  >
-                    <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
-                  </Button>
+                {l.share_contact_info ? (
+                  <>
+                    {c.email && (
+                      <Button variant="ghost" size="sm"
+                        onClick={() => { window.location.href = `mailto:${c.email}`; }}
+                        className="text-events-coral hover:text-events-cream h-7 px-2"
+                      >
+                        <Mail className="w-3.5 h-3.5 mr-1.5" /> Email
+                      </Button>
+                    )}
+                    {c.linkedin_url && (
+                      <Button variant="ghost" size="sm"
+                        onClick={() => window.open(c.linkedin_url, "_blank", "noopener")}
+                        className="text-events-coral hover:text-events-cream h-7 px-2"
+                      >
+                        <Linkedin className="w-3.5 h-3.5 mr-1.5" /> LinkedIn
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-[11px] font-body text-events-cream/50 italic self-center">
+                    Contact info not shared
+                  </span>
                 )}
                 <Button variant="ghost" size="sm"
                   onClick={() => setOpenId(c.id)}
