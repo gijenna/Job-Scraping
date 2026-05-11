@@ -429,6 +429,17 @@ const ConnectFull = () => {
                 </FieldRow>
               )}
             </Row>
+            <FieldRow
+              label={label("full_open_to_retail_label", "Open to retail work?")}
+              hint={<EditableText settingKey="full_open_to_retail_hint" defaultText="Retail roles in stores or showrooms. Includes ambassador, sales, and in-person customer-facing work." as="span" />}
+            >
+              <SelectBox
+                value={c.open_to_retail === true ? "Yes" : c.open_to_retail === false ? "No" : ""}
+                onChange={(v) => set("open_to_retail", v === "Yes")}
+                options={["Yes", "No"]}
+                optionKeyPrefix="full_yes_no_option"
+              />
+            </FieldRow>
             <FieldRow label={label("full_remote_preference_label", "Remote preference")}>
               <SelectBox value={c.remote_preference || ""} onChange={(v) => set("remote_preference", v)} options={REMOTE_PREFERENCES as any} optionKeyPrefix="full_remote_preference_option" />
             </FieldRow>
