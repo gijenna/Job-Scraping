@@ -22,7 +22,7 @@ function MetricPill({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function DashboardWorkspace({ rep, onEditCardUrl }: { rep: any; onEditCardUrl?: (url: string) => void }) {
+export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal }: { rep: any; onEditCardUrl?: (url: string) => void; openEditSignal?: number }) {
   const [summary, setSummary] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({});
   const [search, setSearch] = useState("");
