@@ -26,6 +26,7 @@ export type Filters = {
   workplace?: string[];
   remote?: string[];
   relocation?: "yes" | "no" | undefined;
+  open_to_retail?: boolean;
   outdoor?: "yes" | "no" | undefined;
   outdoor_min_years?: number;
   management?: "yes" | "no" | undefined;
