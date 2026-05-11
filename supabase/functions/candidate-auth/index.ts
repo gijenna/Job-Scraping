@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
         "niche_experience","the_pitch","resume_url","prior_careers","total_years_professional",
         "outdoor_industry_experience","outdoor_industry_years","management_experience",
         "management_years","min_pay_rate","portfolio_url","workplace_type_preference",
-        "signup_mode","field_other","data_portability_consent",
+        "signup_mode","field_other","data_portability_consent","open_to_retail",
       ]) if (body[k] !== undefined) insertable[k] = body[k];
 
 
