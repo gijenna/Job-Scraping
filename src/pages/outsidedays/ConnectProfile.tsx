@@ -263,6 +263,13 @@ const ConnectProfile = () => {
             </div>
           </Section>
 
+          <Section title="Contact preferences">
+            <BrandContactConsentCheckbox
+              checked={!!c.brand_contact_consent}
+              onChange={(v) => set("brand_contact_consent", v)}
+            />
+          </Section>
+
           <div className="sticky bottom-0 -mx-4 px-4 py-3 bg-events-teal/95 border-t border-events-cream/10 backdrop-blur">
             <Button onClick={save} disabled={saving} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream h-12">
               {saving ? "Saving..." : "Save changes"}
