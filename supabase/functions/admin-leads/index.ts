@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
   }
 
   const { data: leads } = await sb.from("brand_lead_responses")
-    .select("id, brand_id, candidate_id, response_value, response_label, question_text, created_at, updated_at")
+    .select("id, brand_id, candidate_id, response_value, response_label, question_text, share_contact_info, created_at, updated_at")
     .order("updated_at", { ascending: false });
 
   const brandIds = Array.from(new Set((leads || []).map((l: any) => l.brand_id)));
