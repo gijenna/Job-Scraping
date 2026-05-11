@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
       }
 
       const { data: leads } = await sb.from("brand_lead_responses")
-        .select("id, candidate_id, response_value, response_label, question_text, created_at, updated_at")
+        .select("id, candidate_id, response_value, response_label, question_text, share_contact_info, created_at, updated_at")
         .eq("brand_id", brand_id)
         .order("updated_at", { ascending: false });
 
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
       let candMap: Record<string, any> = {};
       if (ids.length) {
         const { data: cands } = await sb.from("candidates")
-          .select("id, first_name, last_name, email, linkedin_url, current_title, current_company, photo_url")
+          .select("id, first_name, last_name, email, linkedin_url, current_title, current_company, photo_url, brand_contact_consent")
           .in("id", ids);
         for (const c of cands || []) candMap[c.id] = c;
       }
