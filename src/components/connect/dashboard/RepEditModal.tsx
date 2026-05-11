@@ -16,16 +16,19 @@ interface Props {
 
 export default function RepEditModal({ open, onClose, rep, citySlug = "denver", cityName = "Denver", onSaved }: Props) {
   const [expertType, setExpertType] = useState<'industry_expert' | 'brand_rep'>('brand_rep');
+  const [fullRep, setFullRep] = useState<any>(null);
 
   useEffect(() => {
     if (!open || !rep?.id) return;
+    setFullRep(null); // never reuse a stale fetch from a previous open
     (async () => {
-      const { data } = await supabase
-        .from("expert_city_assignments")
-        .select("expert_type, city_slug")
-        .eq("expert_id", rep.id);
-      const a = (data || []).find((x: any) => x.city_slug === citySlug) || (data || [])[0];
+      const [{ data: assigns }, { data: freshRep }] = await Promise.all([
+        supabase.from("expert_city_assignments").select("expert_type, city_slug").eq("expert_id", rep.id),
+        supabase.from("industry_experts").select("*").eq("id", rep.id).maybeSingle(),
+      ]);
+      const a = (assigns || []).find((x: any) => x.city_slug === citySlug) || (assigns || [])[0];
       if (a?.expert_type === 'industry_expert' || a?.expert_type === 'brand_rep') setExpertType(a.expert_type);
+      setFullRep(freshRep || rep);
     })();
   }, [open, rep?.id, citySlug]);
 
