@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useImperativeHandle, useState, forwardRef } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import DashboardFilters, { type Filters } from "./DashboardFilters";
 import VirtualCandidateList from "./VirtualCandidateList";
 import CandidateProfileDrawer from "./CandidateProfileDrawer";
 import LeadsPanel from "./LeadsPanel";
+import EditMyCardModal from "./EditMyCardModal";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import { dashboardSummary } from "@/lib/connect-session";
 
