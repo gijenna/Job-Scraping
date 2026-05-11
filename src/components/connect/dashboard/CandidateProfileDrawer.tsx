@@ -61,9 +61,14 @@ export default function CandidateProfileDrawer({ id, open, onClose }: { id: stri
                   {[c.career_stage, c.current_location, c.years_in_current_field ? `${c.years_in_current_field}y` : null].filter(Boolean).join(" · ")}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {c.linkedin_url && (
+                  {c.brand_contact_consent && c.linkedin_url && (
                     <a href={c.linkedin_url} target="_blank" rel="noreferrer" className="text-events-coral text-xs font-body inline-flex items-center gap-1">
                       LinkedIn <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                  {c.brand_contact_consent && c.email && (
+                    <a href={`mailto:${c.email}`} className="text-events-coral text-xs font-body inline-flex items-center gap-1">
+                      Email <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                   {(data.resume_signed_url || c.resume_url) && (
@@ -75,6 +80,11 @@ export default function CandidateProfileDrawer({ id, open, onClose }: { id: stri
                     <a href={c.portfolio_url} target="_blank" rel="noreferrer" className="text-events-coral text-xs font-body inline-flex items-center gap-1">
                       Portfolio <ExternalLink className="w-3 h-3" />
                     </a>
+                  )}
+                  {!c.brand_contact_consent && (
+                    <span className="text-[11px] font-body text-events-cream/50 italic">
+                      Contact info not shared
+                    </span>
                   )}
                 </div>
               </div>
