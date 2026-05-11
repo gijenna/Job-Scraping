@@ -198,7 +198,7 @@ const MapBrandPanel = ({
               <p className="text-sm text-events-cream/70 font-body mt-4">{brand.description}</p>
             )}
 
-            {brand.is_featured && candidateMode && (
+            {candidateMode && ((brand as any).lead_question_active || brand.is_featured) && (
               <BrandLeadCapture brandId={brand.id} />
             )}
           </div>
