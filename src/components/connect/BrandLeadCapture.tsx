@@ -172,23 +172,37 @@ const BrandLeadCapture = ({ brandId }: Props) => {
         </div>
       </div>
       {choice && (
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-events-coral font-body text-[12px]">
-            {busy && savedAt === null ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <CheckCircle2 className="w-3.5 h-3.5" />
-            )}
-            <span>Got it. {brand.name} will see your response.</span>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-events-coral font-body text-[12px]">
+              {busy && savedAt === null ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              )}
+              <span>Got it. {brand.name} will see your response.</span>
+            </div>
+            <button
+              type="button"
+              onClick={clearAnswer}
+              disabled={busy}
+              className="text-[11px] font-body text-events-cream/70 hover:text-events-coral underline-offset-2 hover:underline shrink-0"
+            >
+              Clear my answer
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={clearAnswer}
-            disabled={busy}
-            className="text-[11px] font-body text-events-cream/70 hover:text-events-coral underline-offset-2 hover:underline shrink-0"
-          >
-            Clear my answer
-          </button>
+          <label className="flex items-start gap-2 cursor-pointer pt-2 border-t border-events-cream/10">
+            <input
+              type="checkbox"
+              checked={shareContact}
+              onChange={(e) => toggleShare(e.target.checked)}
+              disabled={busy}
+              className="mt-0.5 h-4 w-4 rounded border-events-cream/30 bg-transparent accent-events-coral"
+            />
+            <span className="text-[12px] text-events-cream/80 font-body leading-snug flex-1">
+              Share my contact info (email, LinkedIn) with {brand.name} for this response.
+            </span>
+          </label>
         </div>
       )}
     </section>
