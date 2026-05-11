@@ -112,19 +112,19 @@ const EditableText = ({
   }
 
   return (
-    <span
-      className={`group/edit relative inline cursor-pointer ${className}`}
-      style={style}
-      onClick={(e) => {
-        e.stopPropagation();
-        setDraft(displayText);
-        setEditing(true);
-      }}
-      title="Click to edit"
-    >
+    <>
       {createElement(Tag, { className, style }, displayText)}
-      <Pencil className="inline-block w-3 h-3 ml-1 opacity-0 group-hover/edit:opacity-60 transition-opacity text-events-coral" />
-    </span>
+      <button
+        type="button"
+        onClick={startEditing}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="inline-flex items-center justify-center align-middle ml-1 w-5 h-5 rounded text-events-coral opacity-50 hover:opacity-100 hover:bg-events-coral/10 transition-opacity"
+        title="Edit"
+        aria-label="Edit"
+      >
+        <Pencil className="w-3 h-3" />
+      </button>
+    </>
   );
 };
 
