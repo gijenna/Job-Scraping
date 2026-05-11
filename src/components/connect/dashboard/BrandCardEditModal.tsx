@@ -31,15 +31,15 @@ export default function BrandCardEditModal({ open, onClose, brand, onSaved }: Pr
   const src = fullBrand || brand;
 
   const initial: BrandFormValues = {
-    website_url: brand.website_url || "",
-    offers_remote: brand.offers_remote || "",
-    currently_hiring: brand.currently_hiring || "",
-    why_visit_text: brand.why_visit_text || "",
-    lead_question_intro: brand.lead_question_intro || "",
-    lead_question_text: brand.lead_question_text || "",
-    lead_question_option_1: brand.lead_question_option_1 || "",
-    lead_question_option_2: brand.lead_question_option_2 || "",
-    lead_question_option_3: brand.lead_question_option_3 || "",
+    website_url: src.website_url || "",
+    offers_remote: src.offers_remote || "",
+    currently_hiring: src.currently_hiring || "",
+    why_visit_text: src.why_visit_text || "",
+    lead_question_intro: src.lead_question_intro || "",
+    lead_question_text: src.lead_question_text || "",
+    lead_question_option_1: src.lead_question_option_1 || "",
+    lead_question_option_2: src.lead_question_option_2 || "",
+    lead_question_option_3: src.lead_question_option_3 || "",
   };
 
   const handleSave = async (patch: BrandFormValues) => {
@@ -58,12 +58,16 @@ export default function BrandCardEditModal({ open, onClose, brand, onSaved }: Pr
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-events-teal border-events-cream/20 max-w-2xl max-h-[92vh] overflow-y-auto text-events-cream">
         <DialogHeader>
-          <DialogTitle className="text-events-cream font-display">Edit brand card · {brand.name}</DialogTitle>
+          <DialogTitle className="text-events-cream font-display">Edit brand card · {src.name}</DialogTitle>
         </DialogHeader>
         <p className="text-[11px] text-events-cream/55 font-body -mt-2">
-          Shared with all reps at {brand.name}. Changes appear on the event map and candidate views in real time.
+          Shared with all reps at {src.name}. Changes appear on the event map and candidate views in real time.
         </p>
-        <BrandCardForm initial={initial} onSave={handleSave} onCancel={onClose} />
+        {fullBrand ? (
+          <BrandCardForm initial={initial} onSave={handleSave} onCancel={onClose} />
+        ) : (
+          <div className="py-12 text-center text-events-cream/55 text-sm font-body">Loading brand card...</div>
+        )}
       </DialogContent>
     </Dialog>
   );
