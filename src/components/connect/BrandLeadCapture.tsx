@@ -32,6 +32,7 @@ const SECTION_HEADING = "A quick question";
 const BrandLeadCapture = ({ brandId }: Props) => {
   const [brand, setBrand] = useState<BrandConfig | null>(null);
   const [choice, setChoice] = useState<Choice | null>(null);
+  const [shareContact, setShareContact] = useState<boolean>(false);
   const [busy, setBusy] = useState(true);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -41,7 +42,6 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     (async () => {
       setBusy(true);
       try {
-        // Load brand config first; bail out if no active question.
         const { data: b } = await (supabase as any).from("event_map_brands")
           .select("id, name, lead_question_intro, lead_question_text, lead_question_option_1, lead_question_option_2, lead_question_option_3, lead_question_active")
           .eq("id", brandId).maybeSingle();
@@ -61,7 +61,13 @@ const BrandLeadCapture = ({ brandId }: Props) => {
 
         const r = await brandLeadGetMine(brandId);
         if (cancelled) return;
-        if (r.response) setChoice(r.response.response_value as Choice);
+        if (r.response) {
+          setChoice(r.response.response_value as Choice);
+          setShareContact(!!r.response.share_contact_info);
+        } else {
+          // Default per-question share toggle to candidate's global consent
+          setShareContact(!!me.session?.subject?.brand_contact_consent);
+        }
       } catch {
         if (!cancelled) setSignedIn(false);
       } finally {
@@ -77,12 +83,24 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     const prev = choice;
     setChoice(value);
     try {
-      await brandLeadUpsert(brandId, value, brand.lead_question_text || "", label);
+      await brandLeadUpsert(brandId, value, brand.lead_question_text || "", label, shareContact);
       setSavedAt(Date.now());
     } catch {
       setChoice(prev);
     } finally {
       setBusy(false);
+    }
+  };
+
+  const toggleShare = async (next: boolean) => {
+    if (busy || !brand || !choice) return;
+    setShareContact(next);
+    try {
+      const opt = opts.find((o) => o.value === choice);
+      await brandLeadUpsert(brandId, choice, brand.lead_question_text || "", opt?.label, next);
+      setSavedAt(Date.now());
+    } catch {
+      setShareContact(!next);
     }
   };
 
