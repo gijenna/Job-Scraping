@@ -77,6 +77,20 @@ const BrandLeadCapture = ({ brandId }: Props) => {
     return () => { cancelled = true; };
   }, [brandId]);
 
+  // Build option list. Edges First (legacy) keeps "soon"/"eventually" slugs so
+  // existing dashboards stay readable; everything else uses option_1/2/3.
+  const isEdgesFirst = (brand?.name || "").toLowerCase().includes("edges first");
+  const opts: { value: Choice; label: string }[] = [];
+  if (brand?.lead_question_option_1) {
+    opts.push({ value: isEdgesFirst ? "soon" : "option_1", label: brand.lead_question_option_1 });
+  }
+  if (brand?.lead_question_option_2) {
+    opts.push({ value: isEdgesFirst ? "eventually" : "option_2", label: brand.lead_question_option_2 });
+  }
+  if (brand?.lead_question_option_3) {
+    opts.push({ value: "option_3", label: brand.lead_question_option_3 });
+  }
+
   const select = async (value: Choice, label: string) => {
     if (busy || !brand) return;
     setBusy(true);
