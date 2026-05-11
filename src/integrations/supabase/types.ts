@@ -467,6 +467,7 @@ export type Database = {
           question_text: string
           response_label: string | null
           response_value: string
+          share_contact_info: boolean
           updated_at: string
         }
         Insert: {
@@ -477,6 +478,7 @@ export type Database = {
           question_text: string
           response_label?: string | null
           response_value: string
+          share_contact_info?: boolean
           updated_at?: string
         }
         Update: {
@@ -487,6 +489,7 @@ export type Database = {
           question_text?: string
           response_label?: string | null
           response_value?: string
+          share_contact_info?: boolean
           updated_at?: string
         }
         Relationships: []
@@ -566,6 +569,7 @@ export type Database = {
       candidates: {
         Row: {
           areas_of_expertise: string[] | null
+          brand_contact_consent: boolean
           career_stage: string | null
           created_at: string
           current_company: string | null
@@ -617,6 +621,7 @@ export type Database = {
         }
         Insert: {
           areas_of_expertise?: string[] | null
+          brand_contact_consent?: boolean
           career_stage?: string | null
           created_at?: string
           current_company?: string | null
@@ -668,6 +673,7 @@ export type Database = {
         }
         Update: {
           areas_of_expertise?: string[] | null
+          brand_contact_consent?: boolean
           career_stage?: string | null
           created_at?: string
           current_company?: string | null
