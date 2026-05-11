@@ -165,6 +165,13 @@ export default function DashboardFilters({
 
       <TriToggle label="Open to relocation" value={filters.relocation} onChange={(v) => set({ relocation: v })} />
 
+      <div>
+        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Retail</Label>
+        <div className="flex flex-wrap gap-1.5">
+          <Chip active={!!filters.open_to_retail} onClick={() => set({ open_to_retail: !filters.open_to_retail })}>Open to retail work</Chip>
+        </div>
+      </div>
+
       <div className="space-y-2">
         <TriToggle label="Outdoor industry experience" value={filters.outdoor} onChange={(v) => set({ outdoor: v })} />
         {filters.outdoor === "yes" && (
