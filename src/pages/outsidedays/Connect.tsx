@@ -84,6 +84,33 @@ const Connect = () => {
   );
 };
 
+const ValueProp = () => {
+  const bullets = [
+    { key: "stand_out_b1", text: "See exactly who's coming and which brands are hiring" },
+    { key: "stand_out_b2", text: "Research reps so you walk up to their table prepared" },
+    { key: "stand_out_b3", text: "Star brands you want to visit so lines feel shorter on the day" },
+    { key: "stand_out_b4", text: "Reach out ahead of the event if you want them to know who you are" },
+  ];
+  return (
+    <section className="px-2 py-8 mb-6 text-center">
+      <EditableText
+        settingKey="stand_out_title"
+        defaultText="Stand out before you walk in."
+        as="h2"
+        className="font-afterparty text-3xl md:text-4xl text-events-cream mb-5"
+      />
+      <ul className="space-y-2.5 text-left max-w-md mx-auto">
+        {bullets.map((b) => (
+          <li key={b.key} className="flex gap-3 items-start text-events-cream font-body text-sm md:text-base leading-relaxed">
+            <span className="text-events-coral font-bold flex-shrink-0">✓</span>
+            <EditableText settingKey={b.key} defaultText={b.text} as="span" className="flex-1" />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
+
 const BranchPicker = ({ onFull, onEssentials, onReturning }: any) => (
   <div className="space-y-5">
     <div className="text-center space-y-2">
