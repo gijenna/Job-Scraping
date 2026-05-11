@@ -252,6 +252,7 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
     years_in_current_field: 0, the_hook: "",
     signup_mode: "essentials",
     data_portability_consent: false,
+    brand_contact_consent: false,
     open_to_retail: null,
   });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
