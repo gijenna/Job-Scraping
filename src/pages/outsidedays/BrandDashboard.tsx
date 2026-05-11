@@ -25,6 +25,7 @@ const BrandDashboard = () => {
   const [repId, setRepId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [editCardUrl, setEditCardUrl] = useState<string>("https://basecampoutdoorevents.com/denverreps/");
+  const [editSignal, setEditSignal] = useState(0);
 
   useEffect(() => {
     (async () => {
