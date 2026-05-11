@@ -19,6 +19,79 @@ const relativeTime = (iso: string) => {
   return `${d}d ago`;
 };
 
+// May 28, 2026 7:00 PM Mountain Time = 2026-05-29T01:00:00Z
+const EVENT_END = new Date("2026-05-29T01:00:00Z");
+
+const EmptyConnectionsState = () => {
+  const isPreEvent = Date.now() < EVENT_END.getTime();
+  if (!isPreEvent) {
+    return (
+      <div className="py-12 px-2 text-center space-y-5">
+        <h2 className="font-afterparty text-2xl text-events-cream">No connections logged.</h2>
+        <p className="font-body text-events-cream/75 max-w-md mx-auto">
+          You didn't log any connections at the event. If you remember anyone you talked to, you can still add them here.
+        </p>
+        <Link
+          to="/outsidedays26/connect/home"
+          className="inline-block bg-events-coral text-events-cream px-5 py-2.5 rounded-full font-display uppercase tracking-wider text-xs"
+        >
+          Add a connection
+        </Link>
+      </div>
+    );
+  }
+  const Bullet = ({ children }: { children: React.ReactNode }) => (
+    <li className="flex gap-3 items-start font-body text-sm md:text-base text-events-cream/85 leading-relaxed">
+      <span className="text-events-coral font-bold flex-shrink-0">✓</span>
+      <span className="flex-1">{children}</span>
+    </li>
+  );
+  return (
+    <div className="py-8 px-2 space-y-7">
+      <div className="space-y-3 text-center">
+        <h2 className="font-afterparty text-2xl md:text-3xl text-events-cream leading-tight">
+          No connections yet, and that's expected.
+        </h2>
+        <p className="font-body text-events-cream/80 max-w-md mx-auto">
+          You'll log connections at the event itself, on May 28. This is your spot to remember everyone you talked to.
+        </p>
+      </div>
+
+      <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-5 space-y-3">
+        <h3 className="font-display uppercase tracking-wider text-xs text-events-cream/70">Right now you can:</h3>
+        <ul className="space-y-2.5">
+          <Bullet>Browse the map or list to research who's coming</Bullet>
+          <Bullet>Send notes to specific reps and experts you want to meet</Bullet>
+          <Bullet>Star the brands you want to visit so you don't forget on the day</Bullet>
+        </ul>
+      </div>
+
+      <div className="bg-events-cream/5 border border-events-cream/10 rounded-2xl p-5 space-y-3">
+        <h3 className="font-display uppercase tracking-wider text-xs text-events-cream/70">At the event, this tab will hold:</h3>
+        <ul className="space-y-2.5">
+          <Bullet>Every brand you tap "I visited" on</Bullet>
+          <Bullet>Every connection you log with reps and experts</Bullet>
+          <Bullet>The notes you wrote (private and shared)</Bullet>
+          <Bullet>Follow-up directions, contact info, and role flags</Bullet>
+        </ul>
+      </div>
+
+      <p className="font-body text-events-cream/90 italic text-center max-w-md mx-auto pt-2">
+        Lines will be long. Use your wait time to log here. Your future self will thank you.
+      </p>
+
+      <div className="text-center">
+        <Link
+          to="/outsidedays26/connect/home"
+          className="inline-block bg-events-coral text-events-cream px-5 py-2.5 rounded-full font-display uppercase tracking-wider text-xs"
+        >
+          Open the map
+        </Link>
+      </div>
+    </div>
+  );
+};
+
 const ConnectConnections = () => {
   const nav = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
