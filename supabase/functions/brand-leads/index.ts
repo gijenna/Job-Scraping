@@ -30,13 +30,14 @@ Deno.serve(async (req) => {
       if (sess.subject_type !== "candidate") return jsonFor(req, { error: "Candidates only" }, { status: 403 });
       const brand_id = String(body.brand_id || "");
       const response_value = String(body.response_value || "");
+      const response_label = body.response_label != null ? String(body.response_label) : null;
       const question_text = String(body.question_text || "");
-      if (!brand_id || !["soon", "eventually"].includes(response_value) || !question_text) {
+      if (!brand_id || !response_value || !question_text) {
         return jsonFor(req, { error: "Invalid input" }, { status: 400 });
       }
       const { data, error } = await sb.from("brand_lead_responses")
         .upsert(
-          { candidate_id: sess.subject_id, brand_id, response_value, question_text, updated_at: new Date().toISOString() },
+          { candidate_id: sess.subject_id, brand_id, response_value, response_label, question_text, updated_at: new Date().toISOString() },
           { onConflict: "candidate_id,brand_id" },
         )
         .select().maybeSingle();
@@ -55,7 +56,6 @@ Deno.serve(async (req) => {
 
     if (action === "list") {
       if (sess.subject_type !== "brand_rep") return jsonFor(req, { error: "Brand rep only" }, { status: 403 });
-      // Verify rep belongs to the requested brand by name match (same convention as brand-dashboard).
       const { data: rep } = await sb.from("industry_experts")
         .select("id, current_company").eq("id", sess.subject_id).maybeSingle();
       if (!rep) return jsonFor(req, { error: "Rep not found" }, { status: 404 });
@@ -64,8 +64,11 @@ Deno.serve(async (req) => {
       if (!brand_id) return jsonFor(req, { error: "brand_id required" }, { status: 400 });
 
       const { data: brand } = await sb.from("event_map_brands")
-        .select("id, name").eq("id", brand_id).maybeSingle();
+        .select("id, name, lead_capture_visible_to_brand").eq("id", brand_id).maybeSingle();
       if (!brand) return jsonFor(req, { error: "Brand not found" }, { status: 404 });
+      if (brand.lead_capture_visible_to_brand === false) {
+        return jsonFor(req, { error: "Leads not visible for this brand" }, { status: 403 });
+      }
 
       const repCo = (rep.current_company || "").toLowerCase();
       const brandName = (brand.name || "").toLowerCase();
@@ -74,7 +77,7 @@ Deno.serve(async (req) => {
       }
 
       const { data: leads } = await sb.from("brand_lead_responses")
-        .select("id, candidate_id, response_value, question_text, created_at, updated_at")
+        .select("id, candidate_id, response_value, response_label, question_text, created_at, updated_at")
         .eq("brand_id", brand_id)
         .order("updated_at", { ascending: false });
 
