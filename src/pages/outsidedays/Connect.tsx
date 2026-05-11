@@ -518,6 +518,14 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
         </div>
       )}
 
+      {step === TOTAL_STEPS - 1 && (
+        <BrandContactConsentCheckbox
+          checked={!!d.brand_contact_consent}
+          onChange={(v) => set("brand_contact_consent", v)}
+          className="pt-3 border-t border-events-cream/10"
+        />
+      )}
+
       <div className="flex gap-2 pt-2">
         <Button variant="ghost" onClick={() => (step === 0 ? onBack() : setStep(step - 1))} className="flex-1 text-events-cream/70">Back</Button>
         <Button onClick={next} disabled={busy || !stepValid()} className="flex-1 bg-events-coral hover:bg-events-coral/90 text-events-cream">
