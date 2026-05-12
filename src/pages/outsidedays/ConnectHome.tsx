@@ -26,6 +26,7 @@ import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import { calcProfileCompleteness } from "@/lib/profile-completeness";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -69,8 +70,7 @@ const ConnectHome = () => {
   useEffect(() => {
     candidateMe().then((r) => {
       const subj = r?.session?.subject;
-      const score = subj?.profile_completeness_score;
-      if (typeof score === "number") setCompleteness(score);
+      if (subj) setCompleteness(calcProfileCompleteness(subj));
       if (subj && subj.has_seen_map_intro === false) setShowIntro(true);
     }).catch(() => {});
     candidateListStars().then((r) => setStarred(new Set(r.starred_brand_ids || []))).catch(() => {});
