@@ -23,7 +23,7 @@ const HEADERS = [
   "Photo URL","Resume URL","LinkedIn URL","Portfolio URL",
   "Poachable Status","Career Stage","Field","Focus","Years In Current Field",
   "The Hook","The Pitch","Current Title","Current Company","Dream Role Title",
-  "Job Types Seeking","Current Location","Open To Relocation","Relocation Locations",
+  "Job Types Seeking","Current Location","Current State","Current City","Open To Relocation","Relocation Locations","Relocation States","Relocation Cities","Open To Anywhere",
   "Remote Preference","Areas Of Expertise","Dream Companies","Niche Experience",
   "Total Years Professional","Outdoor Industry Experience","Outdoor Industry Years",
   "Management Experience","Management Years","Min Pay Rate","Workplace Type Preference",
