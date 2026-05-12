@@ -26,6 +26,7 @@ import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 import { useEventSettings } from "@/hooks/useEventSettings";
+import { calcProfileCompleteness } from "@/lib/profile-completeness";
 
 // ----- Required-field map -----
 const REQUIRED: { key: string; section: string; label: string; labelKey: string }[] = [
