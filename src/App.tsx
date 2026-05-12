@@ -10,6 +10,7 @@ import GatherPNW from "./pages/GatherPNW";
 import AdminLogin from "./pages/AdminLogin";
 import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
+import AdminPageMeta from "./pages/AdminPageMeta";
 import AdminAfterParty from "./pages/AdminAfterParty";
 import AdminConnect from "./pages/AdminConnect";
 import AdminEmailTemplates from "./pages/AdminEmailTemplates";
