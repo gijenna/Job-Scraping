@@ -128,6 +128,53 @@ Deno.serve(async (req) => {
   const messageId = crypto.randomUUID();
   const idempotencyKey = (variables && variables.idempotency_key) || messageId;
 
+  // Suppression check: never send to suppressed addresses.
+  const normalizedEmail = String(to).toLowerCase();
+  const { data: suppressed } = await sb
+    .from("suppressed_emails")
+    .select("email")
+    .eq("email", normalizedEmail)
+    .maybeSingle();
+  if (suppressed) {
+    await sb.from("email_send_log").insert({
+      message_id: messageId, template_name: template_key, recipient_email: to,
+      status: "suppressed", error_message: "Recipient on suppression list",
+    });
+    return new Response(JSON.stringify({ ok: false, reason: "suppressed" }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+
+  // Get or create unsubscribe token (one per email address). Required by the
+  // Lovable Email API for transactional emails.
+  let unsubscribeToken: string | null = null;
+  const { data: existingToken } = await sb
+    .from("email_unsubscribe_tokens")
+    .select("token, used_at")
+    .eq("email", normalizedEmail)
+    .maybeSingle();
+  if (existingToken && !existingToken.used_at) {
+    unsubscribeToken = existingToken.token;
+  } else if (!existingToken) {
+    const newToken = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map((b) => b.toString(16).padStart(2, "0")).join("");
+    await sb.from("email_unsubscribe_tokens").upsert(
+      { token: newToken, email: normalizedEmail },
+      { onConflict: "email", ignoreDuplicates: true },
+    );
+    const { data: stored } = await sb
+      .from("email_unsubscribe_tokens")
+      .select("token")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+    unsubscribeToken = stored?.token || newToken;
+  } else {
+    // Token used (unsubscribed) but missing from suppression list. Skip send.
+    await sb.from("email_send_log").insert({
+      message_id: messageId, template_name: template_key, recipient_email: to,
+      status: "suppressed", error_message: "Unsubscribe token already used",
+    });
+    return new Response(JSON.stringify({ ok: false, reason: "unsubscribed" }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
+
   await sb.from("email_send_log").insert({
     message_id: messageId, template_name: template_key, recipient_email: to, status: "pending",
   });
@@ -146,6 +193,7 @@ Deno.serve(async (req) => {
       purpose: "transactional",
       label: template_key,
       idempotency_key: idempotencyKey,
+      unsubscribe_token: unsubscribeToken,
       queued_at: new Date().toISOString(),
     },
   });
