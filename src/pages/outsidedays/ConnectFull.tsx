@@ -751,7 +751,7 @@ const SkillsPicker = ({ value, onChange }: { value: string[]; onChange: (v: stri
   return (
     <div className="space-y-3 pt-2 border-t border-events-cream/10">
       <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">
-        <EditableText settingKey="full_areas_expertise_label" defaultText="Areas of expertise" as="span" />
+        <EditableText settingKey="full_areas_expertise_label" defaultText="Skills" as="span" />
       </Label>
       {value.length > 0 && (
         <div className="flex flex-wrap gap-2">

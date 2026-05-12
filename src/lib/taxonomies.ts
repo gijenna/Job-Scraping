@@ -105,3 +105,71 @@ export const SKILL_CATEGORIES: Record<string, string[]> = {
 };
 
 export const SKILL_CATEGORY_KEYS = Object.keys(SKILL_CATEGORIES);
+
+// US states + DC + Outside US. Used for current_state and relocation_states.
+export const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+  "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois",
+  "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+  "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+  "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota",
+  "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+  "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+  "West Virginia", "Wisconsin", "Wyoming", "Outside US",
+] as const;
+
+// Major US city → state lookup. Used for cross-matching in the brand location filter
+// (e.g. typing "Denver" should also surface candidates open to relocating to "Colorado").
+// Kept intentionally short; if no match, the filter falls back to ILIKE substring search.
+export const CITY_TO_STATE: Record<string, string> = {
+  "denver": "Colorado", "boulder": "Colorado", "fort collins": "Colorado", "colorado springs": "Colorado",
+  "portland": "Oregon", "eugene": "Oregon", "bend": "Oregon",
+  "seattle": "Washington", "tacoma": "Washington", "spokane": "Washington", "bellingham": "Washington",
+  "san francisco": "California", "oakland": "California", "los angeles": "California",
+  "san diego": "California", "sacramento": "California", "san jose": "California",
+  "new york": "New York", "brooklyn": "New York", "nyc": "New York",
+  "boston": "Massachusetts", "cambridge": "Massachusetts",
+  "austin": "Texas", "dallas": "Texas", "houston": "Texas", "san antonio": "Texas",
+  "chicago": "Illinois", "phoenix": "Arizona", "tucson": "Arizona", "flagstaff": "Arizona",
+  "salt lake city": "Utah", "park city": "Utah", "moab": "Utah",
+  "atlanta": "Georgia", "miami": "Florida", "tampa": "Florida", "orlando": "Florida",
+  "minneapolis": "Minnesota", "saint paul": "Minnesota",
+  "detroit": "Michigan", "ann arbor": "Michigan",
+  "philadelphia": "Pennsylvania", "pittsburgh": "Pennsylvania",
+  "nashville": "Tennessee", "memphis": "Tennessee", "knoxville": "Tennessee",
+  "charlotte": "North Carolina", "raleigh": "North Carolina", "asheville": "North Carolina",
+  "burlington": "Vermont", "portland maine": "Maine",
+  "jackson": "Wyoming", "jackson hole": "Wyoming",
+  "missoula": "Montana", "bozeman": "Montana",
+  "boise": "Idaho", "ketchum": "Idaho",
+  "santa fe": "New Mexico", "albuquerque": "New Mexico", "taos": "New Mexico",
+  "las vegas": "Nevada", "reno": "Nevada",
+  "washington dc": "District of Columbia", "dc": "District of Columbia",
+};
+
+// Hierarchical poachable filter: selecting the looser tier also returns the stricter ones.
+export function expandPoachableSelection(selected: string[]): string[] {
+  const out = new Set<string>();
+  for (const v of selected) {
+    out.add(v);
+    if (v === "Always open to the right opportunity") out.add("Ready to jump");
+  }
+  return Array.from(out);
+}
+
+// Hierarchical remote filter:
+//   "Only seeking remote roles" -> exact only
+//   "Open to hybrid"            -> hybrid + Anything goes
+//   "Open to in-office"         -> in-office + hybrid + Anything goes
+//   "Anything goes"             -> exact only
+export function expandRemoteSelection(selected: string[]): string[] {
+  const out = new Set<string>();
+  for (const v of selected) {
+    if (v === "Only seeking remote roles") out.add(v);
+    else if (v === "Open to hybrid") { out.add(v); out.add("Anything goes"); }
+    else if (v === "Open to in-office") { out.add(v); out.add("Open to hybrid"); out.add("Anything goes"); }
+    else if (v === "Anything goes") out.add(v);
+    else out.add(v);
+  }
+  return Array.from(out);
+}
