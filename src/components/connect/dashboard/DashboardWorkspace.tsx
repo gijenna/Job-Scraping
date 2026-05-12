@@ -215,16 +215,18 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
 }
 
 function SortSelect({ sort, setSort }: { sort: string; setSort: (s: string) => void }) {
+  const labels: Record<string, string> = {
+    newest: "Newest",
+    most_complete: "Most complete profiles",
+  };
   return (
     <Select value={sort} onValueChange={setSort}>
-      <SelectTrigger className="w-[180px] max-w-[55vw] bg-events-cream/5 border-events-cream/20 text-events-cream">
-        <SelectValue className="truncate" />
+      <SelectTrigger className="w-[240px] max-w-[70vw] bg-events-cream/5 border-events-cream/20 text-events-cream">
+        <span className="truncate">Sort by: {labels[sort] || "Newest"}</span>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="newest">Newest</SelectItem>
         <SelectItem value="most_complete">Most complete profiles</SelectItem>
-        <SelectItem value="visited">Visited my table</SelectItem>
-        <SelectItem value="wrote_note">Wrote me a note</SelectItem>
       </SelectContent>
     </Select>
   );
