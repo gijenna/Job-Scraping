@@ -30,6 +30,22 @@ async function fireWelcomeEmail(candidate: { id: string; first_name: string; ema
   }
 }
 
+async function fireSheetSync(candidateId: string) {
+  try {
+    const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/sync-candidate`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({ id: candidateId }),
+    });
+  } catch (e) {
+    console.error("candidate sheet sync failed", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
