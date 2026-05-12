@@ -81,6 +81,14 @@ const AdminExperts = () => {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/admin/page-meta')}
+              className="text-events-cream/60 hover:text-events-cream"
+            >
+              Share Previews
+            </Button>
             <AddExpertDialog cities={cities} onAdded={fetchAll} />
             <AddExpertDialog cities={cities} onAdded={fetchAll} type="brand_rep" />
           </div>

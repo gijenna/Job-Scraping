@@ -10,6 +10,7 @@ import GatherPNW from "./pages/GatherPNW";
 import AdminLogin from "./pages/AdminLogin";
 import ResetPassword from "./pages/ResetPassword";
 import AdminExperts from "./pages/AdminExperts";
+import AdminPageMeta from "./pages/AdminPageMeta";
 import AdminAfterParty from "./pages/AdminAfterParty";
 import AdminConnect from "./pages/AdminConnect";
 import AdminEmailTemplates from "./pages/AdminEmailTemplates";
@@ -117,6 +118,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          <Route path="/admin/page-meta" element={<AdminPageMeta />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
           <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
