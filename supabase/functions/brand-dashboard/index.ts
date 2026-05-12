@@ -216,20 +216,7 @@ Deno.serve(async (req) => {
         connect_note: connectNotes[c.id] || null,
       }));
 
-      // Engagement-based sorts (post-fetch)
-      if (sort === "visited") {
-        result.sort((a: any, b: any) => {
-          const av = a.engagement?.visited ? new Date(a.engagement.last || 0).getTime() : -1;
-          const bv = b.engagement?.visited ? new Date(b.engagement.last || 0).getTime() : -1;
-          return bv - av;
-        });
-      } else if (sort === "wrote_note") {
-        result.sort((a: any, b: any) => {
-          const an = a.connect_note ? new Date(a.connect_note.sent_at || 0).getTime() : -1;
-          const bn = b.connect_note ? new Date(b.connect_note.sent_at || 0).getTime() : -1;
-          return bn - an;
-        });
-      }
+      // Sort options reduced to "newest" (DB-level, above) and "most_complete" (DB-level, above).
 
       // Log filter activity (fire and forget)
       sb.from("filter_logs").insert({
