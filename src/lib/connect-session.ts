@@ -79,7 +79,7 @@ export async function candidateSignupLookup(input: { first_name: string; last_na
 export async function candidateSignupCreate(input: any) {
   return call<{ session: SessionInfo }>("candidate-auth", { action: "signup_create", ...input });
 }
-export async function candidateSignupCreateBasics(input: { first_name: string; last_name: string; email: string; phone: string }) {
+export async function candidateSignupCreateBasics(input: { first_name: string; last_name: string; email: string; phone: string; brand_contact_consent?: boolean }) {
   return call<{ session: SessionInfo }>("candidate-auth", { action: "signup_create_basics", ...input });
 }
 export async function candidateLogin(input: { first_name: string; last_name: string; phone_last_four: string }) {

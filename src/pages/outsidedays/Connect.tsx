@@ -500,14 +500,14 @@ const NewSignup = ({ toast, onDone, onBack }: any) => {
               {photoFile ? "Choose a different photo" : "Upload from device"}
             </Button>
           </div>
-          <label className="flex items-start gap-2 pt-3 cursor-pointer">
+          <label className="flex items-start gap-3 pt-3 cursor-pointer">
             <input
               type="checkbox"
               checked={!!d.data_portability_consent}
               onChange={(e) => set("data_portability_consent", e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-events-cream/30 bg-transparent accent-events-coral"
+              className="mt-0.5 h-6 w-6 flex-shrink-0 rounded-md border-2 border-events-cream/70 bg-transparent accent-events-coral cursor-pointer"
             />
-            <span className="text-xs text-events-cream/70 font-body leading-relaxed">
+            <span className="text-sm text-events-cream font-body leading-snug">
               I'd like my profile to be portable to{" "}
               <a href="https://basecampjobs.com" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-events-cream">
                 Basecamp Jobs

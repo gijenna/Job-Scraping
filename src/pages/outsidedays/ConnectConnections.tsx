@@ -63,6 +63,7 @@ const EmptyConnectionsState = () => {
           <Bullet>Browse the map or list to research who's coming</Bullet>
           <Bullet>Send notes to specific reps and experts you want to meet</Bullet>
           <Bullet>Star the brands you want to visit so you don't forget on the day</Bullet>
+          <Bullet><strong className="font-semibold text-events-cream">Keep your profile current.</strong> Brands are searching the database for talent before the event.</Bullet>
         </ul>
       </div>
 

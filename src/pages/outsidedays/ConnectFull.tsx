@@ -165,6 +165,7 @@ const ConnectFull = () => {
       }
       const { session } = await candidateSignupCreateBasics({
         first_name: c.first_name, last_name: c.last_name, email: c.email, phone: c.phone,
+        brand_contact_consent: !!c.brand_contact_consent,
       });
       setHasAccount(true);
       setSavedAt(new Date());
@@ -611,12 +612,12 @@ const ConnectFull = () => {
 
           {/* Submit */}
           <div className="sticky bottom-16 sm:bottom-0 -mx-4 px-4 py-4 bg-events-teal/95 backdrop-blur border-t border-events-cream/10 mt-6 space-y-3">
-            <label className="flex items-start gap-2 text-[11px] text-events-cream/70 font-body cursor-pointer">
+            <label className="flex items-start gap-3 text-sm text-events-cream font-body cursor-pointer leading-snug">
               <input
                 type="checkbox"
                 checked={!!c.data_portability_consent}
                 onChange={(e) => set("data_portability_consent", e.target.checked)}
-                className="mt-0.5 accent-events-cream/60"
+                className="mt-0.5 h-6 w-6 flex-shrink-0 rounded-md border-2 border-events-cream/70 bg-transparent accent-events-coral cursor-pointer"
               />
               <span>
                 I'm interested in{" "}
@@ -836,12 +837,9 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
         <Label className="text-events-cream/80 text-xs font-body uppercase tracking-wider block">
           <EditableText settingKey="full_niche_experience_label" defaultText="Niche work experience" as="span" />
         </Label>
-        <EditableText
-          settingKey="full_niche_experience_hint"
-          defaultText="Tap niches you have actual paid work experience in (not just interests). Add years for each."
-          as="p"
-          className="text-[11px] text-events-cream/55 font-body mt-1"
-        />
+        <p className="text-[11px] text-events-cream/55 font-body mt-1">
+          Tap niches you have actual <strong className="font-semibold text-events-cream/85">paid work experience</strong> in (not just interests). Add years for each.
+        </p>
       </div>
       {/* Compact chip grid, fits all options on one phone screen */}
       <div className="flex flex-wrap gap-1.5">
