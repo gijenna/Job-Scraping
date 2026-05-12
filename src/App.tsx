@@ -117,6 +117,7 @@ const App = () => (
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
+          <Route path="/admin/page-meta" element={<AdminPageMeta />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
           <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
