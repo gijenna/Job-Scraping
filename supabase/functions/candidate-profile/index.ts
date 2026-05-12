@@ -11,6 +11,25 @@ const ALLOWED_FIELDS = new Set([
   "signup_mode","field_other","data_portability_consent","open_to_retail","brand_contact_consent",
 ]);
 
+function fireSheetSync(candidateId: string) {
+  try {
+    const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/sync-candidate`;
+    const p = fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({ id: candidateId }),
+    }).catch((e) => console.error("candidate sheet sync failed", e));
+    // @ts-ignore EdgeRuntime is available in Supabase edge runtime
+    const wait = (globalThis as any).EdgeRuntime?.waitUntil;
+    if (wait) wait(p);
+  } catch (e) {
+    console.error("candidate sheet sync failed", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
