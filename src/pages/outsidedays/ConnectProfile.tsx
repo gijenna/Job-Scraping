@@ -422,7 +422,7 @@ const NichePicker = ({ value, onChange }: { value: NicheEntry[]; onChange: (v: N
           );
         })}
       </div>
-      <p className="text-[11px] text-events-cream/50 font-body">Outdoor brands care a lot about niche experience. Years are optional but helpful.</p>
+      <p className="text-[11px] text-events-cream/50 font-body">Tap niches you have actual <strong className="font-semibold text-events-cream/85">paid work experience</strong> in (not just interests). Years are optional but helpful.</p>
     </div>
   );
 };

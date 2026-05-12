@@ -25,10 +25,10 @@ export const JOB_TYPES = [
 ] as const;
 
 export const REMOTE_PREFERENCES = [
-  "Yes, remote only",
-  "Hybrid",
-  "No, in-office",
-  "Open to anything",
+  "Only seeking remote roles",
+  "Open to hybrid",
+  "Open to in-office",
+  "Anything goes",
 ] as const;
 
 export const WORKPLACE_TYPES = [
