@@ -16,12 +16,18 @@ import { dashboardSummary } from "@/lib/connect-session";
 
 type Tab = "candidates" | "leads";
 
-function MetricPill({ label, value }: { label: string; value: number }) {
+function MetricPill({ label, value, onClick, active }: { label: string; value: number; onClick?: () => void; active?: boolean }) {
+  const Comp: any = onClick ? "button" : "div";
   return (
-    <div className="bg-events-cream/5 border border-events-cream/10 rounded-xl px-3 py-2">
+    <Comp
+      onClick={onClick}
+      className={`text-left bg-events-cream/5 border rounded-xl px-3 py-2 transition-colors ${
+        onClick ? "hover:border-events-coral/60 cursor-pointer" : ""
+      } ${active ? "border-events-coral bg-events-coral/10" : "border-events-cream/10"}`}
+    >
       <div className="text-events-cream font-display text-xl">{value}</div>
       <div className="text-events-cream/50 text-[10px] uppercase tracking-wider font-body">{label}</div>
-    </div>
+    </Comp>
   );
 }
 
