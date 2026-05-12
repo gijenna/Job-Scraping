@@ -69,8 +69,7 @@ const ConnectHome = () => {
   useEffect(() => {
     candidateMe().then((r) => {
       const subj = r?.session?.subject;
-      const score = subj?.profile_completeness_score;
-      if (typeof score === "number") setCompleteness(score);
+      if (subj) setCompleteness(calcProfileCompleteness(subj));
       if (subj && subj.has_seen_map_intro === false) setShowIntro(true);
     }).catch(() => {});
     candidateListStars().then((r) => setStarred(new Set(r.starred_brand_ids || []))).catch(() => {});
