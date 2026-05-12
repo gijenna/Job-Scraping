@@ -151,14 +151,46 @@ Deno.serve(async (req) => {
       let q = sb.from("candidates").select("*", { count: "exact" });
 
       if (filters.career_stage?.length) q = q.in("career_stage", filters.career_stage);
-      if (filters.poachable_status?.length) q = q.in("poachable_status", filters.poachable_status);
+
+      // Poachable status (hierarchical): "Always open" also includes "Ready to jump".
+      if (filters.poachable_status?.length) {
+        const set = new Set<string>();
+        for (const v of filters.poachable_status) {
+          set.add(v);
+          if (v === "Always open to the right opportunity") set.add("Ready to jump");
+        }
+        q = q.in("poachable_status", Array.from(set));
+      }
+
       if (filters.field) q = q.eq("field", filters.field);
       if (filters.focus) q = q.eq("focus", filters.focus);
       if (filters.years_min != null) q = q.gte("years_in_current_field", filters.years_min);
       if (filters.years_max != null) q = q.lte("years_in_current_field", filters.years_max);
-      if (filters.job_types?.length) q = q.overlaps("job_types_seeking", filters.job_types);
-      if (filters.workplace?.length) q = q.overlaps("workplace_type_preference", filters.workplace);
-      if (filters.remote?.length) q = q.in("remote_preference", filters.remote);
+
+      // Job types (text[] @> ANY chip). Use OR of cs (containment) per chip so
+      // values containing parens like "Startup (early-stage, scrappy)" serialize correctly.
+      const arrayContainsAnyOr = (col: string, vals: string[]) => {
+        const parts = vals.map((v) => {
+          const safe = String(v).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+          return `${col}.cs.{"${safe}"}`;
+        });
+        return parts.join(",");
+      };
+
+      if (filters.job_types?.length) q = q.or(arrayContainsAnyOr("job_types_seeking", filters.job_types));
+      if (filters.workplace?.length) q = q.or(arrayContainsAnyOr("workplace_type_preference", filters.workplace));
+
+      // Remote preference (hierarchical).
+      if (filters.remote?.length) {
+        const set = new Set<string>();
+        for (const v of filters.remote) {
+          if (v === "Open to hybrid") { set.add(v); set.add("Anything goes"); }
+          else if (v === "Open to in-office") { set.add(v); set.add("Open to hybrid"); set.add("Anything goes"); }
+          else set.add(v);
+        }
+        q = q.in("remote_preference", Array.from(set));
+      }
+
       if (filters.relocation === "yes") q = q.eq("open_to_relocation", true);
       if (filters.relocation === "no") q = q.eq("open_to_relocation", false);
       if (filters.open_to_retail === true) q = q.eq("open_to_retail", true);
@@ -168,16 +200,70 @@ Deno.serve(async (req) => {
       if (filters.management === "yes") q = q.eq("management_experience", true);
       if (filters.management === "no") q = q.eq("management_experience", false);
       if (filters.management_min_years != null) q = q.gte("management_years", filters.management_min_years);
-      if (filters.areas?.length) q = q.overlaps("areas_of_expertise", filters.areas);
+      if (filters.areas?.length) q = q.or(arrayContainsAnyOr("areas_of_expertise", filters.areas));
 
       // Niche filter: niche_experience is jsonb array of {niche, years}.
-      // Match if any selected niche appears as a {niche: X} entry. OR within category.
+      // Match if any selected niche appears as {niche: X}. Tolerate either {"niche":...} or {"name":...}.
       if (filters.niches?.length) {
-        const ors = filters.niches.map((n: string) => {
-          const safe = String(n).replace(/"/g, '\\"');
-          return `niche_experience.cs.[{"niche":"${safe}"}]`;
-        }).join(",");
-        q = q.or(ors);
+        const ors: string[] = [];
+        for (const n of filters.niches) {
+          const safe = String(n).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+          ors.push(`niche_experience.cs.[{"niche":"${safe}"}]`);
+          ors.push(`niche_experience.cs.[{"name":"${safe}"}]`);
+        }
+        q = q.or(ors.join(","));
+      }
+
+      // Location filter: state(s) + city free text. Considers current location,
+      // relocation_states, relocation_cities, and open_to_anywhere.
+      // Major-city → state lookup for cross-matches (e.g. "Denver" -> "Colorado").
+      const CITY_TO_STATE: Record<string, string> = {
+        "denver": "Colorado","boulder": "Colorado","fort collins": "Colorado","colorado springs": "Colorado",
+        "portland": "Oregon","eugene": "Oregon","bend": "Oregon",
+        "seattle": "Washington","tacoma": "Washington","spokane": "Washington","bellingham": "Washington",
+        "san francisco": "California","oakland": "California","los angeles": "California",
+        "san diego": "California","sacramento": "California","san jose": "California",
+        "new york": "New York","brooklyn": "New York","nyc": "New York",
+        "boston": "Massachusetts","cambridge": "Massachusetts",
+        "austin": "Texas","dallas": "Texas","houston": "Texas","san antonio": "Texas",
+        "chicago": "Illinois","phoenix": "Arizona","tucson": "Arizona","flagstaff": "Arizona",
+        "salt lake city": "Utah","park city": "Utah","moab": "Utah",
+        "atlanta": "Georgia","miami": "Florida","tampa": "Florida","orlando": "Florida",
+        "minneapolis": "Minnesota","saint paul": "Minnesota",
+        "detroit": "Michigan","ann arbor": "Michigan",
+        "philadelphia": "Pennsylvania","pittsburgh": "Pennsylvania",
+        "nashville": "Tennessee","memphis": "Tennessee","knoxville": "Tennessee",
+        "charlotte": "North Carolina","raleigh": "North Carolina","asheville": "North Carolina",
+        "burlington": "Vermont","jackson": "Wyoming","jackson hole": "Wyoming",
+        "missoula": "Montana","bozeman": "Montana","boise": "Idaho","ketchum": "Idaho",
+        "santa fe": "New Mexico","albuquerque": "New Mexico","taos": "New Mexico",
+        "las vegas": "Nevada","reno": "Nevada","washington dc": "District of Columbia","dc": "District of Columbia",
+      };
+      const escapeLike = (s: string) => s.replace(/[%_]/g, "");
+      if (filters.states?.length) {
+        const ors: string[] = [];
+        for (const st of filters.states) {
+          const safe = String(st).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+          ors.push(`current_state.eq.${st}`);
+          ors.push(`relocation_states.cs.{"${safe}"}`);
+        }
+        ors.push(`open_to_anywhere.eq.true`);
+        q = q.or(ors.join(","));
+      }
+      if (filters.city && String(filters.city).trim()) {
+        const city = escapeLike(String(filters.city).trim());
+        const lookupState = CITY_TO_STATE[city.toLowerCase()];
+        const ors: string[] = [
+          `current_city.ilike.%${city}%`,
+          `relocation_cities.ilike.%${city}%`,
+          `open_to_anywhere.eq.true`,
+        ];
+        if (lookupState) {
+          const safe = lookupState.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+          ors.push(`relocation_states.cs.{"${safe}"}`);
+          ors.push(`current_state.eq.${lookupState}`);
+        }
+        q = q.or(ors.join(","));
       }
 
       if (search) {
