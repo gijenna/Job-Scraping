@@ -243,14 +243,15 @@ serve(async (req) => {
     if (error) throw new Error(error.message);
     if (!c) throw new Error(`Candidate ${id} not found`);
     const row = await buildRow(sb, c);
-    const existing = await findRowByIdColumn(token, id);
+    const { row: existing, nextRow } = await findRowByIdColumn(token, id);
     if (existing) {
       await updateRow(token, existing, row);
       result.action = "updated";
       result.row = existing;
     } else {
-      await appendRow(token, row);
+      await writeRowAt(token, nextRow, row);
       result.action = "appended";
+      result.row = nextRow;
     }
     return new Response(JSON.stringify({ success: true, ...result }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
