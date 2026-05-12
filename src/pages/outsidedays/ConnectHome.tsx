@@ -26,6 +26,7 @@ import ConnectBottomNav from "@/components/connect/ConnectBottomNav";
 import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-event-mode";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
+import { calcProfileCompleteness } from "@/lib/profile-completeness";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
