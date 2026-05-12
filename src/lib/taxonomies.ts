@@ -3,8 +3,8 @@
 
 export const POACHABLE_STATUS = [
   "Ready to jump",
-  "Poachable for the right thing",
-  "Just here to network",
+  "Always open to the right opportunity",
+  "I'm off market",
 ] as const;
 
 export const CAREER_STAGE = [

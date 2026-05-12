@@ -40,16 +40,30 @@ Deno.serve(async (req) => {
   }
 
   // Resolve event start (gates "visited my table" pre-event).
+  // Note: expert_cities slug for Denver is "denver" (not "denver26").
   let eventStartMs = 0;
   {
     const { data: city } = await sb.from("expert_cities")
-      .select("event_date").eq("slug", "denver26").maybeSingle();
+      .select("event_date").eq("slug", "denver").maybeSingle();
     if (city?.event_date) eventStartMs = new Date(city.event_date).getTime();
   }
   const eventStarted = eventStartMs > 0 && Date.now() >= eventStartMs;
   const visitedAt = (createdAt: string) => {
-    if (!eventStartMs) return eventStarted; // no date set: allow
+    if (!eventStartMs) return true; // no date set: treat all logged connections as visited
     return new Date(createdAt).getTime() >= eventStartMs;
+  };
+
+  // Parse min_pay_rate text like "75", "75K", "75,000", "150k", "$90,000".
+  // Heuristic: strip non-numeric, parse number; if original had "k" or value < 1000, multiply by 1000.
+  const parsePay = (raw: string | null | undefined): number | null => {
+    if (!raw) return null;
+    const s = String(raw).trim();
+    const hasK = /k/i.test(s);
+    const n = Number(s.replace(/[^0-9.]/g, ""));
+    if (!Number.isFinite(n) || n <= 0) return null;
+    if (hasK) return n * 1000;
+    if (n < 1000) return n * 1000; // user typed "75" meaning 75K
+    return n;
   };
 
   try {
@@ -59,11 +73,19 @@ Deno.serve(async (req) => {
       totals.registered = regCount || 0;
       if (brand) {
         const { data: conns } = await sb.from("connections")
-          .select("id, message_sent_at, role_flagged, created_at").eq("brand_id", brand.id);
-        const visitedConns = (conns || []).filter((c: any) => visitedAt(c.created_at));
-        totals.visited = visitedConns.length;
-        totals.sent_note = (conns || []).filter((c: any) => c.message_sent_at).length;
+          .select("id, candidate_id, role_flagged, created_at").eq("brand_id", brand.id);
+        // "Visited" = unique candidates with a connection logged at/after event start.
+        const visitedSet = new Set<string>();
+        for (const c of conns || []) {
+          if (visitedAt(c.created_at)) visitedSet.add(c.candidate_id);
+        }
+        totals.visited = visitedSet.size;
         totals.flagged = (conns || []).filter((c: any) => c.role_flagged).length;
+        // "Sent a note" = unique candidates with an active connect_note to this brand
+        // (matches the pre/during/post-event note filter chips).
+        const { data: noteRows } = await sb.from("connect_notes")
+          .select("candidate_id").eq("brand_id", brand.id).eq("is_active", true);
+        totals.sent_note = new Set((noteRows || []).map((n: any) => n.candidate_id)).size;
         const { count: starCount } = await sb.from("candidate_starred_brands")
           .select("id", { count: "exact", head: true }).eq("brand_id", brand.id);
         totals.starred = starCount || 0;
@@ -148,6 +170,16 @@ Deno.serve(async (req) => {
       if (filters.management_min_years != null) q = q.gte("management_years", filters.management_min_years);
       if (filters.areas?.length) q = q.overlaps("areas_of_expertise", filters.areas);
 
+      // Niche filter: niche_experience is jsonb array of {niche, years}.
+      // Match if any selected niche appears as a {niche: X} entry. OR within category.
+      if (filters.niches?.length) {
+        const ors = filters.niches.map((n: string) => {
+          const safe = String(n).replace(/"/g, '\\"');
+          return `niche_experience.cs.[{"niche":"${safe}"}]`;
+        }).join(",");
+        q = q.or(ors);
+      }
+
       if (search) {
         const s = search.replace(/[%_]/g, "");
         q = q.or(
@@ -155,9 +187,12 @@ Deno.serve(async (req) => {
         );
       }
 
-      // Sort (DB-level)
-      if (sort === "most_complete") q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
-      else q = q.order("updated_at", { ascending: false });
+      // Sort: only "newest" (created_at desc) and "most_complete".
+      if (sort === "most_complete") {
+        q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
+      } else {
+        q = q.order("created_at", { ascending: false });
+      }
 
       q = q.range(page * pageSize, page * pageSize + pageSize - 1);
 
@@ -167,20 +202,18 @@ Deno.serve(async (req) => {
 
       // Engagement-only filters (post-filter)
       if (filters.visited) list = list.filter((c: any) => engagement[c.id]?.visited);
-      if (filters.sent_note) list = list.filter((c: any) => engagement[c.id]?.sent_note);
       if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
       if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
-      if (filters.has_connect_note) list = list.filter((c: any) => !!connectNotes[c.id]);
       if (filters.pre_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "pre_event");
       if (filters.during_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "during_event");
       if (filters.post_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "post_event");
 
-      // Min pay (text field — best-effort numeric parse)
+      // Min pay (text field — robust numeric parse: handles "75K", "$90,000", "75").
       if (filters.min_pay != null) {
         const target = Number(filters.min_pay);
         list = list.filter((c: any) => {
-          const n = Number(String(c.min_pay_rate || "").replace(/[^0-9.]/g, ""));
-          return !isNaN(n) && n >= target;
+          const n = parsePay(c.min_pay_rate);
+          return n != null && n >= target;
         });
       }
 
@@ -191,20 +224,7 @@ Deno.serve(async (req) => {
         connect_note: connectNotes[c.id] || null,
       }));
 
-      // Engagement-based sorts (post-fetch)
-      if (sort === "visited") {
-        result.sort((a: any, b: any) => {
-          const av = a.engagement?.visited ? new Date(a.engagement.last || 0).getTime() : -1;
-          const bv = b.engagement?.visited ? new Date(b.engagement.last || 0).getTime() : -1;
-          return bv - av;
-        });
-      } else if (sort === "wrote_note") {
-        result.sort((a: any, b: any) => {
-          const an = a.connect_note ? new Date(a.connect_note.sent_at || 0).getTime() : -1;
-          const bn = b.connect_note ? new Date(b.connect_note.sent_at || 0).getTime() : -1;
-          return bn - an;
-        });
-      }
+      // Sort options reduced to "newest" (DB-level, above) and "most_complete" (DB-level, above).
 
       // Log filter activity (fire and forget)
       sb.from("filter_logs").insert({

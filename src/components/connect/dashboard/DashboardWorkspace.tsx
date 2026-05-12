@@ -16,12 +16,18 @@ import { dashboardSummary } from "@/lib/connect-session";
 
 type Tab = "candidates" | "leads";
 
-function MetricPill({ label, value }: { label: string; value: number }) {
+function MetricPill({ label, value, onClick, active }: { label: string; value: number; onClick?: () => void; active?: boolean }) {
+  const Comp: any = onClick ? "button" : "div";
   return (
-    <div className="bg-events-cream/5 border border-events-cream/10 rounded-xl px-3 py-2">
+    <Comp
+      onClick={onClick}
+      className={`text-left bg-events-cream/5 border rounded-xl px-3 py-2 transition-colors ${
+        onClick ? "hover:border-events-coral/60 cursor-pointer" : ""
+      } ${active ? "border-events-coral bg-events-coral/10" : "border-events-cream/10"}`}
+    >
       <div className="text-events-cream font-display text-xl">{value}</div>
       <div className="text-events-cream/50 text-[10px] uppercase tracking-wider font-body">{label}</div>
-    </div>
+    </Comp>
   );
 }
 
@@ -80,10 +86,26 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
-          <MetricPill label="Registered" value={totals.registered} />
-          <MetricPill label="Visited table" value={totals.visited} />
-          <MetricPill label="Sent a note" value={totals.sent_note} />
-          <MetricPill label="Starred you" value={totals.starred} />
+          <MetricPill
+            label="Registered" value={totals.registered}
+            onClick={() => setFilters({})}
+            active={Object.keys(filters).length === 0}
+          />
+          <MetricPill
+            label="Visited table" value={totals.visited}
+            onClick={() => setFilters({ visited: true })}
+            active={!!filters.visited}
+          />
+          <MetricPill
+            label="Sent a note" value={totals.sent_note}
+            onClick={() => setFilters({ pre_event_note: true, during_event_note: true, post_event_note: true })}
+            active={!!(filters.pre_event_note || filters.during_event_note || filters.post_event_note)}
+          />
+          <MetricPill
+            label="Starred you" value={totals.starred}
+            onClick={() => setFilters({ starred_brand: true })}
+            active={!!filters.starred_brand}
+          />
         </div>
       </div>
 
@@ -193,16 +215,18 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
 }
 
 function SortSelect({ sort, setSort }: { sort: string; setSort: (s: string) => void }) {
+  const labels: Record<string, string> = {
+    newest: "Newest",
+    most_complete: "Most complete profiles",
+  };
   return (
     <Select value={sort} onValueChange={setSort}>
-      <SelectTrigger className="w-[180px] max-w-[55vw] bg-events-cream/5 border-events-cream/20 text-events-cream">
-        <SelectValue className="truncate" />
+      <SelectTrigger className="w-[240px] max-w-[70vw] bg-events-cream/5 border-events-cream/20 text-events-cream">
+        <span className="truncate">Sort by: {labels[sort] || "Newest"}</span>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="newest">Newest</SelectItem>
         <SelectItem value="most_complete">Most complete profiles</SelectItem>
-        <SelectItem value="visited">Visited my table</SelectItem>
-        <SelectItem value="wrote_note">Wrote me a note</SelectItem>
       </SelectContent>
     </Select>
   );
