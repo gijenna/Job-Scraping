@@ -290,16 +290,28 @@ Deno.serve(async (req) => {
       if (filters.visited) list = list.filter((c: any) => engagement[c.id]?.visited);
       if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
       if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
-      if (filters.pre_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "pre_event");
-      if (filters.during_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "during_event");
-      if (filters.post_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "post_event");
+      // Note timing chips use OR within the category.
+      if (filters.pre_event_note || filters.during_event_note || filters.post_event_note) {
+        const allowed = new Set<string>();
+        if (filters.pre_event_note) allowed.add("pre_event");
+        if (filters.during_event_note) allowed.add("during_event");
+        if (filters.post_event_note) allowed.add("post_event");
+        list = list.filter((c: any) => {
+          const t = connectNotes[c.id]?.note_timing;
+          return t && allowed.has(t);
+        });
+      }
 
-      // Min pay (text field — robust numeric parse: handles "75K", "$90,000", "75").
+      // Min pay (text field, robust numeric parse: handles "75K", "$90,000", "75").
+      // Brand-side filter represents what the brand can afford. Include candidates whose
+      // stated min_pay_rate is at or below the brand's value. NULL min_pay_rate is treated
+      // as "open to negotiation" and always included.
       if (filters.min_pay != null) {
         const target = Number(filters.min_pay);
         list = list.filter((c: any) => {
           const n = parsePay(c.min_pay_rate);
-          return n != null && n >= target;
+          if (n == null) return true;
+          return n <= target;
         });
       }
 
