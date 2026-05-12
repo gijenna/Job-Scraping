@@ -20,7 +20,16 @@ const SLUG_MAP: Record<string, string> = {
   "/afterpartyoakley": "afterparty",
   "/guests": "afterparty",
   "/guestsoakley": "afterparty",
+  "/denverreps": "denverreps",
+  "/pnwreps": "pnwreps",
 };
+
+// Path patterns (regex) that resolve to a slug
+const SLUG_PATTERNS: Array<{ pattern: RegExp; slug: string }> = [
+  { pattern: /^\/afterparty(oakley)?\/[^/]+$/i, slug: "afterparty" },
+  { pattern: /^\/denverreps\/[^/]+$/i, slug: "denverreps" },
+  { pattern: /^\/pnwreps\/[^/]+$/i, slug: "pnwreps" },
+];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
