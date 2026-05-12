@@ -132,6 +132,7 @@ Deno.serve(async (req) => {
       const { data: updated, error } = await sb
         .from("candidates").update({ [field]: signed.signedUrl }).eq("id", candidateId).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      fireSheetSync(candidateId);
       return jsonFor(req, { candidate: updated, signed_url: signed.signedUrl });
     }
 
