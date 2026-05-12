@@ -162,6 +162,16 @@ Deno.serve(async (req) => {
       if (filters.management_min_years != null) q = q.gte("management_years", filters.management_min_years);
       if (filters.areas?.length) q = q.overlaps("areas_of_expertise", filters.areas);
 
+      // Niche filter: niche_experience is jsonb array of {niche, years}.
+      // Match if any selected niche appears as a {niche: X} entry. OR within category.
+      if (filters.niches?.length) {
+        const ors = filters.niches.map((n: string) => {
+          const safe = String(n).replace(/"/g, '\\"');
+          return `niche_experience.cs.[{"niche":"${safe}"}]`;
+        }).join(",");
+        q = q.or(ors);
+      }
+
       if (search) {
         const s = search.replace(/[%_]/g, "");
         q = q.or(
@@ -169,9 +179,12 @@ Deno.serve(async (req) => {
         );
       }
 
-      // Sort (DB-level)
-      if (sort === "most_complete") q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
-      else q = q.order("updated_at", { ascending: false });
+      // Sort: only "newest" (created_at desc) and "most_complete".
+      if (sort === "most_complete") {
+        q = q.order("profile_completeness_score", { ascending: false, nullsFirst: false });
+      } else {
+        q = q.order("created_at", { ascending: false });
+      }
 
       q = q.range(page * pageSize, page * pageSize + pageSize - 1);
 
@@ -181,20 +194,18 @@ Deno.serve(async (req) => {
 
       // Engagement-only filters (post-filter)
       if (filters.visited) list = list.filter((c: any) => engagement[c.id]?.visited);
-      if (filters.sent_note) list = list.filter((c: any) => engagement[c.id]?.sent_note);
       if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
       if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
-      if (filters.has_connect_note) list = list.filter((c: any) => !!connectNotes[c.id]);
       if (filters.pre_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "pre_event");
       if (filters.during_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "during_event");
       if (filters.post_event_note) list = list.filter((c: any) => connectNotes[c.id]?.note_timing === "post_event");
 
-      // Min pay (text field — best-effort numeric parse)
+      // Min pay (text field — robust numeric parse: handles "75K", "$90,000", "75").
       if (filters.min_pay != null) {
         const target = Number(filters.min_pay);
         list = list.filter((c: any) => {
-          const n = Number(String(c.min_pay_rate || "").replace(/[^0-9.]/g, ""));
-          return !isNaN(n) && n >= target;
+          const n = parsePay(c.min_pay_rate);
+          return n != null && n >= target;
         });
       }
 
