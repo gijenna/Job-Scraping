@@ -78,6 +78,9 @@ export default function BrandCardPreview({ brand, onClick }: Props) {
 
       {/* Why visit our table */}
       <div className="mt-4">
+        <h4 className="text-[10px] uppercase tracking-[0.18em] font-display text-events-coral/80 mb-1.5">
+          Why visit our table
+        </h4>
         {why ? (
           <blockquote className="border-l-2 border-events-coral/60 pl-3 text-sm text-events-cream/80 font-body">
             {why}
