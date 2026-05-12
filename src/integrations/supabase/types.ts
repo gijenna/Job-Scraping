@@ -572,8 +572,10 @@ export type Database = {
           brand_contact_consent: boolean
           career_stage: string | null
           created_at: string
+          current_city: string | null
           current_company: string | null
           current_location: string | null
+          current_state: string | null
           current_title: string | null
           data_portability_consent: boolean
           dei_disability: string | null
@@ -597,6 +599,7 @@ export type Database = {
           management_years: number | null
           min_pay_rate: string | null
           niche_experience: Json | null
+          open_to_anywhere: boolean | null
           open_to_relocation: boolean | null
           open_to_retail: boolean | null
           outdoor_industry_experience: boolean | null
@@ -608,7 +611,9 @@ export type Database = {
           portfolio_url: string | null
           prior_careers: Json | null
           profile_completeness_score: number | null
+          relocation_cities: string | null
           relocation_locations: string | null
+          relocation_states: string[] | null
           remote_preference: string | null
           resume_url: string | null
           signup_mode: string | null
@@ -624,8 +629,10 @@ export type Database = {
           brand_contact_consent?: boolean
           career_stage?: string | null
           created_at?: string
+          current_city?: string | null
           current_company?: string | null
           current_location?: string | null
+          current_state?: string | null
           current_title?: string | null
           data_portability_consent?: boolean
           dei_disability?: string | null
@@ -649,6 +656,7 @@ export type Database = {
           management_years?: number | null
           min_pay_rate?: string | null
           niche_experience?: Json | null
+          open_to_anywhere?: boolean | null
           open_to_relocation?: boolean | null
           open_to_retail?: boolean | null
           outdoor_industry_experience?: boolean | null
@@ -660,7 +668,9 @@ export type Database = {
           portfolio_url?: string | null
           prior_careers?: Json | null
           profile_completeness_score?: number | null
+          relocation_cities?: string | null
           relocation_locations?: string | null
+          relocation_states?: string[] | null
           remote_preference?: string | null
           resume_url?: string | null
           signup_mode?: string | null
@@ -676,8 +686,10 @@ export type Database = {
           brand_contact_consent?: boolean
           career_stage?: string | null
           created_at?: string
+          current_city?: string | null
           current_company?: string | null
           current_location?: string | null
+          current_state?: string | null
           current_title?: string | null
           data_portability_consent?: boolean
           dei_disability?: string | null
@@ -701,6 +713,7 @@ export type Database = {
           management_years?: number | null
           min_pay_rate?: string | null
           niche_experience?: Json | null
+          open_to_anywhere?: boolean | null
           open_to_relocation?: boolean | null
           open_to_retail?: boolean | null
           outdoor_industry_experience?: boolean | null
@@ -712,7 +725,9 @@ export type Database = {
           portfolio_url?: string | null
           prior_careers?: Json | null
           profile_completeness_score?: number | null
+          relocation_cities?: string | null
           relocation_locations?: string | null
+          relocation_states?: string[] | null
           remote_preference?: string | null
           resume_url?: string | null
           signup_mode?: string | null
