@@ -73,11 +73,19 @@ Deno.serve(async (req) => {
       totals.registered = regCount || 0;
       if (brand) {
         const { data: conns } = await sb.from("connections")
-          .select("id, message_sent_at, role_flagged, created_at").eq("brand_id", brand.id);
-        const visitedConns = (conns || []).filter((c: any) => visitedAt(c.created_at));
-        totals.visited = visitedConns.length;
-        totals.sent_note = (conns || []).filter((c: any) => c.message_sent_at).length;
+          .select("id, candidate_id, role_flagged, created_at").eq("brand_id", brand.id);
+        // "Visited" = unique candidates with a connection logged at/after event start.
+        const visitedSet = new Set<string>();
+        for (const c of conns || []) {
+          if (visitedAt(c.created_at)) visitedSet.add(c.candidate_id);
+        }
+        totals.visited = visitedSet.size;
         totals.flagged = (conns || []).filter((c: any) => c.role_flagged).length;
+        // "Sent a note" = unique candidates with an active connect_note to this brand
+        // (matches the pre/during/post-event note filter chips).
+        const { data: noteRows } = await sb.from("connect_notes")
+          .select("candidate_id").eq("brand_id", brand.id).eq("is_active", true);
+        totals.sent_note = new Set((noteRows || []).map((n: any) => n.candidate_id)).size;
         const { count: starCount } = await sb.from("candidate_starred_brands")
           .select("id", { count: "exact", head: true }).eq("brand_id", brand.id);
         totals.starred = starCount || 0;
