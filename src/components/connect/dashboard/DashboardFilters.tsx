@@ -14,6 +14,7 @@ import {
   REMOTE_PREFERENCES as TAX_REMOTE,
   NICHES as TAX_NICHES,
   POACHABLE_STATUS as TAX_POACHABLE,
+  US_STATES,
 } from "@/lib/taxonomies";
 
 export type Filters = {
@@ -32,7 +33,9 @@ export type Filters = {
   workplace?: string[];
   remote?: string[];
   niches?: string[];
-  relocation?: "yes" | "no" | undefined;
+  areas?: string[];
+  states?: string[];
+  city?: string;
   open_to_retail?: boolean;
   outdoor?: "yes" | "no" | undefined;
   outdoor_min_years?: number;
@@ -128,6 +131,36 @@ function NicheSearchableMulti({ value = [], onChange }: { value?: string[]; onCh
   );
 }
 
+function StateMultiSelect({ value = [], onChange }: { value?: string[]; onChange: (v: string[]) => void }) {
+  const [q, setQ] = useState("");
+  const filtered = useMemo(() => {
+    const ql = q.trim().toLowerCase();
+    return US_STATES.filter((s) => !ql || s.toLowerCase().includes(ql));
+  }, [q]);
+  const toggle = (s: string) => onChange(value.includes(s) ? value.filter((x) => x !== s) : [...value, s]);
+  return (
+    <div>
+      <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">State</Label>
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {value.map((s) => (
+            <Chip key={s} active onClick={() => toggle(s)}>{s} ✕</Chip>
+          ))}
+        </div>
+      )}
+      <Input
+        value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search states..."
+        className="bg-events-cream/5 border-events-cream/15 text-events-cream placeholder:text-events-cream/40 mb-2 h-8 text-xs"
+      />
+      <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
+        {filtered.map((s) => (
+          <Chip key={s} active={value.includes(s)} onClick={() => toggle(s)}>{s}</Chip>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardFilters({
   filters, onChange, search, onSearch, hasVisited,
 }: {
@@ -141,6 +174,10 @@ export default function DashboardFilters({
   const yrsMax = filters.years_max ?? 30;
 
   const set = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
+  const clearAll = () => {
+    onChange({});
+    onSearch("");
+  };
 
   const sendWishlist = async () => {
     if (!wishlist.trim()) return;
@@ -157,6 +194,16 @@ export default function DashboardFilters({
 
   return (
     <div className="space-y-5 text-events-cream">
+      <div className="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={clearAll}
+          className="text-events-cream/70 hover:text-events-cream underline-offset-4 hover:underline text-xs font-body"
+        >
+          Clear all filters
+        </button>
+      </div>
+
       <div>
         <Input
           value={search}
@@ -166,6 +213,7 @@ export default function DashboardFilters({
         />
       </div>
 
+      {/* 1. Engagement */}
       <div>
         <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">
           Engagement with my brand
@@ -174,20 +222,31 @@ export default function DashboardFilters({
           <Chip active={!!filters.visited} onClick={() => set({ visited: !filters.visited })}>
             Visited my table {!hasVisited && "(0 so far)"}
           </Chip>
+          <Chip active={!!filters.pre_event_note || !!filters.during_event_note || !!filters.post_event_note}
+            onClick={() => set({
+              pre_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
+              during_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
+              post_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
+            })}>Sent me a note</Chip>
+          <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand pre-event</Chip>
           <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
-          <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand</Chip>
+        </div>
+        <div className="flex flex-wrap gap-1.5 mt-2">
           <Chip active={!!filters.pre_event_note} onClick={() => set({ pre_event_note: !filters.pre_event_note })}>Pre-event note</Chip>
           <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>
           <Chip active={!!filters.post_event_note} onClick={() => set({ post_event_note: !filters.post_event_note })}>Post-event note</Chip>
         </div>
       </div>
 
-      <ChipGroup
-        label="Career stage"
-        options={CAREER_STAGE_CHIPS}
-        value={filters.career_stage}
-        onChange={(v) => set({ career_stage: v })}
-      />
+      {/* 2. Open to retail */}
+      <div>
+        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Retail</Label>
+        <div className="flex flex-wrap gap-1.5">
+          <Chip active={!!filters.open_to_retail} onClick={() => set({ open_to_retail: !filters.open_to_retail })}>Open to retail work</Chip>
+        </div>
+      </div>
+
+      {/* 3. Poachable status */}
       <ChipGroup
         label="How easily could a brand poach you?"
         options={TAX_POACHABLE as any}
@@ -195,6 +254,7 @@ export default function DashboardFilters({
         onChange={(v) => set({ poachable_status: v })}
       />
 
+      {/* 4. Field + Focus */}
       <div>
         <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Field</Label>
         <div className="flex flex-wrap gap-1.5">
@@ -204,6 +264,7 @@ export default function DashboardFilters({
         </div>
       </div>
 
+      {/* 5. Years in field */}
       <div>
         <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">
           Years in field: {yrsMin} to {yrsMax}+
@@ -211,21 +272,52 @@ export default function DashboardFilters({
         <Slider min={0} max={30} step={1} value={[yrsMin, yrsMax]} onValueChange={(v) => set({ years_min: v[0], years_max: v[1] })} />
       </div>
 
-      <NicheSearchableMulti value={filters.niches} onChange={(v) => set({ niches: v })} />
-
-      <ChipGroup label="Job type seeking" options={TAX_JOB_TYPES as any} value={filters.job_types} onChange={(v) => set({ job_types: v })} />
-      <ChipGroup label="Workplace preference" options={TAX_WORKPLACE as any} value={filters.workplace} onChange={(v) => set({ workplace: v })} />
-      <ChipGroup label="Remote preference" options={TAX_REMOTE as any} value={filters.remote} onChange={(v) => set({ remote: v })} />
-
-      <TriToggle label="Open to relocation" value={filters.relocation} onChange={(v) => set({ relocation: v })} />
-
-      <div>
-        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Retail</Label>
-        <div className="flex flex-wrap gap-1.5">
-          <Chip active={!!filters.open_to_retail} onClick={() => set({ open_to_retail: !filters.open_to_retail })}>Open to retail work</Chip>
+      {/* 6. Location */}
+      <div className="space-y-3 pt-1">
+        <StateMultiSelect value={filters.states} onChange={(v) => set({ states: v })} />
+        <div>
+          <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">City</Label>
+          <Input
+            value={filters.city || ""}
+            onChange={(e) => set({ city: e.target.value })}
+            placeholder="e.g. Denver"
+            className="bg-events-cream/5 border-events-cream/15 text-events-cream placeholder:text-events-cream/40"
+          />
+          <p className="text-[11px] text-events-cream/50 mt-1 font-body">
+            Also matches candidates open to relocating to that city or anywhere.
+          </p>
         </div>
       </div>
 
+      {/* 7. Remote preference */}
+      <ChipGroup label="Remote preference" options={TAX_REMOTE as any} value={filters.remote} onChange={(v) => set({ remote: v })} />
+
+      {/* 8. Min pay rate */}
+      <div>
+        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Min pay rate (annual $)</Label>
+        <Input
+          type="number" min={0} step={5000} placeholder="e.g. 60000"
+          value={filters.min_pay ?? ""}
+          onChange={(e) => set({ min_pay: e.target.value ? Number(e.target.value) : undefined })}
+          className="bg-events-cream/5 border-events-cream/15 text-events-cream placeholder:text-events-cream/40"
+        />
+      </div>
+
+      {/* 9. Niches */}
+      <NicheSearchableMulti value={filters.niches} onChange={(v) => set({ niches: v })} />
+
+      {/* 10. Skills (renamed from Areas of expertise) */}
+      <div>
+        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Skills</Label>
+        <Input
+          placeholder="Filter by skill keyword..."
+          value={filters.areas?.[0] || ""}
+          onChange={(e) => set({ areas: e.target.value ? [e.target.value] : undefined })}
+          className="bg-events-cream/5 border-events-cream/15 text-events-cream placeholder:text-events-cream/40"
+        />
+      </div>
+
+      {/* 11. Outdoor industry */}
       <div className="space-y-2">
         <TriToggle label="Outdoor industry experience" value={filters.outdoor} onChange={(v) => set({ outdoor: v })} />
         {filters.outdoor === "yes" && (
@@ -238,6 +330,18 @@ export default function DashboardFilters({
         )}
       </div>
 
+      {/* 12. Job type seeking */}
+      <ChipGroup label="Job type seeking" options={TAX_JOB_TYPES as any} value={filters.job_types} onChange={(v) => set({ job_types: v })} />
+
+      {/* 13. Career stage */}
+      <ChipGroup
+        label="Career stage"
+        options={CAREER_STAGE_CHIPS}
+        value={filters.career_stage}
+        onChange={(v) => set({ career_stage: v })}
+      />
+
+      {/* 14. Management experience */}
       <div className="space-y-2">
         <TriToggle label="Management experience" value={filters.management} onChange={(v) => set({ management: v })} />
         {filters.management === "yes" && (
@@ -250,15 +354,8 @@ export default function DashboardFilters({
         )}
       </div>
 
-      <div>
-        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">Min pay rate (annual $)</Label>
-        <Input
-          type="number" min={0} step={5000} placeholder="e.g. 60000"
-          value={filters.min_pay ?? ""}
-          onChange={(e) => set({ min_pay: e.target.value ? Number(e.target.value) : undefined })}
-          className="bg-events-cream/5 border-events-cream/15 text-events-cream placeholder:text-events-cream/40"
-        />
-      </div>
+      {/* 15. Workplace type preference */}
+      <ChipGroup label="Workplace type preference" options={TAX_WORKPLACE as any} value={filters.workplace} onChange={(v) => set({ workplace: v })} />
 
       <div className="pt-4 border-t border-events-cream/10 opacity-80">
         <Label className="text-events-cream/70 text-xs font-body block mb-1">Can't find what you're looking for?</Label>
