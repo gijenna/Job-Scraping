@@ -7,6 +7,8 @@ project_id = "qpnzjcbdtybwazceggmv"
     verify_jwt = false
   [functions.sync-expert]
     verify_jwt = false
+  [functions.sync-candidate]
+    verify_jwt = false
   [functions.attendee-stats]
     verify_jwt = false
   [functions.expert-og]

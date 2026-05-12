@@ -11,6 +11,25 @@ const ALLOWED_FIELDS = new Set([
   "signup_mode","field_other","data_portability_consent","open_to_retail","brand_contact_consent",
 ]);
 
+function fireSheetSync(candidateId: string) {
+  try {
+    const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/sync-candidate`;
+    const p = fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      },
+      body: JSON.stringify({ id: candidateId }),
+    }).catch((e) => console.error("candidate sheet sync failed", e));
+    // @ts-ignore EdgeRuntime is available in Supabase edge runtime
+    const wait = (globalThis as any).EdgeRuntime?.waitUntil;
+    if (wait) wait(p);
+  } catch (e) {
+    console.error("candidate sheet sync failed", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeadersFor(req) });
 
@@ -84,6 +103,7 @@ Deno.serve(async (req) => {
       const { data, error } = await sb
         .from("candidates").update(patch).eq("id", candidateId).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      fireSheetSync(candidateId);
       return jsonFor(req, { candidate: data });
     }
 
@@ -112,6 +132,7 @@ Deno.serve(async (req) => {
       const { data: updated, error } = await sb
         .from("candidates").update({ [field]: signed.signedUrl }).eq("id", candidateId).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      fireSheetSync(candidateId);
       return jsonFor(req, { candidate: updated, signed_url: signed.signedUrl });
     }
 
