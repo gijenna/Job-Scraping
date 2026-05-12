@@ -103,6 +103,7 @@ Deno.serve(async (req) => {
       const { data, error } = await sb
         .from("candidates").update(patch).eq("id", candidateId).select("*").single();
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
+      fireSheetSync(candidateId);
       return jsonFor(req, { candidate: data });
     }
 
