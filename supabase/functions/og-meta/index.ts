@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
     });
   }
 
-  const slug = SLUG_MAP[path];
+  const slug = SLUG_MAP[path] || SLUG_PATTERNS.find((p) => p.pattern.test(path))?.slug;
   if (!slug) {
     return new Response("Unknown path", { status: 404, headers: corsHeaders });
   }
