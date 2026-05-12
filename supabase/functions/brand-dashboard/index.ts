@@ -40,16 +40,30 @@ Deno.serve(async (req) => {
   }
 
   // Resolve event start (gates "visited my table" pre-event).
+  // Note: expert_cities slug for Denver is "denver" (not "denver26").
   let eventStartMs = 0;
   {
     const { data: city } = await sb.from("expert_cities")
-      .select("event_date").eq("slug", "denver26").maybeSingle();
+      .select("event_date").eq("slug", "denver").maybeSingle();
     if (city?.event_date) eventStartMs = new Date(city.event_date).getTime();
   }
   const eventStarted = eventStartMs > 0 && Date.now() >= eventStartMs;
   const visitedAt = (createdAt: string) => {
-    if (!eventStartMs) return eventStarted; // no date set: allow
+    if (!eventStartMs) return true; // no date set: treat all logged connections as visited
     return new Date(createdAt).getTime() >= eventStartMs;
+  };
+
+  // Parse min_pay_rate text like "75", "75K", "75,000", "150k", "$90,000".
+  // Heuristic: strip non-numeric, parse number; if original had "k" or value < 1000, multiply by 1000.
+  const parsePay = (raw: string | null | undefined): number | null => {
+    if (!raw) return null;
+    const s = String(raw).trim();
+    const hasK = /k/i.test(s);
+    const n = Number(s.replace(/[^0-9.]/g, ""));
+    if (!Number.isFinite(n) || n <= 0) return null;
+    if (hasK) return n * 1000;
+    if (n < 1000) return n * 1000; // user typed "75" meaning 75K
+    return n;
   };
 
   try {
