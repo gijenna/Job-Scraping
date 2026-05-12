@@ -19,12 +19,12 @@ const PAGES: Array<{ slug: string; label: string; urls: string[] }> = [
   { slug: "gather-pnw", label: "Gather PNW (legacy)", urls: ["/gather-pnw"] },
 ];
 
-const FIELDS = [
+const FIELDS: Array<{ key: string; label: string; isImage?: boolean }> = [
   { key: "page_og_title", label: "Title" },
   { key: "page_og_description", label: "Description" },
   { key: "page_og_image", label: "Preview Image", isImage: true },
   { key: "page_favicon", label: "Favicon", isImage: true },
-] as const;
+];
 
 type SettingsMap = Record<string, Record<string, string>>; // slug -> key -> value
 
