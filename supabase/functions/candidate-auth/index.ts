@@ -126,6 +126,7 @@ Deno.serve(async (req) => {
         "outdoor_industry_experience","outdoor_industry_years","management_experience",
         "management_years","min_pay_rate","portfolio_url","workplace_type_preference",
         "signup_mode","field_other","data_portability_consent","open_to_retail","brand_contact_consent",
+        "current_state","current_city","relocation_states","relocation_cities","open_to_anywhere",
       ]) if (body[k] !== undefined) insertable[k] = body[k];
 
 
