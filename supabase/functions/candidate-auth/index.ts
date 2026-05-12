@@ -96,6 +96,8 @@ Deno.serve(async (req) => {
       const wait = (globalThis as any).EdgeRuntime?.waitUntil;
       const p = fireWelcomeEmail({ id: data.id, first_name: data.first_name, email: data.email });
       if (wait) wait(p); else p.catch(() => {});
+      const ps = fireSheetSync(data.id);
+      if (wait) wait(ps); else ps.catch(() => {});
 
       const token = await createSession("candidate", data.id);
       return jsonFor(req, { session: { subject_type: "candidate", subject: data }, token }, { headers: setSessionCookieHeader(token) });
