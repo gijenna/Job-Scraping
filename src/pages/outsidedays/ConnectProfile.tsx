@@ -174,13 +174,36 @@ const ConnectProfile = () => {
             <Field label="Remote preference">
               <Select value={c.remote_preference || ""} onChange={(v) => set("remote_preference", v)} options={REMOTE_PREFERENCES as any} />
             </Field>
-            <Field label="Current location"><Input value={c.current_location || ""} onChange={(e) => set("current_location", e.target.value)} /></Field>
+            <Row>
+              <Field label="Current state">
+                <Select value={c.current_state || ""} onChange={(v) => set("current_state", v)} options={US_STATES as any} />
+              </Field>
+              <Field label="Current city"><Input value={c.current_city || ""} onChange={(e) => set("current_city", e.target.value)} placeholder="e.g. Phoenix" /></Field>
+            </Row>
+            {c.current_location && !c.current_state && (
+              <p className="text-[11px] text-events-cream/50 font-body">Previously: {c.current_location}</p>
+            )}
             <Row>
               <Field label="Open to relocation?">
                 <Select value={c.open_to_relocation === true ? "Yes" : c.open_to_relocation === false ? "No" : ""} onChange={(v) => set("open_to_relocation", v === "Yes")} options={["Yes", "No"]} />
               </Field>
-              <Field label="Where to?"><Input value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholder="e.g. PNW, CO, anywhere" /></Field>
+              <Field label="Open to anywhere">
+                <label className="flex items-center gap-2 h-10 text-sm font-body text-events-cream/80">
+                  <Checkbox checked={!!c.open_to_anywhere} onCheckedChange={(v) => set("open_to_anywhere", !!v)} />
+                  Yes, open to anywhere
+                </label>
+              </Field>
             </Row>
+            {c.open_to_relocation === true && (
+              <>
+                <Field label="States open to relocating to">
+                  <MultiPills value={c.relocation_states || []} options={US_STATES as any} onChange={(v) => set("relocation_states", v)} />
+                </Field>
+                <Field label="Specific cities or regions" hint="Separate with commas (e.g. 'Boulder, PNW, anywhere in the mountain west')">
+                  <Input value={c.relocation_cities || ""} onChange={(e) => set("relocation_cities", e.target.value)} placeholder="e.g. Boulder, PNW" />
+                </Field>
+              </>
+            )}
             <Field label="Min pay rate (optional)"><Input value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholder="e.g. 85k or 45/hr" /></Field>
           </Section>
 
