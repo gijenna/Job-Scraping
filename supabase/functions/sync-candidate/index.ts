@@ -144,16 +144,24 @@ async function buildRow(sb: any, c: any): Promise<any[]> {
   ];
 }
 
-async function findRowByIdColumn(token: string, id: string): Promise<number | null> {
+// Returns { row: <existing row 1-indexed or null>, nextRow: <first empty row to write to> }.
+// Reads the full A:A column. We use the count of returned values to decide where to
+// append next, instead of Sheets ":append" which walks past stray cells and can drop
+// new rows hundreds of rows below the contiguous block.
+async function findRowByIdColumn(token: string, id: string): Promise<{ row: number | null; nextRow: number }> {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(TAB_NAME + "!A:A")}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (!res.ok) throw new Error(`read A:A failed ${res.status}: ${await res.text()}`);
   const data = await res.json();
   const rows: string[][] = data.values || [];
+  let row: number | null = null;
+  let lastNonEmpty = 1; // header occupies row 1
   for (let i = 0; i < rows.length; i++) {
-    if ((rows[i]?.[0] || "") === id) return i + 1; // 1-indexed
+    const v = rows[i]?.[0] || "";
+    if (v) lastNonEmpty = i + 1;
+    if (v === id) row = i + 1;
   }
-  return null;
+  return { row, nextRow: Math.max(2, lastNonEmpty + 1) };
 }
 
 async function writeHeaderIfNeeded(token: string): Promise<void> {
@@ -182,14 +190,10 @@ async function updateRow(token: string, rowNum: number, values: any[]): Promise<
   if (!res.ok) throw new Error(`update row ${rowNum} failed ${res.status}: ${await res.text()}`);
 }
 
-async function appendRow(token: string, values: any[]): Promise<void> {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(TAB_NAME + "!A1")}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ values: [values] }),
-  });
-  if (!res.ok) throw new Error(`append failed ${res.status}: ${await res.text()}`);
+// Write directly to the computed next-empty row. Avoids Sheets ":append" finding
+// orphan cells far below the candidate block.
+async function writeRowAt(token: string, rowNum: number, values: any[]): Promise<void> {
+  await updateRow(token, rowNum, values);
 }
 
 async function clearAllExceptHeader(token: string): Promise<void> {
@@ -239,14 +243,15 @@ serve(async (req) => {
     if (error) throw new Error(error.message);
     if (!c) throw new Error(`Candidate ${id} not found`);
     const row = await buildRow(sb, c);
-    const existing = await findRowByIdColumn(token, id);
+    const { row: existing, nextRow } = await findRowByIdColumn(token, id);
     if (existing) {
       await updateRow(token, existing, row);
       result.action = "updated";
       result.row = existing;
     } else {
-      await appendRow(token, row);
+      await writeRowAt(token, nextRow, row);
       result.action = "appended";
+      result.row = nextRow;
     }
     return new Response(JSON.stringify({ success: true, ...result }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

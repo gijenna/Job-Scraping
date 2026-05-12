@@ -222,16 +222,8 @@ export default function DashboardFilters({
           <Chip active={!!filters.visited} onClick={() => set({ visited: !filters.visited })}>
             Visited my table {!hasVisited && "(0 so far)"}
           </Chip>
-          <Chip active={!!filters.pre_event_note || !!filters.during_event_note || !!filters.post_event_note}
-            onClick={() => set({
-              pre_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
-              during_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
-              post_event_note: !(filters.pre_event_note || filters.during_event_note || filters.post_event_note),
-            })}>Sent me a note</Chip>
           <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand pre-event</Chip>
           <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
-        </div>
-        <div className="flex flex-wrap gap-1.5 mt-2">
           <Chip active={!!filters.pre_event_note} onClick={() => set({ pre_event_note: !filters.pre_event_note })}>Pre-event note</Chip>
           <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>
           <Chip active={!!filters.post_event_note} onClick={() => set({ post_event_note: !filters.post_event_note })}>Post-event note</Chip>
