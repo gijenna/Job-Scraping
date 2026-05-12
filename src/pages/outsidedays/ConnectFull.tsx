@@ -15,7 +15,7 @@ import {
 import {
   POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD,
   JOB_TYPES, REMOTE_PREFERENCES, WORKPLACE_TYPES,
-  SKILL_CATEGORIES, SKILL_CATEGORY_KEYS, NICHES,
+  SKILL_CATEGORIES, SKILL_CATEGORY_KEYS, NICHES, US_STATES,
 } from "@/lib/taxonomies";
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import BubbleLogoPicker from "@/components/connect/BubbleLogoPicker";
