@@ -401,11 +401,14 @@ const ConnectFull = () => {
               <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
                 <EditableInput value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholderKey="full_min_pay_rate_placeholder" defaultPlaceholder="e.g. 85k or 45/hr" />
               </FieldRow>
-              <FieldRow label={label("full_current_location_label", "Current location")}>
-                <Input value={c.current_location || ""} onChange={(e) => set("current_location", e.target.value)} />
+              <FieldRow label={label("full_current_state_label", "Current state")}>
+                <SelectBox value={c.current_state || ""} onChange={(v) => set("current_state", v)} options={US_STATES as any} optionKeyPrefix="full_state_option" />
               </FieldRow>
             </Row>
             <Row>
+              <FieldRow label={label("full_current_city_label", "Current city")}>
+                <EditableInput value={c.current_city || ""} onChange={(e) => set("current_city", e.target.value)} placeholderKey="full_current_city_placeholder" defaultPlaceholder="e.g. Phoenix" />
+              </FieldRow>
               <FieldRow label={label("full_open_relocation_label", "Open to relocation?")}>
                 <SelectBox
                   value={c.open_to_relocation === true ? "Yes" : c.open_to_relocation === false ? "No" : ""}
@@ -414,12 +417,25 @@ const ConnectFull = () => {
                   optionKeyPrefix="full_yes_no_option"
                 />
               </FieldRow>
-              {c.open_to_relocation === true && (
-                <FieldRow label={label("full_relocation_where_label", "Where to?")}>
-                  <EditableInput value={c.relocation_locations || ""} onChange={(e) => set("relocation_locations", e.target.value)} placeholderKey="full_relocation_where_placeholder" defaultPlaceholder="e.g. PNW, CO, anywhere" />
-                </FieldRow>
-              )}
             </Row>
+            {c.open_to_relocation === true && (
+              <>
+                <FieldRow label={label("full_relocation_states_label", "States open to relocating to")}>
+                  <MultiPills value={c.relocation_states || []} options={US_STATES as any} onChange={(v) => set("relocation_states", v)} optionKeyPrefix="full_state_option" />
+                </FieldRow>
+                <Row>
+                  <FieldRow label={label("full_relocation_cities_label", "Specific cities or regions")}>
+                    <EditableInput value={c.relocation_cities || ""} onChange={(e) => set("relocation_cities", e.target.value)} placeholderKey="full_relocation_cities_placeholder" defaultPlaceholder="e.g. Boulder, PNW" />
+                  </FieldRow>
+                  <FieldRow label={label("full_open_to_anywhere_label", "Open to anywhere")}>
+                    <label className="flex items-center gap-2 h-10 text-sm font-body text-events-cream/80">
+                      <Checkbox checked={!!c.open_to_anywhere} onCheckedChange={(v) => set("open_to_anywhere", !!v)} />
+                      <EditableText settingKey="full_open_to_anywhere_text" defaultText="Yes, open to anywhere" as="span" />
+                    </label>
+                  </FieldRow>
+                </Row>
+              </>
+            )}
             <FieldRow
               label={label("full_open_to_retail_label", "Open to retail work?")}
               hint={<EditableText settingKey="full_open_to_retail_hint" defaultText="Retail roles in stores or showrooms. Includes ambassador, sales, and in-person customer-facing work." as="span" />}
