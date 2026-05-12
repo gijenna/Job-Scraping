@@ -1,0 +1,1 @@
+DELETE FROM public.candidates WHERE id IN ('94d819c6-e665-457a-abb4-689c252e1972','aec2fbe9-39ba-488a-8b97-7d2fce0041d4','9ccc5270-ded8-427b-970e-51c2b247c726');
