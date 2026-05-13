@@ -149,12 +149,18 @@ const MapBrandGroup = ({
       </div>
 
       {/* Logo bubble + name, always upright (no rotation) */}
+      {(() => {
+        const isHero = /^(outside inc|basecamp)$/i.test(brand.name.trim());
+        const bubble = isHero ? "w-20 h-20 border-4" : "w-10 h-10 border-2";
+        const inner = isHero ? "w-16 h-16" : "w-8 h-8";
+        const initialsSize = isHero ? "text-base" : "text-[10px]";
+        return (
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
-        <div className={`relative w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-2 border-white ${brand.is_featured ? "featured-bubble-glow" : ""}`}>
+        <div className={`relative ${bubble} rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-white ${brand.is_featured ? "featured-bubble-glow" : ""}`}>
           {logoSrc ? (
-            <img src={logoSrc} alt={brand.name} className="w-8 h-8 object-contain" />
+            <img src={logoSrc} alt={brand.name} className={`${inner} object-contain`} />
           ) : (
-            <span className="font-display font-bold text-[10px] text-events-teal">
+            <span className={`font-display font-bold ${initialsSize} text-events-teal`}>
               {brand.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
             </span>
           )}
