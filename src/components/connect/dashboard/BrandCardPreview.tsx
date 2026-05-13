@@ -6,9 +6,10 @@ import { ExternalLink, Wifi, Briefcase, Pencil } from "lucide-react";
 interface Props {
   brand: any;
   onClick?: () => void;
+  footerSlot?: React.ReactNode;
 }
 
-export default function BrandCardPreview({ brand, onClick }: Props) {
+export default function BrandCardPreview({ brand, onClick, footerSlot }: Props) {
   if (!brand) return null;
   const logoSrc = brand.logo_url || (brand.website_url ? (() => {
     try { return `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128`; } catch { return null; }
@@ -19,14 +20,20 @@ export default function BrandCardPreview({ brand, onClick }: Props) {
   const why = brand.why_visit_text;
 
   return (
-    <button
-      type="button"
+    <div
       onClick={onClick}
-      className="group block w-full text-left bg-events-teal border border-events-cream/15 rounded-2xl p-5 hover:border-events-coral/60 transition-colors relative"
+      className="group block w-full text-left bg-events-teal border border-events-cream/15 rounded-2xl p-5 hover:border-events-coral/60 transition-colors relative cursor-pointer"
     >
-      <span className="absolute top-3 right-3 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
-        <Pencil className="w-2.5 h-2.5" /> Edit my brand card
-      </span>
+      <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-1.5">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+          className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 hover:bg-events-coral text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100"
+        >
+          <Pencil className="w-2.5 h-2.5" /> Edit my brand card
+        </button>
+        {footerSlot}
+      </div>
 
       {/* Header */}
       <div className="flex items-center gap-3 pr-28">
