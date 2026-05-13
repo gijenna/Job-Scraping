@@ -15,6 +15,8 @@ import { useEventMode } from "@/lib/connect-event-mode";
 import {
   connectNotesGetMine,
   connectionsList,
+  candidateMe,
+  brandRepMe,
   type ConnectNote,
 } from "@/lib/connect-session";
 
