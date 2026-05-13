@@ -217,6 +217,48 @@ const ConnectPersonSheet = ({
           }}
         />
       )}
+
+      {authPromptOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70"
+          onClick={() => setAuthPromptOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md bg-events-teal rounded-2xl shadow-2xl p-6 text-events-cream"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setAuthPromptOpen(false)}
+              aria-label="Close"
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-events-cream/10 hover:bg-events-cream/20 flex items-center justify-center"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <h3 className="font-headline font-bold text-xl pr-8">
+              Register and sign in to send notes
+            </h3>
+            <p className="font-body text-sm text-events-cream/80 mt-3">
+              Notes help {expert.full_name?.split(" ")[0] || "this rep"} remember you and what you wanted to chat about. Register for the event first, then sign up for Connect to send notes.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              <a
+                href="https://basecampoutdoor.typeform.com/outsidedays"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-events-coral hover:bg-events-coral/90 text-events-cream font-display font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-full transition-colors"
+              >
+                Register for the event
+              </a>
+              <a
+                href="/outsidedays26/connect"
+                className="inline-flex items-center justify-center border border-events-cream/40 text-events-cream/90 hover:border-events-cream hover:text-events-cream font-display font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-full transition-colors"
+              >
+                Already registered? Continue to Connect
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
