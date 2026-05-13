@@ -307,7 +307,7 @@ const EventOutsideDays26 = () => {
         <MapBrandPanel
           brand={selectedMapBrand}
           onClose={() => setSelectedMapBrand(null)}
-          autoOpenRepSlug={mapRepSlug || null}
+          autoOpenRepSlug={shareConsumed ? null : (mapRepSlug || null)}
           registerUrl={TYPEFORM_DENVER}
           connectUrl="/outsidedays26/connect"
         />
