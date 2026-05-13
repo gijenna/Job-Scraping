@@ -147,16 +147,24 @@ const ConnectPersonSheet = ({
             {leadCaptureBrandId && <BrandLeadCapture brandId={leadCaptureBrandId} />}
           </div>
 
-          <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">
-            <ConnectActionFooter
-              mode={mode}
-              hasNote={!!note}
-              hasConnection={!!connection}
-              onSendNote={() => setComposerOpen(true)}
-              onLogConnection={() => setFormOpen(true)}
-              onViewConnection={() => setFormOpen(true)}
-            />
-          </div>
+          {viewer !== "brand_or_expert" && (
+            <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">
+              <ConnectActionFooter
+                mode={mode}
+                hasNote={!!note}
+                hasConnection={!!connection}
+                onSendNote={() => {
+                  if (viewer === "candidate") setComposerOpen(true);
+                  else setAuthPromptOpen(true);
+                }}
+                onLogConnection={() => {
+                  if (viewer === "candidate") setFormOpen(true);
+                  else setAuthPromptOpen(true);
+                }}
+                onViewConnection={() => setFormOpen(true)}
+              />
+            </div>
+          )}
         </SheetContent>
       </Sheet>
 
