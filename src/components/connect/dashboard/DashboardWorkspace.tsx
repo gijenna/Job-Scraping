@@ -145,16 +145,19 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
 
       {/* Two-up preview row: rep card (always) + brand card (if linked) */}
       <div className={`grid gap-4 mb-4 ${brand ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
-        <div
-          onClick={() => setRepEditOpen(true)}
-          className="cursor-pointer group relative bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/60 rounded-2xl p-4 transition-colors"
-        >
-          <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
-            <Pencil className="w-2.5 h-2.5" /> Edit my card
-          </span>
-          <div className="pt-7">
-            <ExpertCardCompact expert={(currentRep || rep) as any} />
+        <div className="flex flex-col">
+          <div
+            onClick={() => setRepEditOpen(true)}
+            className="cursor-pointer group relative bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/60 rounded-2xl p-4 transition-colors"
+          >
+            <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
+              <Pencil className="w-2.5 h-2.5" /> Edit my card
+            </span>
+            <div className="pt-7">
+              <ExpertCardCompact expert={(currentRep || rep) as any} />
+            </div>
           </div>
+          <ShareMyCardPill rep={currentRep || rep} />
         </div>
         {brand && (
           <div className="flex flex-col">
