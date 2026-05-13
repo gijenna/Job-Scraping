@@ -113,11 +113,14 @@ const BrandDashboard = () => {
   return (
     <EditableTextProvider pageSlug="outsidedays26-brand-dashboard">
     <ImpersonationGate>
-      <div className="min-h-screen bg-events-teal text-events-cream px-4 py-8 md:py-14">
-        <div className="max-w-md mx-auto space-y-6">
+      <div
+        className="min-h-screen text-events-cream px-4 py-8 md:py-14 relative bg-events-teal bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `linear-gradient(to bottom, hsl(var(--events-teal) / 0.78), hsl(var(--events-teal) / 0.92)), url(${signinBg})` }}
+      >
+        <div className="max-w-md mx-auto space-y-6 relative">
           {/* Branded header */}
           <div className="flex flex-col items-center text-center space-y-4">
-            <img src={connectLogo} alt="Outside Days" className="h-20 w-auto" />
+            <img src={connectLogo} alt="Outside Days" className="w-full max-w-[260px] h-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]" />
             {/* TODO: replace with admin-uploaded image at event_settings key dashboard_signin_photo_url */}
             <div className="w-full max-w-[260px] aspect-[4/3] bg-gradient-to-br from-events-coral/30 via-events-cream/10 to-events-teal/40 border-[6px] border-events-cream/90 rounded-sm shadow-lg p-4 flex items-end justify-center rotate-[-1deg]">
               <span className="font-body italic text-events-cream/70 text-xs">Event photo coming soon</span>
