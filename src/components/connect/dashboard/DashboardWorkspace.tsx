@@ -129,6 +129,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
               brand={brand}
               onClick={() => setBrandEditOpen(true)}
               footerSlot={<InviteLinkPill brand={brand} />}
+              flushBottom
             />
             <BrandTeamSection brand={brand} />
           </div>
