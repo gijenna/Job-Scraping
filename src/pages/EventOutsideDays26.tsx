@@ -54,23 +54,48 @@ const EventOutsideDays26 = () => {
   const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
   const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
   const [autoExpertSheet, setAutoExpertSheet] = useState<any>(null);
+  // One-shot guard: after the share link auto-opens its target(s) once, we
+  // strip the query params from the URL so closing the modal doesn't
+  // re-trigger the auto-open and create a reopen loop.
+  const shareConsumedRef = useRef(false);
+
+  const consumeShareParams = () => {
+    if (shareConsumedRef.current) return;
+    shareConsumedRef.current = true;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("map_brand");
+      url.searchParams.delete("map_rep");
+      url.searchParams.delete("map_expert");
+      window.history.replaceState({}, "", url.pathname + (url.search ? url.search : "") + url.hash);
+    } catch {/* noop */}
+  };
 
   // Auto-open the brand modal when arriving via a rep share link
   useEffect(() => {
+    if (shareConsumedRef.current) return;
     if (!mapBrandSlug || mapBrands.length === 0 || selectedMapBrand) return;
     const match = mapBrands.find((b: any) => {
       const names = [b.name, ...((b.aliases || []) as string[])].filter(Boolean);
       return names.some((n: string) => slugifyName(n) === mapBrandSlug);
     });
-    if (match) setSelectedMapBrand(match);
+    if (match) {
+      setSelectedMapBrand(match);
+      // Defer clear until rep auto-open effect also has a chance to run.
+      setTimeout(consumeShareParams, 0);
+    }
   }, [mapBrandSlug, mapBrands, selectedMapBrand]);
 
   // Auto-open an industry expert's card directly (no brand modal underneath)
   useEffect(() => {
+    if (shareConsumedRef.current) return;
     if (!mapExpertSlug || autoExpertSheet) return;
     const match = (industryExperts as any[]).find((e: any) => e?.slug === mapExpertSlug)
       || (brandReps as any[]).find((e: any) => e?.slug === mapExpertSlug);
-    if (match) setAutoExpertSheet(match);
+    if (match) {
+      setAutoExpertSheet(match);
+      setTimeout(consumeShareParams, 0);
+    }
   }, [mapExpertSlug, industryExperts, brandReps, autoExpertSheet]);
 
   const tickerBrands = tickerLogos.map((l) => ({
