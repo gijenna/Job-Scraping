@@ -84,6 +84,13 @@ const MapBrandPanel = ({
     fetchReps();
   }, [brand]);
 
+  // Auto-open the matching rep's person sheet when arriving via share link.
+  useEffect(() => {
+    if (!autoOpenRepSlug || experts.length === 0) return;
+    const match = experts.find((e: any) => e?.slug === autoOpenRepSlug);
+    if (match) setPersonSheet(match);
+  }, [autoOpenRepSlug, experts]);
+
   if (!brand) return null;
 
   const logoSrc = brand.logo_url || (brand.website_url ? `https://logo.clearbit.com/${new URL(brand.website_url).hostname}` : null);
