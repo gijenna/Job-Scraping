@@ -12,8 +12,41 @@ import BrandCardEditModal from "./BrandCardEditModal";
 import BrandCardPreview from "./BrandCardPreview";
 import BrandTeamSection, { InviteLinkPill } from "./BrandTeamSection";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
-import { Pencil } from "lucide-react";
+import { Pencil, Copy, Check } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
+
+function ShareMyCardPill({ rep }: { rep: any }) {
+  const [copied, setCopied] = useState(false);
+  const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+  const slug = rep?.slug;
+  const url = slug ? `https://${projectId}.supabase.co/functions/v1/expert-og/${encodeURIComponent(slug)}/denver` : "";
+  const onCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+  if (!slug) return null;
+  return (
+    <div className="mt-3 flex flex-col items-start gap-2">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-cream/10 hover:bg-events-cream/20 text-events-cream border border-events-cream/25 px-4 py-2 rounded-full transition-colors"
+      >
+        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+        {copied ? "Link copied" : "Share my card"}
+      </button>
+      <p className="text-[12px] text-events-cream/75 font-body leading-relaxed">
+        We encourage you to let your networks know you'll be at the event! This link goes directly to your card, and anyone who visits will be able to check you out, and register to attend.
+      </p>
+      <p className="text-[11px] text-events-cream/50 font-body italic">Personal brand win, as a bonus!</p>
+    </div>
+  );
+}
 
 type Tab = "candidates" | "leads";
 
