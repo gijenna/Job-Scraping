@@ -115,7 +115,7 @@ const BrandDashboard = () => {
     <ImpersonationGate>
       <div
         className="min-h-screen text-events-cream px-4 py-8 md:py-14 relative bg-events-teal bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `linear-gradient(to bottom, hsl(var(--events-teal) / 0.78), hsl(var(--events-teal) / 0.92)), url(${signinBg})` }}
+        style={{ backgroundImage: `linear-gradient(to bottom, rgba(25,54,59,0.78), rgba(25,54,59,0.92)), url(${signinBg})` }}
       >
         <div className="max-w-md mx-auto space-y-6 relative">
           {/* Branded header */}
