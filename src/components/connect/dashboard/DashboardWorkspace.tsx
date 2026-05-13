@@ -10,6 +10,7 @@ import LeadsPanel from "./LeadsPanel";
 import RepEditModal from "./RepEditModal";
 import BrandCardEditModal from "./BrandCardEditModal";
 import BrandCardPreview from "./BrandCardPreview";
+import BrandTeamSection, { InviteLinkPill } from "./BrandTeamSection";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import { Pencil } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
