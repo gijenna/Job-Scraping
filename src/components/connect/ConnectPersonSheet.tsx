@@ -47,6 +47,31 @@ const ConnectPersonSheet = ({
   const [connection, setConnection] = useState<any | null>(null);
   const [composerOpen, setComposerOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  // Viewer auth state: drives whether "Send a note" is visible and what it does.
+  // - "candidate"      → real candidate session, normal note composer
+  // - "brand_or_expert"→ rep/expert session, hide note footer entirely
+  // - "guest"          → no session, show note button but intercept w/ prompt
+  // - "loading"        → not yet resolved (default to guest behavior visually)
+  const [viewer, setViewer] = useState<"loading" | "candidate" | "brand_or_expert" | "guest">("loading");
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const c = await candidateMe().catch(() => null);
+        if (cancelled) return;
+        if (c?.session?.subject_type === "candidate") { setViewer("candidate"); return; }
+        const r = await brandRepMe().catch(() => null);
+        if (cancelled) return;
+        if (r?.session?.subject_type === "brand_rep") { setViewer("brand_or_expert"); return; }
+        setViewer("guest");
+      } catch {
+        if (!cancelled) setViewer("guest");
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!open || !expert) {
@@ -54,6 +79,7 @@ const ConnectPersonSheet = ({
       setConnection(null);
       return;
     }
+    if (viewer !== "candidate") return;
     connectNotesGetMine(expert.id).then((r) => setNote(r.note || null)).catch(() => {});
     connectionsList().then((r) => {
       const match = (r.connections || []).find((c: any) =>
@@ -61,7 +87,7 @@ const ConnectPersonSheet = ({
       );
       setConnection(match || null);
     }).catch(() => {});
-  }, [open, expert?.id, subjectType]);
+  }, [open, expert?.id, subjectType, viewer]);
 
   if (!expert) return null;
 
