@@ -165,10 +165,12 @@ const MapBrandGroup = ({
             </span>
           )}
         </div>
-        <span className="text-[9px] font-display font-bold text-white text-center leading-tight mt-0.5 drop-shadow">
+        <span className={`${isHero ? "text-[12px]" : "text-[9px]"} font-display font-bold text-white text-center leading-tight mt-0.5 drop-shadow`}>
           {brand.name}
         </span>
       </div>
+        );
+      })()}
 
       {/* Shape cycle button (admin) */}
       {interactive && brand.table_count > 1 && (
