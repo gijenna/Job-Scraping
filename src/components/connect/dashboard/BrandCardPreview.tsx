@@ -107,7 +107,7 @@ export default function BrandCardPreview({ brand, onClick, footerSlot }: Props) 
           <Placeholder block>Add a custom lead question (optional)</Placeholder>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 
