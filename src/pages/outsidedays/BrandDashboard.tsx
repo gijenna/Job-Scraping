@@ -121,10 +121,6 @@ const BrandDashboard = () => {
           {/* Branded header */}
           <div className="flex flex-col items-center text-center space-y-4">
             <img src={connectLogo} alt="Outside Days" className="w-full max-w-[260px] h-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]" />
-            {/* TODO: replace with admin-uploaded image at event_settings key dashboard_signin_photo_url */}
-            <div className="w-full max-w-[260px] aspect-[4/3] bg-gradient-to-br from-events-coral/30 via-events-cream/10 to-events-teal/40 border-[6px] border-events-cream/90 rounded-sm shadow-lg p-4 flex items-end justify-center rotate-[-1deg]">
-              <span className="font-body italic text-events-cream/70 text-xs">Event photo coming soon</span>
-            </div>
             <div className="space-y-1">
               <h1 className="font-afterparty text-4xl">Brand Dashboard</h1>
               <EditableText
