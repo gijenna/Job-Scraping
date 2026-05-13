@@ -15,6 +15,8 @@ import { useEventMode } from "@/lib/connect-event-mode";
 import {
   connectNotesGetMine,
   connectionsList,
+  candidateMe,
+  brandRepMe,
   type ConnectNote,
 } from "@/lib/connect-session";
 
@@ -45,6 +47,31 @@ const ConnectPersonSheet = ({
   const [connection, setConnection] = useState<any | null>(null);
   const [composerOpen, setComposerOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  // Viewer auth state: drives whether "Send a note" is visible and what it does.
+  // - "candidate"      → real candidate session, normal note composer
+  // - "brand_or_expert"→ rep/expert session, hide note footer entirely
+  // - "guest"          → no session, show note button but intercept w/ prompt
+  // - "loading"        → not yet resolved (default to guest behavior visually)
+  const [viewer, setViewer] = useState<"loading" | "candidate" | "brand_or_expert" | "guest">("loading");
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const c = await candidateMe().catch(() => null);
+        if (cancelled) return;
+        if (c?.session?.subject_type === "candidate") { setViewer("candidate"); return; }
+        const r = await brandRepMe().catch(() => null);
+        if (cancelled) return;
+        if (r?.session?.subject_type === "brand_rep") { setViewer("brand_or_expert"); return; }
+        setViewer("guest");
+      } catch {
+        if (!cancelled) setViewer("guest");
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!open || !expert) {
@@ -52,6 +79,7 @@ const ConnectPersonSheet = ({
       setConnection(null);
       return;
     }
+    if (viewer !== "candidate") return;
     connectNotesGetMine(expert.id).then((r) => setNote(r.note || null)).catch(() => {});
     connectionsList().then((r) => {
       const match = (r.connections || []).find((c: any) =>
@@ -59,7 +87,7 @@ const ConnectPersonSheet = ({
       );
       setConnection(match || null);
     }).catch(() => {});
-  }, [open, expert?.id, subjectType]);
+  }, [open, expert?.id, subjectType, viewer]);
 
   if (!expert) return null;
 
@@ -119,16 +147,24 @@ const ConnectPersonSheet = ({
             {leadCaptureBrandId && <BrandLeadCapture brandId={leadCaptureBrandId} />}
           </div>
 
-          <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">
-            <ConnectActionFooter
-              mode={mode}
-              hasNote={!!note}
-              hasConnection={!!connection}
-              onSendNote={() => setComposerOpen(true)}
-              onLogConnection={() => setFormOpen(true)}
-              onViewConnection={() => setFormOpen(true)}
-            />
-          </div>
+          {viewer !== "brand_or_expert" && (
+            <div className="border-t border-events-cream/10 px-4 py-3 bg-events-teal shadow-[0_-8px_20px_-12px_rgba(0,0,0,0.6)]">
+              <ConnectActionFooter
+                mode={mode}
+                hasNote={!!note}
+                hasConnection={!!connection}
+                onSendNote={() => {
+                  if (viewer === "candidate") setComposerOpen(true);
+                  else setAuthPromptOpen(true);
+                }}
+                onLogConnection={() => {
+                  if (viewer === "candidate") setFormOpen(true);
+                  else setAuthPromptOpen(true);
+                }}
+                onViewConnection={() => setFormOpen(true)}
+              />
+            </div>
+          )}
         </SheetContent>
       </Sheet>
 
@@ -180,6 +216,48 @@ const ConnectPersonSheet = ({
             }).catch(() => {});
           }}
         />
+      )}
+
+      {authPromptOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70"
+          onClick={() => setAuthPromptOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md bg-events-teal rounded-2xl shadow-2xl p-6 text-events-cream"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setAuthPromptOpen(false)}
+              aria-label="Close"
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-events-cream/10 hover:bg-events-cream/20 flex items-center justify-center"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <h3 className="font-headline font-bold text-xl pr-8">
+              Register and sign in to send notes
+            </h3>
+            <p className="font-body text-sm text-events-cream/80 mt-3">
+              Notes help {expert.full_name?.split(" ")[0] || "this rep"} remember you and what you wanted to chat about. Register for the event first, then sign up for Connect to send notes.
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              <a
+                href="https://basecampoutdoor.typeform.com/outsidedays"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-events-coral hover:bg-events-coral/90 text-events-cream font-display font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-full transition-colors"
+              >
+                Register for the event
+              </a>
+              <a
+                href="/outsidedays26/connect"
+                className="inline-flex items-center justify-center border border-events-cream/40 text-events-cream/90 hover:border-events-cream hover:text-events-cream font-display font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-full transition-colors"
+              >
+                Already registered? Continue to Connect
+              </a>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
