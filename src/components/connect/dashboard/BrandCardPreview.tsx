@@ -7,9 +7,10 @@ interface Props {
   brand: any;
   onClick?: () => void;
   footerSlot?: React.ReactNode;
+  flushBottom?: boolean;
 }
 
-export default function BrandCardPreview({ brand, onClick, footerSlot }: Props) {
+export default function BrandCardPreview({ brand, onClick, footerSlot, flushBottom }: Props) {
   if (!brand) return null;
   const logoSrc = brand.logo_url || (brand.website_url ? (() => {
     try { return `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128`; } catch { return null; }
@@ -22,7 +23,7 @@ export default function BrandCardPreview({ brand, onClick, footerSlot }: Props) 
   return (
     <div
       onClick={onClick}
-      className="group block w-full text-left bg-events-teal border border-events-cream/15 rounded-2xl p-5 hover:border-events-coral/60 transition-colors relative cursor-pointer"
+      className={`group block w-full text-left bg-events-teal border border-events-cream/15 p-5 hover:border-events-coral/60 transition-colors relative cursor-pointer ${flushBottom ? "rounded-t-2xl rounded-b-none border-b-0" : "rounded-2xl"}`}
     >
       <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-1.5">
         <button
