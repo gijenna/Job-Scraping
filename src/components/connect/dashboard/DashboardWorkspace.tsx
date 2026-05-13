@@ -10,6 +10,7 @@ import LeadsPanel from "./LeadsPanel";
 import RepEditModal from "./RepEditModal";
 import BrandCardEditModal from "./BrandCardEditModal";
 import BrandCardPreview from "./BrandCardPreview";
+import BrandTeamSection, { InviteLinkPill } from "./BrandTeamSection";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
 import { Pencil } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
@@ -123,7 +124,15 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
           </div>
         </div>
         {brand && (
-          <BrandCardPreview brand={brand} onClick={() => setBrandEditOpen(true)} />
+          <div className="flex flex-col">
+            <BrandCardPreview
+              brand={brand}
+              onClick={() => setBrandEditOpen(true)}
+              footerSlot={<InviteLinkPill brand={brand} />}
+              flushBottom
+            />
+            <BrandTeamSection brand={brand} />
+          </div>
         )}
       </div>
 
