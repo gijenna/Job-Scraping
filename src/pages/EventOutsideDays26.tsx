@@ -58,10 +58,12 @@ const EventOutsideDays26 = () => {
   // strip the query params from the URL so closing the modal doesn't
   // re-trigger the auto-open and create a reopen loop.
   const shareConsumedRef = useRef(false);
+  const [shareConsumed, setShareConsumed] = useState(false);
 
   const consumeShareParams = () => {
     if (shareConsumedRef.current) return;
     shareConsumedRef.current = true;
+    setShareConsumed(true);
     try {
       const url = new URL(window.location.href);
       url.searchParams.delete("map_brand");
