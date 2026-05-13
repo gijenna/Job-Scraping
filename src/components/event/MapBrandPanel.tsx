@@ -22,11 +22,17 @@ interface MapBrandPanelProps {
   onStarChanged?: (brandId: string, isStarred: boolean) => void;
   noteRecipientIds?: Set<string>;
   onSendNote?: (recipient: NoteRecipient) => void;
+  /** When set, auto-open the matching rep's person sheet on top of the modal. */
+  autoOpenRepSlug?: string | null;
+  /** Optional CTA links rendered at the bottom of the modal body. */
+  registerUrl?: string;
+  connectUrl?: string;
 }
 
 const MapBrandPanel = ({
   brand, onClose, candidateMode = false,
   starredBrandIds, onStarChanged, noteRecipientIds, onSendNote,
+  autoOpenRepSlug, registerUrl, connectUrl,
 }: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
@@ -77,6 +83,13 @@ const MapBrandPanel = ({
     };
     fetchReps();
   }, [brand]);
+
+  // Auto-open the matching rep's person sheet when arriving via share link.
+  useEffect(() => {
+    if (!autoOpenRepSlug || experts.length === 0) return;
+    const match = experts.find((e: any) => e?.slug === autoOpenRepSlug);
+    if (match) setPersonSheet(match);
+  }, [autoOpenRepSlug, experts]);
 
   if (!brand) return null;
 
@@ -248,6 +261,35 @@ const MapBrandPanel = ({
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+          )}
+
+          {/* Bottom CTAs: register or jump to Connect */}
+          {(registerUrl || connectUrl) && (
+            <div className="border-t border-white/10 px-6 py-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {registerUrl && (
+                  <a
+                    href={registerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-full transition-colors"
+                  >
+                    Register for the event
+                  </a>
+                )}
+                {connectUrl && (
+                  <div className="flex flex-col sm:items-end items-start gap-1">
+                    <span className="text-[11px] text-events-cream/55 font-body">Already registered?</span>
+                    <a
+                      href={connectUrl}
+                      className="inline-flex items-center justify-center gap-2 border border-events-cream/40 text-events-cream/90 hover:border-events-cream hover:text-events-cream font-display font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-full transition-colors"
+                    >
+                      Send notes to company reps
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

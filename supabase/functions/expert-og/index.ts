@@ -535,12 +535,44 @@ Deno.serve(async (req) => {
   const siteBase = "https://sponsor-attract-hub.lovable.app";
   const eventPath = EVENT_PAGE[city] || "/events";
 
-  const paramName = expertType === "brand_rep" ? "brand" : "expert";
-  const redirectUrl = `${siteBase}${eventPath}?${paramName}=${encodeURIComponent(
-    slug
-  )}&utm_source=expert_share&utm_medium=social&utm_campaign=${encodeURIComponent(
-    city
-  )}`;
+  // Build redirect that auto-opens the brand modal + rep card on the event map.
+  const slugifyName = (s: string) =>
+    (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const isBrandRep = expertType === "brand_rep";
+  const companySlug = expert.current_company ? slugifyName(expert.current_company) : "";
+  const params = new URLSearchParams();
+  if (isBrandRep && companySlug) {
+    params.set("map_brand", companySlug);
+    params.set("map_rep", slug);
+  } else {
+    params.set("map_expert", slug);
+  }
+  params.set("utm_source", "expert_share");
+  params.set("utm_medium", "social");
+  params.set("utm_campaign", city);
+  const redirectUrl = `${siteBase}${eventPath}?${params.toString()}`;
+
+  // Pull main event-page OG metadata so share previews match the event page.
+  const EVENT_SETTINGS_SLUG: Record<string, string> = {
+    portland: "pnw26",
+    denver: "outsidedays26",
+  };
+  const eventSettingsSlug = EVENT_SETTINGS_SLUG[city];
+  let pageOgImage = `${siteBase}/og-basecamp.png`;
+  let pageOgTitle = eventTitle;
+  let pageOgDescription = `Join us at ${eventTitle} in ${cityName}.`;
+  if (eventSettingsSlug) {
+    const { data: pageSettings } = await supabase
+      .from("event_settings")
+      .select("setting_key, setting_value")
+      .eq("event_slug", eventSettingsSlug)
+      .in("setting_key", ["page_og_title", "page_og_description", "page_og_image"]);
+    const m: Record<string, string> = {};
+    pageSettings?.forEach((r: any) => { m[r.setting_key] = r.setting_value; });
+    if (m.page_og_image) pageOgImage = m.page_og_image;
+    if (m.page_og_title) pageOgTitle = m.page_og_title;
+    if (m.page_og_description) pageOgDescription = m.page_og_description;
+  }
 
   const shareOrigin = url.origin.replace("http://", "https://");
   const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(
@@ -587,57 +619,26 @@ Deno.serve(async (req) => {
 
   console.log(`Crawler UA detected: ${ua.slice(0, 120)}`);
 
-  // City-level override: skip per-expert generation and use a fixed event hero image.
-  const CITY_OG_OVERRIDE: Record<string, string> = {
-    denver: `${siteBase}/og-denver-outside-days.png`,
-  };
-
-  const ogImage = CITY_OG_OVERRIDE[city]
-    ? CITY_OG_OVERRIDE[city]
-    : await getOrGenerateOgCard(
-        supabase,
-        expert,
-        eventTitle,
-        cityName,
-        city,
-        slug,
-        siteBase,
-        expertType
-      );
-
-  const title = `${expert.full_name} — ${
-    expertType === "brand_rep" ? "Brand Rep" : "Industry Expert"
-  } at ${eventTitle}`;
-  const description = [
-    expert.job_title,
-    expert.current_company ? `at ${expert.current_company}` : null,
-    `· Meet me at ${eventTitle} in ${cityName}`,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
+  // Reuse the main event-page OG image/title/description so previews match.
   const html = `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>${esc(title)}</title>
-  <link rel="canonical" href="${esc(shareUrl)}" />
-  <meta property="og:type" content="profile" />
-  <meta property="og:title" content="${esc(title)}" />
-  <meta property="og:description" content="${esc(description)}" />
-  <meta property="og:image" content="${esc(ogImage)}" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:url" content="${esc(shareUrl)}" />
+  <title>${esc(pageOgTitle)}</title>
+  <link rel="canonical" href="${esc(redirectUrl)}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="${esc(pageOgTitle)}" />
+  <meta property="og:description" content="${esc(pageOgDescription)}" />
+  <meta property="og:image" content="${esc(pageOgImage)}" />
+  <meta property="og:url" content="${esc(redirectUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${esc(title)}" />
-  <meta name="twitter:description" content="${esc(description)}" />
-  <meta name="twitter:image" content="${esc(ogImage)}" />
+  <meta name="twitter:title" content="${esc(pageOgTitle)}" />
+  <meta name="twitter:description" content="${esc(pageOgDescription)}" />
+  <meta name="twitter:image" content="${esc(pageOgImage)}" />
   <meta http-equiv="refresh" content="0;url=${esc(redirectUrl)}" />
 </head>
 <body>
-  <p>Redirecting to <a href="${esc(redirectUrl)}">${esc(eventTitle)}</a>...</p>
+  <p>Redirecting to <a href="${esc(redirectUrl)}">${esc(pageOgTitle)}</a>...</p>
 </body>
 </html>`;
 

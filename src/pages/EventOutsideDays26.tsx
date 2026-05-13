@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -21,6 +21,7 @@ import AdminLogoManager from "@/components/event/AdminLogoManager";
 import OrderedSections, { SectionDef } from "@/components/event/OrderedSections";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
+import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import { useEventAttendees } from "@/hooks/useEventAttendees";
 import { useEventMapBrands, MapBrand } from "@/hooks/useEventMapBrands";
@@ -35,10 +36,16 @@ import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
+const slugifyName = (s: string) =>
+  (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 const EventOutsideDays26 = () => {
   const [searchParams] = useSearchParams();
   const highlightExpert = searchParams.get("expert") || undefined;
   const highlightBrandRep = searchParams.get("brand") || undefined;
+  const mapBrandSlug = searchParams.get("map_brand") || undefined;
+  const mapRepSlug = searchParams.get("map_rep") || undefined;
+  const mapExpertSlug = searchParams.get("map_expert") || undefined;
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
@@ -46,6 +53,25 @@ const EventOutsideDays26 = () => {
   const { brands: mapBrands } = useEventMapBrands("denver26");
   const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
   const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
+  const [autoExpertSheet, setAutoExpertSheet] = useState<any>(null);
+
+  // Auto-open the brand modal when arriving via a rep share link
+  useEffect(() => {
+    if (!mapBrandSlug || mapBrands.length === 0 || selectedMapBrand) return;
+    const match = mapBrands.find((b: any) => {
+      const names = [b.name, ...((b.aliases || []) as string[])].filter(Boolean);
+      return names.some((n: string) => slugifyName(n) === mapBrandSlug);
+    });
+    if (match) setSelectedMapBrand(match);
+  }, [mapBrandSlug, mapBrands, selectedMapBrand]);
+
+  // Auto-open an industry expert's card directly (no brand modal underneath)
+  useEffect(() => {
+    if (!mapExpertSlug || autoExpertSheet) return;
+    const match = (industryExperts as any[]).find((e: any) => e?.slug === mapExpertSlug)
+      || (brandReps as any[]).find((e: any) => e?.slug === mapExpertSlug);
+    if (match) setAutoExpertSheet(match);
+  }, [mapExpertSlug, industryExperts, brandReps, autoExpertSheet]);
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
@@ -227,8 +253,45 @@ const EventOutsideDays26 = () => {
 
         <OrderedSections sections={sections} />
 
+        {/* Bottom CTA banner */}
+        <section className="bg-events-teal border-t border-events-cream/10 px-6 py-12">
+          <div className="container mx-auto max-w-3xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <a
+              href={TYPEFORM_DENVER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display font-bold text-base uppercase tracking-wider px-7 py-4 rounded-full transition-colors shadow-lg"
+            >
+              Register for the event
+            </a>
+            <div className="flex flex-col sm:items-end items-start gap-1.5">
+              <span className="text-xs text-events-cream/60 font-body">Already registered?</span>
+              <a
+                href="/outsidedays26/connect"
+                className="inline-flex items-center justify-center gap-2 border border-events-cream/40 text-events-cream/90 hover:border-events-cream hover:text-events-cream font-display font-bold text-sm uppercase tracking-wider px-5 py-2.5 rounded-full transition-colors"
+              >
+                Send notes to company reps
+              </a>
+            </div>
+          </div>
+        </section>
+
         <SiteFooter />
-        <MapBrandPanel brand={selectedMapBrand} onClose={() => setSelectedMapBrand(null)} />
+        <MapBrandPanel
+          brand={selectedMapBrand}
+          onClose={() => setSelectedMapBrand(null)}
+          autoOpenRepSlug={mapRepSlug || null}
+          registerUrl={TYPEFORM_DENVER}
+          connectUrl="/outsidedays26/connect"
+        />
+        {autoExpertSheet && (
+          <ConnectPersonSheet
+            open
+            expert={autoExpertSheet}
+            subjectType="expert"
+            onClose={() => setAutoExpertSheet(null)}
+          />
+        )}
       </main>
     </EditableTextProvider>
   );
