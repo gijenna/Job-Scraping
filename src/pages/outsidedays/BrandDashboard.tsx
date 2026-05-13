@@ -9,6 +9,7 @@ import {
 import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import DashboardWorkspace from "@/components/connect/dashboard/DashboardWorkspace";
 import connectLogo from "@/assets/connect-basecamp-outside-days.png";
+import signinBg from "@/assets/dashboard-signin-bg.jpg";
 import EditableText from "@/components/EditableText";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 
