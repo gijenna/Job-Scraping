@@ -74,7 +74,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
   const count = reps.length;
 
   return (
-    <div className="-mt-2 bg-events-coral text-events-cream rounded-b-2xl rounded-t-none overflow-hidden">
+    <div className="bg-events-coral text-events-cream rounded-b-2xl rounded-t-none overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
