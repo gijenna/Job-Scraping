@@ -263,6 +263,35 @@ const MapBrandPanel = ({
               </AnimatePresence>
             </div>
           )}
+
+          {/* Bottom CTAs: register or jump to Connect */}
+          {(registerUrl || connectUrl) && (
+            <div className="border-t border-white/10 px-6 py-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {registerUrl && (
+                  <a
+                    href={registerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-events-coral hover:bg-events-coral/90 text-events-cream font-display font-bold text-sm uppercase tracking-wider px-5 py-3 rounded-full transition-colors"
+                  >
+                    Register for the event
+                  </a>
+                )}
+                {connectUrl && (
+                  <div className="flex flex-col sm:items-end items-start gap-1">
+                    <span className="text-[11px] text-events-cream/55 font-body">Already registered?</span>
+                    <a
+                      href={connectUrl}
+                      className="inline-flex items-center justify-center gap-2 border border-events-cream/40 text-events-cream/90 hover:border-events-cream hover:text-events-cream font-display font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-full transition-colors"
+                    >
+                      Send notes to company reps
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
