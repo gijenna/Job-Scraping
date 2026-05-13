@@ -22,11 +22,17 @@ interface MapBrandPanelProps {
   onStarChanged?: (brandId: string, isStarred: boolean) => void;
   noteRecipientIds?: Set<string>;
   onSendNote?: (recipient: NoteRecipient) => void;
+  /** When set, auto-open the matching rep's person sheet on top of the modal. */
+  autoOpenRepSlug?: string | null;
+  /** Optional CTA links rendered at the bottom of the modal body. */
+  registerUrl?: string;
+  connectUrl?: string;
 }
 
 const MapBrandPanel = ({
   brand, onClose, candidateMode = false,
   starredBrandIds, onStarChanged, noteRecipientIds, onSendNote,
+  autoOpenRepSlug, registerUrl, connectUrl,
 }: MapBrandPanelProps) => {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [expanded, setExpanded] = useState(true);
