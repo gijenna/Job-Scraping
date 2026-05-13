@@ -124,7 +124,14 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
           </div>
         </div>
         {brand && (
-          <BrandCardPreview brand={brand} onClick={() => setBrandEditOpen(true)} />
+          <div className="flex flex-col">
+            <BrandCardPreview
+              brand={brand}
+              onClick={() => setBrandEditOpen(true)}
+              footerSlot={<InviteLinkPill brand={brand} />}
+            />
+            <BrandTeamSection brand={brand} />
+          </div>
         )}
       </div>
 
