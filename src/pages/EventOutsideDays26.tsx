@@ -35,10 +35,16 @@ import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const TYPEFORM_DENVER = "https://basecampoutdoor.typeform.com/outsidedays";
 
+const slugifyName = (s: string) =>
+  (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 const EventOutsideDays26 = () => {
   const [searchParams] = useSearchParams();
   const highlightExpert = searchParams.get("expert") || undefined;
   const highlightBrandRep = searchParams.get("brand") || undefined;
+  const mapBrandSlug = searchParams.get("map_brand") || undefined;
+  const mapRepSlug = searchParams.get("map_rep") || undefined;
+  const mapExpertSlug = searchParams.get("map_expert") || undefined;
   const { logos: tickerLogos } = useEventLogos("denver26");
   const { logos: partnerLogos } = useEventLogos("denver26-partners");
   const { logos: bubbleLogos } = useEventLogos("denver26-bubbles");
@@ -46,6 +52,25 @@ const EventOutsideDays26 = () => {
   const { brands: mapBrands } = useEventMapBrands("denver26");
   const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
   const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
+  const [autoExpertSheet, setAutoExpertSheet] = useState<any>(null);
+
+  // Auto-open the brand modal when arriving via a rep share link
+  useEffect(() => {
+    if (!mapBrandSlug || mapBrands.length === 0 || selectedMapBrand) return;
+    const match = mapBrands.find((b: any) => {
+      const names = [b.name, ...((b.aliases || []) as string[])].filter(Boolean);
+      return names.some((n: string) => slugifyName(n) === mapBrandSlug);
+    });
+    if (match) setSelectedMapBrand(match);
+  }, [mapBrandSlug, mapBrands, selectedMapBrand]);
+
+  // Auto-open an industry expert's card directly (no brand modal underneath)
+  useEffect(() => {
+    if (!mapExpertSlug || autoExpertSheet) return;
+    const match = (industryExperts as any[]).find((e: any) => e?.slug === mapExpertSlug)
+      || (brandReps as any[]).find((e: any) => e?.slug === mapExpertSlug);
+    if (match) setAutoExpertSheet(match);
+  }, [mapExpertSlug, industryExperts, brandReps, autoExpertSheet]);
 
   const tickerBrands = tickerLogos.map((l) => ({
     name: l.name, domain: l.domain || "", url: l.url || undefined, logo_url: l.logo_url || undefined,
