@@ -18,28 +18,45 @@ export interface SessionInfo {
 // ---- od_sid bearer token store ----
 // Cookie path is unreliable cross-origin (Safari/ITP, embedded webviews drop
 // SameSite=None third-party cookies). We mirror the session token in
-// sessionStorage and send it as Authorization: Bearer on every call so the
-// backend can authenticate us even when the cookie is missing.
+// localStorage and send it as Authorization: Bearer on every call so the
+// backend can authenticate us even when the cookie is missing. localStorage
+// (not sessionStorage) is required so sign-in survives tab close and
+// navigations between /outsidedays26/* routes.
 const TOKEN_KEY = "od_sid";
 let tokenInMemory: string | null = null;
 
-function safeSession(): Storage | null {
+function safeStore(): Storage | null {
+  try { return typeof window !== "undefined" ? window.localStorage : null; } catch { return null; }
+}
+function legacyStore(): Storage | null {
   try { return typeof window !== "undefined" ? window.sessionStorage : null; } catch { return null; }
 }
 export function bootstrapToken() {
   if (tokenInMemory) return tokenInMemory;
-  const s = safeSession();
+  const s = safeStore();
   try { tokenInMemory = s?.getItem(TOKEN_KEY) || null; } catch { tokenInMemory = null; }
+  // Migrate any pre-existing sessionStorage token to localStorage one time.
+  if (!tokenInMemory) {
+    const legacy = legacyStore();
+    try {
+      const v = legacy?.getItem(TOKEN_KEY);
+      if (v) {
+        tokenInMemory = v;
+        try { s?.setItem(TOKEN_KEY, v); } catch {}
+        try { legacy?.removeItem(TOKEN_KEY); } catch {}
+      }
+    } catch {/* noop */}
+  }
   return tokenInMemory;
 }
 export function getOdSidToken(): string | null { return tokenInMemory ?? bootstrapToken(); }
 export function setOdSidToken(t: string | null) {
   tokenInMemory = t || null;
-  const s = safeSession();
+  const s = safeStore();
   try {
     if (t) s?.setItem(TOKEN_KEY, t);
     else s?.removeItem(TOKEN_KEY);
-  } catch {/* sessionStorage blocked; in-memory still works for this tab */}
+  } catch {/* storage blocked; in-memory still works for this tab */}
 }
 export function clearOdSidToken() { setOdSidToken(null); }
 
