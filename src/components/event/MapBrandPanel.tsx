@@ -160,7 +160,7 @@ const MapBrandPanel = ({
                   </span>
                   {brand.website_url && (
                     <a
-                      href={brand.website_url}
+                      href={/^https?:\/\//i.test(brand.website_url) ? brand.website_url : `https://${brand.website_url.replace(/^\/+/, "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-events-coral font-display font-bold hover:underline"
