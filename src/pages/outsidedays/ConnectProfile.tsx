@@ -70,7 +70,11 @@ const ConnectProfile = () => {
       const put = await fetch(upload_url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
       if (!put.ok) throw new Error("Upload failed");
       const { candidate } = await candidateAttachUpload(kind, storage_path);
-      setC(candidate);
+      // Only merge the file URL the server just stored. Replacing the whole
+      // local state with the server row would wipe any unsaved edits the user
+      // is currently typing (hook, pitch, etc).
+      const urlField = kind === "photo" ? "photo_url" : "resume_url";
+      setC((prev: any) => ({ ...(prev || candidate), [urlField]: candidate?.[urlField] ?? prev?.[urlField] }));
       toast({ title: kind === "photo" ? "Photo uploaded" : "Resume uploaded" });
     } catch (e: any) {
       toast({ title: "Upload failed", description: e.message, variant: "destructive" });
