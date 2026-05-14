@@ -175,11 +175,27 @@ const ConnectFull = () => {
       return;
     }
     try {
+      // Flush any pending edits BEFORE the upload, so the server's returned
+      // candidate row reflects the user's latest typing (hook/pitch/etc).
+      // Without this, the 30s autosave debounce can leave fresh edits unsaved,
+      // and merging the server row back over local state would wipe them.
+      if (debounceRef.current) { window.clearTimeout(debounceRef.current); debounceRef.current = null; }
+      try {
+        setSavingNow(true);
+        const flushed = await candidateUpdateProfile(sanitizeForSave(c));
+        if (flushed?.candidate) setC((prev: any) => ({ ...prev, ...flushed.candidate }));
+        setSavedAt(new Date());
+      } catch {} finally { setSavingNow(false); }
+
       const { upload_url, storage_path } = await candidateUploadSignedUrl(kind, file.name, file.type);
       const put = await fetch(upload_url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
       if (!put.ok) throw new Error("Upload failed");
       const { candidate } = await candidateAttachUpload(kind, storage_path);
-      setC((prev: any) => ({ ...prev, ...candidate }));
+      // Only merge the file URL field returned by the server. Do NOT splat the
+      // whole candidate row over local state; that race-conditions any typing
+      // that happened between the flush and the attach response.
+      const urlField = kind === "photo" ? "photo_url" : "resume_url";
+      setC((prev: any) => ({ ...prev, [urlField]: candidate?.[urlField] ?? prev[urlField] }));
       toast({ title: kind === "photo" ? "Photo uploaded" : "Resume uploaded" });
     } catch (e: any) {
       toast({ title: "Upload failed", description: e.message, variant: "destructive" });
