@@ -236,7 +236,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
             {filterPanel}
           </aside>
 
-          <main className="flex-1 min-w-0 md:max-h-[calc(100vh-220px)]">
+          <main className="flex-1 min-w-0 md:max-h-[calc(100vh-220px)] md:overflow-y-auto md:pr-2">
             <div className="hidden md:flex justify-end mb-2">
               <SortSelect sort={sort} setSort={setSort} />
             </div>
