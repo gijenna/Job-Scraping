@@ -252,8 +252,9 @@ const ConnectHome = () => {
                 minScale={0.2}
                 maxScale={4}
                 centerOnInit
-                wheel={{ step: 0.15 }}
+                wheel={{ step: 0.15, activationKeys: ["Control", "Meta"] }}
                 pinch={{ step: 5 }}
+                panning={{ velocityDisabled: false, wheelPanning: true } as any}
                 doubleClick={{ disabled: false, step: 0.7 }}
               >
                 <TransformComponent
