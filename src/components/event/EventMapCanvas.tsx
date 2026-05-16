@@ -93,7 +93,7 @@ const EventMapCanvas = ({
       {/* Fit-all toggle */}
       {!printMode && (
         <button
-          onClick={() => { setFitAll((v) => !v); setUserZoom(1); }}
+          onClick={() => setFitAll((v) => !v)}
           className="absolute top-2 right-2 z-20 px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-xs font-body transition-colors"
         >
           {fitAll ? "1:1 View" : "Fit All Courts"}
