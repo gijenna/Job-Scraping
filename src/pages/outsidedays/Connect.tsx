@@ -16,6 +16,7 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
+import RegisterReminderBanner from "@/components/connect/RegisterReminderBanner";
 
 type Mode = "branch" | "choice" | "new" | "returning" | "done";
 
@@ -48,6 +49,7 @@ const Connect = () => {
     <EditableTextProvider pageSlug="outsidedays26-connect">
       <ImpersonationGate>
         <ConnectShell maxWidth="md">
+          {mode !== "done" && <RegisterReminderBanner />}
           {mode === "branch" && (
             <>
               <ValueProp />
