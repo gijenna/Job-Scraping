@@ -540,7 +540,7 @@ const MapPanZoom = ({
       const api = apiRef.current;
       if (!api) return;
       e.preventDefault();
-      const { positionX, positionY, scale } = api.instance.transformState;
+      const { positionX, positionY, scale } = api.state;
       api.setTransform(positionX - e.deltaX, positionY - e.deltaY, scale, 0);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
