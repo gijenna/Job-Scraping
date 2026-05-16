@@ -94,13 +94,26 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
   const [repEditOpen, setRepEditOpen] = useState(false);
   const [brandEditOpen, setBrandEditOpen] = useState(false);
   const [currentRep, setCurrentRep] = useState<any>(rep);
+  const [editCardUrl, setEditCardUrl] = useState<string | null>(null);
+
+  // Industry experts edit their card on the public ExpertInvite page, not in the
+  // brand modal. Detect by URL pattern: /Denverexperts/ (or any */experts/ path).
+  const isExpertEditUrl = (u?: string | null) => !!u && /\/[A-Za-z]+experts\//i.test(u);
+  const openEditCard = () => {
+    if (isExpertEditUrl(editCardUrl)) {
+      window.open(editCardUrl as string, "_blank", "noopener");
+    } else {
+      setRepEditOpen(true);
+    }
+  };
 
   useEffect(() => { dashboardSummary().then((s) => {
     setSummary(s);
-    if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url);
+    if (s?.edit_card_url) { setEditCardUrl(s.edit_card_url); onEditCardUrl?.(s.edit_card_url); }
   }).catch(() => {}); }, []);
   useEffect(() => {
-    if (openEditSignal && openEditSignal > 0) setRepEditOpen(true);
+    if (openEditSignal && openEditSignal > 0) openEditCard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openEditSignal]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
