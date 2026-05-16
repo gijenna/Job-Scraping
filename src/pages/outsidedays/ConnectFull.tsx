@@ -384,7 +384,28 @@ const ConnectFull = () => {
             </FieldRow>
           </SectionBlock>
 
-          {/* Section 2: What you do */}
+          {/* Conditional: shown when the candidate has actively signaled high
+              intent to switch jobs. Promotes the most-asked-for fields up. */}
+          {(c.poachable_status === "Ready to jump" || c.poachable_status === "Always open to the right opportunity") && (
+            <SectionBlock keyId="priority" titleKey="full_priority_title" defaultTitle="What you're looking for">
+              <p className="font-body text-xs text-events-cream/65 -mt-1">
+                <EditableText
+                  settingKey="full_priority_hint"
+                  defaultText="You're open to opportunities. These three answers help brands match you fast."
+                  as="span"
+                />
+              </p>
+              <FieldRow label={label("full_dream_role_title_label", "Dream role title")}>
+                <Input value={c.dream_role_title || ""} onChange={(e) => set("dream_role_title", e.target.value)} />
+              </FieldRow>
+              <FieldRow label={label("full_job_types_label", "Job types open to")}>
+                <MultiPills value={c.job_types_seeking || []} options={JOB_TYPES as any} onChange={(v) => set("job_types_seeking", v)} optionKeyPrefix="full_job_type_option" />
+              </FieldRow>
+              <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
+                <EditableInput value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholderKey="full_min_pay_rate_placeholder" defaultPlaceholder="e.g. 85k or 45/hr" />
+              </FieldRow>
+            </SectionBlock>
+          )}
           <SectionBlock keyId="what" titleKey="full_s2_title" defaultTitle="What you do *">
             <Row>
               <FieldRow refSetter={setRef("field")} label={label("full_field_label", "Field *")} error={errors.field}>
