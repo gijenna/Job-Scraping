@@ -2,7 +2,7 @@
 // MapBrandPanel, and ExpertCardMinimal. View preference persists in a cookie
 // (NOT localStorage). Mobile-first: 375px target.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
 import { X, HelpCircle, Star, Users, User } from "lucide-react";
