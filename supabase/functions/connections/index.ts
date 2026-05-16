@@ -31,25 +31,38 @@ Deno.serve(async (req) => {
         ...new Set(list.flatMap((r) => [r.brand_rep_id, r.expert_id]).filter(Boolean)),
       ];
 
-      const [{ data: brands }, { data: experts }] = await Promise.all([
+      const [{ data: brands }, { data: experts }, { data: notes }] = await Promise.all([
         brandIds.length
           ? sb.from("event_map_brands").select("id, name, logo_url, website_url").in("id", brandIds)
           : Promise.resolve({ data: [] }),
         expertIds.length
           ? sb.from("industry_experts").select("id, full_name, photo_url, current_company, job_title").in("id", expertIds)
           : Promise.resolve({ data: [] }),
+        expertIds.length
+          ? sb.from("connect_notes")
+              .select("recipient_id, message, note_cta, created_at, is_active")
+              .eq("candidate_id", candidateId)
+              .eq("is_active", true)
+              .in("recipient_id", expertIds)
+          : Promise.resolve({ data: [] }),
       ]);
 
       const brandMap = Object.fromEntries((brands || []).map((b: any) => [b.id, b]));
       const expertMap = Object.fromEntries((experts || []).map((e: any) => [e.id, e]));
+      const noteMap = Object.fromEntries((notes || []).map((n: any) => [n.recipient_id, n]));
 
       return jsonFor(req, {
-        connections: list.map((r) => ({
-          ...r,
-          brand: r.brand_id ? brandMap[r.brand_id] || null : null,
-          rep: r.brand_rep_id ? expertMap[r.brand_rep_id] || null : null,
-          expert: r.expert_id ? expertMap[r.expert_id] || null : null,
-        })),
+        connections: list.map((r) => {
+          const recipientId = r.expert_id || r.brand_rep_id || null;
+          const sentNote = recipientId ? noteMap[recipientId] || null : null;
+          return {
+            ...r,
+            brand: r.brand_id ? brandMap[r.brand_id] || null : null,
+            rep: r.brand_rep_id ? expertMap[r.brand_rep_id] || null : null,
+            expert: r.expert_id ? expertMap[r.expert_id] || null : null,
+            sent_note: sentNote,
+          };
+        }),
       });
     }
 
