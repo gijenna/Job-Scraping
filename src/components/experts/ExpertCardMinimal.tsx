@@ -52,18 +52,6 @@ const ExpertCardMinimal = ({ expert, autoExpand = false, className = "", disable
             {expert.full_name.split(' ').map(n => n[0]).join('')}
           </div>
         )}
-        {expert.current_company && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100">
-                  <CompanyLogoWithFallback company={expert.current_company} domainOverrides={expert.company_domains} className="w-4 h-4" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent><p>{expert.current_company}</p></TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
         {expert.linkedin_url && (
           <a href={expert.linkedin_url} target="_blank" rel="noopener noreferrer" className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100" onClick={(e) => e.stopPropagation()}>
             <Linkedin className="w-3 h-3 text-[#0077B5]" />
