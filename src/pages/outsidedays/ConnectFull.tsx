@@ -271,6 +271,7 @@ const ConnectFull = () => {
     <EditableTextProvider pageSlug="outsidedays26-connect">
       <ImpersonationGate>
         <ConnectShell maxWidth="2xl">
+          <RegisterReminderBanner />
           {/* Sticky progress */}
           <div className="sticky top-0 -mx-4 px-4 py-3 bg-events-teal/95 backdrop-blur z-30 border-b border-events-cream/10 mb-6">
             <div className="flex items-center justify-between gap-3 mb-1.5">
