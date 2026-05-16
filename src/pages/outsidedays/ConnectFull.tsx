@@ -430,16 +430,22 @@ const ConnectFull = () => {
 
           {/* Section 3: Where you're going */}
           <SectionBlock keyId="going" titleKey="full_s3_title" defaultTitle="Where you're going">
-            <FieldRow label={label("full_dream_role_title_label", "Dream role title")}>
-              <Input value={c.dream_role_title || ""} onChange={(e) => set("dream_role_title", e.target.value)} />
-            </FieldRow>
-            <FieldRow label={label("full_job_types_label", "Job types open to")}>
-              <MultiPills value={c.job_types_seeking || []} options={JOB_TYPES as any} onChange={(v) => set("job_types_seeking", v)} optionKeyPrefix="full_job_type_option" />
-            </FieldRow>
+            {!(c.poachable_status === "Ready to jump" || c.poachable_status === "Always open to the right opportunity") && (
+              <>
+                <FieldRow label={label("full_dream_role_title_label", "Dream role title")}>
+                  <Input value={c.dream_role_title || ""} onChange={(e) => set("dream_role_title", e.target.value)} />
+                </FieldRow>
+                <FieldRow label={label("full_job_types_label", "Job types open to")}>
+                  <MultiPills value={c.job_types_seeking || []} options={JOB_TYPES as any} onChange={(v) => set("job_types_seeking", v)} optionKeyPrefix="full_job_type_option" />
+                </FieldRow>
+              </>
+            )}
             <Row>
-              <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
-                <EditableInput value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholderKey="full_min_pay_rate_placeholder" defaultPlaceholder="e.g. 85k or 45/hr" />
-              </FieldRow>
+              {!(c.poachable_status === "Ready to jump" || c.poachable_status === "Always open to the right opportunity") && (
+                <FieldRow label={label("full_min_pay_rate_label", "Min pay rate")}>
+                  <EditableInput value={c.min_pay_rate || ""} onChange={(e) => set("min_pay_rate", e.target.value)} placeholderKey="full_min_pay_rate_placeholder" defaultPlaceholder="e.g. 85k or 45/hr" />
+                </FieldRow>
+              )}
               <FieldRow label={label("full_current_state_label", "Current state")}>
                 <SelectBox value={c.current_state || ""} onChange={(v) => set("current_state", v)} options={US_STATES as any} optionKeyPrefix="full_state_option" />
               </FieldRow>
