@@ -12,8 +12,26 @@ import BrandCardEditModal from "./BrandCardEditModal";
 import BrandCardPreview from "./BrandCardPreview";
 import BrandTeamSection, { InviteLinkPill } from "./BrandTeamSection";
 import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
-import { Pencil, Copy, Check } from "lucide-react";
+import { Pencil, Copy, Check, PartyPopper } from "lucide-react";
 import { dashboardSummary } from "@/lib/connect-session";
+import { useEventSettings } from "@/hooks/useEventSettings";
+
+function AfterpartyInviteLink() {
+  const { settings } = useEventSettings("outsidedays26-brand-dashboard");
+  const text = settings.dashboard_afterparty_invite_text || "Come to the afterparty";
+  const url = settings.dashboard_afterparty_invite_url || "https://basecampoutdoorevents.com/afterparty";
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-3 inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-yellow/15 hover:bg-events-yellow/25 text-events-yellow border border-events-yellow/40 px-4 py-2 rounded-full transition-colors self-start"
+    >
+      <PartyPopper className="w-3.5 h-3.5" />
+      {text}
+    </a>
+  );
+}
 
 function ShareMyCardPill({ rep }: { rep: any }) {
   const [copied, setCopied] = useState(false);
@@ -76,13 +94,26 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
   const [repEditOpen, setRepEditOpen] = useState(false);
   const [brandEditOpen, setBrandEditOpen] = useState(false);
   const [currentRep, setCurrentRep] = useState<any>(rep);
+  const [editCardUrl, setEditCardUrl] = useState<string | null>(null);
+
+  // Industry experts edit their card on the public ExpertInvite page, not in the
+  // brand modal. Detect by URL pattern: /Denverexperts/ (or any */experts/ path).
+  const isExpertEditUrl = (u?: string | null) => !!u && /\/[A-Za-z]+experts\//i.test(u);
+  const openEditCard = () => {
+    if (isExpertEditUrl(editCardUrl)) {
+      window.open(editCardUrl as string, "_blank", "noopener");
+    } else {
+      setRepEditOpen(true);
+    }
+  };
 
   useEffect(() => { dashboardSummary().then((s) => {
     setSummary(s);
-    if (s?.edit_card_url) onEditCardUrl?.(s.edit_card_url);
+    if (s?.edit_card_url) { setEditCardUrl(s.edit_card_url); onEditCardUrl?.(s.edit_card_url); }
   }).catch(() => {}); }, []);
   useEffect(() => {
-    if (openEditSignal && openEditSignal > 0) setRepEditOpen(true);
+    if (openEditSignal && openEditSignal > 0) openEditCard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openEditSignal]);
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
@@ -147,7 +178,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
       <div className={`grid gap-4 mb-4 ${brand ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
         <div className="flex flex-col">
           <div
-            onClick={() => setRepEditOpen(true)}
+            onClick={openEditCard}
             className="cursor-pointer group relative bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/60 rounded-2xl p-4 transition-colors"
           >
             <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
@@ -158,6 +189,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
             </div>
           </div>
           <ShareMyCardPill rep={currentRep || rep} />
+          <AfterpartyInviteLink />
         </div>
         {brand && (
           <div className="flex flex-col">
