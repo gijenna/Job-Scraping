@@ -2,9 +2,9 @@
 // MapBrandPanel, and ExpertCardMinimal. View preference persists in a cookie
 // (NOT localStorage). Mobile-first: 375px target.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
 import { X, HelpCircle, Star, Users, User } from "lucide-react";
 import connectLogo from "@/assets/connect-basecamp-outside-days.png";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
@@ -246,36 +246,12 @@ const ConnectHome = () => {
         {/* Body */}
         <main className="flex-1">
           {view === "map" ? (
-            <div className="w-full h-[calc(100vh-64px)] bg-events-teal touch-none">
-              <TransformWrapper
-                initialScale={0.4}
-                minScale={0.2}
-                maxScale={4}
-                centerOnInit
-                wheel={{ step: 0.15 }}
-                pinch={{ step: 5 }}
-                doubleClick={{ disabled: false, step: 0.7 }}
-              >
-                <TransformComponent
-                  wrapperStyle={{ width: "100%", height: "100%" }}
-                  contentStyle={{ width: "max-content", height: "max-content" }}
-                >
-                  <EventMapCanvas
-                    brands={brands}
-                    layouts={layouts}
-                    interactive={false}
-                    onClick={handleBrandClick}
-                    expertZoneExperts={experts.map((e) => ({
-                      id: e.id,
-                      full_name: e.full_name,
-                      photo_url: e.photo_url,
-                      current_company: e.current_company,
-                      job_title: e.job_title,
-                    }))}
-                  />
-                </TransformComponent>
-              </TransformWrapper>
-            </div>
+            <MapPanZoom
+              brands={brands}
+              layouts={layouts}
+              experts={experts}
+              onBrandClick={handleBrandClick}
+            />
           ) : (
             <ListView
               brands={sortedBrands}
@@ -545,4 +521,66 @@ const BubbleTile = ({
   );
 };
 
+// Map view with trackpad-friendly pan/zoom: plain wheel/two-finger scroll pans,
+// ctrl/cmd+wheel and pinch zoom. Mouse drag still pans on desktop, touch on mobile.
+const MapPanZoom = ({
+  brands, layouts, experts, onBrandClick,
+}: {
+  brands: any[]; layouts: any[]; experts: any[]; onBrandClick: (b: any) => void;
+}) => {
+  const apiRef = useRef<ReactZoomPanPinchRef | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      // ctrl/meta (incl. trackpad pinch) is handled by the library via activationKeys.
+      if (e.ctrlKey || e.metaKey) return;
+      const api = apiRef.current;
+      if (!api) return;
+      e.preventDefault();
+      const { positionX, positionY, scale } = api.state;
+      api.setTransform(positionX - e.deltaX, positionY - e.deltaY, scale, 0);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="w-full h-[calc(100vh-64px)] bg-events-teal touch-none">
+      <TransformWrapper
+        ref={apiRef}
+        initialScale={0.4}
+        minScale={0.2}
+        maxScale={4}
+        centerOnInit
+        wheel={{ step: 0.15, activationKeys: ["Control", "Meta"] }}
+        pinch={{ step: 5 }}
+        doubleClick={{ disabled: false, step: 0.7 }}
+      >
+        <TransformComponent
+          wrapperStyle={{ width: "100%", height: "100%" }}
+          contentStyle={{ width: "max-content", height: "max-content" }}
+        >
+          <EventMapCanvas
+            brands={brands}
+            layouts={layouts}
+            interactive={false}
+            onClick={onBrandClick}
+            expertZoneExperts={experts.map((e) => ({
+              id: e.id,
+              full_name: e.full_name,
+              photo_url: e.photo_url,
+              current_company: e.current_company,
+              job_title: e.job_title,
+            }))}
+          />
+        </TransformComponent>
+      </TransformWrapper>
+    </div>
+  );
+};
+
 export default ConnectHome;
+

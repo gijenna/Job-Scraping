@@ -75,7 +75,6 @@ const EventMapCanvas = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [fitAll, setFitAll] = useState(false);
   const [scale, setScale] = useState(1);
-  const [userZoom, setUserZoom] = useState(1);
 
   const fullW = TOTAL_W + PADDING * 2;
   const fullH = TOTAL_H + PADDING * 2;
@@ -87,31 +86,14 @@ const EventMapCanvas = ({
     setScale(s);
   }, [fitAll, fullW, fullH]);
 
-  // Desktop: ctrl/cmd + wheel and trackpad pinch (which browsers report as
-  // ctrlKey wheel events) zoom the map. Plain wheel/scroll falls through to
-  // the wrapper's overflow-auto and pans naturally. Mobile pinch/swipe is
-  // untouched.
-  useEffect(() => {
-    if (printMode) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey && !e.metaKey) return;
-      e.preventDefault();
-      setUserZoom((z) => Math.min(2.5, Math.max(0.4, z * (1 - e.deltaY * 0.01))));
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [printMode]);
-
-  const effectiveScale = scale * userZoom;
+  const effectiveScale = scale;
 
   return (
     <div ref={wrapperRef} className={`relative ${printMode ? "" : "overflow-auto"} border border-white/20 rounded-lg ${printMode ? "border-none" : ""}`}>
       {/* Fit-all toggle */}
       {!printMode && (
         <button
-          onClick={() => { setFitAll((v) => !v); setUserZoom(1); }}
+          onClick={() => setFitAll((v) => !v)}
           className="absolute top-2 right-2 z-20 px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-xs font-body transition-colors"
         >
           {fitAll ? "1:1 View" : "Fit All Courts"}
