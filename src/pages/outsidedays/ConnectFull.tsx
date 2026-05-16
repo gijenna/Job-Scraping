@@ -25,6 +25,7 @@ import { EditableTextProvider, useEditableTextContext } from "@/components/Edita
 import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER, PITCH_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
+import RegisterReminderBanner from "@/components/connect/RegisterReminderBanner";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { calcProfileCompleteness } from "@/lib/profile-completeness";
 
