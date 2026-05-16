@@ -178,7 +178,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
       <div className={`grid gap-4 mb-4 ${brand ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
         <div className="flex flex-col">
           <div
-            onClick={() => setRepEditOpen(true)}
+            onClick={openEditCard}
             className="cursor-pointer group relative bg-events-cream/5 border border-events-cream/10 hover:border-events-coral/60 rounded-2xl p-4 transition-colors"
           >
             <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
@@ -189,6 +189,7 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
             </div>
           </div>
           <ShareMyCardPill rep={currentRep || rep} />
+          <AfterpartyInviteLink />
         </div>
         {brand && (
           <div className="flex flex-col">
