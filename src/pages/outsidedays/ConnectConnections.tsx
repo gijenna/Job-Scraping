@@ -154,6 +154,21 @@ const ConnectConnections = () => {
                   mode === "expert" ? r.expert?.photo_url :
                   mode === "brand_rep" ? r.rep?.photo_url :
                   (r.brand?.logo_url || (r.brand?.website_url ? `https://logo.clearbit.com/${r.brand.website_url.replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0]}` : null));
+                const timing = timingFor(r.created_at);
+                // Sent note text: brand/brand_rep uses message_to_brand on the
+                // connection. Experts use the standalone connect_notes join.
+                const sentNoteText =
+                  (mode === "brand" || mode === "brand_rep")
+                    ? (r.message_sent_at ? r.message_to_brand : null)
+                    : r.sent_note?.message || null;
+                // Connection-type chip. Visited = logged at/after doors open
+                // for a brand visit. Private journal = no note + no visit.
+                const typeChip = (() => {
+                  if (mode === "brand" && timing !== "pre") return { label: "Visited table", cls: "bg-events-yellow/90 text-events-teal" };
+                  if (sentNoteText || r.message_sent_at || r.sent_note) return { label: "Note sent", cls: "bg-events-coral/90 text-events-cream" };
+                  if (mode !== "brand" && timing === "at") return { label: "Met at event", cls: "bg-events-yellow/90 text-events-teal" };
+                  return { label: "Private journal", cls: "bg-events-cream/10 text-events-cream/70" };
+                })();
                 return (
                   <li key={r.id}>
                     <button
@@ -172,17 +187,17 @@ const ConnectConnections = () => {
                           <div className="font-display font-bold truncate">{subject || "Untitled"}</div>
                           <div className="text-[10px] text-events-cream/40 font-body shrink-0">{relativeTime(r.created_at)}</div>
                         </div>
+                        {sentNoteText && (
+                          <p className="text-xs text-events-cream/85 font-body italic line-clamp-2 mt-1 border-l-2 border-events-coral/60 pl-2">
+                            "{sentNoteText}"
+                          </p>
+                        )}
                         {r.private_notes && (
-                          <p className="text-xs text-events-cream/60 font-body line-clamp-2 mt-1">{r.private_notes}</p>
+                          <p className="text-xs text-events-cream/55 font-body line-clamp-2 mt-1">{r.private_notes}</p>
                         )}
                         <div className="flex flex-wrap gap-1.5 mt-2">
-                          {(mode === "brand" || mode === "brand_rep") && (
-                            r.message_sent_at ? (
-                              <span className="text-[9px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2 py-0.5 rounded-full">Note sent</span>
-                            ) : (
-                              <span className="text-[9px] uppercase tracking-wider font-display bg-events-cream/10 text-events-cream/60 px-2 py-0.5 rounded-full">Note not yet sent</span>
-                            )
-                          )}
+                          <span className={`text-[9px] uppercase tracking-wider font-display px-2 py-0.5 rounded-full ${typeChip.cls}`}>{typeChip.label}</span>
+                          <span className="text-[9px] uppercase tracking-wider font-display bg-events-cream/10 text-events-cream/70 px-2 py-0.5 rounded-full">{TIMING_LABEL[timing]}</span>
                           {mode === "expert" && r.would_want_as_mentor && (
                             <span className="text-[9px] uppercase tracking-wider font-display bg-events-yellow/90 text-events-teal px-2 py-0.5 rounded-full">Mentor flagged</span>
                           )}
