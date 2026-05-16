@@ -4,7 +4,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from "react-zoom-pan-pinch";
 import { X, HelpCircle, Star, Users, User } from "lucide-react";
 import connectLogo from "@/assets/connect-basecamp-outside-days.png";
 import { useEventMapBrands, type MapBrand } from "@/hooks/useEventMapBrands";
