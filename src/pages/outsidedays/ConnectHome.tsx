@@ -246,37 +246,12 @@ const ConnectHome = () => {
         {/* Body */}
         <main className="flex-1">
           {view === "map" ? (
-            <div className="w-full h-[calc(100vh-64px)] bg-events-teal touch-none">
-              <TransformWrapper
-                initialScale={0.4}
-                minScale={0.2}
-                maxScale={4}
-                centerOnInit
-                wheel={{ step: 0.15, activationKeys: ["Control", "Meta"] }}
-                pinch={{ step: 5 }}
-                panning={{ velocityDisabled: false, wheelPanning: true } as any}
-                doubleClick={{ disabled: false, step: 0.7 }}
-              >
-                <TransformComponent
-                  wrapperStyle={{ width: "100%", height: "100%" }}
-                  contentStyle={{ width: "max-content", height: "max-content" }}
-                >
-                  <EventMapCanvas
-                    brands={brands}
-                    layouts={layouts}
-                    interactive={false}
-                    onClick={handleBrandClick}
-                    expertZoneExperts={experts.map((e) => ({
-                      id: e.id,
-                      full_name: e.full_name,
-                      photo_url: e.photo_url,
-                      current_company: e.current_company,
-                      job_title: e.job_title,
-                    }))}
-                  />
-                </TransformComponent>
-              </TransformWrapper>
-            </div>
+            <MapPanZoom
+              brands={brands}
+              layouts={layouts}
+              experts={experts}
+              onBrandClick={handleBrandClick}
+            />
           ) : (
             <ListView
               brands={sortedBrands}
