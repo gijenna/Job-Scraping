@@ -72,10 +72,9 @@ const App = () => (
       <BrowserRouter>
         <LinkTracker>
         <Routes>
-          {/* Pinned to top for quick access */}
-          <Route path="/experts/afterparty" element={<AdminAfterParty />} />
-          <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
-          <Route path="/afterparty-interest" element={<AfterPartyInterest />} />
+          {/* Pinned to top for quick access — order matches Jenna's preferred menu order */}
+          <Route path="/" element={<Events />} />
+          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route
             path="/afterparty"
             element={
@@ -85,6 +84,16 @@ const App = () => (
               />
             }
           />
+          <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
+          <Route path="/admin/experts" element={<AdminExperts />} />
+          <Route path="/admin/event-map" element={<EventMapAdmin />} />
+          <Route path="/experts/afterparty" element={<AdminAfterParty />} />
+          <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
+
+          {/* Other afterparty variants */}
+          <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
+          <Route path="/afterparty-interest" element={<AfterPartyInterest />} />
           <Route
             path="/afterparty/:name"
             element={
@@ -112,27 +121,21 @@ const App = () => (
               />
             }
           />
-          {/* Primary routes */}
-          <Route path="/" element={<Events />} />
+          {/* Other primary routes */}
           <Route path="/events" element={<Events />} />
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/page-meta" element={<AdminPageMeta />} />
-          <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
           <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
           <Route path="/admin/leads" element={<AdminLeads />} />
-          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}
-          <Route path="/outsidedays26/connect" element={<Connect />} />
           <Route path="/outsidedays26/connect/how-it-works" element={<ConnectHowItWorks />} />
           <Route path="/outsidedays26/connect/full" element={<ConnectFull />} />
           <Route path="/outsidedays26/connect/home" element={<ConnectHome />} />
           <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
           <Route path="/outsidedays26/connect/connections" element={<ConnectConnections />} />
-          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
           {/* Secondary routes */}
           <Route path="/Gatheroverview" element={<Index />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
@@ -168,7 +171,6 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/T&C" element={<TermsConditions />} />
           <Route path="/print-card" element={<PrintExpertCard />} />
-          <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
           {/* Hidden Oakley variant — same data as /guests, with the RiNo
               venue showcase replacing the event-info column. Not linked. */}
           <Route path="/guestsoakley" element={<GuestList venueShowcase="oakley-rino" />} />
