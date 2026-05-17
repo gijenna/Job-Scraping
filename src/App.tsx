@@ -95,15 +95,6 @@ const App = () => (
           <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
           <Route path="/afterparty-interest" element={<AfterPartyInterest />} />
           <Route
-            path="/afterparty"
-            element={
-              <AfterPartyInvite
-                presenter={OAKLEY_PRESENTER}
-                venueShowcase="oakley-rino"
-              />
-            }
-          />
-          <Route
             path="/afterparty/:name"
             element={
               <AfterPartyInvite
@@ -130,27 +121,21 @@ const App = () => (
               />
             }
           />
-          {/* Primary routes */}
-          <Route path="/" element={<Events />} />
+          {/* Other primary routes */}
           <Route path="/events" element={<Events />} />
           <Route path="/gather-denver" element={<GatherDenver />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/page-meta" element={<AdminPageMeta />} />
-          <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/admin/connect" element={<AdminConnect />} />
           <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
           <Route path="/admin/leads" element={<AdminLeads />} />
-          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route path="/outsidedays26-cos" element={<EventOutsideDaysCOS />} />
           {/* Outside Days connect (career fair) */}
-          <Route path="/outsidedays26/connect" element={<Connect />} />
           <Route path="/outsidedays26/connect/how-it-works" element={<ConnectHowItWorks />} />
           <Route path="/outsidedays26/connect/full" element={<ConnectFull />} />
           <Route path="/outsidedays26/connect/home" element={<ConnectHome />} />
           <Route path="/outsidedays26/connect/profile" element={<ConnectProfile />} />
           <Route path="/outsidedays26/connect/connections" element={<ConnectConnections />} />
-          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
           {/* Secondary routes */}
           <Route path="/Gatheroverview" element={<Index />} />
           <Route path="/gather-pnw-export" element={<GatherPNWExport />} />
