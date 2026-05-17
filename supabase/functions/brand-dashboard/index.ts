@@ -150,6 +150,40 @@ Deno.serve(async (req) => {
       // Fetch candidate page
       let q = sb.from("candidates").select("*", { count: "exact" });
 
+      // Engagement-only filters must be applied at the DB level (before pagination),
+      // otherwise candidates outside the first page get silently dropped.
+      const engagementIdSets: Set<string>[] = [];
+      if (filters.visited) {
+        engagementIdSets.push(new Set(Object.keys(engagement).filter((id) => engagement[id]?.visited)));
+      }
+      if (filters.role_flagged) {
+        engagementIdSets.push(new Set(Object.keys(engagement).filter((id) => engagement[id]?.role_flagged)));
+      }
+      if (filters.starred_brand) {
+        engagementIdSets.push(new Set(starred));
+      }
+      if (filters.pre_event_note || filters.during_event_note || filters.post_event_note) {
+        const allowedTimings = new Set<string>();
+        if (filters.pre_event_note) allowedTimings.add("pre_event");
+        if (filters.during_event_note) allowedTimings.add("during_event");
+        if (filters.post_event_note) allowedTimings.add("post_event");
+        engagementIdSets.push(new Set(
+          Object.keys(connectNotes).filter((id) => allowedTimings.has(connectNotes[id]?.note_timing))
+        ));
+      }
+      if (engagementIdSets.length) {
+        // Intersect all engagement filter id-sets.
+        let allowed = engagementIdSets[0];
+        for (let i = 1; i < engagementIdSets.length; i++) {
+          allowed = new Set([...allowed].filter((id) => engagementIdSets[i].has(id)));
+        }
+        const ids = Array.from(allowed);
+        if (ids.length === 0) {
+          return jsonFor(req, { items: [], count: 0, page, page_size: pageSize });
+        }
+        q = q.in("id", ids);
+      }
+
       if (filters.career_stage?.length) q = q.in("career_stage", filters.career_stage);
 
       // Poachable status (hierarchical): "Always open" also includes "Ready to jump".
@@ -286,21 +320,7 @@ Deno.serve(async (req) => {
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
       let list = rows || [];
 
-      // Engagement-only filters (post-filter)
-      if (filters.visited) list = list.filter((c: any) => engagement[c.id]?.visited);
-      if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
-      if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
-      // Note timing chips use OR within the category.
-      if (filters.pre_event_note || filters.during_event_note || filters.post_event_note) {
-        const allowed = new Set<string>();
-        if (filters.pre_event_note) allowed.add("pre_event");
-        if (filters.during_event_note) allowed.add("during_event");
-        if (filters.post_event_note) allowed.add("post_event");
-        list = list.filter((c: any) => {
-          const t = connectNotes[c.id]?.note_timing;
-          return t && allowed.has(t);
-        });
-      }
+      // Engagement-only filters were already applied at the DB level above.
 
       // Min pay (text field, robust numeric parse: handles "75K", "$90,000", "75").
       // Brand-side filter represents what the brand can afford. Include candidates whose
