@@ -72,8 +72,26 @@ const App = () => (
       <BrowserRouter>
         <LinkTracker>
         <Routes>
-          {/* Pinned to top for quick access */}
+          {/* Pinned to top for quick access — order matches Jenna's preferred menu order */}
+          <Route path="/" element={<Events />} />
+          <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
+          <Route
+            path="/afterparty"
+            element={
+              <AfterPartyInvite
+                presenter={OAKLEY_PRESENTER}
+                venueShowcase="oakley-rino"
+              />
+            }
+          />
+          <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
+          <Route path="/admin/experts" element={<AdminExperts />} />
+          <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/experts/afterparty" element={<AdminAfterParty />} />
+          <Route path="/outsidedays26/connect" element={<Connect />} />
+          <Route path="/outsidedays26/dashboard" element={<BrandDashboard />} />
+
+          {/* Other afterparty variants */}
           <Route path="/afterparty-clip" element={<AfterPartySplashClip />} />
           <Route path="/afterparty-interest" element={<AfterPartyInterest />} />
           <Route
