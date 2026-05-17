@@ -320,21 +320,7 @@ Deno.serve(async (req) => {
       if (error) return jsonFor(req, { error: error.message }, { status: 400 });
       let list = rows || [];
 
-      // Engagement-only filters (post-filter)
-      if (filters.visited) list = list.filter((c: any) => engagement[c.id]?.visited);
-      if (filters.role_flagged) list = list.filter((c: any) => engagement[c.id]?.role_flagged);
-      if (filters.starred_brand) list = list.filter((c: any) => starred.has(c.id));
-      // Note timing chips use OR within the category.
-      if (filters.pre_event_note || filters.during_event_note || filters.post_event_note) {
-        const allowed = new Set<string>();
-        if (filters.pre_event_note) allowed.add("pre_event");
-        if (filters.during_event_note) allowed.add("during_event");
-        if (filters.post_event_note) allowed.add("post_event");
-        list = list.filter((c: any) => {
-          const t = connectNotes[c.id]?.note_timing;
-          return t && allowed.has(t);
-        });
-      }
+      // Engagement-only filters were already applied at the DB level above.
 
       // Min pay (text field, robust numeric parse: handles "75K", "$90,000", "75").
       // Brand-side filter represents what the brand can afford. Include candidates whose
