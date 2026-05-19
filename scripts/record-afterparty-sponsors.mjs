@@ -12,12 +12,16 @@ const WIDTH = 1080;
 const HEIGHT = ratio === "square" ? 1080 : 1920;
 const FPS = 30;
 const HEAD_MS = 200;
+// Mirror src/pages/AfterPartySplashClip.tsx timings
 const SPLASH_MS = 10800;
-const FADE_START_MS = 12300;
-const FADE_MS = 1200;
-const HOLD_MS = 5200; // hold sponsors panel after fade
-const TAIL_MS = 800;
-const TOTAL_MS = HEAD_MS + FADE_START_MS + FADE_MS + HOLD_MS + TAIL_MS;
+const DJ_FADE_IN_MS = 800;
+const DJ_HOLD_MS = 1200;            // splash holds before fading out (10800+800+1200=12800 = SPLASH_FADE_OUT_START)
+const SPLASH_FADE_OUT_MS = 1200;
+const SPONSORS_FADE_IN_MS = 1200;
+const HOLD_MS = 4200;               // hold sponsors panel
+const TAIL_MS = 600;
+const TOTAL_MS =
+  HEAD_MS + SPLASH_MS + DJ_FADE_IN_MS + DJ_HOLD_MS + SPLASH_FADE_OUT_MS + SPONSORS_FADE_IN_MS + HOLD_MS + TAIL_MS;
 const totalFrames = Math.round((TOTAL_MS / 1000) * FPS);
 
 const URL = `http://localhost:8080/afterparty-clip?ratio=${ratio}&mode=sponsors&seek=0`;
