@@ -415,6 +415,16 @@ const ConnectFull = () => {
                 <SelectBox value={c.focus || ""} onChange={(v) => set("focus", v)} options={c.field === "Other" ? ["Other"] : (FOCUSES_BY_FIELD[c.field] || [])} optionKeyPrefix="full_focus_option" />
               </FieldRow>
             </Row>
+            {/* Quick-pick pills mirroring the dropdowns so users can tap-to-select. */}
+            {c.field && c.field !== "Other" && (FOCUSES_BY_FIELD[c.field] || []).length > 0 && (
+              <SinglePills
+                value={c.focus || ""}
+                options={FOCUSES_BY_FIELD[c.field] || []}
+                onChange={(v) => set("focus", v)}
+                optionKeyPrefix="full_focus_option"
+                label={label("full_focus_pills_label", "Pick a focus")}
+              />
+            )}
             {c.field === "Other" && (
               <FieldRow refSetter={setRef("field_other")} label={label("full_field_other_label", "Tell us what you do *")} error={errors.field_other}>
                 <EditableInput value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholderKey="full_field_other_placeholder" defaultPlaceholder="e.g. Outdoor industrial design" />
