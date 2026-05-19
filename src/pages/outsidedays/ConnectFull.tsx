@@ -415,6 +415,13 @@ const ConnectFull = () => {
                 <SelectBox value={c.focus || ""} onChange={(v) => set("focus", v)} options={c.field === "Other" ? ["Other"] : (FOCUSES_BY_FIELD[c.field] || [])} optionKeyPrefix="full_focus_option" />
               </FieldRow>
             </Row>
+            <SinglePills
+              value={c.field || ""}
+              options={FIELDS}
+              onChange={(v) => { set("field", v); set("focus", ""); }}
+              optionKeyPrefix="full_field_option"
+              label={label("full_field_pills_label", "Pick a field")}
+            />
             {/* Quick-pick pills mirroring the dropdowns so users can tap-to-select. */}
             {c.field && c.field !== "Other" && (FOCUSES_BY_FIELD[c.field] || []).length > 0 && (
               <SinglePills
@@ -765,7 +772,16 @@ const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: strin
       {isAdmin && optionKeyPrefix && options.length > 0 && (
         <div className="flex flex-wrap gap-1.5 rounded-md border border-events-cream/10 bg-events-cream/5 p-2">
           {options.map((o) => (
-            <EditableText key={o} settingKey={optionKey(o)} defaultText={o} as="span" className="px-2 py-1 rounded-full border border-events-cream/15 text-[10px] normal-case tracking-normal text-events-cream/75" />
+            <div
+              key={o}
+              role="button"
+              tabIndex={0}
+              onClick={() => onChange(o)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onChange(o); }}
+              className={`px-2 py-1 rounded-full border text-[10px] normal-case tracking-normal cursor-pointer transition-colors ${value === o ? "bg-events-coral text-events-cream border-events-coral" : "border-events-cream/15 text-events-cream/75 hover:border-events-cream/40"}`}
+            >
+              <EditableText settingKey={optionKey(o)} defaultText={o} as="span" />
+            </div>
           ))}
         </div>
       )}
