@@ -73,13 +73,27 @@ const AfterPartySplashClip = () => {
   const effectiveTimeMs =
     typeof clipSeekMs === "number" ? clipSeekMs : Math.max(liveElapsed, splashDone ? SPLASH_DONE_MS : 0);
 
-  // Sponsors-mode crossfade progress (0 → 1) starting at SPONSORS_FADE_START_MS
-  const sponsorsProgress =
+  // === Deterministic, time-driven opacities (no CSS transitions, so the recorder
+  //     can seek frame-by-frame and every transition stays perfectly smooth). ===
+
+  // DJ/Drinks row fades in immediately after splash completes
+  const djOpacity = easeInOut(clamp01((effectiveTimeMs - SPLASH_DONE_MS) / DJ_FADE_IN_MS));
+
+  // Darkening veil follows the same curve as the DJ row so the stage doesn't pop
+  const veilOpacity = easeInOut(clamp01((effectiveTimeMs - 8100) / 3200));
+
+  // Sponsors mode: splash fades OUT first, sponsors fades IN after — sequential.
+  const splashFadeOut =
     mode === "sponsors"
-      ? Math.max(0, Math.min(1, (effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      ? easeInOut(clamp01((effectiveTimeMs - SPLASH_FADE_OUT_START_MS) / SPLASH_FADE_OUT_MS))
       : 0;
-  const sponsorsVisible = sponsorsProgress > 0;
-  const splashOpacity = mode === "sponsors" ? 1 - sponsorsProgress : 1;
+  const splashOpacity = 1 - splashFadeOut;
+
+  const sponsorsOpacity =
+    mode === "sponsors"
+      ? easeInOut(clamp01((effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      : 0;
+  const sponsorsVisible = sponsorsOpacity > 0;
 
   useEffect(() => {
     const clipWindow = window as typeof window & { __SET_AFTERPARTY_CLIP_TIME__?: (ms: number) => void };
