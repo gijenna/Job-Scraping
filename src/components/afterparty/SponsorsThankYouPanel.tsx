@@ -91,8 +91,7 @@ const SponsorsThankYouPanel = ({ ratio, opacity }: Props) => {
         alignItems: "center",
         justifyContent: "center",
         padding: isStory ? "80px 60px" : "48px 40px",
-        opacity: visible ? 1 : 0,
-        transition: "opacity 900ms ease-in-out",
+        opacity,
         pointerEvents: "none",
       }}
     >
