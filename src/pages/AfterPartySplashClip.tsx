@@ -2,7 +2,18 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import StarSparkle from "@/components/afterparty/StarSparkle";
+import SponsorsThankYouPanel from "@/components/afterparty/SponsorsThankYouPanel";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
+
+// Timeline (ms) for sponsors mode:
+//   0      → splash begins
+//   10800  → splash done, DJ/Drinks row visible
+//   12300  → start crossfade from splash → sponsors panel (1200ms)
+//   13500  → sponsors panel fully visible
+//   18500  → end of clip
+const SPLASH_DONE_MS = 10800;
+const SPONSORS_FADE_START_MS = 12300;
+const SPONSORS_FADE_MS = 1200;
 
 const OAKLEY_PRESENTER = {
   label: "@",
