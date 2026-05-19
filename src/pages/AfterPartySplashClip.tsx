@@ -5,15 +5,25 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import SponsorsThankYouPanel from "@/components/afterparty/SponsorsThankYouPanel";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
 
-// Timeline (ms) for sponsors mode:
+// Timeline (ms) for sponsors mode — fully SEQUENTIAL fades for smoothness:
 //   0      → splash begins
-//   10800  → splash done, DJ/Drinks row visible
-//   12300  → start crossfade from splash → sponsors panel (1200ms)
-//   13500  → sponsors panel fully visible
-//   18500  → end of clip
+//   10800  → splash done; DJ/Drinks row begins fading in
+//   11600  → DJ row fully visible (800ms ease-in)
+//   12800  → splash container begins fading OUT (1200ms)
+//   14000  → splash fully gone
+//   14000  → sponsors panel begins fading IN (1200ms)
+//   15200  → sponsors panel fully visible
+//   ~19500 → end of clip
 const SPLASH_DONE_MS = 10800;
-const SPONSORS_FADE_START_MS = 12300;
+const DJ_FADE_IN_MS = 800;
+const SPLASH_FADE_OUT_START_MS = 12800;
+const SPLASH_FADE_OUT_MS = 1200;
+const SPONSORS_FADE_START_MS = 14000;
 const SPONSORS_FADE_MS = 1200;
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+// easeInOutCubic — silky, no pop
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 const OAKLEY_PRESENTER = {
   label: "@",
