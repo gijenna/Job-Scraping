@@ -2,7 +2,18 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BasecampMatchPopflyLogo from "@/components/afterparty/BasecampMatchPopflyLogo";
 import StarSparkle from "@/components/afterparty/StarSparkle";
+import SponsorsThankYouPanel from "@/components/afterparty/SponsorsThankYouPanel";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
+
+// Timeline (ms) for sponsors mode:
+//   0      → splash begins
+//   10800  → splash done, DJ/Drinks row visible
+//   12300  → start crossfade from splash → sponsors panel (1200ms)
+//   13500  → sponsors panel fully visible
+//   18500  → end of clip
+const SPLASH_DONE_MS = 10800;
+const SPONSORS_FADE_START_MS = 12300;
+const SPONSORS_FADE_MS = 1200;
 
 const OAKLEY_PRESENTER = {
   label: "@",
@@ -27,11 +38,38 @@ const CREAM = "#F5E6D3";
 const AfterPartySplashClip = () => {
   const [params] = useSearchParams();
   const ratio = params.get("ratio") === "square" ? "square" : "story";
+  const mode = params.get("mode") === "sponsors" ? "sponsors" : "default";
   const [clipSeekMs, setClipSeekMs] = useState<number | undefined>(
     params.has("seek") ? Number(params.get("seek")) || 0 : undefined,
   );
   const [liveSplashDone, setLiveSplashDone] = useState(false);
-  const splashDone = typeof clipSeekMs === "number" ? clipSeekMs >= 10800 : liveSplashDone;
+  const [liveElapsed, setLiveElapsed] = useState(0);
+  const splashDone = typeof clipSeekMs === "number" ? clipSeekMs >= SPLASH_DONE_MS : liveSplashDone;
+
+  // Track live elapsed so the sponsors fade-in works without explicit seeking.
+  useEffect(() => {
+    if (typeof clipSeekMs === "number") return;
+    if (!liveSplashDone) return;
+    const start = performance.now();
+    let raf = 0;
+    const tick = () => {
+      setLiveElapsed(performance.now() - start + SPLASH_DONE_MS);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [liveSplashDone, clipSeekMs]);
+
+  const effectiveTimeMs =
+    typeof clipSeekMs === "number" ? clipSeekMs : Math.max(liveElapsed, splashDone ? SPLASH_DONE_MS : 0);
+
+  // Sponsors-mode crossfade progress (0 → 1) starting at SPONSORS_FADE_START_MS
+  const sponsorsProgress =
+    mode === "sponsors"
+      ? Math.max(0, Math.min(1, (effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      : 0;
+  const sponsorsVisible = sponsorsProgress > 0;
+  const splashOpacity = mode === "sponsors" ? 1 - sponsorsProgress : 1;
 
   useEffect(() => {
     const clipWindow = window as typeof window & { __SET_AFTERPARTY_CLIP_TIME__?: (ms: number) => void };
@@ -112,6 +150,8 @@ const AfterPartySplashClip = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: ratio === "square" ? "72px" : "120px 64px",
+          opacity: splashOpacity,
+          transition: "opacity 200ms linear",
         }}
       >
         <div style={{ width: "100%" }}>
@@ -168,6 +208,10 @@ const AfterPartySplashClip = () => {
           </div>
         </div>
       </div>
+
+      {mode === "sponsors" && (
+        <SponsorsThankYouPanel ratio={ratio} visible={sponsorsVisible} />
+      )}
     </div>
   );
 };
