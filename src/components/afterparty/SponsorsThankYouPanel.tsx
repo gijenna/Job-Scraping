@@ -31,7 +31,8 @@ const needsCreamBubble = (name: string) =>
 
 interface Props {
   ratio: "square" | "story";
-  visible: boolean;
+  /** 0–1 numeric opacity, driven by parent (deterministic, no CSS transitions). */
+  opacity: number;
 }
 
 /**
@@ -41,7 +42,7 @@ interface Props {
  * Pulls from the same `afterparty_partners` table as AfterPartySpotlights,
  * grouped by category, but renders smaller chips with no interactive controls.
  */
-const SponsorsThankYouPanel = ({ ratio, visible }: Props) => {
+const SponsorsThankYouPanel = ({ ratio, opacity }: Props) => {
   const [items, setItems] = useState<Spotlight[]>([]);
 
   useEffect(() => {
@@ -90,8 +91,7 @@ const SponsorsThankYouPanel = ({ ratio, visible }: Props) => {
         alignItems: "center",
         justifyContent: "center",
         padding: isStory ? "80px 60px" : "48px 40px",
-        opacity: visible ? 1 : 0,
-        transition: "opacity 900ms ease-in-out",
+        opacity,
         pointerEvents: "none",
       }}
     >

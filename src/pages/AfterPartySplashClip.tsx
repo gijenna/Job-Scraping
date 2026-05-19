@@ -5,15 +5,25 @@ import StarSparkle from "@/components/afterparty/StarSparkle";
 import SponsorsThankYouPanel from "@/components/afterparty/SponsorsThankYouPanel";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
 
-// Timeline (ms) for sponsors mode:
+// Timeline (ms) for sponsors mode — fully SEQUENTIAL fades for smoothness:
 //   0      → splash begins
-//   10800  → splash done, DJ/Drinks row visible
-//   12300  → start crossfade from splash → sponsors panel (1200ms)
-//   13500  → sponsors panel fully visible
-//   18500  → end of clip
+//   10800  → splash done; DJ/Drinks row begins fading in
+//   11600  → DJ row fully visible (800ms ease-in)
+//   12800  → splash container begins fading OUT (1200ms)
+//   14000  → splash fully gone
+//   14000  → sponsors panel begins fading IN (1200ms)
+//   15200  → sponsors panel fully visible
+//   ~19500 → end of clip
 const SPLASH_DONE_MS = 10800;
-const SPONSORS_FADE_START_MS = 12300;
+const DJ_FADE_IN_MS = 800;
+const SPLASH_FADE_OUT_START_MS = 12800;
+const SPLASH_FADE_OUT_MS = 1200;
+const SPONSORS_FADE_START_MS = 14000;
 const SPONSORS_FADE_MS = 1200;
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+// easeInOutCubic — silky, no pop
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 const OAKLEY_PRESENTER = {
   label: "@",
@@ -63,13 +73,27 @@ const AfterPartySplashClip = () => {
   const effectiveTimeMs =
     typeof clipSeekMs === "number" ? clipSeekMs : Math.max(liveElapsed, splashDone ? SPLASH_DONE_MS : 0);
 
-  // Sponsors-mode crossfade progress (0 → 1) starting at SPONSORS_FADE_START_MS
-  const sponsorsProgress =
+  // === Deterministic, time-driven opacities (no CSS transitions, so the recorder
+  //     can seek frame-by-frame and every transition stays perfectly smooth). ===
+
+  // DJ/Drinks row fades in immediately after splash completes
+  const djOpacity = easeInOut(clamp01((effectiveTimeMs - SPLASH_DONE_MS) / DJ_FADE_IN_MS));
+
+  // Darkening veil follows the same curve as the DJ row so the stage doesn't pop
+  const veilOpacity = easeInOut(clamp01((effectiveTimeMs - 8100) / 3200));
+
+  // Sponsors mode: splash fades OUT first, sponsors fades IN after — sequential.
+  const splashFadeOut =
     mode === "sponsors"
-      ? Math.max(0, Math.min(1, (effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      ? easeInOut(clamp01((effectiveTimeMs - SPLASH_FADE_OUT_START_MS) / SPLASH_FADE_OUT_MS))
       : 0;
-  const sponsorsVisible = sponsorsProgress > 0;
-  const splashOpacity = mode === "sponsors" ? 1 - sponsorsProgress : 1;
+  const splashOpacity = 1 - splashFadeOut;
+
+  const sponsorsOpacity =
+    mode === "sponsors"
+      ? easeInOut(clamp01((effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      : 0;
+  const sponsorsVisible = sponsorsOpacity > 0;
 
   useEffect(() => {
     const clipWindow = window as typeof window & { __SET_AFTERPARTY_CLIP_TIME__?: (ms: number) => void };
@@ -131,11 +155,7 @@ const AfterPartySplashClip = () => {
           position: "absolute",
           inset: 0,
           backgroundColor: "rgba(0,0,0,0.55)",
-          opacity: splashDone ? 1 : 0,
-          animation: splashDone
-            ? undefined
-            : "apClipBgDarken 3200ms ease-in-out 8100ms forwards",
-          transition: "opacity 0.4s ease-out",
+          opacity: veilOpacity,
           pointerEvents: "none",
         }}
       />
@@ -151,7 +171,6 @@ const AfterPartySplashClip = () => {
           justifyContent: "center",
           padding: ratio === "square" ? "72px" : "120px 64px",
           opacity: splashOpacity,
-          transition: "opacity 200ms linear",
         }}
       >
         <div style={{ width: "100%" }}>
@@ -159,8 +178,7 @@ const AfterPartySplashClip = () => {
 
           <div
             style={{
-              opacity: splashDone ? 1 : 0,
-              transition: "opacity 0.4s ease-out",
+              opacity: djOpacity,
               textAlign: "center",
               marginTop: 12,
             }}
@@ -209,8 +227,8 @@ const AfterPartySplashClip = () => {
         </div>
       </div>
 
-      {mode === "sponsors" && (
-        <SponsorsThankYouPanel ratio={ratio} visible={sponsorsVisible} />
+      {mode === "sponsors" && sponsorsVisible && (
+        <SponsorsThankYouPanel ratio={ratio} opacity={sponsorsOpacity} />
       )}
     </div>
   );
