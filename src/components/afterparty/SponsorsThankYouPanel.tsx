@@ -31,7 +31,8 @@ const needsCreamBubble = (name: string) =>
 
 interface Props {
   ratio: "square" | "story";
-  visible: boolean;
+  /** 0–1 numeric opacity, driven by parent (deterministic, no CSS transitions). */
+  opacity: number;
 }
 
 /**
