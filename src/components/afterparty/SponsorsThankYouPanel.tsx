@@ -42,7 +42,7 @@ interface Props {
  * Pulls from the same `afterparty_partners` table as AfterPartySpotlights,
  * grouped by category, but renders smaller chips with no interactive controls.
  */
-const SponsorsThankYouPanel = ({ ratio, visible }: Props) => {
+const SponsorsThankYouPanel = ({ ratio, opacity }: Props) => {
   const [items, setItems] = useState<Spotlight[]>([]);
 
   useEffect(() => {
