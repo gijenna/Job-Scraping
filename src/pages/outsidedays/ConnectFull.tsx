@@ -415,6 +415,16 @@ const ConnectFull = () => {
                 <SelectBox value={c.focus || ""} onChange={(v) => set("focus", v)} options={c.field === "Other" ? ["Other"] : (FOCUSES_BY_FIELD[c.field] || [])} optionKeyPrefix="full_focus_option" />
               </FieldRow>
             </Row>
+            {/* Quick-pick pills mirroring the dropdowns so users can tap-to-select. */}
+            {c.field && c.field !== "Other" && (FOCUSES_BY_FIELD[c.field] || []).length > 0 && (
+              <SinglePills
+                value={c.focus || ""}
+                options={FOCUSES_BY_FIELD[c.field] || []}
+                onChange={(v) => set("focus", v)}
+                optionKeyPrefix="full_focus_option"
+                label={label("full_focus_pills_label", "Pick a focus")}
+              />
+            )}
             {c.field === "Other" && (
               <FieldRow refSetter={setRef("field_other")} label={label("full_field_other_label", "Tell us what you do *")} error={errors.field_other}>
                 <EditableInput value={c.field_other || ""} onChange={(e) => set("field_other", e.target.value)} placeholderKey="full_field_other_placeholder" defaultPlaceholder="e.g. Outdoor industrial design" />
@@ -762,6 +772,29 @@ const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: strin
     </div>
   );
 };
+const SinglePills = ({ value, options, onChange, optionKeyPrefix, label }: { value: string; options: string[]; onChange: (v: string) => void; optionKeyPrefix?: string; label?: React.ReactNode }) => {
+  const { settings } = useEditableTextContext();
+  const optionKey = (o: string) => `${optionKeyPrefix || "full_pill_option"}_${slugifyKey(o)}`;
+  const labelFor = (o: string) => (optionKeyPrefix ? settings[optionKey(o)] || o : o);
+  if (!options || options.length === 0) return null;
+  return (
+    <div className="space-y-1.5">
+      {label && <div className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body">{label}</div>}
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => {
+          const on = value === o;
+          return (
+            <button type="button" key={o} onClick={() => onChange(o)}
+              className={`px-3 py-1.5 rounded-full text-xs font-body border transition ${on ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"}`}>
+              {labelFor(o)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 
 const MultiPills = ({ value, options, onChange, optionKeyPrefix }: { value: string[]; options: string[]; onChange: (v: string[]) => void; optionKeyPrefix?: string }) => {
   const { settings, isAdmin } = useEditableTextContext();

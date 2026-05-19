@@ -18,17 +18,30 @@ Deno.serve(async (req) => {
       const fullName = `${first_name.trim()} ${last_name.trim()}`;
       const { data: experts } = await sb
         .from("industry_experts")
-        .select("id, full_name, phone, phone_last_four, photo_url, current_company, job_title")
+        .select("id, full_name, phone, phone_last_four, photo_url, current_company, job_title, email")
         .ilike("full_name", fullName);
       if (!experts || experts.length === 0) return [];
       const ids = experts.map((e: any) => e.id);
       const { data: assigns } = await sb
         .from("expert_city_assignments")
-        .select("expert_id, expert_type")
+        .select("expert_id, expert_type, published")
         .in("expert_id", ids)
         .eq("expert_type", "brand_rep");
       const repIds = new Set((assigns || []).map((a: any) => a.expert_id));
-      return experts.filter((e: any) => repIds.has(e.id));
+      const publishedIds = new Set((assigns || []).filter((a: any) => a.published).map((a: any) => a.expert_id));
+      let reps = experts.filter((e: any) => repIds.has(e.id));
+      // De-duplicate "shell" records: when multiple rows share a name, prefer
+      // those with an email on file, and prefer published rep cards. This
+      // prevents "Multiple reps found" errors caused by orphan/empty duplicates.
+      if (reps.length > 1) {
+        const withEmail = reps.filter((r: any) => r.email && String(r.email).trim() !== "");
+        if (withEmail.length >= 1 && withEmail.length < reps.length) reps = withEmail;
+      }
+      if (reps.length > 1) {
+        const published = reps.filter((r: any) => publishedIds.has(r.id));
+        if (published.length >= 1 && published.length < reps.length) reps = published;
+      }
+      return reps;
     }
 
     const isMissing = (r: any) => !r.phone || !r.phone_last_four || String(r.phone_last_four).trim() === "";
