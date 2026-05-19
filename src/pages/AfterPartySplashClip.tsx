@@ -38,11 +38,38 @@ const CREAM = "#F5E6D3";
 const AfterPartySplashClip = () => {
   const [params] = useSearchParams();
   const ratio = params.get("ratio") === "square" ? "square" : "story";
+  const mode = params.get("mode") === "sponsors" ? "sponsors" : "default";
   const [clipSeekMs, setClipSeekMs] = useState<number | undefined>(
     params.has("seek") ? Number(params.get("seek")) || 0 : undefined,
   );
   const [liveSplashDone, setLiveSplashDone] = useState(false);
-  const splashDone = typeof clipSeekMs === "number" ? clipSeekMs >= 10800 : liveSplashDone;
+  const [liveElapsed, setLiveElapsed] = useState(0);
+  const splashDone = typeof clipSeekMs === "number" ? clipSeekMs >= SPLASH_DONE_MS : liveSplashDone;
+
+  // Track live elapsed so the sponsors fade-in works without explicit seeking.
+  useEffect(() => {
+    if (typeof clipSeekMs === "number") return;
+    if (!liveSplashDone) return;
+    const start = performance.now();
+    let raf = 0;
+    const tick = () => {
+      setLiveElapsed(performance.now() - start + SPLASH_DONE_MS);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [liveSplashDone, clipSeekMs]);
+
+  const effectiveTimeMs =
+    typeof clipSeekMs === "number" ? clipSeekMs : Math.max(liveElapsed, splashDone ? SPLASH_DONE_MS : 0);
+
+  // Sponsors-mode crossfade progress (0 → 1) starting at SPONSORS_FADE_START_MS
+  const sponsorsProgress =
+    mode === "sponsors"
+      ? Math.max(0, Math.min(1, (effectiveTimeMs - SPONSORS_FADE_START_MS) / SPONSORS_FADE_MS))
+      : 0;
+  const sponsorsVisible = sponsorsProgress > 0;
+  const splashOpacity = mode === "sponsors" ? 1 - sponsorsProgress : 1;
 
   useEffect(() => {
     const clipWindow = window as typeof window & { __SET_AFTERPARTY_CLIP_TIME__?: (ms: number) => void };
