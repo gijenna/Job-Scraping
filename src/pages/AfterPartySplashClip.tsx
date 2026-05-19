@@ -150,6 +150,8 @@ const AfterPartySplashClip = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: ratio === "square" ? "72px" : "120px 64px",
+          opacity: splashOpacity,
+          transition: "opacity 200ms linear",
         }}
       >
         <div style={{ width: "100%" }}>
@@ -206,6 +208,10 @@ const AfterPartySplashClip = () => {
           </div>
         </div>
       </div>
+
+      {mode === "sponsors" && (
+        <SponsorsThankYouPanel ratio={ratio} visible={sponsorsVisible} />
+      )}
     </div>
   );
 };
