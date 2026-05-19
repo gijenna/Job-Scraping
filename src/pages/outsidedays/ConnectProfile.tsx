@@ -136,6 +136,14 @@ const ConnectProfile = () => {
                 <Select value={c.focus || ""} onChange={(v) => set("focus", v)} options={(FOCUSES_BY_FIELD[c.field] || [])} />
               </Field>
             </Row>
+            <Field label="Pick a field">
+              <SinglePills value={c.field || ""} options={FIELDS} onChange={(v) => { set("field", v); set("focus", ""); }} />
+            </Field>
+            {c.field && (FOCUSES_BY_FIELD[c.field] || []).length > 0 && (
+              <Field label="Pick a focus">
+                <SinglePills value={c.focus || ""} options={FOCUSES_BY_FIELD[c.field] || []} onChange={(v) => set("focus", v)} />
+              </Field>
+            )}
             <Field label="Years in current field">
               <Input type="number" min={0} value={c.years_in_current_field ?? 0} onChange={(e) => set("years_in_current_field", Number(e.target.value || 0))} />
             </Field>
@@ -330,6 +338,19 @@ const Select = ({ value, onChange, options }: { value: string; onChange: (v: str
     <option value="">Select...</option>
     {options.map((o) => (<option key={o} value={o}>{o}</option>))}
   </select>
+);
+const SinglePills = ({ value, options, onChange }: { value: string; options: string[]; onChange: (v: string) => void }) => (
+  <div className="flex flex-wrap gap-2">
+    {options.map((o) => {
+      const on = value === o;
+      return (
+        <button type="button" key={o} onClick={() => onChange(o)}
+          className={`px-3 py-1.5 rounded-full text-xs font-body border transition ${on ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"}`}>
+          {o}
+        </button>
+      );
+    })}
+  </div>
 );
 const MultiPills = ({ value, options, onChange }: { value: string[]; options: string[]; onChange: (v: string[]) => void }) => {
   const toggle = (o: string) => onChange(value.includes(o) ? value.filter((x) => x !== o) : [...value, o]);
