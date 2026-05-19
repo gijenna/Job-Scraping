@@ -772,6 +772,29 @@ const SelectBox = ({ value, onChange, options, optionKeyPrefix }: { value: strin
     </div>
   );
 };
+const SinglePills = ({ value, options, onChange, optionKeyPrefix, label }: { value: string; options: string[]; onChange: (v: string) => void; optionKeyPrefix?: string; label?: React.ReactNode }) => {
+  const { settings } = useEditableTextContext();
+  const optionKey = (o: string) => `${optionKeyPrefix || "full_pill_option"}_${slugifyKey(o)}`;
+  const labelFor = (o: string) => (optionKeyPrefix ? settings[optionKey(o)] || o : o);
+  if (!options || options.length === 0) return null;
+  return (
+    <div className="space-y-1.5">
+      {label && <div className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body">{label}</div>}
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => {
+          const on = value === o;
+          return (
+            <button type="button" key={o} onClick={() => onChange(o)}
+              className={`px-3 py-1.5 rounded-full text-xs font-body border transition ${on ? "bg-events-coral text-events-cream border-events-coral" : "bg-transparent text-events-cream/70 border-events-cream/20 hover:border-events-cream/40"}`}>
+              {labelFor(o)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 
 const MultiPills = ({ value, options, onChange, optionKeyPrefix }: { value: string[]; options: string[]; onChange: (v: string[]) => void; optionKeyPrefix?: string }) => {
   const { settings, isAdmin } = useEditableTextContext();
