@@ -227,8 +227,8 @@ const AfterPartySplashClip = () => {
         </div>
       </div>
 
-      {mode === "sponsors" && (
-        <SponsorsThankYouPanel ratio={ratio} visible={sponsorsVisible} />
+      {mode === "sponsors" && sponsorsVisible && (
+        <SponsorsThankYouPanel ratio={ratio} opacity={sponsorsOpacity} />
       )}
     </div>
   );
