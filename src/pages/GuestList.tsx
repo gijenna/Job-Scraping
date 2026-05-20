@@ -43,6 +43,16 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
   const [activeNiches, setActiveNiches] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const s = await getSession();
+      if (!cancelled) setHasSession(!!s?.attendeeId);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Resolve current viewer's slug from query param or sessionStorage
   const viewerSlug = useMemo(() => {
