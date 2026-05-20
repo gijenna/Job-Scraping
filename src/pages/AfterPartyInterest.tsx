@@ -8,6 +8,7 @@ import EditableText from "@/components/EditableText";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import OakleyRinoVenueShowcase from "@/components/afterparty/OakleyRinoVenueShowcase";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import PartyFeaturesGrid from "@/components/afterparty/PartyFeaturesGrid";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
 
