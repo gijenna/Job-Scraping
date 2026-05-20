@@ -1441,6 +1441,7 @@ export type Database = {
           photo_url: string | null
           previous_companies: string | null
           saved_for_later: boolean | null
+          seen_dashboard_intro: boolean
           slug: string
           status: Database["public"]["Enums"]["expert_status"] | null
           updated_at: string | null
@@ -1467,6 +1468,7 @@ export type Database = {
           photo_url?: string | null
           previous_companies?: string | null
           saved_for_later?: boolean | null
+          seen_dashboard_intro?: boolean
           slug: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null
@@ -1493,6 +1495,7 @@ export type Database = {
           photo_url?: string | null
           previous_companies?: string | null
           saved_for_later?: boolean | null
+          seen_dashboard_intro?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["expert_status"] | null
           updated_at?: string | null
