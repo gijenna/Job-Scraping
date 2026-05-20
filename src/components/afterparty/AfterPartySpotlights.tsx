@@ -26,6 +26,8 @@ const CREAM_BUBBLE_NAMES = new Set([
   "westbound and down",
   "rod and hammer",
   "rod & hammer",
+  "dod outdoors",
+  "dod",
 ]);
 const needsCreamBubble = (name: string) =>
   CREAM_BUBBLE_NAMES.has(name.trim().toLowerCase());
