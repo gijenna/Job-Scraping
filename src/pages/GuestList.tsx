@@ -65,6 +65,8 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
     }
   }, [searchParams]);
 
+  const isAuthed = !!viewerSlug || hasSession;
+
   // Persist slug in sessionStorage when it comes via query param
   useEffect(() => {
     const qs = searchParams.get("slug");
