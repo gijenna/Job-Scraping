@@ -128,7 +128,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
       )}
 
       <Dialog open={!!activeRep} onOpenChange={(o) => !o && setActiveRep(null)}>
-        <DialogContent className="bg-transparent border-0 shadow-none max-w-md p-0">
+        <DialogContent className="bg-transparent border-0 shadow-none max-w-md p-0 max-h-[90vh] overflow-y-auto">
           {activeRep && <ExpertCard expert={activeRep} expanded />}
         </DialogContent>
       </Dialog>
