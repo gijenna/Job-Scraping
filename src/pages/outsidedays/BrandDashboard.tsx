@@ -202,6 +202,23 @@ const BrandDashboard = () => {
             />
           )}
         </div>
+
+        {showIntro && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/70 backdrop-blur-sm">
+            <div className="max-w-md w-full bg-events-teal border border-events-cream/20 rounded-2xl p-6 space-y-4 shadow-2xl">
+              <h2 className="font-afterparty text-3xl text-events-coral">Your card is saved!</h2>
+              <p className="font-body text-events-cream/80 text-sm leading-relaxed">
+                Welcome to your Brand Dashboard. After the event you'll use this page to see who visited your table, read notes from candidates, and browse the full attendee database.
+              </p>
+              <p className="font-body text-events-cream/70 text-sm leading-relaxed">
+                Sign in with your name and the last 4 digits of your phone to access it anytime.
+              </p>
+              <Button onClick={dismissIntro} className="w-full bg-events-coral hover:bg-events-coral/90 text-events-cream">
+                Got it, sign me in
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </ImpersonationGate>
     </EditableTextProvider>
