@@ -28,8 +28,16 @@ const BrandDashboard = () => {
   const [busy, setBusy] = useState(false);
   const [editCardUrl, setEditCardUrl] = useState<string>("https://basecampoutdoorevents.com/denverreps/");
   const [editSignal, setEditSignal] = useState(0);
+  const [introExpertId, setIntroExpertId] = useState<string | null>(null);
+  const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const intro = params.get("intro");
+    if (intro) {
+      setIntroExpertId(intro);
+      setShowIntro(true);
+    }
     (async () => {
       try {
         const { session } = await brandRepMe();
@@ -38,6 +46,22 @@ const BrandDashboard = () => {
       setMode("lookup");
     })();
   }, []);
+
+  const dismissIntro = async () => {
+    setShowIntro(false);
+    if (introExpertId) {
+      try {
+        await supabase.from("industry_experts")
+          .update({ seen_dashboard_intro: true })
+          .eq("id", introExpertId);
+      } catch {}
+      // Clean the URL.
+      const url = new URL(window.location.href);
+      url.searchParams.delete("intro");
+      window.history.replaceState({}, "", url.toString());
+      setIntroExpertId(null);
+    }
+  };
 
   const doLookup = async () => {
     setBusy(true);
