@@ -604,6 +604,11 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                     current_company: prev?.current_company || savedExpert.current_company,
                   }));
                 }
+                // First-save redirect to dashboard with intro modal.
+                const savedRow = savedExpert as any;
+                if (citySlug === 'denver' && savedRow?.id && savedRow?.seen_dashboard_intro === false) {
+                  window.location.href = `/outsidedays26/dashboard?intro=${savedRow.id}`;
+                }
               }}
             />
           </div>

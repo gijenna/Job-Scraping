@@ -1,0 +1,1 @@
+ALTER TABLE public.industry_experts ADD COLUMN IF NOT EXISTS seen_dashboard_intro boolean NOT NULL DEFAULT false;
