@@ -150,6 +150,12 @@ const AfterPartySpotlights = () => {
               {list.map((s) => {
                 const src = resolveLogoSrc(s.logo_url, s.website_url);
                 const hasDesc = !!(s.description && s.description.trim());
+                const hasExpanded = !!(s.expanded_description && s.expanded_description.trim());
+                const hasPhoto = !!(s.photo_url && s.photo_url.trim());
+                const hasValue = !!(s.value && s.value.trim());
+                const hasTitle = !!(s.title && s.title.trim());
+                const linkUrl = toAbsoluteUrl(s.website_url);
+                const canExpand = hasDesc || hasExpanded || hasPhoto || hasValue || hasTitle || !!linkUrl;
                 const isOpen = expanded.has(s.id);
                 const cream = needsCreamBubble(s.name);
                 const logo = (
@@ -191,7 +197,7 @@ const AfterPartySpotlights = () => {
 
                 const nameLinked = s.website_url ? (
                   <a
-                    href={toAbsoluteUrl(s.website_url) || "#"}
+                    href={linkUrl || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:opacity-90 transition-opacity inline-flex items-center gap-2"
@@ -213,12 +219,12 @@ const AfterPartySpotlights = () => {
                     style={{
                       backgroundColor: CARD,
                       border: `1px solid ${BORDER}`,
-                      maxWidth: isOpen ? 280 : undefined,
+                      maxWidth: isOpen ? 300 : undefined,
                     }}
                   >
                     <div className="flex items-center gap-2 pl-1 pr-2 py-1">
                       {nameLinked}
-                      {hasDesc && (
+                      {canExpand && (
                         <button
                           type="button"
                           onClick={() => toggle(s.id)}
@@ -238,12 +244,38 @@ const AfterPartySpotlights = () => {
                         </button>
                       )}
                     </div>
-                    {hasDesc && isOpen && (
+                    {canExpand && isOpen && (
                       <div
-                        className="px-3 pb-2 pt-1 text-[12px] leading-snug"
+                        className="px-3 pb-3 pt-2 text-[12px] leading-snug space-y-2"
                         style={{ color: CREAM_MUTED, borderTop: `1px solid ${BORDER}` }}
                       >
-                        {s.description}
+                        {hasTitle && (
+                          <div style={{ color: CREAM, fontWeight: 600, fontSize: 13 }}>{s.title}</div>
+                        )}
+                        {hasDesc && <div>{s.description}</div>}
+                        {hasPhoto && (
+                          <img
+                            src={s.photo_url as string}
+                            alt={s.title || s.name}
+                            className="w-full rounded-md"
+                            style={{ maxHeight: 180, objectFit: "cover", border: "1px solid rgba(245,230,211,0.1)" }}
+                          />
+                        )}
+                        {hasValue && (
+                          <div style={{ color: "#E1B624", fontWeight: 600 }}>Value: {s.value}</div>
+                        )}
+                        {hasExpanded && <div>{s.expanded_description}</div>}
+                        {linkUrl && (
+                          <a
+                            href={linkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block underline"
+                            style={{ color: "#ED7660", fontWeight: 600 }}
+                          >
+                            View it →
+                          </a>
+                        )}
                       </div>
                     )}
                   </div>
