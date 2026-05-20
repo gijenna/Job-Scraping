@@ -102,7 +102,12 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
                   .slice(0, 2)
                   .toUpperCase();
                 return (
-                  <div key={r.id} className="flex flex-col items-center text-center gap-1.5">
+                  <button
+                    type="button"
+                    key={r.id}
+                    onClick={() => setActiveRep(r)}
+                    className="flex flex-col items-center text-center gap-1.5 hover:opacity-80 transition-opacity"
+                  >
                     <div className="w-12 h-12 rounded-full bg-events-cream/20 overflow-hidden flex items-center justify-center border-2 border-events-cream/40">
                       {r.photo_url ? (
                         <img src={r.photo_url} alt={r.full_name} className="w-full h-full object-cover" />
@@ -113,7 +118,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
                     <span className="text-[11px] font-body text-events-cream leading-tight line-clamp-2">
                       {r.full_name}
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -121,6 +126,12 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
           <CopyInviteLinkPill url={inviteUrl} />
         </div>
       )}
+
+      <Dialog open={!!activeRep} onOpenChange={(o) => !o && setActiveRep(null)}>
+        <DialogContent className="bg-transparent border-0 shadow-none max-w-md p-0">
+          {activeRep && <ExpertCard expert={activeRep} expanded />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
