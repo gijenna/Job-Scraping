@@ -6,6 +6,7 @@ import { Search, ArrowLeft } from "lucide-react";
 import GuestCard, { GuestRow } from "@/components/afterparty/GuestCard";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import PartyFeaturesGrid from "@/components/afterparty/PartyFeaturesGrid";
 import OakleyRinoVenueShowcase from "@/components/afterparty/OakleyRinoVenueShowcase";
 
 import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline";
@@ -196,30 +197,99 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
           </Link>
         )}
 
-        {!viewerSlug && (
-          <Link
-            to="/afterparty"
-            onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
-            className="block rounded-xl p-4 sm:p-5 mb-6 hover:opacity-95 transition-opacity"
+        {/* Two-column top banner: LEFT = event details (auth) or RSVP prompt
+            (unauth). RIGHT = 6-icon Party Features grid (always visible). */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-3 sm:gap-4 mb-6 items-stretch"
+        >
+          <div
+            className="rounded-xl p-4 sm:p-5"
             style={{
-              backgroundColor: "rgba(237,118,96,0.14)",
-              border: "1px solid #ED7660",
+              backgroundColor: "rgba(8,8,8,0.78)",
+              border: viewerSlug
+                ? "1px solid rgba(245,230,211,0.18)"
+                : "1px solid #ED7660",
+              backdropFilter: "blur(4px)",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
             }}
           >
-            <div
-              className="text-[11px] uppercase mb-1"
-              style={{ letterSpacing: "0.14em", color: "#ED7660", fontWeight: 700 }}
-            >
-              Not on the list yet?
+            {viewerSlug ? (
+              <>
+                <div
+                  className="text-[11px] uppercase mb-1.5"
+                  style={{ letterSpacing: "0.16em", color: "#ED7660", fontWeight: 700 }}
+                >
+                  The Party
+                </div>
+                <div className="text-[13px] space-y-1" style={{ color: "#F5E6D3" }}>
+                  <div>May 28, 2026</div>
+                  <div>7:30 PM &ndash; 9:30 PM (no early birdies)</div>
+                  <div>
+                    <a
+                      href="https://www.google.com/maps/place/2660+Walnut+St+Unit+3,+Denver,+CO+80205"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                      style={{ color: "#F5E6D3" }}
+                    >
+                      Oakley RiNo, 2660 Walnut Street, Unit 3, Denver, CO
+                    </a>
+                  </div>
+                  <div style={{ color: "rgba(245,230,211,0.75)" }}>
+                    No plus-ones unless they're on the list.
+                  </div>
+                  <div className="pt-1">
+                    <Link
+                      to="/afterparty-interest"
+                      className="text-[12px] underline"
+                      style={{ color: "#ED7660", fontWeight: 600 }}
+                    >
+                      Got someone in mind? Send them here →
+                    </Link>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <Link
+                to="/afterparty"
+                onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
+                className="block hover:opacity-95 transition-opacity"
+              >
+                <div
+                  className="text-[11px] uppercase mb-1"
+                  style={{ letterSpacing: "0.14em", color: "#ED7660", fontWeight: 700 }}
+                >
+                  Not on the list yet?
+                </div>
+                <div className="text-[15px]" style={{ color: "#F5E6D3", fontWeight: 600, letterSpacing: "-0.01em" }}>
+                  RSVP to the Creator Kick-Off Party →
+                </div>
+                <div className="text-[12px] mt-1" style={{ color: "rgba(245,230,211,0.7)" }}>
+                  Grab your spot, then come back here to see the full party details.
+                </div>
+              </Link>
+            )}
+          </div>
+
+          <div
+            className="rounded-xl p-3 sm:p-4 flex items-center justify-center"
+            style={{
+              backgroundColor: "rgba(8,8,8,0.55)",
+              border: "1px solid rgba(245,230,211,0.14)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <div className="w-full">
+              <div
+                className="text-[10px] uppercase mb-2 text-center"
+                style={{ letterSpacing: "0.18em", color: "#E1B624", fontWeight: 700 }}
+              >
+                Party Features
+              </div>
+              <PartyFeaturesGrid />
             </div>
-            <div className="text-[15px]" style={{ color: "#F5E6D3", fontWeight: 600, letterSpacing: "-0.01em" }}>
-              RSVP to the Creator Kick-Off Party →
-            </div>
-            <div className="text-[12px] mt-1" style={{ color: "rgba(245,230,211,0.7)" }}>
-              Grab your spot, then come back here to see who else is coming.
-            </div>
-          </Link>
-        )}
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] gap-5 mb-6 items-start">
           {/* Headcount header - left */}
@@ -253,6 +323,23 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             >
               Live roster. Updates as folks RSVP.
             </p>
+            {viewerSlug && (
+              <p
+                className="text-[12px] mt-1.5"
+                style={{ color: "rgba(245,230,211,0.7)" }}
+              >
+                May 28, 2026 · 7:30 PM at{" "}
+                <a
+                  href="https://www.google.com/maps/place/2660+Walnut+St+Unit+3,+Denver,+CO+80205"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-[#ED7660] transition-colors"
+                  style={{ color: "#F5E6D3" }}
+                >
+                  Oakley RiNo
+                </a>
+              </p>
+            )}
           </div>
 
           {/* Event info - right column. On the Oakley variant this is replaced
@@ -286,6 +373,42 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             </div>
           )}
         </div>
+
+        {/* Unauthenticated: replace "Your Card" with an RSVP/login prompt */}
+        {!viewerSlug && (
+          <Link
+            to="/afterparty"
+            onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
+            className="block rounded-2xl p-5 sm:p-6 mb-4 hover:opacity-95 transition-opacity"
+            style={{
+              backgroundColor: CARD,
+              border: `1px solid ${BORDER}`,
+            }}
+          >
+            <div
+              className="text-[11px] uppercase mb-2"
+              style={{ letterSpacing: "0.16em", color: "rgba(245,230,211,0.5)", fontWeight: 600 }}
+            >
+              Your card
+            </div>
+            <h2
+              className="text-[20px] sm:text-[22px] leading-tight mb-2"
+              style={{ fontWeight: 600, color: "#F5E6D3", letterSpacing: "-0.01em" }}
+            >
+              Want to be on the list?
+            </h2>
+            <p className="text-[13px] mb-4" style={{ color: "rgba(245,230,211,0.7)" }}>
+              RSVP'ing reveals the venue details, your personal card, and the full guest list.
+            </p>
+            <span
+              className="inline-flex items-center px-4 py-2 rounded-lg text-[14px]"
+              style={{ backgroundColor: "#ED7660", color: "#19363B", fontWeight: 700 }}
+            >
+              RSVP / Log in →
+            </span>
+          </Link>
+        )}
+
 
         {/* The viewer's own card + matches at the top, when we know who they are.
             On tablet/desktop, sponsor spotlights sit beside the card preview.

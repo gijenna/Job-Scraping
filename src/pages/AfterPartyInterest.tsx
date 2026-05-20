@@ -8,6 +8,7 @@ import EditableText from "@/components/EditableText";
 import StarSparkle from "@/components/afterparty/StarSparkle";
 import OakleyRinoVenueShowcase from "@/components/afterparty/OakleyRinoVenueShowcase";
 import AfterPartySpotlights from "@/components/afterparty/AfterPartySpotlights";
+import PartyFeaturesGrid from "@/components/afterparty/PartyFeaturesGrid";
 import BrandActivateButton from "@/components/afterparty/BrandActivateButton";
 import oakleyCreamLogo from "@/assets/oakley-logo-cream.png";
 
@@ -349,6 +350,25 @@ const AfterPartyInterest = () => {
           <div className="mt-10">
             <AfterPartySpotlights />
           </div>
+
+          {/* Party Features 6-icon grid (mirrors /afterparty) */}
+          <div
+            className="mt-8 rounded-xl p-4 sm:p-5"
+            style={{
+              backgroundColor: "rgba(8,8,8,0.6)",
+              border: "1px solid rgba(245,230,211,0.14)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <div
+              className="text-[10px] uppercase mb-2 text-center"
+              style={{ letterSpacing: "0.18em", color: "#E1B624", fontWeight: 700 }}
+            >
+              Party Features
+            </div>
+            <PartyFeaturesGrid guestListScrollsToRoster={false} />
+          </div>
+
 
           <div className="mt-8 text-center text-[12px]" style={{ color: CREAM_DIM, borderTop: `1px solid ${BORDER}`, paddingTop: 16 }}>
             Questions?{" "}

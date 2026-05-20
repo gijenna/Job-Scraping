@@ -285,9 +285,14 @@ export type Database = {
           created_at: string
           description: string | null
           display_order: number
+          expanded_description: string | null
           id: string
           logo_url: string | null
           name: string
+          photo_url: string | null
+          show_in_icon_grid: boolean
+          title: string | null
+          value: string | null
           website_url: string | null
         }
         Insert: {
@@ -295,9 +300,14 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number
+          expanded_description?: string | null
           id?: string
           logo_url?: string | null
           name: string
+          photo_url?: string | null
+          show_in_icon_grid?: boolean
+          title?: string | null
+          value?: string | null
           website_url?: string | null
         }
         Update: {
@@ -305,9 +315,14 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number
+          expanded_description?: string | null
           id?: string
           logo_url?: string | null
           name?: string
+          photo_url?: string | null
+          show_in_icon_grid?: boolean
+          title?: string | null
+          value?: string | null
           website_url?: string | null
         }
         Relationships: []

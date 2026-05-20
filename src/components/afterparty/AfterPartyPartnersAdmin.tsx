@@ -15,9 +15,34 @@ interface Partner {
   display_order: number;
   category: string | null;
   description: string | null;
+  title: string | null;
+  expanded_description: string | null;
+  photo_url: string | null;
+  value: string | null;
+  show_in_icon_grid: boolean | null;
 }
 
-const CATEGORIES = ["Brands", "Beverages", "Food", "Giveaways & Swag"];
+const CATEGORIES = [
+  "Brands",
+  "Beverages",
+  "Food",
+  "Giveaways & Swag",
+  // Party Features categories — drive the 6-icon grid modals
+  "Noms",
+  "DJ",
+  "Giveaways",
+  "Swag",
+  "Experiences",
+  "Guest List Description",
+];
+
+const uploadImage = async (file: File, folder: string): Promise<string | null> => {
+  const ext = file.name.split(".").pop();
+  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await supabase.storage.from("event-photos").upload(path, file);
+  if (error) return null;
+  return supabase.storage.from("event-photos").getPublicUrl(path).data.publicUrl;
+};
 
 const AfterPartyPartnersAdmin = () => {
   const { toast } = useToast();
@@ -28,8 +53,14 @@ const AfterPartyPartnersAdmin = () => {
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [category, setCategory] = useState<string>("");
   const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [expandedDescription, setExpandedDescription] = useState("");
+  const [value, setValue] = useState("");
+  const [showInIconGrid, setShowInIconGrid] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const photoRef = useRef<HTMLInputElement>(null);
 
   const fetchPartners = async () => {
     const { data } = await (supabase as any)
@@ -48,18 +79,8 @@ const AfterPartyPartnersAdmin = () => {
       return;
     }
     setSaving(true);
-    let logo_url: string | null = null;
-    if (logoFile) {
-      const ext = logoFile.name.split(".").pop();
-      const path = `afterparty-partners/${Date.now()}.${ext}`;
-      const { error: uploadErr } = await supabase.storage.from("event-photos").upload(path, logoFile);
-      if (uploadErr) {
-        toast({ title: "Upload failed", description: uploadErr.message, variant: "destructive" });
-        setSaving(false);
-        return;
-      }
-      logo_url = supabase.storage.from("event-photos").getPublicUrl(path).data.publicUrl;
-    }
+    const logo_url = logoFile ? await uploadImage(logoFile, "afterparty-partners") : null;
+    const photo_url = photoFile ? await uploadImage(photoFile, "afterparty-partners-photos") : null;
     const nextOrder = (partners[partners.length - 1]?.display_order ?? -1) + 1;
     const { error } = await (supabase as any).from("afterparty_partners").insert({
       name: name.trim(),
@@ -68,14 +89,22 @@ const AfterPartyPartnersAdmin = () => {
       display_order: nextOrder,
       category: category || null,
       description: description.trim() || null,
+      title: title.trim() || null,
+      expanded_description: expandedDescription.trim() || null,
+      photo_url,
+      value: value.trim() || null,
+      show_in_icon_grid: showInIconGrid,
     });
     setSaving(false);
     if (error) {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
-    setName(""); setWebsiteUrl(""); setCategory(""); setDescription(""); setLogoFile(null);
+    setName(""); setWebsiteUrl(""); setCategory(""); setDescription("");
+    setTitle(""); setExpandedDescription(""); setValue(""); setShowInIconGrid(false);
+    setLogoFile(null); setPhotoFile(null);
     if (fileRef.current) fileRef.current.value = "";
+    if (photoRef.current) photoRef.current.value = "";
     toast({ title: "Partner added" });
     fetchPartners();
   };
@@ -99,19 +128,30 @@ const AfterPartyPartnersAdmin = () => {
     fetchPartners();
   };
 
+  const handleRowPhoto = async (id: string, file: File) => {
+    const url = await uploadImage(file, "afterparty-partners-photos");
+    if (!url) {
+      toast({ title: "Photo upload failed", variant: "destructive" });
+      return;
+    }
+    updateField(id, { photo_url: url });
+  };
+
   return (
     <div className="rounded-xl border border-events-cream/10 p-4 space-y-4">
       <div>
-        <h3 className="font-display font-bold text-events-cream">Partners & brand spotlights</h3>
+        <h3 className="font-display font-bold text-events-cream">Partners &amp; Party Features</h3>
         <p className="text-xs text-events-cream/50 mt-1">
-          Every partner shows as a bubble logo. Add a category + description and they
-          also appear in the "Who else to check out" section.
+          Every partner shows as a bubble logo. Add a category + description for the
+          "Community Partners" section. Check "Show in 6-icon grid" to surface it
+          inside the corresponding Party Features modal (Noms, DJ, Giveaways, Swag,
+          Experiences, or Guest List).
         </p>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-2">
         <Input
-          placeholder="Partner name"
+          placeholder="Partner / brand name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
@@ -122,13 +162,25 @@ const AfterPartyPartnersAdmin = () => {
           onChange={(e) => setWebsiteUrl(e.target.value)}
           className="bg-black/30 border-events-cream/20 text-events-cream"
         />
+        <Input
+          placeholder='Title (e.g. "Win a Backcountry Tent" or "DJ Klutch")'
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="bg-black/30 border-events-cream/20 text-events-cream"
+        />
+        <Input
+          placeholder='Value (e.g. "$500" or "$200 retail")'
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="bg-black/30 border-events-cream/20 text-events-cream"
+        />
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="bg-black/30 border border-events-cream/20 text-events-cream rounded-md px-3 h-10 text-sm"
         >
-          <option value="">Bubble only (no spotlight)</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>Spotlight: {c}</option>)}
+          <option value="">Bubble only (no category)</option>
+          {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         <label className="cursor-pointer inline-flex items-center justify-center px-3 h-10 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
           <Upload className="w-4 h-4 mr-2" />
@@ -141,13 +193,38 @@ const AfterPartyPartnersAdmin = () => {
             onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
           />
         </label>
+        <label className="cursor-pointer inline-flex items-center justify-center px-3 h-10 rounded-md text-sm bg-events-cream/10 text-events-cream hover:bg-events-cream/20 sm:col-span-2">
+          <Upload className="w-4 h-4 mr-2" />
+          {photoFile ? photoFile.name.slice(0, 22) : "Photo (product / scene, optional)"}
+          <input
+            ref={photoRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+          />
+        </label>
       </div>
       <Textarea
-        placeholder="Spotlight description (optional, only shown if a category is set)"
+        placeholder="Short description (shown in Community Partners expanded view)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         className="bg-black/30 border-events-cream/20 text-events-cream min-h-[60px]"
       />
+      <Textarea
+        placeholder="Expanded description (longer copy for the Party Features modal)"
+        value={expandedDescription}
+        onChange={(e) => setExpandedDescription(e.target.value)}
+        className="bg-black/30 border-events-cream/20 text-events-cream min-h-[60px]"
+      />
+      <label className="flex items-center gap-2 text-sm text-events-cream">
+        <input
+          type="checkbox"
+          checked={showInIconGrid}
+          onChange={(e) => setShowInIconGrid(e.target.checked)}
+        />
+        Show in 6-icon grid
+      </label>
       <div className="flex justify-end">
         <Button onClick={handleAdd} disabled={saving} className="bg-events-coral text-events-cream">
           {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
@@ -182,20 +259,80 @@ const AfterPartyPartnersAdmin = () => {
                       className="bg-black/40 border border-events-cream/20 text-events-cream rounded px-2 h-7 text-xs"
                     >
                       <option value="">Bubble only</option>
-                      {CATEGORIES.map((c) => <option key={c} value={c}>Spotlight: {c}</option>)}
+                      {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
+                    <label className="flex items-center gap-1 text-[11px] text-events-cream/80">
+                      <input
+                        type="checkbox"
+                        checked={!!p.show_in_icon_grid}
+                        onChange={(e) => updateField(p.id, { show_in_icon_grid: e.target.checked })}
+                      />
+                      In 6-icon grid
+                    </label>
                   </div>
-                  {p.category && (
-                    <Textarea
-                      defaultValue={p.description || ""}
-                      onBlur={(e) => {
-                        const v = e.target.value.trim();
-                        if ((p.description || "") !== v) updateField(p.id, { description: v || null });
-                      }}
-                      placeholder="Spotlight description"
-                      className="bg-black/40 border-events-cream/20 text-events-cream text-xs min-h-[40px] mt-1"
-                    />
-                  )}
+                  <Input
+                    defaultValue={p.title || ""}
+                    placeholder="Title"
+                    onBlur={(e) => {
+                      const v = e.target.value.trim();
+                      if ((p.title || "") !== v) updateField(p.id, { title: v || null });
+                    }}
+                    className="bg-black/40 border-events-cream/20 text-events-cream text-xs h-7"
+                  />
+                  <Input
+                    defaultValue={p.value || ""}
+                    placeholder='Value (e.g. "$500")'
+                    onBlur={(e) => {
+                      const v = e.target.value.trim();
+                      if ((p.value || "") !== v) updateField(p.id, { value: v || null });
+                    }}
+                    className="bg-black/40 border-events-cream/20 text-events-cream text-xs h-7"
+                  />
+                  <Textarea
+                    defaultValue={p.description || ""}
+                    onBlur={(e) => {
+                      const v = e.target.value.trim();
+                      if ((p.description || "") !== v) updateField(p.id, { description: v || null });
+                    }}
+                    placeholder="Short description"
+                    className="bg-black/40 border-events-cream/20 text-events-cream text-xs min-h-[40px]"
+                  />
+                  <Textarea
+                    defaultValue={p.expanded_description || ""}
+                    onBlur={(e) => {
+                      const v = e.target.value.trim();
+                      if ((p.expanded_description || "") !== v) updateField(p.id, { expanded_description: v || null });
+                    }}
+                    placeholder="Expanded description (modal)"
+                    className="bg-black/40 border-events-cream/20 text-events-cream text-xs min-h-[40px]"
+                  />
+                  <div className="flex items-center gap-2">
+                    {p.photo_url && (
+                      <img src={p.photo_url} alt="" className="w-10 h-10 rounded object-cover" />
+                    )}
+                    <label className="cursor-pointer inline-flex items-center px-2 h-7 rounded text-[11px] bg-events-cream/10 text-events-cream hover:bg-events-cream/20">
+                      <Upload className="w-3 h-3 mr-1" />
+                      {p.photo_url ? "Replace photo" : "Upload photo"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          if (f) handleRowPhoto(p.id, f);
+                        }}
+                      />
+                    </label>
+                    {p.photo_url && (
+                      <button
+                        type="button"
+                        onClick={() => updateField(p.id, { photo_url: null })}
+                        className="text-[11px] text-events-cream/60 underline"
+                      >
+                        clear
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <Button size="sm" variant="ghost" onClick={() => handleDelete(p.id)} className="text-red-400 hover:text-red-300">
                   <Trash2 className="w-4 h-4" />
