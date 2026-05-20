@@ -219,14 +219,14 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             className="rounded-xl p-4 sm:p-5"
             style={{
               backgroundColor: "rgba(8,8,8,0.78)",
-              border: viewerSlug
+              border: isAuthed
                 ? "1px solid rgba(245,230,211,0.18)"
                 : "1px solid #ED7660",
               backdropFilter: "blur(4px)",
               boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
             }}
           >
-            {viewerSlug ? (
+            {isAuthed ? (
               <>
                 <div
                   className="text-[11px] uppercase mb-1.5"
