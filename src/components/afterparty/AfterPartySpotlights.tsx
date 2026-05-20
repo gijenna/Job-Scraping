@@ -10,6 +10,10 @@ interface Spotlight {
   logo_url: string | null;
   website_url: string | null;
   display_order: number;
+  title?: string | null;
+  expanded_description?: string | null;
+  photo_url?: string | null;
+  value?: string | null;
 }
 
 const CREAM = "#F5E6D3";
