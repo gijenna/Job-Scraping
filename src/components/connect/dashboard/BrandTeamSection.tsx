@@ -4,12 +4,10 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ExpertCard from "@/components/experts/ExpertCard";
 
-interface Rep {
-  id: string;
-  full_name: string;
-  photo_url: string | null;
-}
+type Rep = any;
 
 const slugify = (s: string) =>
   (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -44,6 +42,7 @@ export function InviteLinkPill({ brand }: { brand: any }) {
 export default function BrandTeamSection({ brand }: { brand: any }) {
   const [reps, setReps] = useState<Rep[]>([]);
   const [expanded, setExpanded] = useState(false);
+  const [activeRep, setActiveRep] = useState<Rep | null>(null);
   const inviteUrl = `https://sponsor-attract-hub.lovable.app/denverreps/${slugify(brand?.name || "")}`;
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
     (async () => {
       const { data } = await supabase
         .from("expert_city_assignments")
-        .select("expert_type, industry_experts(id, full_name, photo_url, current_company)")
+        .select("expert_type, industry_experts(*)")
         .eq("city_slug", "denver")
         .eq("expert_type", "brand_rep");
       if (!data) return;
@@ -64,7 +63,6 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
           return co && brandNames.includes(co);
         })
         .map((d) => d.industry_experts as Rep);
-      // Dedup by id
       const seen = new Set<string>();
       setReps(matched.filter((r) => r && !seen.has(r.id) && (seen.add(r.id) || true)));
     })();
@@ -104,7 +102,12 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
                   .slice(0, 2)
                   .toUpperCase();
                 return (
-                  <div key={r.id} className="flex flex-col items-center text-center gap-1.5">
+                  <button
+                    type="button"
+                    key={r.id}
+                    onClick={() => setActiveRep(r)}
+                    className="flex flex-col items-center text-center gap-1.5 hover:opacity-80 transition-opacity"
+                  >
                     <div className="w-12 h-12 rounded-full bg-events-cream/20 overflow-hidden flex items-center justify-center border-2 border-events-cream/40">
                       {r.photo_url ? (
                         <img src={r.photo_url} alt={r.full_name} className="w-full h-full object-cover" />
@@ -115,7 +118,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
                     <span className="text-[11px] font-body text-events-cream leading-tight line-clamp-2">
                       {r.full_name}
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -123,6 +126,12 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
           <CopyInviteLinkPill url={inviteUrl} />
         </div>
       )}
+
+      <Dialog open={!!activeRep} onOpenChange={(o) => !o && setActiveRep(null)}>
+        <DialogContent className="bg-transparent border-0 shadow-none max-w-md p-0">
+          {activeRep && <ExpertCard expert={activeRep} expanded />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
