@@ -66,7 +66,7 @@ const AfterPartySpotlights = () => {
       const [partnersRes, legacyRes] = await Promise.all([
         (supabase as any)
           .from("afterparty_partners")
-          .select("id, name, logo_url, website_url, display_order, category, description")
+          .select("id, name, logo_url, website_url, display_order, category, description, title, expanded_description, photo_url, value")
           .not("category", "is", null)
           .order("display_order"),
         (supabase as any)
@@ -82,6 +82,10 @@ const AfterPartySpotlights = () => {
         logo_url: p.logo_url,
         website_url: p.website_url,
         display_order: p.display_order,
+        title: p.title,
+        expanded_description: p.expanded_description,
+        photo_url: p.photo_url,
+        value: p.value,
       })) as Spotlight[];
       const legacy = (legacyRes.data || []) as Spotlight[];
       setItems([...fromPartners, ...legacy]);
