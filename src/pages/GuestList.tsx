@@ -13,6 +13,7 @@ import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline
 import DesignCredit from "@/components/afterparty/DesignCredit";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
+import { getSession } from "@/services/auth";
 
 const BG = "#080808";
 const CARD = "#111111";
@@ -42,6 +43,16 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
   const [activeNiches, setActiveNiches] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const s = await getSession();
+      if (!cancelled) setHasSession(!!s?.attendeeId);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // Resolve current viewer's slug from query param or sessionStorage
   const viewerSlug = useMemo(() => {
@@ -53,6 +64,8 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
       return null;
     }
   }, [searchParams]);
+
+  const isAuthed = !!viewerSlug || hasSession;
 
   // Persist slug in sessionStorage when it comes via query param
   useEffect(() => {
@@ -206,14 +219,14 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             className="rounded-xl p-4 sm:p-5"
             style={{
               backgroundColor: "rgba(8,8,8,0.78)",
-              border: viewerSlug
+              border: isAuthed
                 ? "1px solid rgba(245,230,211,0.18)"
                 : "1px solid #ED7660",
               backdropFilter: "blur(4px)",
               boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
             }}
           >
-            {viewerSlug ? (
+            {isAuthed ? (
               <>
                 <div
                   className="text-[11px] uppercase mb-1.5"
@@ -323,7 +336,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             >
               Live roster. Updates as folks RSVP.
             </p>
-            {viewerSlug && (
+            {isAuthed && (
               <p
                 className="text-[12px] mt-1.5"
                 style={{ color: "rgba(245,230,211,0.7)" }}
@@ -375,7 +388,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         </div>
 
         {/* Unauthenticated: replace "Your Card" with an RSVP/login prompt */}
-        {!viewerSlug && (
+        {!isAuthed && (
           <Link
             to="/afterparty"
             onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
