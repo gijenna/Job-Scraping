@@ -388,7 +388,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
         </div>
 
         {/* Unauthenticated: replace "Your Card" with an RSVP/login prompt */}
-        {!viewerSlug && (
+        {!isAuthed && (
           <Link
             to="/afterparty"
             onClick={() => { try { sessionStorage.setItem("afterparty:skip_splash", "1"); } catch {} }}
