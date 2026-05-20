@@ -4,12 +4,10 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Copy, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ExpertCard from "@/components/experts/ExpertCard";
 
-interface Rep {
-  id: string;
-  full_name: string;
-  photo_url: string | null;
-}
+type Rep = any;
 
 const slugify = (s: string) =>
   (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
