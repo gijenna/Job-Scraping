@@ -13,6 +13,7 @@ import AfterPartyAdminInline from "@/components/afterparty/AfterPartyAdminInline
 import DesignCredit from "@/components/afterparty/DesignCredit";
 import MyCardSection from "@/components/afterparty/MyCardSection";
 import { AfterPartyAttendee } from "@/lib/afterparty-matching";
+import { getSession } from "@/services/auth";
 
 const BG = "#080808";
 const CARD = "#111111";
