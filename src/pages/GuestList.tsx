@@ -336,7 +336,7 @@ const GuestList = ({ venueShowcase }: GuestListProps = {}) => {
             >
               Live roster. Updates as folks RSVP.
             </p>
-            {viewerSlug && (
+            {isAuthed && (
               <p
                 className="text-[12px] mt-1.5"
                 style={{ color: "rgba(245,230,211,0.7)" }}
