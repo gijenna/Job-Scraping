@@ -42,6 +42,7 @@ export function InviteLinkPill({ brand }: { brand: any }) {
 export default function BrandTeamSection({ brand }: { brand: any }) {
   const [reps, setReps] = useState<Rep[]>([]);
   const [expanded, setExpanded] = useState(false);
+  const [activeRep, setActiveRep] = useState<Rep | null>(null);
   const inviteUrl = `https://sponsor-attract-hub.lovable.app/denverreps/${slugify(brand?.name || "")}`;
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
     (async () => {
       const { data } = await supabase
         .from("expert_city_assignments")
-        .select("expert_type, industry_experts(id, full_name, photo_url, current_company)")
+        .select("expert_type, industry_experts(*)")
         .eq("city_slug", "denver")
         .eq("expert_type", "brand_rep");
       if (!data) return;
@@ -62,7 +63,6 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
           return co && brandNames.includes(co);
         })
         .map((d) => d.industry_experts as Rep);
-      // Dedup by id
       const seen = new Set<string>();
       setReps(matched.filter((r) => r && !seen.has(r.id) && (seen.add(r.id) || true)));
     })();
