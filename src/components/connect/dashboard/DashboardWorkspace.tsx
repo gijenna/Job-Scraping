@@ -20,16 +20,27 @@ function AfterpartyInviteLink() {
   const { settings } = useEventSettings("outsidedays26-brand-dashboard");
   const text = settings.dashboard_afterparty_invite_text || "Come to the afterparty";
   const url = settings.dashboard_afterparty_invite_url || "https://basecampoutdoorevents.com/afterparty";
+  const faqUrl = settings.dashboard_parking_info_url || "https://docs.google.com/document/d/1TSBxwK0rEYrD8Tk198aWHt_XkZhVAoP37RQEg7hnJRE/edit";
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mt-3 inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-yellow/15 hover:bg-events-yellow/25 text-events-yellow border border-events-yellow/40 px-4 py-2 rounded-full transition-colors self-start"
-    >
-      <PartyPopper className="w-3.5 h-3.5" />
-      {text}
-    </a>
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-yellow/15 hover:bg-events-yellow/25 text-events-yellow border border-events-yellow/40 px-4 py-2 rounded-full transition-colors"
+      >
+        <PartyPopper className="w-3.5 h-3.5" />
+        {text}
+      </a>
+      <a
+        href={faqUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-coral hover:bg-events-coral/90 text-events-cream px-4 py-2 rounded-full transition-colors shadow-sm"
+      >
+        Parking & set-up info
+      </a>
+    </div>
   );
 }
 

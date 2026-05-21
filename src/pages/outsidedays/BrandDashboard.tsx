@@ -102,11 +102,21 @@ const BrandDashboard = () => {
 
   if (mode === "signed_in" && me) {
     return (
+      <EditableTextProvider pageSlug="outsidedays26-brand-dashboard">
       <ImpersonationGate>
         <div className="min-h-screen bg-events-teal text-events-cream px-4 py-6 md:py-10">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <h1 className="font-afterparty text-2xl md:text-3xl">Brand Dashboard</h1>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="font-afterparty text-2xl md:text-3xl">Brand Dashboard</h1>
+                <a
+                  href="https://docs.google.com/document/d/1TSBxwK0rEYrD8Tk198aWHt_XkZhVAoP37RQEg7hnJRE/edit"
+                  target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-display uppercase tracking-wider bg-events-yellow text-events-teal hover:bg-events-yellow/90 px-3 py-1.5 rounded-full transition-colors shadow-sm"
+                >
+                  Event FAQ
+                </a>
+              </div>
               <div className="flex items-center gap-3 text-xs">
                 <a
                   href="/outsidedays26"
@@ -132,6 +142,7 @@ const BrandDashboard = () => {
           </div>
         </div>
       </ImpersonationGate>
+      </EditableTextProvider>
     );
   }
 
