@@ -1065,11 +1065,13 @@ export type Database = {
       event_map_brands: {
         Row: {
           aliases: string[]
+          child_logo_ids: string[]
           created_at: string
           culture_blurb: string | null
           currently_hiring: string | null
           description: string | null
           event_slug: string
+          extra_logo_urls: Json
           id: string
           is_activation: boolean
           is_featured: boolean
@@ -1081,8 +1083,11 @@ export type Database = {
           lead_question_option_3: string | null
           lead_question_text: string | null
           logo_url: string | null
+          map_size: string
           name: string
           offers_remote: string | null
+          parent_brand_id: string | null
+          primary_child: boolean
           sponsor_brand_id: string | null
           sponsor_callout_text: string | null
           table_count: number
@@ -1091,11 +1096,13 @@ export type Database = {
         }
         Insert: {
           aliases?: string[]
+          child_logo_ids?: string[]
           created_at?: string
           culture_blurb?: string | null
           currently_hiring?: string | null
           description?: string | null
           event_slug?: string
+          extra_logo_urls?: Json
           id?: string
           is_activation?: boolean
           is_featured?: boolean
@@ -1107,8 +1114,11 @@ export type Database = {
           lead_question_option_3?: string | null
           lead_question_text?: string | null
           logo_url?: string | null
+          map_size?: string
           name: string
           offers_remote?: string | null
+          parent_brand_id?: string | null
+          primary_child?: boolean
           sponsor_brand_id?: string | null
           sponsor_callout_text?: string | null
           table_count?: number
@@ -1117,11 +1127,13 @@ export type Database = {
         }
         Update: {
           aliases?: string[]
+          child_logo_ids?: string[]
           created_at?: string
           culture_blurb?: string | null
           currently_hiring?: string | null
           description?: string | null
           event_slug?: string
+          extra_logo_urls?: Json
           id?: string
           is_activation?: boolean
           is_featured?: boolean
@@ -1133,8 +1145,11 @@ export type Database = {
           lead_question_option_3?: string | null
           lead_question_text?: string | null
           logo_url?: string | null
+          map_size?: string
           name?: string
           offers_remote?: string | null
+          parent_brand_id?: string | null
+          primary_child?: boolean
           sponsor_brand_id?: string | null
           sponsor_callout_text?: string | null
           table_count?: number
@@ -1142,6 +1157,13 @@ export type Database = {
           why_visit_text?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "event_map_brands_parent_brand_id_fkey"
+            columns: ["parent_brand_id"]
+            isOneToOne: false
+            referencedRelation: "event_map_brands"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "event_map_brands_sponsor_brand_id_fkey"
             columns: ["sponsor_brand_id"]
@@ -1455,6 +1477,7 @@ export type Database = {
           phone_last_four: string | null
           photo_url: string | null
           previous_companies: string | null
+          restricted_to_brand_names: string[] | null
           saved_for_later: boolean | null
           seen_dashboard_intro: boolean
           slug: string
@@ -1482,6 +1505,7 @@ export type Database = {
           phone_last_four?: string | null
           photo_url?: string | null
           previous_companies?: string | null
+          restricted_to_brand_names?: string[] | null
           saved_for_later?: boolean | null
           seen_dashboard_intro?: boolean
           slug: string
@@ -1509,6 +1533,7 @@ export type Database = {
           phone_last_four?: string | null
           photo_url?: string | null
           previous_companies?: string | null
+          restricted_to_brand_names?: string[] | null
           saved_for_later?: boolean | null
           seen_dashboard_intro?: boolean
           slug?: string
