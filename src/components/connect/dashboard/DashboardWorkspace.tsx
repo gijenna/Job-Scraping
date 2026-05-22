@@ -263,7 +263,8 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
                 {t.label}
               </button>
             ))}
-          </div>
+            </div>
+          </>
         );
       })()}
 
