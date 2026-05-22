@@ -60,7 +60,7 @@ function ShareMyCardPill({ rep }: { rep: any }) {
   };
   if (!slug) return null;
   return (
-    <div className="mt-3 flex flex-col items-start gap-2">
+    <div className="flex flex-col items-start gap-2" onClick={(e) => e.stopPropagation()}>
       <button
         type="button"
         onClick={onCopy}
@@ -195,13 +195,18 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
             <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
               <Pencil className="w-2.5 h-2.5" /> Edit my card
             </span>
-            <div className="pt-7">
-              <ExpertCardCompact expert={(currentRep || rep) as any} />
+            <div className="pt-7 flex flex-col sm:flex-row gap-4 items-start">
+              <div className="shrink-0 w-full sm:w-auto sm:max-w-[260px]">
+                <ExpertCardCompact expert={(currentRep || rep) as any} />
+              </div>
+              <div className="flex-1 min-w-0 sm:pt-2">
+                <ShareMyCardPill rep={currentRep || rep} />
+              </div>
             </div>
           </div>
-          <ShareMyCardPill rep={currentRep || rep} />
           <AfterpartyInviteLink />
         </div>
+
         {brand && (
           <div className="flex flex-col">
             <BrandCardPreview
@@ -236,9 +241,14 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
         const leadsVisible = brand?.lead_capture_visible_to_brand !== false;
         const showLeadsTab = !leadsActive || leadsVisible; // hide only when active && !visible
         return (
-          <div className="flex items-center gap-1.5 mb-4">
-            {([
-              { v: "candidates", label: "Candidates" },
+          <>
+            <div className="border-t border-events-cream/10 mt-8 pt-6 mb-4">
+              <h2 className="font-afterparty text-2xl md:text-3xl text-events-cream">Candidate Zone</h2>
+            </div>
+            <div className="flex items-center gap-1.5 mb-4">
+              {([
+                { v: "candidates", label: "Candidates" },
+
               ...(showLeadsTab ? [{ v: "leads", label: "Leads" } as const] : []),
             ] as { v: Tab; label: string }[]).map((t) => (
               <button
@@ -253,7 +263,8 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
                 {t.label}
               </button>
             ))}
-          </div>
+            </div>
+          </>
         );
       })()}
 
