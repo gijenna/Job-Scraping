@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import FeedbackTab from "@/components/FeedbackTab";
 import Events from "./pages/Events";
 import Index from "./pages/Index";
 import GatherDenver from "./pages/GatherDenver";
@@ -63,6 +64,14 @@ const OAKLEY_PRESENTER = {
 };
 
 const queryClient = new QueryClient();
+
+const FeedbackTabMount = () => {
+  const { pathname } = useLocation();
+  const p = pathname.toLowerCase();
+  const show = p.startsWith("/outsidedays26/dashboard") || p.startsWith("/outsidedays26/connect");
+  if (!show) return null;
+  return <FeedbackTab />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -182,6 +191,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <FeedbackTabMount />
         </LinkTracker>
       </BrowserRouter>
     </TooltipProvider>
