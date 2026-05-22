@@ -26,6 +26,12 @@ export interface MapBrand {
   lead_question_option_2?: string | null;
   lead_question_option_3?: string | null;
   lead_capture_visible_to_brand?: boolean | null;
+  aliases?: string[] | null;
+  parent_brand_id?: string | null;
+  primary_child?: boolean | null;
+  map_size?: "normal" | "large" | "xl" | string | null;
+  child_logo_ids?: string[] | null;
+  extra_logo_urls?: Array<{ name?: string; url?: string; logo_url?: string }> | null;
 }
 
 export function useEventMapBrands(eventSlug: string) {
