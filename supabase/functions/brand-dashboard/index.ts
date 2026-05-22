@@ -397,13 +397,17 @@ Deno.serve(async (req) => {
           resume_signed_url = data?.signedUrl || null;
         } catch {}
       }
-      let photo_signed_url: string | null = cand.photo_url || null;
-      if (cand.photo_url && cand.photo_url.includes("candidate-photos") && !cand.photo_url.startsWith("http")) {
+      let photo_signed_url: string | null = null;
+      if (cand.photo_url && cand.photo_url.includes("candidate-photos")) {
         try {
-          const path = cand.photo_url.split("/candidate-photos/")[1] || cand.photo_url;
-          const { data } = await sb.storage.from("candidate-photos").createSignedUrl(path, 60 * 10);
-          photo_signed_url = data?.signedUrl || null;
+          const path = cand.photo_url.split("/candidate-photos/")[1].split("?")[0];
+          if (!/\.(heic|heif)$/i.test(path)) {
+            const { data } = await sb.storage.from("candidate-photos").createSignedUrl(path, 60 * 60);
+            photo_signed_url = data?.signedUrl || null;
+          }
         } catch {}
+      } else if (cand.photo_url?.startsWith("http")) {
+        photo_signed_url = cand.photo_url;
       }
       return jsonFor(req, { candidate: cand, connections: conns, resume_signed_url, photo_signed_url });
     }
