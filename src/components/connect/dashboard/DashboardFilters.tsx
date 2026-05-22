@@ -213,22 +213,64 @@ export default function DashboardFilters({
         />
       </div>
 
-      {/* 1. Engagement */}
-      <div>
-        <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">
-          Engagement with my brand
-        </Label>
-        <div className="flex flex-wrap gap-1.5">
-          <Chip active={!!filters.visited} onClick={() => set({ visited: !filters.visited })}>
-            Visited my table {!hasVisited && "(0 so far)"}
-          </Chip>
-          <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand pre-event</Chip>
-          <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
-          <Chip active={!!filters.pre_event_note} onClick={() => set({ pre_event_note: !filters.pre_event_note })}>Pre-event note</Chip>
-          <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>
-          <Chip active={!!filters.post_event_note} onClick={() => set({ post_event_note: !filters.post_event_note })}>Post-event note</Chip>
-        </div>
-      </div>
+      {/* 1. Engagement — split into pre-event (available now) and in-event (locked until go-live) */}
+      {(() => {
+        const GO_LIVE = new Date("2026-05-28T20:30:00Z"); // May 28, 2026 · 2:30 PM MT
+        const isLive = new Date() >= GO_LIVE;
+        const lockedLabel = "Unlocks May 28 · 2:30 PM MT";
+        const LockedChip = ({ children }: { children: React.ReactNode }) => (
+          <span
+            title={lockedLabel}
+            className="px-3 py-1.5 rounded-full text-xs font-body border border-dashed border-events-cream/15 bg-events-cream/[0.03] text-events-cream/35 cursor-not-allowed inline-flex items-center gap-1.5"
+          >
+            <span aria-hidden>🔒</span>{children}
+          </span>
+        );
+        return (
+          <>
+            <div>
+              <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-2 block">
+                Pre-event engagement with my brand
+              </Label>
+              <div className="flex flex-wrap gap-1.5">
+                <Chip active={!!filters.starred_brand} onClick={() => set({ starred_brand: !filters.starred_brand })}>Starred my brand pre-event</Chip>
+                <Chip active={!!filters.pre_event_note} onClick={() => set({ pre_event_note: !filters.pre_event_note })}>Pre-event note</Chip>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-events-cream/60 text-[11px] uppercase tracking-wider font-body mb-1 block">
+                In-event engagement with my brand
+              </Label>
+              {!isLive && (
+                <p className="text-[11px] text-events-cream/50 font-body mb-2 italic">
+                  Unlocks live on May 28 at 2:30 PM MT.
+                </p>
+              )}
+              <div className="flex flex-wrap gap-1.5">
+                {isLive ? (
+                  <>
+                    <Chip active={!!filters.visited} onClick={() => set({ visited: !filters.visited })}>
+                      Visited my table {!hasVisited && "(0 so far)"}
+                    </Chip>
+                    <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
+                    <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>
+                    <Chip active={!!filters.post_event_note} onClick={() => set({ post_event_note: !filters.post_event_note })}>Post-event note</Chip>
+                  </>
+                ) : (
+                  <>
+                    <LockedChip>Visited my table</LockedChip>
+                    <LockedChip>Flagged a role to apply to</LockedChip>
+                    <LockedChip>Note from event</LockedChip>
+                    <LockedChip>Post-event note</LockedChip>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      })()}
+
 
       {/* 2. Open to retail */}
       <div>
