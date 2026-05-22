@@ -195,13 +195,18 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
             <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-display bg-events-coral/90 text-events-cream px-2.5 py-1 rounded-full opacity-90 group-hover:opacity-100">
               <Pencil className="w-2.5 h-2.5" /> Edit my card
             </span>
-            <div className="pt-7">
-              <ExpertCardCompact expert={(currentRep || rep) as any} />
+            <div className="pt-7 flex flex-col sm:flex-row gap-4 items-start">
+              <div className="shrink-0 w-full sm:w-auto sm:max-w-[260px]">
+                <ExpertCardCompact expert={(currentRep || rep) as any} />
+              </div>
+              <div className="flex-1 min-w-0 sm:pt-2">
+                <ShareMyCardPill rep={currentRep || rep} />
+              </div>
             </div>
           </div>
-          <ShareMyCardPill rep={currentRep || rep} />
           <AfterpartyInviteLink />
         </div>
+
         {brand && (
           <div className="flex flex-col">
             <BrandCardPreview
