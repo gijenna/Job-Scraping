@@ -48,21 +48,23 @@ export default function BrandTeamSection({ brand }: { brand: any }) {
   useEffect(() => {
     if (!brand) return;
     (async () => {
-      const { data } = await supabase
-        .from("expert_city_assignments")
-        .select("expert_type, industry_experts(*)")
-        .eq("city_slug", "denver")
-        .eq("expert_type", "brand_rep");
-      if (!data) return;
-      const brandNames = [brand.name, ...((brand as any).aliases || [])]
-        .map((n: string) => n?.toLowerCase().trim())
+      const [{ data: assignData }, { data: brandData }] = await Promise.all([
+        supabase
+          .from("expert_city_assignments")
+          .select("expert_type, industry_experts(*)")
+          .eq("city_slug", "denver")
+          .eq("expert_type", "brand_rep"),
+        supabase
+          .from("event_map_brands")
+          .select("id, name, aliases, parent_brand_id, primary_child")
+          .eq("event_slug", (brand as any).event_slug || "denver26"),
+      ]);
+      if (!assignData) return;
+      const { repsForBrand } = await import("@/lib/brand-rep-rollup");
+      const rawReps = (assignData as any[])
+        .map((d) => d.industry_experts)
         .filter(Boolean);
-      const matched = (data as any[])
-        .filter((d) => {
-          const co = d.industry_experts?.current_company?.toLowerCase().trim();
-          return co && brandNames.includes(co);
-        })
-        .map((d) => d.industry_experts as Rep);
+      const matched = repsForBrand(brand as any, (brandData as any) || [], rawReps);
       const seen = new Set<string>();
       setReps(matched.filter((r) => r && !seen.has(r.id) && (seen.add(r.id) || true)));
     })();
