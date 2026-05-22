@@ -179,26 +179,34 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
-          <MetricPill
-            label="Registered" value={totals.registered}
-            onClick={() => setFilters({})}
-            active={Object.keys(filters).length === 0}
-          />
-          <MetricPill
-            label="Visited table" value={totals.visited}
-            onClick={() => setFilters({ visited: true })}
-            active={!!filters.visited}
-          />
-          <MetricPill
-            label="Sent a note" value={totals.sent_note}
-            onClick={() => setFilters({ pre_event_note: true, during_event_note: true, post_event_note: true })}
-            active={!!(filters.pre_event_note || filters.during_event_note || filters.post_event_note)}
-          />
-          <MetricPill
-            label="Starred you" value={totals.starred}
-            onClick={() => setFilters({ starred_brand: true })}
-            active={!!filters.starred_brand}
-          />
+          {(() => {
+            const isLive = new Date() >= GO_LIVE_TS;
+            return (
+              <>
+                <MetricPill
+                  label="Registered" value={totals.registered}
+                  onClick={() => setFilters({})}
+                  active={Object.keys(filters).length === 0}
+                />
+                <MetricPill
+                  label="Visited table" value={totals.visited}
+                  onClick={isLive ? () => setFilters({ visited: true }) : undefined}
+                  active={!!filters.visited}
+                  locked={!isLive}
+                />
+                <MetricPill
+                  label="Sent a note" value={totals.sent_note}
+                  onClick={() => setFilters({ pre_event_note: true, during_event_note: true, post_event_note: true })}
+                  active={!!(filters.pre_event_note || filters.during_event_note || filters.post_event_note)}
+                />
+                <MetricPill
+                  label="Starred you" value={totals.starred}
+                  onClick={() => setFilters({ starred_brand: true })}
+                  active={!!filters.starred_brand}
+                />
+              </>
+            );
+          })()}
         </div>
       </div>
 
