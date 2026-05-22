@@ -61,6 +61,18 @@ const ConnectProfile = () => {
       toast({ title: "PDF only", description: "Resume must be a PDF.", variant: "destructive" });
       return;
     }
+    if (kind === "photo") {
+      const okTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      const isHeic = /\.(heic|heif)$/i.test(file.name) || /hei[cf]/i.test(file.type);
+      if (isHeic || !okTypes.includes(file.type.toLowerCase())) {
+        toast({
+          title: "Photo format not supported",
+          description: "Please upload a JPG, PNG, or WEBP. iPhone HEIC photos won't display — on iPhone, go to Settings → Camera → Formats → 'Most Compatible', or convert your photo first.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
     if (file.size > 5 * 1024 * 1024) {
       toast({ title: "File too large", description: "Max 5MB.", variant: "destructive" });
       return;
