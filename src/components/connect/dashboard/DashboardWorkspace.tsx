@@ -79,7 +79,24 @@ function ShareMyCardPill({ rep }: { rep: any }) {
 
 type Tab = "candidates" | "leads";
 
-function MetricPill({ label, value, onClick, active }: { label: string; value: number; onClick?: () => void; active?: boolean }) {
+const GO_LIVE_TS = new Date("2026-05-28T20:30:00Z"); // May 28, 2026 · 2:30 PM MT
+
+function MetricPill({ label, value, onClick, active, locked }: { label: string; value: number; onClick?: () => void; active?: boolean; locked?: boolean }) {
+  if (locked) {
+    return (
+      <div
+        title="Unlocks May 28 · 2:30 PM MT"
+        className="text-left bg-events-cream/[0.03] border border-dashed border-events-cream/15 rounded-xl px-3 py-2 cursor-not-allowed"
+      >
+        <div className="text-events-cream/40 font-display text-xl inline-flex items-center gap-1.5">
+          <span aria-hidden>🔒</span>
+          <span>—</span>
+        </div>
+        <div className="text-events-cream/35 text-[10px] uppercase tracking-wider font-body">{label}</div>
+        <div className="text-events-cream/40 text-[9px] font-body italic mt-0.5">Unlocks May 28 · 2:30 PM MT</div>
+      </div>
+    );
+  }
   const Comp: any = onClick ? "button" : "div";
   return (
     <Comp
@@ -162,26 +179,34 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
-          <MetricPill
-            label="Registered" value={totals.registered}
-            onClick={() => setFilters({})}
-            active={Object.keys(filters).length === 0}
-          />
-          <MetricPill
-            label="Visited table" value={totals.visited}
-            onClick={() => setFilters({ visited: true })}
-            active={!!filters.visited}
-          />
-          <MetricPill
-            label="Sent a note" value={totals.sent_note}
-            onClick={() => setFilters({ pre_event_note: true, during_event_note: true, post_event_note: true })}
-            active={!!(filters.pre_event_note || filters.during_event_note || filters.post_event_note)}
-          />
-          <MetricPill
-            label="Starred you" value={totals.starred}
-            onClick={() => setFilters({ starred_brand: true })}
-            active={!!filters.starred_brand}
-          />
+          {(() => {
+            const isLive = new Date() >= GO_LIVE_TS;
+            return (
+              <>
+                <MetricPill
+                  label="Registered" value={totals.registered}
+                  onClick={() => setFilters({})}
+                  active={Object.keys(filters).length === 0}
+                />
+                <MetricPill
+                  label="Visited table" value={totals.visited}
+                  onClick={isLive ? () => setFilters({ visited: true }) : undefined}
+                  active={!!filters.visited}
+                  locked={!isLive}
+                />
+                <MetricPill
+                  label="Sent a note" value={totals.sent_note}
+                  onClick={() => setFilters({ pre_event_note: true, during_event_note: true, post_event_note: true })}
+                  active={!!(filters.pre_event_note || filters.during_event_note || filters.post_event_note)}
+                />
+                <MetricPill
+                  label="Starred you" value={totals.starred}
+                  onClick={() => setFilters({ starred_brand: true })}
+                  active={!!filters.starred_brand}
+                />
+              </>
+            );
+          })()}
         </div>
       </div>
 

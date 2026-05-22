@@ -335,8 +335,28 @@ Deno.serve(async (req) => {
         });
       }
 
-      const result = list.map((c: any) => ({
+      // Re-sign photo URLs (stored signed URLs expire after 7 days). Extract storage
+      // path from the previously-signed URL and mint a fresh short-lived signed URL.
+      const reSignPhoto = async (urlOrPath: string | null | undefined): Promise<string | null> => {
+        if (!urlOrPath) return null;
+        let path = urlOrPath;
+        const marker = "/candidate-photos/";
+        if (urlOrPath.includes(marker)) {
+          path = urlOrPath.split(marker)[1].split("?")[0];
+        } else if (urlOrPath.startsWith("http")) {
+          return urlOrPath; // external URL, leave alone
+        }
+        // Skip formats browsers can't render (HEIC/HEIF). Surface as null so UI shows fallback.
+        if (/\.(heic|heif)$/i.test(path)) return null;
+        try {
+          const { data } = await sb.storage.from("candidate-photos").createSignedUrl(path, 60 * 60);
+          return data?.signedUrl || null;
+        } catch { return null; }
+      };
+      const signedPhotos = await Promise.all(list.map((c: any) => reSignPhoto(c.photo_url)));
+      const result = list.map((c: any, i: number) => ({
         ...c,
+        photo_url: signedPhotos[i],
         engagement: engagement[c.id] || null,
         starred_brand: starred.has(c.id),
         connect_note: connectNotes[c.id] || null,
@@ -377,13 +397,17 @@ Deno.serve(async (req) => {
           resume_signed_url = data?.signedUrl || null;
         } catch {}
       }
-      let photo_signed_url: string | null = cand.photo_url || null;
-      if (cand.photo_url && cand.photo_url.includes("candidate-photos") && !cand.photo_url.startsWith("http")) {
+      let photo_signed_url: string | null = null;
+      if (cand.photo_url && cand.photo_url.includes("candidate-photos")) {
         try {
-          const path = cand.photo_url.split("/candidate-photos/")[1] || cand.photo_url;
-          const { data } = await sb.storage.from("candidate-photos").createSignedUrl(path, 60 * 10);
-          photo_signed_url = data?.signedUrl || null;
+          const path = cand.photo_url.split("/candidate-photos/")[1].split("?")[0];
+          if (!/\.(heic|heif)$/i.test(path)) {
+            const { data } = await sb.storage.from("candidate-photos").createSignedUrl(path, 60 * 60);
+            photo_signed_url = data?.signedUrl || null;
+          }
         } catch {}
+      } else if (cand.photo_url?.startsWith("http")) {
+        photo_signed_url = cand.photo_url;
       }
       return jsonFor(req, { candidate: cand, connections: conns, resume_signed_url, photo_signed_url });
     }

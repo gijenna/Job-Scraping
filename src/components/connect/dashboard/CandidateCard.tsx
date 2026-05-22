@@ -62,7 +62,7 @@ export default function CandidateCard({ candidate, onClick }: { candidate: any; 
           <Badge tone="coral">{TIMING_LABEL[candidate.connect_note.note_timing] || "Sent a note"}</Badge>
         )}
         {eng?.sent_note && !candidate.connect_note && <Badge tone="coral">Logged a note</Badge>}
-        {eng?.role_flagged && <Badge tone="yellow">Flagged a role</Badge>}
+        {eng?.role_flagged && <Badge tone="yellow">Flagged for role by team</Badge>}
         {candidate.starred_brand && <Badge tone="yellow">Starred your brand</Badge>}
         {areas.map((a) => <Badge key={a}>{a}</Badge>)}
         {niches.slice(0, 3).map((n) => <Badge key={n}>{n}</Badge>)}
