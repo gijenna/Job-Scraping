@@ -64,15 +64,15 @@ function ShareMyCardPill({ rep }: { rep: any }) {
       <button
         type="button"
         onClick={onCopy}
-        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-teal/15 hover:bg-events-teal/25 text-events-teal border border-events-teal/30 px-4 py-2 rounded-full transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-wider bg-events-cream/10 hover:bg-events-cream/20 text-events-cream border border-events-cream/25 px-4 py-2 rounded-full transition-colors"
       >
         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
         {copied ? "Link copied" : "Share my card"}
       </button>
-      <p className="text-[12px] text-events-teal/80 font-body leading-relaxed">
+      <p className="text-[12px] text-events-cream/75 font-body leading-relaxed">
         We encourage you to let your networks know you'll be at the event! This link goes directly to your card, and anyone who visits will be able to check you out, and register to attend.
       </p>
-      <p className="text-[11px] text-events-teal/60 font-body italic">Personal brand win, as a bonus!</p>
+      <p className="text-[11px] text-events-cream/50 font-body italic">Personal brand win, as a bonus!</p>
     </div>
   );
 }
