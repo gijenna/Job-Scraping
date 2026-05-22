@@ -14,7 +14,13 @@ Deno.serve(async (req) => {
 
   const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
   const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || Deno.env.get('SUPABASE_PUBLISHABLE_KEY')
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
+
+  if (!ANON_KEY) {
+    console.error('Missing SUPABASE_ANON_KEY / SUPABASE_PUBLISHABLE_KEY')
+    return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+  }
 
   let body: any
   try { body = await req.json() } catch {
@@ -64,16 +70,16 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Send email via existing transactional pipeline. Call via fetch so we can
-  // explicitly pass the service-role JWT — supabase.functions.invoke from
-  // inside an edge function does NOT auto-attach auth, which fails the
-  // gateway verify_jwt check on send-transactional-email.
+  // Send email via existing app-email pipeline. The email function only needs
+  // a valid gateway JWT to enter, then it uses its own service credentials
+  // internally. In this project the service secret is not always a gateway JWT,
+  // so use the anon/publishable JWT here to avoid UNAUTHORIZED_INVALID_JWT_FORMAT.
   const sendRes = await fetch(`${SUPABASE_URL}/functions/v1/send-transactional-email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${SERVICE_KEY}`,
-      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${ANON_KEY}`,
+      apikey: ANON_KEY,
     },
     body: JSON.stringify({
       templateName: 'feedback-from-user',
