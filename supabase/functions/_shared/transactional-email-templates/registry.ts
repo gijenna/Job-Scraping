@@ -18,6 +18,7 @@ import { template as brandActivationConfirmation } from './brand-activation-conf
 import { template as afterpartyInterestAlert } from './afterparty-interest-alert.tsx'
 import { template as candidateNoteReceivedPreEvent } from './candidate-note-received-pre-event.tsx'
 import { template as candidateNoteReceivedPostEvent } from './candidate-note-received-post-event.tsx'
+import { template as feedbackFromUser } from './feedback-from-user.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-matches': afterpartyMatches,
@@ -29,4 +30,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-interest-alert': afterpartyInterestAlert,
   'candidate-note-received-pre-event': candidateNoteReceivedPreEvent,
   'candidate-note-received-post-event': candidateNoteReceivedPostEvent,
+  'feedback-from-user': feedbackFromUser,
 }
