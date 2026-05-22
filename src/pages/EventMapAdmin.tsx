@@ -206,7 +206,7 @@ const EventMapAdmin = () => {
 
   const startEdit = (brand: MapBrand) => {
     setEditingId(brand.id);
-    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url, offers_remote: brand.offers_remote ?? null, currently_hiring: brand.currently_hiring ?? null, why_visit_text: (brand as any).why_visit_text ?? brand.culture_blurb ?? null, lead_question_intro: (brand as any).lead_question_intro ?? null, lead_question_text: (brand as any).lead_question_text ?? null, lead_question_option_1: (brand as any).lead_question_option_1 ?? null, lead_question_option_2: (brand as any).lead_question_option_2 ?? null, lead_question_option_3: (brand as any).lead_question_option_3 ?? null });
+    setEditFields({ name: brand.name, description: brand.description, table_count: brand.table_count, logo_url: brand.logo_url, is_activation: brand.is_activation, sponsor_brand_id: brand.sponsor_brand_id, website_url: brand.website_url, offers_remote: brand.offers_remote ?? null, currently_hiring: brand.currently_hiring ?? null, why_visit_text: (brand as any).why_visit_text ?? brand.culture_blurb ?? null, lead_question_intro: (brand as any).lead_question_intro ?? null, lead_question_text: (brand as any).lead_question_text ?? null, lead_question_option_1: (brand as any).lead_question_option_1 ?? null, lead_question_option_2: (brand as any).lead_question_option_2 ?? null, lead_question_option_3: (brand as any).lead_question_option_3 ?? null, parent_brand_id: (brand as any).parent_brand_id ?? null, primary_child: (brand as any).primary_child ?? false, map_size: (brand as any).map_size ?? "normal", child_logo_ids: (brand as any).child_logo_ids ?? [], extra_logo_urls: (brand as any).extra_logo_urls ?? [] } as any);
   };
 
   const saveEdit = async () => {
@@ -542,6 +542,94 @@ const EventMapAdmin = () => {
                               <p className="text-[10px] text-white/40 font-body italic">
                                 Appears on the candidate card automatically once both Question and Option 1 are filled. Past responses are preserved.
                               </p>
+                            </div>
+
+                            {/* Parent-company / activation table */}
+                            <div className="space-y-2 pt-3 border-t border-white/10">
+                              <p className="text-xs uppercase tracking-wider text-events-coral font-body font-semibold">Parent company & activation table</p>
+                              <p className="text-[10px] text-white/50 font-body">
+                                Use a parent brand (e.g. VF Corp) to roll up reps from its children. Children with a parent are hidden from the map but stay in the list. Reps from any child also appear under the parent's card.
+                              </p>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Parent brand</label>
+                                  <select
+                                    value={(editFields as any).parent_brand_id || ""}
+                                    onChange={(e) => setEditFields((p: any) => ({ ...p, parent_brand_id: e.target.value || null }))}
+                                    className="bg-white/10 border border-white/20 text-white text-xs rounded h-8 px-2 w-full"
+                                  >
+                                    <option value="">(none — this is a top-level brand)</option>
+                                    {brands.filter((b) => b.id !== editingId && !((b as any).parent_brand_id)).map((b) => (
+                                      <option key={b.id} value={b.id}>{b.name}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Map size</label>
+                                  <select
+                                    value={(editFields as any).map_size || "normal"}
+                                    onChange={(e) => setEditFields((p: any) => ({ ...p, map_size: e.target.value }))}
+                                    className="bg-white/10 border border-white/20 text-white text-xs rounded h-8 px-2 w-full"
+                                  >
+                                    <option value="normal">Normal</option>
+                                    <option value="large">Large (1.25x)</option>
+                                    <option value="xl">XL (1.6x — parent activations)</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-end">
+                                  <label className="flex items-center gap-2 text-xs text-white/80 font-body">
+                                    <input
+                                      type="checkbox"
+                                      checked={!!(editFields as any).primary_child}
+                                      onChange={(e) => setEditFields((p: any) => ({ ...p, primary_child: e.target.checked }))}
+                                    />
+                                    Primary child (sees full parent rollup)
+                                  </label>
+                                </div>
+                              </div>
+
+                              {/* Child logos on parent table */}
+                              {!((editFields as any).parent_brand_id) && (
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Child brand logos on this table (multi-select)</label>
+                                  <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto bg-white/5 border border-white/15 rounded p-2">
+                                    {brands.filter((b) => b.id !== editingId).map((b) => {
+                                      const checked = ((editFields as any).child_logo_ids || []).includes(b.id);
+                                      return (
+                                        <label key={b.id} className={`text-[10px] font-body px-2 py-1 rounded border cursor-pointer ${checked ? "bg-events-coral border-events-coral text-white" : "bg-white/10 border-white/20 text-white/70 hover:text-white"}`}>
+                                          <input
+                                            type="checkbox"
+                                            checked={checked}
+                                            onChange={(e) => setEditFields((p: any) => {
+                                              const cur: string[] = p.child_logo_ids || [];
+                                              return { ...p, child_logo_ids: e.target.checked ? [...cur, b.id] : cur.filter((id) => id !== b.id) };
+                                            })}
+                                            className="hidden"
+                                          />
+                                          {b.name}
+                                        </label>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Extra ad-hoc logos */}
+                              {!((editFields as any).parent_brand_id) && (
+                                <div>
+                                  <label className="text-[10px] text-white/60 font-body block mb-1">Extra logos (manual — name + image URL)</label>
+                                  <div className="space-y-1.5">
+                                    {(((editFields as any).extra_logo_urls || []) as any[]).map((l, i) => (
+                                      <div key={i} className="flex gap-1.5 items-center">
+                                        <Input value={l.name || ""} placeholder="Name" onChange={(e) => setEditFields((p: any) => { const arr = [...(p.extra_logo_urls || [])]; arr[i] = { ...arr[i], name: e.target.value }; return { ...p, extra_logo_urls: arr }; })} className="bg-white/10 border-white/20 text-white h-7 text-xs flex-1" />
+                                        <Input value={l.logo_url || ""} placeholder="https://logo.png" onChange={(e) => setEditFields((p: any) => { const arr = [...(p.extra_logo_urls || [])]; arr[i] = { ...arr[i], logo_url: e.target.value }; return { ...p, extra_logo_urls: arr }; })} className="bg-white/10 border-white/20 text-white h-7 text-xs flex-[2]" />
+                                        <button onClick={() => setEditFields((p: any) => ({ ...p, extra_logo_urls: ((p.extra_logo_urls || []) as any[]).filter((_, j) => j !== i) }))} className="w-6 h-6 rounded bg-red-600/30 text-red-200 flex items-center justify-center"><X className="w-3 h-3" /></button>
+                                      </div>
+                                    ))}
+                                    <button onClick={() => setEditFields((p: any) => ({ ...p, extra_logo_urls: [...(p.extra_logo_urls || []), { name: "", logo_url: "" }] }))} className="text-[10px] uppercase tracking-wider font-display text-events-coral hover:underline">+ Add logo</button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </TableCell>

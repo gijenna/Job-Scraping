@@ -145,14 +145,36 @@ const EventMapCanvas = ({
             </div>
           ))}
 
-          {/* Placed brands */}
+          {/* Placed brands — skip children that roll up into a parent */}
           {layouts.map((layout) => {
             const brand = brands.find((b) => b.id === layout.brand_id);
             if (!brand) return null;
+            // Hide child brands on the map (they still appear in the list view
+            // and roll up into the parent's table here).
+            if (brand.parent_brand_id && !interactive) return null;
             const sponsorBrand = brand.sponsor_brand_id
               ? brands.find((b) => b.id === brand.sponsor_brand_id) || null
               : null;
             const isExpertZone = brand.name === expertZoneBrandName;
+
+            // Child logos to render on the parent's table.
+            const childLogos = !brand.parent_brand_id
+              ? [
+                  ...((brand.child_logo_ids || [])
+                    .map((id) => brands.find((b) => b.id === id))
+                    .filter(Boolean) as MapBrand[])
+                    .map((b) => ({
+                      name: b.name,
+                      logo_url: b.logo_url,
+                      website_url: b.website_url,
+                    })),
+                  ...((brand.extra_logo_urls || []).map((l) => ({
+                    name: l.name || "",
+                    logo_url: l.logo_url || null,
+                    website_url: l.url || null,
+                  }))),
+                ]
+              : [];
 
             return (
               <div key={layout.id} onDoubleClick={() => handleDoubleClick(brand.id)}>
@@ -178,6 +200,7 @@ const EventMapCanvas = ({
                     onRotate={onRotate}
                     onClick={onClick}
                     sponsorBrand={sponsorBrand}
+                    childLogos={childLogos}
                   />
                 )}
               </div>

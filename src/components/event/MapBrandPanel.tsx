@@ -62,24 +62,28 @@ const MapBrandPanel = ({
   useEffect(() => {
     if (!brand) { setExperts([]); return; }
     const fetchReps = async () => {
-      const { data } = await supabase
-        .from("expert_city_assignments")
-        .select("expert_id, expert_type, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status)")
-        .eq("city_slug", "denver")
-        .eq("published", true);
-
-      if (!data) return;
-      const brandNames = [brand.name, ...((brand as any).aliases || [])]
-        .map((n: string) => n?.toLowerCase().trim())
+      // Pull every Denver assignment + every map brand so the rollup helper
+      // can resolve parent → children relationships.
+      const [{ data: assignData }, { data: brandData }] = await Promise.all([
+        supabase
+          .from("expert_city_assignments")
+          .select("expert_id, expert_type, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, restricted_to_brand_names)")
+          .eq("city_slug", "denver")
+          .eq("published", true),
+        supabase
+          .from("event_map_brands")
+          .select("id, name, aliases, parent_brand_id, primary_child")
+          .eq("event_slug", (brand as any).event_slug || "denver26"),
+      ]);
+      if (!assignData) return;
+      const { repsForBrand } = await import("@/lib/brand-rep-rollup");
+      const reps = assignData
+        .map((d: any) => d.industry_experts)
         .filter(Boolean);
-      const matched = data
-        .filter((d: any) => {
-          const exp = d.industry_experts;
-          const co = exp?.current_company?.toLowerCase().trim();
-          return co && brandNames.includes(co);
-        })
-        .map((d: any) => d.industry_experts as Expert);
-      setExperts(matched);
+      const matched = repsForBrand(brand as any, (brandData as any) || [], reps);
+      // Dedupe by id (a rep could match through multiple paths in theory)
+      const seen = new Set<string>();
+      setExperts(matched.filter((r: any) => r && !seen.has(r.id) && (seen.add(r.id) || true)) as Expert[]);
     };
     fetchReps();
   }, [brand]);

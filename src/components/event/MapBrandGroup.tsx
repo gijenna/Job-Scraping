@@ -46,6 +46,12 @@ export function getShapeBounds(cells: ShapeCell[]) {
   return { width: (maxCol + 1) * TABLE_W, height: (maxRow + 1) * TABLE_H };
 }
 
+interface ChildLogo {
+  name: string;
+  logo_url: string | null;
+  website_url: string | null;
+}
+
 interface MapBrandGroupProps {
   brand: MapBrand;
   layout: MapLayout;
@@ -55,6 +61,7 @@ interface MapBrandGroupProps {
   onRotate?: (brandId: string, rotation: number) => void;
   onClick?: (brand: MapBrand) => void;
   sponsorBrand?: MapBrand | null;
+  childLogos?: ChildLogo[];
 }
 
 const MapBrandGroup = ({
@@ -66,9 +73,20 @@ const MapBrandGroup = ({
   onRotate,
   onClick,
   sponsorBrand,
+  childLogos = [],
 }: MapBrandGroupProps) => {
+  // map_size scales the table footprint AND the bubble. 'xl' is reserved for
+  // parent-company activations like VF Corp — bigger than normal brands but
+  // still smaller than the hero (Outside / Basecamp) tables.
+  const sizeMul =
+    brand.map_size === "xl" ? 1.6 : brand.map_size === "large" ? 1.25 : 1;
+  const T_W = TABLE_W * sizeMul;
+  const T_H = TABLE_H * sizeMul;
+
   const cells = getShapeCells(layout.shape, brand.table_count);
-  const bounds = getShapeBounds(cells);
+  const maxCol = Math.max(...cells.map((c) => c.col));
+  const maxRow = Math.max(...cells.map((c) => c.row));
+  const bounds = { width: (maxCol + 1) * T_W, height: (maxRow + 1) * T_H };
 
   const logoSrc = brand.logo_url || (brand.website_url ? `https://www.google.com/s2/favicons?domain=${new URL(brand.website_url.startsWith("http") ? brand.website_url : `https://${brand.website_url}`).hostname}&sz=128` : null);
 
@@ -138,22 +156,59 @@ const MapBrandGroup = ({
             key={i}
             className="absolute border border-white/30 rounded-sm"
             style={{
-              left: cell.col * TABLE_W,
-              top: cell.row * TABLE_H,
-              width: TABLE_W,
-              height: TABLE_H,
-              backgroundColor: brand.is_activation ? "rgba(225, 182, 36, 0.3)" : "rgba(237, 118, 96, 0.3)",
+              left: cell.col * T_W,
+              top: cell.row * T_H,
+              width: T_W,
+              height: T_H,
+              backgroundColor: brand.is_activation || brand.map_size === "xl"
+                ? "rgba(225, 182, 36, 0.35)"
+                : "rgba(237, 118, 96, 0.3)",
             }}
           />
         ))}
+
+        {/* Child-logo strip rendered over the parent table */}
+        {childLogos.length > 0 && (
+          <div
+            className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1 pointer-events-none"
+          >
+            {childLogos.slice(0, 12).map((c, i) => {
+              const src = c.logo_url || (c.website_url ? (() => {
+                try {
+                  const d = new URL(c.website_url!.startsWith("http") ? c.website_url! : `https://${c.website_url}`).hostname;
+                  return `https://www.google.com/s2/favicons?domain=${d}&sz=64`;
+                } catch { return null; }
+              })() : null);
+              return (
+                <div
+                  key={i}
+                  className="w-5 h-5 rounded-full bg-white/95 overflow-hidden flex items-center justify-center shadow-sm border border-white"
+                  title={c.name}
+                >
+                  {src ? (
+                    <img src={src} alt={c.name} className="w-4 h-4 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  ) : (
+                    <span className="text-[6px] font-bold text-events-teal">{(c.name || "?")[0]}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Logo bubble + name, always upright (no rotation) */}
       {(() => {
         const isHero = /^(outside inc|basecamp)$/i.test(brand.name.trim());
-        const bubble = isHero ? "w-20 h-20 border-4" : "w-10 h-10 border-2";
-        const inner = isHero ? "w-16 h-16" : "w-8 h-8";
-        const initialsSize = isHero ? "text-base" : "text-[10px]";
+        const isXl = brand.map_size === "xl";
+        const bubble = isHero
+          ? "w-20 h-20 border-4"
+          : isXl
+          ? "w-14 h-14 border-[3px]"
+          : "w-10 h-10 border-2";
+        const inner = isHero ? "w-16 h-16" : isXl ? "w-11 h-11" : "w-8 h-8";
+        const initialsSize = isHero ? "text-base" : isXl ? "text-sm" : "text-[10px]";
+        const nameSize = isHero ? "text-[12px]" : isXl ? "text-[11px]" : "text-[9px]";
         return (
       <div className="flex flex-col items-center -mt-2" style={{ width: bounds.width }}>
         <div className={`relative ${bubble} rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border-white ${brand.is_featured ? "featured-bubble-glow" : ""}`}>
@@ -165,7 +220,7 @@ const MapBrandGroup = ({
             </span>
           )}
         </div>
-        <span className={`${isHero ? "text-[12px]" : "text-[9px]"} font-display font-bold text-white text-center leading-tight mt-0.5 drop-shadow`}>
+        <span className={`${nameSize} font-display font-bold text-white text-center leading-tight mt-0.5 drop-shadow`}>
           {brand.name}
         </span>
       </div>
