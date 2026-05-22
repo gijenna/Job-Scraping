@@ -241,9 +241,14 @@ export default function DashboardWorkspace({ rep, onEditCardUrl, openEditSignal 
         const leadsVisible = brand?.lead_capture_visible_to_brand !== false;
         const showLeadsTab = !leadsActive || leadsVisible; // hide only when active && !visible
         return (
-          <div className="flex items-center gap-1.5 mb-4">
-            {([
-              { v: "candidates", label: "Candidates" },
+          <>
+            <div className="border-t border-events-cream/10 mt-8 pt-6 mb-4">
+              <h2 className="font-afterparty text-2xl md:text-3xl text-events-cream">Candidate Zone</h2>
+            </div>
+            <div className="flex items-center gap-1.5 mb-4">
+              {([
+                { v: "candidates", label: "Candidates" },
+
               ...(showLeadsTab ? [{ v: "leads", label: "Leads" } as const] : []),
             ] as { v: Tab; label: string }[]).map((t) => (
               <button
