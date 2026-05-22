@@ -120,9 +120,9 @@ const ConnectProfile = () => {
                 {c.photo_url ? <img src={c.photo_url} alt="You" className="w-full h-full object-cover" /> : "No photo"}
               </div>
               <div className="space-y-2">
-                <input ref={photoInput} type="file" accept="image/*" capture="user" hidden onChange={(e) => e.target.files?.[0] && upload("photo", e.target.files[0])} />
+                <input ref={photoInput} type="file" accept="image/jpeg,image/png,image/webp" capture="user" hidden onChange={(e) => e.target.files?.[0] && upload("photo", e.target.files[0])} />
                 <Button onClick={() => photoInput.current?.click()} className="bg-events-coral hover:bg-events-coral/90 text-events-cream">Upload photo</Button>
-                <p className="text-[11px] font-body text-events-cream/50">JPG or PNG, under 5MB.</p>
+                <p className="text-[11px] font-body text-events-cream/50">JPG, PNG, or WEBP — under 5MB. iPhone HEIC photos won't show; switch your camera to "Most Compatible" or convert first.</p>
               </div>
             </div>
           </Section>
