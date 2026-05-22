@@ -253,14 +253,14 @@ export default function DashboardFilters({
                     <Chip active={!!filters.visited} onClick={() => set({ visited: !filters.visited })}>
                       Visited my table {!hasVisited && "(0 so far)"}
                     </Chip>
-                    <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged a role to apply to</Chip>
+                    <Chip active={!!filters.role_flagged} onClick={() => set({ role_flagged: !filters.role_flagged })}>Flagged for role by team</Chip>
                     <Chip active={!!filters.during_event_note} onClick={() => set({ during_event_note: !filters.during_event_note })}>Note from event</Chip>
                     <Chip active={!!filters.post_event_note} onClick={() => set({ post_event_note: !filters.post_event_note })}>Post-event note</Chip>
                   </>
                 ) : (
                   <>
                     <LockedChip>Visited my table</LockedChip>
-                    <LockedChip>Flagged a role to apply to</LockedChip>
+                    <LockedChip>Flagged for role by team</LockedChip>
                     <LockedChip>Note from event</LockedChip>
                     <LockedChip>Post-event note</LockedChip>
                   </>
