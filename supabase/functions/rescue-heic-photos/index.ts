@@ -11,22 +11,22 @@ const cors = {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
-  // Gate: caller must be the admin Supabase Auth user.
+  // Gate: caller must be a @wearetheoutdoorindustry.com admin (same pattern as admin-impersonate).
+  const ADMIN_DOMAIN = "@wearetheoutdoorindustry.com";
   const authHeader = req.headers.get("Authorization") || "";
-  const token = authHeader.replace(/^Bearer\s+/i, "");
-  const adminEmail = (Deno.env.get("ADMIN_EMAIL") || "").toLowerCase();
-  if (!token || !adminEmail) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+  const jwt = authHeader.replace(/^Bearer\s+/i, "");
+  if (!jwt) {
+    return new Response(JSON.stringify({ error: "Admin auth required" }), {
       status: 401, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
-  const authClient = createClient(
+  const userClient = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_ANON_KEY")!,
-    { global: { headers: { Authorization: `Bearer ${token}` } } },
+    { global: { headers: { Authorization: `Bearer ${jwt}` } }, auth: { persistSession: false } },
   );
-  const { data: userData } = await authClient.auth.getUser(token);
-  if (!userData?.user?.email || userData.user.email.toLowerCase() !== adminEmail) {
+  const { data: { user } } = await userClient.auth.getUser();
+  if (!user?.email || !user.email.toLowerCase().endsWith(ADMIN_DOMAIN)) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403, headers: { ...cors, "Content-Type": "application/json" },
     });
