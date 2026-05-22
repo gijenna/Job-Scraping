@@ -11,10 +11,24 @@ const cors = {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
-  const adminKey = req.headers.get("x-admin-key");
-  if (adminKey !== Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) {
+  // Gate: caller must be the admin Supabase Auth user.
+  const authHeader = req.headers.get("Authorization") || "";
+  const token = authHeader.replace(/^Bearer\s+/i, "");
+  const adminEmail = (Deno.env.get("ADMIN_EMAIL") || "").toLowerCase();
+  if (!token || !adminEmail) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401, headers: { ...cors, "Content-Type": "application/json" },
+    });
+  }
+  const authClient = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    { global: { headers: { Authorization: `Bearer ${token}` } } },
+  );
+  const { data: userData } = await authClient.auth.getUser(token);
+  if (!userData?.user?.email || userData.user.email.toLowerCase() !== adminEmail) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
