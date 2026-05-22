@@ -179,7 +179,7 @@ Deno.serve(async (req) => {
         }
         const ids = Array.from(allowed);
         if (ids.length === 0) {
-          return jsonFor(req, { items: [], count: 0, page, page_size: pageSize });
+          return jsonFor(req, { candidates: [], total: 0, page, page_size: pageSize });
         }
         q = q.in("id", ids);
       }
