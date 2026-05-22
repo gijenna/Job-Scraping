@@ -56,21 +56,40 @@ const ConnectProfile = () => {
     setSaving(false);
   };
 
-  const upload = async (kind: "photo" | "resume", file: File) => {
+  const upload = async (kind: "photo" | "resume", incoming: File) => {
+    let file: File = incoming;
     if (kind === "resume" && file.type !== "application/pdf") {
       toast({ title: "PDF only", description: "Resume must be a PDF.", variant: "destructive" });
       return;
     }
     if (kind === "photo") {
-      const okTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
       const isHeic = /\.(heic|heif)$/i.test(file.name) || /hei[cf]/i.test(file.type);
-      if (isHeic || !okTypes.includes(file.type.toLowerCase())) {
-        toast({
-          title: "Photo format not supported",
-          description: "Please upload a JPG, PNG, or WEBP. iPhone HEIC photos won't display — on iPhone, go to Settings → Camera → Formats → 'Most Compatible', or convert your photo first.",
-          variant: "destructive",
-        });
-        return;
+      if (isHeic) {
+        try {
+          toast({ title: "Converting iPhone photo...", description: "Hang tight, this takes a few seconds." });
+          const heic2any = (await import("heic2any")).default;
+          const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 });
+          const blob = Array.isArray(converted) ? converted[0] : converted;
+          const newName = file.name.replace(/\.(heic|heif)$/i, ".jpg");
+          file = new File([blob], newName, { type: "image/jpeg" });
+        } catch (e: any) {
+          toast({
+            title: "Couldn't convert that photo",
+            description: "Try a JPG or PNG instead, or on iPhone go to Settings → Camera → Formats → 'Most Compatible'.",
+            variant: "destructive",
+          });
+          return;
+        }
+      } else {
+        const okTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+        if (!okTypes.includes(file.type.toLowerCase())) {
+          toast({
+            title: "Photo format not supported",
+            description: "Please upload a JPG, PNG, or WEBP.",
+            variant: "destructive",
+          });
+          return;
+        }
       }
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -82,9 +101,6 @@ const ConnectProfile = () => {
       const put = await fetch(upload_url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
       if (!put.ok) throw new Error("Upload failed");
       const { candidate } = await candidateAttachUpload(kind, storage_path);
-      // Only merge the file URL the server just stored. Replacing the whole
-      // local state with the server row would wipe any unsaved edits the user
-      // is currently typing (hook, pitch, etc).
       const urlField = kind === "photo" ? "photo_url" : "resume_url";
       setC((prev: any) => ({ ...(prev || candidate), [urlField]: candidate?.[urlField] ?? prev?.[urlField] }));
       toast({ title: kind === "photo" ? "Photo uploaded" : "Resume uploaded" });
