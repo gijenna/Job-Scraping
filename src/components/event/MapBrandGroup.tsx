@@ -167,10 +167,15 @@ const MapBrandGroup = ({
           />
         ))}
 
-        {/* Child-logo strip rendered over the parent table */}
+        {/* Child-logo strip rendered over the parent table.
+            Counter-rotate so logos stay upright regardless of table rotation. */}
         {childLogos.length > 0 && (
           <div
             className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1 pointer-events-none"
+            style={{
+              transform: `rotate(${-layout.rotation}deg)`,
+              transformOrigin: "center center",
+            }}
           >
             {childLogos.slice(0, 12).map((c, i) => {
               const src = c.logo_url || (c.website_url ? (() => {
