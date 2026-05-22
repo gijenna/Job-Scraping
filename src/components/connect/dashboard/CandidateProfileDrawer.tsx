@@ -100,9 +100,16 @@ export default function CandidateProfileDrawer({ id, open, onClose }: { id: stri
                 <div className="mt-2">
                   <p className="text-events-cream/60 text-xs">Prior careers</p>
                   <ul className="list-disc list-inside text-sm">
-                    {c.prior_careers.map((p: any, i: number) => (
-                      <li key={i}>{typeof p === "string" ? p : `${p.title || ""} at ${p.company || ""}`}</li>
-                    ))}
+                    {c.prior_careers.map((p: any, i: number) => {
+                      if (typeof p === "string") return <li key={i}>{p}</li>;
+                      const parts = [p.field, p.focus].filter((x: any) => x && String(x).trim());
+                      const main = parts.length ? parts.join(" / ") : (p.title || p.company || "");
+                      const yrs = p.years != null && p.years !== "" ? ` (${p.years} yr${p.years === 1 ? "" : "s"})` : "";
+                      const titleAt = p.title && p.company ? `${p.title} at ${p.company}` : "";
+                      const label = titleAt || `${main}${yrs}`;
+                      if (!label.trim()) return null;
+                      return <li key={i}>{label}</li>;
+                    })}
                   </ul>
                 </div>
               )}

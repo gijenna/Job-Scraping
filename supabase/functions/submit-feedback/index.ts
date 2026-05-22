@@ -64,9 +64,18 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Send email via existing transactional pipeline
-  const { error: sendErr } = await supabase.functions.invoke('send-transactional-email', {
-    body: {
+  // Send email via existing transactional pipeline. Call via fetch so we can
+  // explicitly pass the service-role JWT — supabase.functions.invoke from
+  // inside an edge function does NOT auto-attach auth, which fails the
+  // gateway verify_jwt check on send-transactional-email.
+  const sendRes = await fetch(`${SUPABASE_URL}/functions/v1/send-transactional-email`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      apikey: SERVICE_KEY,
+    },
+    body: JSON.stringify({
       templateName: 'feedback-from-user',
       recipientEmail: 'jenna@wearetheoutdoorindustry.com',
       idempotencyKey: `feedback-${crypto.randomUUID()}`,
@@ -80,11 +89,12 @@ Deno.serve(async (req) => {
         message,
         screenshotUrl,
       },
-    },
+    }),
   })
 
-  if (sendErr) {
-    console.error('send-transactional-email failed', sendErr)
+  if (!sendRes.ok) {
+    const errText = await sendRes.text().catch(() => '')
+    console.error('send-transactional-email failed', sendRes.status, errText)
     return new Response(JSON.stringify({ error: 'Failed to send feedback' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
   }
 
