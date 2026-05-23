@@ -287,12 +287,13 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
     && !me.mind_blowing_fact && !me.company;
   const isOwner = !!me && (verifiedAttendeeId === me.id || isPreRsvpShell);
 
-  // Load public_listing for owner (not exposed via public view)
+  // Load public_listing for owner. Now exposed via the public view so anon
+  // (pre-auth) can read it without granting access to email/phone.
   useEffect(() => {
     if (!isOwner || !me) return;
     (async () => {
       const { data } = await (supabase as any)
-        .from("afterparty_attendees")
+        .from("afterparty_attendees_public")
         .select("public_listing")
         .eq("id", me.id)
         .maybeSingle();
@@ -302,24 +303,28 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
     })();
   }, [isOwner, me?.id]);
 
-  // Load the full attendee row whenever we have a `me`, so the editor
-  // always opens against the freshest, most complete data, regardless of
-  // entry point (direct link, email link, /guests, etc.). The public view
-  // omits some fields (email, phone, public_listing) and historically we
-  // only fetched the full row after PIN verification, which meant edits
-  // made in one session could appear "missing" when the editor was
-  // re-opened from a different entry point before verification.
+  // Load the freshest attendee row for the editor. We try the base table
+  // first (works once the user is authenticated via PIN / anon claim) and
+  // fall back to the public view (no email/phone) for pre-auth views like
+  // pre-RSVP shells coming from email links.
   useEffect(() => {
     if (!me) { setMeFull(null); return; }
     (async () => {
-      const { data } = await (supabase as any)
+      const { data: priv } = await (supabase as any)
         .from("afterparty_attendees")
         .select("*")
         .eq("id", me.id)
         .maybeSingle();
-      if (data) setMeFull(data);
+      if (priv) { setMeFull(priv); return; }
+      const { data: pub } = await (supabase as any)
+        .from("afterparty_attendees_public")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (pub) setMeFull(pub);
     })();
   }, [me?.id, verifiedAttendeeId, editMode]);
+
 
   const togglePublicListing = async (next: boolean) => {
     if (!me) return;
