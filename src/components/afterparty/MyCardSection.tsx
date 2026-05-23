@@ -191,7 +191,8 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
       .select("*")
       .eq("id", id)
       .maybeSingle();
-    if (full) setMeFull(full);
+    if (full) setMeFull(full); else if (data) setMeFull(data as any);
+
   };
 
   if (!me) return null;
