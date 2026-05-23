@@ -80,19 +80,26 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
     if (target) setMe(target);
   }, [allAttendees, slug, verifiedAttendeeId]);
 
-  // Load full row (with phone/email/status) once we have an attendee.
-  // We need `status` to decide whether to show "Secure my spot" vs "Edit my card".
+  // Load attendee row for the editor. Try base table (works post-auth) and
+  // fall back to the public view (no email/phone) for pre-auth viewers.
   useEffect(() => {
     if (!me) { setMeFull(null); return; }
     (async () => {
-      const { data } = await (supabase as any)
+      const { data: priv } = await (supabase as any)
         .from("afterparty_attendees")
         .select("*")
         .eq("id", me.id)
         .maybeSingle();
-      if (data) setMeFull(data);
+      if (priv) { setMeFull(priv); return; }
+      const { data: pub } = await (supabase as any)
+        .from("afterparty_attendees_public")
+        .select("*")
+        .eq("id", me.id)
+        .maybeSingle();
+      if (pub) setMeFull(pub);
     })();
   }, [me?.id]);
+
 
   // Locked matches
   useEffect(() => {
@@ -184,7 +191,8 @@ const MyCardSection = ({ allAttendees, slug, onCardSaved, sidebar, rinoMural = f
       .select("*")
       .eq("id", id)
       .maybeSingle();
-    if (full) setMeFull(full);
+    if (full) setMeFull(full); else if (data) setMeFull(data as any);
+
   };
 
   if (!me) return null;
