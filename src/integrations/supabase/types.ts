@@ -1650,6 +1650,7 @@ export type Database = {
           niches: string[] | null
           photo_url: string | null
           platforms: string[] | null
+          public_listing: boolean | null
           role: string | null
           show_instagram: boolean | null
           show_linkedin: boolean | null
@@ -1679,6 +1680,7 @@ export type Database = {
           niches?: string[] | null
           photo_url?: string | null
           platforms?: string[] | null
+          public_listing?: boolean | null
           role?: string | null
           show_instagram?: boolean | null
           show_linkedin?: boolean | null
@@ -1708,6 +1710,7 @@ export type Database = {
           niches?: string[] | null
           photo_url?: string | null
           platforms?: string[] | null
+          public_listing?: boolean | null
           role?: string | null
           show_instagram?: boolean | null
           show_linkedin?: boolean | null
