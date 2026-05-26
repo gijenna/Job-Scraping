@@ -22,7 +22,7 @@ const isKelly = (e: Expert) =>
   (e?.full_name || "").toLowerCase().startsWith("kelly");
 
 const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps) => {
-  const [personSheet, setPersonSheet] = useState<Expert | null>(null);
+  
 
   // Kelly first, then everyone else
   const ordered = [...experts].sort((a, b) => {
