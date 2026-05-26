@@ -185,7 +185,7 @@ const EventOutsideDays26 = () => {
             sponsorExpertSlug={(industryExperts as any[]).find((e: any) => (e?.full_name || "").toLowerCase().startsWith("kelly"))?.slug}
             headerSlot={
               <ExpertSponsorCallout
-                kellySlug={(industryExperts as any[]).find((e: any) => (e?.full_name || "").toLowerCase().startsWith("kelly"))?.slug}
+                kellyExpert={(industryExperts as any[]).find((e: any) => (e?.full_name || "").toLowerCase().startsWith("kelly")) || null}
               />
             }
           />

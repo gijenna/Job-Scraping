@@ -1,21 +1,23 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Heart, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
-import { clearbitFromUrl, faviconFromUrl } from "@/lib/url-logo";
+import ExpertCardCompact from "@/components/experts/ExpertCardCompact";
+import { Expert } from "@/lib/expert-types";
+import edgesLogo from "@/assets/edges-first-logo.png";
+import nemoLogo from "@/assets/nemo-logo.webp";
 
 interface Props {
-  kellySlug?: string | null;
+  kellyExpert?: Expert | null;
   accentColor?: string;
 }
 
 const EDGES_URL = "https://edgesfirst.co/";
 const NEMO_URL = "https://www.nemoequipment.com/";
+const STARGAZE_URL =
+  "https://www.nemoequipment.com/products/stargaze-reclining-camp-chair?srsltid=AfmBOooCxukfQY4K6rdxrMAaOlplT0WGO3zluKCeakLezu11lq-eGcl3";
 
-const ExpertSponsorCallout = ({ kellySlug, accentColor = "#ED7660" }: Props) => {
-  const edgesLogo = clearbitFromUrl(EDGES_URL) || faviconFromUrl(EDGES_URL, 256);
-  const nemoLogo = clearbitFromUrl(NEMO_URL) || faviconFromUrl(NEMO_URL, 128);
-
+const ExpertSponsorCallout = ({ kellyExpert, accentColor = "#ED7660" }: Props) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -23,47 +25,37 @@ const ExpertSponsorCallout = ({ kellySlug, accentColor = "#ED7660" }: Props) => 
       viewport={{ once: true }}
       className="relative mb-10 rounded-3xl overflow-hidden border border-events-coral/40 bg-gradient-to-br from-events-coral/15 via-events-cream/5 to-transparent p-6 md:p-8 shadow-[0_0_60px_-15px_rgba(237,118,96,0.35)]"
     >
-      {/* Glow accent */}
       <span
         aria-hidden
         className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30"
         style={{ background: accentColor }}
       />
 
-      <div className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-        {/* Logo */}
-        <a
-          href={EDGES_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-events-cream flex items-center justify-center border-4 border-events-coral shadow-xl hover:scale-105 transition-transform"
-        >
-          {edgesLogo ? (
-            <img
-              src={edgesLogo}
-              alt="Edges First"
-              className="w-20 h-20 md:w-24 md:h-24 object-contain"
-              onError={(e) => {
-                const fb = faviconFromUrl(EDGES_URL, 256);
-                if (fb && (e.currentTarget as HTMLImageElement).src !== fb) {
-                  (e.currentTarget as HTMLImageElement).src = fb;
-                }
-              }}
-            />
-          ) : (
-            <span className="font-display font-bold text-events-teal text-xl">EF</span>
-          )}
-        </a>
-
-        <div className="flex-1 min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-events-coral/20 border border-events-coral/40 mb-3">
-            <Sparkles className="w-3 h-3 text-events-coral" />
-            <EditableText
-              settingKey="denver_expert_sponsor_eyebrow"
-              defaultText="Industry Expert Program Sponsor"
-              as="span"
-              className="text-[10px] md:text-xs font-display font-bold uppercase tracking-[0.2em] text-events-coral"
-            />
+      <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-center">
+        {/* Left: text + CTA */}
+        <div className="min-w-0">
+          <div className="flex items-center gap-4 mb-4">
+            <a
+              href={EDGES_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 hover:scale-105 transition-transform"
+            >
+              <img
+                src={edgesLogo}
+                alt="Edges First"
+                className="h-16 md:h-20 w-auto object-contain"
+              />
+            </a>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-events-coral/20 border border-events-coral/40">
+              <Sparkles className="w-3 h-3 text-events-coral" />
+              <EditableText
+                settingKey="denver_expert_sponsor_eyebrow"
+                defaultText="Industry Expert Program Sponsor"
+                as="span"
+                className="text-[10px] md:text-xs font-display font-bold uppercase tracking-[0.2em] text-events-coral"
+              />
+            </div>
           </div>
 
           <h3 className="font-headline font-bold text-xl md:text-2xl text-events-cream leading-tight mb-2">
@@ -82,7 +74,7 @@ const ExpertSponsorCallout = ({ kellySlug, accentColor = "#ED7660" }: Props) => 
             multiline
           />
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <EditableLink
               textKey="denver_expert_sponsor_cta_text"
               urlKey="denver_expert_sponsor_cta_url"
@@ -90,18 +82,32 @@ const ExpertSponsorCallout = ({ kellySlug, accentColor = "#ED7660" }: Props) => 
               defaultUrl={EDGES_URL}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-events-coral text-events-cream font-display font-bold text-sm uppercase tracking-wider hover:bg-events-coral/90 transition-colors shadow-lg"
             />
-            {kellySlug && (
-              <a
-                href={`#expert-${kellySlug}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-events-cream/40 text-events-cream font-display font-bold text-sm uppercase tracking-wider hover:border-events-cream hover:bg-events-cream/5 transition-colors"
-              >
-                <Heart className="w-4 h-4 fill-events-coral text-events-coral" />
-                Meet Kelly Below
-                <ArrowRight className="w-4 h-4" />
-              </a>
+            {kellyExpert && (
+              <EditableText
+                settingKey="denver_expert_sponsor_meet_kelly_text"
+                defaultText="→ Meet Kelly, right here."
+                as="span"
+                className="font-body italic text-events-cream/90 text-sm md:text-base"
+              />
             )}
           </div>
         </div>
+
+        {/* Right: Kelly's compact card with ring + badge */}
+        {kellyExpert && (
+          <div className="relative w-full md:w-72 mx-auto md:mx-0">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -inset-2 rounded-3xl ring-4 ring-events-coral/70 animate-pulse shadow-[0_0_40px_rgba(237,118,96,0.55)] z-0"
+            />
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-2.5 py-0.5 rounded-full bg-events-coral text-events-cream text-[10px] font-display font-bold uppercase tracking-wider shadow-lg whitespace-nowrap">
+              Made this possible
+            </span>
+            <div className="relative z-10">
+              <ExpertCardCompact expert={kellyExpert} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Nemo seats credit */}
@@ -110,20 +116,25 @@ const ExpertSponsorCallout = ({ kellySlug, accentColor = "#ED7660" }: Props) => 
           href={NEMO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 w-12 h-12 rounded-xl bg-events-cream flex items-center justify-center border border-events-cream/30 hover:scale-105 transition-transform"
+          className="shrink-0 hover:scale-105 transition-transform"
         >
-          {nemoLogo ? (
-            <img src={nemoLogo} alt="Nemo Equipment" className="w-9 h-9 object-contain" />
-          ) : (
-            <span className="font-display font-bold text-events-teal text-xs">NEMO</span>
-          )}
+          <img src={nemoLogo} alt="Nemo Equipment" className="h-12 w-auto object-contain" />
         </a>
-        <EditableText
-          settingKey="denver_nemo_seats_text"
-          defaultText="Seats provided by Nemo. Chat with experts in comfy Stargaze chairs."
-          as="p"
-          className="font-body text-events-cream/80 text-sm md:text-base"
-        />
+        <p className="font-body text-events-cream/80 text-sm md:text-base">
+          <EditableText
+            settingKey="denver_nemo_seats_lead"
+            defaultText="Seats provided by Nemo. Chat with experts in comfy "
+            as="span"
+          />
+          <EditableLink
+            textKey="denver_nemo_chair_text"
+            urlKey="denver_nemo_chair_url"
+            defaultText="Stargaze chairs"
+            defaultUrl={STARGAZE_URL}
+            className="font-semibold text-events-coral underline-offset-4 hover:underline"
+          />
+          <span>.</span>
+        </p>
       </div>
     </motion.div>
   );
