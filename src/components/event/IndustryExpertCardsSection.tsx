@@ -56,6 +56,8 @@ const IndustryExpertCardsSection = ({
   headlineKey = "experts_cards_headline",
   highlightExpert,
   registrationUrl,
+  sponsorExpertSlug,
+  headerSlot,
 }: IndustryExpertCardsSectionProps) => {
   const { settings } = useEventSettings(eventSlug);
   const { isAdmin } = useEditableTextContext();
