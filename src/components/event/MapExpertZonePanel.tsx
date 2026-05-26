@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
-import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import edgesLogo from "@/assets/edges-first-logo.png";
 
 interface MapExpertZonePanelProps {
@@ -24,7 +22,7 @@ const isKelly = (e: Expert) =>
   (e?.full_name || "").toLowerCase().startsWith("kelly");
 
 const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps) => {
-  const [personSheet, setPersonSheet] = useState<Expert | null>(null);
+  
 
   // Kelly first, then everyone else
   const ordered = [...experts].sort((a, b) => {
@@ -115,10 +113,7 @@ const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps)
                           </>
                         )}
                         <div className="relative z-[1]">
-                          <ExpertCardMinimal
-                            expert={expert}
-                            onClick={() => setPersonSheet(expert)}
-                          />
+                          <ExpertCardMinimal expert={expert} />
                         </div>
                       </div>
                     );
@@ -128,14 +123,6 @@ const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps)
             </div>
           </motion.div>
 
-          {personSheet && (
-            <ConnectPersonSheet
-              open
-              expert={personSheet}
-              subjectType="expert"
-              onClose={() => setPersonSheet(null)}
-            />
-          )}
         </motion.div>
       )}
     </AnimatePresence>
