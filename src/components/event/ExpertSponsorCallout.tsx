@@ -106,9 +106,9 @@ const ExpertSponsorCallout = ({ kellyExpert, accentColor = "#ED7660" }: Props) =
               <div className="relative">
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -inset-1.5 rounded-full ring-2 ring-events-coral/70 animate-pulse shadow-[0_0_25px_rgba(237,118,96,0.55)] z-0"
+                  className="pointer-events-none absolute top-[-4px] left-1/2 -translate-x-1/2 w-[88px] h-[88px] rounded-full ring-2 ring-events-coral/70 animate-pulse shadow-[0_0_25px_rgba(237,118,96,0.55)] z-0"
                 />
-                <span className="absolute -top-2 left-1/2 -translate-x-1/2 z-20 px-1.5 py-0.5 rounded-full bg-events-coral text-events-cream text-[8px] font-display font-bold uppercase tracking-wider shadow-lg whitespace-nowrap">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-1.5 py-0.5 rounded-full bg-events-coral text-events-cream text-[8px] font-display font-bold uppercase tracking-wider shadow-lg whitespace-nowrap">
                   Made this possible
                 </span>
                 <div className="relative z-10">
