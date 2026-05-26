@@ -1,50 +1,32 @@
-## Goal
-On `/outsidedays26` give Kelly Bleck / Edges First a prominent, hard-to-miss sponsor callout above the Industry Experts section, plus add a Nemo "seats provided by" credit. Add a glowing ring around Kelly's expert card so visitors find her immediately.
+## Update Edges First / Nemo sponsor callout
 
-## What to build
+**1. Use uploaded logos (not Clearbit)**
+- Copy `user-uploads://edges-first-logo_1-2.png` → `src/assets/edges-first-logo.png`
+- Copy `user-uploads://nemoLogo_600x_1.webp` → `src/assets/nemo-logo.webp`
+- In `ExpertSponsorCallout.tsx`, import both as ES6 modules and replace the `clearbitFromUrl`/`faviconFromUrl` lookup. Remove the cream background tile behind the Edges logo so the blue mark sits cleanly on the coral gradient (keep a soft container only if needed for contrast).
 
-### 1. New `ExpertSponsorCallout` component (mirrors the /connect treatment, but bigger and more visual)
-Renders a wide card directly above the Industry Experts grid in the existing `denver_industry_experts` section. Includes:
+**2. Link "Stargaze chairs" text**
+- Wrap the phrase "Stargaze chairs" inside the Nemo credit line in an anchor to:
+  `https://www.nemoequipment.com/products/stargaze-reclining-camp-chair?srsltid=AfmBOooCxukfQY4K6rdxrMAaOlplT0WGO3zluKCeakLezu11lq-eGcl3`
+- Since `EditableText` renders plain text, split the Nemo credit into: editable lead text ("Seats provided by Nemo. Chat with experts in comfy ") + an `EditableLink` for "Stargaze chairs" (textKey `denver_nemo_chair_text`, urlKey `denver_nemo_chair_url`) + trailing period.
 
-- Edges First logo (auto-fetched from edgesfirst.co via the existing logo fallback util) inside a coral ring.
-- Headline (editable): "Industry Experts brought to you by Edges First"
-- Sub-blurb (editable, defaults to Kelly's provided copy, condensed): "Edges First is a digital experience and web shop founded by Kelly Bleck, built for the outdoor + community-impact world. Kelly made this entire Industry Expert program possible — go say thanks and check out her work."
-- Two CTAs:
-  - "Visit edgesfirst.co" → https://edgesfirst.co/ (editable URL via EditableLink)
-  - "Meet Kelly" → scrolls to / pulses her expert card (uses existing `?expert=<slug>` highlight mechanism by setting the hash)
-- Secondary line with Nemo wordmark logo (auto from nemoequipment.com) + editable text: "Seats provided by Nemo — chat with experts in comfy Stargaze chairs."
+**3. Embed Kelly's card inside the sponsor box (Compact / type C)**
+- Add a new prop `kellyExpert?: Expert | null` to `ExpertSponsorCallout`.
+- Restructure the callout into a 2-column layout on md+ screens:
+  - Left column: logo + eyebrow + headline + blurb + CTAs (Visit edgesfirst.co, and the "Meet Kelly" text — see step 4).
+  - Right column: `<ExpertCardCompact expert={kellyExpert} />` wrapped in the same coral ring + "Made this possible" badge as currently shown on her main grid card.
+- On mobile, stack: text block → Kelly card → Nemo credit.
+- `EventOutsideDays26.tsx`: pass `kellyExpert={kellyExpert}` to the callout. Keep `sponsorExpertSlug` pass-through so her card in the main grid still gets the ring + badge (per request "keep her card in the main area too").
 
-All copy uses `EditableText` / `EditableLink` with new `setting_key`s so Jenna can edit later. Per project rule: all new copy must be admin-editable.
+**4. Replace "Meet Kelly Below" button with inline text pointer**
+- Remove the bordered button. Replace with a short inline sentence next to the "Visit edgesfirst.co" CTA, e.g. "→ Meet Kelly, right here." (editable via `denver_expert_sponsor_meet_kelly_text`). No anchor jump needed since her card is now in the same box. Drop the word "Below".
 
-### 2. Glow ring on Kelly's expert card
-Extend `IndustryExpertCardsSection` with an optional `sponsorExpertSlug` prop. When a card matches that slug, wrap it in an absolutely positioned glowing coral ring (animated subtle pulse, similar to the existing `featured-bubble-list-glow` style in ConnectHome). The glow is independent of the existing `highlightExpert` query-param effect, so it's always on for Kelly.
+**5. No other changes**
+- Keep all other experts' rendering, the main grid sponsor ring/badge on Kelly, and admin editability untouched.
+- No backend or schema changes.
 
-Pass `sponsorExpertSlug="kelly-bleck"` from `EventOutsideDays26.tsx` (the slug will be confirmed from the experts list at render time by matching `e.full_name` starting with "kelly" → take its `slug`, same pattern already used in `ConnectHome.tsx`).
-
-### 3. Wire-up in `EventOutsideDays26.tsx`
-- Compute `kellyExpert` and its slug from `industryExperts` (same pattern as ConnectHome).
-- Render the new `<ExpertSponsorCallout>` inside the `denver_industry_experts` section, immediately above the cards grid (handled by passing it as a `header` slot prop or by inserting it inside the section component — I'll add a `headerSlot?: ReactNode` prop to `IndustryExpertCardsSection` so order/styling stays consistent).
-- Pass `sponsorExpertSlug={kellyExpert?.slug}`.
-
-### 4. Editable keys created
-- `denver_expert_sponsor_headline`
-- `denver_expert_sponsor_blurb`
-- `denver_expert_sponsor_cta_text` / `denver_expert_sponsor_cta_url` (default https://edgesfirst.co/)
-- `denver_expert_sponsor_meet_kelly_text`
-- `denver_nemo_seats_text` (default "Seats provided by Nemo — chat with experts in comfy Stargaze chairs.")
-- `denver_nemo_url` (default https://www.nemoequipment.com/)
-
-No DB migration needed — `event_settings` rows are created on first edit, defaults render inline.
-
-## Files touched
-- `src/components/event/ExpertSponsorCallout.tsx` (new)
-- `src/components/event/IndustryExpertCardsSection.tsx` (add `sponsorExpertSlug` + `headerSlot` props, glow ring wrapper)
-- `src/pages/EventOutsideDays26.tsx` (compute kelly, render callout, pass slug)
-- `src/index.css` (one new `@keyframes` + class for the coral pulse ring if not reusable)
-
-## Optional extra visibility (your "any other way?" question)
-Two low-effort additions I'd recommend, but will skip unless you say yes:
-- (a) Add Edges First as a featured bubble in the "Meet the Teams" bubble cloud (it's already in `edgesFirstBrand` on the Connect side).
-- (b) Add a small "Site by Edges First" credit in the `SiteFooter` linking to edgesfirst.co.
-
-Say "yes do both" / "just a" / "just b" / "skip" and I'll include it in the build.
+### Files touched
+- `src/assets/edges-first-logo.png` (new, copied)
+- `src/assets/nemo-logo.webp` (new, copied)
+- `src/components/event/ExpertSponsorCallout.tsx` (refactor: imported logos, 2-col layout, embed `ExpertCardCompact`, inline Stargaze link, drop "Meet Kelly Below" button)
+- `src/pages/EventOutsideDays26.tsx` (pass `kellyExpert` prop)
