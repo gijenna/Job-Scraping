@@ -41,6 +41,8 @@ interface IndustryExpertCardsSectionProps {
   headlineKey?: string;
   highlightExpert?: string;
   registrationUrl?: string;
+  sponsorExpertSlug?: string | null;
+  headerSlot?: React.ReactNode;
 }
 
 const IndustryExpertCardsSection = ({
@@ -54,6 +56,8 @@ const IndustryExpertCardsSection = ({
   headlineKey = "experts_cards_headline",
   highlightExpert,
   registrationUrl,
+  sponsorExpertSlug,
+  headerSlot,
 }: IndustryExpertCardsSectionProps) => {
   const { settings } = useEventSettings(eventSlug);
   const { isAdmin } = useEditableTextContext();
@@ -107,19 +111,37 @@ const IndustryExpertCardsSection = ({
           <CardStylePicker eventSlug={eventSlug} settingKey="card_style_experts" label="Experts" onStyleChange={setCardStyle} />
         </div>
 
+        {headerSlot}
+
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleDragEnd(e, experts, setExperts)}>
           <SortableContext items={experts.map(e => e.id)} strategy={rectSortingStrategy}>
             <div className={getGridClass()}>
-              {experts.map((expert) => (
-                <div key={expert.id} id={`expert-${expert.slug}`} ref={highlightExpert === expert.slug ? highlightRef : undefined} className="relative">
-                  {isAdmin && (
-                    <div className="absolute -top-1 right-0 z-10">
-                      <AnchorCopyButton anchor={`expert-${expert.slug}`} label={expert.full_name} />
+              {experts.map((expert) => {
+                const isSponsor = !!sponsorExpertSlug && expert.slug === sponsorExpertSlug;
+                return (
+                  <div key={expert.id} id={`expert-${expert.slug}`} ref={highlightExpert === expert.slug ? highlightRef : undefined} className="relative">
+                    {isSponsor && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute -inset-2 rounded-3xl ring-4 ring-events-coral/70 animate-pulse shadow-[0_0_40px_rgba(237,118,96,0.55)] z-0"
+                      />
+                    )}
+                    {isSponsor && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-2.5 py-0.5 rounded-full bg-events-coral text-events-cream text-[10px] font-display font-bold uppercase tracking-wider shadow-lg whitespace-nowrap">
+                        Made this possible
+                      </span>
+                    )}
+                    {isAdmin && (
+                      <div className="absolute -top-1 right-0 z-10">
+                        <AnchorCopyButton anchor={`expert-${expert.slug}`} label={expert.full_name} />
+                      </div>
+                    )}
+                    <div className="relative z-10">
+                      <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
                     </div>
-                  )}
-                  <SortableCard expert={expert} renderCard={renderCard} isAdmin={isAdmin} />
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           </SortableContext>
         </DndContext>
