@@ -331,6 +331,11 @@ const EventOutsideDays26 = () => {
             onClose={() => setAutoExpertSheet(null)}
           />
         )}
+        <MapExpertZonePanel
+          open={expertZoneOpen}
+          onClose={() => setExpertZoneOpen(false)}
+          experts={industryExperts as any}
+        />
       </main>
     </EditableTextProvider>
   );
