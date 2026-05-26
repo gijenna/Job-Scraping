@@ -77,7 +77,10 @@ const MapBrandPanel = ({
       ]);
       if (!assignData) return;
       const { repsForBrand } = await import("@/lib/brand-rep-rollup");
+      // Only brand reps appear on brand cards. Industry experts live in the
+      // Industry Expert Zone, not under any brand.
       const reps = assignData
+        .filter((d: any) => d.expert_type === "brand_rep")
         .map((d: any) => d.industry_experts)
         .filter(Boolean);
       const matched = repsForBrand(brand as any, (brandData as any) || [], reps);
