@@ -15,6 +15,7 @@ import EventLogoTicker from "@/components/event/EventLogoTicker";
 import FeaturedTeamsSection from "@/components/event/FeaturedTeamsSection";
 import BrandRepCardsSection from "@/components/event/BrandRepCardsSection";
 import IndustryExpertCardsSection from "@/components/event/IndustryExpertCardsSection";
+import ExpertSponsorCallout from "@/components/event/ExpertSponsorCallout";
 import DenverFestivalPartner from "@/components/event/DenverFestivalPartner";
 import RegistrantDenverStats from "@/components/event/RegistrantDenverStats";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
