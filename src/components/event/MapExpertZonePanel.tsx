@@ -115,10 +115,7 @@ const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps)
                           </>
                         )}
                         <div className="relative z-[1]">
-                          <ExpertCardMinimal
-                            expert={expert}
-                            onClick={() => setPersonSheet(expert)}
-                          />
+                          <ExpertCardMinimal expert={expert} />
                         </div>
                       </div>
                     );
