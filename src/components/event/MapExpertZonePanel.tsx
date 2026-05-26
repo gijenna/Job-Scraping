@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Expert } from "@/lib/expert-types";
 import ExpertCardMinimal from "@/components/experts/ExpertCardMinimal";
-import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import edgesLogo from "@/assets/edges-first-logo.png";
 
 interface MapExpertZonePanelProps {
