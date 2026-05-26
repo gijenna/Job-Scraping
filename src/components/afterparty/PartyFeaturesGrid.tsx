@@ -351,8 +351,8 @@ const EntryCard = ({ entry }: { entry: PartnerRow }) => {
         <img
           src={logoSrc}
           alt={name}
-          className="w-7 h-7 rounded-full object-cover flex-shrink-0"
-          style={{ border: "1px solid rgba(245,230,211,0.15)" }}
+          className="w-7 h-7 rounded-full object-contain flex-shrink-0 p-0.5"
+          style={{ border: "1px solid rgba(245,230,211,0.15)", backgroundColor: CREAM }}
           onError={(e) => {
             const fav = faviconFromUrl(entry.website_url);
             const el = e.currentTarget as HTMLImageElement;
@@ -360,6 +360,7 @@ const EntryCard = ({ entry }: { entry: PartnerRow }) => {
           }}
         />
       )}
+
       <div className="min-w-0">
         {titleOrName && (
           <div style={{ color: CREAM, fontWeight: 600, fontSize: 15, lineHeight: 1.2 }}>
