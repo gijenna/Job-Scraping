@@ -1,60 +1,50 @@
 ## Goal
+On `/outsidedays26` give Kelly Bleck / Edges First a prominent, hard-to-miss sponsor callout above the Industry Experts section, plus add a Nemo "seats provided by" credit. Add a glowing ring around Kelly's expert card so visitors find her immediately.
 
-A reusable "parent company" relationship between brands. VF Corp is the first use case; the same fields will work for Helly Hansen → Musto, etc.
+## What to build
 
-## Behavior
+### 1. New `ExpertSponsorCallout` component (mirrors the /connect treatment, but bigger and more visual)
+Renders a wide card directly above the Industry Experts grid in the existing `denver_industry_experts` section. Includes:
 
-**Map view (Connect + Event Map):**
-- Parent (VF Corp) renders as a single, oversized table — bigger than normal brands, smaller than Outside.
-- Child brands with a parent_brand_id are hidden from the map (no separate bubble).
-- Child logos are rendered as a logo strip/cluster on the parent's table (visual activation).
-- Clicking anywhere on the parent table opens the **VF Corp** brand card.
+- Edges First logo (auto-fetched from edgesfirst.co via the existing logo fallback util) inside a coral ring.
+- Headline (editable): "Industry Experts brought to you by Edges First"
+- Sub-blurb (editable, defaults to Kelly's provided copy, condensed): "Edges First is a digital experience and web shop founded by Kelly Bleck, built for the outdoor + community-impact world. Kelly made this entire Industry Expert program possible — go say thanks and check out her work."
+- Two CTAs:
+  - "Visit edgesfirst.co" → https://edgesfirst.co/ (editable URL via EditableLink)
+  - "Meet Kelly" → scrolls to / pulses her expert card (uses existing `?expert=<slug>` highlight mechanism by setting the hash)
+- Secondary line with Nemo wordmark logo (auto from nemoequipment.com) + editable text: "Seats provided by Nemo — chat with experts in comfy Stargaze chairs."
 
-**List view (Connect):**
-- All brands (parent + every child) still appear as their own list entries — unchanged.
-- Clicking any child opens that child's brand card.
+All copy uses `EditableText` / `EditableLink` with new `setting_key`s so Jenna can edit later. Per project rule: all new copy must be admin-editable.
 
-**Brand card aggregation (who shows up):**
-- **Parent (VF Corp) card:** every rep + expert from VF Corp and all children.
-- **Primary child (The North Face):** same full list as parent (Devin included).
-- **Non-primary child (Vans, Smartwool, etc.):** full parent rollup **minus** anyone flagged as restricted.
-- A rep/expert can be flagged "restricted to specific brands" — they then only appear for the brands listed (e.g., Devin → TNF + VF Corp). No admin UI for now; I'll set these via DB when you tell me.
+### 2. Glow ring on Kelly's expert card
+Extend `IndustryExpertCardsSection` with an optional `sponsorExpertSlug` prop. When a card matches that slug, wrap it in an absolutely positioned glowing coral ring (animated subtle pulse, similar to the existing `featured-bubble-list-glow` style in ConnectHome). The glow is independent of the existing `highlightExpert` query-param effect, so it's always on for Kelly.
 
-**TNF cleanup:**
-- Remove all `industry_expert` assignments currently on The North Face (Daniel Mattie, etc.). Brand reps stay. Experts continue to appear in the Industry Expert activation.
+Pass `sponsorExpertSlug="kelly-bleck"` from `EventOutsideDays26.tsx` (the slug will be confirmed from the experts list at render time by matching `e.full_name` starting with "kelly" → take its `slug`, same pattern already used in `ConnectHome.tsx`).
 
-## Schema
+### 3. Wire-up in `EventOutsideDays26.tsx`
+- Compute `kellyExpert` and its slug from `industryExperts` (same pattern as ConnectHome).
+- Render the new `<ExpertSponsorCallout>` inside the `denver_industry_experts` section, immediately above the cards grid (handled by passing it as a `header` slot prop or by inserting it inside the section component — I'll add a `headerSlot?: ReactNode` prop to `IndustryExpertCardsSection` so order/styling stays consistent).
+- Pass `sponsorExpertSlug={kellyExpert?.slug}`.
 
-```sql
-ALTER TABLE event_map_brands
-  ADD COLUMN parent_brand_id uuid REFERENCES event_map_brands(id) ON DELETE SET NULL,
-  ADD COLUMN primary_child boolean NOT NULL DEFAULT false,
-  ADD COLUMN map_size text NOT NULL DEFAULT 'normal'; -- 'normal' | 'large' | 'xl'
+### 4. Editable keys created
+- `denver_expert_sponsor_headline`
+- `denver_expert_sponsor_blurb`
+- `denver_expert_sponsor_cta_text` / `denver_expert_sponsor_cta_url` (default https://edgesfirst.co/)
+- `denver_expert_sponsor_meet_kelly_text`
+- `denver_nemo_seats_text` (default "Seats provided by Nemo — chat with experts in comfy Stargaze chairs.")
+- `denver_nemo_url` (default https://www.nemoequipment.com/)
 
-ALTER TABLE event_map_brands
-  ADD COLUMN child_logo_ids uuid[] NOT NULL DEFAULT '{}',  -- ordered list of child brand ids to render on parent table
-  ADD COLUMN extra_logo_urls jsonb NOT NULL DEFAULT '[]'::jsonb; -- [{name,url,logo_url}] for ad-hoc uploads not tied to a brand row
+No DB migration needed — `event_settings` rows are created on first edit, defaults render inline.
 
-ALTER TABLE industry_experts
-  ADD COLUMN restricted_to_brand_names text[] DEFAULT NULL; -- if set, only show under these brand names (matched same way as current_company)
-```
+## Files touched
+- `src/components/event/ExpertSponsorCallout.tsx` (new)
+- `src/components/event/IndustryExpertCardsSection.tsx` (add `sponsorExpertSlug` + `headerSlot` props, glow ring wrapper)
+- `src/pages/EventOutsideDays26.tsx` (compute kelly, render callout, pass slug)
+- `src/index.css` (one new `@keyframes` + class for the coral pulse ring if not reusable)
 
-Using `restricted_to_brand_names` (text) so it works with the existing name/alias matching pattern rather than introducing FK coupling.
+## Optional extra visibility (your "any other way?" question)
+Two low-effort additions I'd recommend, but will skip unless you say yes:
+- (a) Add Edges First as a featured bubble in the "Meet the Teams" bubble cloud (it's already in `edgesFirstBrand` on the Connect side).
+- (b) Add a small "Site by Edges First" credit in the `SiteFooter` linking to edgesfirst.co.
 
-## Code changes
-
-1. **`useEventMapBrands` + types** — surface new columns.
-2. **`EventMapCanvas` / `MapBrandGroup`** — skip brands with `parent_brand_id`; render `map_size='xl'` larger; render child-logo strip on parent.
-3. **Connect map layer** (the customer-facing map on `/connect`) — same skip + size logic; click on parent → open parent's brand card.
-4. **Brand card data fetch** (CandidateProfileDrawer / brand card view) — when opening a brand:
-   - If parent → union of own + all children's reps/experts.
-   - If primary_child → same union.
-   - If child (non-primary) → union, filtered by `restricted_to_brand_names`.
-5. **Admin Event Map editor** — on a brand: pick parent, mark primary_child, choose map_size, multi-select child logos from existing brand rows, upload extra logos.
-6. **Data:** set VF Corp `map_size='xl'`, mark TNF + other VF brands with `parent_brand_id = VF`, TNF `primary_child=true`, add child_logo_ids. Set Devin's `restricted_to_brand_names = ['The North Face','VF Corp']`. Delete TNF industry_expert assignments.
-
-## Notes
-
-- No UI for the per-rep exclusion list yet — you tell me, I set it via DB.
-- Existing alias-based rep matching is unchanged; rollup happens on top of it.
-- Parent-company model is fully generic — works for any future parent/child group.
+Say "yes do both" / "just a" / "just b" / "skip" and I'll include it in the build.
