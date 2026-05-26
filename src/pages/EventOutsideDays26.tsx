@@ -205,7 +205,10 @@ const EventOutsideDays26 = () => {
             <EventMapCanvas
               brands={mapBrands}
               layouts={mapLayouts}
-              onClick={(b) => setSelectedMapBrand(b)}
+              onClick={(b) => {
+                if (b.name === "Industry Expert Zone") setExpertZoneOpen(true);
+                else setSelectedMapBrand(b);
+              }}
             />
           </div>
         </section>
