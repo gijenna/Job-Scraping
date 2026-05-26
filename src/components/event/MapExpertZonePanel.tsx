@@ -125,14 +125,6 @@ const MapExpertZonePanel = ({ open, onClose, experts }: MapExpertZonePanelProps)
             </div>
           </motion.div>
 
-          {personSheet && (
-            <ConnectPersonSheet
-              open
-              expert={personSheet}
-              subjectType="expert"
-              onClose={() => setPersonSheet(null)}
-            />
-          )}
         </motion.div>
       )}
     </AnimatePresence>
