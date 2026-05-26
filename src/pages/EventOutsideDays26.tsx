@@ -22,6 +22,7 @@ import AdminLogoManager from "@/components/event/AdminLogoManager";
 import OrderedSections, { SectionDef } from "@/components/event/OrderedSections";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
+import MapExpertZonePanel from "@/components/event/MapExpertZonePanel";
 import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import { useEventAttendees } from "@/hooks/useEventAttendees";
