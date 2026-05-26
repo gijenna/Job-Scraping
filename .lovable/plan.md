@@ -1,32 +1,25 @@
-## Update Edges First / Nemo sponsor callout
+## 1. Clicking the Expert Zone on the map opens an experts-only panel
 
-**1. Use uploaded logos (not Clearbit)**
-- Copy `user-uploads://edges-first-logo_1-2.png` → `src/assets/edges-first-logo.png`
-- Copy `user-uploads://nemoLogo_600x_1.webp` → `src/assets/nemo-logo.webp`
-- In `ExpertSponsorCallout.tsx`, import both as ES6 modules and replace the `clearbitFromUrl`/`faviconFromUrl` lookup. Remove the cream background tile behind the Edges logo so the blue mark sits cleanly on the coral gradient (keep a soft container only if needed for contrast).
+Currently when the Expert Zone tile is clicked, it opens `MapBrandPanel` (the same panel used for brand cards), which doesn't show the industry experts list.
 
-**2. Link "Stargaze chairs" text**
-- Wrap the phrase "Stargaze chairs" inside the Nemo credit line in an anchor to:
-  `https://www.nemoequipment.com/products/stargaze-reclining-camp-chair?srsltid=AfmBOooCxukfQY4K6rdxrMAaOlplT0WGO3zluKCeakLezu11lq-eGcl3`
-- Since `EditableText` renders plain text, split the Nemo credit into: editable lead text ("Seats provided by Nemo. Chat with experts in comfy ") + an `EditableLink` for "Stargaze chairs" (textKey `denver_nemo_chair_text`, urlKey `denver_nemo_chair_url`) + trailing period.
+**Change in `src/pages/EventOutsideDays26.tsx`:**
+- In the `EventMapCanvas` `onClick` handler, branch on `brand.name === "Industry Expert Zone"`. If it's the expert zone, open a new dedicated panel instead of `MapBrandPanel`.
 
-**3. Embed Kelly's card inside the sponsor box (Compact / type C)**
-- Add a new prop `kellyExpert?: Expert | null` to `ExpertSponsorCallout`.
-- Restructure the callout into a 2-column layout on md+ screens:
-  - Left column: logo + eyebrow + headline + blurb + CTAs (Visit edgesfirst.co, and the "Meet Kelly" text — see step 4).
-  - Right column: `<ExpertCardCompact expert={kellyExpert} />` wrapped in the same coral ring + "Made this possible" badge as currently shown on her main grid card.
-- On mobile, stack: text block → Kelly card → Nemo credit.
-- `EventOutsideDays26.tsx`: pass `kellyExpert={kellyExpert}` to the callout. Keep `sponsorExpertSlug` pass-through so her card in the main grid still gets the ring + badge (per request "keep her card in the main area too").
+**Create `src/components/event/MapExpertZonePanel.tsx`:**
+- A right-side sheet (same visual treatment as `MapBrandPanel`) that:
+  - Receives the same `industryExperts` array already loaded on the page (passed in as a prop — no extra fetch, identical to the "Industry Pros You'll Meet in Person" section).
+  - Header: "Industry Expert Zone" + small caption "Free thanks to Edges First" with the cream Edges First wordmark (reuse the asset/filter already used in `ExpertSponsorCallout`).
+  - Body: grid of `ExpertCardMinimal` cards (one per industry expert).
+  - Kelly's card (matched by `full_name` starting with "Kelly"): rendered first, with a coral ring `ring-2 ring-events-coral animate-pulse` and a small "Made this possible" badge — same glow treatment we already use in `ExpertSponsorCallout`.
 
-**4. Replace "Meet Kelly Below" button with inline text pointer**
-- Remove the bordered button. Replace with a short inline sentence next to the "Visit edgesfirst.co" CTA, e.g. "→ Meet Kelly, right here." (editable via `denver_expert_sponsor_meet_kelly_text`). No anchor jump needed since her card is now in the same box. Drop the word "Below".
+## 2. Remove industry experts from the VF (and other brand) card "Team" list
 
-**5. No other changes**
-- Keep all other experts' rendering, the main grid sponsor ring/badge on Kelly, and admin editability untouched.
-- No backend or schema changes.
+Daniel Mattie, Natalie Viragh, and Jessica Paul are stored as `expert_type = 'industry_expert'`, but `MapBrandPanel` matches reps by company name only and shows them under VF Corp.
 
-### Files touched
-- `src/assets/edges-first-logo.png` (new, copied)
-- `src/assets/nemo-logo.webp` (new, copied)
-- `src/components/event/ExpertSponsorCallout.tsx` (refactor: imported logos, 2-col layout, embed `ExpertCardCompact`, inline Stargaze link, drop "Meet Kelly Below" button)
-- `src/pages/EventOutsideDays26.tsx` (pass `kellyExpert` prop)
+**Change in `src/components/event/MapBrandPanel.tsx`:**
+- In the `fetchReps` effect, when mapping `assignData` to reps, keep only rows where `d.expert_type === 'brand_rep'`. Industry experts will no longer appear on any brand card — they belong in the Expert Zone only.
+
+## Out of scope
+
+- No DB/schema changes (the three people are already classified correctly as industry experts).
+- No changes to `MapExpertZone` admin tool, `MapExpertZoneGroup` rendering on the map, or the "Industry Pros You'll Meet in Person" section itself.
