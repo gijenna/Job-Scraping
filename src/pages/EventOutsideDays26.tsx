@@ -182,6 +182,12 @@ const EventOutsideDays26 = () => {
             headlineKey="denver_experts_headline"
             highlightExpert={highlightExpert}
             registrationUrl={TYPEFORM_DENVER}
+            sponsorExpertSlug={(industryExperts as any[]).find((e: any) => (e?.full_name || "").toLowerCase().startsWith("kelly"))?.slug}
+            headerSlot={
+              <ExpertSponsorCallout
+                kellySlug={(industryExperts as any[]).find((e: any) => (e?.full_name || "").toLowerCase().startsWith("kelly"))?.slug}
+              />
+            }
           />
       ),
     },
