@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Linkedin, X } from "lucide-react";
 import { Expert } from "@/lib/expert-types";
 import CompanyLogoWithFallback from "./CompanyLogoWithFallback";
@@ -21,10 +22,10 @@ const ExpertCardMinimal = ({ expert, autoExpand = false, className = "", disable
   }, [autoExpand, disableExpand]);
 
   if (expanded && !disableExpand) {
-    return (
+    return createPortal(
       <>
-        <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setExpanded(false)} />
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setExpanded(false)}>
+        <div className="fixed inset-0 bg-black/50 z-[100]" onClick={() => setExpanded(false)} />
+        <div className="fixed inset-0 z-[101] flex items-center justify-center p-4" onClick={() => setExpanded(false)}>
           <div className="relative w-full max-w-xs animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
             <button
               onClick={() => setExpanded(false)}
@@ -35,7 +36,8 @@ const ExpertCardMinimal = ({ expert, autoExpand = false, className = "", disable
             <ExpertCard expert={expert} expanded />
           </div>
         </div>
-      </>
+      </>,
+      document.body
     );
   }
 
