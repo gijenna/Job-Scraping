@@ -41,6 +41,8 @@ interface IndustryExpertCardsSectionProps {
   headlineKey?: string;
   highlightExpert?: string;
   registrationUrl?: string;
+  sponsorExpertSlug?: string | null;
+  headerSlot?: React.ReactNode;
 }
 
 const IndustryExpertCardsSection = ({
