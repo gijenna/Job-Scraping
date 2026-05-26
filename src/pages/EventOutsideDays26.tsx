@@ -22,6 +22,7 @@ import AdminLogoManager from "@/components/event/AdminLogoManager";
 import OrderedSections, { SectionDef } from "@/components/event/OrderedSections";
 import EventMapCanvas from "@/components/event/EventMapCanvas";
 import MapBrandPanel from "@/components/event/MapBrandPanel";
+import MapExpertZonePanel from "@/components/event/MapExpertZonePanel";
 import ConnectPersonSheet from "@/components/connect/ConnectPersonSheet";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import { useEventAttendees } from "@/hooks/useEventAttendees";
@@ -55,6 +56,7 @@ const EventOutsideDays26 = () => {
   const { layouts: mapLayouts } = useEventMapLayouts("denver26", "live");
   const [selectedMapBrand, setSelectedMapBrand] = useState<MapBrand | null>(null);
   const [autoExpertSheet, setAutoExpertSheet] = useState<any>(null);
+  const [expertZoneOpen, setExpertZoneOpen] = useState(false);
   // One-shot guard: after the share link auto-opens its target(s) once, we
   // strip the query params from the URL so closing the modal doesn't
   // re-trigger the auto-open and create a reopen loop.
@@ -203,7 +205,10 @@ const EventOutsideDays26 = () => {
             <EventMapCanvas
               brands={mapBrands}
               layouts={mapLayouts}
-              onClick={(b) => setSelectedMapBrand(b)}
+              onClick={(b) => {
+                if (b.name === "Industry Expert Zone") setExpertZoneOpen(true);
+                else setSelectedMapBrand(b);
+              }}
             />
           </div>
         </section>
@@ -326,6 +331,11 @@ const EventOutsideDays26 = () => {
             onClose={() => setAutoExpertSheet(null)}
           />
         )}
+        <MapExpertZonePanel
+          open={expertZoneOpen}
+          onClose={() => setExpertZoneOpen(false)}
+          experts={industryExperts as any}
+        />
       </main>
     </EditableTextProvider>
   );
