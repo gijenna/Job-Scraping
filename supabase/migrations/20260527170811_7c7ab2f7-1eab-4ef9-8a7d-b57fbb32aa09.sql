@@ -1,0 +1,1 @@
+UPDATE public.candidates SET first_name = btrim(first_name), last_name = btrim(last_name) WHERE first_name <> btrim(first_name) OR last_name <> btrim(last_name);
