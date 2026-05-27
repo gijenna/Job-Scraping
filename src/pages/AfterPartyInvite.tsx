@@ -187,8 +187,23 @@ const AfterPartyInvite = ({ presenter, venueShowcase }: AfterPartyInviteProps = 
     const found = attendees.find(
       (a) => slugify(a.full_name) === slugify(lookupName),
     );
-    if (found) setMe(found);
-    else alert("No card found for that name. Reach out to the organizer for an invite link.");
+    if (found) {
+      // If they've already RSVPd, send them straight to their /guests dashboard
+      // instead of the logged-in invite view.
+      const hasRsvpd = !!(found.photo_url || found.cartoon_url
+        || (found.niches?.length) || (found.looking_for?.length)
+        || (found.creator_types?.length) || (found.platforms?.length)
+        || (found as any).mind_blowing_fact || (found as any).company);
+      const slugForGuests = found.slug || slugify(found.full_name);
+      if (hasRsvpd) {
+        try { sessionStorage.setItem("afterparty:return_slug", slugForGuests); } catch {}
+        navigate(`/guests?slug=${slugForGuests}`, { replace: true });
+        return;
+      }
+      setMe(found);
+    } else {
+      alert("No card found for that name. Reach out to the organizer for an invite link.");
+    }
   };
 
   const handleSaved = async (id: string, isFirstSave?: boolean) => {
