@@ -4,9 +4,9 @@
 
 export type EventMode = "pre_event" | "during_event" | "post_event";
 
-// Denver Outside Days 26: Wed May 27, 2026, 4pm-7pm MT (UTC-6).
-export const EVENT_START = new Date("2026-05-27T16:00:00-06:00");
-export const POST_EVENT_START = new Date("2026-05-27T19:00:00-06:00");
+// Denver Outside Days 26: Thu May 28, 2026, 2:30pm-6pm MT (UTC-6).
+export const EVENT_START = new Date("2026-05-28T14:30:00-06:00");
+export const POST_EVENT_START = new Date("2026-05-28T18:00:00-06:00");
 
 export function getEventMode(now: Date = new Date()): EventMode {
   if (now < EVENT_START) return "pre_event";
