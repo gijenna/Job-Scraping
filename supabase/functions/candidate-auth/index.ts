@@ -151,15 +151,22 @@ Deno.serve(async (req) => {
         return jsonFor(req, { error: "first_name, last_name, phone_last_four required" }, { status: 400 });
       }
       const last4 = lastFour(phone_last_four);
+      const fn = String(first_name).trim();
+      const ln = String(last_name).trim();
+      // Use wildcard ilike so legacy rows with stray leading/trailing whitespace still match,
+      // then re-filter in JS by trimmed case-insensitive equality.
       const { data: rows, error } = await sb
         .from("candidates")
         .select("*")
-        .ilike("first_name", first_name.trim())
-        .ilike("last_name", last_name.trim());
+        .ilike("first_name", `%${fn}%`)
+        .ilike("last_name", `%${ln}%`);
       if (error) return jsonFor(req, { error: error.message }, { status: 500 });
-      // Normalize stored value with lastFour as well so legacy rows missing
-      // a leading zero (e.g. "217") still match against "0217".
-      const data = (rows || []).filter((c: any) => lastFour(String(c.phone_last_four ?? c.phone ?? "")) === last4);
+      const norm = (s: any) => String(s ?? "").trim().toLowerCase();
+      const data = (rows || []).filter((c: any) =>
+        norm(c.first_name) === fn.toLowerCase() &&
+        norm(c.last_name) === ln.toLowerCase() &&
+        lastFour(String(c.phone_last_four ?? c.phone ?? "")) === last4
+      );
       if (!data || data.length === 0) return jsonFor(req, { session: null });
       if (data.length > 1) return jsonFor(req, { ambiguous: true });
 
