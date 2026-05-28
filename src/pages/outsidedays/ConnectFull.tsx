@@ -367,7 +367,7 @@ const ConnectFull = () => {
                   {c.photo_url ? <img src={c.photo_url} alt="You" className="w-full h-full object-cover" /> : <EditableText settingKey="full_no_photo_label" defaultText="No photo" as="span" />}
                 </div>
                 <div className="space-y-1">
-                  <input ref={photoInput} type="file" accept="image/*" capture="user" hidden
+                  <input ref={photoInput} type="file" accept="image/*" hidden
                     onChange={(e) => e.target.files?.[0] && upload("photo", e.target.files[0])} />
                   <Button type="button" onClick={() => photoInput.current?.click()} className="bg-events-coral hover:bg-events-coral/90 text-events-cream">
                     {c.photo_url ? <EditableText settingKey="full_replace_photo_button" defaultText="Replace photo" as="span" /> : <EditableText settingKey="full_upload_photo_button" defaultText="Upload photo" as="span" />}
