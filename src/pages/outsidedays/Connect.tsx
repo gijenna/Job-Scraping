@@ -92,6 +92,7 @@ const Connect = () => {
               toast={toast}
               onDone={() => nav("/outsidedays26/connect/home")}
               onBack={() => setMode("branch")}
+              onGoToQuick={() => setMode("quick")}
             />
           )}
           {mode === "done" && (
@@ -236,7 +237,7 @@ const CompletionScreen = ({ candidate, onAddRest, onSkip }: any) => (
   </div>
 );
 
-const Returning = ({ toast, onDone, onBack }: any) => {
+const Returning = ({ toast, onDone, onBack, onGoToQuick }: any) => {
   const [first, setFirst] = useState(""); const [last, setLast] = useState(""); const [last4, setLast4] = useState("");
   const [busy, setBusy] = useState(false);
   const submit = async () => {
@@ -248,7 +249,8 @@ const Returning = ({ toast, onDone, onBack }: any) => {
       } else if (r?.session) {
         onDone(r.session.subject);
       } else {
-        toast({ title: "Account not found", description: "Hit Back and tap \"Quick start\" with the same email you used before. We'll recognize it and log you in.", variant: "destructive" });
+        toast({ title: "No account yet", description: "Sending you to Quick start to make one. If you used a different email before, we'll recognize it and log you in.", });
+        onGoToQuick?.();
       }
     } catch (e: any) { toast({ title: "Sign-in failed", description: e.message, variant: "destructive" }); }
     setBusy(false);
