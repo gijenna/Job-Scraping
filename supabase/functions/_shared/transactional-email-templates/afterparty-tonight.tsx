@@ -9,6 +9,8 @@ import {
   Link,
   Preview,
   Section,
+  Row,
+  Column,
   Text,
   Button,
   Hr,
@@ -40,6 +42,7 @@ const AfterPartyTonightEmail = ({
 }: AfterPartyTonightProps) => {
   const first = (recipientName || "there").split(/\s+/)[0];
   const numLabel = attendeeNumber ? `#${attendeeNumber}` : "your number";
+  const top5 = matches.slice(0, 5);
 
   return (
     <Html lang="en" dir="ltr">
@@ -54,8 +57,8 @@ const AfterPartyTonightEmail = ({
 
           <Text style={text}>
             The after-party starts at <strong>7:30pm tonight</strong> at{" "}
-            <strong>{VENUE_NAME}</strong> —{" "}
-            <Link href={MAPS_URL} style={mapsLink}>
+            <strong>{VENUE_NAME}</strong>,{" "}
+            <Link href={MAPS_URL} style={inlineLink}>
               {VENUE_ADDR}
             </Link>
             .
@@ -80,18 +83,15 @@ const AfterPartyTonightEmail = ({
           <Hr style={hr} />
 
           <Text style={sectionLabel}>Your matches are:</Text>
-          {matches.length ? (
-            <Section style={matchesGrid}>
-              {matches.map((m, i) => (
-                <Section key={i} style={miniMatch}>
-                  <Text style={miniNumber}>#{m.number}</Text>
-                  <Text style={miniName}>
-                    {m.name}{" "}
-                    <span style={miniRole}>· {m.role}</span>
-                  </Text>
-                </Section>
+          {top5.length ? (
+            <Row style={{ margin: "0 0 14px" }}>
+              {top5.map((m, i) => (
+                <Column key={i} style={pillCol} align="center">
+                  <Text style={pillNumber}>#{m.number}</Text>
+                  <Text style={pillName}>{(m.name || "").split(/\s+/)[0]}</Text>
+                </Column>
               ))}
-            </Section>
+            </Row>
           ) : (
             <Text style={muted}>
               Look for your name tag matches at the door, and ask the Basecamp team to point you to who you should meet.
@@ -106,12 +106,29 @@ const AfterPartyTonightEmail = ({
 
           <Heading style={h2}>Don't feel like networking?</Heading>
           <Text style={text}>
-            We've got Make Your Own Jewellery, a Recovery Zone, Aura Photography, a tubular light show, DJ Homie, live painting, and drinks courtesy of Sap's, Best Day, Strive Soda, Telluride Brewing, Westbound &amp; Down, Brez, Ska Brewing, 4 Noses &amp; Rod &amp; Hammer.
+            We've got Make Your Own Jewellery, a Recovery Zone, Aura Photography, a tubular light show, DJ Homie, live painting, and drinks courtesy of{" "}
+            <Link href="https://www.sapsoriginal.com/" style={inlineLink}>Sap's</Link>,{" "}
+            <Link href="https://bestdaybrewing.com/" style={inlineLink}>Best Day</Link>,{" "}
+            <Link href="https://strivesoda.com/" style={inlineLink}>Strive Soda</Link>,{" "}
+            <Link href="https://www.telluridebrewingco.com/" style={inlineLink}>Telluride Brewing</Link>,{" "}
+            <Link href="https://www.westboundanddown.com/" style={inlineLink}>Westbound &amp; Down</Link>,{" "}
+            <Link href="https://www.drinkbrez.com/" style={inlineLink}>Brez</Link>,{" "}
+            <Link href="https://www.skabrewing.com/" style={inlineLink}>Ska Brewing</Link>,{" "}
+            <Link href="https://www.4nosesbrewing.com/" style={inlineLink}>4 Noses</Link> &amp;{" "}
+            <Link href="https://www.rodandhammer.com/" style={inlineLink}>Rod &amp; Hammer</Link>.
           </Text>
 
           <Section style={swagBox}>
             <Text style={swagText}>
-              🎁 The first 50 guests get swag bags with gifts from deuter, ing outdoors, Nite Ize, hydrapak, Creepers Socks, PAKA, Puffin Drinkware, and Oakley.
+              🎁 The first 50 guests get swag bags with gifts from{" "}
+              <Link href="https://www.deuter.com/" style={swagLink}>deuter</Link>,{" "}
+              <Link href="https://www.ingoutdoors.com/" style={swagLink}>ing outdoors</Link>,{" "}
+              <Link href="https://niteize.com/" style={swagLink}>Nite Ize</Link>,{" "}
+              <Link href="https://hydrapak.com/" style={swagLink}>hydrapak</Link>,{" "}
+              <Link href="https://creeperssocks.com/" style={swagLink}>creepers socks</Link>,{" "}
+              <Link href="https://www.pakaapparel.com/" style={swagLink}>PAKA</Link>,{" "}
+              <Link href="https://puffindrinkware.com/" style={swagLink}>Puffin drinkware</Link>, and{" "}
+              <Link href="https://www.oakley.com/" style={swagLink}>Oakley</Link>.
             </Text>
           </Section>
 
@@ -122,15 +139,60 @@ const AfterPartyTonightEmail = ({
             We're giving away a TON of prizes. Be on site at <strong>9pm</strong> to win:
           </Text>
           <Section style={raffleBox}>
-            <Text style={raffleItem}>• Down Anorak 1.0 / Founder's Batch — @temi.earth</Text>
-            <Text style={raffleItem}>• Gen 3 Speaker — @turtleboxaudio</Text>
-            <Text style={raffleItem}>• 3 year membership — @ing_outdoors</Text>
-            <Text style={raffleItem}>• Sugoi Chair (Olive), Glacier Bundle, Kura Soft Cooler 10, Pera Moe Fire Pit, 1Pull Dome Tent + Kiso Awning Pole, Kamaboko Tent (Small) — @dod_outdoors</Text>
-            <Text style={raffleItem}>• 15 hard cooler or 24 hard cooler — @yeti</Text>
-            <Text style={raffleItem}>• Stargaze Chairs — @nemoequipment</Text>
-            <Text style={raffleItem}>• Backtrack Chairs — @kumaoutdoor</Text>
-            <Text style={raffleItem}>• String lights — @niteize</Text>
-            <Text style={raffleItem}>• Outside Days tickets — @getoutside</Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://temiearth.com/products/the-anorak" style={inlineLink}>Down Anorak 1.0 / Founder's Batch</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/temi.earth/" style={inlineLink}>@temi.earth</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://turtleboxaudio.com/products/turtlebox-speaker-gen-3" style={inlineLink}>Gen 3 Speaker</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/turtleboxaudio/" style={inlineLink}>@turtleboxaudio</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://www.ingoutdoors.com/products/3-year-membership" style={inlineLink}>3 year membership</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/ing_outdoors/" style={inlineLink}>@ing_outdoors</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://dodoutdoors.com/collections/gear" style={inlineLink}>Sugoi Chair (Olive), Glacier Bundle, Kura Soft Cooler 10, Pera Moe Fire Pit, 1Pull Dome Tent + Kiso Awning Pole, Kamaboko Tent (Small)</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/dod_outdoors/" style={inlineLink}>@dod_outdoors</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://www.yeti.com/coolers/hard-coolers" style={inlineLink}>15 hard cooler or 24 hard cooler</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/yeti/" style={inlineLink}>@yeti</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://www.nemoequipment.com/collections/stargaze" style={inlineLink}>Stargaze Chairs</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/nemoequipment/" style={inlineLink}>@nemoequipment</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://www.kumaoutdoorgear.com/product/backtrack-chair-74" style={inlineLink}>Backtrack Chairs</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/kumaoutdoor/" style={inlineLink}>@kumaoutdoor</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://niteize.com/radiant-shine-line-multi-color-led-string-lights" style={inlineLink}>String lights</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/niteize/" style={inlineLink}>@niteize</Link>
+            </Text>
+            <Text style={raffleItem}>
+              •{" "}
+              <Link href="https://www.outsideonline.com/outside-days-tickets" style={inlineLink}>Outside Days tickets</Link>
+              {" "}from{" "}
+              <Link href="https://www.instagram.com/getoutside/" style={inlineLink}>@getoutside</Link>
+            </Text>
           </Section>
 
           <Text style={signoff}>{'<3'} Oakley, Popfly, Basecamp, &amp; Outside</Text>
@@ -160,7 +222,7 @@ export const template = {
     matches: [
       { number: 17, name: "Alex Rivera", role: "brand" },
       { number: 23, name: "Sam Chen", role: "creator" },
-      { number: 8, name: "Patagonia (Patagonia)", role: "brand" },
+      { number: 8, name: "Patagonia", role: "brand" },
       { number: 41, name: "Jordan Lee", role: "creator" },
       { number: 12, name: "Maya Patel", role: "creator" },
     ],
@@ -183,29 +245,35 @@ const numberBadge = {
 };
 const text = { fontSize: "15px", color: "#333", lineHeight: "1.55", margin: "0 0 16px" };
 const muted = { fontSize: "14px", color: "#777", lineHeight: "1.5", margin: "0 0 16px", fontStyle: "italic" as const };
-const mapsLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
+const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const checklistBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "16px 20px", margin: "8px 0 20px" };
 const checklistTitle = { fontSize: "14px", fontWeight: 700, color: "#19363B", margin: "0 0 8px", textTransform: "uppercase" as const, letterSpacing: "0.5px" };
 const checklistItem = { fontSize: "14px", color: "#19363B", lineHeight: "1.5", margin: "0 0 6px" };
 const hr = { borderColor: "#eee", margin: "20px 0" };
 const sectionLabel = { fontSize: "14px", fontWeight: 700, color: "#19363B", margin: "0 0 10px", textTransform: "uppercase" as const, letterSpacing: "0.5px" };
-const matchesGrid = { margin: "0 0 16px" };
-const miniMatch = {
-  padding: "8px 12px",
-  backgroundColor: "#fafafa",
-  borderLeft: "3px solid #E1B624",
+const pillCol = {
+  padding: "8px 4px",
+  backgroundColor: "#F5E6D3",
+  borderTop: "3px solid #E1B624",
   borderRadius: "6px",
-  margin: "0 0 6px",
+  width: "20%",
+  verticalAlign: "top" as const,
 };
-const miniNumber = {
-  display: "inline-block",
-  fontWeight: "bold",
+const pillNumber = {
+  fontWeight: 700,
   color: "#E1B624",
   margin: "0 0 2px",
-  fontSize: "12px",
+  fontSize: "13px",
+  textAlign: "center" as const,
 };
-const miniName = { fontSize: "14px", fontWeight: 600, color: "#19363B", margin: 0 };
-const miniRole = { fontSize: "11px", color: "#888", textTransform: "uppercase" as const, letterSpacing: "0.5px", fontWeight: 400 };
+const pillName = {
+  fontSize: "13px",
+  fontWeight: 600,
+  color: "#19363B",
+  margin: 0,
+  textAlign: "center" as const,
+  lineHeight: "1.2",
+};
 const button = {
   backgroundColor: "#ED7660",
   color: "#ffffff",
@@ -219,6 +287,7 @@ const button = {
 };
 const swagBox = { backgroundColor: "#19363B", borderRadius: "12px", padding: "16px 20px", margin: "12px 0" };
 const swagText = { fontSize: "14px", color: "#F5E6D3", lineHeight: "1.55", margin: 0 };
+const swagLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const raffleBox = { margin: "8px 0 16px" };
 const raffleItem = { fontSize: "13px", color: "#333", lineHeight: "1.5", margin: "0 0 4px" };
 const signoff = { fontSize: "15px", color: "#19363B", fontWeight: 600, margin: "20px 0 0" };
