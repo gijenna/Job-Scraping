@@ -7,6 +7,7 @@ import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { connectionsList } from "@/lib/connect-session";
 import ConnectionSummary from "@/components/connect/ConnectionSummary";
 import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
+import { EVENT_START, POST_EVENT_START } from "@/lib/connect-event-mode";
 
 const relativeTime = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
@@ -19,9 +20,8 @@ const relativeTime = (iso: string) => {
   return `${d}d ago`;
 };
 
-// Event window in UTC. Pre = before doors. At = doors-to-close. Post = after.
-const EVENT_START = new Date("2026-05-28T21:00:00Z"); // May 28, 2026 3:00 PM MT
-const EVENT_END = new Date("2026-05-29T01:00:00Z");   // May 28, 2026 7:00 PM MT
+// Event window. Pre = before doors (2:30pm MT). At = doors to 6pm MT. Post = after.
+const EVENT_END = POST_EVENT_START;
 
 const timingFor = (iso: string): "pre" | "at" | "post" => {
   const t = new Date(iso).getTime();
