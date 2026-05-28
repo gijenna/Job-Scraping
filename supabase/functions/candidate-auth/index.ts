@@ -118,9 +118,12 @@ Deno.serve(async (req) => {
       }
       if ((body.the_hook as string).length > 100) return jsonFor(req, { error: "The Hook must be 100 chars or less" }, { status: 400 });
 
-      // Reject if email already taken
-      const { data: existing } = await sb.from("candidates").select("id").ilike("email", body.email).maybeSingle();
-      if (existing) return jsonFor(req, { error: "Email already registered. Try signing in." }, { status: 409 });
+      // If this email already has an account, sign them in rather than erroring.
+      const { data: existingFull } = await sb.from("candidates").select("*").ilike("email", body.email).maybeSingle();
+      if (existingFull) {
+        const token = await createSession("candidate", existingFull.id);
+        return jsonFor(req, { session: { subject_type: "candidate", subject: existingFull }, token, recovered: true }, { headers: setSessionCookieHeader(token) });
+      }
 
       const insertable: any = {};
       for (const k of [
