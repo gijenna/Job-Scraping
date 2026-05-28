@@ -30,6 +30,8 @@ const Connect = () => {
   const [mode, setMode] = useState<Mode>("branch");
   const [createdCandidate, setCreatedCandidate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const eventMode = useEventMode();
+  const isEventLive = eventMode === "during_event" || eventMode === "post_event";
 
   useEffect(() => {
     (async () => {
@@ -57,17 +59,31 @@ const Connect = () => {
           {mode === "branch" && (
             <>
               <ValueProp />
-              <BranchPicker
-                onFull={() => nav("/outsidedays26/connect/full")}
-                onEssentials={() => setMode("choice")}
-                onReturning={() => setMode("returning")}
-              />
+              {isEventLive ? (
+                <EventDayBranchPicker
+                  onQuick={() => setMode("quick")}
+                  onReturning={() => setMode("returning")}
+                />
+              ) : (
+                <BranchPicker
+                  onFull={() => nav("/outsidedays26/connect/full")}
+                  onEssentials={() => setMode("choice")}
+                  onReturning={() => setMode("returning")}
+                />
+              )}
             </>
           )}
           {mode === "choice" && (
             <NewSignup
               toast={toast}
               onDone={(c: any) => { setCreatedCandidate(c); setMode("done"); }}
+              onBack={() => setMode("branch")}
+            />
+          )}
+          {mode === "quick" && (
+            <QuickAtEventSignup
+              toast={toast}
+              onDone={(c: any) => { setCreatedCandidate(c); nav("/outsidedays26/connect/home"); }}
               onBack={() => setMode("branch")}
             />
           )}
@@ -90,6 +106,7 @@ const Connect = () => {
     </EditableTextProvider>
   );
 };
+
 
 const ValueProp = () => {
   const bullets = [
