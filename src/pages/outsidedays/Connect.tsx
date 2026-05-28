@@ -92,6 +92,7 @@ const Connect = () => {
               toast={toast}
               onDone={() => nav("/outsidedays26/connect/home")}
               onBack={() => setMode("branch")}
+              onGoToQuick={() => setMode("quick")}
             />
           )}
           {mode === "done" && (
