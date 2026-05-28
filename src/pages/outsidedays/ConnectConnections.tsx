@@ -20,9 +20,8 @@ const relativeTime = (iso: string) => {
   return `${d}d ago`;
 };
 
-// Event window in UTC. Pre = before doors. At = doors-to-close. Post = after.
-const EVENT_START = new Date("2026-05-28T21:00:00Z"); // May 28, 2026 3:00 PM MT
-const EVENT_END = new Date("2026-05-29T01:00:00Z");   // May 28, 2026 7:00 PM MT
+// Event window. Pre = before doors (2:30pm MT). At = doors to 6pm MT. Post = after.
+const EVENT_END = POST_EVENT_START;
 
 const timingFor = (iso: string): "pre" | "at" | "post" => {
   const t = new Date(iso).getTime();
