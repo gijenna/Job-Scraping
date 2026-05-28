@@ -7,6 +7,7 @@ import ImpersonationGate from "@/components/connect/ImpersonationGate";
 import { connectionsList } from "@/lib/connect-session";
 import ConnectionSummary from "@/components/connect/ConnectionSummary";
 import ConnectBottomNav, { ConnectTopNav } from "@/components/connect/ConnectBottomNav";
+import { EVENT_START, POST_EVENT_START } from "@/lib/connect-event-mode";
 
 const relativeTime = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
