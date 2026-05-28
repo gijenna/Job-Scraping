@@ -121,13 +121,13 @@ const AfterPartyTonightEmail = ({
           <Section style={swagBox}>
             <Text style={swagText}>
               🎁 The first 50 guests get swag bags with gifts from{" "}
-              <Link href="https://www.deuter.com/" style={swagLink}>deuter</Link>,{" "}
-              <Link href="https://www.ingoutdoors.com/" style={swagLink}>ing outdoors</Link>,{" "}
+              <Link href="https://www.deuter.com/" style={swagLink}>Deuter</Link>,{" "}
+              <Link href="https://ingoutdoors.com/" style={swagLink}>ING Outdoors</Link>,{" "}
               <Link href="https://niteize.com/" style={swagLink}>Nite Ize</Link>,{" "}
-              <Link href="https://hydrapak.com/" style={swagLink}>hydrapak</Link>,{" "}
-              <Link href="https://creeperssocks.com/" style={swagLink}>creepers socks</Link>,{" "}
+              <Link href="https://hydrapak.com/" style={swagLink}>HydraPak</Link>,{" "}
+              <Link href="https://creeperssocks.com/" style={swagLink}>Creepers Socks</Link>,{" "}
               <Link href="https://www.pakaapparel.com/" style={swagLink}>PAKA</Link>,{" "}
-              <Link href="https://puffindrinkware.com/" style={swagLink}>Puffin drinkware</Link>, and{" "}
+              <Link href="https://puffindrinkware.com/" style={swagLink}>Puffin Drinkware</Link>, and{" "}
               <Link href="https://www.oakley.com/" style={swagLink}>Oakley</Link>.
             </Text>
           </Section>
