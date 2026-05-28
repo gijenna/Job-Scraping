@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
 
-    if (!top5.length) { skipped++; continue }
+    // Send even if no matches — template handles empty array gracefully.
 
     const slug = me.slug || slugify(me.full_name)
     const guestsUrl = `${PUBLISHED_BASE}/guests?slug=${slug}`
