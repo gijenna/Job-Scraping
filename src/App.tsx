@@ -95,6 +95,7 @@ const App = () => (
             }
           />
           <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
+          <Route path="/checkin" element={<Checkin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/experts/afterparty" element={<AdminAfterParty />} />
