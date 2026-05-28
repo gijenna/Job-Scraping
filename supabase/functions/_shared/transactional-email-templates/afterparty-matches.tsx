@@ -147,3 +147,7 @@ const button = {
 };
 const footer = { fontSize: "13px", color: "#888", margin: "24px 0 0" };
 const fineprint = { fontSize: "11px", color: "#999", lineHeight: "1.5", margin: "16px 0 0", fontStyle: "italic" as const };
+const venueBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "14px 18px", margin: "12px 0 4px" };
+const venueTitle = { fontSize: "13px", fontWeight: 700, color: "#19363B", margin: "0 0 4px", textTransform: "uppercase" as const, letterSpacing: "0.5px" };
+const venueAddr = { fontSize: "14px", color: "#19363B", margin: 0 };
+const mapsLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
