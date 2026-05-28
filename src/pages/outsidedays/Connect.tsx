@@ -244,11 +244,11 @@ const Returning = ({ toast, onDone, onBack }: any) => {
     try {
       const r: any = await candidateLogin({ first_name: first, last_name: last, phone_last_four: last4 });
       if (r?.ambiguous) {
-        toast({ title: "Multiple accounts found", description: "Please contact jenna@wearetheoutdoorindustry.com to resolve.", variant: "destructive" });
+        toast({ title: "Multiple accounts found", description: "Text Jenna at 970-685-1115 and she'll merge them in 30 seconds.", variant: "destructive" });
       } else if (r?.session) {
         onDone(r.session.subject);
       } else {
-        toast({ title: "Account not found", description: "We couldn't find that account. Try signing up?", variant: "destructive" });
+        toast({ title: "Account not found", description: "Hit Back and tap \"Quick start\" with the same email you used before. We'll recognize it and log you in.", variant: "destructive" });
       }
     } catch (e: any) { toast({ title: "Sign-in failed", description: e.message, variant: "destructive" }); }
     setBusy(false);
