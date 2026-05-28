@@ -27,6 +27,7 @@ import { useEventMode, MODE_HEADER_COPY, MODE_INTRO_COPY } from "@/lib/connect-e
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import { calcProfileCompleteness } from "@/lib/profile-completeness";
+import CandidateFAQ from "@/components/connect/CandidateFAQ";
 
 const EVENT_SLUG = "denver26";
 const EXPERT_ZONE_NAME = "Industry Expert Zone";
@@ -140,6 +141,7 @@ const ConnectHome = () => {
                 </button>
               ))}
             </div>
+            <CandidateFAQ />
             <Button
               variant="ghost"
               size="sm"
