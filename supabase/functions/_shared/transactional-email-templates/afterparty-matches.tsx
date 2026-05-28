@@ -6,6 +6,7 @@ import {
   Head,
   Heading,
   Html,
+  Link,
   Preview,
   Section,
   Text,
@@ -13,6 +14,10 @@ import {
   Hr,
 } from "npm:@react-email/components@0.0.22";
 import type { TemplateEntry } from "./registry.ts";
+
+const VENUE_NAME = "Oakley RiNo";
+const VENUE_ADDR = "2660 Walnut St Ste #3, Denver, CO 80205";
+const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Oakley+RiNo+2660+Walnut+St+Denver+CO+80205";
 
 interface MatchItem {
   number: number;
