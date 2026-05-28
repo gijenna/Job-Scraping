@@ -85,6 +85,14 @@ const main = {
   fontFamily: "'Josefin Sans', Arial, sans-serif",
 };
 const container = { padding: "32px 28px", maxWidth: "560px" };
+const eyebrow = {
+  fontSize: "11px",
+  fontWeight: 600,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase" as const,
+  color: "#ED7660",
+  margin: "0 0 10px",
+};
 const h1 = { fontSize: "26px", fontWeight: 600, color: "#19363B", margin: "0 0 18px" };
 const h2 = { fontSize: "18px", fontWeight: 600, color: "#19363B", margin: "24px 0 10px" };
 const text = { fontSize: "15px", color: "#19363B", lineHeight: 1.6, margin: "0 0 14px" };
