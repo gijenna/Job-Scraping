@@ -48,6 +48,7 @@ import AfterPartyInvite from "./pages/AfterPartyInvite";
 import AfterPartyInterest from "./pages/AfterPartyInterest";
 import AfterPartySplashClip from "./pages/AfterPartySplashClip";
 import GuestList from "./pages/GuestList";
+import Checkin from "./pages/Checkin";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
