@@ -6,6 +6,7 @@ import {
   Head,
   Heading,
   Html,
+  Link,
   Preview,
   Section,
   Text,
@@ -13,6 +14,10 @@ import {
   Hr,
 } from "npm:@react-email/components@0.0.22";
 import type { TemplateEntry } from "./registry.ts";
+
+const VENUE_NAME = "Oakley RiNo";
+const VENUE_ADDR = "2660 Walnut St Ste #3, Denver, CO 80205";
+const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Oakley+RiNo+2660+Walnut+St+Denver+CO+80205";
 
 interface MatchItem {
   number: number;
@@ -47,6 +52,13 @@ const AfterPartyMatchesEmail = ({
         <Heading style={h1}>Hey {recipientName} 👋</Heading>
         {attendeeNumber && <Text style={numberBadge}>You're attendee #{attendeeNumber}</Text>}
         <Text style={text}>5 new connections are waiting. Here are their numbers, look out for them tonight.</Text>
+
+        <Section style={venueBox}>
+          <Text style={venueTitle}>Tonight at {VENUE_NAME} · 7:30pm</Text>
+          <Text style={venueAddr}>
+            <Link href={MAPS_URL} style={mapsLink}>{VENUE_ADDR}</Link>
+          </Text>
+        </Section>
 
         <Hr style={hr} />
 
@@ -135,3 +147,7 @@ const button = {
 };
 const footer = { fontSize: "13px", color: "#888", margin: "24px 0 0" };
 const fineprint = { fontSize: "11px", color: "#999", lineHeight: "1.5", margin: "16px 0 0", fontStyle: "italic" as const };
+const venueBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "14px 18px", margin: "12px 0 4px" };
+const venueTitle = { fontSize: "13px", fontWeight: 700, color: "#19363B", margin: "0 0 4px", textTransform: "uppercase" as const, letterSpacing: "0.5px" };
+const venueAddr = { fontSize: "14px", color: "#19363B", margin: 0 };
+const mapsLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
