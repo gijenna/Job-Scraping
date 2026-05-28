@@ -53,6 +53,13 @@ const AfterPartyMatchesEmail = ({
         {attendeeNumber && <Text style={numberBadge}>You're attendee #{attendeeNumber}</Text>}
         <Text style={text}>5 new connections are waiting. Here are their numbers, look out for them tonight.</Text>
 
+        <Section style={venueBox}>
+          <Text style={venueTitle}>Tonight at {VENUE_NAME} · 7:30pm</Text>
+          <Text style={venueAddr}>
+            <Link href={MAPS_URL} style={mapsLink}>{VENUE_ADDR}</Link>
+          </Text>
+        </Section>
+
         <Hr style={hr} />
 
         {matches.map((m, i) => (
