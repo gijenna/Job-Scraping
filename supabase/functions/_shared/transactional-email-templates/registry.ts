@@ -10,6 +10,7 @@ export interface TemplateEntry {
 }
 
 import { template as afterpartyMatches } from './afterparty-matches.tsx'
+import { template as afterpartyTonight } from './afterparty-tonight.tsx'
 import { template as afterpartyInvite } from './afterparty-invite.tsx'
 import { template as afterpartyPin } from './afterparty-pin.tsx'
 import { template as afterpartyRsvpConfirmation } from './afterparty-rsvp-confirmation.tsx'
@@ -22,6 +23,7 @@ import { template as feedbackFromUser } from './feedback-from-user.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-matches': afterpartyMatches,
+  'afterparty-tonight': afterpartyTonight,
   'afterparty-invite': afterpartyInvite,
   'afterparty-pin': afterpartyPin,
   'afterparty-rsvp-confirmation': afterpartyRsvpConfirmation,
