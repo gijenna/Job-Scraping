@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateSignupLookup, candidateSignupCreate, candidateLogin,
+  candidateSignupCreateBasics,
   candidateUploadSignedUrl, candidateAttachUpload, candidateUpdateProfile,
 } from "@/lib/connect-session";
 import { POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD } from "@/lib/taxonomies";
@@ -17,8 +18,11 @@ import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 import RegisterReminderBanner from "@/components/connect/RegisterReminderBanner";
+import { useEventMode } from "@/lib/connect-event-mode";
+import { supabase } from "@/integrations/supabase/client";
 
-type Mode = "branch" | "choice" | "new" | "returning" | "done";
+type Mode = "branch" | "choice" | "new" | "returning" | "quick" | "done";
+
 
 const Connect = () => {
   const nav = useNavigate();
@@ -26,6 +30,8 @@ const Connect = () => {
   const [mode, setMode] = useState<Mode>("branch");
   const [createdCandidate, setCreatedCandidate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const eventMode = useEventMode();
+  const isEventLive = eventMode === "during_event" || eventMode === "post_event";
 
   useEffect(() => {
     (async () => {
@@ -53,17 +59,31 @@ const Connect = () => {
           {mode === "branch" && (
             <>
               <ValueProp />
-              <BranchPicker
-                onFull={() => nav("/outsidedays26/connect/full")}
-                onEssentials={() => setMode("choice")}
-                onReturning={() => setMode("returning")}
-              />
+              {isEventLive ? (
+                <EventDayBranchPicker
+                  onQuick={() => setMode("quick")}
+                  onReturning={() => setMode("returning")}
+                />
+              ) : (
+                <BranchPicker
+                  onFull={() => nav("/outsidedays26/connect/full")}
+                  onEssentials={() => setMode("choice")}
+                  onReturning={() => setMode("returning")}
+                />
+              )}
             </>
           )}
           {mode === "choice" && (
             <NewSignup
               toast={toast}
               onDone={(c: any) => { setCreatedCandidate(c); setMode("done"); }}
+              onBack={() => setMode("branch")}
+            />
+          )}
+          {mode === "quick" && (
+            <QuickAtEventSignup
+              toast={toast}
+              onDone={(c: any) => { setCreatedCandidate(c); nav("/outsidedays26/connect/home"); }}
               onBack={() => setMode("branch")}
             />
           )}
@@ -86,6 +106,7 @@ const Connect = () => {
     </EditableTextProvider>
   );
 };
+
 
 const ValueProp = () => {
   const bullets = [
@@ -243,7 +264,172 @@ const Returning = ({ toast, onDone, onBack }: any) => {
   );
 };
 
+const EventDayBranchPicker = ({ onQuick, onReturning }: any) => (
+  <div className="space-y-5">
+    <div className="text-center space-y-2">
+      <EditableText
+        settingKey="eventday_branch_title"
+        defaultText="Welcome in. Are you new or returning?"
+        as="h1"
+        className="font-afterparty text-3xl md:text-4xl text-events-cream"
+      />
+      <EditableText
+        settingKey="eventday_branch_subtitle"
+        defaultText="Pick one to get into the map fast."
+        as="p"
+        className="font-body text-sm text-events-cream/70"
+      />
+    </div>
+
+    <button
+      onClick={onQuick}
+      className="w-full text-left bg-events-coral hover:bg-events-coral/90 text-events-cream rounded-2xl p-5 transition-colors shadow-lg"
+    >
+      <div className="text-3xl mb-1">⚡</div>
+      <EditableText
+        settingKey="eventday_quick_heading"
+        defaultText="I'm at the event, get me in quick"
+        as="h2"
+        className="font-display text-xl mb-1"
+      />
+      <EditableText
+        settingKey="eventday_quick_subtext"
+        defaultText="Just name, email, and phone. Takes 30 seconds and drops you on the map. You'll finish your profile later so brands can actually find you."
+        as="p"
+        className="text-sm font-body text-events-cream/90"
+      />
+    </button>
+
+    <button
+      onClick={onReturning}
+      className="w-full text-left bg-events-cream/10 hover:bg-events-cream/15 border border-events-cream/20 text-events-cream rounded-2xl p-5 transition-colors"
+    >
+      <div className="text-3xl mb-1">🔑</div>
+      <EditableText
+        settingKey="eventday_login_heading"
+        defaultText="Log in"
+        as="h2"
+        className="font-display text-xl mb-1"
+      />
+      <EditableText
+        settingKey="eventday_login_subtext"
+        defaultText="You already signed up. First name, last name, last 4 of your phone."
+        as="p"
+        className="text-sm font-body text-events-cream/80"
+      />
+    </button>
+  </div>
+);
+
+const QuickAtEventSignup = ({ toast, onDone, onBack }: any) => {
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const valid =
+    first.trim() &&
+    last.trim() &&
+    /\S+@\S+\.\S+/.test(email) &&
+    phone.replace(/[^0-9]/g, "").length >= 10;
+
+  const submit = async () => {
+    if (!valid) return;
+    setBusy(true);
+    try {
+      const { session } = await candidateSignupCreateBasics({
+        first_name: first.trim(),
+        last_name: last.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        brand_contact_consent: true,
+      });
+      try {
+        supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "connect-quick-signup-complete-profile",
+            recipientEmail: email.trim(),
+            idempotencyKey: `connect-quick-signup-${session.subject.id}`,
+            templateData: {
+              first_name: first.trim(),
+              profile_url: "https://basecampoutdoorevents.com/outsidedays26/connect/profile",
+            },
+          },
+        }).catch(() => {});
+      } catch {}
+      onDone(session.subject);
+    } catch (e: any) {
+      toast({
+        title: "Sign up failed",
+        description: e?.message || "Please try again.",
+        variant: "destructive",
+      });
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4 bg-events-cream/5 border border-events-cream/10 rounded-2xl p-5">
+      <div className="space-y-2">
+        <EditableText
+          settingKey="quick_atevent_title"
+          defaultText="Quick start"
+          as="h2"
+          className="font-afterparty text-2xl text-events-cream"
+        />
+        <EditableText
+          settingKey="quick_atevent_explainer"
+          defaultText="We only need your name, email, and phone to get you on the map right now. We'll email you tonight so you can fill in the rest. Brand recruiters search by field, focus, and what you're open to, so a complete profile is what gets you found after today."
+          as="p"
+          className="font-body text-sm text-events-cream/75 leading-relaxed"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="First name">
+          <Input value={first} onChange={(e) => setFirst(e.target.value)} autoComplete="given-name" />
+        </Field>
+        <Field label="Last name">
+          <Input value={last} onChange={(e) => setLast(e.target.value)} autoComplete="family-name" />
+        </Field>
+      </div>
+      <Field label="Email">
+        <Input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          inputMode="email"
+        />
+      </Field>
+      <Field label="Phone number">
+        <Input
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          autoComplete="tel"
+          inputMode="tel"
+          placeholder="(555) 123-4567"
+        />
+      </Field>
+
+      <Button
+        onClick={submit}
+        disabled={busy || !valid}
+        className="w-full h-12 bg-events-coral hover:bg-events-coral/90 text-events-cream"
+      >
+        {busy ? "Getting you in..." : "Get me in"}
+      </Button>
+      <Button variant="ghost" onClick={onBack} className="w-full text-events-cream/60">
+        Back
+      </Button>
+    </div>
+  );
+};
+
 const TOTAL_STEPS = 7; // 0..6: name -> phone -> career -> poachable -> field -> hook -> photo
+
 
 const NewSignup = ({ toast, onDone, onBack }: any) => {
   const [step, setStep] = useState(0);
