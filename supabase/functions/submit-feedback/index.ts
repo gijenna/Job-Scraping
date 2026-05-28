@@ -70,18 +70,13 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Send email via existing app-email pipeline. The email function only needs
-  // a valid gateway JWT to enter, then it uses its own service credentials
-  // internally. In this project the service secret is not always a gateway JWT,
-  // so use the anon/publishable JWT here to avoid UNAUTHORIZED_INVALID_JWT_FORMAT.
-  const sendRes = await fetch(`${SUPABASE_URL}/functions/v1/send-transactional-email`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${ANON_KEY}`,
-      apikey: ANON_KEY,
-    },
-    body: JSON.stringify({
+  // Send email via existing app-email pipeline using the service-role
+  // Supabase client. supabase.functions.invoke() attaches the correct
+  // gateway JWT automatically, avoiding UNAUTHORIZED_INVALID_JWT_FORMAT
+  // errors that occur when SUPABASE_ANON_KEY is the new non-JWT
+  // publishable key (sb_publishable_...).
+  const { error: sendErr } = await supabase.functions.invoke('send-transactional-email', {
+    body: {
       templateName: 'feedback-from-user',
       recipientEmail: 'jenna@wearetheoutdoorindustry.com',
       idempotencyKey: `feedback-${crypto.randomUUID()}`,
@@ -95,12 +90,11 @@ Deno.serve(async (req) => {
         message,
         screenshotUrl,
       },
-    }),
+    },
   })
 
-  if (!sendRes.ok) {
-    const errText = await sendRes.text().catch(() => '')
-    console.error('send-transactional-email failed', sendRes.status, errText)
+  if (sendErr) {
+    console.error('send-transactional-email failed', sendErr)
     return new Response(JSON.stringify({ error: 'Failed to send feedback' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
   }
 
