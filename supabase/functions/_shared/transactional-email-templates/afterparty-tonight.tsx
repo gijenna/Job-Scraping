@@ -121,13 +121,13 @@ const AfterPartyTonightEmail = ({
           <Section style={swagBox}>
             <Text style={swagText}>
               🎁 The first 50 guests get swag bags with gifts from{" "}
-              <Link href="https://www.deuter.com/" style={swagLink}>deuter</Link>,{" "}
-              <Link href="https://www.ingoutdoors.com/" style={swagLink}>ing outdoors</Link>,{" "}
+              <Link href="https://www.deuter.com/" style={swagLink}>Deuter</Link>,{" "}
+              <Link href="https://ingoutdoors.com/" style={swagLink}>ING Outdoors</Link>,{" "}
               <Link href="https://niteize.com/" style={swagLink}>Nite Ize</Link>,{" "}
-              <Link href="https://hydrapak.com/" style={swagLink}>hydrapak</Link>,{" "}
-              <Link href="https://creeperssocks.com/" style={swagLink}>creepers socks</Link>,{" "}
+              <Link href="https://hydrapak.com/" style={swagLink}>HydraPak</Link>,{" "}
+              <Link href="https://creeperssocks.com/" style={swagLink}>Creepers Socks</Link>,{" "}
               <Link href="https://www.pakaapparel.com/" style={swagLink}>PAKA</Link>,{" "}
-              <Link href="https://puffindrinkware.com/" style={swagLink}>Puffin drinkware</Link>, and{" "}
+              <Link href="https://puffindrinkware.com/" style={swagLink}>Puffin Drinkware</Link>, and{" "}
               <Link href="https://www.oakley.com/" style={swagLink}>Oakley</Link>.
             </Text>
           </Section>
@@ -141,55 +141,60 @@ const AfterPartyTonightEmail = ({
           <Section style={raffleBox}>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://temiearth.com/products/the-anorak" style={inlineLink}>Down Anorak 1.0 / Founder's Batch</Link>
+              <Link href="https://www.kickstarter.com/projects/gabrielpattersonphd/temi-dwn-anr-hdy-lmt001" style={inlineLink}>Down Anorak 1.0 / Founder's Batch</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/temi.earth/" style={inlineLink}>@temi.earth</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://turtleboxaudio.com/products/turtlebox-speaker-gen-3" style={inlineLink}>Gen 3 Speaker</Link>
+              <Link href="https://turtleboxaudio.com/products/turtlebox-speaker-original" style={inlineLink}>Turtlebox Original Speaker</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/turtleboxaudio/" style={inlineLink}>@turtleboxaudio</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://www.ingoutdoors.com/products/3-year-membership" style={inlineLink}>3 year membership</Link>
+              <Link href="https://ingoutdoors.com/" style={inlineLink}>3 year membership</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/ing_outdoors/" style={inlineLink}>@ing_outdoors</Link>
             </Text>
             <Text style={raffleItem}>
-              •{" "}
-              <Link href="https://dodoutdoors.com/collections/gear" style={inlineLink}>Sugoi Chair (Olive), Glacier Bundle, Kura Soft Cooler 10, Pera Moe Fire Pit, 1Pull Dome Tent + Kiso Awning Pole, Kamaboko Tent (Small)</Link>
-              {" "}from{" "}
-              <Link href="https://www.instagram.com/dod_outdoors/" style={inlineLink}>@dod_outdoors</Link>
+              • From{" "}
+              <Link href="https://www.instagram.com/dod_outdoors/" style={inlineLink}>@dod_outdoors</Link>:{" "}
+              <Link href="https://dodoutdoors.com/collections/camp-furniture/outdoor-chair" style={inlineLink}>Sugoi Chair (Olive)</Link>,{" "}
+              <Link href="https://dodoutdoors.com/products/glacier-bundle" style={inlineLink}>Glacier Bundle</Link>,{" "}
+              <Link href="https://dodoutdoors.com/products/kura-soft-cooler-11" style={inlineLink}>Kura Soft Cooler 11</Link>,{" "}
+              <Link href="https://dodoutdoors.com/products/pera-moe-tabletop-fire-pit" style={inlineLink}>Pera Moe Fire Pit</Link>,{" "}
+              <Link href="https://dodoutdoors.com/products/the-one-touch-dome-tent" style={inlineLink}>One Touch Dome Tent</Link>, and{" "}
+              <Link href="https://dodoutdoors.com/products/kamaboko-super-tent-s" style={inlineLink}>Kamaboko Super Tent (S)</Link>
+            </Text>
+            <Text style={raffleItem}>
+              • From{" "}
+              <Link href="https://www.instagram.com/yeti/" style={inlineLink}>@yeti</Link>:{" "}
+              <Link href="https://www.yeti.com/coolers/hard-coolers/roadie/10033010000.html" style={inlineLink}>Roadie 15 hard cooler</Link>
+              {" "}or{" "}
+              <Link href="https://www.yeti.com/coolers/hard-coolers/roadie/10022200002.html" style={inlineLink}>Roadie 24 hard cooler</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://www.yeti.com/coolers/hard-coolers" style={inlineLink}>15 hard cooler or 24 hard cooler</Link>
-              {" "}from{" "}
-              <Link href="https://www.instagram.com/yeti/" style={inlineLink}>@yeti</Link>
-            </Text>
-            <Text style={raffleItem}>
-              •{" "}
-              <Link href="https://www.nemoequipment.com/collections/stargaze" style={inlineLink}>Stargaze Chairs</Link>
+              <Link href="https://www.rei.com/product/242354/nemo-stargaze-evo-x-folding-reclining-camp-chair" style={inlineLink}>Stargaze Chairs</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/nemoequipment/" style={inlineLink}>@nemoequipment</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://www.kumaoutdoorgear.com/product/backtrack-chair-74" style={inlineLink}>Backtrack Chairs</Link>
+              <Link href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/" style={inlineLink}>Backtrack Chairs</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/kumaoutdoor/" style={inlineLink}>@kumaoutdoor</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://niteize.com/radiant-shine-line-multi-color-led-string-lights" style={inlineLink}>String lights</Link>
+              <Link href="https://niteize.com/radiant-starlit-rechargeable-lantern-plus-string-light-disc-o" style={inlineLink}>Radiant Starlit Rechargeable Lantern + String Lights</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/niteize/" style={inlineLink}>@niteize</Link>
             </Text>
             <Text style={raffleItem}>
               •{" "}
-              <Link href="https://www.outsideonline.com/outside-days-tickets" style={inlineLink}>Outside Days tickets</Link>
+              <Link href="https://bit.ly/outside-days" style={inlineLink}>Outside Days tickets</Link>
               {" "}from{" "}
               <Link href="https://www.instagram.com/getoutside/" style={inlineLink}>@getoutside</Link>
             </Text>
