@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   candidateMe, candidateSignupLookup, candidateSignupCreate, candidateLogin,
+  candidateSignupCreateBasics,
   candidateUploadSignedUrl, candidateAttachUpload, candidateUpdateProfile,
 } from "@/lib/connect-session";
 import { POACHABLE_STATUS, CAREER_STAGE, FIELDS, FOCUSES_BY_FIELD } from "@/lib/taxonomies";
@@ -17,8 +18,11 @@ import EditableText from "@/components/EditableText";
 import HookExamples, { HOOK_EXAMPLE_PLACEHOLDER } from "@/components/connect/HookExamples";
 import BrandContactConsentCheckbox from "@/components/connect/BrandContactConsentCheckbox";
 import RegisterReminderBanner from "@/components/connect/RegisterReminderBanner";
+import { useEventMode } from "@/lib/connect-event-mode";
+import { supabase } from "@/integrations/supabase/client";
 
-type Mode = "branch" | "choice" | "new" | "returning" | "done";
+type Mode = "branch" | "choice" | "new" | "returning" | "quick" | "done";
+
 
 const Connect = () => {
   const nav = useNavigate();
