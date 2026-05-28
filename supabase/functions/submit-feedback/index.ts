@@ -76,6 +76,12 @@ Deno.serve(async (req) => {
   // errors that occur when SUPABASE_ANON_KEY is the new non-JWT
   // publishable key (sb_publishable_...).
   const { error: sendErr } = await supabase.functions.invoke('send-transactional-email', {
+    headers: {
+      // Gateway has verify_jwt=true and validates the Authorization
+      // header as a JWT. The publishable key (apikey header) is no
+      // longer a JWT, so we MUST pass the service-role JWT explicitly.
+      Authorization: `Bearer ${SERVICE_KEY}`,
+    },
     body: {
       templateName: 'feedback-from-user',
       recipientEmail: 'jenna@wearetheoutdoorindustry.com',
