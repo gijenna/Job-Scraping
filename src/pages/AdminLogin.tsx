@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-const ALLOWED_DOMAINS = ["@wearetheoutdoorindustry.com"];
+const ALLOWED_DOMAINS = ["@wearetheoutdoorindustry.com", "@popfly.com"];
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");

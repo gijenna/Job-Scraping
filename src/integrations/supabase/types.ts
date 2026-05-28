@@ -48,6 +48,8 @@ export type Database = {
           brands_wishlist: string | null
           budget_range: string | null
           cartoon_url: string | null
+          checked_in_at: string | null
+          checked_in_by: string | null
           company: string | null
           company_role: string | null
           company_url: string | null
@@ -87,6 +89,8 @@ export type Database = {
           brands_wishlist?: string | null
           budget_range?: string | null
           cartoon_url?: string | null
+          checked_in_at?: string | null
+          checked_in_by?: string | null
           company?: string | null
           company_role?: string | null
           company_url?: string | null
@@ -126,6 +130,8 @@ export type Database = {
           brands_wishlist?: string | null
           budget_range?: string | null
           cartoon_url?: string | null
+          checked_in_at?: string | null
+          checked_in_by?: string | null
           company?: string | null
           company_role?: string | null
           company_url?: string | null

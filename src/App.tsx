@@ -48,6 +48,7 @@ import AfterPartyInvite from "./pages/AfterPartyInvite";
 import AfterPartyInterest from "./pages/AfterPartyInterest";
 import AfterPartySplashClip from "./pages/AfterPartySplashClip";
 import GuestList from "./pages/GuestList";
+import Checkin from "./pages/Checkin";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 import LinkTracker from "./components/LinkTracker";
@@ -94,6 +95,7 @@ const App = () => (
             }
           />
           <Route path="/guests" element={<GuestList venueShowcase="oakley-rino" />} />
+          <Route path="/checkin" element={<Checkin />} />
           <Route path="/admin/experts" element={<AdminExperts />} />
           <Route path="/admin/event-map" element={<EventMapAdmin />} />
           <Route path="/experts/afterparty" element={<AdminAfterParty />} />
