@@ -671,7 +671,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
             <input
               id="afterparty-photo-input"
               type="file"
-              accept="image/*"
+              accept="image/*,.heic,.heif"
               hidden
               onChange={handlePhoto}
             />
