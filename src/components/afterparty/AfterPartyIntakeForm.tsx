@@ -231,12 +231,24 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
   };
 
   const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const raw = e.target.files?.[0];
+    if (!raw) return;
     setUploading(true);
-    const ext = file.name.split(".").pop();
+    let file: File;
+    try {
+      const { processPhotoForUpload } = await import("@/lib/process-photo");
+      file = await processPhotoForUpload(raw);
+    } catch (err: any) {
+      toast({ title: "Couldn't read that photo", description: err?.message || "Try a JPG or PNG.", variant: "destructive" });
+      setUploading(false);
+      return;
+    }
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
     const path = `afterparty/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from("event-photos").upload(path, file);
+    const { error } = await supabase.storage.from("event-photos").upload(path, file, {
+      upsert: true,
+      contentType: file.type || "image/jpeg",
+    });
     if (error) {
       toast({ title: "Upload failed", description: error.message, variant: "destructive" });
       setUploading(false);
