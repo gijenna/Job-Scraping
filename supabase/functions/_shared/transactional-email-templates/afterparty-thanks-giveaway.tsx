@@ -32,7 +32,9 @@ const DEFAULT_PHOTOS = [
   `${ASSET_BASE}/photo-1-crowd.jpg`,
   `${ASSET_BASE}/photo-2-sunglasses.jpg`,
   `${ASSET_BASE}/photo-3-scream.jpg`,
+  `${ASSET_BASE}/photo-7-chair.jpg`,
   `${ASSET_BASE}/photo-4-saps.jpg`,
+  `${ASSET_BASE}/photo-8-neon.jpg`,
   `${ASSET_BASE}/photo-5-dj.jpg`,
   `${ASSET_BASE}/photo-6-outside.jpg`,
 ];
@@ -79,9 +81,9 @@ const SponsorChip = ({ s }: { s: Sponsor }) => (
 
 const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
-  const photos = (eventPhotos && eventPhotos.length > 0 ? eventPhotos : DEFAULT_PHOTOS).slice(0, 6);
-  const row1 = photos.slice(0, 3);
-  const row2 = photos.slice(3, 6);
+  const photos = (eventPhotos && eventPhotos.length > 0 ? eventPhotos : DEFAULT_PHOTOS).slice(0, 8);
+  const row1 = photos.slice(0, 4);
+  const row2 = photos.slice(4, 8);
 
   return (
     <Html lang="en" dir="ltr">
@@ -164,38 +166,37 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
-            <Text style={promoIntro}>
-              Get secret early access to{" "}
-              <Link href="https://basecampjobs.com/" style={inlineLink}>
-                Basecampjobs.com
-              </Link>
-              !
-            </Text>
-            <Text style={promoLine}>
-              · Find your dream job with code <strong style={code}>FindYourCalling</strong>
-            </Text>
-            <Text style={promoLine}>
-              · Post gigs for free with code <strong style={code}>HireSmarter</strong>
-            </Text>
-            <Text style={promoLine}>
-              · Make content collabs way easier as an outdoor creator or marketer with{" "}
-              <Link href="https://www.popfly.com/" style={inlineLink}>
-                Popfly.com
-              </Link>
-              .
-            </Text>
-
-            {/* subtle brand logos */}
-            <Row style={{ marginTop: "14px" }}>
-              <Column align="center" style={{ padding: "0 8px" }}>
+            <Row>
+              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
                 <Link href="https://basecampmatch.com/">
-                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={84} height={42} style={brandLogo} />
+                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={92} height={46} style={brandLogo} />
+                </Link>
+                <div style={{ height: "10px" }} />
+                <Link href="https://www.popfly.com/">
+                  <Img src={POPFLY_LOGO} alt="Popfly" width={92} height={46} style={brandLogo} />
                 </Link>
               </Column>
-              <Column align="center" style={{ padding: "0 8px" }}>
-                <Link href="https://www.popfly.com/">
-                  <Img src={POPFLY_LOGO} alt="Popfly" width={84} height={42} style={brandLogo} />
-                </Link>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={promoIntro}>
+                  Get secret early access to{" "}
+                  <Link href="https://basecampjobs.com/" style={inlineLink}>
+                    Basecampjobs.com
+                  </Link>
+                  !
+                </Text>
+                <Text style={promoLine}>
+                  · Find your dream job with code <strong style={code}>FindYourCalling</strong>
+                </Text>
+                <Text style={promoLine}>
+                  · Post gigs for free with code <strong style={code}>HireSmarter</strong>
+                </Text>
+                <Text style={promoLine}>
+                  · Make content collabs way easier as an outdoor creator or marketer with{" "}
+                  <Link href="https://www.popfly.com/" style={inlineLink}>
+                    Popfly.com
+                  </Link>
+                  .
+                </Text>
               </Column>
             </Row>
           </Section>
@@ -279,8 +280,8 @@ const h3 = { fontSize: "13px", fontWeight: 700, color: "#19363B", margin: "16px 
 const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 14px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
-const photoCol = { padding: "0 3px", width: "33.33%", verticalAlign: "top" as const };
-const photoImg = { width: "100%", maxWidth: "150px", height: "auto", borderRadius: "6px", display: "block" };
+const photoCol = { padding: "0 3px", width: "25%", verticalAlign: "top" as const };
+const photoImg = { width: "100%", maxWidth: "130px", height: "auto", borderRadius: "6px", display: "block" };
 const chairImg = {
   width: "100%",
   maxWidth: "160px",
