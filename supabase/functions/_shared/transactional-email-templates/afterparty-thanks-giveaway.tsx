@@ -93,7 +93,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
         <Container style={container}>
           <Heading style={h1}>One last giveaway 👀</Heading>
           <Text style={text}>
-            Hey {first}, we looooved seeing you at our Oakley after-party! You definitely brought the hype.
+            Hey {first}, we looooved seeing you at our Oakley after-party! Thanks for your energy.
           </Text>
 
           {/* PHOTOS */}
