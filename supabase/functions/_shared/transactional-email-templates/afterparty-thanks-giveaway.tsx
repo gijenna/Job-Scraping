@@ -281,8 +281,8 @@ const h3 = { fontSize: "13px", fontWeight: 700, color: "#19363B", margin: "16px 
 const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 14px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
-const photoCol = { padding: "0 3px", width: "33.33%", verticalAlign: "top" as const };
-const photoImg = { width: "100%", maxWidth: "150px", height: "auto", borderRadius: "6px", display: "block" };
+const photoCol = { padding: "0 3px", width: "25%", verticalAlign: "top" as const };
+const photoImg = { width: "100%", maxWidth: "130px", height: "auto", borderRadius: "6px", display: "block" };
 const chairImg = {
   width: "100%",
   maxWidth: "160px",
