@@ -91,29 +91,54 @@ Deno.serve(async (req) => {
       }
     }
 
-    let sent = 0;
-    let failed = 0;
-    const errors: string[] = [];
-
-    for (const r of recipients) {
-      const { error } = await admin.functions.invoke("send-transactional-email", {
-        body: {
-          templateName,
-          recipientEmail: r.email,
-          idempotencyKey: r.idKey,
-          replyTo: "jenna@wearetheoutdoorindustry.com",
-          templateData: { recipientName: r.name, eventPhotos },
-        },
-      });
-      if (error) {
-        failed++;
-        if (errors.length < 5) errors.push(`${r.email}: ${error.message}`);
-      } else {
-        sent++;
-      }
+    // Skip recipients who already received this template (pending/sent) in the last 24h
+    if (mode === "all" && recipients.length) {
+      const { data: prior } = await admin
+        .from("email_send_log")
+        .select("recipient_email,status")
+        .eq("template_name", templateName)
+        .in("status", ["pending", "sent"])
+        .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+      const already = new Set(((prior as any[]) || []).map((p) => (p.recipient_email || "").toLowerCase()));
+      recipients = recipients.filter((r) => !already.has(r.email.toLowerCase()));
     }
 
-    return json({ ok: true, mode, variant, total: recipients.length, sent, failed, errors });
+    const sendUrl = `${SUPABASE_URL}/functions/v1/send-transactional-email`;
+    const total = recipients.length;
+
+    const runSends = async () => {
+      let sent = 0, failed = 0;
+      for (const r of recipients) {
+        try {
+          const resp = await fetch(sendUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": authHeader,
+              "apikey": ANON_KEY,
+            },
+            body: JSON.stringify({
+              templateName,
+              recipientEmail: r.email,
+              idempotencyKey: r.idKey,
+              replyTo: "jenna@wearetheoutdoorindustry.com",
+              templateData: { recipientName: r.name, eventPhotos },
+            }),
+          });
+          if (resp.ok) sent++; else failed++;
+        } catch { failed++; }
+      }
+      console.log(`bulk send done variant=${variant} sent=${sent} failed=${failed} total=${total}`);
+    };
+
+    // @ts-ignore
+    if (mode === "all" && typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
+      // @ts-ignore
+      EdgeRuntime.waitUntil(runSends());
+      return json({ ok: true, mode, variant, total, queued: true });
+    }
+    await runSends();
+    return json({ ok: true, mode, variant, total });
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
   }
