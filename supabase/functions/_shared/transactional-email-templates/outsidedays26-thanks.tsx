@@ -475,3 +475,28 @@ const chipLinkText = {
   verticalAlign: "middle" as const,
 };
 const signoff = { fontSize: "15px", color: "#19363B", fontWeight: 600, margin: "22px 0 0" };
+const bubbleWrapOuter = { lineHeight: "1.6", textAlign: "center" as const };
+const bubbleWrap = { display: "inline-block", margin: "4px 6px", verticalAlign: "middle" as const };
+const bubbleLogo = {
+  width: "44px",
+  height: "44px",
+  borderRadius: "999px",
+  border: "1px solid #E8DFCD",
+  backgroundColor: "#ffffff",
+  objectFit: "contain" as const,
+  padding: "4px",
+  display: "block",
+};
+const bubbleFallback = {
+  display: "inline-block",
+  width: "44px",
+  height: "44px",
+  lineHeight: "44px",
+  textAlign: "center" as const,
+  borderRadius: "999px",
+  backgroundColor: "#ED7660",
+  color: "#F5E6D3",
+  fontSize: "13px",
+  fontWeight: 700,
+  border: "1px solid #E8DFCD",
+};
