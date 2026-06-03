@@ -225,14 +225,18 @@ const AfterPartyAdmin = () => {
     }
   };
 
-  const sendThanksEmail = async (mode: "test" | "all") => {
-    const checkedInCount = attendees.filter((a: any) => a.checked_in_at && a.email).length;
+  const sendThanksEmail = async (mode: "test" | "all", variant: "checkedin" | "apology" = "checkedin") => {
+    const checkedInWithEmail = attendees.filter((a: any) => a.checked_in_at && a.email).length;
+    const notCheckedInWithEmail = attendees.filter((a: any) => !a.checked_in_at && a.email).length;
+    const targetCount = variant === "apology" ? notCheckedInWithEmail : checkedInWithEmail;
+    const label = variant === "apology" ? "apology giveaway email" : "thank-you + KUMA chair giveaway email";
+    const audience = variant === "apology" ? "registrants who did NOT check in" : "checked-in attendees";
     if (mode === "all") {
-      const typed = prompt(`This will send the thank-you + KUMA chair giveaway email to ${checkedInCount} checked-in attendees with an email. Type SEND to confirm.`);
+      const typed = prompt(`This will send the ${label} to ${targetCount} ${audience} with an email. Type SEND to confirm.`);
       if (typed !== "SEND") return;
     }
     setWorking(true);
-    const { data, error } = await supabase.functions.invoke("send-afterparty-thanks", { body: { mode } });
+    const { data, error } = await supabase.functions.invoke("send-afterparty-thanks", { body: { mode, variant } });
     setWorking(false);
     if (error) {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
@@ -240,7 +244,7 @@ const AfterPartyAdmin = () => {
     }
     const d = data as any;
     toast({
-      title: mode === "test" ? "Test sent to Jenna" : "Thank-you emails queued",
+      title: mode === "test" ? "Test sent to Jenna" : `${variant === "apology" ? "Apology" : "Thank-you"} emails queued`,
       description: `Sent: ${d?.sent ?? 0}${d?.failed ? ` · Failed: ${d.failed}` : ""} (${d?.total ?? 0} total)`,
     });
   };
@@ -292,6 +296,23 @@ const AfterPartyAdmin = () => {
           <Button onClick={() => sendThanksEmail("all")} disabled={working} className="bg-events-coral text-events-cream">
             <Mail className="w-4 h-4 mr-2" />
             Send to all checked-in ({attendees.filter((a: any) => a.checked_in_at && a.email).length})
+          </Button>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-events-yellow/30 bg-events-yellow/5 p-4">
+        <h3 className="font-display font-bold text-events-cream mb-1">After-party APOLOGY giveaway (didn't get in)</h3>
+        <p className="text-xs text-events-cream/60 mb-3">
+          Sends the apology + KUMA chair giveaway email to every registrant who did NOT check in (stuck in line).
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={() => sendThanksEmail("test", "apology")} disabled={working} variant="outline" className="border-events-cream/30 text-events-cream">
+            {working ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+            Send test to Jenna
+          </Button>
+          <Button onClick={() => sendThanksEmail("all", "apology")} disabled={working} className="bg-events-yellow text-events-teal">
+            <Mail className="w-4 h-4 mr-2" />
+            Send to all non-checked-in ({attendees.filter((a: any) => !a.checked_in_at && a.email).length})
           </Button>
         </div>
       </div>

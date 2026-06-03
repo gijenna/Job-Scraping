@@ -21,7 +21,8 @@ const ADMIN_EMAILS = (Deno.env.get("ADMIN_EMAIL") || "")
 const ADMIN_DOMAINS = ["wearetheoutdoorindustry.com"];
 
 const TEST_RECIPIENT = "jenna@wearetheoutdoorindustry.com";
-const TEMPLATE_NAME = "afterparty-thanks-giveaway";
+const TEMPLATE_CHECKEDIN = "afterparty-thanks-giveaway";
+const TEMPLATE_APOLOGY = "afterparty-apology-giveaway";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -50,7 +51,10 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const mode = body?.mode === "all" ? "all" : "test";
+    const variant = body?.variant === "apology" ? "apology" : "checkedin";
     const eventPhotos = Array.isArray(body?.eventPhotos) ? body.eventPhotos : [];
+    const templateName = variant === "apology" ? TEMPLATE_APOLOGY : TEMPLATE_CHECKEDIN;
+    const idPrefix = variant === "apology" ? "afterparty-apology" : "afterparty-thanks";
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
       auth: { autoRefreshToken: false, persistSession: false },
@@ -60,13 +64,18 @@ Deno.serve(async (req) => {
     let recipients: { email: string; name: string; idKey: string }[] = [];
 
     if (mode === "test") {
-      recipients = [{ email: TEST_RECIPIENT, name: "Jenna", idKey: `afterparty-thanks-test-${Date.now()}` }];
+      recipients = [{ email: TEST_RECIPIENT, name: "Jenna", idKey: `${idPrefix}-test-${Date.now()}` }];
     } else {
-      const { data, error } = await admin
+      let query = admin
         .from("afterparty_attendees")
         .select("id, full_name, email, checked_in_at")
-        .not("checked_in_at", "is", null)
         .not("email", "is", null);
+      if (variant === "apology") {
+        query = query.is("checked_in_at", null);
+      } else {
+        query = query.not("checked_in_at", "is", null);
+      }
+      const { data, error } = await query;
       if (error) return json({ error: error.message }, 500);
 
       const seen = new Set<string>();
@@ -77,7 +86,7 @@ Deno.serve(async (req) => {
         recipients.push({
           email,
           name: a.full_name || "there",
-          idKey: `afterparty-thanks-${a.id}`,
+          idKey: `${idPrefix}-${a.id}`,
         });
       }
     }
@@ -89,7 +98,7 @@ Deno.serve(async (req) => {
     for (const r of recipients) {
       const { error } = await admin.functions.invoke("send-transactional-email", {
         body: {
-          templateName: TEMPLATE_NAME,
+          templateName,
           recipientEmail: r.email,
           idempotencyKey: r.idKey,
           replyTo: "jenna@wearetheoutdoorindustry.com",
@@ -104,7 +113,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ ok: true, mode, total: recipients.length, sent, failed, errors });
+    return json({ ok: true, mode, variant, total: recipients.length, sent, failed, errors });
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
   }

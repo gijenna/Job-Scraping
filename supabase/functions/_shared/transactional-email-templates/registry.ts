@@ -15,6 +15,7 @@ import { template as afterpartyInvite } from './afterparty-invite.tsx'
 import { template as afterpartyPin } from './afterparty-pin.tsx'
 import { template as afterpartyRsvpConfirmation } from './afterparty-rsvp-confirmation.tsx'
 import { template as afterpartyThanksGiveaway } from './afterparty-thanks-giveaway.tsx'
+import { template as afterpartyApologyGiveaway } from './afterparty-apology-giveaway.tsx'
 import { template as brandActivationAlert } from './brand-activation-alert.tsx'
 import { template as brandActivationConfirmation } from './brand-activation-confirmation.tsx'
 import { template as afterpartyInterestAlert } from './afterparty-interest-alert.tsx'
@@ -30,6 +31,7 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-pin': afterpartyPin,
   'afterparty-rsvp-confirmation': afterpartyRsvpConfirmation,
   'afterparty-thanks-giveaway': afterpartyThanksGiveaway,
+  'afterparty-apology-giveaway': afterpartyApologyGiveaway,
   'brand-activation-alert': brandActivationAlert,
   'brand-activation-confirmation': brandActivationConfirmation,
   'afterparty-interest-alert': afterpartyInterestAlert,

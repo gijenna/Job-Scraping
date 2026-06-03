@@ -88,16 +88,32 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   return (
     <Html lang="en" dir="ltr">
       <Head />
-      <Preview>Open meeee for gifties from Basecamp x Popfly.</Preview>
+      <Preview>An apology giveaway from Basecamp x Popfly.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>One last giveaway 👀</Heading>
+          <Heading style={h1}>Got stuck in line? 🫶</Heading>
           <Text style={text}>
-            Hey {first}, we looooved seeing you at our Oakley after-party! Thanks for your energy.
+            Hey {first}, we didn't see you on the rooftop last Thursday, so we're gonna assume you're one of the folks who didn't make it into the party!
+          </Text>
+          <Text style={text}>
+            To honor and celebrate the camaraderie of "The Line," we wanted to carry on the spirit of the "ONE OF US" chant and give you an opp to nab a set of{" "}
+            <Link
+              href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
+              style={inlineLink}
+            >
+              KUMA Backtrack chairs
+            </Link>
+            .
+          </Text>
+          <Text style={text}>
+            To win, just <strong>reply all</strong> and tell us one GOOD thing that happened in line. Maybe it's someone you met, maybe it's something you heard, maybe it's something you felt.
+          </Text>
+          <Text style={text}>
+            We super appreciate you coming &amp; your incredible patience and attitudes, and will make sure we expand our footprint next year.
           </Text>
 
           {/* PHOTOS */}
-          <Heading style={h2}>Want to see if you're in any photos?</Heading>
+          <Heading style={h2}>A few moments from the night</Heading>
           <Text style={text}>
             Browse the full gallery here:{" "}
             <Link href="https://anthonymarz.pixieset.com/popflyweoutside/" style={inlineLink}>
@@ -128,38 +144,6 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
               ))}
             </Row>
           )}
-
-          <Hr style={hr} />
-
-          {/* CHAIR GIVEAWAY */}
-          <Heading style={h2}>Want to win retro chairs?</Heading>
-          <Row>
-            <Column style={{ width: "58%", verticalAlign: "top", paddingRight: "12px" }}>
-              <Text style={text}>
-                <strong>Reply all</strong> to shoot us back a quickie email telling us what you liked about hanging out at{" "}
-                <Link
-                  href="https://www.google.com/maps/search/?api=1&query=Oakley+RiNo+2660+Walnut+St+Denver+CO+80205"
-                  style={inlineLink}
-                >
-                  Oakley RiNo
-                </Link>
-                . We're planning MORE parties, so we'll keep the good stuff.
-              </Text>
-              <Text style={text}>
-                We'll randomly select a winner from the responses to nab a set of{" "}
-                <Link
-                  href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
-                  style={inlineLink}
-                >
-                  KUMA Backtrack chairs
-                </Link>
-                .
-              </Text>
-            </Column>
-            <Column style={{ width: "42%", verticalAlign: "top" }} align="center">
-              <Img src={KUMA_CHAIR_IMG} alt="KUMA Backtrack Chair" style={chairImg} />
-            </Column>
-          </Row>
 
           <Hr style={hr} />
 
@@ -281,8 +265,8 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
 
 export const template = {
   component: Email,
-  subject: "One last giveaway from Basecamp x Popfly!",
-  displayName: "After Party - thank-you + KUMA chair giveaway",
+  subject: "Got stuck in line at the Oakley After-party? APOLOGY GIVEAWAY!",
+  displayName: "After Party - apology giveaway (uncheckedin registrants)",
   previewData: {
     recipientName: "Jenna",
     eventPhotos: [],
