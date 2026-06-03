@@ -46,13 +46,13 @@ type Sponsor = { name: string; href: string; domain: string };
 
 const SPONSORS: Sponsor[] = [
   { name: "Oakley", href: "https://www.instagram.com/oakley/", domain: "oakley.com" },
-  { name: "Basecamp / Outside Days", href: "https://www.instagram.com/getoutside/", domain: "outsideinc.com" },
+  { name: "Outside", href: "https://www.instagram.com/getoutside/", domain: "outsideinc.com" },
   { name: "YETI", href: "https://www.instagram.com/yeti/", domain: "yeti.com" },
   { name: "NEMO Equipment", href: "https://www.instagram.com/nemoequipment/", domain: "nemoequipment.com" },
-  { name: "DOD Outdoors", href: "https://www.instagram.com/dod_outdoors/", domain: "dodoutdoors.com" },
+  { name: "DOD Outdoors", href: "https://www.instagram.com/dodoutdoors.usa/", domain: "dodoutdoors.com" },
   { name: "Nite Ize", href: "https://www.instagram.com/niteize/", domain: "niteize.com" },
   { name: "Turtlebox", href: "https://www.instagram.com/turtleboxaudio/", domain: "turtleboxaudio.com" },
-  { name: "ING Outdoors", href: "https://www.instagram.com/ing_outdoors/", domain: "ingoutdoors.com" },
+  { name: "ING Outdoors", href: "https://www.instagram.com/ingoutdoors/", domain: "ingoutdoors.com" },
   { name: "Deuter", href: "https://www.instagram.com/deuter/", domain: "deuter.com" },
   { name: "Kuma Outdoor Gear", href: "https://www.instagram.com/kumaoutdoor/", domain: "kumaoutdoorgear.com" },
   { name: "HydraPak", href: "https://www.instagram.com/hydrapak/", domain: "hydrapak.com" },
@@ -62,11 +62,11 @@ const SPONSORS: Sponsor[] = [
 ];
 
 const BEVYS: Sponsor[] = [
-  { name: "Sap's", href: "https://www.instagram.com/drink_saps", domain: "sapsoriginal.com" },
+  { name: "Sap's", href: "https://www.instagram.com/sapsoriginal/", domain: "sapsoriginal.com" },
   { name: "Best Day", href: "https://www.instagram.com/bestdaybrewing", domain: "bestdaybrewing.com" },
   { name: "Telluride Brewing", href: "https://www.instagram.com/telluridebrewing", domain: "telluridebrewingco.com" },
   { name: "Westbound & Down", href: "https://www.instagram.com/westboundanddownbrewing", domain: "westboundanddown.com" },
-  { name: "Brez", href: "https://www.instagram.com/drinkbrez", domain: "drinkbrez.com" },
+  { name: "Brez", href: "https://www.instagram.com/drinkabrez/", domain: "drinkbrez.com" },
   { name: "Ska Brewing", href: "https://www.instagram.com/skabrewing", domain: "skabrewing.com" },
   { name: "4 Noses", href: "https://www.instagram.com/4nosesbrewing", domain: "4nosesbrewing.com" },
   { name: "Rod & Hammer", href: "https://www.instagram.com/rodandhammer", domain: "rodandhammer.com" },
@@ -166,14 +166,11 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
+            {/* Basecamp Match block */}
             <Row>
-              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
+              <Column style={{ width: "110px", verticalAlign: "middle", paddingRight: "14px" }} align="center">
                 <Link href="https://basecampmatch.com/">
-                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={92} height={46} style={brandLogo} />
-                </Link>
-                <div style={{ height: "10px" }} />
-                <Link href="https://www.popfly.com/">
-                  <Img src={POPFLY_LOGO} alt="Popfly" width={92} height={46} style={brandLogo} />
+                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={96} height={48} style={brandLogo} />
                 </Link>
               </Column>
               <Column style={{ verticalAlign: "top" }}>
@@ -190,8 +187,24 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                 <Text style={promoLine}>
                   · Post gigs for free with code <strong style={code}>HireSmarter</strong>
                 </Text>
+              </Column>
+            </Row>
+
+            <Hr style={promoDivider} />
+
+            {/* Popfly block */}
+            <Row>
+              <Column style={{ width: "110px", verticalAlign: "middle", paddingRight: "14px" }} align="center">
+                <Link href="https://www.popfly.com/">
+                  <Img src={POPFLY_LOGO} alt="Popfly" width={96} height={48} style={brandLogo} />
+                </Link>
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={promoIntro}>
+                  Creator or marketer?
+                </Text>
                 <Text style={promoLine}>
-                  · Make content collabs way easier as an outdoor creator or marketer with{" "}
+                  · Make content collabs way easier with{" "}
                   <Link href="https://www.popfly.com/" style={inlineLink}>
                     Popfly.com
                   </Link>
@@ -291,6 +304,7 @@ const chairImg = {
   border: "3px solid #E1B624",
 };
 const promoBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "18px 22px", margin: "8px 0 12px" };
+const promoDivider = { borderColor: "#E8D5B5", margin: "14px 0" };
 const promoIntro = { fontSize: "16px", color: "#19363B", fontWeight: 600, lineHeight: "1.5", margin: "0 0 10px" };
 const promoLine = { fontSize: "14px", color: "#19363B", lineHeight: "1.55", margin: "0 0 8px" };
 const code = {
