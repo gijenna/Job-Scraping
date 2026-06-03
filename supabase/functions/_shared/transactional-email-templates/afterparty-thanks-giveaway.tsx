@@ -46,13 +46,13 @@ type Sponsor = { name: string; href: string; domain: string };
 
 const SPONSORS: Sponsor[] = [
   { name: "Oakley", href: "https://www.instagram.com/oakley/", domain: "oakley.com" },
-  { name: "Basecamp / Outside Days", href: "https://www.instagram.com/getoutside/", domain: "outsideinc.com" },
+  { name: "Outside", href: "https://www.instagram.com/getoutside/", domain: "outsideinc.com" },
   { name: "YETI", href: "https://www.instagram.com/yeti/", domain: "yeti.com" },
   { name: "NEMO Equipment", href: "https://www.instagram.com/nemoequipment/", domain: "nemoequipment.com" },
-  { name: "DOD Outdoors", href: "https://www.instagram.com/dod_outdoors/", domain: "dodoutdoors.com" },
+  { name: "DOD Outdoors", href: "https://www.instagram.com/dodoutdoors.usa/", domain: "dodoutdoors.com" },
   { name: "Nite Ize", href: "https://www.instagram.com/niteize/", domain: "niteize.com" },
   { name: "Turtlebox", href: "https://www.instagram.com/turtleboxaudio/", domain: "turtleboxaudio.com" },
-  { name: "ING Outdoors", href: "https://www.instagram.com/ing_outdoors/", domain: "ingoutdoors.com" },
+  { name: "ING Outdoors", href: "https://www.instagram.com/ingoutdoors/", domain: "ingoutdoors.com" },
   { name: "Deuter", href: "https://www.instagram.com/deuter/", domain: "deuter.com" },
   { name: "Kuma Outdoor Gear", href: "https://www.instagram.com/kumaoutdoor/", domain: "kumaoutdoorgear.com" },
   { name: "HydraPak", href: "https://www.instagram.com/hydrapak/", domain: "hydrapak.com" },
