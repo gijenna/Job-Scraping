@@ -81,9 +81,9 @@ const SponsorChip = ({ s }: { s: Sponsor }) => (
 
 const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
-  const photos = (eventPhotos && eventPhotos.length > 0 ? eventPhotos : DEFAULT_PHOTOS).slice(0, 6);
-  const row1 = photos.slice(0, 3);
-  const row2 = photos.slice(3, 6);
+  const photos = (eventPhotos && eventPhotos.length > 0 ? eventPhotos : DEFAULT_PHOTOS).slice(0, 8);
+  const row1 = photos.slice(0, 4);
+  const row2 = photos.slice(4, 8);
 
   return (
     <Html lang="en" dir="ltr">
