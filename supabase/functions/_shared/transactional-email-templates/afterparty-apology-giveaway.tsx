@@ -127,40 +127,6 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           <Hr style={hr} />
 
           {/* PHOTOS */}
-          <Heading style={h2}>A few moments from the night</Heading>
-          <Text style={text}>
-            Browse the full gallery here:{" "}
-            <Link href="https://anthonymarz.pixieset.com/popflyweoutside/" style={inlineLink}>
-              anthonymarz.pixieset.com/popflyweoutside
-            </Link>
-            . Need to post/share one of these bad boys? Tag{" "}
-            <Link href="https://www.instagram.com/anthonymarz/" style={inlineLink}>
-              @anthonymarz
-            </Link>
-            {" "}for credit.
-          </Text>
-
-          {row1.length > 0 && (
-            <Row style={{ margin: "8px 0 6px" }}>
-              {row1.map((src, i) => (
-                <Column key={`r1-${i}`} style={photoCol} align="center">
-                  <Img src={src} alt="After-party moment" style={photoImg} />
-                </Column>
-              ))}
-            </Row>
-          )}
-          {row2.length > 0 && (
-            <Row style={{ margin: "0 0 14px" }}>
-              {row2.map((src, i) => (
-                <Column key={`r2-${i}`} style={photoCol} align="center">
-                  <Img src={src} alt="After-party moment" style={photoImg} />
-                </Column>
-              ))}
-            </Row>
-          )}
-
-          <Hr style={hr} />
-
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
@@ -220,6 +186,42 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           </Section>
 
           <Hr style={hr} />
+
+          {/* PHOTOS */}
+          <Heading style={h2}>A few moments from the night</Heading>
+          <Text style={text}>
+            Browse the full gallery here:{" "}
+            <Link href="https://anthonymarz.pixieset.com/popflyweoutside/" style={inlineLink}>
+              anthonymarz.pixieset.com/popflyweoutside
+            </Link>
+            . Need to post/share one of these bad boys? Tag{" "}
+            <Link href="https://www.instagram.com/anthonymarz/" style={inlineLink}>
+              @anthonymarz
+            </Link>
+            {" "}for credit.
+          </Text>
+
+          {row1.length > 0 && (
+            <Row style={{ margin: "8px 0 6px" }}>
+              {row1.map((src, i) => (
+                <Column key={`r1-${i}`} style={photoCol} align="center">
+                  <Img src={src} alt="After-party moment" style={photoImg} />
+                </Column>
+              ))}
+            </Row>
+          )}
+          {row2.length > 0 && (
+            <Row style={{ margin: "0 0 14px" }}>
+              {row2.map((src, i) => (
+                <Column key={`r2-${i}`} style={photoCol} align="center">
+                  <Img src={src} alt="After-party moment" style={photoImg} />
+                </Column>
+              ))}
+            </Row>
+          )}
+
+          <Hr style={hr} />
+
 
           {/* MUSIC + FOOD */}
           <Heading style={h2}>Big thanks to our vibes crew</Heading>
