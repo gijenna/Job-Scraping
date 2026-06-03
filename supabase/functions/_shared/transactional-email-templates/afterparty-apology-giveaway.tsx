@@ -180,10 +180,10 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                   !
                 </Text>
                 <Text style={promoLine}>
-                  · Find your dream job with code <strong style={code}>FindYourCalling</strong>
+                  • Find your dream job with code <strong style={code}>FindYourCalling</strong>
                 </Text>
                 <Text style={promoLine}>
-                  · Post gigs for free with code <strong style={code}>HireSmarter</strong>
+                  • Post gigs for free with code <strong style={code}>HireSmarter</strong>
                 </Text>
               </Column>
             </Row>
@@ -202,14 +202,14 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                   The Creator Marketing Platform Built for Adventure
                 </Text>
                 <Text style={promoLine}>
-                  · Creators and creatives:{" "}
+                  • Creators and creatives:{" "}
                   <Link href="https://www.popfly.com/creators" style={inlineLink}>
                     Join the community
                   </Link>
                   .
                 </Text>
                 <Text style={promoLine}>
-                  · Brands and marketers:{" "}
+                  • Brands and marketers:{" "}
                   <Link href="https://www.popfly.com/brands" style={inlineLink}>
                     Schedule a demo
                   </Link>
