@@ -21,7 +21,8 @@ const ADMIN_EMAILS = (Deno.env.get("ADMIN_EMAIL") || "")
 const ADMIN_DOMAINS = ["wearetheoutdoorindustry.com"];
 
 const TEST_RECIPIENT = "jenna@wearetheoutdoorindustry.com";
-const TEMPLATE_NAME = "afterparty-thanks-giveaway";
+const TEMPLATE_CHECKEDIN = "afterparty-thanks-giveaway";
+const TEMPLATE_APOLOGY = "afterparty-apology-giveaway";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
