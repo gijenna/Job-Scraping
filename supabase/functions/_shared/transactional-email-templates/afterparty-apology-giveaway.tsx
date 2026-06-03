@@ -96,21 +96,35 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
             Hey {first}, we didn't see you on the rooftop last Thursday, so we're gonna assume you're one of the folks who didn't make it into the party!
           </Text>
           <Text style={text}>
-            To honor and celebrate the camaraderie of "The Line," we wanted to carry on the spirit of the "ONE OF US" chant and give you an opp to nab a set of{" "}
-            <Link
-              href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
-              style={inlineLink}
-            >
-              KUMA Backtrack chairs
-            </Link>
-            .
-          </Text>
-          <Text style={text}>
-            To win, just <strong>reply all</strong> and tell us one GOOD thing that happened in line. Maybe it's someone you met, maybe it's something you heard, maybe it's something you felt.
-          </Text>
-          <Text style={text}>
             We super appreciate you coming &amp; your incredible patience and attitudes, and will make sure we expand our footprint next year.
           </Text>
+
+          <Hr style={hr} />
+
+          {/* CHAIR GIVEAWAY */}
+          <Heading style={h2}>An apology giveaway for "The Line"</Heading>
+          <Row>
+            <Column style={{ width: "58%", verticalAlign: "top", paddingRight: "12px" }}>
+              <Text style={text}>
+                To honor and celebrate the camaraderie of "The Line," we wanted to carry on the spirit of the "ONE OF US" chant and give you an opp to nab a set of{" "}
+                <Link
+                  href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
+                  style={inlineLink}
+                >
+                  KUMA Backtrack chairs
+                </Link>
+                .
+              </Text>
+              <Text style={text}>
+                To win, just <strong>reply all</strong> and tell us one GOOD thing that happened in line. Maybe it's someone you met, maybe it's something you heard, maybe it's something you felt.
+              </Text>
+            </Column>
+            <Column style={{ width: "42%", verticalAlign: "top" }} align="center">
+              <Img src={KUMA_CHAIR_IMG} alt="KUMA Backtrack Chair" style={chairImg} />
+            </Column>
+          </Row>
+
+          <Hr style={hr} />
 
           {/* PHOTOS */}
           <Heading style={h2}>A few moments from the night</Heading>
@@ -166,10 +180,10 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                   !
                 </Text>
                 <Text style={promoLine}>
-                  · Find your dream job with code <strong style={code}>FindYourCalling</strong>
+                  • Find your dream job with code <strong style={code}>FindYourCalling</strong>
                 </Text>
                 <Text style={promoLine}>
-                  · Post gigs for free with code <strong style={code}>HireSmarter</strong>
+                  • Post gigs for free with code <strong style={code}>HireSmarter</strong>
                 </Text>
               </Column>
             </Row>
@@ -188,14 +202,14 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                   The Creator Marketing Platform Built for Adventure
                 </Text>
                 <Text style={promoLine}>
-                  · Creators and creatives:{" "}
+                  • Creators and creatives:{" "}
                   <Link href="https://www.popfly.com/creators" style={inlineLink}>
                     Join the community
                   </Link>
                   .
                 </Text>
                 <Text style={promoLine}>
-                  · Brands and marketers:{" "}
+                  • Brands and marketers:{" "}
                   <Link href="https://www.popfly.com/brands" style={inlineLink}>
                     Schedule a demo
                   </Link>
