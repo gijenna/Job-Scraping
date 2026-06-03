@@ -115,6 +115,23 @@ const SponsorChip = ({ s }: { s: SponsorBrand }) => {
   );
 };
 
+const LogoBubble = ({ s }: { s: SponsorBrand }) => {
+  const href = normalizeUrl(s.website_url);
+  const logo = s.logo_url || fav(s.website_url);
+  const img = logo ? (
+    <Img src={logo} alt={s.name} title={s.name} width={44} height={44} style={bubbleLogo} />
+  ) : (
+    <span style={bubbleFallback} title={s.name}>
+      {s.name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()}
+    </span>
+  );
+  return (
+    <span style={bubbleWrap}>
+      {href ? <Link href={href}>{img}</Link> : img}
+    </span>
+  );
+};
+
 const Email = ({
   recipientName = "there",
   eventPhotos,
@@ -269,18 +286,6 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* VIBES */}
-          <Heading style={h2}>Big thanks to our vibes crew</Heading>
-          <Section style={sponsorBox}>
-            <div style={chipWrap}>
-              {VIBES.map((s) => (
-                <SponsorChip key={s.name} s={s} />
-              ))}
-            </div>
-          </Section>
-
-          <Hr style={hr} />
-
           {/* OUTSIDE THANK YOU */}
           <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
           <Text style={text}>
@@ -290,23 +295,28 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* CAREER FAIR SPONSORS */}
-          {brands.length > 0 && (
-            <>
-              <Heading style={h2}>Follow the brands you met at the fair 🏕️</Heading>
-              <Text style={text}>
-                Every booth on the floor, in one place. Click any logo to dig in to their careers page or site.
-              </Text>
-              <Section style={sponsorBox}>
-                <div style={chipWrap}>
-                  {brands.map((s) => (
-                    <SponsorChip key={s.name} s={s} />
-                  ))}
-                </div>
-              </Section>
-              <Hr style={hr} />
-            </>
-          )}
+          {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
+          <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
+          <Text style={text}>
+            Vibes crew, career-fair booths, all in one place. Tap any logo to follow up.
+          </Text>
+          <Section style={sponsorBox}>
+            <div style={bubbleWrapOuter}>
+              {(() => {
+                const seen = new Set<string>();
+                const merged: SponsorBrand[] = [];
+                for (const s of [...VIBES, ...brands]) {
+                  const key = (s.name || "").trim().toLowerCase();
+                  if (!key || seen.has(key)) continue;
+                  seen.add(key);
+                  merged.push(s);
+                }
+                return merged.map((s) => <LogoBubble key={s.name} s={s} />);
+              })()}
+            </div>
+          </Section>
+
+          <Hr style={hr} />
 
           {/* SIGN OFF */}
           <Heading style={h2}>P.S. We're already plotting the next one 👀</Heading>
@@ -332,7 +342,37 @@ export const template = {
   previewData: {
     recipientName: "Jenna",
     eventPhotos: [],
-    sponsors: [],
+    sponsors: [
+      { name: "A Basin", logo_url: "https://www.google.com/s2/favicons?domain=abasin.com&sz=128" },
+      { name: "Adaptive Climbing Group", website_url: "https://www.adaptiveclimbinggroup.org/", logo_url: "https://www.google.com/s2/favicons?domain=www.adaptiveclimbinggroup.org&sz=128" },
+      { name: "Alterra Mountain Company", website_url: "alterramountainco.com", logo_url: "https://www.google.com/s2/favicons?domain=alterramountainco.com&sz=128" },
+      { name: "ALTRA", logo_url: "https://www.google.com/s2/favicons?domain=altrarunning.com&sz=128" },
+      { name: "Aspen One", website_url: "Aspen.com", logo_url: "https://www.google.com/s2/favicons?domain=aspen.com&sz=128" },
+      { name: "Basecamp", website_url: "Basecampjobs.com", logo_url: "https://www.google.com/s2/favicons?domain=basecampjobs.com&sz=128" },
+      { name: "BOA", website_url: "https://www.boafit.com/en-us/company/careers", logo_url: "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/event-photos/logos/denver26-partners/1773855520687.jpg" },
+      { name: "Brooks Running", website_url: "https://www.brooksrunning.com/en_us/meet-brooks/careers/", logo_url: "https://www.google.com/s2/favicons?domain=Brooksrunning.com&sz=128" },
+      { name: "Big city mountaineers", website_url: "bigcitymountaineers.org", logo_url: "https://www.google.com/s2/favicons?domain=bigcitymountaineers.org&sz=128" },
+      { name: "Cotopaxi", logo_url: "https://www.google.com/s2/favicons?domain=cotopaxi.com&sz=128" },
+      { name: "Department of Natural Resources", website_url: "https://dnr.colorado.gov/", logo_url: "https://www.google.com/s2/favicons?domain=dnr.colorado.gov&sz=128" },
+      { name: "HBCUs Outside", website_url: "https://www.hbcusoutside.com/", logo_url: "https://www.google.com/s2/favicons?domain=www.hbcusoutside.com&sz=128" },
+      { name: "icebreaker", website_url: "icebreaker.com", logo_url: "https://www.google.com/s2/favicons?domain=icebreaker.com&sz=128" },
+      { name: "ing outdoors", website_url: "ingoutdoors.com", logo_url: "https://www.google.com/s2/favicons?domain=ingoutdoors.com&sz=128" },
+      { name: "Jansport", website_url: "Jansport.com", logo_url: "https://www.google.com/s2/favicons?domain=jansport.com&sz=128" },
+      { name: "Maine Outdoor Brands", logo_url: "https://www.google.com/s2/favicons?domain=Maineoutdoorbrands.com&sz=128" },
+      { name: "Oakley", website_url: "https://www.oakley.com/en-us/careers", logo_url: "https://www.google.com/s2/favicons?domain=oakley.com&sz=128" },
+      { name: "Outcrop Wilderness", logo_url: "https://www.google.com/s2/favicons?domain=Outcropwilderness.com&sz=128" },
+      { name: "Outside Inc", website_url: "https://www.outsideinc.com/careers/", logo_url: "https://www.google.com/s2/favicons?domain=outsideinc.com&sz=128" },
+      { name: "Outward Bound", website_url: "https://www.outwardbound.org/about-us/working-at-outward-bound/careers/", logo_url: "https://www.google.com/s2/favicons?domain=outwardbound.org&sz=128" },
+      { name: "Peak Design", website_url: "Peakdesign.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=peakdesign.com&sz=128" },
+      { name: "Rainmaker", website_url: "makerain.com", logo_url: "https://www.google.com/s2/favicons?domain=makerain.com&sz=128" },
+      { name: "REI", website_url: "rei.com", logo_url: "https://www.google.com/s2/favicons?domain=REI.com&sz=128" },
+      { name: "SheJumps", website_url: "shejumps.org", logo_url: "https://www.google.com/s2/favicons?domain=shejumps.org&sz=128" },
+      { name: "Smartwool", logo_url: "https://www.google.com/s2/favicons?domain=smartwool.com&sz=128" },
+      { name: "Steamboat Resort", website_url: "steamboat.com", logo_url: "https://www.google.com/s2/favicons?domain=steamboat.com&sz=128" },
+      { name: "The North Face", website_url: "Thenorthface.com", logo_url: "https://www.google.com/s2/favicons?domain=thenorthface.com&sz=128" },
+      { name: "The Wilderness Society", website_url: "https://www.wilderness.org/careers-internships", logo_url: "https://www.google.com/s2/favicons?domain=wilderness.org&sz=128" },
+      { name: "Timberland", website_url: "timberland.com", logo_url: "https://www.google.com/s2/favicons?domain=timberland.com&sz=128" },
+    ],
     edgesFirst: DEFAULT_EDGES,
   },
 } satisfies TemplateEntry;
@@ -465,3 +505,28 @@ const chipLinkText = {
   verticalAlign: "middle" as const,
 };
 const signoff = { fontSize: "15px", color: "#19363B", fontWeight: 600, margin: "22px 0 0" };
+const bubbleWrapOuter = { lineHeight: "1.6", textAlign: "center" as const };
+const bubbleWrap = { display: "inline-block", margin: "4px 6px", verticalAlign: "middle" as const };
+const bubbleLogo = {
+  width: "44px",
+  height: "44px",
+  borderRadius: "999px",
+  border: "1px solid #E8DFCD",
+  backgroundColor: "#ffffff",
+  objectFit: "contain" as const,
+  padding: "4px",
+  display: "block",
+};
+const bubbleFallback = {
+  display: "inline-block",
+  width: "44px",
+  height: "44px",
+  lineHeight: "44px",
+  textAlign: "center" as const,
+  borderRadius: "999px",
+  backgroundColor: "#ED7660",
+  color: "#F5E6D3",
+  fontSize: "13px",
+  fontWeight: 700,
+  border: "1px solid #E8DFCD",
+};
