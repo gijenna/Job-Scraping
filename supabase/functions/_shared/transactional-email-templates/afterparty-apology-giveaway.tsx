@@ -265,8 +265,8 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
 
 export const template = {
   component: Email,
-  subject: "One last giveaway from Basecamp x Popfly!",
-  displayName: "After Party - thank-you + KUMA chair giveaway",
+  subject: "Got stuck in line at the Oakley After-party? APOLOGY GIVEAWAY!",
+  displayName: "After Party - apology giveaway (uncheckedin registrants)",
   previewData: {
     recipientName: "Jenna",
     eventPhotos: [],
