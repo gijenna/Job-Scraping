@@ -304,6 +304,7 @@ const chairImg = {
   border: "3px solid #E1B624",
 };
 const promoBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "18px 22px", margin: "8px 0 12px" };
+const promoDivider = { borderColor: "#E8D5B5", margin: "14px 0" };
 const promoIntro = { fontSize: "16px", color: "#19363B", fontWeight: 600, lineHeight: "1.5", margin: "0 0 10px" };
 const promoLine = { fontSize: "14px", color: "#19363B", lineHeight: "1.55", margin: "0 0 8px" };
 const code = {
