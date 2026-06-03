@@ -225,14 +225,18 @@ const AfterPartyAdmin = () => {
     }
   };
 
-  const sendThanksEmail = async (mode: "test" | "all") => {
-    const checkedInCount = attendees.filter((a: any) => a.checked_in_at && a.email).length;
+  const sendThanksEmail = async (mode: "test" | "all", variant: "checkedin" | "apology" = "checkedin") => {
+    const checkedInWithEmail = attendees.filter((a: any) => a.checked_in_at && a.email).length;
+    const notCheckedInWithEmail = attendees.filter((a: any) => !a.checked_in_at && a.email).length;
+    const targetCount = variant === "apology" ? notCheckedInWithEmail : checkedInWithEmail;
+    const label = variant === "apology" ? "apology giveaway email" : "thank-you + KUMA chair giveaway email";
+    const audience = variant === "apology" ? "registrants who did NOT check in" : "checked-in attendees";
     if (mode === "all") {
-      const typed = prompt(`This will send the thank-you + KUMA chair giveaway email to ${checkedInCount} checked-in attendees with an email. Type SEND to confirm.`);
+      const typed = prompt(`This will send the ${label} to ${targetCount} ${audience} with an email. Type SEND to confirm.`);
       if (typed !== "SEND") return;
     }
     setWorking(true);
-    const { data, error } = await supabase.functions.invoke("send-afterparty-thanks", { body: { mode } });
+    const { data, error } = await supabase.functions.invoke("send-afterparty-thanks", { body: { mode, variant } });
     setWorking(false);
     if (error) {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
@@ -240,7 +244,7 @@ const AfterPartyAdmin = () => {
     }
     const d = data as any;
     toast({
-      title: mode === "test" ? "Test sent to Jenna" : "Thank-you emails queued",
+      title: mode === "test" ? "Test sent to Jenna" : `${variant === "apology" ? "Apology" : "Thank-you"} emails queued`,
       description: `Sent: ${d?.sent ?? 0}${d?.failed ? ` · Failed: ${d.failed}` : ""} (${d?.total ?? 0} total)`,
     });
   };
