@@ -62,11 +62,11 @@ const SPONSORS: Sponsor[] = [
 ];
 
 const BEVYS: Sponsor[] = [
-  { name: "Sap's", href: "https://www.instagram.com/drink_saps", domain: "sapsoriginal.com" },
+  { name: "Sap's", href: "https://www.instagram.com/sapsoriginal/", domain: "sapsoriginal.com" },
   { name: "Best Day", href: "https://www.instagram.com/bestdaybrewing", domain: "bestdaybrewing.com" },
   { name: "Telluride Brewing", href: "https://www.instagram.com/telluridebrewing", domain: "telluridebrewingco.com" },
   { name: "Westbound & Down", href: "https://www.instagram.com/westboundanddownbrewing", domain: "westboundanddown.com" },
-  { name: "Brez", href: "https://www.instagram.com/drinkbrez", domain: "drinkbrez.com" },
+  { name: "Brez", href: "https://www.instagram.com/drinkabrez/", domain: "drinkbrez.com" },
   { name: "Ska Brewing", href: "https://www.instagram.com/skabrewing", domain: "skabrewing.com" },
   { name: "4 Noses", href: "https://www.instagram.com/4nosesbrewing", domain: "4nosesbrewing.com" },
   { name: "Rod & Hammer", href: "https://www.instagram.com/rodandhammer", domain: "rodandhammer.com" },
