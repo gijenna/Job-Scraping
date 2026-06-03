@@ -19,22 +19,63 @@ import type { TemplateEntry } from "./registry.ts";
 
 interface Props {
   recipientName?: string;
-  eventPhotos?: string[]; // optional gallery thumbnails
+  eventPhotos?: string[];
 }
 
-const KUMA_CHAIR_IMG =
-  "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets/afterparty-thanks/kuma-backtrack-chair.jpg";
-
-const PHOTO_BASE =
+const ASSET_BASE =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets/afterparty-thanks";
+const KUMA_CHAIR_IMG = `${ASSET_BASE}/kuma-backtrack-chair.jpg`;
+const POPFLY_LOGO = `${ASSET_BASE}/popfly-logo.png`;
+const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/basecamp-match-logo.png`;
+
 const DEFAULT_PHOTOS = [
-  `${PHOTO_BASE}/photo-1-crowd.jpg`,
-  `${PHOTO_BASE}/photo-2-sunglasses.jpg`,
-  `${PHOTO_BASE}/photo-3-scream.jpg`,
-  `${PHOTO_BASE}/photo-4-saps.jpg`,
-  `${PHOTO_BASE}/photo-5-dj.jpg`,
-  `${PHOTO_BASE}/photo-6-outside.jpg`,
+  `${ASSET_BASE}/photo-1-crowd.jpg`,
+  `${ASSET_BASE}/photo-2-sunglasses.jpg`,
+  `${ASSET_BASE}/photo-3-scream.jpg`,
+  `${ASSET_BASE}/photo-4-saps.jpg`,
+  `${ASSET_BASE}/photo-5-dj.jpg`,
+  `${ASSET_BASE}/photo-6-outside.jpg`,
 ];
+
+const fav = (domain: string) =>
+  `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+type Sponsor = { name: string; href: string; domain: string };
+
+const SPONSORS: Sponsor[] = [
+  { name: "Oakley", href: "https://www.instagram.com/oakley/", domain: "oakley.com" },
+  { name: "Basecamp / Outside Days", href: "https://www.instagram.com/getoutside/", domain: "outsideinc.com" },
+  { name: "YETI", href: "https://www.instagram.com/yeti/", domain: "yeti.com" },
+  { name: "NEMO Equipment", href: "https://www.instagram.com/nemoequipment/", domain: "nemoequipment.com" },
+  { name: "DOD Outdoors", href: "https://www.instagram.com/dod_outdoors/", domain: "dodoutdoors.com" },
+  { name: "Nite Ize", href: "https://www.instagram.com/niteize/", domain: "niteize.com" },
+  { name: "Turtlebox", href: "https://www.instagram.com/turtleboxaudio/", domain: "turtleboxaudio.com" },
+  { name: "ING Outdoors", href: "https://www.instagram.com/ing_outdoors/", domain: "ingoutdoors.com" },
+  { name: "Deuter", href: "https://www.instagram.com/deuter/", domain: "deuter.com" },
+  { name: "Kuma Outdoor Gear", href: "https://www.instagram.com/kumaoutdoor/", domain: "kumaoutdoorgear.com" },
+  { name: "HydraPak", href: "https://www.instagram.com/hydrapak/", domain: "hydrapak.com" },
+  { name: "Creepers Socks", href: "https://www.instagram.com/creeperssocks/", domain: "creeperssocks.com" },
+  { name: "PAKA", href: "https://www.instagram.com/paka/", domain: "pakaapparel.com" },
+  { name: "Puffin Drinkware", href: "https://www.instagram.com/puffindrinkwear/", domain: "puffindrinkware.com" },
+];
+
+const BEVYS: Sponsor[] = [
+  { name: "Sap's", href: "https://www.instagram.com/drink_saps", domain: "sapsoriginal.com" },
+  { name: "Best Day", href: "https://www.instagram.com/bestdaybrewing", domain: "bestdaybrewing.com" },
+  { name: "Telluride Brewing", href: "https://www.instagram.com/telluridebrewing", domain: "telluridebrewingco.com" },
+  { name: "Westbound & Down", href: "https://www.instagram.com/westboundanddownbrewing", domain: "westboundanddown.com" },
+  { name: "Brez", href: "https://www.instagram.com/drinkbrez", domain: "drinkbrez.com" },
+  { name: "Ska Brewing", href: "https://www.instagram.com/skabrewing", domain: "skabrewing.com" },
+  { name: "4 Noses", href: "https://www.instagram.com/4nosesbrewing", domain: "4nosesbrewing.com" },
+  { name: "Rod & Hammer", href: "https://www.instagram.com/rodandhammer", domain: "rodandhammer.com" },
+];
+
+const SponsorChip = ({ s }: { s: Sponsor }) => (
+  <span style={chip}>
+    <Img src={fav(s.domain)} alt="" width={18} height={18} style={chipLogo} />
+    <Link href={s.href} style={chipLink}>{s.name}</Link>
+  </span>
+);
 
 const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
@@ -48,7 +89,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
       <Preview>Open meeee for gifties from Basecamp x Popfly.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>One last giveaway 🎁</Heading>
+          <Heading style={h1}>One last giveaway 👀</Heading>
           <Text style={text}>
             Hey {first}, we looooved seeing you at our Oakley after-party! You definitely brought the hype.
           </Text>
@@ -60,15 +101,15 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
             <Link href="https://anthonymarz.pixieset.com/popflyweoutside/" style={inlineLink}>
               anthonymarz.pixieset.com/popflyweoutside
             </Link>
-            . Please credit{" "}
+            . Need to post/share one of these bad boys? Tag{" "}
             <Link href="https://www.instagram.com/anthonymarz/" style={inlineLink}>
               @anthonymarz
             </Link>
-            .
+            {" "}for credit.
           </Text>
 
           {row1.length > 0 && (
-            <Row style={{ margin: "8px 0 8px" }}>
+            <Row style={{ margin: "8px 0 6px" }}>
               {row1.map((src, i) => (
                 <Column key={`r1-${i}`} style={photoCol} align="center">
                   <Img src={src} alt="After-party moment" style={photoImg} />
@@ -77,7 +118,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
             </Row>
           )}
           {row2.length > 0 && (
-            <Row style={{ margin: "0 0 16px" }}>
+            <Row style={{ margin: "0 0 14px" }}>
               {row2.map((src, i) => (
                 <Column key={`r2-${i}`} style={photoCol} align="center">
                   <Img src={src} alt="After-party moment" style={photoImg} />
@@ -91,9 +132,16 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           {/* CHAIR GIVEAWAY */}
           <Heading style={h2}>Want to win retro chairs?</Heading>
           <Row>
-            <Column style={{ width: "55%", verticalAlign: "top", paddingRight: "12px" }}>
+            <Column style={{ width: "58%", verticalAlign: "top", paddingRight: "12px" }}>
               <Text style={text}>
-                <strong>Reply all</strong> to shoot us back a quickie email telling us what you liked about hanging out in Oakley RiNo. We're planning MORE parties, so we'll keep the good stuff.
+                <strong>Reply all</strong> to shoot us back a quickie email telling us what you liked about hanging out at{" "}
+                <Link
+                  href="https://www.google.com/maps/search/?api=1&query=Oakley+RiNo+2660+Walnut+St+Denver+CO+80205"
+                  style={inlineLink}
+                >
+                  Oakley RiNo
+                </Link>
+                . We're planning MORE parties, so we'll keep the good stuff.
               </Text>
               <Text style={text}>
                 We'll randomly select a winner from the responses to nab a set of{" "}
@@ -106,7 +154,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                 .
               </Text>
             </Column>
-            <Column style={{ width: "45%", verticalAlign: "top" }} align="center">
+            <Column style={{ width: "42%", verticalAlign: "top" }} align="center">
               <Img src={KUMA_CHAIR_IMG} alt="KUMA Backtrack Chair" style={chairImg} />
             </Column>
           </Row>
@@ -114,22 +162,42 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           <Hr style={hr} />
 
           {/* PROMO CODES */}
-          <Heading style={h2}>Want to work, hire, or collab?</Heading>
+          <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
-            <Text style={promoLine}>
-              Get FREE early access to{" "}
+            <Text style={promoIntro}>
+              Get secret early access to{" "}
               <Link href="https://basecampjobs.com/" style={inlineLink}>
                 Basecampjobs.com
-              </Link>{" "}
-              with code <strong style={code}>FindYourCalling</strong> to find your dream job, or post gigs for free with code <strong style={code}>HireSmarter</strong>.
+              </Link>
+              !
             </Text>
             <Text style={promoLine}>
-              Check out{" "}
+              · Find your dream job with code <strong style={code}>FindYourCalling</strong>
+            </Text>
+            <Text style={promoLine}>
+              · Post gigs for free with code <strong style={code}>HireSmarter</strong>
+            </Text>
+            <Text style={promoLine}>
+              · Make content collabs way easier as an outdoor creator or marketer with{" "}
               <Link href="https://www.popfly.com/" style={inlineLink}>
                 Popfly.com
-              </Link>{" "}
-              to make content collabs as an outdoor industry creator or marketer way easier.
+              </Link>
+              .
             </Text>
+
+            {/* subtle brand logos */}
+            <Row style={{ marginTop: "14px" }}>
+              <Column align="center" style={{ padding: "0 8px" }}>
+                <Link href="https://basecampmatch.com/">
+                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={84} height={42} style={brandLogo} />
+                </Link>
+              </Column>
+              <Column align="center" style={{ padding: "0 8px" }}>
+                <Link href="https://www.popfly.com/">
+                  <Img src={POPFLY_LOGO} alt="Popfly" width={84} height={42} style={brandLogo} />
+                </Link>
+              </Column>
+            </Row>
           </Section>
 
           <Hr style={hr} />
@@ -152,83 +220,19 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
 
           {/* SPONSORS */}
           <Heading style={h2}>Want to ensure more parties? Follow our sponsors!</Heading>
-          <Text style={text}>
-            <Link href="https://www.instagram.com/oakley/" style={inlineLink}>Oakley</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/getoutside/" style={inlineLink}>Basecamp / Outside Days</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/yeti/" style={inlineLink}>YETI</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/nemoequipment/" style={inlineLink}>NEMO Equipment</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/dod_outdoors/" style={inlineLink}>DOD Outdoors</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/niteize/" style={inlineLink}>Nite Ize</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/turtleboxaudio/" style={inlineLink}>Turtlebox</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/ing_outdoors/" style={inlineLink}>ING Outdoors</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/deuter/" style={inlineLink}>Deuter</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/kumaoutdoor/" style={inlineLink}>Kuma Outdoor Gear</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/hydrapak/" style={inlineLink}>HydraPak</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/creeperssocks/" style={inlineLink}>Creepers Socks</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/paka/" style={inlineLink}>PAKA</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/puffindrinkwear/" style={inlineLink}>Puffin Drinkware</Link>
-          </Text>
+          <Section style={sponsorBox}>
+            <div style={chipWrap}>
+              {SPONSORS.map((s) => (
+                <SponsorChip key={s.name} s={s} />
+              ))}
+            </div>
 
-          <Heading style={h3}>Bevys</Heading>
-          <Text style={text}>
-            <Link href="https://www.instagram.com/drink_saps" style={inlineLink}>Sap's</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/bestdaybrewing" style={inlineLink}>Best Day</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/telluridebrewing" style={inlineLink}>Telluride Brewing</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/westboundanddownbrewing" style={inlineLink}>Westbound &amp; Down</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/drinkbrez" style={inlineLink}>Brez</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/skabrewing" style={inlineLink}>Ska Brewing</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/4nosesbrewing" style={inlineLink}>4 Noses</Link>
-            {" · "}
-            <Link href="https://www.instagram.com/rodandhammer" style={inlineLink}>Rod &amp; Hammer</Link>
-          </Text>
-
-          <Section style={swagBox}>
-            <Text style={swagText}>
-              🎁 The first 50 guests got swag bags with gifts from{" "}
-              <Link href="https://www.instagram.com/deuter/" style={swagLink}>Deuter</Link>,{" "}
-              <Link href="https://www.instagram.com/ing_outdoors/" style={swagLink}>ING Outdoors</Link>,{" "}
-              <Link href="https://www.instagram.com/niteize/" style={swagLink}>Nite Ize</Link>,{" "}
-              <Link href="https://www.instagram.com/hydrapak/" style={swagLink}>HydraPak</Link>,{" "}
-              <Link href="https://www.instagram.com/creeperssocks/" style={swagLink}>Creepers Socks</Link>,{" "}
-              <Link href="https://www.instagram.com/paka/" style={swagLink}>PAKA</Link>,{" "}
-              <Link href="https://www.instagram.com/puffindrinkwear/" style={swagLink}>Puffin Drinkware</Link>, and{" "}
-              <Link href="https://www.instagram.com/oakley/" style={swagLink}>Oakley</Link>.
-            </Text>
-          </Section>
-
-          <Hr style={hr} />
-
-          {/* RAFFLE RECAP */}
-          <Heading style={h2}>9pm Raffle winners (huge thanks to the sponsors)</Heading>
-          <Section style={raffleBox}>
-            <Text style={raffleItem}>• Down Anorak 1.0 / Founder's Batch from <Link href="https://www.instagram.com/temi.earth/" style={inlineLink}>@temi.earth</Link></Text>
-            <Text style={raffleItem}>• Turtlebox Original Speaker from <Link href="https://www.instagram.com/turtleboxaudio/" style={inlineLink}>@turtleboxaudio</Link></Text>
-            <Text style={raffleItem}>• 3 year membership from <Link href="https://www.instagram.com/ing_outdoors/" style={inlineLink}>@ing_outdoors</Link></Text>
-            <Text style={raffleItem}>• From <Link href="https://www.instagram.com/dod_outdoors/" style={inlineLink}>@dod_outdoors</Link>: Sugoi Chair, Glacier Bundle, Kura Soft Cooler 11, Pera Moe Fire Pit, One Touch Dome Tent, and Kamaboko Super Tent (S)</Text>
-            <Text style={raffleItem}>• Roadie 15 or Roadie 24 hard cooler from <Link href="https://www.instagram.com/yeti/" style={inlineLink}>@yeti</Link></Text>
-            <Text style={raffleItem}>• Stargaze Chairs from <Link href="https://www.instagram.com/nemoequipment/" style={inlineLink}>@nemoequipment</Link></Text>
-            <Text style={raffleItem}>• Backtrack Chairs from <Link href="https://www.instagram.com/kumaoutdoor/" style={inlineLink}>@kumaoutdoor</Link></Text>
-            <Text style={raffleItem}>• Radiant Starlit Rechargeable Lantern + String Lights from <Link href="https://www.instagram.com/niteize/" style={inlineLink}>@niteize</Link></Text>
-            <Text style={raffleItem}>• Outside Days tickets from <Link href="https://www.instagram.com/getoutside/" style={inlineLink}>@getoutside</Link></Text>
+            <Heading style={h3}>Bevys</Heading>
+            <div style={chipWrap}>
+              {BEVYS.map((s) => (
+                <SponsorChip key={s.name} s={s} />
+              ))}
+            </div>
           </Section>
 
           <Hr style={hr} />
@@ -247,7 +251,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
             {" "}so you know when the next party drops.
           </Text>
 
-          <Text style={signoff}>{'<3'} Jenna, Basecamp &amp; Popfly</Text>
+          <Text style={signoff}>{'<3'} Basecamp &amp; Popfly (&amp; our friends at Oakley &amp; Outside!)</Text>
         </Container>
       </Body>
     </Html>
@@ -271,22 +275,23 @@ const main = {
 const container = { padding: "32px 28px", maxWidth: "600px" };
 const h1 = { fontSize: "30px", fontWeight: 700, color: "#19363B", margin: "0 0 12px", lineHeight: "1.15" };
 const h2 = { fontSize: "20px", fontWeight: 600, color: "#19363B", margin: "20px 0 8px" };
-const h3 = { fontSize: "14px", fontWeight: 700, color: "#19363B", margin: "16px 0 6px", textTransform: "uppercase" as const, letterSpacing: "0.5px" };
+const h3 = { fontSize: "13px", fontWeight: 700, color: "#19363B", margin: "16px 0 8px", textTransform: "uppercase" as const, letterSpacing: "0.6px" };
 const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 14px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
-const photoCol = { padding: "0 4px", width: "33.33%", verticalAlign: "top" as const };
-const photoImg = { width: "100%", height: "auto", borderRadius: "8px", display: "block" };
+const photoCol = { padding: "0 3px", width: "33.33%", verticalAlign: "top" as const };
+const photoImg = { width: "100%", maxWidth: "150px", height: "auto", borderRadius: "6px", display: "block" };
 const chairImg = {
   width: "100%",
-  maxWidth: "180px",
+  maxWidth: "160px",
   height: "auto",
   borderRadius: "10px",
   display: "block",
   border: "3px solid #E1B624",
 };
-const promoBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "16px 20px", margin: "8px 0 12px" };
-const promoLine = { fontSize: "14px", color: "#19363B", lineHeight: "1.55", margin: "0 0 10px" };
+const promoBox = { backgroundColor: "#F5E6D3", borderRadius: "12px", padding: "18px 22px", margin: "8px 0 12px" };
+const promoIntro = { fontSize: "16px", color: "#19363B", fontWeight: 600, lineHeight: "1.5", margin: "0 0 10px" };
+const promoLine = { fontSize: "14px", color: "#19363B", lineHeight: "1.55", margin: "0 0 8px" };
 const code = {
   backgroundColor: "#19363B",
   color: "#E1B624",
@@ -295,9 +300,43 @@ const code = {
   fontFamily: "monospace",
   fontSize: "13px",
 };
-const swagBox = { backgroundColor: "#19363B", borderRadius: "12px", padding: "16px 20px", margin: "16px 0" };
-const swagText = { fontSize: "14px", color: "#F5E6D3", lineHeight: "1.6", margin: 0 };
-const swagLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
-const raffleBox = { margin: "8px 0 16px" };
-const raffleItem = { fontSize: "13px", color: "#333", lineHeight: "1.55", margin: "0 0 4px" };
+const brandLogo = {
+  height: "42px",
+  width: "auto",
+  maxWidth: "120px",
+  opacity: 0.85,
+  display: "block",
+};
+const sponsorBox = {
+  backgroundColor: "#FAF6EF",
+  borderRadius: "12px",
+  padding: "16px 18px",
+  margin: "6px 0 8px",
+  border: "1px solid #EFE4D2",
+};
+const chipWrap = { lineHeight: "2.2" };
+const chip = {
+  display: "inline-block",
+  backgroundColor: "#ffffff",
+  border: "1px solid #E8DFCD",
+  borderRadius: "999px",
+  padding: "4px 12px 4px 6px",
+  margin: "3px 4px 3px 0",
+  verticalAlign: "middle" as const,
+  whiteSpace: "nowrap" as const,
+};
+const chipLogo = {
+  display: "inline-block",
+  verticalAlign: "middle" as const,
+  borderRadius: "999px",
+  marginRight: "6px",
+  backgroundColor: "#fff",
+};
+const chipLink = {
+  color: "#19363B",
+  textDecoration: "none",
+  fontWeight: 600,
+  fontSize: "13px",
+  verticalAlign: "middle" as const,
+};
 const signoff = { fontSize: "15px", color: "#19363B", fontWeight: 600, margin: "22px 0 0" };
