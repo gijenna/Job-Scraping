@@ -31,6 +31,7 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-pin': afterpartyPin,
   'afterparty-rsvp-confirmation': afterpartyRsvpConfirmation,
   'afterparty-thanks-giveaway': afterpartyThanksGiveaway,
+  'afterparty-apology-giveaway': afterpartyApologyGiveaway,
   'brand-activation-alert': brandActivationAlert,
   'brand-activation-confirmation': brandActivationConfirmation,
   'afterparty-interest-alert': afterpartyInterestAlert,
