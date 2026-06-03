@@ -88,16 +88,32 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   return (
     <Html lang="en" dir="ltr">
       <Head />
-      <Preview>Open meeee for gifties from Basecamp x Popfly.</Preview>
+      <Preview>An apology giveaway from Basecamp x Popfly.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>One last giveaway 👀</Heading>
+          <Heading style={h1}>Got stuck in line? 🫶</Heading>
           <Text style={text}>
-            Hey {first}, we looooved seeing you at our Oakley after-party! Thanks for your energy.
+            Hey {first}, we didn't see you on the rooftop last Thursday, so we're gonna assume you're one of the folks who didn't make it into the party!
+          </Text>
+          <Text style={text}>
+            To honor and celebrate the camaraderie of "The Line," we wanted to carry on the spirit of the "ONE OF US" chant and give you an opp to nab a set of{" "}
+            <Link
+              href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
+              style={inlineLink}
+            >
+              KUMA Backtrack chairs
+            </Link>
+            .
+          </Text>
+          <Text style={text}>
+            To win, just <strong>reply all</strong> and tell us one GOOD thing that happened in line. Maybe it's someone you met, maybe it's something you heard, maybe it's something you felt.
+          </Text>
+          <Text style={text}>
+            We super appreciate you coming &amp; your incredible patience and attitudes, and will make sure we expand our footprint next year.
           </Text>
 
           {/* PHOTOS */}
-          <Heading style={h2}>Want to see if you're in any photos?</Heading>
+          <Heading style={h2}>A few moments from the night</Heading>
           <Text style={text}>
             Browse the full gallery here:{" "}
             <Link href="https://anthonymarz.pixieset.com/popflyweoutside/" style={inlineLink}>
