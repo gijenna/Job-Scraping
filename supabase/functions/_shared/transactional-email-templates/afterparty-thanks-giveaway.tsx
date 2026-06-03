@@ -25,8 +25,22 @@ interface Props {
 const KUMA_CHAIR_IMG =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets/afterparty-thanks/kuma-backtrack-chair.jpg";
 
-const Email = ({ recipientName = "there", eventPhotos = [] }: Props) => {
+const PHOTO_BASE =
+  "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets/afterparty-thanks";
+const DEFAULT_PHOTOS = [
+  `${PHOTO_BASE}/photo-1-crowd.jpg`,
+  `${PHOTO_BASE}/photo-2-sunglasses.jpg`,
+  `${PHOTO_BASE}/photo-3-scream.jpg`,
+  `${PHOTO_BASE}/photo-4-saps.jpg`,
+  `${PHOTO_BASE}/photo-5-dj.jpg`,
+  `${PHOTO_BASE}/photo-6-outside.jpg`,
+];
+
+const Email = ({ recipientName = "there", eventPhotos }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
+  const photos = (eventPhotos && eventPhotos.length > 0 ? eventPhotos : DEFAULT_PHOTOS).slice(0, 6);
+  const row1 = photos.slice(0, 3);
+  const row2 = photos.slice(3, 6);
 
   return (
     <Html lang="en" dir="ltr">
@@ -53,10 +67,19 @@ const Email = ({ recipientName = "there", eventPhotos = [] }: Props) => {
             .
           </Text>
 
-          {eventPhotos.length > 0 && (
-            <Row style={{ margin: "8px 0 16px" }}>
-              {eventPhotos.slice(0, 3).map((src, i) => (
-                <Column key={i} style={photoCol} align="center">
+          {row1.length > 0 && (
+            <Row style={{ margin: "8px 0 8px" }}>
+              {row1.map((src, i) => (
+                <Column key={`r1-${i}`} style={photoCol} align="center">
+                  <Img src={src} alt="After-party moment" style={photoImg} />
+                </Column>
+              ))}
+            </Row>
+          )}
+          {row2.length > 0 && (
+            <Row style={{ margin: "0 0 16px" }}>
+              {row2.map((src, i) => (
+                <Column key={`r2-${i}`} style={photoCol} align="center">
                   <Img src={src} alt="After-party moment" style={photoImg} />
                 </Column>
               ))}
