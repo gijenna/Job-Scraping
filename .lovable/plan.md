@@ -1,63 +1,40 @@
 ## Goal
 
-A shared, live-updating check-in screen at `/checkin` for the Popfly door team to mark afterparty guests as arrived, with walk-in registration and a 30-second undo window.
+Send a branded HTML email to the 199 checked-in Denver/Oakley RiNo afterparty attendees with: photo gallery link, KUMA chair giveaway prompt (reply-all), Basecamp Jobs + Popfly promo codes, sponsor thank-yous (all hyperlinked to Instagram, no visible URLs), music/food shout-outs, swag bag list, 9pm raffle list, and final Basecamp/Popfly follow CTA. Test first to Jenna, then full send on your approval.
 
-## Auth
+## What gets built
 
-- One shared login: `door@popfly.com` (you create it; password shared with the team).
-- Extend the existing admin auth gate so this route accepts emails ending in `@popfly.com` OR `@wearetheoutdoorindustry.com`. All other admin routes stay restricted to `@wearetheoutdoorindustry.com`.
+**1. New email template** — `supabase/functions/_shared/transactional-email-templates/afterparty-thanks-giveaway.tsx`
+- Subject: "One last giveaway from Basecamp x Popfly! Open meeee for gifties."
+- Built with React Email components, brand colors (Dark Teal, Coral, Cream), Josefin Sans
+- All brand names are clickable links (website + Instagram handle styled as link, no raw URLs shown)
+- Embedded sections: hero copy, Photos link, KUMA chair giveaway block with chair image, Jobs/Popfly promo codes, Sponsors grid, Bevys grid (with the 8 IG links you supplied), Music (DJ Homie) + Food (Joey Parm) shout-out, Swag bags, 9pm raffle list, P.S. follow Basecamp + Popfly
+- Registered in `registry.ts`
 
-## Database changes (single migration)
+**2. Images hosted in `email-assets` bucket**
+- KUMA Backtrack chair (pulled from kumaoutdoorgear.com)
+- 3-5 event photos that you upload in chat
 
-On `afterparty_attendees`:
-- Add `checked_in_at timestamptz` (nullable)
-- Add `checked_in_by text` (nullable) — stores the email of whoever tapped check-in
-- Enable Realtime on the table so multiple devices stay in sync
-- Widen the existing admin UPDATE policy to also allow `@popfly.com` emails to update only `checked_in_at` / `checked_in_by` (or simply allow the same update scope — simpler and lower risk for one night)
+**3. New send edge function** — `supabase/functions/send-afterparty-thanks/index.ts`
+- Admin-only (verifies caller is an admin user)
+- Accepts `{ mode: 'test' | 'all' }`
+  - `test`: sends only to jenna@wearetheoutdoorindustry.com
+  - `all`: queries `afterparty_attendees` where `checked_in_at IS NOT NULL AND email IS NOT NULL`, dedupes by email, invokes `send-transactional-email` for each with a stable idempotency key (`afterparty-thanks-{attendee_id}`) so retries don't double-send
+- Returns count queued
 
-## Page: `/checkin`
+**4. Admin UI button** — small "Send afterparty thank-you email" card in `AfterPartyAdmin` with two buttons: "Send test to Jenna" and "Send to all checked-in (199)". The full-send button requires a typed confirmation.
 
-Single mobile-first screen, no separate route per action.
+## Flow
 
-**Sticky header**
-- Live counter: `47 / 132 checked in`
-- Search bar: filter as you type by attendee number, name, or company
-- Toggle: "Show all" / "Not checked in only"
+1. You upload event photos in your next message
+2. I host photos + KUMA chair image, build the template, deploy
+3. I trigger the test send to jenna@wearetheoutdoorindustry.com
+4. You confirm it looks right
+5. You click "Send to all checked-in" in the admin UI (or tell me to fire it)
 
-**List** (sorted by attendee number ascending)
-- Each row: `#36 · Jenna Herbison · Basecamp Outdoor` + role chip
-- Right side: big tap target
-  - Not checked in → coral "Check In" button
-  - Checked in → cream row with ✓ + "Checked in 2 min ago by door@popfly.com"
-- Realtime subscription on `afterparty_attendees` so check-ins, walk-ins, and any new registrations appear on every device within ~1 second
+## Notes
 
-**30-second lock with undo**
-- When tapped, row shows ✓ plus an "Undo" link for 30 seconds
-- After 30 seconds, the inline Undo disappears and the row collapses to the checked-in state
-- A small "⋯" on every checked-in row opens a confirm dialog: "Un-check this guest? This should only be used for mistakes." → reverses it
-- This keeps casual mis-taps recoverable instantly while preventing accidental un-checks during a busy door
-
-**Walk-in (floating button, bottom right)**
-- "+ Walk-in" opens a sheet with a truncated form:
-  - Full name (required)
-  - Email (required)
-  - Company
-  - Role (Brand / Creator / Other — radio)
-- On submit: inserts into `afterparty_attendees` with auto-assigned `attendee_number`, then immediately marks them checked-in. They appear instantly on every device via realtime.
-
-## Out of scope
-
-- No printing, no per-person logins, no exports, no edge functions.
-- No changes to the existing afterparty registration flow, emails, or matches.
-
-## Technical notes
-
-- New file: `src/pages/Checkin.tsx` (~300 lines)
-- Route added in `src/App.tsx`
-- Auth gate: locate the existing `@wearetheoutdoorindustry.com` check and add an OR for `@popfly.com` scoped to this route only
-- Realtime: `supabase.channel('checkin').on('postgres_changes', { event: '*', schema: 'public', table: 'afterparty_attendees' }, ...)` plus `ALTER PUBLICATION supabase_realtime ADD TABLE public.afterparty_attendees`
-- Undo timer: local `setTimeout` per row; the underlying DB write happens immediately on tap (instant for other devices) and the inline Undo just reverses it within 30s
-
-## What you'll need to do
-
-After I build it, you give the Popfly lead this URL and the shared `door@popfly.com` login. That's it.
+- Existing send infra (queue, suppression, unsubscribe footer) is reused, so unsubscribed addresses are skipped automatically and the required unsubscribe footer is appended.
+- "Reply all" works because the email's reply-to is jenna@wearetheoutdoorindustry.com; recipients hitting Reply will go to Jenna (true reply-all to the whole list isn't possible since each recipient gets an individual send, which is correct for deliverability).
+- No em dashes anywhere in the copy.
+- One small caveat: 199 sends will count against your monthly email quota. If you're still tight on quota, top up Cloud & AI balance before the full send.
