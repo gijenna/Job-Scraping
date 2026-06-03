@@ -286,44 +286,28 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* VIBES */}
-          <Heading style={h2}>Big thanks to our vibes crew</Heading>
+          {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
+          <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
+          <Text style={text}>
+            Vibes crew, career-fair booths, all in one place. Tap any logo to follow up.
+          </Text>
           <Section style={sponsorBox}>
-            <div style={chipWrap}>
-              {VIBES.map((s) => (
-                <SponsorChip key={s.name} s={s} />
-              ))}
+            <div style={bubbleWrapOuter}>
+              {(() => {
+                const seen = new Set<string>();
+                const merged: SponsorBrand[] = [];
+                for (const s of [...VIBES, ...brands]) {
+                  const key = (s.name || "").trim().toLowerCase();
+                  if (!key || seen.has(key)) continue;
+                  seen.add(key);
+                  merged.push(s);
+                }
+                return merged.map((s) => <LogoBubble key={s.name} s={s} />);
+              })()}
             </div>
           </Section>
 
           <Hr style={hr} />
-
-          {/* OUTSIDE THANK YOU */}
-          <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
-          <Text style={text}>
-            <Link href="https://www.outsideinc.com/" style={inlineLink}>Outside</Link>{" "}
-            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee and every brand. None of this happens without them.
-          </Text>
-
-          <Hr style={hr} />
-
-          {/* CAREER FAIR SPONSORS */}
-          {brands.length > 0 && (
-            <>
-              <Heading style={h2}>Follow the brands you met at the fair 🏕️</Heading>
-              <Text style={text}>
-                Every booth on the floor, in one place. Click any logo to dig in to their careers page or site.
-              </Text>
-              <Section style={sponsorBox}>
-                <div style={chipWrap}>
-                  {brands.map((s) => (
-                    <SponsorChip key={s.name} s={s} />
-                  ))}
-                </div>
-              </Section>
-              <Hr style={hr} />
-            </>
-          )}
 
           {/* SIGN OFF */}
           <Heading style={h2}>P.S. We're already plotting the next one 👀</Heading>
