@@ -166,14 +166,11 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
+            {/* Basecamp Match block */}
             <Row>
-              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
+              <Column style={{ width: "110px", verticalAlign: "middle", paddingRight: "14px" }} align="center">
                 <Link href="https://basecampmatch.com/">
-                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={92} height={46} style={brandLogo} />
-                </Link>
-                <div style={{ height: "10px" }} />
-                <Link href="https://www.popfly.com/">
-                  <Img src={POPFLY_LOGO} alt="Popfly" width={92} height={46} style={brandLogo} />
+                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={96} height={48} style={brandLogo} />
                 </Link>
               </Column>
               <Column style={{ verticalAlign: "top" }}>
@@ -190,8 +187,24 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
                 <Text style={promoLine}>
                   · Post gigs for free with code <strong style={code}>HireSmarter</strong>
                 </Text>
+              </Column>
+            </Row>
+
+            <Hr style={promoDivider} />
+
+            {/* Popfly block */}
+            <Row>
+              <Column style={{ width: "110px", verticalAlign: "middle", paddingRight: "14px" }} align="center">
+                <Link href="https://www.popfly.com/">
+                  <Img src={POPFLY_LOGO} alt="Popfly" width={96} height={48} style={brandLogo} />
+                </Link>
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={promoIntro}>
+                  Creator or marketer?
+                </Text>
                 <Text style={promoLine}>
-                  · Make content collabs way easier as an outdoor creator or marketer with{" "}
+                  · Make content collabs way easier with{" "}
                   <Link href="https://www.popfly.com/" style={inlineLink}>
                     Popfly.com
                   </Link>
