@@ -11,6 +11,7 @@ import AfterPartyLinkBuilder from "./AfterPartyLinkBuilder";
 import AfterPartyTestMatches from "./AfterPartyTestMatches";
 import AfterPartyPartnersAdmin from "./AfterPartyPartnersAdmin";
 import AfterPartySpotlightsAdmin from "./AfterPartySpotlightsAdmin";
+import { OutsideDays26ThanksSender } from "./OutsideDays26ThanksSender";
 
 interface Suggestion {
   id: string;
@@ -316,6 +317,8 @@ const AfterPartyAdmin = () => {
           </Button>
         </div>
       </div>
+
+      <OutsideDays26ThanksSender />
 
       <AfterPartyLinkBuilder onCreated={fetchAll} />
 
