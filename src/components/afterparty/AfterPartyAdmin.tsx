@@ -300,6 +300,23 @@ const AfterPartyAdmin = () => {
         </div>
       </div>
 
+      <div className="rounded-xl border border-events-yellow/30 bg-events-yellow/5 p-4">
+        <h3 className="font-display font-bold text-events-cream mb-1">After-party APOLOGY giveaway (didn't get in)</h3>
+        <p className="text-xs text-events-cream/60 mb-3">
+          Sends the apology + KUMA chair giveaway email to every registrant who did NOT check in (stuck in line).
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={() => sendThanksEmail("test", "apology")} disabled={working} variant="outline" className="border-events-cream/30 text-events-cream">
+            {working ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+            Send test to Jenna
+          </Button>
+          <Button onClick={() => sendThanksEmail("all", "apology")} disabled={working} className="bg-events-yellow text-events-teal">
+            <Mail className="w-4 h-4 mr-2" />
+            Send to all non-checked-in ({attendees.filter((a: any) => !a.checked_in_at && a.email).length})
+          </Button>
+        </div>
+      </div>
+
       <AfterPartyLinkBuilder onCreated={fetchAll} />
 
       <AfterPartyCsvSeed onImported={fetchAll} />
