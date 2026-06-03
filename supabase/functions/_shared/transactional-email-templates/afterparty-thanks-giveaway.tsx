@@ -166,38 +166,37 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
-            <Text style={promoIntro}>
-              Get secret early access to{" "}
-              <Link href="https://basecampjobs.com/" style={inlineLink}>
-                Basecampjobs.com
-              </Link>
-              !
-            </Text>
-            <Text style={promoLine}>
-              · Find your dream job with code <strong style={code}>FindYourCalling</strong>
-            </Text>
-            <Text style={promoLine}>
-              · Post gigs for free with code <strong style={code}>HireSmarter</strong>
-            </Text>
-            <Text style={promoLine}>
-              · Make content collabs way easier as an outdoor creator or marketer with{" "}
-              <Link href="https://www.popfly.com/" style={inlineLink}>
-                Popfly.com
-              </Link>
-              .
-            </Text>
-
-            {/* subtle brand logos */}
-            <Row style={{ marginTop: "14px" }}>
-              <Column align="center" style={{ padding: "0 8px" }}>
+            <Row>
+              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
                 <Link href="https://basecampmatch.com/">
-                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={84} height={42} style={brandLogo} />
+                  <Img src={BASECAMP_MATCH_LOGO} alt="Basecamp Match" width={92} height={46} style={brandLogo} />
+                </Link>
+                <div style={{ height: "10px" }} />
+                <Link href="https://www.popfly.com/">
+                  <Img src={POPFLY_LOGO} alt="Popfly" width={92} height={46} style={brandLogo} />
                 </Link>
               </Column>
-              <Column align="center" style={{ padding: "0 8px" }}>
-                <Link href="https://www.popfly.com/">
-                  <Img src={POPFLY_LOGO} alt="Popfly" width={84} height={42} style={brandLogo} />
-                </Link>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={promoIntro}>
+                  Get secret early access to{" "}
+                  <Link href="https://basecampjobs.com/" style={inlineLink}>
+                    Basecampjobs.com
+                  </Link>
+                  !
+                </Text>
+                <Text style={promoLine}>
+                  · Find your dream job with code <strong style={code}>FindYourCalling</strong>
+                </Text>
+                <Text style={promoLine}>
+                  · Post gigs for free with code <strong style={code}>HireSmarter</strong>
+                </Text>
+                <Text style={promoLine}>
+                  · Make content collabs way easier as an outdoor creator or marketer with{" "}
+                  <Link href="https://www.popfly.com/" style={inlineLink}>
+                    Popfly.com
+                  </Link>
+                  .
+                </Text>
               </Column>
             </Row>
           </Section>
