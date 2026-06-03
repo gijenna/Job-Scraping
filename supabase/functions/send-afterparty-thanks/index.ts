@@ -95,21 +95,34 @@ Deno.serve(async (req) => {
     let failed = 0;
     const errors: string[] = [];
 
+    const sendUrl = `${SUPABASE_URL}/functions/v1/send-transactional-email`;
     for (const r of recipients) {
-      const { error } = await admin.functions.invoke("send-transactional-email", {
-        body: {
-          templateName,
-          recipientEmail: r.email,
-          idempotencyKey: r.idKey,
-          replyTo: "jenna@wearetheoutdoorindustry.com",
-          templateData: { recipientName: r.name, eventPhotos },
-        },
-      });
-      if (error) {
+      try {
+        const resp = await fetch(sendUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
+            "apikey": SERVICE_ROLE_KEY,
+          },
+          body: JSON.stringify({
+            templateName,
+            recipientEmail: r.email,
+            idempotencyKey: r.idKey,
+            replyTo: "jenna@wearetheoutdoorindustry.com",
+            templateData: { recipientName: r.name, eventPhotos },
+          }),
+        });
+        if (!resp.ok) {
+          failed++;
+          const txt = await resp.text().catch(() => "");
+          if (errors.length < 5) errors.push(`${r.email}: ${resp.status} ${txt.slice(0,200)}`);
+        } else {
+          sent++;
+        }
+      } catch (e) {
         failed++;
-        if (errors.length < 5) errors.push(`${r.email}: ${error.message}`);
-      } else {
-        sent++;
+        if (errors.length < 5) errors.push(`${r.email}: ${e instanceof Error ? e.message : String(e)}`);
       }
     }
 
