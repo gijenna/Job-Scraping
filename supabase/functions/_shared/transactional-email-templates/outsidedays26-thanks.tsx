@@ -286,6 +286,15 @@ const Email = ({
 
           <Hr style={hr} />
 
+          {/* OUTSIDE THANK YOU */}
+          <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
+          <Text style={text}>
+            <Link href="https://www.outsideinc.com/" style={inlineLink}>Outside</Link>{" "}
+            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee and every brand. None of this happens without them.
+          </Text>
+
+          <Hr style={hr} />
+
           {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
           <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
           <Text style={text}>
