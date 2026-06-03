@@ -115,6 +115,23 @@ const SponsorChip = ({ s }: { s: SponsorBrand }) => {
   );
 };
 
+const LogoBubble = ({ s }: { s: SponsorBrand }) => {
+  const href = normalizeUrl(s.website_url);
+  const logo = s.logo_url || fav(s.website_url);
+  const img = logo ? (
+    <Img src={logo} alt={s.name} title={s.name} width={44} height={44} style={bubbleLogo} />
+  ) : (
+    <span style={bubbleFallback} title={s.name}>
+      {s.name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()}
+    </span>
+  );
+  return (
+    <span style={bubbleWrap}>
+      {href ? <Link href={href}>{img}</Link> : img}
+    </span>
+  );
+};
+
 const Email = ({
   recipientName = "there",
   eventPhotos,
