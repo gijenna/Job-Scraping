@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
     for (const r of recipients) {
       const { error } = await admin.functions.invoke("send-transactional-email", {
         body: {
-          templateName: TEMPLATE_NAME,
+          templateName,
           recipientEmail: r.email,
           idempotencyKey: r.idKey,
           replyTo: "jenna@wearetheoutdoorindustry.com",
