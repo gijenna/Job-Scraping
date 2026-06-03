@@ -96,7 +96,7 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
             Hey {first}, we didn't see you on the rooftop last Thursday, so we're gonna assume you're one of the folks who didn't make it into the party!
           </Text>
           <Text style={text}>
-            We super appreciate you coming &amp; your incredible patience and attitudes, and will make sure we expand our footprint next year.
+            We super appreciate you coming &amp; your incredible patience + attitude, and we'll make sure we expand our footprint next year.
           </Text>
 
           <Hr style={hr} />
