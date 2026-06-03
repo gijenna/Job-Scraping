@@ -201,12 +201,19 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
               </Column>
               <Column style={{ verticalAlign: "top" }}>
                 <Text style={promoIntro}>
-                  Creator or marketer?
+                  The Creator Marketing Platform Built for Adventure
                 </Text>
                 <Text style={promoLine}>
-                  · Make content collabs way easier with{" "}
-                  <Link href="https://www.popfly.com/" style={inlineLink}>
-                    Popfly.com
+                  · Creators and creatives:{" "}
+                  <Link href="https://www.popfly.com/creators" style={inlineLink}>
+                    Join the community
+                  </Link>
+                  .
+                </Text>
+                <Text style={promoLine}>
+                  · Brands and marketers:{" "}
+                  <Link href="https://www.popfly.com/brands" style={inlineLink}>
+                    Schedule a demo
                   </Link>
                   .
                 </Text>
