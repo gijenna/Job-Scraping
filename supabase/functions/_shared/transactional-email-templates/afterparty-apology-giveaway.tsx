@@ -147,38 +147,6 @@ const Email = ({ recipientName = "there", eventPhotos }: Props) => {
 
           <Hr style={hr} />
 
-          {/* CHAIR GIVEAWAY */}
-          <Heading style={h2}>Want to win retro chairs?</Heading>
-          <Row>
-            <Column style={{ width: "58%", verticalAlign: "top", paddingRight: "12px" }}>
-              <Text style={text}>
-                <strong>Reply all</strong> to shoot us back a quickie email telling us what you liked about hanging out at{" "}
-                <Link
-                  href="https://www.google.com/maps/search/?api=1&query=Oakley+RiNo+2660+Walnut+St+Denver+CO+80205"
-                  style={inlineLink}
-                >
-                  Oakley RiNo
-                </Link>
-                . We're planning MORE parties, so we'll keep the good stuff.
-              </Text>
-              <Text style={text}>
-                We'll randomly select a winner from the responses to nab a set of{" "}
-                <Link
-                  href="https://www.kumaoutdoorgear.com/store/category/chairs-17/product/backtrack-chair-18/"
-                  style={inlineLink}
-                >
-                  KUMA Backtrack chairs
-                </Link>
-                .
-              </Text>
-            </Column>
-            <Column style={{ width: "42%", verticalAlign: "top" }} align="center">
-              <Img src={KUMA_CHAIR_IMG} alt="KUMA Backtrack Chair" style={chairImg} />
-            </Column>
-          </Row>
-
-          <Hr style={hr} />
-
           {/* PROMO CODES */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🌲</Heading>
           <Section style={promoBox}>
