@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({ ok: true, mode, total: recipients.length, sent, failed, errors });
+    return json({ ok: true, mode, variant, total: recipients.length, sent, failed, errors });
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : String(e) }, 500);
   }
