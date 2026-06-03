@@ -225,6 +225,27 @@ const AfterPartyAdmin = () => {
     }
   };
 
+  const sendThanksEmail = async (mode: "test" | "all") => {
+    const checkedInCount = attendees.filter((a: any) => a.checked_in_at && a.email).length;
+    if (mode === "all") {
+      const typed = prompt(`This will send the thank-you + KUMA chair giveaway email to ${checkedInCount} checked-in attendees with an email. Type SEND to confirm.`);
+      if (typed !== "SEND") return;
+    }
+    setWorking(true);
+    const { data, error } = await supabase.functions.invoke("send-afterparty-thanks", { body: { mode } });
+    setWorking(false);
+    if (error) {
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    const d = data as any;
+    toast({
+      title: mode === "test" ? "Test sent to Jenna" : "Thank-you emails queued",
+      description: `Sent: ${d?.sent ?? 0}${d?.failed ? ` · Failed: ${d.failed}` : ""} (${d?.total ?? 0} total)`,
+    });
+  };
+
+
   const reviewSuggestion = async (id: string, status: "approved" | "rejected") => {
     const r = await callAdmin("review_suggestion", { id, status });
     if (r) {
@@ -256,6 +277,23 @@ const AfterPartyAdmin = () => {
         <span className="text-xs text-events-cream/50 ml-auto">
           {attendees.length} attendees · {lockedCount > 0 ? `${lockedCount} locked match rows` : "matches are live"}
         </span>
+      </div>
+
+      <div className="rounded-xl border border-events-coral/30 bg-events-coral/5 p-4">
+        <h3 className="font-display font-bold text-events-cream mb-1">After-party thank-you + KUMA chair giveaway</h3>
+        <p className="text-xs text-events-cream/60 mb-3">
+          Sends the one-off recap email (photos, chair raffle, sponsor thanks, Aug Mpls teaser) to every checked-in attendee with an email.
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={() => sendThanksEmail("test")} disabled={working} variant="outline" className="border-events-cream/30 text-events-cream">
+            {working ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+            Send test to Jenna
+          </Button>
+          <Button onClick={() => sendThanksEmail("all")} disabled={working} className="bg-events-coral text-events-cream">
+            <Mail className="w-4 h-4 mr-2" />
+            Send to all checked-in ({attendees.filter((a: any) => a.checked_in_at && a.email).length})
+          </Button>
+        </div>
       </div>
 
       <AfterPartyLinkBuilder onCreated={fetchAll} />
