@@ -32,7 +32,9 @@ const DEFAULT_PHOTOS = [
   `${ASSET_BASE}/photo-1-crowd.jpg`,
   `${ASSET_BASE}/photo-2-sunglasses.jpg`,
   `${ASSET_BASE}/photo-3-scream.jpg`,
+  `${ASSET_BASE}/photo-7-chair.jpg`,
   `${ASSET_BASE}/photo-4-saps.jpg`,
+  `${ASSET_BASE}/photo-8-neon.jpg`,
   `${ASSET_BASE}/photo-5-dj.jpg`,
   `${ASSET_BASE}/photo-6-outside.jpg`,
 ];
