@@ -233,22 +233,22 @@ const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 
 const smallText = { fontSize: "13px", color: "#555", lineHeight: "1.55", margin: "0 0 12px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
-const photoGrid = { margin: "4px 0 16px" };
-const photoTile = {
-  display: "inline-block",
-  width: "126px",
-  height: "126px",
+const heroBannerWrap = { margin: "0 0 18px" };
+const heroBanner = {
+  display: "block",
+  width: "100%",
+  height: "104px",
   objectFit: "cover" as const,
   borderRadius: "10px",
-  margin: "0 8px 8px 0",
 };
-const photoTileWide = {
+const photoGrid = { margin: "4px 0 16px", textAlign: "center" as const };
+const photoTileLandscape = {
   display: "inline-block",
-  width: "126px",
-  height: "126px",
+  width: "160px",
+  height: "118px",
   objectFit: "cover" as const,
   borderRadius: "10px",
-  margin: "0 8px 8px 0",
+  margin: "0 8px 10px 0",
 };
 const promoBox = {
   backgroundColor: "#F5E6D3",
