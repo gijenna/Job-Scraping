@@ -3,6 +3,7 @@ import * as React from "npm:react@18.3.1";
 import {
   Body,
   Button,
+  Column,
   Container,
   Font,
   Head,
@@ -11,6 +12,7 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
   Hr,
@@ -147,19 +149,26 @@ const Email = ({
 
           {/* CONNECT DASHBOARD */}
           <Heading style={h2}>Follow up with candidates 💬</Heading>
-          <Img
-            src={PHOTO_075}
-            alt="GATHER attendee holding event materials"
-            width={360}
-            height={540}
-            style={connectPhoto}
-          />
-          <Text style={text}>
-            Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
-          </Text>
-          <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
-            Open your Connect dashboard
-          </Button>
+          <Section style={connectSection}>
+            <Row>
+              <Column style={connectPhotoCol}>
+                <Img
+                  src={PHOTO_075}
+                  alt="GATHER attendee holding event materials"
+                  width={180}
+                  style={connectPhoto}
+                />
+              </Column>
+              <Column style={connectTextCol}>
+                <Text style={{ ...text, margin: "0 0 12px" }}>
+                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
+                </Text>
+                <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
+                  Open your Connect dashboard
+                </Button>
+              </Column>
+            </Row>
+          </Section>
 
           <Hr style={hr} />
 
@@ -256,13 +265,14 @@ const ctaBtnTeal = {
   textDecoration: "none",
   display: "inline-block",
 };
+const connectSection = { margin: "4px 0 8px" };
+const connectPhotoCol = { width: "180px", verticalAlign: "top" as const, paddingRight: "16px" };
+const connectTextCol = { verticalAlign: "top" as const };
 const connectPhoto = {
   display: "block",
-  width: "260px",
+  width: "180px",
   height: "auto",
-  maxWidth: "100%",
   borderRadius: "10px",
-  margin: "2px 0 14px",
 };
 const code = {
   backgroundColor: "#19363B",
