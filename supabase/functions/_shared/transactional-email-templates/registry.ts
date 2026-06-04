@@ -17,6 +17,7 @@ import { template as afterpartyRsvpConfirmation } from './afterparty-rsvp-confir
 import { template as afterpartyThanksGiveaway } from './afterparty-thanks-giveaway.tsx'
 import { template as afterpartyApologyGiveaway } from './afterparty-apology-giveaway.tsx'
 import { template as outsidedays26Thanks } from './outsidedays26-thanks.tsx'
+import { template as outsidedays26SponsorThanks } from './outsidedays26-sponsor-thanks.tsx'
 import { template as brandActivationAlert } from './brand-activation-alert.tsx'
 import { template as brandActivationConfirmation } from './brand-activation-confirmation.tsx'
 import { template as afterpartyInterestAlert } from './afterparty-interest-alert.tsx'
