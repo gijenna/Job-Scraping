@@ -28,11 +28,13 @@ interface Props {
 const ASSET_BASE =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets";
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
-const PHOTO_001 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-001.jpg`;
-const PHOTO_057 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-057.jpg`;
-const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068.jpg`;
-const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073.jpg`;
+const PHOTO_017 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-017.jpg`;
+const PHOTO_024 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-024.jpg`;
+const PHOTO_043 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-043.jpg`;
+const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068-3.jpg`;
+const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073-3.jpg`;
 const PHOTO_075 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-075.jpg`;
+const PHOTO_208 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-208.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const DASHBOARD_URL = "https://basecampoutdoorevents.com/outsidedays26/dashboard";
