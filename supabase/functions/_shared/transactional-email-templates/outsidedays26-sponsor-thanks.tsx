@@ -4,6 +4,7 @@ import {
   Body,
   Button,
   Container,
+  Font,
   Head,
   Heading,
   Html,
@@ -25,10 +26,15 @@ interface Props {
 const ASSET_BASE =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets";
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
+const PHOTO_001 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-001.jpg`;
+const PHOTO_057 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-057.jpg`;
+const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068.jpg`;
+const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073.jpg`;
+const PHOTO_075 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-075.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const DASHBOARD_URL = "https://basecampoutdoorevents.com/outsidedays26/dashboard";
-const JOBS_URL = "https://basecampjobs.com/";
+const JOBS_URL = "https://basecampjobs.com/home-employer";
 const OPTIN_SHEET_URL =
   "https://docs.google.com/spreadsheets/d/1XvRvbPKqW9H1W4lx73TnqB9HHa9SF532d28S5DGOPQQ/edit?gid=0#gid=0";
 
@@ -41,7 +47,38 @@ const Email = ({
 
   return (
     <Html lang="en" dir="ltr">
-      <Head />
+      <Head>
+        <Font
+          fontFamily="Josefin Sans"
+          fallbackFontFamily="Arial"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/josefinsans/v34/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQXME.ttf",
+            format: "truetype",
+          }}
+          fontWeight={400}
+          fontStyle="normal"
+        />
+        <Font
+          fontFamily="Josefin Sans"
+          fallbackFontFamily="Arial"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/josefinsans/v34/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_ObXXME.ttf",
+            format: "truetype",
+          }}
+          fontWeight={600}
+          fontStyle="normal"
+        />
+        <Font
+          fontFamily="Josefin Sans"
+          fallbackFontFamily="Arial"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/josefinsans/v34/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_N_XXME.ttf",
+            format: "truetype",
+          }}
+          fontWeight={700}
+          fontStyle="normal"
+        />
+      </Head>
       <Preview>Your GATHER Career Fair recap, photos, and free job posts on Basecampjobs.com.</Preview>
       <Body style={main}>
         <Container style={container}>
@@ -60,6 +97,12 @@ const Email = ({
           <Text style={text}>
             We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
           </Text>
+          <Section style={photoGrid}>
+            <Img src={PHOTO_001} alt="Basecamp Outdoor stickers at GATHER" width={126} height={126} style={photoTile} />
+            <Img src={PHOTO_057} alt="Sponsor team member at GATHER" width={126} height={126} style={photoTile} />
+            <Img src={PHOTO_068} alt="GATHER Career Fair floor with sponsor booths" width={126} height={126} style={photoTileWide} />
+            <Img src={PHOTO_073} alt="Outside Days attendee holding Outside magazine" width={126} height={126} style={photoTile} />
+          </Section>
           <Text style={text}>
             {companyFolderUrl ? (
               <>
@@ -93,7 +136,7 @@ const Email = ({
               Our new job board is easy to use and free when you help us close the wage gap by including a pay range on every role. As a thanks for participating in GATHER, you get early access plus FREE candidate match boosts (normally $400/job).
             </Text>
             <Text style={text}>
-              Use code <strong style={code}>HireSmarter</strong> at checkout.
+              If you have not made an employer account yet, enter code <strong style={code}>HireSmarter</strong> on the employer landing page.
             </Text>
             <Button href={JOBS_URL} style={ctaBtn}>
               Post a job on Basecampjobs.com
@@ -104,6 +147,13 @@ const Email = ({
 
           {/* CONNECT DASHBOARD */}
           <Heading style={h2}>Follow up with candidates 💬</Heading>
+          <Img
+            src={PHOTO_075}
+            alt="GATHER attendee holding event materials"
+            width={360}
+            height={540}
+            style={connectPhoto}
+          />
           <Text style={text}>
             Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
           </Text>
