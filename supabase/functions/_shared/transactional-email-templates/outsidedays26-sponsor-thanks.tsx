@@ -3,6 +3,7 @@ import * as React from "npm:react@18.3.1";
 import {
   Body,
   Button,
+  Column,
   Container,
   Font,
   Head,
@@ -11,6 +12,7 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
   Hr,
