@@ -292,7 +292,7 @@ const AfterPartyInterest = () => {
                 <p className="text-[11px] text-[#F5E6D3]/55 leading-relaxed pt-2">
                   <EditableText
                     settingKey="interest_fineprint"
-                    defaultText="By submitting, you're cool with Oakley sending you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event."
+                    defaultText="By submitting, you're cool with Oakley and Popfly sending you an email about other fun stuff they're doing, and with your likeness being shared if you're captured in a photo at the event."
                     as="span"
                   />
                 </p>
