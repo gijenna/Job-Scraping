@@ -212,6 +212,23 @@ const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 
 const smallText = { fontSize: "13px", color: "#555", lineHeight: "1.55", margin: "0 0 12px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
+const photoGrid = { margin: "4px 0 16px" };
+const photoTile = {
+  display: "inline-block",
+  width: "126px",
+  height: "126px",
+  objectFit: "cover" as const,
+  borderRadius: "10px",
+  margin: "0 8px 8px 0",
+};
+const photoTileWide = {
+  display: "inline-block",
+  width: "126px",
+  height: "126px",
+  objectFit: "cover" as const,
+  borderRadius: "10px",
+  margin: "0 8px 8px 0",
+};
 const promoBox = {
   backgroundColor: "#F5E6D3",
   borderRadius: "12px",
@@ -238,6 +255,14 @@ const ctaBtnTeal = {
   fontSize: "14px",
   textDecoration: "none",
   display: "inline-block",
+};
+const connectPhoto = {
+  display: "block",
+  width: "260px",
+  height: "auto",
+  maxWidth: "100%",
+  borderRadius: "10px",
+  margin: "2px 0 14px",
 };
 const code = {
   backgroundColor: "#19363B",
