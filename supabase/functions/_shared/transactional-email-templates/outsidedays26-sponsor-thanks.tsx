@@ -149,19 +149,26 @@ const Email = ({
 
           {/* CONNECT DASHBOARD */}
           <Heading style={h2}>Follow up with candidates 💬</Heading>
-          <Img
-            src={PHOTO_075}
-            alt="GATHER attendee holding event materials"
-            width={360}
-            height={540}
-            style={connectPhoto}
-          />
-          <Text style={text}>
-            Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
-          </Text>
-          <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
-            Open your Connect dashboard
-          </Button>
+          <Section style={connectSection}>
+            <Row>
+              <Column style={connectPhotoCol}>
+                <Img
+                  src={PHOTO_075}
+                  alt="GATHER attendee holding event materials"
+                  width={180}
+                  style={connectPhoto}
+                />
+              </Column>
+              <Column style={connectTextCol}>
+                <Text style={{ ...text, margin: "0 0 12px" }}>
+                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
+                </Text>
+                <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
+                  Open your Connect dashboard
+                </Button>
+              </Column>
+            </Row>
+          </Section>
 
           <Hr style={hr} />
 
