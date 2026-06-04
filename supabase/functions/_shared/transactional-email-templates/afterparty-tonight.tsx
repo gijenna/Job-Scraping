@@ -203,7 +203,7 @@ const AfterPartyTonightEmail = ({
           <Text style={signoff}>{'<3'} Oakley, Popfly, Basecamp, &amp; Outside</Text>
 
           <Text style={fineprint}>
-            By registering for this event, you're cool with Oakley and Popfly shooting you an email about other fun stuff they're doing, and with your likeness being shared if you're captured in a photo at the event.
+            By registering for this event, you're cool with Oakley, Popfly, and Basecamp Outdoor shooting you an email about other fun stuff they're doing, and with your likeness being shared if you're captured in a photo at the event.
           </Text>
         </Container>
       </Body>
