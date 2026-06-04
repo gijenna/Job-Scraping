@@ -28,11 +28,13 @@ interface Props {
 const ASSET_BASE =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets";
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
-const PHOTO_001 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-001.jpg`;
-const PHOTO_057 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-057.jpg`;
-const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068.jpg`;
-const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073.jpg`;
+const PHOTO_017 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-017.jpg`;
+const PHOTO_024 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-024.jpg`;
+const PHOTO_043 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-043.jpg`;
+const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068-3.jpg`;
+const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073-3.jpg`;
 const PHOTO_075 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-075.jpg`;
+const PHOTO_208 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-208.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const DASHBOARD_URL = "https://basecampoutdoorevents.com/outsidedays26/dashboard";
@@ -84,6 +86,15 @@ const Email = ({
       <Preview>Your GATHER Career Fair recap, photos, and free job posts on Basecampjobs.com.</Preview>
       <Body style={main}>
         <Container style={container}>
+          <Section style={heroBannerWrap}>
+            <Img
+              src={PHOTO_043}
+              alt="We're Hiring sign at GATHER"
+              width={544}
+              style={heroBanner}
+            />
+          </Section>
+
           <Heading style={h1}>Thanks for showing up for GATHER 🌲</Heading>
           <Text style={text}>
             Hi {first},
@@ -100,10 +111,11 @@ const Email = ({
             We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
           </Text>
           <Section style={photoGrid}>
-            <Img src={PHOTO_001} alt="Basecamp Outdoor stickers at GATHER" width={126} height={126} style={photoTile} />
-            <Img src={PHOTO_057} alt="Sponsor team member at GATHER" width={126} height={126} style={photoTile} />
-            <Img src={PHOTO_068} alt="GATHER Career Fair floor with sponsor booths" width={126} height={126} style={photoTileWide} />
-            <Img src={PHOTO_073} alt="Outside Days attendee holding Outside magazine" width={126} height={126} style={photoTile} />
+            <Img src={PHOTO_017} alt="Conversation happening at the GATHER career fair" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_208} alt="Attendees talking across a sponsor table at GATHER" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_024} alt="Attendees relaxing together in camp chairs at the event" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={160} height={118} style={photoTileLandscape} />
           </Section>
           <Text style={text}>
             {companyFolderUrl ? (
@@ -221,22 +233,22 @@ const text = { fontSize: "15px", color: "#333", lineHeight: "1.6", margin: "0 0 
 const smallText = { fontSize: "13px", color: "#555", lineHeight: "1.55", margin: "0 0 12px" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline", fontWeight: 600 };
 const hr = { borderColor: "#eee", margin: "22px 0" };
-const photoGrid = { margin: "4px 0 16px" };
-const photoTile = {
-  display: "inline-block",
-  width: "126px",
-  height: "126px",
+const heroBannerWrap = { margin: "0 0 18px" };
+const heroBanner = {
+  display: "block",
+  width: "100%",
+  height: "104px",
   objectFit: "cover" as const,
   borderRadius: "10px",
-  margin: "0 8px 8px 0",
 };
-const photoTileWide = {
+const photoGrid = { margin: "4px 0 16px", textAlign: "center" as const };
+const photoTileLandscape = {
   display: "inline-block",
-  width: "126px",
-  height: "126px",
+  width: "160px",
+  height: "118px",
   objectFit: "cover" as const,
   borderRadius: "10px",
-  margin: "0 8px 8px 0",
+  margin: "0 8px 10px 0",
 };
 const promoBox = {
   backgroundColor: "#F5E6D3",
