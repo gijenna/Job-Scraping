@@ -86,6 +86,15 @@ const Email = ({
       <Preview>Your GATHER Career Fair recap, photos, and free job posts on Basecampjobs.com.</Preview>
       <Body style={main}>
         <Container style={container}>
+          <Section style={heroBannerWrap}>
+            <Img
+              src={PHOTO_043}
+              alt="We're Hiring sign at GATHER"
+              width={544}
+              style={heroBanner}
+            />
+          </Section>
+
           <Heading style={h1}>Thanks for showing up for GATHER 🌲</Heading>
           <Text style={text}>
             Hi {first},
@@ -102,10 +111,11 @@ const Email = ({
             We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
           </Text>
           <Section style={photoGrid}>
-            <Img src={PHOTO_001} alt="Basecamp Outdoor stickers at GATHER" width={126} height={126} style={photoTile} />
-            <Img src={PHOTO_057} alt="Sponsor team member at GATHER" width={126} height={126} style={photoTile} />
-            <Img src={PHOTO_068} alt="GATHER Career Fair floor with sponsor booths" width={126} height={126} style={photoTileWide} />
-            <Img src={PHOTO_073} alt="Outside Days attendee holding Outside magazine" width={126} height={126} style={photoTile} />
+            <Img src={PHOTO_017} alt="Conversation happening at the GATHER career fair" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_208} alt="Attendees talking across a sponsor table at GATHER" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_024} alt="Attendees relaxing together in camp chairs at the event" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={160} height={118} style={photoTileLandscape} />
           </Section>
           <Text style={text}>
             {companyFolderUrl ? (
