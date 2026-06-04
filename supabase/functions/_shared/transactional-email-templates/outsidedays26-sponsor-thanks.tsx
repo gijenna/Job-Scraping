@@ -265,13 +265,14 @@ const ctaBtnTeal = {
   textDecoration: "none",
   display: "inline-block",
 };
+const connectSection = { margin: "4px 0 8px" };
+const connectPhotoCol = { width: "180px", verticalAlign: "top" as const, paddingRight: "16px" };
+const connectTextCol = { verticalAlign: "top" as const };
 const connectPhoto = {
   display: "block",
-  width: "260px",
+  width: "180px",
   height: "auto",
-  maxWidth: "100%",
   borderRadius: "10px",
-  margin: "2px 0 14px",
 };
 const code = {
   backgroundColor: "#19363B",
