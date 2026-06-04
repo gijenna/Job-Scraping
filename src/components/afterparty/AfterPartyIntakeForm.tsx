@@ -961,7 +961,7 @@ const AfterPartyIntakeForm = ({ attendeeId, initial, onSaved, startInStep2Hint }
             className="text-[11px] leading-snug"
             style={{ color: "rgba(255,255,255,0.55)", maxWidth: 480 }}
           >
-            By registering, you're cool with Oakley shooting you an email about other fun stuff they're doing in store, and with your likeness being shared if you're captured in a photo at the event.
+            By registering, you're cool with Oakley and Popfly shooting you an email about other fun stuff they're doing, and with your likeness being shared if you're captured in a photo at the event.
           </p>
         </div>
       ) : (attendeeId || justSavedId) ? (
