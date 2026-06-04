@@ -28,13 +28,13 @@ interface Props {
 const ASSET_BASE =
   "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/email-assets";
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
-const PHOTO_017 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-017.jpg`;
-const PHOTO_024 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-024.jpg`;
+const PHOTO_001 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-001.jpg`;
 const PHOTO_043 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-043.jpg`;
-const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068-3.jpg`;
-const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073-3.jpg`;
+const PHOTO_068 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-068.jpg`;
+const PHOTO_073 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-073.jpg`;
 const PHOTO_075 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-075.jpg`;
-const PHOTO_208 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-208.jpg`;
+const PHOTO_179 = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-179.jpg`;
+const PHOTO_9060 = `${ASSET_BASE}/outsidedays26-sponsor%2FIMG_9060.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const DASHBOARD_URL = "https://basecampoutdoorevents.com/outsidedays26/dashboard";
@@ -111,11 +111,11 @@ const Email = ({
             We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
           </Text>
           <Section style={photoGrid}>
-            <Img src={PHOTO_017} alt="Conversation happening at the GATHER career fair" width={160} height={118} style={photoTileLandscape} />
-            <Img src={PHOTO_208} alt="Attendees talking across a sponsor table at GATHER" width={160} height={118} style={photoTileLandscape} />
-            <Img src={PHOTO_024} alt="Attendees relaxing together in camp chairs at the event" width={160} height={118} style={photoTileLandscape} />
-            <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={160} height={118} style={photoTileLandscape} />
-            <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={160} height={118} style={photoTileLandscape} />
+            <Img src={PHOTO_001} alt="Basecamp Outdoor stickers scattered on a table" width={104} height={130} style={photoTilePortrait} />
+            <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={104} height={130} style={photoTilePortrait} />
+            <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={104} height={130} style={photoTilePortrait} />
+            <Img src={PHOTO_9060} alt="Two attendees laughing during a conversation at GATHER" width={104} height={130} style={photoTilePortrait} />
+            <Img src={PHOTO_179} alt="REI rep smiling at her booth at GATHER" width={104} height={130} style={photoTilePortrait} />
           </Section>
           <Text style={text}>
             {companyFolderUrl ? (
@@ -241,14 +241,14 @@ const heroBanner = {
   objectFit: "cover" as const,
   borderRadius: "10px",
 };
-const photoGrid = { margin: "4px 0 16px", textAlign: "center" as const };
-const photoTileLandscape = {
+const photoGrid = { margin: "4px 0 16px", textAlign: "center" as const, whiteSpace: "nowrap" as const };
+const photoTilePortrait = {
   display: "inline-block",
-  width: "160px",
-  height: "118px",
+  width: "104px",
+  height: "130px",
   objectFit: "cover" as const,
-  borderRadius: "10px",
-  margin: "0 8px 10px 0",
+  borderRadius: "8px",
+  margin: "0 3px 6px 0",
 };
 const promoBox = {
   backgroundColor: "#F5E6D3",
