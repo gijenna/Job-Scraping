@@ -42,6 +42,9 @@ const ASSET_BASE =
 const PHOTO_BASE = `${ASSET_BASE}/outsidedays26-thanks`;
 const KUMA_CHAIR_IMG = `${ASSET_BASE}/afterparty-thanks/kuma-backtrack-chair.jpg`;
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
+const EDGES_FIRST_LOGO = `${ASSET_BASE}/outsidedays26-thanks%2Fedges-first-logo.png`;
+const CONNECT_CARD_EXAMPLE = `${ASSET_BASE}/outsidedays26-thanks%2Fconnect-card-example.png`;
+const HIRING_BANNER = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-043.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const FEEDBACK_FORM = "https://basecampoutdoor.typeform.com/to/oknPzBB6";
@@ -70,10 +73,11 @@ const DEFAULT_EDGES: ExpertSpotlight = {
 const VIBES: SponsorBrand[] = [
   { name: "Outside", website_url: "https://www.outsideinc.com/" },
   { name: "Sap's", website_url: "https://sapsoriginal.com/" },
-  { name: "Edges First", website_url: "https://edgesfirst.co/" },
+  { name: "Edges First", website_url: "https://edgesfirst.co/", logo_url: EDGES_FIRST_LOGO },
   { name: "Best Day", website_url: "https://bestdaybrewing.com/" },
   { name: "NEMO Equipment", website_url: "https://www.nemoequipment.com/" },
 ];
+
 
 const fav = (url?: string | null): string | undefined => {
   if (!url) return undefined;
