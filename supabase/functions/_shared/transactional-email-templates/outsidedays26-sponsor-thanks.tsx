@@ -19,10 +19,21 @@ import {
 } from "npm:@react-email/components@0.0.22";
 import type { TemplateEntry } from "./registry.ts";
 
+interface CompanyPhoto {
+  url: string;
+  alt?: string;
+}
+
 interface Props {
   recipientName?: string;
   companyName?: string;
   companyFolderUrl?: string;
+  customGreeting?: string;
+  customIntro?: string;
+  companyPhotos?: CompanyPhoto[];
+  companyLabel?: string;
+  companyAlbumUrl?: string;
+  companyAlbumLinkText?: string;
 }
 
 const ASSET_BASE =
@@ -46,8 +57,17 @@ const Email = ({
   recipientName = "there",
   companyName,
   companyFolderUrl,
+  customGreeting,
+  customIntro,
+  companyPhotos,
+  companyLabel,
+  companyAlbumUrl,
+  companyAlbumLinkText,
 }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
+  const photosHeading = companyLabel ? `${companyLabel} photos 📸` : "Photos of your team 📸";
+  const albumLinkText = companyAlbumLinkText || (companyLabel ? `${companyLabel} album` : "Your company folder");
+  const albumUrl = companyAlbumUrl || companyFolderUrl;
 
   return (
     <Html lang="en" dir="ltr">
@@ -97,30 +117,42 @@ const Email = ({
 
           <Heading style={h1}>Thanks for showing up for GATHER 🌲</Heading>
           <Text style={text}>
-            Hi {first},
+            {customGreeting || `Hi ${first},`}
           </Text>
           <Text style={text}>
-            We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
+            {customIntro || (
+              <>
+                We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
+              </>
+            )}
           </Text>
 
           <Hr style={hr} />
 
           {/* PHOTOS */}
-          <Heading style={h2}>Photos of your team 📸</Heading>
+          <Heading style={h2}>{photosHeading}</Heading>
           <Text style={text}>
             We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
           </Text>
           <Section style={photoGrid}>
-            <Img src={PHOTO_001} alt="Basecamp Outdoor stickers scattered on a table" width={104} height={130} style={photoTilePortrait} />
-            <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={104} height={130} style={photoTilePortrait} />
-            <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={104} height={130} style={photoTilePortrait} />
-            <Img src={PHOTO_9060} alt="Two attendees laughing during a conversation at GATHER" width={104} height={130} style={photoTilePortrait} />
-            <Img src={PHOTO_179} alt="REI rep smiling at her booth at GATHER" width={104} height={130} style={photoTilePortrait} />
+            {companyPhotos && companyPhotos.length > 0 ? (
+              companyPhotos.map((p, i) => (
+                <Img key={i} src={p.url} alt={p.alt || "Event photo"} width={104} height={130} style={photoTilePortrait} />
+              ))
+            ) : (
+              <>
+                <Img src={PHOTO_001} alt="Basecamp Outdoor stickers scattered on a table" width={104} height={130} style={photoTilePortrait} />
+                <Img src={PHOTO_068} alt="Wide overhead view of the GATHER Career Fair floor" width={104} height={130} style={photoTilePortrait} />
+                <Img src={PHOTO_073} alt="Attendee reading Outside magazine at the event" width={104} height={130} style={photoTilePortrait} />
+                <Img src={PHOTO_9060} alt="Two attendees laughing during a conversation at GATHER" width={104} height={130} style={photoTilePortrait} />
+                <Img src={PHOTO_179} alt="REI rep smiling at her booth at GATHER" width={104} height={130} style={photoTilePortrait} />
+              </>
+            )}
           </Section>
           <Text style={text}>
-            {companyFolderUrl ? (
+            {albumUrl ? (
               <>
-                · <Link href={companyFolderUrl} style={inlineLink}>Your company folder</Link><br />
+                · <Link href={albumUrl} style={inlineLink}>{albumLinkText}</Link><br />
               </>
             ) : null}
             · <Link href={PIXIESET_URL} style={inlineLink}>All event photos</Link>
