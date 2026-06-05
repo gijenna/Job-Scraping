@@ -115,24 +115,26 @@ const Email = ({
             />
           </Section>
 
-          <Heading style={h1}>Thanks for showing up for GATHER 🌲</Heading>
+          <Heading style={h1}>Thanks for showing up for GATHER</Heading>
           <Text style={text}>
             {customGreeting || `Hi ${first},`}
           </Text>
-          <Text style={text}>
-            {customIntro || (
-              <>
-                We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
-              </>
-            )}
-          </Text>
+          {customIntro ? (
+            customIntro.split(/\n\n+/).map((para, i) => (
+              <Text key={i} style={text}>{para}</Text>
+            ))
+          ) : (
+            <Text style={text}>
+              We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
+            </Text>
+          )}
 
           <Hr style={hr} />
 
           {/* PHOTOS */}
           <Heading style={h2}>{photosHeading}</Heading>
           <Text style={text}>
-            We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
+            Here's a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"}.
           </Text>
           <Section style={photoGrid}>
             {companyPhotos && companyPhotos.length > 0 ? (
@@ -150,6 +152,7 @@ const Email = ({
             )}
           </Section>
           <Text style={text}>
+            You can find the rest here:<br />
             {albumUrl ? (
               <>
                 · <Link href={albumUrl} style={inlineLink}>{albumLinkText}</Link><br />
@@ -179,7 +182,7 @@ const Email = ({
               Jobs with pay details are FREE to post on Basecampjobs.com
             </Heading>
             <Text style={text}>
-              Our new job board is easy to use and free when you help us close the wage gap by including a pay range on every role. As a thanks for participating in GATHER, you get early access plus FREE candidate match boosts (normally $400/job).
+              As a thanks for participating in GATHER, you get early access to our new job board plus FREE candidate match boosts (normally $400/job).
             </Text>
             <Text style={text}>
               If you have not made an employer account yet, enter code <strong style={code}>HireSmarter</strong> on the employer landing page.
@@ -205,7 +208,10 @@ const Email = ({
               </Column>
               <Column style={connectTextCol}>
                 <Text style={{ ...text, margin: "0 0 12px" }}>
-                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
+                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note.
+                </Text>
+                <Text style={{ ...text, margin: "0 0 12px" }}>
+                  You can also search and filter all 554 registered candidates.
                 </Text>
                 <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
                   Open your Connect dashboard
@@ -233,7 +239,8 @@ const Email = ({
           <Hr style={hr} />
 
           <Text style={signoff}>
-            Thanks again for making GATHER what it is.<br />
+            Thanks again for making GATHER what it is.<br /><br />
+            Just hit reply with any questions or feedback!<br /><br />
             {'<3'} Jenna &amp; the Basecamp crew
           </Text>
         </Container>
