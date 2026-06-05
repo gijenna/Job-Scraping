@@ -115,17 +115,19 @@ const Email = ({
             />
           </Section>
 
-          <Heading style={h1}>Thanks for showing up for GATHER 🌲</Heading>
+          <Heading style={h1}>Thanks for showing up for GATHER</Heading>
           <Text style={text}>
             {customGreeting || `Hi ${first},`}
           </Text>
-          <Text style={text}>
-            {customIntro || (
-              <>
-                We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
-              </>
-            )}
-          </Text>
+          {customIntro ? (
+            customIntro.split(/\n\n+/).map((para, i) => (
+              <Text key={i} style={text}>{para}</Text>
+            ))
+          ) : (
+            <Text style={text}>
+              We are thrilled you joined us for this year's GATHER Career Fair with Outside Days. We welcomed just over 500 community members to this year's event. You put in <em>work</em>.
+            </Text>
+          )}
 
           <Hr style={hr} />
 
