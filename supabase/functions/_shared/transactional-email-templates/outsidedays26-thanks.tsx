@@ -187,18 +187,7 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* CONNECT DASHBOARD REMINDER */}
-          <Heading style={h2}>Keep the conversations going 💬</Heading>
-          <Text style={text}>
-            Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
-          </Text>
-          <Button href={CONNECT_URL} style={ctaBtnTeal}>
-            Open your Connect dashboard
-          </Button>
-
-          <Hr style={hr} />
-
-          {/* WORK / HIRE / COLLAB */}
+          {/* WORK / HIRE / COLLAB - moved up under KUMA giveaway */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🏔️</Heading>
           <Section style={promoBox}>
             <Row>
@@ -227,6 +216,31 @@ const Email = ({
 
           <Hr style={hr} />
 
+          {/* CONNECT DASHBOARD REMINDER - with example card image */}
+          <Heading style={h2}>Keep the conversations going 💬</Heading>
+          <Section>
+            <Row>
+              <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
+                <Img
+                  src={CONNECT_CARD_EXAMPLE}
+                  alt="Example of what employers see in your Connect profile"
+                  style={connectExampleImg}
+                />
+                <Text style={connectExampleCaption}>Here's an example of what employers see</Text>
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={text}>
+                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
+                </Text>
+                <Button href={CONNECT_URL} style={ctaBtnTeal}>
+                  Open your Connect dashboard
+                </Button>
+              </Column>
+            </Row>
+          </Section>
+
+          <Hr style={hr} />
+
           {/* EDGES FIRST SPOTLIGHT */}
           <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
           <Section style={expertCard}>
@@ -235,6 +249,13 @@ const Email = ({
                 {edges.photo_url && (
                   <Img src={edges.photo_url} alt={edges.full_name || "Edges First"} style={expertPhoto} />
                 )}
+                <Img
+                  src={EDGES_FIRST_LOGO}
+                  alt="Edges First"
+                  width={96}
+                  height={74}
+                  style={edgesLogoUnderPhoto}
+                />
               </Column>
               <Column style={{ verticalAlign: "top" }}>
                 <Text style={expertName}>{edges.full_name}</Text>
@@ -298,6 +319,18 @@ const Email = ({
           </Text>
 
           <Hr style={hr} />
+
+          {/* WE'RE HIRING BANNER */}
+          <Section style={heroBannerWrap}>
+            <Img
+              src={HIRING_BANNER}
+              alt="We're Hiring at GATHER Career Fair"
+              width={544}
+              height={104}
+              style={heroBanner}
+            />
+          </Section>
+
 
           {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
           <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
