@@ -1,34 +1,44 @@
-## Plan to redo the four sponsor emails
+## Plan to correct the attendee email
 
-I will redo these from scratch and treat the image match as the primary QA step.
+I will update the OutsideDays career-fair attendee thank-you email so it exactly follows this order:
 
-### What I will redo
+```text
+Banner
+Kuma
+Basecampjobs.com
+Photos
+Keep convos going
+Edges First
+Brands grid
+Outside thank you
+```
 
-1. **Big City Mountaineers**
-   - Album: `https://drive.google.com/drive/u/2/folders/1oEOvt32CTcOxyp51wRb0mXCII8wmGra3`
-   - Rebuild the email photo set using only verified Big City Mountaineers photos.
+### Changes I will make
 
-2. **Adaptive Climbing Group**
-   - Album: `https://drive.google.com/drive/u/2/folders/1VyhpqtbwpqiiFEAlDGm8IgCpIThV0C5d`
-   - Rebuild the email photo set using only verified Adaptive Climbing Group photos.
+1. **Move the hiring banner to the very top**
+   - Put the existing “We're Hiring” banner immediately after the intro, before KUMA.
 
-3. **Best Day Brewing**
-   - Album: `https://drive.google.com/drive/u/2/folders/1IGsk6Y5VcfhWCiJyw9VKwpxGI12HNNAq`
-   - Rebuild the email photo set using only verified Best Day Brewing photos.
+2. **Keep KUMA second**
+   - Leave the KUMA chair giveaway directly under the banner.
 
-4. **Sap's Original**
-   - Album: `https://drive.google.com/drive/u/2/folders/1FGpa2VushYF_RJPI9pVwAL13Qmo7W1uA`
-   - Rebuild the email photo set using only verified Sap's Original photos.
+3. **Keep Basecampjobs.com third**
+   - Leave the Basecampjobs.com promo directly under KUMA.
 
-### QA process before sending
+4. **Move photos before Connect**
+   - Move the event photos/gallery section above “Keep conversations going.”
 
-- Open and inspect the available images for each company before upload.
-- Do not reuse the previous uploaded photo URLs or filename guesses.
-- Upload corrected images under fresh, company-specific paths so the old wrong images cannot be accidentally reused.
-- Confirm each public image URL loads before using it in an email.
-- Send corrected test emails to `jenna@wearetheoutdoorindustry.com` only.
+5. **Keep the Connect app card image on the left**
+   - Keep the uploaded/example profile card image in the left column of “Keep conversations going.”
+   - Keep the caption: “Here's an example of what employers see”.
 
-### Deliverable
+6. **Restore the VIBES portion inside the brands section**
+   - Re-add the vibes crew callout instead of letting it disappear.
+   - Keep Edges First in that vibes/company merge with the correct logo.
+   - Keep Sap’s, Best Day, Outside, NEMO, and Edges First in the vibes list.
 
-- Four corrected test emails sent to Jenna.
-- A short summary listing the exact images used for each company and confirming the album links are correct.
+7. **Move Outside thank-you to the very end**
+   - Put the Outside thank-you section after the brands grid and before the signoff.
+
+8. **Deploy and test**
+   - Deploy the updated email function.
+   - Send a test attendee email to Jenna so the order and missing visual sections can be checked.
