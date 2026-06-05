@@ -57,8 +57,17 @@ const Email = ({
   recipientName = "there",
   companyName,
   companyFolderUrl,
+  customGreeting,
+  customIntro,
+  companyPhotos,
+  companyLabel,
+  companyAlbumUrl,
+  companyAlbumLinkText,
 }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
+  const photosHeading = companyLabel ? `${companyLabel} photos 📸` : "Photos of your team 📸";
+  const albumLinkText = companyAlbumLinkText || (companyLabel ? `${companyLabel} album` : "Your company folder");
+  const albumUrl = companyAlbumUrl || companyFolderUrl;
 
   return (
     <Html lang="en" dir="ltr">
