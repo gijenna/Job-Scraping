@@ -239,7 +239,8 @@ const Email = ({
           <Hr style={hr} />
 
           <Text style={signoff}>
-            Thanks again for making GATHER what it is.<br />
+            Thanks again for making GATHER what it is.<br /><br />
+            Just hit reply with any questions or feedback!<br /><br />
             {'<3'} Jenna &amp; the Basecamp crew
           </Text>
         </Container>
