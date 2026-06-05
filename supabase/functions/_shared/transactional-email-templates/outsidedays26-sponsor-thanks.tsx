@@ -111,6 +111,7 @@ const Email = ({
               src={PHOTO_043}
               alt="We're Hiring sign at GATHER"
               width={544}
+              height={104}
               style={heroBanner}
             />
           </Section>
