@@ -485,6 +485,36 @@ const code = {
   fontSize: "13px",
 };
 const brandLogo = { height: "42px", width: "auto", maxWidth: "120px", opacity: 0.85, display: "block" };
+const connectExampleImg = {
+  width: "100%",
+  maxWidth: "220px",
+  height: "auto",
+  borderRadius: "10px",
+  display: "block",
+  border: "1px solid #E8DFCD",
+};
+const connectExampleCaption = {
+  fontSize: "12px",
+  color: "#19363B",
+  fontStyle: "italic" as const,
+  textAlign: "center" as const,
+  margin: "6px 0 0",
+  opacity: 0.8,
+};
+const edgesLogoUnderPhoto = {
+  width: "96px",
+  height: "auto",
+  display: "block",
+  margin: "10px auto 0",
+};
+const heroBannerWrap = { margin: "8px 0 14px" };
+const heroBanner = {
+  width: "100%",
+  maxWidth: "544px",
+  height: "auto",
+  borderRadius: "10px",
+  display: "block",
+};
 const expertCard = {
   backgroundColor: "#F5E6D3",
   borderRadius: "12px",
