@@ -134,7 +134,7 @@ const Email = ({
           {/* PHOTOS */}
           <Heading style={h2}>{photosHeading}</Heading>
           <Text style={text}>
-            We attached a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"} to this email. You can find the rest here:
+            Here's a few of our favorite shots of {companyName ? <strong>{companyName}</strong> : "your team"}.
           </Text>
           <Section style={photoGrid}>
             {companyPhotos && companyPhotos.length > 0 ? (
@@ -152,6 +152,7 @@ const Email = ({
             )}
           </Section>
           <Text style={text}>
+            You can find the rest here:<br />
             {albumUrl ? (
               <>
                 · <Link href={albumUrl} style={inlineLink}>{albumLinkText}</Link><br />
