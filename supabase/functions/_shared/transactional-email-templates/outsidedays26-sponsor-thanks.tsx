@@ -182,7 +182,7 @@ const Email = ({
               Jobs with pay details are FREE to post on Basecampjobs.com
             </Heading>
             <Text style={text}>
-              Our new job board is easy to use and free when you help us close the wage gap by including a pay range on every role. As a thanks for participating in GATHER, you get early access plus FREE candidate match boosts (normally $400/job).
+              As a thanks for participating in GATHER, you get early access to our new job board plus FREE candidate match boosts (normally $400/job).
             </Text>
             <Text style={text}>
               If you have not made an employer account yet, enter code <strong style={code}>HireSmarter</strong> on the employer landing page.
