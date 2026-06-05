@@ -19,10 +19,21 @@ import {
 } from "npm:@react-email/components@0.0.22";
 import type { TemplateEntry } from "./registry.ts";
 
+interface CompanyPhoto {
+  url: string;
+  alt?: string;
+}
+
 interface Props {
   recipientName?: string;
   companyName?: string;
   companyFolderUrl?: string;
+  customGreeting?: string;
+  customIntro?: string;
+  companyPhotos?: CompanyPhoto[];
+  companyLabel?: string;
+  companyAlbumUrl?: string;
+  companyAlbumLinkText?: string;
 }
 
 const ASSET_BASE =
