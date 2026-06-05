@@ -160,7 +160,20 @@ const Email = ({
             Hey {first}, we're so glad you joined us at the OutsideDays Career Fair. The energy in that room was unreal, and a huge part of that was you. Below are a few ways to keep the momentum going.
           </Text>
 
-          {/* CHAIR GIVEAWAY (now feedback-driven) */}
+          {/* 1. WE'RE HIRING BANNER */}
+          <Section style={heroBannerWrap}>
+            <Img
+              src={HIRING_BANNER}
+              alt="We're Hiring at GATHER Career Fair"
+              width={544}
+              height={104}
+              style={heroBanner}
+            />
+          </Section>
+
+          <Hr style={hr} />
+
+          {/* 2. KUMA CHAIR GIVEAWAY */}
           <Section style={giveawayBox}>
             <Row>
               <Column style={{ width: "58%", verticalAlign: "top", paddingRight: "12px" }}>
@@ -187,7 +200,7 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* WORK / HIRE / COLLAB - moved up under KUMA giveaway */}
+          {/* 3. BASECAMPJOBS.COM */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🏔️</Heading>
           <Section style={promoBox}>
             <Row>
@@ -216,67 +229,7 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* CONNECT DASHBOARD REMINDER - with example card image */}
-          <Heading style={h2}>Keep the conversations going 💬</Heading>
-          <Section>
-            <Row>
-              <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
-                <Img
-                  src={CONNECT_CARD_EXAMPLE}
-                  alt="Example of what employers see in your Connect profile"
-                  style={connectExampleImg}
-                />
-                <Text style={connectExampleCaption}>Here's an example of what employers see</Text>
-              </Column>
-              <Column style={{ verticalAlign: "top" }}>
-                <Text style={text}>
-                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
-                </Text>
-                <Button href={CONNECT_URL} style={ctaBtnTeal}>
-                  Open your Connect dashboard
-                </Button>
-              </Column>
-            </Row>
-          </Section>
-
-          <Hr style={hr} />
-
-          {/* EDGES FIRST SPOTLIGHT */}
-          <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
-          <Section style={expertCard}>
-            <Row>
-              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
-                {edges.photo_url && (
-                  <Img src={edges.photo_url} alt={edges.full_name || "Edges First"} style={expertPhoto} />
-                )}
-                <Img
-                  src={EDGES_FIRST_LOGO}
-                  alt="Edges First"
-                  width={96}
-                  height={74}
-                  style={edgesLogoUnderPhoto}
-                />
-              </Column>
-              <Column style={{ verticalAlign: "top" }}>
-                <Text style={expertName}>{edges.full_name}</Text>
-                <Text style={expertRole}>
-                  {edges.job_title}{edges.job_title && edges.current_company ? " · " : ""}{edges.current_company}
-                </Text>
-                <Text style={expertBlurb}>
-                  Kelly built our site and a bunch of others you've probably visited. If you're planning a refresh, a launch, or just need someone who actually picks up the phone, start with her. She'll tell you the truth about what you need (and what you don't).
-                </Text>
-                {edges.website_url && (
-                  <Button href={normalizeUrl(edges.website_url)!} style={ctaBtnCoral}>
-                    Visit Edges First
-                  </Button>
-                )}
-              </Column>
-            </Row>
-          </Section>
-
-          <Hr style={hr} />
-
-          {/* PHOTOS */}
+          {/* 4. PHOTOS */}
           <Heading style={h2}>See if you made the gallery 📸</Heading>
           <Text style={text}>
             Browse the full set here:{" "}
@@ -311,47 +264,106 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* OUTSIDE THANK YOU */}
+          {/* 5. KEEP CONVERSATIONS GOING */}
+          <Heading style={h2}>Keep the conversations going 💬</Heading>
+          <Section>
+            <Row>
+              <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
+                <Img
+                  src={CONNECT_CARD_EXAMPLE}
+                  alt="Example of what employers see in your Connect profile"
+                  style={connectExampleImg}
+                />
+                <Text style={connectExampleCaption}>Here's an example of what employers see</Text>
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={text}>
+                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
+                </Text>
+                <Button href={CONNECT_URL} style={ctaBtnTeal}>
+                  Open your Connect dashboard
+                </Button>
+              </Column>
+            </Row>
+          </Section>
+
+          <Hr style={hr} />
+
+          {/* 6. EDGES FIRST SPOTLIGHT */}
+          <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
+          <Section style={expertCard}>
+            <Row>
+              <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
+                {edges.photo_url && (
+                  <Img src={edges.photo_url} alt={edges.full_name || "Edges First"} style={expertPhoto} />
+                )}
+                <Img
+                  src={EDGES_FIRST_LOGO}
+                  alt="Edges First"
+                  width={96}
+                  height={74}
+                  style={edgesLogoUnderPhoto}
+                />
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={expertName}>{edges.full_name}</Text>
+                <Text style={expertRole}>
+                  {edges.job_title}{edges.job_title && edges.current_company ? " · " : ""}{edges.current_company}
+                </Text>
+                <Text style={expertBlurb}>
+                  Kelly built our site and a bunch of others you've probably visited. If you're planning a refresh, a launch, or just need someone who actually picks up the phone, start with her. She'll tell you the truth about what you need (and what you don't).
+                </Text>
+                {edges.website_url && (
+                  <Button href={normalizeUrl(edges.website_url)!} style={ctaBtnCoral}>
+                    Visit Edges First
+                  </Button>
+                )}
+              </Column>
+            </Row>
+          </Section>
+
+          <Hr style={hr} />
+
+          {/* 7. BRANDS GRID (vibes crew + career-fair sponsors) */}
+          <Heading style={h2}>Big thanks to our vibes crew 💛</Heading>
+          <Text style={text}>
+            The brands who kept the day fueled, hydrated, and feeling good.
+          </Text>
+          <Section style={sponsorBox}>
+            <div style={bubbleWrapOuter}>
+              {VIBES.map((s) => <LogoBubble key={`vibes-${s.name}`} s={s} />)}
+            </div>
+          </Section>
+
+          <Heading style={h2}>And every brand on the floor 🏕️</Heading>
+          <Text style={text}>
+            Career-fair booths, all in one place. Tap any logo to follow up.
+          </Text>
+          <Section style={sponsorBox}>
+            <div style={bubbleWrapOuter}>
+              {(() => {
+                const vibesKeys = new Set(VIBES.map((v) => (v.name || "").trim().toLowerCase()));
+                const seen = new Set<string>();
+                const filtered: SponsorBrand[] = [];
+                for (const s of brands) {
+                  const key = (s.name || "").trim().toLowerCase();
+                  if (!key || seen.has(key) || vibesKeys.has(key)) continue;
+                  seen.add(key);
+                  filtered.push(s);
+                }
+                return filtered.map((s) => <LogoBubble key={s.name} s={s} />);
+              })()}
+            </div>
+          </Section>
+
+          <Hr style={hr} />
+
+          {/* 8. OUTSIDE THANK YOU */}
           <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
           <Text style={text}>
             <Link href="https://www.outsideinc.com/" style={inlineLink}>Outside</Link>{" "}
             hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee and every brand. None of this happens without them.
           </Text>
-
-          <Hr style={hr} />
-
-          {/* WE'RE HIRING BANNER */}
-          <Section style={heroBannerWrap}>
-            <Img
-              src={HIRING_BANNER}
-              alt="We're Hiring at GATHER Career Fair"
-              width={544}
-              height={104}
-              style={heroBanner}
-            />
-          </Section>
-
-
-          {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
-          <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
-          <Text style={text}>
-            Vibes crew, career-fair booths, all in one place. Tap any logo to follow up.
-          </Text>
-          <Section style={sponsorBox}>
-            <div style={bubbleWrapOuter}>
-              {(() => {
-                const seen = new Set<string>();
-                const merged: SponsorBrand[] = [];
-                for (const s of [...VIBES, ...brands]) {
-                  const key = (s.name || "").trim().toLowerCase();
-                  if (!key || seen.has(key)) continue;
-                  seen.add(key);
-                  merged.push(s);
-                }
-                return merged.map((s) => <LogoBubble key={s.name} s={s} />);
-              })()}
-            </div>
-          </Section>
 
           <Hr style={hr} />
 
