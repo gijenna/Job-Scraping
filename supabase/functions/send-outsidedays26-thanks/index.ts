@@ -77,14 +77,58 @@ Deno.serve(async (req) => {
       "sound healing",
       "best day brewing", // listed in vibes section instead
       "sap's",
+      "oakley", // removed per request
     ]);
+
+    // Brand URL overrides — keyed by lowercased trimmed brand name. Applied after DB fetch
+    // so the public event map is untouched. Multiple names can point to the same URL (e.g. VF family).
+    const VFC = "https://www.vfc.com/careers";
+    const ALTERRA = "https://www.alterramtn.co/en/careers";
+    const URL_OVERRIDES: Record<string, string> = {
+      "department of natural resources": "https://dnr.colorado.gov/careers",
+      "colorado department of natural resources": "https://dnr.colorado.gov/careers",
+      "co dnr": "https://dnr.colorado.gov/careers",
+      "alterra mountain company": ALTERRA,
+      "a basin": ALTERRA,
+      "arapahoe basin": ALTERRA,
+      "winter park": ALTERRA,
+      "winter park resort": ALTERRA,
+      "steamboat": ALTERRA,
+      "steamboat resort": ALTERRA,
+      "aspen": "https://aspen.com/careers/",
+      "aspen one": "https://aspen.com/careers/",
+      "altra": VFC,
+      "smartwool": VFC,
+      "vans": VFC,
+      "icebreaker": VFC,
+      "the north face": VFC,
+      "north face": VFC,
+      "vf": VFC,
+      "vf corporation": VFC,
+      "timberland": VFC,
+      "jansport": VFC,
+      "cotopaxi": "https://www.cotopaxi.com/pages/jobs?srsltid=AfmBOor3_BFljUoPHjHFnCZ8yvnSVWc8nAoj5pXap-s_s5d16BOxHSZG",
+      "maine outdoor brands": "https://maineoutdoorbrands.com/job-board/",
+      "rei": "https://www.rei.jobs/careers-home",
+      "outcrop wilderness": "https://www.outcropwilderness.com/",
+      "edges first": "https://edgesfirst.co/",
+    };
+
+    const EDGES_FIRST_LOGO = `${SUPABASE_URL}/storage/v1/object/public/email-assets/outsidedays26-thanks%2Fedges-first-logo.png`;
+
     const sponsors = ((brandRows as any[]) || [])
       .filter((b) => b?.name && !SKIP_NAMES.has(b.name.toLowerCase().trim()))
-      .map((b) => ({
-        name: b.name,
-        website_url: b.website_url || null,
-        logo_url: b.logo_url || null,
-      }));
+      .map((b) => {
+        const key = String(b.name || "").toLowerCase().trim();
+        const override = URL_OVERRIDES[key];
+        const isEdges = key === "edges first";
+        return {
+          name: b.name,
+          website_url: override || b.website_url || null,
+          logo_url: isEdges ? EDGES_FIRST_LOGO : (b.logo_url || null),
+        };
+      });
+
 
     // --- Fetch Edges First expert spotlight ---
     const { data: edgesRows } = await admin

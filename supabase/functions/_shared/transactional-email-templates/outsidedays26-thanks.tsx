@@ -42,6 +42,9 @@ const ASSET_BASE =
 const PHOTO_BASE = `${ASSET_BASE}/outsidedays26-thanks`;
 const KUMA_CHAIR_IMG = `${ASSET_BASE}/afterparty-thanks/kuma-backtrack-chair.jpg`;
 const BASECAMP_MATCH_LOGO = `${ASSET_BASE}/afterparty-thanks/basecamp-match-logo.png`;
+const EDGES_FIRST_LOGO = `${ASSET_BASE}/outsidedays26-thanks%2Fedges-first-logo.png`;
+const CONNECT_CARD_EXAMPLE = `${ASSET_BASE}/outsidedays26-thanks%2Fconnect-card-example.png`;
+const HIRING_BANNER = `${ASSET_BASE}/outsidedays26-sponsor%2FAnthonyMarz_Basecamp-043.jpg`;
 
 const PIXIESET_URL = "https://anthonymarz.pixieset.com/basecampoutdooroutsidedays/";
 const FEEDBACK_FORM = "https://basecampoutdoor.typeform.com/to/oknPzBB6";
@@ -70,10 +73,11 @@ const DEFAULT_EDGES: ExpertSpotlight = {
 const VIBES: SponsorBrand[] = [
   { name: "Outside", website_url: "https://www.outsideinc.com/" },
   { name: "Sap's", website_url: "https://sapsoriginal.com/" },
-  { name: "Edges First", website_url: "https://edgesfirst.co/" },
+  { name: "Edges First", website_url: "https://edgesfirst.co/", logo_url: EDGES_FIRST_LOGO },
   { name: "Best Day", website_url: "https://bestdaybrewing.com/" },
   { name: "NEMO Equipment", website_url: "https://www.nemoequipment.com/" },
 ];
+
 
 const fav = (url?: string | null): string | undefined => {
   if (!url) return undefined;
@@ -183,18 +187,7 @@ const Email = ({
 
           <Hr style={hr} />
 
-          {/* CONNECT DASHBOARD REMINDER */}
-          <Heading style={h2}>Keep the conversations going 💬</Heading>
-          <Text style={text}>
-            Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
-          </Text>
-          <Button href={CONNECT_URL} style={ctaBtnTeal}>
-            Open your Connect dashboard
-          </Button>
-
-          <Hr style={hr} />
-
-          {/* WORK / HIRE / COLLAB */}
+          {/* WORK / HIRE / COLLAB - moved up under KUMA giveaway */}
           <Heading style={h2}>Want to work, hire, or collab in the Outdoor Industry? 🏔️</Heading>
           <Section style={promoBox}>
             <Row>
@@ -223,6 +216,31 @@ const Email = ({
 
           <Hr style={hr} />
 
+          {/* CONNECT DASHBOARD REMINDER - with example card image */}
+          <Heading style={h2}>Keep the conversations going 💬</Heading>
+          <Section>
+            <Row>
+              <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
+                <Img
+                  src={CONNECT_CARD_EXAMPLE}
+                  alt="Example of what employers see in your Connect profile"
+                  style={connectExampleImg}
+                />
+                <Text style={connectExampleCaption}>Here's an example of what employers see</Text>
+              </Column>
+              <Column style={{ verticalAlign: "top" }}>
+                <Text style={text}>
+                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
+                </Text>
+                <Button href={CONNECT_URL} style={ctaBtnTeal}>
+                  Open your Connect dashboard
+                </Button>
+              </Column>
+            </Row>
+          </Section>
+
+          <Hr style={hr} />
+
           {/* EDGES FIRST SPOTLIGHT */}
           <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
           <Section style={expertCard}>
@@ -231,6 +249,13 @@ const Email = ({
                 {edges.photo_url && (
                   <Img src={edges.photo_url} alt={edges.full_name || "Edges First"} style={expertPhoto} />
                 )}
+                <Img
+                  src={EDGES_FIRST_LOGO}
+                  alt="Edges First"
+                  width={96}
+                  height={74}
+                  style={edgesLogoUnderPhoto}
+                />
               </Column>
               <Column style={{ verticalAlign: "top" }}>
                 <Text style={expertName}>{edges.full_name}</Text>
@@ -295,6 +320,18 @@ const Email = ({
 
           <Hr style={hr} />
 
+          {/* WE'RE HIRING BANNER */}
+          <Section style={heroBannerWrap}>
+            <Img
+              src={HIRING_BANNER}
+              alt="We're Hiring at GATHER Career Fair"
+              width={544}
+              height={104}
+              style={heroBanner}
+            />
+          </Section>
+
+
           {/* PARTICIPATING BRANDS (vibes crew + career-fair sponsors, merged) */}
           <Heading style={h2}>Big thanks to every brand on the floor 🏕️</Heading>
           <Text style={text}>
@@ -343,36 +380,39 @@ export const template = {
     recipientName: "Jenna",
     eventPhotos: [],
     sponsors: [
-      { name: "A Basin", logo_url: "https://www.google.com/s2/favicons?domain=abasin.com&sz=128" },
+      { name: "A Basin", website_url: "https://www.alterramtn.co/en/careers", logo_url: "https://www.google.com/s2/favicons?domain=abasin.com&sz=128" },
       { name: "Adaptive Climbing Group", website_url: "https://www.adaptiveclimbinggroup.org/", logo_url: "https://www.google.com/s2/favicons?domain=www.adaptiveclimbinggroup.org&sz=128" },
-      { name: "Alterra Mountain Company", website_url: "alterramountainco.com", logo_url: "https://www.google.com/s2/favicons?domain=alterramountainco.com&sz=128" },
-      { name: "ALTRA", logo_url: "https://www.google.com/s2/favicons?domain=altrarunning.com&sz=128" },
-      { name: "Aspen One", website_url: "Aspen.com", logo_url: "https://www.google.com/s2/favicons?domain=aspen.com&sz=128" },
-      { name: "Basecamp", website_url: "Basecampjobs.com", logo_url: "https://www.google.com/s2/favicons?domain=basecampjobs.com&sz=128" },
+      { name: "Alterra Mountain Company", website_url: "https://www.alterramtn.co/en/careers", logo_url: "https://www.google.com/s2/favicons?domain=alterramountainco.com&sz=128" },
+      { name: "ALTRA", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=altrarunning.com&sz=128" },
+      { name: "Aspen One", website_url: "https://aspen.com/careers/", logo_url: "https://www.google.com/s2/favicons?domain=aspen.com&sz=128" },
+      { name: "Basecamp", website_url: "https://basecampjobs.com/", logo_url: "https://www.google.com/s2/favicons?domain=basecampjobs.com&sz=128" },
       { name: "BOA", website_url: "https://www.boafit.com/en-us/company/careers", logo_url: "https://qpnzjcbdtybwazceggmv.supabase.co/storage/v1/object/public/event-photos/logos/denver26-partners/1773855520687.jpg" },
       { name: "Brooks Running", website_url: "https://www.brooksrunning.com/en_us/meet-brooks/careers/", logo_url: "https://www.google.com/s2/favicons?domain=Brooksrunning.com&sz=128" },
-      { name: "Big city mountaineers", website_url: "bigcitymountaineers.org", logo_url: "https://www.google.com/s2/favicons?domain=bigcitymountaineers.org&sz=128" },
-      { name: "Cotopaxi", logo_url: "https://www.google.com/s2/favicons?domain=cotopaxi.com&sz=128" },
-      { name: "Department of Natural Resources", website_url: "https://dnr.colorado.gov/", logo_url: "https://www.google.com/s2/favicons?domain=dnr.colorado.gov&sz=128" },
+      { name: "Big city mountaineers", website_url: "https://bigcitymountaineers.org", logo_url: "https://www.google.com/s2/favicons?domain=bigcitymountaineers.org&sz=128" },
+      { name: "Cotopaxi", website_url: "https://www.cotopaxi.com/pages/jobs?srsltid=AfmBOor3_BFljUoPHjHFnCZ8yvnSVWc8nAoj5pXap-s_s5d16BOxHSZG", logo_url: "https://www.google.com/s2/favicons?domain=cotopaxi.com&sz=128" },
+      { name: "Department of Natural Resources", website_url: "https://dnr.colorado.gov/careers", logo_url: "https://www.google.com/s2/favicons?domain=dnr.colorado.gov&sz=128" },
+      { name: "Edges First", website_url: "https://edgesfirst.co/", logo_url: EDGES_FIRST_LOGO },
       { name: "HBCUs Outside", website_url: "https://www.hbcusoutside.com/", logo_url: "https://www.google.com/s2/favicons?domain=www.hbcusoutside.com&sz=128" },
-      { name: "icebreaker", website_url: "icebreaker.com", logo_url: "https://www.google.com/s2/favicons?domain=icebreaker.com&sz=128" },
-      { name: "ing outdoors", website_url: "ingoutdoors.com", logo_url: "https://www.google.com/s2/favicons?domain=ingoutdoors.com&sz=128" },
-      { name: "Jansport", website_url: "Jansport.com", logo_url: "https://www.google.com/s2/favicons?domain=jansport.com&sz=128" },
-      { name: "Maine Outdoor Brands", logo_url: "https://www.google.com/s2/favicons?domain=Maineoutdoorbrands.com&sz=128" },
-      { name: "Oakley", website_url: "https://www.oakley.com/en-us/careers", logo_url: "https://www.google.com/s2/favicons?domain=oakley.com&sz=128" },
-      { name: "Outcrop Wilderness", logo_url: "https://www.google.com/s2/favicons?domain=Outcropwilderness.com&sz=128" },
+      { name: "icebreaker", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=icebreaker.com&sz=128" },
+      { name: "ing outdoors", website_url: "https://ingoutdoors.com", logo_url: "https://www.google.com/s2/favicons?domain=ingoutdoors.com&sz=128" },
+      { name: "Jansport", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=jansport.com&sz=128" },
+      { name: "Maine Outdoor Brands", website_url: "https://maineoutdoorbrands.com/job-board/", logo_url: "https://www.google.com/s2/favicons?domain=Maineoutdoorbrands.com&sz=128" },
+      { name: "Outcrop Wilderness", website_url: "https://www.outcropwilderness.com/", logo_url: "https://www.google.com/s2/favicons?domain=Outcropwilderness.com&sz=128" },
       { name: "Outside Inc", website_url: "https://www.outsideinc.com/careers/", logo_url: "https://www.google.com/s2/favicons?domain=outsideinc.com&sz=128" },
       { name: "Outward Bound", website_url: "https://www.outwardbound.org/about-us/working-at-outward-bound/careers/", logo_url: "https://www.google.com/s2/favicons?domain=outwardbound.org&sz=128" },
-      { name: "Peak Design", website_url: "Peakdesign.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=peakdesign.com&sz=128" },
-      { name: "Rainmaker", website_url: "makerain.com", logo_url: "https://www.google.com/s2/favicons?domain=makerain.com&sz=128" },
-      { name: "REI", website_url: "rei.com", logo_url: "https://www.google.com/s2/favicons?domain=REI.com&sz=128" },
-      { name: "SheJumps", website_url: "shejumps.org", logo_url: "https://www.google.com/s2/favicons?domain=shejumps.org&sz=128" },
-      { name: "Smartwool", logo_url: "https://www.google.com/s2/favicons?domain=smartwool.com&sz=128" },
-      { name: "Steamboat Resort", website_url: "steamboat.com", logo_url: "https://www.google.com/s2/favicons?domain=steamboat.com&sz=128" },
-      { name: "The North Face", website_url: "Thenorthface.com", logo_url: "https://www.google.com/s2/favicons?domain=thenorthface.com&sz=128" },
+      { name: "Peak Design", website_url: "https://peakdesign.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=peakdesign.com&sz=128" },
+      { name: "Rainmaker", website_url: "https://makerain.com", logo_url: "https://www.google.com/s2/favicons?domain=makerain.com&sz=128" },
+      { name: "REI", website_url: "https://www.rei.jobs/careers-home", logo_url: "https://www.google.com/s2/favicons?domain=REI.com&sz=128" },
+      { name: "SheJumps", website_url: "https://shejumps.org", logo_url: "https://www.google.com/s2/favicons?domain=shejumps.org&sz=128" },
+      { name: "Smartwool", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=smartwool.com&sz=128" },
+      { name: "Steamboat Resort", website_url: "https://www.alterramtn.co/en/careers", logo_url: "https://www.google.com/s2/favicons?domain=steamboat.com&sz=128" },
+      { name: "The North Face", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=thenorthface.com&sz=128" },
       { name: "The Wilderness Society", website_url: "https://www.wilderness.org/careers-internships", logo_url: "https://www.google.com/s2/favicons?domain=wilderness.org&sz=128" },
-      { name: "Timberland", website_url: "timberland.com", logo_url: "https://www.google.com/s2/favicons?domain=timberland.com&sz=128" },
+      { name: "Timberland", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=timberland.com&sz=128" },
+      { name: "Vans", website_url: "https://www.vfc.com/careers", logo_url: "https://www.google.com/s2/favicons?domain=vans.com&sz=128" },
+      { name: "Winter Park Resort", website_url: "https://www.alterramtn.co/en/careers", logo_url: "https://www.google.com/s2/favicons?domain=winterparkresort.com&sz=128" },
     ],
+
     edgesFirst: DEFAULT_EDGES,
   },
 } satisfies TemplateEntry;
@@ -448,6 +488,36 @@ const code = {
   fontSize: "13px",
 };
 const brandLogo = { height: "42px", width: "auto", maxWidth: "120px", opacity: 0.85, display: "block" };
+const connectExampleImg = {
+  width: "100%",
+  maxWidth: "220px",
+  height: "auto",
+  borderRadius: "10px",
+  display: "block",
+  border: "1px solid #E8DFCD",
+};
+const connectExampleCaption = {
+  fontSize: "12px",
+  color: "#19363B",
+  fontStyle: "italic" as const,
+  textAlign: "center" as const,
+  margin: "6px 0 0",
+  opacity: 0.8,
+};
+const edgesLogoUnderPhoto = {
+  width: "96px",
+  height: "auto",
+  display: "block",
+  margin: "10px auto 0",
+};
+const heroBannerWrap = { margin: "8px 0 14px" };
+const heroBanner = {
+  width: "100%",
+  maxWidth: "544px",
+  height: "auto",
+  borderRadius: "10px",
+  display: "block",
+};
 const expertCard = {
   backgroundColor: "#F5E6D3",
   borderRadius: "12px",
