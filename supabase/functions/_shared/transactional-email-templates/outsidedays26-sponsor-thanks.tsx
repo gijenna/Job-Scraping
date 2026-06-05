@@ -208,7 +208,10 @@ const Email = ({
               </Column>
               <Column style={connectTextCol}>
                 <Text style={{ ...text, margin: "0 0 12px" }}>
-                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note. You can also search and filter all 554 registered candidates.
+                  Log in to your Connect dashboard, the tool we built for this event, to see and message every candidate who visited your table or sent your team a note.
+                </Text>
+                <Text style={{ ...text, margin: "0 0 12px" }}>
+                  You can also search and filter all 554 registered candidates.
                 </Text>
                 <Button href={DASHBOARD_URL} style={ctaBtnTeal}>
                   Open your Connect dashboard
