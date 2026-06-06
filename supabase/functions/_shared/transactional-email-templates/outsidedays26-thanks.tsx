@@ -524,11 +524,11 @@ const edgesLogoUnderPhoto = {
 };
 const heroBannerWrap = { margin: "8px 0 14px" };
 const heroBanner = {
-  width: "100%",
-  maxWidth: "544px",
-  height: "auto",
-  borderRadius: "10px",
   display: "block",
+  width: "100%",
+  height: "104px",
+  objectFit: "cover" as const,
+  borderRadius: "10px",
 };
 const expertCard = {
   backgroundColor: "#F5E6D3",
