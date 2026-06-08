@@ -337,7 +337,7 @@ const Email = ({
 
           <Heading style={h2}>And every brand on the floor 🏕️</Heading>
           <Text style={text}>
-            Career-fair booths, all in one place. Tap any logo to follow up.
+            Tap any logo for careers info.
           </Text>
           <Section style={sponsorBox}>
             <div style={bubbleWrapOuter}>
@@ -359,10 +359,10 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 8. OUTSIDE THANK YOU */}
-          <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
+          <Heading style={h2}>A HUGE thank you to Outside 💛</Heading>
           <Text style={text}>
             <Link href="https://www.outsideinc.com/" style={inlineLink}>Outside</Link>{" "}
-            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee and every brand. None of this happens without them.
+            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee. None of this happens without them.
           </Text>
 
           <Hr style={hr} />
