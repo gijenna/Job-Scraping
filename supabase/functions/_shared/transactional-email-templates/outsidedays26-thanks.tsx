@@ -290,7 +290,7 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 6. EDGES FIRST SPOTLIGHT */}
-          <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
+          <Heading style={h2}>Need a website in the next year? Work with an outdoorsy human 🛠️</Heading>
           <Section style={expertCard}>
             <Row>
               <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
@@ -306,12 +306,12 @@ const Email = ({
                 />
               </Column>
               <Column style={{ verticalAlign: "top" }}>
-                <Text style={expertName}>{edges.full_name}</Text>
+                <Text style={expertName}>Kelly Bleck, Durango, CO</Text>
                 <Text style={expertRole}>
                   {edges.job_title}{edges.job_title && edges.current_company ? " · " : ""}{edges.current_company}
                 </Text>
                 <Text style={expertBlurb}>
-                  Kelly built our site and a bunch of others you've probably visited. If you're planning a refresh, a launch, or just need someone who actually picks up the phone, start with her. She'll tell you the truth about what you need (and what you don't).
+                  Kelly is ROOTED in outdoor rec and community impact, and is committed to helping orgs in this space bridge the gap between the depth of their work and how they show up online. If you're a startup, non-profit, or legacy organization, Kelly can walk you through an affordable, human solution that lets YOU stay focused on your community, mission, or the trail you're summiting that day.
                 </Text>
                 {edges.website_url && (
                   <Button href={normalizeUrl(edges.website_url)!} style={ctaBtnCoral}>
