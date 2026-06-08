@@ -70,7 +70,6 @@ Deno.serve(async (req) => {
 
     const SKIP_NAMES = new Set([
       "industry expert zone",
-      "popfly",
       "edges first",
       "basecamp",
       "career collective",
