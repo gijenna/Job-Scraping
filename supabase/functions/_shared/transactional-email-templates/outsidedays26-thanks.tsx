@@ -374,7 +374,7 @@ const Email = ({
             <Link href="https://www.instagram.com/basecampoutdoorjobs/" style={inlineLink}>
               @basecampoutdoorjobs
             </Link>
-            {" "}so you know when and where we pop up next.
+            {" "}so you know when and where we pop up next (hint: MN).
           </Text>
 
           <Text style={signoff}>{'<3'} Jenna &amp; the Basecamp crew</Text>
