@@ -265,7 +265,7 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 5. KEEP CONVERSATIONS GOING */}
-          <Heading style={h2}>Keep the conversations going 💬</Heading>
+          <Heading style={h2}>Start some conversations 💬</Heading>
           <Section>
             <Row>
               <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
@@ -278,7 +278,7 @@ const Email = ({
               </Column>
               <Column style={{ verticalAlign: "top" }}>
                 <Text style={text}>
-                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
+                  Even though you didn't make it you can still use the Connect dashboard to send notes to the industry experts and recruiters who were at the fair, and make sure your profile is set up so you appear in employer searches.
                 </Text>
                 <Button href={CONNECT_URL} style={ctaBtnTeal}>
                   Open your Connect dashboard
