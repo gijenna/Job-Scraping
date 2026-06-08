@@ -70,7 +70,6 @@ Deno.serve(async (req) => {
 
     const SKIP_NAMES = new Set([
       "industry expert zone",
-      "popfly",
       "edges first",
       "basecamp",
       "career collective",
@@ -112,6 +111,7 @@ Deno.serve(async (req) => {
       "rei": "https://www.rei.jobs/careers-home",
       "outcrop wilderness": "https://www.outcropwilderness.com/",
       "edges first": "https://edgesfirst.co/",
+      "popfly": "https://popfly.com/",
     };
 
     const EDGES_FIRST_LOGO = `${SUPABASE_URL}/storage/v1/object/public/email-assets/outsidedays26-thanks%2Fedges-first-logo.png`;

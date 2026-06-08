@@ -155,9 +155,9 @@ const Email = ({
       <Preview>Win a set of KUMA chairs + see the OutsideDays Career Fair recap.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Thanks for showing up 🌲</Heading>
+          <Heading style={h1}>Hey friends 🌲</Heading>
           <Text style={text}>
-            Hey {first}, we're so glad you joined us at the OutsideDays Career Fair. The energy in that room was unreal, and a huge part of that was you. Below are a few ways to keep the momentum going.
+            We're bummed we didn't get to say hi, BUT, we know life happens & we figured we'd extend a few ways for you to interact with the industry experts and recruiters we gathered in Denver.
           </Text>
 
           {/* 1. WE'RE HIRING BANNER */}
@@ -265,7 +265,7 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 5. KEEP CONVERSATIONS GOING */}
-          <Heading style={h2}>Keep the conversations going 💬</Heading>
+          <Heading style={h2}>Start some conversations 💬</Heading>
           <Section>
             <Row>
               <Column style={{ width: "44%", verticalAlign: "top", paddingRight: "14px" }} align="center">
@@ -278,7 +278,7 @@ const Email = ({
               </Column>
               <Column style={{ verticalAlign: "top" }}>
                 <Text style={text}>
-                  Head to your Connect dashboard to send notes to the industry experts and recruiters you chatted with at the fair, and make sure your profile is set up so you come up in employer searches.
+                  Even though you didn't make it you can still use the Connect dashboard to send notes to the industry experts and recruiters who were at the fair, and make sure your profile is set up so you appear in employer searches.
                 </Text>
                 <Button href={CONNECT_URL} style={ctaBtnTeal}>
                   Open your Connect dashboard
@@ -290,7 +290,7 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 6. EDGES FIRST SPOTLIGHT */}
-          <Heading style={h2}>Need a website in the next year? Meet Edges First 🛠️</Heading>
+          <Heading style={h2}>Need a website in the next year? Work with an outdoorsy human 🛠️</Heading>
           <Section style={expertCard}>
             <Row>
               <Column style={{ width: "110px", verticalAlign: "top", paddingRight: "14px" }} align="center">
@@ -306,12 +306,12 @@ const Email = ({
                 />
               </Column>
               <Column style={{ verticalAlign: "top" }}>
-                <Text style={expertName}>{edges.full_name}</Text>
+                <Text style={expertName}>Kelly Bleck, Durango, CO</Text>
                 <Text style={expertRole}>
                   {edges.job_title}{edges.job_title && edges.current_company ? " · " : ""}{edges.current_company}
                 </Text>
                 <Text style={expertBlurb}>
-                  Kelly built our site and a bunch of others you've probably visited. If you're planning a refresh, a launch, or just need someone who actually picks up the phone, start with her. She'll tell you the truth about what you need (and what you don't).
+                  Kelly is ROOTED in outdoor rec and community impact, and is committed to helping orgs in this space bridge the gap between the depth of their work and how they show up online. If you're a startup, non-profit, or legacy organization, Kelly can walk you through an affordable, human solution that lets YOU stay focused on your community, mission, or the trail you're summiting that day.
                 </Text>
                 {edges.website_url && (
                   <Button href={normalizeUrl(edges.website_url)!} style={ctaBtnCoral}>
@@ -337,7 +337,7 @@ const Email = ({
 
           <Heading style={h2}>And every brand on the floor 🏕️</Heading>
           <Text style={text}>
-            Career-fair booths, all in one place. Tap any logo to follow up.
+            Tap any logo for careers info.
           </Text>
           <Section style={sponsorBox}>
             <div style={bubbleWrapOuter}>
@@ -359,10 +359,10 @@ const Email = ({
           <Hr style={hr} />
 
           {/* 8. OUTSIDE THANK YOU */}
-          <Heading style={h2}>And a HUGE thank you to Outside 💛</Heading>
+          <Heading style={h2}>A HUGE thank you to Outside 💛</Heading>
           <Text style={text}>
             <Link href="https://www.outsideinc.com/" style={inlineLink}>Outside</Link>{" "}
-            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee and every brand. None of this happens without them.
+            hosted the whole career fair at the U of Outside and made sure it stayed free for every attendee. None of this happens without them.
           </Text>
 
           <Hr style={hr} />
@@ -374,7 +374,7 @@ const Email = ({
             <Link href="https://www.instagram.com/basecampoutdoorjobs/" style={inlineLink}>
               @basecampoutdoorjobs
             </Link>
-            {" "}so you know when and where we pop up next.
+            {" "}so you know when and where we pop up next (hint: MN).
           </Text>
 
           <Text style={signoff}>{'<3'} Jenna &amp; the Basecamp crew</Text>
