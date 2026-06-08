@@ -155,9 +155,9 @@ const Email = ({
       <Preview>Win a set of KUMA chairs + see the OutsideDays Career Fair recap.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Thanks for showing up 🌲</Heading>
+          <Heading style={h1}>Hey friends 🌲</Heading>
           <Text style={text}>
-            Hey {first}, we're so glad you joined us at the OutsideDays Career Fair. The energy in that room was unreal, and a huge part of that was you. Below are a few ways to keep the momentum going.
+            We're bummed we didn't get to say hi, BUT, we know life happens & we figured we'd extend a few ways for you to interact with the industry experts and recruiters we gathered in Denver.
           </Text>
 
           {/* 1. WE'RE HIRING BANNER */}
