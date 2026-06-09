@@ -12,6 +12,10 @@ const words = [
   "Panel Discussions",
   "Resume Reviews",
   "Leadership Talks",
+  "How I Broke In Panels",
+  "Happy Hours",
+  "Women's Brunches",
+  "Intimate Gatherings",
 ];
 
 const EventsTicker = () => {
