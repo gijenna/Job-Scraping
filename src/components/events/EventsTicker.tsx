@@ -12,6 +12,10 @@ const words = [
   "Panel Discussions",
   "Resume Reviews",
   "Leadership Talks",
+  "How I Broke In Panels",
+  "Happy Hours",
+  "Women's Brunches",
+  "Intimate Gatherings",
 ];
 
 const EventsTicker = () => {
@@ -19,7 +23,7 @@ const EventsTicker = () => {
 
   return (
     <section className="bg-events-cream py-5 overflow-hidden">
-      <div className="flex animate-events-ticker whitespace-nowrap">
+      <div className="flex w-max animate-events-ticker whitespace-nowrap">
         {doubled.map((word, i) => (
           <span
             key={i}
