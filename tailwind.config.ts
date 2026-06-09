@@ -110,7 +110,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "logo-scroll": "logo-scroll 40s linear infinite",
-        "events-ticker": "events-ticker 25s linear infinite",
+        "events-ticker": "events-ticker 90s linear infinite",
         "ken-burns": "ken-burns 60s ease-in-out infinite alternate",
       },
     },
