@@ -23,7 +23,7 @@ const EventsTicker = () => {
 
   return (
     <section className="bg-events-cream py-5 overflow-hidden">
-      <div className="flex animate-events-ticker whitespace-nowrap">
+      <div className="flex w-max animate-events-ticker whitespace-nowrap">
         {doubled.map((word, i) => (
           <span
             key={i}
