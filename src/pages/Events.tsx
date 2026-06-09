@@ -74,6 +74,8 @@ const Events = () => {
 
         <EventsHero />
 
+        <EventsTicker />
+
         {/* Newsletter CTA - after hero */}
         <div className="bg-events-coral py-6 px-6">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -135,7 +137,6 @@ const Events = () => {
           </div>
         </div>
 
-        <EventsTicker />
 
         <div ref={partnerRef}>
           <PartnerSection />
