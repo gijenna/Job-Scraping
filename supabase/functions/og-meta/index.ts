@@ -13,6 +13,7 @@ const SLUG_MAP: Record<string, string> = {
   "/OutsideDays26": "outsidedays26",
   "/outsidedays26": "outsidedays26",
   "/OutsideDaysCOS": "outsidedays26-cos",
+  "/minneapolis26": "minneapolis26",
   "/events": "events",
   "/gather-pnw": "gather-pnw",
   "/gather-denver": "gather-denver",

@@ -19,6 +19,7 @@ import AdminLeads from "./pages/AdminLeads";
 import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
+import EventMinneapolis26 from "./pages/EventMinneapolis26";
 import Connect from "./pages/outsidedays/Connect";
 import ConnectFull from "./pages/outsidedays/ConnectFull";
 import ConnectProfile from "./pages/outsidedays/ConnectProfile";
@@ -84,6 +85,7 @@ const App = () => (
         <Routes>
           {/* Pinned to top for quick access — order matches Jenna's preferred menu order */}
           <Route path="/" element={<Events />} />
+          <Route path="/minneapolis26" element={<EventMinneapolis26 />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route
             path="/afterparty"
