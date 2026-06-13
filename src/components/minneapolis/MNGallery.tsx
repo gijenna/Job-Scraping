@@ -4,12 +4,21 @@ import p2 from "@/assets/mn26/AnthonyMarz_Basecamp-094.jpg.asset.json";
 import p3 from "@/assets/mn26/AnthonyMarz_PopflyOutside-126.jpg.asset.json";
 import p4 from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-045.jpg.asset.json";
 import p5 from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-197.jpg.asset.json";
+import p6 from "@/assets/mn26/AnthonyMarz_Basecamp-139.jpg.asset.json";
+import p7 from "@/assets/mn26/AnthonyMarz_Basecamp-169.jpg.asset.json";
+import p8 from "@/assets/mn26/AnthonyMarz_Basecamp-179_1.jpg.asset.json";
+import p9 from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
+import p10 from "@/assets/mn26/AnthonyMarz_Basecamp-022.jpg.asset.json";
+import p11 from "@/assets/mn26/AnthonyMarz_Basecamp-025.jpg.asset.json";
+import p12 from "@/assets/mn26/AnthonyMarz_Basecamp-037.jpg.asset.json";
+import p13 from "@/assets/mn26/AnthonyMarz_Basecamp-046.jpg.asset.json";
+import p14 from "@/assets/mn26/AnthonyMarz_Basecamp-057_1.jpg.asset.json";
+import p15 from "@/assets/mn26/AnthonyMarz_Basecamp-138.jpg.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
-const SAGE = "#A8B5A0";
 
-const photos = [p1.url, p2.url, p3.url, p4.url, p5.url];
+const photos = [p6, p10, p7, p15, p8, p13, p11, p1, p12, p14, p2, p9, p3, p4, p5].map((p) => p.url);
 
 const MNGallery = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: CREAM, color: FOREST }}>
@@ -31,16 +40,17 @@ const MNGallery = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {photos.map((src, i) => (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {photos.map((src) => (
           <div
             key={src}
-            className={`overflow-hidden rounded-lg ${i === 0 ? "col-span-2 row-span-2 md:col-span-2 md:row-span-2" : ""}`}
-            style={{ aspectRatio: i === 0 ? "1 / 1" : "3 / 4" }}
+            className="overflow-hidden rounded-lg"
+            style={{ aspectRatio: "3 / 4" }}
           >
             <img
               src={src}
               alt="Basecamp gathering"
+              loading="lazy"
               className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
             />
           </div>
