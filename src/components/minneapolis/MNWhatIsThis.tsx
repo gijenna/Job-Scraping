@@ -114,7 +114,7 @@ const MNWhatIsThis = () => (
       >
         <EditableText
           settingKey="what_pullquote"
-          defaultText="\"Most of these people don't reply to LinkedIn DMs. For two days in August, they're answering in person.\""
+          defaultText={`"Most of these people don't reply to LinkedIn DMs. For two days in August, they're answering in person."`}
           as="span"
           multiline
         />
