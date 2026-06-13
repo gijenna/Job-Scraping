@@ -4,7 +4,7 @@ import MNTwoSessions from "@/components/minneapolis/MNTwoSessions";
 import MNExpertGrid from "@/components/minneapolis/MNExpertGrid";
 import MNSponsors from "@/components/minneapolis/MNSponsors";
 import MNFinalCTA from "@/components/minneapolis/MNFinalCTA";
-import EditableTextProvider from "@/components/EditableTextProvider";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 
 const EventMinneapolis26 = () => {
