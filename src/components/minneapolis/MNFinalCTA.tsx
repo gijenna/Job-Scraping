@@ -1,3 +1,6 @@
+import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
+
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 const CORAL = "#E8836B";
@@ -13,26 +16,28 @@ const MNFinalCTA = () => (
         className="font-bold leading-tight"
         style={{ fontSize: "clamp(32px, 5vw, 48px)", color: FOREST }}
       >
-        Free. No badge. No gatekeepers.
+        <EditableText
+          settingKey="final_headline"
+          defaultText="Free. No badge. No gatekeepers."
+          as="span"
+        />
       </h2>
       <p style={{ fontSize: 18, color: FOREST }}>
-        Two open windows in August. Walk right in.
+        <EditableText
+          settingKey="final_sub"
+          defaultText="Two open windows in August. Walk right in."
+          as="span"
+        />
       </p>
       <div className="pt-4">
-        <a
-          href={REGISTER}
-          target="_blank"
-          rel="noopener noreferrer"
+        <EditableLink
+          textKey="final_cta_text"
+          urlKey="final_cta_url"
+          defaultText="Register now →"
+          defaultUrl={REGISTER}
           className="inline-block rounded-full font-bold transition hover:opacity-90"
-          style={{
-            backgroundColor: CREAM,
-            color: CORAL,
-            fontSize: 20,
-            padding: "20px 44px",
-          }}
-        >
-          Register now →
-        </a>
+          style={{ backgroundColor: CREAM, color: CORAL, fontSize: 20, padding: "20px 44px" }}
+        />
       </div>
     </div>
   </section>

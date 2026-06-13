@@ -1,3 +1,6 @@
+import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
+
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 const CORAL = "#E8836B";
@@ -9,50 +12,59 @@ const MNTwoSessions = () => (
     <div className="max-w-5xl mx-auto">
       <div className="text-center space-y-3 mb-12">
         <h2 className="font-normal" style={{ fontSize: 36, color: CREAM }}>
-          The two open windows.
+          <EditableText settingKey="sessions_headline" defaultText="The two open windows." as="span" />
         </h2>
         <p className="italic" style={{ fontSize: 16, color: SAGE }}>
-          Same Typeform. Pick one or both.
+          <EditableText settingKey="sessions_sub" defaultText="Same Typeform. Pick one or both." as="span" />
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a
-          href={REGISTER}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block rounded-lg p-8 transition hover:scale-[1.01] space-y-4"
-          style={{ backgroundColor: CREAM, color: FOREST }}
-        >
+        <div className="rounded-lg p-8 space-y-4" style={{ backgroundColor: CREAM, color: FOREST }}>
           <p
             className="uppercase font-semibold"
             style={{ fontSize: 13, letterSpacing: "1.4px", color: CORAL }}
           >
-            THURSDAY · AUG 20 · 3–5PM
+            <EditableText
+              settingKey="sessions_happy_when"
+              defaultText="THURSDAY · AUG 20 · 3–5PM"
+              as="span"
+            />
           </p>
           <h3 className="font-bold" style={{ fontSize: 32, color: FOREST }}>
-            Happy Hour
+            <EditableText settingKey="sessions_happy_title" defaultText="Happy Hour" as="span" />
           </h3>
           <p style={{ fontSize: 16, color: FOREST }}>
-            Come early, stay late. Drinks, snacks, and the most relaxed networking you'll do all year.
+            <EditableText
+              settingKey="sessions_happy_body"
+              defaultText="Come early, stay late. Drinks, snacks, and the most relaxed networking you'll do all year."
+              as="span"
+              multiline
+            />
           </p>
-        </a>
+          <EditableLink
+            textKey="sessions_happy_cta_text"
+            urlKey="sessions_happy_cta_url"
+            defaultText="Register for Happy Hour →"
+            defaultUrl={REGISTER}
+            className="inline-block font-bold underline underline-offset-4"
+            style={{ color: CORAL, fontSize: 14 }}
+          />
+        </div>
 
-        <a
-          href={REGISTER}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block rounded-lg p-8 transition hover:scale-[1.01] space-y-4"
-          style={{ backgroundColor: CREAM, color: FOREST }}
-        >
+        <div className="rounded-lg p-8 space-y-4" style={{ backgroundColor: CREAM, color: FOREST }}>
           <p
             className="uppercase font-semibold"
             style={{ fontSize: 13, letterSpacing: "1.4px", color: CORAL }}
           >
-            FRIDAY · AUG 21 · 10AM–12PM
+            <EditableText
+              settingKey="sessions_brunch_when"
+              defaultText="FRIDAY · AUG 21 · 10AM–12PM"
+              as="span"
+            />
           </p>
           <h3 className="font-bold" style={{ fontSize: 32, color: FOREST }}>
-            Women's Brunch
+            <EditableText settingKey="sessions_brunch_title" defaultText="Women's Brunch" as="span" />
           </h3>
           <span
             className="inline-block uppercase rounded-full font-semibold"
@@ -64,12 +76,29 @@ const MNTwoSessions = () => (
               letterSpacing: "1px",
             }}
           >
-            WOMEN IN THE OUTDOOR INDUSTRY
+            <EditableText
+              settingKey="sessions_brunch_tag"
+              defaultText="WOMEN IN THE OUTDOOR INDUSTRY"
+              as="span"
+            />
           </span>
           <p style={{ fontSize: 16, color: FOREST }}>
-            Morning gathering for women in the industry, and women trying to break in. Coffee, food, real talk.
+            <EditableText
+              settingKey="sessions_brunch_body"
+              defaultText="Morning gathering for women in the industry, and women trying to break in. Coffee, food, real talk."
+              as="span"
+              multiline
+            />
           </p>
-        </a>
+          <EditableLink
+            textKey="sessions_brunch_cta_text"
+            urlKey="sessions_brunch_cta_url"
+            defaultText="Register for Women's Brunch →"
+            defaultUrl={REGISTER}
+            className="inline-block font-bold underline underline-offset-4"
+            style={{ color: CORAL, fontSize: 14 }}
+          />
+        </div>
       </div>
     </div>
   </section>
