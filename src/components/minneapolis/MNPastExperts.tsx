@@ -9,7 +9,7 @@ import EditableText from "@/components/EditableText";
 import CardStylePicker from "@/components/event/CardStylePicker";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
