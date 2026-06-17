@@ -1,37 +1,84 @@
-## Build `/minneapolis26` (Basecamp Lounge × OR Gatherings, MN)
+## Goal
 
-A single new page. Surgical, additive. No existing files touched except `App.tsx` (one new route) and `supabase/functions/og-meta/index.ts` (one new SLUG_MAP entry for crawler share previews).
+Make /MNexperts (expert invite landing) and /minneapolis26 (public event page) reflect the **OR Gatherings × Basecamp Outdoor** partnership, surface past Denver + Portland experts, capture each expert's session preference (Aug 20 happy hour and/or Aug 21 women's brunch), and give admin full control over copy, ordering, hiding, and card style.
 
-### Files to create
+## 1. Assets & branding
 
-1. **`src/pages/EventMinneapolis26.tsx`** — page shell, 6 sections, uses `EditableTextProvider pageSlug="minneapolis26"` + `PageMetaApplier` like other event pages so the OG meta can be managed without code edits later.
-2. **`src/components/minneapolis/MNHero.tsx`** — Section 1 (forest hero, kicker, headline, sub, date line, coral CTA pill → `https://basecampoutdoor.typeform.com/ORgatherings`, secondary apply link → `https://basecampoutdoor.typeform.com/MNExperts`).
-3. **`src/components/minneapolis/MNWhatIsThis.tsx`** — Section 2 (cream, 3 audience cards, pull-quote box).
-4. **`src/components/minneapolis/MNTwoSessions.tsx`** — Section 3 (forest, two clickable cards: Happy Hour Thu Aug 20 3-5pm, Women's Brunch Fri Aug 21 10am-12pm).
-5. **`src/components/minneapolis/MNExpertGrid.tsx`** — Section 4. Fetches via existing pattern: `expert_city_assignments` join `industry_experts` where `city_slug = 'minneapolis'` AND `published = true` AND `expert_type != 'brand_rep'` (matches `useDenverExperts` exactly). Renders with the existing **`ExpertCard`** component (the polaroid Type A used in `ExpertGrid`/OutsideDays26), in `ExpertGrid` layout (4/3/2 cols). Empty-state copy + apply link as specced.
-6. **`src/components/minneapolis/MNSponsors.tsx`** — Section 5 (cream, 4 placeholder name tiles: REI, QBP, Adidas, The Dyrt; code comment that Jenna will swap real logos later; mailto Jenna CTA).
-7. **`src/components/minneapolis/MNFinalCTA.tsx`** — Section 6 (coral band, register CTA).
+- Upload the two attached PNGs (`GATHER logos (5).png` stacked, `GATHER logos (4).png` horizontal) to Lovable Assets under `src/assets/mn26/`.
+- Use the **horizontal lockup** in the `/minneapolis26` hero block and the `/MNexperts` hero. Use the **stacked lockup** in the OR Gatherings explainer section.
+- Update all visible labels from "Basecamp Outdoor Lounge × Minneapolis" to **"Basecamp Outdoor @ OR Gatherings · Minneapolis"** (each line still EditableText, so admin can override).
+- `expert_cities.event_title` for `minneapolis` → "Basecamp Outdoor @ OR Gatherings". Page meta + `<title>` updated.
 
-### Files to edit
+## 2. New "OR Gatherings" explainer section (both pages)
 
-- **`src/App.tsx`** — add `import EventMinneapolis26` and `<Route path="/minneapolis26" element={<EventMinneapolis26 />} />` above the catch-all. Nothing else changes.
-- **`supabase/functions/og-meta/index.ts`** — add `"/minneapolis26": "minneapolis26"` to `SLUG_MAP` so social crawlers get OG tags. (One-line addition; existing function logic unchanged.)
+Insert a section pulling the framing from the OR press release (paraphrased, all EditableText):
 
-### Data source confirmed
+> Outdoor Retailer introduces **OR Gatherings**: intentional, intimate conversations on the show floor designed to spark meaningful industry dialogue. Basecamp Outdoor is hosting two of them in Minneapolis.
 
-`expert_city_assignments.city_slug` already supports `'minneapolis'` (verified). Reuses the existing schema and the existing `ExpertCard` polaroid component verbatim — no schema change, no card redesign. Spec mentioned `event_slug = 'minneapolis26'`; the project's actual filter dimension is `city_slug` on assignments, so we use the existing pattern (same as Denver and Portland). Calling this out so Jenna knows MN experts get added via the normal expert assignment flow.
+Includes the OR Outdoor Retailer logo, the OR Gatherings lockup, and a "Presented with Outdoor Retailer" caption. Added as `mn_or_gatherings` to the OrderedSections list on `/minneapolis26` and as a top section on `/MNexperts`.
 
-### Design tokens
+## 3. Two-session selector
 
-Inline brand hex values per spec (`#1A2520`, `#F2E7D5`, `#E8836B`, `#F4D03F`, `#A8B5A0`) rather than introducing new global tokens — keeps the page self-contained and avoids touching `tailwind.config.ts` / `index.css`. Josefin Sans is already loaded sitewide. No em dashes in any copy (project rule).
+### Schema (migration)
+Add to `expert_city_assignments`:
+- `attend_aug20_happyhour boolean default false`
+- `attend_aug21_brunch boolean default false`
+- `hidden_on_mn boolean default false` (used by past-experts section only)
 
-### Out of scope (not touched)
+### Expert intake (MN only)
+In `ExpertIntakeForm.tsx`, when `citySlug === "minneapolis"`, render a two-checkbox block:
+- ☐ Aug 20 · Happy Hour (3–5 PM) — open to all
+- ☐ Aug 21 · Women's Brunch (10 AM–12 PM) — women only
 
-`/afterparty`, `/OutsideDays26`, `/PNW26`, Denver, all `/admin` pages, Connect, candidate/expert intake, Google Sheets sync, expert-og function, existing card components, navigation menu structure (spec says only add if a nav menu with event links exists; the site has no such global menu, so nothing to add).
+Both can be selected. Persists onto the MN assignment row. Existing forms for Denver/Portland are untouched.
 
-### Acceptance
+### Public page filter tabs
+On `/minneapolis26`, the expert grid gets a tab bar: **All · Aug 20 Happy Hour · Aug 21 Women's Brunch**. Each expert card shows small session chips. Tabs filter client-side on the loaded list.
 
-- `/minneapolis26` renders all 6 sections; CTAs open Typeform in new tab.
-- Expert grid uses existing `ExpertCard` (Type A polaroid) and shows empty state when no MN-assigned published experts exist.
-- OG meta served to crawlers via existing `og-meta` edge function with the new slug.
-- No other route or component modified.
+### Two Sessions block
+The existing `MNTwoSessions` component updates to the confirmed dates/times and adds a "Both welcome" note.
+
+## 4. Past experts section (both pages, combined grid)
+
+New component `MNPastExpertsSection.tsx`:
+- Query `expert_city_assignments` where `city_slug IN ('denver','portland')` AND `published = true`, joined to `industry_experts`.
+- Dedupe by expert id (an expert who did both cities appears once).
+- Exclude any expert with a row in new `mn_past_expert_hidden` table.
+- Renders the grid using the existing `IndustryExpertCardsSection` pattern (Type A polaroid / B compact / C minimal) driven by an `event_settings` key `card_style_mn_past_experts` so admin gets the same A/B/C picker.
+- Each card has a small city tag ("Denver '25" / "Portland '25").
+- Admin sees an eye-toggle on each card to hide from this section only (page-scoped). Hides persist in `mn_past_expert_hidden(expert_id pk, hidden_at)`.
+
+Heading (EditableText): "Who's shown up before" · subhead: "Experts from past Basecamp Outdoor activations in Denver and Portland."
+
+CTA at bottom links to `/minneapolis26`: "See who's confirmed for Minneapolis →" (only on /MNexperts; on /minneapolis26 it links to the upcoming expert grid section anchor).
+
+## 5. Admin controls (matching OutsideDays26 / PNW pattern)
+
+Both pages already use `EditableTextProvider` and `OrderedSections`. Confirm and extend:
+- **Reorder & hide sections**: `OrderedSections` already supports drag + hide via `event_settings` (`section_order_minneapolis26`, `section_hidden_<key>`). Add the new sections (`mn_or_gatherings`, `mn_past_experts`) to its registry.
+- **Edit copy without credits**: every new heading, paragraph, button label uses `<EditableText>` / `<EditableLink>` already wired to `event_settings`.
+- **Link click counts**: existing `LinkTracker` + `link_clicks` table. Wrap the new OR Retailer link, past-experts CTA, and 2-session apply links. Admin already has the count overlay.
+- **Card style A/B/C**: `CardStylePicker` reused for the past-experts grid (`card_style_mn_past_experts`) and confirm the main MN expert grid uses one (`card_style_mn_experts`).
+
+## 6. /MNexperts page-level changes
+
+`ExpertInvite.tsx` Minneapolis branch:
+- Hero swaps in OR Gatherings horizontal lockup + updated tagline.
+- Adds the OR Gatherings explainer block.
+- Adds the new past-experts section.
+- Adds a "View the public event page →" link to `/minneapolis26` (LinkTracker).
+- Two-session selector now shown in the intake form when an invited expert lands here.
+
+## 7. Out of scope
+
+- No changes to Denver, Portland, /afterparty, /OutsideDays26, Connect, brand dashboard, existing card components, or Google Sheets sync.
+- Women-only enforcement on Aug 21 is honor-system via the checkbox label — no gender field added to experts.
+- No emails sent from this change.
+
+## Technical summary
+
+- **Migration 1**: `ALTER TABLE expert_city_assignments ADD attend_aug20_happyhour bool default false, attend_aug21_brunch bool default false`.
+- **Migration 2**: `CREATE TABLE mn_past_expert_hidden(expert_id uuid pk references industry_experts on delete cascade, hidden_at timestamptz default now())` + GRANTs (`select` to anon for public read, full to authenticated/service_role) + RLS (public select, authenticated full).
+- **New files**: `src/components/minneapolis/MNORGatherings.tsx`, `src/components/minneapolis/MNPastExperts.tsx`, `src/assets/mn26/or-gatherings-horizontal.png.asset.json`, `src/assets/mn26/or-gatherings-stacked.png.asset.json`.
+- **Edited files**: `src/pages/EventMinneapolis26.tsx` (register new sections), `src/pages/ExpertInvite.tsx` (MN-only branch), `src/components/minneapolis/MNHero.tsx` (lockup), `src/components/minneapolis/MNTwoSessions.tsx` (confirmed times), `src/components/minneapolis/MNExpertGrid.tsx` (session tabs + chips), `src/components/experts/ExpertIntakeForm.tsx` (MN session checkboxes), `src/components/event/IndustryExpertCardsSection.tsx` (reuse for past experts — or thin wrapper).
+- No changes to existing card components themselves.

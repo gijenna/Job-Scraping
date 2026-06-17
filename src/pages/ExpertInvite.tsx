@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, Star, ChevronDown, Briefcase, BookOpen, Coffee } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
+import { EditableTextProvider } from "@/components/EditableTextProvider";
+import MNORGatherings from "@/components/minneapolis/MNORGatherings";
+import MNPastExperts from "@/components/minneapolis/MNPastExperts";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
@@ -378,6 +381,13 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               </div>
             </div>
           </section>
+
+          {citySlug === 'minneapolis' && (
+            <EditableTextProvider pageSlug="mnexperts">
+              <MNORGatherings />
+              <MNPastExperts eventSlug="mnexperts" showLinkToEvent />
+            </EditableTextProvider>
+          )}
 
           {/* === THE EVENT SECTION === */}
           {(() => {

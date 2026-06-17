@@ -38,6 +38,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
   const [yearsInCityLabel, setYearsInCityLabel] = useState(cityName);
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
   const [allCities, setAllCities] = useState<{ slug: string; name: string }[]>([]);
+  const [sessionPrefs, setSessionPrefs] = useState<{ aug20: boolean; aug21: boolean }>({ aug20: false, aug21: false });
   const assignmentsLoadedRef = useRef(false);
 
   // Load existing city assignments for this expert
@@ -57,13 +58,20 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
 
       assignmentsLoadedRef.current = true;
       const { data: assigns } = await supabase
-        .from('expert_city_assignments').select('city_slug').eq('expert_id', expertId);
+        .from('expert_city_assignments').select('city_slug, attend_aug20_happyhour, attend_aug21_brunch').eq('expert_id', expertId);
       if (assigns && assigns.length > 0 && citiesData) {
         const mapped = assigns.map(a => ({
           city_slug: a.city_slug,
           city_name: citiesData.find(c => c.slug === a.city_slug)?.name || a.city_slug,
         }));
         setMyAssignments(mapped);
+        const mn = assigns.find((a: any) => a.city_slug === 'minneapolis');
+        if (mn) {
+          setSessionPrefs({
+            aug20: !!(mn as any).attend_aug20_happyhour,
+            aug21: !!(mn as any).attend_aug21_brunch,
+          });
+        }
       } else if (citiesData) {
         // Expert exists but no assignments found, default to current city
         setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
@@ -338,6 +346,18 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
             .eq('city_slug', slug);
           if (deleteError) throw deleteError;
         }
+
+        // Persist MN session preferences (Aug 20 happy hour / Aug 21 women's brunch)
+        if (selectedCitySlugs.has('minneapolis')) {
+          await supabase
+            .from('expert_city_assignments')
+            .update({
+              attend_aug20_happyhour: sessionPrefs.aug20,
+              attend_aug21_brunch: sessionPrefs.aug21,
+            } as any)
+            .eq('expert_id', finalExpertId)
+            .eq('city_slug', 'minneapolis');
+        }
       }
 
       // Fetch the final saved expert to pass back
@@ -540,7 +560,41 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               </div>
             )}
           </div>
+
+          {myAssignments.some(a => a.city_slug === 'minneapolis') && (
+            <div className="space-y-3 pt-2 border-t border-events-cream/10">
+              <div>
+                <Label className="text-events-cream">Minneapolis · Which Gathering(s) will you attend? *</Label>
+                <p className="text-events-cream/40 text-xs">You can pick one or both.</p>
+              </div>
+              <label className="flex items-start gap-3 p-3 rounded-lg bg-events-card/40 border border-events-cream/10 cursor-pointer hover:border-events-coral/40 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={sessionPrefs.aug20}
+                  onChange={e => setSessionPrefs(p => ({ ...p, aug20: e.target.checked }))}
+                  className="mt-1 accent-events-coral w-4 h-4"
+                />
+                <div className="flex-1">
+                  <p className="text-events-cream font-semibold text-sm">Aug 20 · Happy Hour (3–5 PM CT)</p>
+                  <p className="text-events-cream/50 text-xs">Open to everyone in the outdoor industry.</p>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 p-3 rounded-lg bg-events-card/40 border border-events-cream/10 cursor-pointer hover:border-events-coral/40 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={sessionPrefs.aug21}
+                  onChange={e => setSessionPrefs(p => ({ ...p, aug21: e.target.checked }))}
+                  className="mt-1 accent-events-coral w-4 h-4"
+                />
+                <div className="flex-1">
+                  <p className="text-events-cream font-semibold text-sm">Aug 21 · Women's Brunch (10 AM–12 PM CT)</p>
+                  <p className="text-events-cream/50 text-xs">For women in (or trying to break into) the outdoor industry.</p>
+                </div>
+              </label>
+            </div>
+          )}
         </div>
+
 
         {/* Profile Details */}
         <div className="space-y-4">

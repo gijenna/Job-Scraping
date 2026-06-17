@@ -1336,6 +1336,8 @@ export type Database = {
       }
       expert_city_assignments: {
         Row: {
+          attend_aug20_happyhour: boolean
+          attend_aug21_brunch: boolean
           card_version: Json | null
           city_slug: string
           created_at: string | null
@@ -1347,6 +1349,8 @@ export type Database = {
           share_reminder_sent: boolean | null
         }
         Insert: {
+          attend_aug20_happyhour?: boolean
+          attend_aug21_brunch?: boolean
           card_version?: Json | null
           city_slug: string
           created_at?: string | null
@@ -1358,6 +1362,8 @@ export type Database = {
           share_reminder_sent?: boolean | null
         }
         Update: {
+          attend_aug20_happyhour?: boolean
+          attend_aug21_brunch?: boolean
           card_version?: Json | null
           city_slug?: string
           created_at?: string | null
@@ -1577,6 +1583,29 @@ export type Database = {
           session_id?: string | null
         }
         Relationships: []
+      }
+      mn_past_expert_hidden: {
+        Row: {
+          expert_id: string
+          hidden_at: string
+        }
+        Insert: {
+          expert_id: string
+          hidden_at?: string
+        }
+        Update: {
+          expert_id?: string
+          hidden_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mn_past_expert_hidden_expert_id_fkey"
+            columns: ["expert_id"]
+            isOneToOne: true
+            referencedRelation: "industry_experts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       suppressed_emails: {
         Row: {
