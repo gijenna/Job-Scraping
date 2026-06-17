@@ -164,6 +164,8 @@ const App = () => (
           <Route path="/denverreps/:name" element={<BrandRepInvite citySlug="denver" />} />
           <Route path="/pnwreps" element={<BrandRepInvite citySlug="portland" />} />
           <Route path="/pnwreps/:name" element={<BrandRepInvite citySlug="portland" />} />
+          <Route path="/MNreps" element={<BrandRepInvite citySlug="minneapolis" />} />
+          <Route path="/MNreps/:name" element={<BrandRepInvite citySlug="minneapolis" />} />
           {/* Public expert browsing pages */}
           <Route path="/Denverexperts/browse" element={<CityExperts citySlug="denver" />} />
           <Route path="/Portlandexperts/browse" element={<CityExperts citySlug="portland" />} />

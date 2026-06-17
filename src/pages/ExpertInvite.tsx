@@ -11,6 +11,7 @@ import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
+import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -19,7 +20,13 @@ interface ExpertInviteProps {
 const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   denver: { video: heroDenver },
   portland: { image: heroPortland },
-  minneapolis: { image: heroPortland },
+  minneapolis: { image: heroMN.url },
+};
+
+const CITY_EVENT_LINK: Record<string, { path: string; label: string; shortLabel: string }> = {
+  denver: { path: '/OutsideDays26', label: 'Outside Days Career Fair', shortLabel: 'Outside Days Career Fair' },
+  portland: { path: '/PNW26', label: 'Gather PNW', shortLabel: 'Gather: PNW' },
+  minneapolis: { path: '/minneapolis26', label: 'Basecamp Outdoor Lounge Minneapolis', shortLabel: 'Basecamp Lounge: MN' },
 };
 
 const CITY_EVENT_DATA: Record<string, {
@@ -85,24 +92,24 @@ const CITY_EVENT_DATA: Record<string, {
     ],
   },
   minneapolis: {
-    tagline: 'Basecamp Minneapolis',
-    yearNote: 'New market, first event in the Twin Cities',
-    attendance: '200+',
-    attendanceNote: 'outdoor professionals & job seekers',
-    venue: 'Minneapolis, MN',
+    tagline: 'Basecamp Outdoor Lounge × Minneapolis',
+    yearNote: 'New market, first Basecamp Outdoor Lounge in the Twin Cities',
+    attendance: '150–250',
+    attendanceNote: 'outdoor professionals & passive talent · intentionally intimate',
+    venue: 'Minneapolis, MN — venue announced soon',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
-    time: 'TBD',
+    time: 'Thursday · Aug 20, 2026 · 3–5 PM CT (Session 1) & 6–8 PM CT (Session 2)',
     whoAttends: [
-      'Outdoor industry professionals in the Midwest region',
-      'Mid-career professionals looking to break into outdoor',
-      'Recent graduates with outdoor industry interests',
-      'Active job seekers in the current market',
+      'Outdoor industry professionals across the Midwest',
+      'Active & passive talent open to mission-aligned opportunities',
+      'Mid-career professionals from tech, retail & sport pivoting into outdoor',
+      'Recent grads and early-career candidates from MN, WI, IA & beyond',
     ],
     format: [
-      'Discovery Zone, your branded space to tell your story',
-      'Employer tables with 5–10 min recruiter conversations',
-      'Networking hour with food & drinks',
-      'Panel discussion with industry leaders',
+      'Proudly Sober networking lounge — focused conversations, no bar noise',
+      'Two intimate sessions: afternoon & evening (attend one or both)',
+      'Industry expert "office hours" — walk-up or pre-arranged chats',
+      'Light bites & N/A drinks for all attendees',
     ],
     companies: [],
   },
@@ -231,7 +238,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                   <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
                 </a>
-                <Link to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
+                <Link to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
 
@@ -248,11 +255,10 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                           <span className="text-events-coral">Industry Expert</span>
                           <br />
                           at{' '}
-                          {citySlug === 'denver' ? (
-                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Outside Days Career Fair</Link>
-                          ) : (
-                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Gather PNW</Link>
-                          )}.
+                          {(() => {
+                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                          })()}.
                         </>
                       ) : (
                         <>
@@ -260,11 +266,10 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                           <span className="text-events-coral">Industry Expert</span>
                           <br />
                           at{' '}
-                          {citySlug === 'denver' ? (
-                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Outside Days Career Fair</Link>
-                          ) : (
-                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Gather PNW</Link>
-                          )}.
+                          {(() => {
+                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                          })()}.
                         </>
                       )}
                     </h1>
@@ -533,7 +538,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 </Button>
               </div>
               <Link
-                to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'}
+                to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'}
                 className="text-events-cream/50 hover:text-events-cream/80 text-sm mt-6 inline-block transition-colors underline underline-offset-2"
               >
                 Just want to register and attend for free? We'd love to see you
