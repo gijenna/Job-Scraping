@@ -31,15 +31,20 @@ const CITY_LABEL: Record<string, string> = {
 
 const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }: MNPastExpertsProps) => {
   const { isAdmin } = useEditableTextContext();
-  const { settings } = useEventSettings(eventSlug);
+  const { settings, setSetting } = useEventSettings(eventSlug);
   const [rows, setRows] = useState<PastRow[]>([]);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
   const [cardStyle, setCardStyle] = useState("polaroid");
   const [loading, setLoading] = useState(true);
+  const [order, setOrder] = useState<string[]>([]);
 
   useEffect(() => {
     const v = settings["card_style_mn_past_experts"];
     if (v) setCardStyle(v);
+    const o = settings["past_experts_order"];
+    if (o) {
+      try { setOrder(JSON.parse(o)); } catch { /* noop */ }
+    }
   }, [settings]);
 
   useEffect(() => {
@@ -90,7 +95,31 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
     }
   };
 
-  const visibleRows = rows.filter((r) => isAdmin || !hiddenIds.has(r.expert.id));
+  // Apply saved order, then append any not yet ordered
+  const orderedRows = (() => {
+    const byId = new Map(rows.map((r) => [r.expert.id, r]));
+    const used = new Set<string>();
+    const result: PastRow[] = [];
+    order.forEach((id) => {
+      const r = byId.get(id);
+      if (r) { result.push(r); used.add(id); }
+    });
+    rows.forEach((r) => { if (!used.has(r.expert.id)) result.push(r); });
+    return result;
+  })();
+
+  const moveExpert = async (expertId: string, dir: -1 | 1) => {
+    const ids = orderedRows.map((r) => r.expert.id);
+    const idx = ids.indexOf(expertId);
+    const newIdx = idx + dir;
+    if (idx < 0 || newIdx < 0 || newIdx >= ids.length) return;
+    [ids[idx], ids[newIdx]] = [ids[newIdx], ids[idx]];
+    setOrder(ids);
+    await setSetting("past_experts_order", JSON.stringify(ids));
+  };
+
+  const visibleRows = orderedRows.filter((r) => isAdmin || !hiddenIds.has(r.expert.id));
+
 
   const renderCard = (e: Expert) => {
     switch (cardStyle) {
