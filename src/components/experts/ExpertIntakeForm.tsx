@@ -38,6 +38,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
   const [yearsInCityLabel, setYearsInCityLabel] = useState(cityName);
   const [myAssignments, setMyAssignments] = useState<CityAssignment[]>([]);
   const [allCities, setAllCities] = useState<{ slug: string; name: string }[]>([]);
+  const [sessionPrefs, setSessionPrefs] = useState<{ aug20: boolean; aug21: boolean }>({ aug20: false, aug21: false });
   const assignmentsLoadedRef = useRef(false);
 
   // Load existing city assignments for this expert
@@ -57,13 +58,20 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
 
       assignmentsLoadedRef.current = true;
       const { data: assigns } = await supabase
-        .from('expert_city_assignments').select('city_slug').eq('expert_id', expertId);
+        .from('expert_city_assignments').select('city_slug, attend_aug20_happyhour, attend_aug21_brunch').eq('expert_id', expertId);
       if (assigns && assigns.length > 0 && citiesData) {
         const mapped = assigns.map(a => ({
           city_slug: a.city_slug,
           city_name: citiesData.find(c => c.slug === a.city_slug)?.name || a.city_slug,
         }));
         setMyAssignments(mapped);
+        const mn = assigns.find((a: any) => a.city_slug === 'minneapolis');
+        if (mn) {
+          setSessionPrefs({
+            aug20: !!(mn as any).attend_aug20_happyhour,
+            aug21: !!(mn as any).attend_aug21_brunch,
+          });
+        }
       } else if (citiesData) {
         // Expert exists but no assignments found, default to current city
         setMyAssignments([{ city_slug: citySlug, city_name: cityName }]);
