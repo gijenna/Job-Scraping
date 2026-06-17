@@ -6,7 +6,7 @@ import hero2 from "@/assets/mn26/AnthonyMarz_Basecamp-017.jpg.asset.json";
 import hero3 from "@/assets/mn26/AnthonyMarz_Basecamp-019.jpg.asset.json";
 import hero4 from "@/assets/mn26/AnthonyMarz_Basecamp-021.jpg.asset.json";
 import hero5 from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-183.jpg.asset.json";
-import lockup from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
+import lockup from "@/assets/mn26/or-gatherings-square.png.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
@@ -46,7 +46,7 @@ const MNHero = () => {
         <img
           src={lockup.url}
           alt="Basecamp Outdoor @ Minneapolis · OR Gatherings"
-          className="mx-auto w-full max-w-[520px] h-auto -mb-2"
+          className="mx-auto w-full max-w-[360px] h-auto block -mb-8 md:-mb-10"
         />
         <p className="uppercase !mt-0" style={{ fontSize: 13, letterSpacing: "1.6px", color: CREAM }}>
           <EditableText settingKey="hero_kicker" defaultText="AN OR GATHERING · HOSTED BY BASECAMP OUTDOOR" as="span" />
