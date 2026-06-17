@@ -346,6 +346,18 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
             .eq('city_slug', slug);
           if (deleteError) throw deleteError;
         }
+
+        // Persist MN session preferences (Aug 20 happy hour / Aug 21 women's brunch)
+        if (selectedCitySlugs.has('minneapolis')) {
+          await supabase
+            .from('expert_city_assignments')
+            .update({
+              attend_aug20_happyhour: sessionPrefs.aug20,
+              attend_aug21_brunch: sessionPrefs.aug21,
+            } as any)
+            .eq('expert_id', finalExpertId)
+            .eq('city_slug', 'minneapolis');
+        }
       }
 
       // Fetch the final saved expert to pass back
