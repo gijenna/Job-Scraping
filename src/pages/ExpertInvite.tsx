@@ -398,8 +398,8 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           )}
 
 
-          {/* === THE EVENT SECTION === */}
-          {(() => {
+          {/* === THE EVENT SECTION (non-MN cities) === */}
+          {citySlug !== 'minneapolis' && (() => {
             const eventData = CITY_EVENT_DATA[citySlug] || CITY_EVENT_DATA.denver;
             return (
               <section className="relative py-16 md:py-24 overflow-hidden">
