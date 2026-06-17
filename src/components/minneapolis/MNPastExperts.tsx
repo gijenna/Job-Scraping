@@ -199,6 +199,23 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
                     >
                       {isHidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                     </button>
+                  {isAdmin && (
+                    <div className="absolute -top-2 -left-2 z-20 flex gap-1">
+                      <button
+                        onClick={() => moveExpert(expert.id, -1)}
+                        className="w-7 h-7 rounded-full bg-events-teal text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                        title="Move left"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => moveExpert(expert.id, 1)}
+                        className="w-7 h-7 rounded-full bg-events-teal text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                        title="Move right"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   )}
                   {renderCard(expert)}
                   <div className="absolute top-2 left-2 z-10 flex gap-1 flex-wrap pointer-events-none">
