@@ -558,7 +558,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                 </Button>
               </div>
               <Link
-                to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'}
+                to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'}
                 className="text-events-cream/50 hover:text-events-cream/80 text-sm mt-6 inline-block transition-colors underline underline-offset-2"
               >
                 Just want to register and attend for free? We'd love to see you
