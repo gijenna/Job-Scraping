@@ -498,6 +498,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             );
           })()}
 
+
           {/* === FAQ SECTION === */}
           {faqs.length > 0 && (
             <section className="bg-events-teal py-16 md:py-20">
