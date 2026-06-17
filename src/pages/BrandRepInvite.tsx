@@ -278,11 +278,10 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                           Your company is
                           <br />
                           <span className="text-events-coral">confirmed</span> at{' '}
-                          {citySlug === 'denver' ? (
-                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4">Outside Days Career Fair</Link>
-                          ) : (
-                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4">Gather PNW</Link>
-                          )}.
+                          {(() => {
+                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4">{ev.label}</Link>;
+                          })()}.
                         </>
                       )}
                     </h1>
