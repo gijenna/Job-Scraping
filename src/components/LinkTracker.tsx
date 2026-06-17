@@ -25,7 +25,10 @@ const LinkTracker = ({ children }: { children: ReactNode }) => {
   const [showTooltip, setShowTooltip] = useState<{ x: number; y: number; stat: ClickStat } | null>(null);
   const lowerPath = location.pathname.toLowerCase();
   const canShowAdminStats =
-    isAdmin && (lowerPath.startsWith("/admin") || lowerPath === "/minneapolis26");
+    isAdmin &&
+    (lowerPath.startsWith("/admin") ||
+      lowerPath === "/minneapolis26" ||
+      lowerPath.startsWith("/mnexperts"));
 
   // Auth check — only allow internal admin domains
   useEffect(() => {

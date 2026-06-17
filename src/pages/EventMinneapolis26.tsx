@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import MNHero from "@/components/minneapolis/MNHero";
 import MNWhatIsThis from "@/components/minneapolis/MNWhatIsThis";
+import MNORGatherings from "@/components/minneapolis/MNORGatherings";
 import MNTwoSessions from "@/components/minneapolis/MNTwoSessions";
 import MNExpertGrid from "@/components/minneapolis/MNExpertGrid";
+import MNPastExperts from "@/components/minneapolis/MNPastExperts";
 import MNGallery from "@/components/minneapolis/MNGallery";
 import MNSponsors from "@/components/minneapolis/MNSponsors";
 import MNFinalCTA from "@/components/minneapolis/MNFinalCTA";
@@ -15,9 +17,11 @@ const EventMinneapolis26 = () => {
   const sections: SectionDef[] = useMemo(
     () => [
       { key: "mn_hero", content: <MNHero /> },
+      { key: "mn_or_gatherings", content: <MNORGatherings /> },
       { key: "mn_what_is_this", content: <MNWhatIsThis /> },
       { key: "mn_two_sessions", content: <MNTwoSessions /> },
       { key: "mn_expert_grid", content: <MNExpertGrid /> },
+      { key: "mn_past_experts", content: <MNPastExperts eventSlug="minneapolis26" /> },
       { key: "mn_gallery", content: <MNGallery /> },
       { key: "mn_sponsors", content: <MNSponsors /> },
       { key: "mn_final_cta", content: <MNFinalCTA /> },
@@ -27,7 +31,7 @@ const EventMinneapolis26 = () => {
 
   return (
     <EditableTextProvider pageSlug="minneapolis26">
-      <PageMetaApplier title="Basecamp Outdoor Lounge × OR Gatherings · Minneapolis · Aug 20–21" />
+      <PageMetaApplier title="Basecamp Outdoor @ OR Gatherings · Minneapolis · Aug 20–21" />
       <main className="font-body" style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
         <PageMetaEditor />
         <OrderedSections sections={sections} />

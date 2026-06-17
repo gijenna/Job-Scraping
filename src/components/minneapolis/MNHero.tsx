@@ -6,6 +6,7 @@ import hero2 from "@/assets/mn26/AnthonyMarz_Basecamp-017.jpg.asset.json";
 import hero3 from "@/assets/mn26/AnthonyMarz_Basecamp-019.jpg.asset.json";
 import hero4 from "@/assets/mn26/AnthonyMarz_Basecamp-021.jpg.asset.json";
 import hero5 from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-183.jpg.asset.json";
+import lockup from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
@@ -41,15 +42,20 @@ const MNHero = () => {
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(26,37,32,0.72)" }} />
       </div>
 
-      <div className="relative z-10 max-w-4xl text-center space-y-8">
+      <div className="relative z-10 max-w-4xl text-center space-y-6">
+        <img
+          src={lockup.url}
+          alt="Basecamp Outdoor @ Minneapolis · OR Gatherings"
+          className="mx-auto w-full max-w-[520px] h-auto"
+        />
         <p className="uppercase" style={{ fontSize: 13, letterSpacing: "1.6px", color: CREAM }}>
-          <EditableText settingKey="hero_kicker" defaultText="INDUSTRY EXPERTS · OR GATHERINGS" as="span" />
+          <EditableText settingKey="hero_kicker" defaultText="AN OR GATHERING · HOSTED BY BASECAMP OUTDOOR" as="span" />
         </p>
         <h1 className="font-normal leading-tight" style={{ fontSize: "clamp(36px, 5.5vw, 56px)", color: CREAM }}>
           <EditableText settingKey="hero_headline" defaultText="This is the room you've been trying to get into." as="span" multiline />
         </h1>
         <p className="italic" style={{ fontSize: 20, color: SAGE }}>
-          <EditableText settingKey="hero_sub" defaultText="Two days. Industry experts. No OR badge needed." as="span" />
+          <EditableText settingKey="hero_sub" defaultText="Two intentional Gatherings on the show floor. No OR badge needed." as="span" />
         </p>
         <p className="uppercase" style={{ fontSize: 14, letterSpacing: "1.4px", color: CREAM }}>
           <EditableText
