@@ -266,11 +266,10 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                           <span className="text-events-coral">Industry Expert</span>
                           <br />
                           at{' '}
-                          {citySlug === 'denver' ? (
-                            <Link to="/OutsideDays26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Outside Days Career Fair</Link>
-                          ) : (
-                            <Link to="/PNW26" className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">Gather PNW</Link>
-                          )}.
+                          {(() => {
+                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                          })()}.
                         </>
                       )}
                     </h1>
