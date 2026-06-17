@@ -12,6 +12,7 @@ import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
+import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 
 interface BrandRepInviteProps {
   citySlug: string;
@@ -20,6 +21,13 @@ interface BrandRepInviteProps {
 const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
   denver: { video: heroDenver },
   portland: { image: heroPortland },
+  minneapolis: { image: heroMN.url },
+};
+
+const CITY_EVENT_LINK: Record<string, { path: string; label: string; shortLabel: string }> = {
+  denver: { path: '/OutsideDays26', label: 'Outside Days Career Fair', shortLabel: 'Outside Days Career Fair' },
+  portland: { path: '/PNW26', label: 'Gather PNW', shortLabel: 'Gather: PNW' },
+  minneapolis: { path: '/minneapolis26', label: 'Basecamp Outdoor Lounge Minneapolis', shortLabel: 'Basecamp Lounge: MN' },
 };
 
 const normalizeDenverBrandName = (value: string, slug: string) =>
