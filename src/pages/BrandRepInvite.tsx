@@ -95,6 +95,28 @@ const CITY_EVENT_DATA: Record<string, {
       'Adidas', 'REI', 'KEEN', 'Popfly', 'Oregon Outdoor Alliance', 'Peak Design',
     ],
   },
+  minneapolis: {
+    tagline: 'Basecamp Outdoor Lounge × Minneapolis',
+    yearNote: 'New market, first Basecamp Outdoor Lounge in the Twin Cities',
+    attendance: '150–250',
+    attendanceNote: 'outdoor professionals & passive talent · intentionally intimate',
+    venue: 'Minneapolis, MN — venue announced soon',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
+    time: 'Thursday · Aug 20, 2026 · 3–5 PM CT & 6–8 PM CT',
+    whoAttends: [
+      'Outdoor industry professionals across the Midwest',
+      'Active & passive talent open to mission-aligned opportunities',
+      'Mid-career professionals from tech, retail & sport pivoting into outdoor',
+      'Recent grads and early-career candidates from MN, WI, IA & beyond',
+    ],
+    format: [
+      'Proudly Sober networking lounge — focused conversations, no bar noise',
+      'Two intimate sessions: afternoon & evening (attend one or both)',
+      'Industry expert "office hours" — walk-up or pre-arranged chats',
+      'Light bites & N/A drinks for all attendees',
+    ],
+    companies: [],
+  },
 };
 
 const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
