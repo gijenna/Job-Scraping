@@ -10,11 +10,14 @@ import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, M
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
+import OrderedSections from "@/components/event/OrderedSections";
 import MNORGatherings from "@/components/minneapolis/MNORGatherings";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
+import MNEventDetails from "@/components/minneapolis/MNEventDetails";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
+import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -384,13 +387,19 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
           {citySlug === 'minneapolis' && (
             <EditableTextProvider pageSlug="mnexperts">
-              <MNORGatherings />
-              <MNPastExperts eventSlug="mnexperts" showLinkToEvent />
+              <OrderedSections
+                sections={[
+                  { key: 'or_gatherings', content: <MNORGatherings /> },
+                  { key: 'event_details', content: <MNEventDetails /> },
+                  { key: 'past_experts', content: <MNPastExperts eventSlug="mnexperts" showLinkToEvent /> },
+                ]}
+              />
             </EditableTextProvider>
           )}
 
-          {/* === THE EVENT SECTION === */}
-          {(() => {
+
+          {/* === THE EVENT SECTION (non-MN cities) === */}
+          {citySlug !== 'minneapolis' && (() => {
             const eventData = CITY_EVENT_DATA[citySlug] || CITY_EVENT_DATA.denver;
             return (
               <section className="relative py-16 md:py-24 overflow-hidden">
@@ -489,6 +498,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             );
           })()}
 
+
           {/* === FAQ SECTION === */}
           {faqs.length > 0 && (
             <section className="bg-events-teal py-16 md:py-20">
@@ -516,7 +526,11 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           {/* === CTA SECTION === */}
           <section className="relative py-16 md:py-24">
             <div className="absolute inset-0 z-0">
-              {heroMedia?.image && <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />}
+              {citySlug === 'minneapolis' ? (
+                <img src={mnCtaBg.url} alt="" className="w-full h-full object-cover" />
+              ) : heroMedia?.image ? (
+                <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
+              ) : null}
               <div className="absolute inset-0 bg-events-teal/85" />
             </div>
 
