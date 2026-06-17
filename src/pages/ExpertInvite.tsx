@@ -10,11 +10,14 @@ import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, M
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
+import OrderedSections from "@/components/event/OrderedSections";
 import MNORGatherings from "@/components/minneapolis/MNORGatherings";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
+import MNEventDetails from "@/components/minneapolis/MNEventDetails";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
+import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
 
 interface ExpertInviteProps {
   citySlug?: string;
