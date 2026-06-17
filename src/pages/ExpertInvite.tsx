@@ -526,7 +526,11 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           {/* === CTA SECTION === */}
           <section className="relative py-16 md:py-24">
             <div className="absolute inset-0 z-0">
-              {heroMedia?.image && <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />}
+              {citySlug === 'minneapolis' ? (
+                <img src={mnCtaBg.url} alt="" className="w-full h-full object-cover" />
+              ) : heroMedia?.image ? (
+                <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
+              ) : null}
               <div className="absolute inset-0 bg-events-teal/85" />
             </div>
 
