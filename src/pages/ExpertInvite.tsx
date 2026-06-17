@@ -387,10 +387,16 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
           {citySlug === 'minneapolis' && (
             <EditableTextProvider pageSlug="mnexperts">
-              <MNORGatherings />
-              <MNPastExperts eventSlug="mnexperts" showLinkToEvent />
+              <OrderedSections
+                sections={[
+                  { key: 'or_gatherings', content: <MNORGatherings /> },
+                  { key: 'event_details', content: <MNEventDetails /> },
+                  { key: 'past_experts', content: <MNPastExperts eventSlug="mnexperts" showLinkToEvent /> },
+                ]}
+              />
             </EditableTextProvider>
           )}
+
 
           {/* === THE EVENT SECTION === */}
           {(() => {
