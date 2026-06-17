@@ -199,6 +199,7 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
                     >
                       {isHidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                     </button>
+                  )}
                   {isAdmin && (
                     <div className="absolute -top-2 -left-2 z-20 flex gap-1">
                       <button
