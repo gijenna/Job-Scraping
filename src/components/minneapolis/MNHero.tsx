@@ -46,7 +46,7 @@ const MNHero = () => {
         <img
           src={lockup.url}
           alt="Basecamp Outdoor @ Minneapolis · OR Gatherings"
-          className="mx-auto w-full max-w-[520px] h-auto -mb-2"
+          className="mx-auto w-full max-w-[360px] h-auto block -mb-8 md:-mb-10"
         />
         <p className="uppercase !mt-0" style={{ fontSize: 13, letterSpacing: "1.6px", color: CREAM }}>
           <EditableText settingKey="hero_kicker" defaultText="AN OR GATHERING · HOSTED BY BASECAMP OUTDOOR" as="span" />
