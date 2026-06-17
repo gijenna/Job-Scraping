@@ -248,7 +248,7 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
                 <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                   <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
                 </a>
-                <Link to={citySlug === 'denver' ? '/OutsideDays26' : '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
+                <Link to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
 
