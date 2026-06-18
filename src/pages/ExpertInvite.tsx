@@ -18,6 +18,10 @@ const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
+import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
+
+const MN_FOREST = "#1A2520";
+const isMN = (slug: string) => slug === "minneapolis";
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -219,7 +223,8 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const firstName = expert?.full_name?.split(' ')[0] || '';
 
   return (
-    <div className="min-h-screen bg-events-teal">
+    <div className="min-h-screen" style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
+      {!isMN(citySlug) && <div className="absolute inset-0 -z-10 bg-events-teal" />}
       <LeafConfetti active={showConfetti} />
 
       {!showForm ? (
@@ -241,9 +246,14 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
             <div className="relative z-10 border-b border-white/10">
               <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
-                  <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
-                </a>
+                <div className="flex items-center gap-4">
+                  <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
+                    <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+                  </a>
+                  {isMN(citySlug) && (
+                    <img src={orGatheringsHorizontal.url} alt="OR Gatherings" className="h-8 md:h-10 w-auto" />
+                  )}
+                </div>
                 <Link to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
