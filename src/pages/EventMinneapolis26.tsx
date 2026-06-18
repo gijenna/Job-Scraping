@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import MNHero from "@/components/minneapolis/MNHero";
 import MNWhatIsThis from "@/components/minneapolis/MNWhatIsThis";
-import MNORGatherings from "@/components/minneapolis/MNORGatherings";
-import MNTwoSessions from "@/components/minneapolis/MNTwoSessions";
+import MNHowItWorks from "@/components/minneapolis/MNHowItWorks";
 import MNExpertGrid from "@/components/minneapolis/MNExpertGrid";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
 import MNGallery from "@/components/minneapolis/MNGallery";
@@ -17,9 +16,8 @@ const EventMinneapolis26 = () => {
   const sections: SectionDef[] = useMemo(
     () => [
       { key: "mn_hero", content: <MNHero /> },
-      { key: "mn_or_gatherings", content: <MNORGatherings /> },
       { key: "mn_what_is_this", content: <MNWhatIsThis /> },
-      { key: "mn_two_sessions", content: <MNTwoSessions /> },
+      { key: "mn_how_it_works", content: <MNHowItWorks /> },
       { key: "mn_expert_grid", content: <MNExpertGrid /> },
       { key: "mn_past_experts", content: <MNPastExperts eventSlug="minneapolis26" /> },
       { key: "mn_gallery", content: <MNGallery /> },
@@ -28,6 +26,7 @@ const EventMinneapolis26 = () => {
     ],
     []
   );
+
 
   return (
     <EditableTextProvider pageSlug="minneapolis26">

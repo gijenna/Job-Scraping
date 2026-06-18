@@ -26,7 +26,7 @@ const MNHero = () => {
 
   return (
     <section
-      className="relative w-full flex items-center justify-center px-6 py-24 md:py-0 md:min-h-screen min-h-[70vh] overflow-hidden"
+      className="relative w-full flex items-center justify-center px-6 py-24 md:py-32 md:min-h-screen min-h-[70vh] overflow-hidden"
       style={{ backgroundColor: FOREST, color: CREAM }}
     >
       <div className="absolute inset-0">
@@ -42,19 +42,20 @@ const MNHero = () => {
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(26,37,32,0.72)" }} />
       </div>
 
-      <div className="relative z-10 max-w-4xl text-center space-y-6">
+      <div className="relative z-10 max-w-4xl text-center">
         <img
           src={lockup.url}
           alt="Basecamp Outdoor @ Minneapolis · OR Gatherings"
-          className="mx-auto w-full max-w-[360px] h-auto block -mb-8 md:-mb-10"
+          className="mx-auto w-full max-w-[320px] h-auto block mb-4"
         />
-        <p className="uppercase !mt-0" style={{ fontSize: 13, letterSpacing: "1.6px", color: CREAM }}>
+        <p className="uppercase mb-6" style={{ fontSize: 13, letterSpacing: "1.6px", color: CREAM }}>
+
           <EditableText settingKey="hero_kicker" defaultText="AN OR GATHERING · HOSTED BY BASECAMP OUTDOOR" as="span" />
         </p>
-        <h1 className="font-normal leading-tight" style={{ fontSize: "clamp(36px, 5.5vw, 56px)", color: CREAM }}>
+        <h1 className="font-normal leading-tight mb-5" style={{ fontSize: "clamp(36px, 5.5vw, 56px)", color: CREAM }}>
           <EditableText settingKey="hero_headline" defaultText="This is the room you've been trying to get into." as="span" multiline />
         </h1>
-        <p className="italic" style={{ fontSize: 20, color: SAGE }}>
+        <p className="italic mb-5" style={{ fontSize: 20, color: SAGE }}>
           <EditableText settingKey="hero_sub" defaultText="Two intentional Gatherings on the show floor. No OR badge needed." as="span" />
         </p>
         <p className="uppercase" style={{ fontSize: 14, letterSpacing: "1.4px", color: CREAM }}>
@@ -64,6 +65,7 @@ const MNHero = () => {
             as="span"
           />
         </p>
+
         <div className="pt-4 flex flex-col items-center gap-5">
           <EditableLink
             textKey="hero_register_text"
