@@ -13,6 +13,7 @@ import SiteFooter from "@/components/SiteFooter";
 const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
+import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
 
 interface BrandRepInviteProps {
   citySlug: string;
@@ -245,9 +246,14 @@ const BrandRepInvite = ({ citySlug }: BrandRepInviteProps) => {
 
             <div className="relative z-10 border-b border-white/10">
               <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
-                  <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
-                </a>
+                <div className="flex items-center gap-4">
+                  <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
+                    <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+                  </a>
+                  {citySlug === 'minneapolis' && (
+                    <img src={orGatheringsHorizontal.url} alt="OR Gatherings" className="h-8 md:h-10 w-auto" />
+                  )}
+                </div>
                 <Link to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
