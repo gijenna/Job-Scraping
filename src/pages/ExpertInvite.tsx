@@ -351,8 +351,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           </section>
 
           {/* === WHAT IT MEANS SECTION === */}
-          <section id="learn-more" className="py-16 md:py-24" style={{ backgroundColor: isMN(citySlug) ? MN_FOREST : undefined }}>
-            {!isMN(citySlug) && <span className="hidden bg-events-teal" />}
+          <section id="learn-more" className={isMN(citySlug) ? "py-16 md:py-24" : "bg-events-teal py-16 md:py-24"} style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
             <div className="max-w-4xl mx-auto px-4">
               <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                 What It Means To Be An Industry Expert
