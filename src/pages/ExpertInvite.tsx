@@ -241,7 +241,11 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               ) : heroMedia?.image ? (
                 <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
               ) : null}
-              <div className="absolute inset-0 bg-gradient-to-b from-events-teal/80 via-events-teal/60 to-events-teal" />
+              {isMN(citySlug) ? (
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, ${MN_FOREST}cc, ${MN_FOREST}99, ${MN_FOREST})` }} />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-b from-events-teal/80 via-events-teal/60 to-events-teal" />
+              )}
             </div>
 
             <div className="relative z-10 border-b border-white/10">
@@ -347,7 +351,8 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           </section>
 
           {/* === WHAT IT MEANS SECTION === */}
-          <section id="learn-more" className="bg-events-teal py-16 md:py-24">
+          <section id="learn-more" className="py-16 md:py-24" style={{ backgroundColor: isMN(citySlug) ? MN_FOREST : undefined }}>
+            {!isMN(citySlug) && <span className="hidden bg-events-teal" />}
             <div className="max-w-4xl mx-auto px-4">
               <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                 What It Means To Be An Industry Expert
@@ -541,7 +546,9 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               ) : heroMedia?.image ? (
                 <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
               ) : null}
-              <div className="absolute inset-0 bg-events-teal/85" />
+              <div className="absolute inset-0" style={{ backgroundColor: isMN(citySlug) ? `${MN_FOREST}d9` : undefined }}>
+                {!isMN(citySlug) && <div className="w-full h-full bg-events-teal/85" />}
+              </div>
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
