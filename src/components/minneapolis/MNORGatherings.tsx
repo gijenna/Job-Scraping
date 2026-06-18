@@ -14,7 +14,10 @@ const MNORGatherings = () => (
   <section className="px-6 py-20 md:py-24" style={{ backgroundColor: FOREST, color: CREAM }}>
     <div className="max-w-5xl mx-auto grid md:grid-cols-[260px_1fr] gap-10 md:gap-14 items-center">
       <div className="flex justify-center md:justify-start">
-        <div className="rounded-2xl p-6 flex items-center justify-center" style={{ backgroundColor: CREAM }}>
+        <div
+          className="rounded-2xl p-6 flex items-center justify-center border"
+          style={{ backgroundColor: FOREST, borderColor: "rgba(242,231,213,0.15)" }}
+        >
           <img
             src={lockup.url}
             alt="Basecamp Outdoor @ Minneapolis × OR Gatherings"

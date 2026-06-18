@@ -18,6 +18,10 @@ const heroDenver = "/hero-denver.mp4";
 import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
+import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
+
+const MN_FOREST = "#1A2520";
+const isMN = (slug: string) => slug === "minneapolis";
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -219,7 +223,8 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const firstName = expert?.full_name?.split(' ')[0] || '';
 
   return (
-    <div className="min-h-screen bg-events-teal">
+    <div className="min-h-screen" style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
+      {!isMN(citySlug) && <div className="absolute inset-0 -z-10 bg-events-teal" />}
       <LeafConfetti active={showConfetti} />
 
       {!showForm ? (
@@ -236,14 +241,23 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               ) : heroMedia?.image ? (
                 <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
               ) : null}
-              <div className="absolute inset-0 bg-gradient-to-b from-events-teal/80 via-events-teal/60 to-events-teal" />
+              {isMN(citySlug) ? (
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, ${MN_FOREST}cc, ${MN_FOREST}99, ${MN_FOREST})` }} />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-b from-events-teal/80 via-events-teal/60 to-events-teal" />
+              )}
             </div>
 
             <div className="relative z-10 border-b border-white/10">
               <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
-                  <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
-                </a>
+                <div className="flex items-center gap-4">
+                  <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
+                    <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
+                  </a>
+                  {isMN(citySlug) && (
+                    <img src={orGatheringsHorizontal.url} alt="OR Gatherings" className="h-8 md:h-10 w-auto" />
+                  )}
+                </div>
                 <Link to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'} className="text-white/40 text-xs font-display uppercase tracking-widest hover:text-white/70 transition-colors">{eventTitle}</Link>
               </div>
             </div>
@@ -337,7 +351,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           </section>
 
           {/* === WHAT IT MEANS SECTION === */}
-          <section id="learn-more" className="bg-events-teal py-16 md:py-24">
+          <section id="learn-more" className={isMN(citySlug) ? "py-16 md:py-24" : "bg-events-teal py-16 md:py-24"} style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
             <div className="max-w-4xl mx-auto px-4">
               <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                 What It Means To Be An Industry Expert
@@ -531,7 +545,9 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               ) : heroMedia?.image ? (
                 <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
               ) : null}
-              <div className="absolute inset-0 bg-events-teal/85" />
+              <div className="absolute inset-0" style={{ backgroundColor: isMN(citySlug) ? `${MN_FOREST}d9` : undefined }}>
+                {!isMN(citySlug) && <div className="w-full h-full bg-events-teal/85" />}
+              </div>
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
