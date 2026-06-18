@@ -11,33 +11,35 @@ const cards = [
   {
     bg: bg1.url,
     labelKey: "what_card1_label",
-    labelDefault: "ALREADY IN",
+    labelDefault: "LEVEL UP",
     headKey: "what_card1_head",
-    headDefault: "Industry, leveling up.",
+    headDefault: "Already in the industry, ready to level up.",
     bodyKey: "what_card1_body",
-    bodyDefault: "Skip the cold-email game. Meet the people who can shortcut your next move.",
+    bodyDefault:
+      "Skip the cold-email game. The people who can shortcut your next move are in this room.",
   },
   {
     bg: bg2.url,
     labelKey: "what_card2_label",
-    labelDefault: "ALREADY IN",
+    labelDefault: "BREAK IN",
     headKey: "what_card2_head",
-    headDefault: "Industry, just engaging.",
+    headDefault: "Mid-career, industry-curious.",
     bodyKey: "what_card2_body",
     bodyDefault:
-      "No motive. You just love this community and want to be in the room with it. See old friends. Make new ones.",
+      "You've got the skills. You need the network and the intel. Two hours, the right room, real conversations.",
   },
   {
     bg: bg3.url,
     labelKey: "what_card3_label",
-    labelDefault: "NOT IN YET",
+    labelDefault: "NO FOMO",
     headKey: "what_card3_head",
-    headDefault: "Industry-curious.",
+    headDefault: "Curious about the OR show.",
     bodyKey: "what_card3_body",
     bodyDefault:
-      "Historically that's been the wall. Too expensive, not a buyer, not press, not invited. For these two windows, you walk right in. Free.",
+      "Not a buyer, not press, not invited? Doesn't matter. Hug your friends. See what the show is actually about. Walk in free.",
   },
 ];
+
 
 const MNWhatIsThis = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: CREAM, color: FOREST }}>
@@ -53,11 +55,12 @@ const MNWhatIsThis = () => (
         <p style={{ fontSize: 18, color: FOREST }}>
           <EditableText
             settingKey="what_sub"
-            defaultText="OR Gatherings is your opportunity to network with industry legends. Perfect for anyone who works in the outdoor industry, or wants to."
+            defaultText="Three reasons people walk in: break into the industry, check out the OR show, or just avoid the FOMO."
             as="span"
             multiline
           />
         </p>
+
         <p className="font-bold pt-4" style={{ fontSize: 22, color: FOREST }}>
           <EditableText
             settingKey="what_made_for"
@@ -85,17 +88,19 @@ const MNWhatIsThis = () => (
           />
           <div className="relative z-10 space-y-4" style={{ color: CREAM }}>
             <span
-              className="inline-block uppercase rounded-full font-semibold"
+              className="inline-flex items-center justify-center uppercase rounded-full font-semibold"
               style={{
                 backgroundColor: CORAL,
                 color: CREAM,
                 fontSize: 11,
-                padding: "5px 12px",
-                letterSpacing: "1px",
+                padding: "6px 14px",
+                letterSpacing: "1.2px",
+                minWidth: 96,
               }}
             >
               <EditableText settingKey={c.labelKey} defaultText={c.labelDefault} as="span" />
             </span>
+
             <h3 className="font-bold" style={{ fontSize: 22, color: CREAM }}>
               <EditableText settingKey={c.headKey} defaultText={c.headDefault} as="span" />
             </h3>

@@ -52,10 +52,10 @@ const MNHero = () => {
 
           <EditableText settingKey="hero_kicker" defaultText="AN OR GATHERING · HOSTED BY BASECAMP OUTDOOR" as="span" />
         </p>
-        <h1 className="font-normal leading-tight" style={{ fontSize: "clamp(36px, 5.5vw, 56px)", color: CREAM }}>
+        <h1 className="font-normal leading-tight mb-5" style={{ fontSize: "clamp(36px, 5.5vw, 56px)", color: CREAM }}>
           <EditableText settingKey="hero_headline" defaultText="This is the room you've been trying to get into." as="span" multiline />
         </h1>
-        <p className="italic" style={{ fontSize: 20, color: SAGE }}>
+        <p className="italic mb-5" style={{ fontSize: 20, color: SAGE }}>
           <EditableText settingKey="hero_sub" defaultText="Two intentional Gatherings on the show floor. No OR badge needed." as="span" />
         </p>
         <p className="uppercase" style={{ fontSize: 14, letterSpacing: "1.4px", color: CREAM }}>
@@ -65,6 +65,7 @@ const MNHero = () => {
             as="span"
           />
         </p>
+
         <div className="pt-4 flex flex-col items-center gap-5">
           <EditableLink
             textKey="hero_register_text"
