@@ -82,7 +82,7 @@ const MNExpertGrid = () => {
   ];
 
   return (
-    <section className="px-6 py-20 md:py-28" style={{ backgroundColor: FOREST, color: CREAM }}>
+    <section id="experts" className="px-6 py-20 md:py-28" style={{ backgroundColor: FOREST, color: CREAM }}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center space-y-3 mb-10">
           <h2 className="font-normal" style={{ fontSize: 36, color: CREAM }}>
