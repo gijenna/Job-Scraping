@@ -60,6 +60,7 @@ const MNWhatIsThis = () => (
             as="span"
             multiline
           />
+        </p>
       </div>
     </div>
 
