@@ -2,6 +2,7 @@ import EditableText from "@/components/EditableText";
 import bg1 from "@/assets/mn26/AnthonyMarz_Basecamp-083.jpg.asset.json";
 import bg2 from "@/assets/mn26/AnthonyMarz_Basecamp-094.jpg.asset.json";
 import bg3 from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-045.jpg.asset.json";
+import lounge from "@/assets/mn26/lounge-watercolor.jpg.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
