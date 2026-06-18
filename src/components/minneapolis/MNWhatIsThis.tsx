@@ -72,6 +72,14 @@ const MNWhatIsThis = () => (
       </div>
     </div>
 
+    <div className="mx-auto mt-10 rounded-2xl overflow-hidden shadow-lg" style={{ maxWidth: 1080 }}>
+      <img
+        src={lounge.url}
+        alt="Illustrated watercolor scene of the Basecamp Outdoor Lounge with rocking chairs, high-top tables, expert cards, and category signage"
+        className="w-full h-auto block"
+      />
+    </div>
+
     <div className="mx-auto mt-12 grid grid-cols-1 md:grid-cols-3 gap-6" style={{ maxWidth: 1080 }}>
       {cards.map((c, i) => (
         <div
