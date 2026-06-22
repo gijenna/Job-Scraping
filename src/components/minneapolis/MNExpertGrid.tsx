@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Expert } from "@/lib/expert-types";
 import ExpertCard from "@/components/experts/ExpertCard";
