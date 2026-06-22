@@ -151,30 +151,55 @@ const MNExpertGrid = () => {
           </div>
         ) : (
           <div className={gridClass}>
-            {filtered.map(({ expert, aug20, aug21 }) => (
-              <div key={expert.id} className="relative">
-                {renderCard(expert)}
-                <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
-                  {aug20 && (
-                    <span
-                      className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: CORAL, color: CREAM }}
-                    >
-                      Aug 20
-                    </span>
-                  )}
-                  {aug21 && (
-                    <span
-                      className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: CREAM, color: FOREST }}
-                    >
-                      Aug 21
-                    </span>
-                  )}
+            {filtered.map(({ expert, aug20, aug21 }) => {
+              const clickable = cardStyle !== "minimal";
+              return (
+                <div
+                  key={expert.id}
+                  className={`relative ${clickable ? "cursor-pointer transition-transform hover:scale-[1.02]" : ""}`}
+                  onClick={clickable ? () => setFocused(expert) : undefined}
+                >
+                  {renderCard(expert)}
+                  <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
+                    {aug20 && (
+                      <span
+                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: CORAL, color: CREAM }}
+                      >
+                        Aug 20
+                      </span>
+                    )}
+                    {aug21 && (
+                      <span
+                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: CREAM, color: FOREST }}
+                      >
+                        Aug 21
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+        )}
+
+        {focused && createPortal(
+          <>
+            <div className="fixed inset-0 bg-black/60 z-[100]" onClick={() => setFocused(null)} />
+            <div className="fixed inset-0 z-[101] flex items-center justify-center p-4" onClick={() => setFocused(null)}>
+              <div className="relative w-full max-w-xs animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => setFocused(null)}
+                  className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <ExpertCard expert={focused} expanded />
+              </div>
+            </div>
+          </>,
+          document.body
         )}
 
         <div className="text-center mt-12">
