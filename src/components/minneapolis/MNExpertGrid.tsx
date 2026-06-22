@@ -28,6 +28,7 @@ const MNExpertGrid = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<SessionFilter>("all");
   const [cardStyle, setCardStyle] = useState("polaroid");
+  const [focused, setFocused] = useState<Expert | null>(null);
 
   useEffect(() => {
     const v = settings["card_style_mn_experts"];
