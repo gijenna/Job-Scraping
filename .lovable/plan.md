@@ -1,51 +1,74 @@
-## /minneapolis26 restructure
+# Minneapolis26 Brand Sales Page
 
-### 1. Hero (MNHero.tsx)
-- Remove the negative margins (`-mb-8 md:-mb-10`) that overlap the lockup onto the kicker.
-- Use explicit, balanced spacing: ~16px between lockup and kicker, ~24px between kicker/headline/sub/date.
-- Add `pb-20 md:pb-28` so the date line breathes off the bottom edge of the photo (not flush to image edge).
-- Lockup max-width stays 360px; no overlap.
+A new standalone page for brand decision-makers evaluating the Basecamp Outdoor Lounge partnership at OR Minneapolis 2026. Completely separate from `/minneapolis26`. Nothing existing is modified.
 
-### 2. New "How It Works" section (replaces MNTwoSessions + MNORGatherings)
-Create `MNHowItWorks.tsx`. Cream background, dark forest text. Structure:
+## Route
 
-- Eyebrow: "HOW IT WORKS"
-- Headline: "Two Gatherings. 100 seats each. Here's the play."
-- 4-step flow (numbered, all admin-editable):
-  1. **Pick your session** — two compact session cards inline (Thu Aug 20, 3–5 PM Happy Hour / Fri Aug 21, 10 AM–12 PM Women's Brunch), each with its own Register button. First 100 per session.
-  2. **Plan your conversations** — browse the expert cards, pick who you want to meet. Link → /MNexperts.
-  3. **Grab your OR guest pass** — sent day-of, no OR Summer Market badge needed.
-  4. **Walk into the Basecamp Outdoor Lounge** — chat with experts, see old friends, meet the room.
-- Closing line folds in the OR Gatherings context (presented with Outdoor Retailer + press link) so the standalone block can be cut.
+- **URL**: `/minneapolis26-brands` (added to `src/App.tsx`)
+- **Page**: `src/pages/MN26Brands.tsx`
+- All internal/CTA links use `basecampoutdoorevents.com`. No `lovable.app` links anywhere.
 
-### 3. Watercolor scene illustration
-Generate one wide watercolor/gouache illustration of the Basecamp Outdoor Lounge inside the Minneapolis Convention Center:
-- Loose watercolor, warm earthy palette (cream/forest/coral/sage matching site).
-- Airy indoor lounge with industrial windows, plants, a wooden "OR GATHERINGS" hanging sign.
-- GCI Outdoor Grab-and-Go Rockers in small conversation clusters (using the linked product silhouette).
-- High-top tables with people chatting.
-- Hanging category signs above zones: "MARKETING", "OPERATIONS", "PRODUCT", "RETAIL", "MEDIA".
-- Beside several rockers, easel-style "expert cards" with real past Denver/PNW expert names + roles (I'll pull 5–6 from past_experts data before generating).
-- Embedded full-bleed inside How It Works, above the steps.
+## What the page looks like by default
 
-### 4. Three Kinds of People (MNWhatIsThis.tsx)
-Rewrite the three cards. Equal pill widths, new labels and copy:
+Every section renders complete and polished using real Basecamp Outdoor content. A first-time visitor sees a finished sales page — no placeholders, no "your logo here", no empty states. Personalization is a bonus.
 
-| Card | Pill | Headline | Body |
-|---|---|---|---|
-| 1 | LEVEL UP | Already in the industry, ready to level up. | Skip the cold-email game. The people who can shortcut your next move are in this room. |
-| 2 | BREAK IN | Mid-career, industry-curious. | You've got the skills. You need the network and the intel. Two hours, the right room, real conversations. |
-| 3 | NO FOMO | Curious about the OR show. | Not a buyer, not press, not invited? Doesn't matter. Hug your friends. See what the show is actually about. Walk in free. |
+## Sections
 
-All pills 2 words / identical padding so they line up across the cards. Section sub-headline: "Three reasons people walk in." All copy stays admin-editable.
+**1. Hero + What it is**
+- Dark teal background, cream + coral type
+- Headline: "See your brand in the room."
+- Body: OR Gatherings, Thursday 10:30am–12:30pm, inside the 600 sq ft Basecamp Outdoor Lounge, Minneapolis Convention Center, Aug 19–21, 2026. Experts sit for mentorship-style conversations. We line up the experts; brands support theirs and show up for the community.
+- Small tasteful personalization card lives at the bottom of the hero (see below).
 
-### 5. Cuts & reorder
-- **Remove** `MNORGatherings` from the page (content folds into How It Works closing line).
-- **Remove** `MNTwoSessions` from the page (folded into How It Works step 1).
-- New section order: MNHero → MNWhatIsThis → MNHowItWorks → MNExpertGrid → MNPastExperts → MNGallery → MNSponsors → MNFinalCTA.
+**2. Two tiers side by side + comparison table**
+- Two cards: "Bring Your Expert — $1,500" and "Lounge Partner — $5,000" with the exact copy from the brief (including the honest note that $1,500 does not include a show pass or team badges; expert still gets after-party invite).
+- Comparison table with the 11 rows exactly as specified. $5,000 column has a coral-tinted background; $1,500 column is muted (sage/cream). Checkmarks and dashes styled to make the visual gap obvious.
+- Below the table, the coral italic line: "At $5,000 the team badges alone can exceed the price..."
+- On mobile the two tier cards stack; the comparison table becomes a stacked/scrollable card-per-tier layout.
 
-### Technical notes
-- New file: `src/components/minneapolis/MNHowItWorks.tsx` — uses `EditableText`/`EditableLink` for every string and URL.
-- New asset: `src/assets/mn26/lounge-watercolor.png.asset.json` via image generation (premium tier for fidelity + legible signage text).
-- Edits: `MNHero.tsx` (spacing), `MNWhatIsThis.tsx` (copy + pill widths), `EventMinneapolis26.tsx` (sections array).
-- No DB migrations. New copy uses fresh `event_settings` keys with sensible defaults so admin can edit immediately.
+**3. "See how you'll show up" (mockups)**
+Three mockups, all rendered client-side with the current brand (defaults to Basecamp Outdoor):
+- **Newsletter mention vs feature** side by side: left = small logo + one-line mention; right = large branded block with logo, headline, paragraph.
+- **Event website partner section mockup**: a cream card showing where the logo sits among partner logos.
+- **"Event photo" with logo overlay**: real event photo from `src/assets/mn26/` (e.g. `AnthonyMarz_Basecamp-176`); an absolutely positioned div overlays the brand logo onto a sign/banner area of the photo. Caption below: "Your brand, in the room."
+- All three swap to the entered brand name + uploaded logo when personalization is filled in. Otherwise they quietly stay Basecamp Outdoor.
+
+**4. Why it's worth it**
+- Booth at OR runs $5,000–8,000 in floor space alone, before build-out, freight, staff.
+- Lounge gives brand presence, recruiting, and content reach across 300K community (70K newsletter, 180K social) — no setup.
+- Proof point: Denver Lounge generated $55K in partnerships; experts return on their own time.
+
+**5. Final CTA**
+- "Let's get your brand in the room."
+- Coral button → `mailto:jenna@wearetheoutdoorindustry.com` with subject "Basecamp Outdoor Lounge Partnership — OR Minneapolis 2026".
+- Small note: payment can route through our nonprofit arm if needed.
+
+## Personalization (bonus layer)
+
+Understated block placed at the end of the hero (and again as a small inline nudge above Section 3):
+
+- Copy: "Want to see YOUR brand in the room? Add your name and logo."
+- Text input: brand name
+- File input styled as a button: "Upload your logo" (accepts PNG/JPG/SVG)
+- Coral button: "See it with my brand" → scrolls to Section 3
+- "Reset to Basecamp" ghost link when a brand is active
+
+Stored in React state at the page level (`useState` for `brandName` and `logoDataUrl`). The uploaded file is read via `FileReader.readAsDataURL` into a data URL held in memory. No upload, no backend, no persistence. Refresh clears it. Jenna can pre-fill and screenshot before sending.
+
+The three Section 3 mockups read `brandName || "Basecamp Outdoor"` and `logoDataUrl || basecampLogo`. Never an empty state.
+
+## Style
+
+- Tokens used directly as inline hex where semantic tokens are missing: teal `#19363B`, coral `#ED7660`, gold `#E1B624`, cream `#E6E1CE`, sage `#809482`.
+- Font: Josefin Sans (already loaded project-wide) applied via `font-body` / explicit `font-family` on the page root.
+- Alternating dark teal and cream section backgrounds. Coral for accents and buttons. Warm, editorial, confident. No corporate stock feel. No em dashes anywhere in copy.
+- Mobile-first: tier cards stack, table converts to per-tier stacked cards, mockups stack full width, personalization block full width.
+
+## Technical notes
+
+- Single new file `src/pages/MN26Brands.tsx` containing all sections as local sub-components (kept in one file for isolation and to guarantee zero impact on `/minneapolis26`).
+- Reuse existing Basecamp logo asset already in the project for the default logo (verified during implementation from `src/assets/`).
+- Reuse one existing lounge/event photo from `src/assets/mn26/*.jpg.asset.json` for the photo mockup.
+- Add exactly one line to `src/App.tsx` importing the page and one `<Route path="/minneapolis26-brands" element={<MN26Brands />} />` above the catch-all.
+- No new dependencies. No changes to Tailwind config, `index.css`, existing components, or any Minneapolis attendee-page files.
+- No backend, no Supabase calls, no auth.
