@@ -20,6 +20,7 @@ import EventPNW26 from "./pages/EventPNW26";
 import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
 import EventMinneapolis26 from "./pages/EventMinneapolis26";
+import MN26Brands from "./pages/MN26Brands";
 import Connect from "./pages/outsidedays/Connect";
 import ConnectFull from "./pages/outsidedays/ConnectFull";
 import ConnectProfile from "./pages/outsidedays/ConnectProfile";
