@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
-import loungePhoto from "@/assets/mn26/AnthonyMarz_Basecamp-176.jpg.asset.json";
+import loungePhoto from "@/assets/mn26/AnthonyMarz_Basecamp-169.jpg.asset.json";
 
 const TEAL = "#19363B";
 const CORAL = "#ED7660";
