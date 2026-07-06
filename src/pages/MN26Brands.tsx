@@ -112,34 +112,70 @@ const PersonalizationCard = ({
   );
 };
 
-const Hero = ({ personalization }: { personalization: ReturnType<typeof usePersonalization> }) => (
-  <section style={{ background: TEAL, ...font }} className="px-6 pt-20 pb-24 md:pt-28 md:pb-32">
-    <div className="max-w-5xl mx-auto">
-      <p style={{ color: GOLD }} className="text-xs md:text-sm tracking-[0.3em] uppercase font-medium">
-        Basecamp Outdoor Lounge · OR Minneapolis 2026
-      </p>
-      <h1
-        style={{ color: CREAM, fontWeight: 300, letterSpacing: "-0.02em" }}
-        className="mt-6 text-5xl md:text-7xl leading-[1.02]"
-      >
-        See your brand
-        <br />
-        <span style={{ fontWeight: 600 }}>in the room.</span>
-      </h1>
-      <div style={{ color: `${CREAM}cc` }} className="mt-8 max-w-2xl text-base md:text-lg leading-relaxed font-light space-y-4">
-        <p>
-          OR Gatherings is our signature event. Thursday morning, 10:30am to 12:30pm, inside the 600 sq ft Basecamp Outdoor Lounge we host all three days of Outdoor Retailer.
+const FACTS: Array<[string, string]> = [
+  ["Event", "OR Gatherings at the Basecamp Outdoor Lounge"],
+  ["Date", "Thursday, August 20, 2026"],
+  ["Time", "10:30am–12:30pm"],
+  ["Location", "Minneapolis Convention Center, inside Outdoor Retailer"],
+  ["Cost", "Free to attend, no OR badge needed"],
+];
+
+const Hero = () => (
+  <>
+    <section style={{ background: TEAL, ...font }} className="px-6 pt-20 pb-16 md:pt-28 md:pb-20">
+      <div className="max-w-5xl mx-auto">
+        <p style={{ color: GOLD }} className="text-xs md:text-sm tracking-[0.3em] uppercase font-medium">
+          Basecamp Outdoor Lounge · OR Minneapolis 2026
         </p>
-        <p>
-          Minneapolis Convention Center. August 19 to 21, 2026. Industry experts sit for mentorship-style conversations with people breaking into and growing in the outdoor industry.
+        <h1
+          style={{ color: CREAM, fontWeight: 300, letterSpacing: "-0.02em" }}
+          className="mt-6 text-5xl md:text-7xl leading-[1.02]"
+        >
+          See your brand
+          <br />
+          <span style={{ fontWeight: 600 }}>in the room.</span>
+        </h1>
+        <p style={{ color: CREAM, fontWeight: 400 }} className="mt-6 text-lg md:text-2xl font-light max-w-2xl">
+          Some brands buy a booth. You could build a reputation instead.
         </p>
-        <p style={{ color: CREAM }}>
-          We line up the experts. Brands get to support theirs, and be seen as the brand that showed up for the community.
+        <div style={{ color: `${CREAM}cc` }} className="mt-6 max-w-2xl text-base md:text-lg leading-relaxed font-light space-y-3">
+          <p>OR Gatherings is our signature event, and your brand can power it.</p>
+          <p>Your people sit down with the next generation of the industry, and you become the brand that showed up for the community.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Facts strip */}
+    <section style={{ background: CREAM, borderTop: `1px solid ${TEAL}18`, borderBottom: `1px solid ${TEAL}18`, ...font }} className="px-6 py-8 md:py-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-4">
+        {FACTS.map(([label, value], i) => (
+          <div
+            key={label}
+            style={{
+              borderLeft: `2px solid ${CORAL}`,
+            }}
+            className={`pl-4 md:pl-4 md:border-l-2 ${i === 0 ? "" : ""}`}
+          >
+            <div style={{ color: CORAL }} className="text-[10px] tracking-[0.25em] uppercase font-semibold">
+              {label}
+            </div>
+            <div style={{ color: TEAL }} className="mt-1.5 text-sm md:text-[15px] font-medium leading-snug">
+              {value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Model context line */}
+    <section style={{ background: CREAM, ...font }} className="px-6 pb-10 md:pb-14">
+      <div className="max-w-4xl mx-auto text-center">
+        <p style={{ color: `${TEAL}cc` }} className="text-base md:text-lg font-light italic">
+          We line up the experts. Brands get to support theirs and share the spotlight.
         </p>
       </div>
-      <PersonalizationCard {...personalization} />
-    </div>
-  </section>
+    </section>
+  </>
 );
 
 const TierCard = ({
@@ -472,7 +508,7 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
     <section id="mockups" style={{ background: TEAL, ...font }} className="px-6 py-20 md:py-28">
       <div className="max-w-6xl mx-auto">
         <p style={{ color: GOLD }} className="text-xs tracking-[0.3em] uppercase font-medium">
-          Section 3
+          See it live
         </p>
         <h2 style={{ color: CREAM, fontWeight: 300 }} className="mt-3 text-3xl md:text-5xl">
           See how you'll <span style={{ fontWeight: 600 }}>show up.</span>
@@ -480,8 +516,15 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
         <p style={{ color: `${CREAM}99` }} className="mt-4 max-w-2xl text-base font-light">
           {personalization.active
             ? `Previewing with ${brand.name}. Nothing is saved, this is just for you.`
-            : "Previewing with Basecamp Outdoor. Add your brand above to see it swap in."}
+            : "Previewing with Basecamp Outdoor. Add your brand below to see it swap in."}
         </p>
+
+        <div className="mt-8 max-w-3xl">
+          <h3 style={{ color: CREAM, fontWeight: 400 }} className="text-lg md:text-xl mb-3 font-light">
+            Want to see your brand in the room? Add your name and logo.
+          </h3>
+          <PersonalizationCard {...personalization} compact />
+        </div>
 
         <div className="mt-10 grid md:grid-cols-2 gap-5">
           <NewsletterMention brand={brand} />
@@ -490,10 +533,6 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
         <div className="mt-5 grid md:grid-cols-2 gap-5">
           <PartnerSection brand={brand} />
           <EventPhoto brand={brand} />
-        </div>
-
-        <div className="mt-10 max-w-2xl">
-          <PersonalizationCard {...personalization} compact />
         </div>
       </div>
     </section>
@@ -574,7 +613,7 @@ const MN26Brands = () => {
   const personalization = usePersonalization();
   return (
     <div style={{ background: TEAL, ...font }} className="min-h-screen">
-      <Hero personalization={personalization} />
+      <Hero />
       <Tiers />
       <Mockups personalization={personalization} />
       <WhyWorthIt />
