@@ -613,7 +613,7 @@ const MN26Brands = () => {
   const personalization = usePersonalization();
   return (
     <div style={{ background: TEAL, ...font }} className="min-h-screen">
-      <Hero personalization={personalization} />
+      <Hero />
       <Tiers />
       <Mockups personalization={personalization} />
       <WhyWorthIt />
