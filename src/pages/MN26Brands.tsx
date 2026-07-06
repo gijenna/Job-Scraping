@@ -508,7 +508,7 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
     <section id="mockups" style={{ background: TEAL, ...font }} className="px-6 py-20 md:py-28">
       <div className="max-w-6xl mx-auto">
         <p style={{ color: GOLD }} className="text-xs tracking-[0.3em] uppercase font-medium">
-          Section 3
+          See it live
         </p>
         <h2 style={{ color: CREAM, fontWeight: 300 }} className="mt-3 text-3xl md:text-5xl">
           See how you'll <span style={{ fontWeight: 600 }}>show up.</span>
@@ -516,8 +516,15 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
         <p style={{ color: `${CREAM}99` }} className="mt-4 max-w-2xl text-base font-light">
           {personalization.active
             ? `Previewing with ${brand.name}. Nothing is saved, this is just for you.`
-            : "Previewing with Basecamp Outdoor. Add your brand above to see it swap in."}
+            : "Previewing with Basecamp Outdoor. Add your brand below to see it swap in."}
         </p>
+
+        <div className="mt-8 max-w-3xl">
+          <h3 style={{ color: CREAM, fontWeight: 400 }} className="text-lg md:text-xl mb-3 font-light">
+            Want to see your brand in the room? Add your name and logo.
+          </h3>
+          <PersonalizationCard {...personalization} compact />
+        </div>
 
         <div className="mt-10 grid md:grid-cols-2 gap-5">
           <NewsletterMention brand={brand} />
@@ -526,10 +533,6 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
         <div className="mt-5 grid md:grid-cols-2 gap-5">
           <PartnerSection brand={brand} />
           <EventPhoto brand={brand} />
-        </div>
-
-        <div className="mt-10 max-w-2xl">
-          <PersonalizationCard {...personalization} compact />
         </div>
       </div>
     </section>
