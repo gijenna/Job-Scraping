@@ -145,7 +145,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           <Button
             size="sm"
             variant={!showSaved ? "secondary" : "ghost"}
-            onClick={() => setShowSaved(false)}
+            onClick={() => setShowSavedPersist(false)}
             className="h-7 text-xs"
           >
             Active ({activeCount})
@@ -153,7 +153,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           <Button
             size="sm"
             variant={showSaved ? "secondary" : "ghost"}
-            onClick={() => setShowSaved(true)}
+            onClick={() => setShowSavedPersist(true)}
             className="h-7 text-xs"
           >
             <Bookmark className="w-3 h-3 mr-1" /> Saved ({savedCount})
