@@ -57,15 +57,20 @@ const MNEventDetails = ({ onApply }: MNEventDetailsProps) => (
             />
           </p>
           <div className="mt-5">
-            <EditableLink
-              textKey="event_session1_cta_text"
-              urlKey="event_session1_cta_url"
-              defaultText="Apply for this session →"
-              defaultUrl={APPLY}
+            <button
+              type="button"
+              onClick={onApply}
               className="inline-block rounded-full font-bold transition hover:opacity-90"
               style={{ backgroundColor: CORAL, color: CREAM, fontSize: 14, padding: "10px 22px" }}
-            />
+            >
+              <EditableText
+                settingKey="event_session1_cta_text"
+                defaultText="Build your Expert card →"
+                as="span"
+              />
+            </button>
           </div>
+
         </div>
 
       </div>
