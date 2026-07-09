@@ -25,7 +25,7 @@ const MNFinalCTA = () => (
       <p style={{ fontSize: 18, color: FOREST }}>
         <EditableText
           settingKey="final_sub"
-          defaultText="Two open windows in August. Walk right in."
+          defaultText="One Thursday morning window. Walk right in."
           as="span"
         />
       </p>

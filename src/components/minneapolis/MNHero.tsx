@@ -56,7 +56,7 @@ const MNHero = () => {
           <EditableText settingKey="hero_headline" defaultText="This is the room you've been trying to get into." as="span" multiline />
         </h1>
         <p className="italic mb-5" style={{ fontSize: 20, color: SAGE }}>
-          <EditableText settingKey="hero_sub" defaultText="Two intentional Gatherings on the show floor. No OR badge needed." as="span" />
+          <EditableText settingKey="hero_sub" defaultText="One focused Gathering on the show floor. Free to attend, no OR badge needed." as="span" />
         </p>
         <p className="uppercase" style={{ fontSize: 14, letterSpacing: "1.4px", color: CREAM }}>
           <EditableText
