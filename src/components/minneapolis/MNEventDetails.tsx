@@ -1,22 +1,18 @@
 import EditableText from "@/components/EditableText";
-import EditableLink from "@/components/EditableLink";
 import { MapPin, Users, Sparkles } from "lucide-react";
-import bgPhoto from "@/assets/mn26/AnthonyMarz_Basecamp-046.jpg.asset.json";
+
+interface MNEventDetailsProps {
+  onApply?: () => void;
+}
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 const CORAL = "#E8836B";
-const APPLY = "https://basecampoutdoor.typeform.com/MNExperts";
 const VENUE_MAP =
   "https://www.google.com/maps/search/?api=1&query=Minneapolis+Convention+Center";
 
-const MNEventDetails = () => (
-  <section className="relative py-16 md:py-24 overflow-hidden">
-    <div className="absolute inset-0 z-0">
-      <img src={bgPhoto.url} alt="" className="w-full h-full object-cover" />
-      <div className="absolute inset-0" style={{ backgroundColor: "rgba(242,231,213,0.92)" }} />
-    </div>
-
+const MNEventDetails = ({ onApply }: MNEventDetailsProps) => (
+  <section className="relative py-16 md:py-24 overflow-hidden" style={{ backgroundColor: CREAM }}>
     <div className="relative z-10 max-w-4xl mx-auto px-4">
       <div className="text-center mb-12">
         <p className="font-display font-semibold text-sm uppercase tracking-widest" style={{ color: CORAL }}>
@@ -61,15 +57,20 @@ const MNEventDetails = () => (
             />
           </p>
           <div className="mt-5">
-            <EditableLink
-              textKey="event_session1_cta_text"
-              urlKey="event_session1_cta_url"
-              defaultText="Apply for this session →"
-              defaultUrl={APPLY}
+            <button
+              type="button"
+              onClick={onApply}
               className="inline-block rounded-full font-bold transition hover:opacity-90"
               style={{ backgroundColor: CORAL, color: CREAM, fontSize: 14, padding: "10px 22px" }}
-            />
+            >
+              <EditableText
+                settingKey="event_session1_cta_text"
+                defaultText="Build your Expert card →"
+                as="span"
+              />
+            </button>
           </div>
+
         </div>
 
       </div>
