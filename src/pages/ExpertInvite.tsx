@@ -601,7 +601,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             <OrderedSections
               sections={[
                 { key: 'or_gatherings', content: <MNORGatherings /> },
-                { key: 'event_details', content: <MNEventDetails /> },
+                { key: 'event_details', content: <MNEventDetails onApply={() => setShowForm(true)} /> },
                 { key: 'past_experts', content: <MNPastExperts eventSlug="mnexperts" showLinkToEvent /> },
               ]}
             />
