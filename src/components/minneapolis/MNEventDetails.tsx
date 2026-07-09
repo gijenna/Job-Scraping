@@ -32,31 +32,30 @@ const MNEventDetails = () => (
         <p className="text-lg mt-3 max-w-xl mx-auto" style={{ color: "rgba(26,37,32,0.65)" }}>
           <EditableText
             settingKey="event_sub"
-            defaultText="Two intentional Gatherings on the OR show floor. Apply for one or both."
+            defaultText="One intentional Gathering on the OR show floor. Apply to join as an Industry Expert."
             as="span"
             multiline
           />
         </p>
       </div>
 
-      {/* Two session boxes */}
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
-        {/* Session 1 */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border" style={{ borderColor: "rgba(26,37,32,0.1)" }}>
+      {/* Session box */}
+      <div className="mb-10">
+        <div className="bg-white rounded-xl p-6 shadow-sm border max-w-xl mx-auto" style={{ borderColor: "rgba(26,37,32,0.1)" }}>
           <p className="uppercase font-semibold" style={{ fontSize: 13, letterSpacing: "1.4px", color: CORAL }}>
             <EditableText
               settingKey="event_session1_when"
-              defaultText="THURSDAY · AUG 20 · 3–5 PM"
+              defaultText="THURSDAY · AUG 20 · 10:30 AM TO 12:30 PM"
               as="span"
             />
           </p>
           <h3 className="font-display font-bold mt-3" style={{ fontSize: 28, color: FOREST }}>
-            <EditableText settingKey="event_session1_title" defaultText="Happy Hour" as="span" />
+            <EditableText settingKey="event_session1_title" defaultText="Basecamp Outdoor Lounge" as="span" />
           </h3>
           <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(26,37,32,0.75)" }}>
             <EditableText
               settingKey="event_session1_body"
-              defaultText="Open to everyone. Light bites, N/A drinks, and the most relaxed networking in the building."
+              defaultText="A focused Thursday morning session for intentional conversations, mentoring, and industry connection."
               as="span"
               multiline
             />
@@ -73,53 +72,6 @@ const MNEventDetails = () => (
           </div>
         </div>
 
-        {/* Session 2 */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border" style={{ borderColor: "rgba(26,37,32,0.1)" }}>
-          <p className="uppercase font-semibold" style={{ fontSize: 13, letterSpacing: "1.4px", color: CORAL }}>
-            <EditableText
-              settingKey="event_session2_when"
-              defaultText="FRIDAY · AUG 21 · 10 AM–12 PM"
-              as="span"
-            />
-          </p>
-          <h3 className="font-display font-bold mt-3" style={{ fontSize: 28, color: FOREST }}>
-            <EditableText settingKey="event_session2_title" defaultText="Women's Brunch" as="span" />
-          </h3>
-          <span
-            className="inline-block uppercase rounded-full font-semibold mt-2"
-            style={{
-              backgroundColor: CORAL,
-              color: CREAM,
-              fontSize: 11,
-              padding: "4px 10px",
-              letterSpacing: "1px",
-            }}
-          >
-            <EditableText
-              settingKey="event_session2_tag"
-              defaultText="WOMEN IN THE OUTDOOR INDUSTRY"
-              as="span"
-            />
-          </span>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(26,37,32,0.75)" }}>
-            <EditableText
-              settingKey="event_session2_body"
-              defaultText="Morning gathering for women in the industry, and women trying to break in. Coffee, food, and real talk."
-              as="span"
-              multiline
-            />
-          </p>
-          <div className="mt-5">
-            <EditableLink
-              textKey="event_session2_cta_text"
-              urlKey="event_session2_cta_url"
-              defaultText="Apply for this session →"
-              defaultUrl={APPLY}
-              className="inline-block rounded-full font-bold transition hover:opacity-90"
-              style={{ backgroundColor: CORAL, color: CREAM, fontSize: 14, padding: "10px 22px" }}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Attendance + Venue */}
@@ -163,7 +115,7 @@ const MNEventDetails = () => (
           <Sparkles className="w-4 h-4 inline mr-2" style={{ color: "#E1B624" }} />
           <EditableText
             settingKey="event_year_note"
-            defaultText="Inside OR Summer Market — no OR badge required to attend either Gathering."
+            defaultText="Inside OR Summer Market. Experts receive a free Outdoor Retailer badge."
             as="span"
           />
         </p>
