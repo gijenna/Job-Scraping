@@ -22,12 +22,14 @@ import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
 import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
-import expertPhoto1 from "@/assets/mn26/AnthonyMarz_Basecamp-083.jpg.asset.json";
-import expertPhoto2 from "@/assets/mn26/AnthonyMarz_Basecamp-094.jpg.asset.json";
-import expertPhoto3 from "@/assets/mn26/AnthonyMarz_Basecamp-138.jpg.asset.json";
 
 const MN_FOREST = "#1A2520";
 const isMN = (slug: string) => slug === "minneapolis";
+const EXPERT_PHOTOS = [
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/9dbf7783-4552-4a9b-bf39-9029c76e3acb/AnthonyMarz_Basecamp-083-2.jpg",
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/54a59ae4-e76d-401e-9ea4-dd70f7cbd927/AnthonyMarz_Basecamp-094-2.jpg",
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/b8a8a961-1567-4b57-9e36-aabb1f692ca4/AnthonyMarz_Basecamp-138.jpg",
+];
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -435,7 +437,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
                   <div className="grid md:grid-cols-3 gap-5 mt-10">
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample src={expertPhoto1.url} alt="Industry experts in conversation at a Basecamp Outdoor event" />
+                      <ExpertExample src={EXPERT_PHOTOS[0]} alt="Industry experts in conversation at a Basecamp Outdoor event" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature1_title" defaultText="Share Your Journey" as="span" />
                       </h4>
@@ -449,7 +451,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                       </p>
                     </div>
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample src={expertPhoto2.url} alt="Outdoor industry leaders networking at Basecamp Outdoor" />
+                      <ExpertExample src={EXPERT_PHOTOS[1]} alt="Outdoor industry leaders networking at Basecamp Outdoor" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature2_title" defaultText="Get Free Access" as="span" />
                       </h4>
@@ -463,7 +465,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                       </p>
                     </div>
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample src={expertPhoto3.url} alt="Basecamp Outdoor community members sharing industry advice" />
+                      <ExpertExample src={EXPERT_PHOTOS[2]} alt="Basecamp Outdoor community members sharing industry advice" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature3_title" defaultText="Expert Status" as="span" />
                       </h4>
