@@ -407,7 +407,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
           {isMN(citySlug) && (
             <section className="border-y border-events-cream/10 px-4 py-5" style={{ backgroundColor: MN_FOREST }}>
-              <div className="mx-auto flex max-w-7xl px-6 flex-col gap-2 text-center text-xs font-display font-semibold uppercase tracking-[0.18em] text-events-cream/58 md:flex-row md:items-center md:justify-center md:gap-6">
+              <div className="mx-auto flex max-w-none w-full px-8 lg:px-16 flex-col gap-2 text-center text-xs font-display font-semibold uppercase tracking-[0.18em] text-events-cream/58 md:flex-row md:items-center md:justify-center md:gap-6">
                 <span><EditableText settingKey="mn_event_detail_date" defaultText="Thursday · Aug 20, 2026" as="span" /></span>
                 <span className="hidden md:inline text-events-coral">•</span>
                 <span><EditableText settingKey="mn_event_detail_time" defaultText="10:30 AM to 12:30 PM CT" as="span" /></span>

@@ -12,7 +12,7 @@ const PRESS_URL =
 
 const MNORGatherings = () => (
   <section className="px-6 py-20 md:py-24" style={{ backgroundColor: FOREST, color: CREAM }}>
-    <div className="max-w-7xl mx-auto grid md:grid-cols-[320px_1fr] gap-10 md:gap-16 items-center">
+    <div className="w-full mx-auto px-8 lg:px-16 grid md:grid-cols-[320px_1fr] gap-10 md:gap-16 items-center">
       <div className="flex justify-center md:justify-start">
         <div
           className="rounded-2xl p-6 flex items-center justify-center border"
