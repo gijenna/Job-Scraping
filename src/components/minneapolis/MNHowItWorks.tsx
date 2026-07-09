@@ -52,7 +52,7 @@ const MNHowItWorks = () => (
         <h2 className="font-normal" style={{ fontSize: 40, color: FOREST, lineHeight: 1.1 }}>
           <EditableText
             settingKey="how_headline"
-            defaultText="Two Gatherings. 100 seats each. Here's the play."
+            defaultText="One Gathering. 100 seats. Here's the play."
             as="span"
             multiline
           />
@@ -72,14 +72,14 @@ const MNHowItWorks = () => (
             <h3 className="font-bold" style={{ fontSize: 22, color: FOREST }}>
               <EditableText
                 settingKey="how_step1_title"
-                defaultText="Pick your session."
+                defaultText="Grab your seat."
                 as="span"
               />
             </h3>
             <p style={{ fontSize: 16, color: FOREST, lineHeight: 1.55 }}>
               <EditableText
                 settingKey="how_step1_body"
-                defaultText="Two windows on the OR show floor. First 100 people per session get a seat. Same Typeform, pick one or both."
+                defaultText="One window on the OR show floor. First 100 people get a seat. Free to register."
                 as="span"
                 multiline
               />
@@ -87,18 +87,18 @@ const MNHowItWorks = () => (
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ml-0 md:ml-[68px]">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-5 ml-0 md:ml-[68px] max-w-xl">
           <div className="rounded-lg p-6 space-y-3" style={{ backgroundColor: FOREST, color: CREAM }}>
             <p className="uppercase font-semibold" style={{ fontSize: 12, letterSpacing: "1.4px", color: CORAL }}>
-              <EditableText settingKey="how_happy_when" defaultText="THURSDAY · AUG 20 · 3–5 PM" as="span" />
+              <EditableText settingKey="how_happy_when" defaultText="THURSDAY · AUG 20 · 10:30 AM–12:30 PM" as="span" />
             </p>
             <h4 className="font-bold" style={{ fontSize: 24, color: CREAM }}>
-              <EditableText settingKey="how_happy_title" defaultText="Happy Hour" as="span" />
+              <EditableText settingKey="how_happy_title" defaultText="The Gathering" as="span" />
             </h4>
             <p style={{ fontSize: 14, color: CREAM, opacity: 0.9 }}>
               <EditableText
                 settingKey="how_happy_body"
-                defaultText="Drinks, snacks, and the most relaxed networking you'll do all year."
+                defaultText="Coffee, snacks, and the most intentional networking you'll do all year."
                 as="span"
                 multiline
               />
@@ -106,38 +106,14 @@ const MNHowItWorks = () => (
             <EditableLink
               textKey="how_happy_cta_text"
               urlKey="how_happy_cta_url"
-              defaultText="Apply for this session →"
-              defaultUrl={REGISTER}
-              className="inline-block rounded-full font-bold"
-              style={{ backgroundColor: CORAL, color: CREAM, fontSize: 13, padding: "10px 20px" }}
-            />
-          </div>
-
-          <div className="rounded-lg p-6 space-y-3" style={{ backgroundColor: FOREST, color: CREAM }}>
-            <p className="uppercase font-semibold" style={{ fontSize: 12, letterSpacing: "1.4px", color: CORAL }}>
-              <EditableText settingKey="how_brunch_when" defaultText="FRIDAY · AUG 21 · 10 AM–12 PM" as="span" />
-            </p>
-            <h4 className="font-bold" style={{ fontSize: 24, color: CREAM }}>
-              <EditableText settingKey="how_brunch_title" defaultText="Women's Brunch" as="span" />
-            </h4>
-            <p style={{ fontSize: 14, color: CREAM, opacity: 0.9 }}>
-              <EditableText
-                settingKey="how_brunch_body"
-                defaultText="Morning gathering for women in the industry and women trying to break in. Coffee, food, real talk."
-                as="span"
-                multiline
-              />
-            </p>
-            <EditableLink
-              textKey="how_brunch_cta_text"
-              urlKey="how_brunch_cta_url"
-              defaultText="Apply for this session →"
+              defaultText="Register Free · No OR Badge Needed →"
               defaultUrl={REGISTER}
               className="inline-block rounded-full font-bold"
               style={{ backgroundColor: CORAL, color: CREAM, fontSize: 13, padding: "10px 20px" }}
             />
           </div>
         </div>
+      </div>
       </div>
 
       {/* Steps 2-4 side by side */}
