@@ -14,7 +14,7 @@ import ImpersonatePanel from "@/components/connect/ImpersonatePanel";
 import BrandAliasMatcher from "@/components/experts/BrandAliasMatcher";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
+import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, ArrowUpDown } from "lucide-react";
 
 const AdminExperts = () => {
   const navigate = useNavigate();
@@ -25,6 +25,17 @@ const AdminExperts = () => {
   const [assignments, setAssignments] = useState<ExpertCityAssignment[]>([]);
   const [questions, setQuestions] = useState<ExpertQuestion[]>([]);
   const [previewMode, setPreviewMode] = useState<'carousel' | 'grid'>('carousel');
+  const [peopleFirst, setPeopleFirst] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('adminExperts.peopleFirst') === '1';
+  });
+  const togglePeopleFirst = () => {
+    setPeopleFirst((p) => {
+      const next = !p;
+      try { localStorage.setItem('adminExperts.peopleFirst', next ? '1' : '0'); } catch {}
+      return next;
+    });
+  };
 
 
 
