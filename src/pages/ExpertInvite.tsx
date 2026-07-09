@@ -274,7 +274,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 border-b border-white/10">
-              <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+              <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                     <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
@@ -288,7 +288,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 flex-1 flex items-center">
-              <div className="max-w-5xl mx-auto px-4 py-12 md:py-16 w-full">
+              <div className="max-w-7xl mx-auto px-6 py-12 md:py-16 w-full">
                 {isMN(citySlug) ? (
                   <div className="max-w-2xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
@@ -421,7 +421,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           {isMN(citySlug) ? (
             <>
               <section id="learn-more" className="py-12 md:py-16" style={{ backgroundColor: MN_FOREST }}>
-                <div className="max-w-5xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-6">
                   <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                     <EditableText settingKey="mn_meaning_headline" defaultText="What It Means To Be An Industry Expert" as="span" />
                   </h2>
@@ -801,7 +801,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
         /* Intake Form */
         <>
           <div className="border-b border-events-cream/10">
-            <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
               <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
               <button
                 onClick={() => setShowForm(false)}
@@ -811,7 +811,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               </button>
             </div>
           </div>
-          <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+          <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
             <div className="mb-8">
               <h2 className="font-display text-3xl font-bold text-events-cream">
                 {isMN(citySlug) ? <EditableText settingKey="mn_form_headline" defaultText="Build your Industry Expert card" as="span" /> : <>Build your <span className="text-events-coral">Industry Expert</span> card</>}
