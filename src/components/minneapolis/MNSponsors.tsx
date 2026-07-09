@@ -1,10 +1,29 @@
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
+import orLogo from "@/assets/mn26/sponsors/or-logo.png.asset.json";
+import alsoLogo from "@/assets/mn26/sponsors/also-logo.webp.asset.json";
+import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 
-const SPONSORS = ["REI", "QBP", "Adidas", "The Dyrt"];
+const SPONSORS = [
+  {
+    name: "Outdoor Retailer",
+    logo: orLogo.url,
+    url: "https://outdoorretailer.com",
+  },
+  {
+    name: "ALSO",
+    logo: alsoLogo.url,
+    url: "https://ridealso.com",
+  },
+  {
+    name: "Basecamp Jobs",
+    logo: basecampJobsLogo.url,
+    url: "https://basecampjobs.com",
+  },
+];
 
 const MNSponsors = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: CREAM, color: FOREST }}>
@@ -22,20 +41,32 @@ const MNSponsors = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {SPONSORS.map((name, i) => (
-          <div
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {SPONSORS.map((s, i) => (
+          <a
             key={i}
-            className="aspect-square flex items-center justify-center text-center font-bold"
+            href={s.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center justify-center gap-4 p-8 transition hover:opacity-80"
             style={{
               backgroundColor: CREAM,
               border: `1px solid ${FOREST}`,
               color: FOREST,
-              fontSize: 22,
+              minHeight: 220,
             }}
           >
-            <EditableText settingKey={`sponsors_name_${i + 1}`} defaultText={name} as="span" />
-          </div>
+            <div className="flex-1 flex items-center justify-center w-full">
+              <img
+                src={s.logo}
+                alt={`${s.name} logo`}
+                className="max-h-24 max-w-[70%] w-auto object-contain"
+              />
+            </div>
+            <span className="font-bold text-center" style={{ fontSize: 18, color: FOREST }}>
+              <EditableText settingKey={`sponsors_name_${i + 1}`} defaultText={s.name} as="span" />
+            </span>
+          </a>
         ))}
       </div>
 
