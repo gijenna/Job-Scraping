@@ -5,8 +5,9 @@ import { Expert, ExpertCity, ExpertQuestion } from "@/lib/expert-types";
 import ExpertIntakeForm from "@/components/experts/ExpertIntakeForm";
 import LeafConfetti from "@/components/experts/LeafConfetti";
 import QuestionDialog from "@/components/experts/QuestionDialog";
+import ExpertCard from "@/components/experts/ExpertCard";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, Star, ChevronDown, Briefcase, BookOpen, Coffee } from "lucide-react";
+import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, Star, ChevronDown, Briefcase, BookOpen, Coffee, Ticket, Award } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
@@ -108,7 +109,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendanceNote: 'outdoor professionals & passive talent · intentionally intimate',
     venue: 'Minneapolis, MN — venue announced soon',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
-    time: 'Thursday · Aug 20, 2026 · 3–5 PM CT (Session 1) & 6–8 PM CT (Session 2)',
+    time: 'Thursday · Aug 20, 2026 · 10:30 AM–12:30 PM CT',
     whoAttends: [
       'Outdoor industry professionals across the Midwest',
       'Active & passive talent open to mission-aligned opportunities',
@@ -116,10 +117,10 @@ const CITY_EVENT_DATA: Record<string, {
       'Recent grads and early-career candidates from MN, WI, IA & beyond',
     ],
     format: [
-      'Proudly Sober networking lounge — focused conversations, no bar noise',
-      'Two intimate sessions: afternoon & evening (attend one or both)',
+      'One intimate session — Thursday morning inside Outdoor Retailer',
+      'Proudly Sober lounge — focused conversations, no bar noise',
       'Industry expert "office hours" — walk-up or pre-arranged chats',
-      'Light bites & N/A drinks for all attendees',
+      'Free OR badge + access to the Popfly × Basecamp After Party Thursday night',
     ],
     companies: [],
   },
@@ -138,6 +139,16 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const [lookupName, setLookupName] = useState("");
   const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
   const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
+  const [sampleExpert, setSampleExpert] = useState<Expert | null>(null);
+
+  useEffect(() => {
+    if (citySlug !== 'minneapolis') return;
+    (async () => {
+      const { data } = await supabase
+        .from('industry_experts').select('*').eq('slug', 'mike-chamberlain-torres').maybeSingle();
+      if (data) setSampleExpert(data as unknown as Expert);
+    })();
+  }, [citySlug]);
 
   useEffect(() => {
     loadData();
@@ -264,84 +275,112 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
             <div className="relative z-10 flex-1 flex items-center">
               <div className="max-w-5xl mx-auto px-4 py-16 w-full">
-                <div className="grid md:grid-cols-[1fr_320px] gap-8 items-center">
-                  <div>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
+                {isMN(citySlug) ? (
+                  <div className="max-w-2xl mx-auto text-center">
+                    <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
+                      Basecamp Outdoor Lounge · OR Minneapolis
+                    </p>
+                    <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.05] mt-6">
                       {expert ? (
-                        <>
-                          Hey <span className="text-events-yellow">{firstName}</span>,
-                          <br />
-                          we'd love for you to be an{' '}
-                          <span className="text-events-coral">Industry Expert</span>
-                          <br />
-                          at{' '}
-                          {(() => {
-                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
-                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
-                          })()}.
-                        </>
+                        <>Hey <span className="text-events-yellow">{firstName}</span>, be an <span className="text-events-coral">Industry Expert</span>.</>
                       ) : (
-                        <>
-                          Become an{' '}
-                          <span className="text-events-coral">Industry Expert</span>
-                          <br />
-                          at{' '}
-                          {(() => {
-                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
-                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
-                          })()}.
-                        </>
+                        <>Be an <span className="text-events-coral">Industry Expert</span>.</>
                       )}
                     </h1>
-
-                    <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
-                      {expert ? (
-                        <>
-                          You'll share your story, answer questions from attendees, and help the next generation of outdoor industry professionals find their path. Your profile card will be published on our site before the event.
-                        </>
-                      ) : (
-                        <>
-                          Share your career story, mentor attendees, and help the next generation of outdoor professionals find their path. Your profile card will be featured on our website before the event.
-                        </>
-                      )}
+                    <p className="text-white/75 text-base md:text-lg mt-6 max-w-xl mx-auto leading-relaxed">
+                      Two hours. Thursday morning inside Outdoor Retailer. Mentor the next generation at scale, on the record, in the room.
                     </p>
-
-                    <div className="flex items-center gap-4 mt-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+                      <Button
+                        onClick={handleImIn}
+                        className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-base px-8 py-6 rounded-xl"
+                      >
+                        I'm In <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
                       <Button
                         onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="bg-white text-events-teal hover:bg-white/90 font-display font-bold text-base px-8 py-6 rounded-xl"
+                        variant="outline"
+                        className="border-white/25 text-white hover:bg-white/10 font-display text-base px-8 py-6 rounded-xl"
                       >
-                        Learn More <ArrowRight className="w-4 h-4 ml-2" />
+                        Learn More
                       </Button>
                     </div>
                   </div>
-
-                  {/* Right - Mini Card Preview */}
-                  <div className="hidden md:block">
-                    <div
-                      onClick={handleImIn}
-                      className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
-                    >
-                      <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20 overflow-hidden">
-                        {expert?.photo_url ? (
-                          <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="grid md:grid-cols-[1fr_320px] gap-8 items-center">
+                    <div>
+                      <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
+                        {expert ? (
+                          <>
+                            Hey <span className="text-events-yellow">{firstName}</span>,
+                            <br />
+                            we'd love for you to be an{' '}
+                            <span className="text-events-coral">Industry Expert</span>
+                            <br />
+                            at{' '}
+                            {(() => {
+                              const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                              return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                            })()}.
+                          </>
                         ) : (
-                          <span className="text-white/60 font-display text-2xl font-bold">?</span>
+                          <>
+                            Become an{' '}
+                            <span className="text-events-coral">Industry Expert</span>
+                            <br />
+                            at{' '}
+                            {(() => {
+                              const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                              return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                            })()}.
+                          </>
                         )}
-                      </div>
-                      <h3 className="font-display text-lg font-bold text-white text-center mt-4">
-                        {expert?.full_name || 'Your Name Here'}
-                      </h3>
-                      <p className="text-events-coral text-sm text-center font-medium">Industry Expert</p>
-                      {expert?.current_company && (
-                        <p className="text-white/40 text-xs text-center mt-0.5">{expert.current_company}</p>
-                      )}
-                      <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
-                        Click to build your card →
+                      </h1>
+
+                      <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
+                        {expert ? (
+                          <>You'll share your story, answer questions from attendees, and help the next generation of outdoor industry professionals find their path. Your profile card will be published on our site before the event.</>
+                        ) : (
+                          <>Share your career story, mentor attendees, and help the next generation of outdoor professionals find their path. Your profile card will be featured on our website before the event.</>
+                        )}
                       </p>
+
+                      <div className="flex items-center gap-4 mt-8">
+                        <Button
+                          onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
+                          className="bg-white text-events-teal hover:bg-white/90 font-display font-bold text-base px-8 py-6 rounded-xl"
+                        >
+                          Learn More <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="hidden md:block">
+                      <div
+                        onClick={handleImIn}
+                        className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
+                      >
+                        <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20 overflow-hidden">
+                          {expert?.photo_url ? (
+                            <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-white/60 font-display text-2xl font-bold">?</span>
+                          )}
+                        </div>
+                        <h3 className="font-display text-lg font-bold text-white text-center mt-4">
+                          {expert?.full_name || 'Your Name Here'}
+                        </h3>
+                        <p className="text-events-coral text-sm text-center font-medium">Industry Expert</p>
+                        {expert?.current_company && (
+                          <p className="text-white/40 text-xs text-center mt-0.5">{expert.current_company}</p>
+                        )}
+                        <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
+                          Click to build your card →
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -351,53 +390,149 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           </section>
 
           {/* === WHAT IT MEANS SECTION === */}
-          <section id="learn-more" className={isMN(citySlug) ? "py-16 md:py-24" : "bg-events-teal py-16 md:py-24"} style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
-            <div className="max-w-4xl mx-auto px-4">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
-                What It Means To Be An Industry Expert
-              </h2>
-              <p className="text-events-cream/60 text-lg text-center mt-6 max-w-2xl mx-auto leading-relaxed">
-                As an <strong className="text-events-coral">Industry Expert</strong>, you'll be a go-to resource
-                for attendees, answering questions, sharing your career journey, and helping people navigate the outdoor industry.
-              </p>
-              <p className="text-events-cream/70 text-lg text-center mt-4 max-w-2xl mx-auto leading-relaxed">
-                We want attendees to know <strong className="text-events-cream">who's coming</strong> in advance
-                so they can have questions ready. Your profile card will be published on our website before the event
-                so people can prepare meaningful conversations with you.
-              </p>
+          {isMN(citySlug) ? (
+            <>
+              <section id="learn-more" className="py-16 md:py-24" style={{ backgroundColor: MN_FOREST }}>
+                <div className="max-w-4xl mx-auto px-4">
+                  <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
+                    What It Means To Be An Industry Expert
+                  </h2>
+                  <p className="text-events-cream/70 text-lg md:text-xl text-center mt-6 max-w-2xl mx-auto leading-relaxed">
+                    You show up for two hours and hold the door open for the next generation of outdoor talent.
+                  </p>
 
-              {/* Feature cards */}
-              <div className="grid md:grid-cols-3 gap-6 mt-12">
-                <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
-                    <Briefcase className="w-6 h-6 text-events-coral" />
+                  <div className="grid md:grid-cols-3 gap-6 mt-12">
+                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                      <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
+                        <Briefcase className="w-6 h-6 text-events-coral" />
+                      </div>
+                      <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
+                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
+                        The messy, honest version of how you got here — the pivots, the lucky breaks, the hard lessons someone else needs to hear.
+                      </p>
+                    </div>
+                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                      <div className="w-12 h-12 rounded-full bg-events-yellow/20 flex items-center justify-center mx-auto">
+                        <Ticket className="w-6 h-6 text-events-yellow" />
+                      </div>
+                      <h4 className="font-display text-events-cream font-bold mt-4">Get Free Access</h4>
+                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
+                        A free OR badge (a real one) plus a spot at the Popfly × Basecamp After Party Thursday night. On us.
+                      </p>
+                    </div>
+                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                      <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
+                        <Award className="w-6 h-6 text-events-coral" />
+                      </div>
+                      <h4 className="font-display text-events-cream font-bold mt-4">Expert Status</h4>
+                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
+                        Selected, vetted, and published as an official Basecamp Industry Expert — a career milestone you can put on your resume, LinkedIn, or portfolio.
+                      </p>
+                    </div>
                   </div>
-                  <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
-                  <p className="text-events-cream/50 text-sm mt-2">
-                    Tell your story, how you got into the industry, what you've learned, and what excites you most.
-                  </p>
                 </div>
-                <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-events-yellow/20 flex items-center justify-center mx-auto">
-                    <BookOpen className="w-6 h-6 text-events-yellow" />
+              </section>
+
+              {/* === HOW YOU'LL SHOW UP === */}
+              <section className="py-16 md:py-24" style={{ backgroundColor: MN_FOREST }}>
+                <div className="max-w-6xl mx-auto px-4">
+                  <div className="text-center mb-12">
+                    <p className="text-events-coral font-display font-semibold text-xs uppercase tracking-[0.25em]">
+                      How You'll Show Up
+                    </p>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream mt-3">
+                      This is your card. It goes live before the event.
+                    </h2>
                   </div>
-                  <h4 className="font-display text-events-cream font-bold mt-4">Pre-Event Spotlight</h4>
-                  <p className="text-events-cream/50 text-sm mt-2">
-                    Your card is published on our site before the event, attendees will come prepared with questions for you.
-                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-10 items-center">
+                    <div className="flex justify-center">
+                      {sampleExpert ? (
+                        <div className="w-full max-w-xs">
+                          <ExpertCard expert={sampleExpert} />
+                        </div>
+                      ) : (
+                        <div className="w-full max-w-xs aspect-[3/4] rounded-xl bg-events-card/40 animate-pulse" />
+                      )}
+                    </div>
+
+                    <div className="space-y-5 text-events-cream">
+                      <h3 className="font-display text-2xl font-bold">
+                        A pre-event spotlight, filled in by you.
+                      </h3>
+                      <p className="text-events-cream/75 leading-relaxed">
+                        You write it. You edit it anytime. Attendees read it before they walk in — so when they find you at the lounge, they already have a real question ready.
+                      </p>
+                      <ul className="space-y-3 text-events-cream/80 text-sm">
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Your story, your voice — not a bio a recruiter wrote.</span></li>
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Update it whenever the job, the ask, or the mood changes.</span></li>
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Attendees show up prepared. You get better conversations.</span></li>
+                      </ul>
+                      <p className="text-events-cream/60 text-sm italic pt-2">
+                        Hint: this card also becomes your profile if you join our larger{' '}
+                        <a
+                          href="https://www.wearetheoutdoorindustry.com/career-collective-"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-events-yellow underline underline-offset-4 hover:text-events-yellow/80"
+                        >
+                          Industry Expert program
+                        </a>
+                        .
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
-                    <Coffee className="w-6 h-6 text-events-coral" />
+              </section>
+            </>
+          ) : (
+            <section id="learn-more" className="bg-events-teal py-16 md:py-24">
+              <div className="max-w-4xl mx-auto px-4">
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
+                  What It Means To Be An Industry Expert
+                </h2>
+                <p className="text-events-cream/60 text-lg text-center mt-6 max-w-2xl mx-auto leading-relaxed">
+                  As an <strong className="text-events-coral">Industry Expert</strong>, you'll be a go-to resource
+                  for attendees, answering questions, sharing your career journey, and helping people navigate the outdoor industry.
+                </p>
+                <p className="text-events-cream/70 text-lg text-center mt-4 max-w-2xl mx-auto leading-relaxed">
+                  We want attendees to know <strong className="text-events-cream">who's coming</strong> in advance
+                  so they can have questions ready. Your profile card will be published on our website before the event
+                  so people can prepare meaningful conversations with you.
+                </p>
+
+                <div className="grid md:grid-cols-3 gap-6 mt-12">
+                  <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
+                      <Briefcase className="w-6 h-6 text-events-coral" />
+                    </div>
+                    <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
+                    <p className="text-events-cream/50 text-sm mt-2">
+                      Tell your story, how you got into the industry, what you've learned, and what excites you most.
+                    </p>
                   </div>
-                  <h4 className="font-display text-events-cream font-bold mt-4">Real Conversations</h4>
-                  <p className="text-events-cream/50 text-sm mt-2">
-                    No resumes, no booth lines. Just authentic one-on-one conversations with passionate industry talent.
-                  </p>
+                  <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-events-yellow/20 flex items-center justify-center mx-auto">
+                      <BookOpen className="w-6 h-6 text-events-yellow" />
+                    </div>
+                    <h4 className="font-display text-events-cream font-bold mt-4">Pre-Event Spotlight</h4>
+                    <p className="text-events-cream/50 text-sm mt-2">
+                      Your card is published on our site before the event, attendees will come prepared with questions for you.
+                    </p>
+                  </div>
+                  <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
+                      <Coffee className="w-6 h-6 text-events-coral" />
+                    </div>
+                    <h4 className="font-display text-events-cream font-bold mt-4">Real Conversations</h4>
+                    <p className="text-events-cream/50 text-sm mt-2">
+                      No resumes, no booth lines. Just authentic one-on-one conversations with passionate industry talent.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           {citySlug === 'minneapolis' && (
             <EditableTextProvider pageSlug="mnexperts">
