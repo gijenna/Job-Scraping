@@ -29,8 +29,6 @@ import expertPhoto3 from "@/assets/mn26/AnthonyMarz_Basecamp-138.jpg.asset.json"
 const MN_FOREST = "#1A2520";
 const isMN = (slug: string) => slug === "minneapolis";
 
-const EXPERT_SELECT = "id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, created_by, created_at, updated_at";
-
 interface ExpertInviteProps {
   citySlug?: string;
 }
@@ -153,27 +151,16 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
   const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
   const [sampleExpert, setSampleExpert] = useState<Expert | null>(null);
-  const [featureExperts, setFeatureExperts] = useState<Expert[]>([]);
 
   useEffect(() => {
     if (citySlug !== 'minneapolis') return;
     (async () => {
-      const [{ data: sample }, { data: assignments }] = await Promise.all([
-        supabase.from('industry_experts').select('*').eq('slug', 'mike-chamberlain-torres').maybeSingle(),
-        supabase
-          .from('expert_city_assignments')
-          .select(`city_slug, expert_id, expert_type, industry_experts(${EXPERT_SELECT})`)
-          .in('city_slug', ['denver', 'portland'])
-          .eq('published', true),
-      ]);
+      const { data: sample } = await supabase
+        .from('industry_experts')
+        .select('*')
+        .eq('slug', 'mike-chamberlain-torres')
+        .maybeSingle();
       if (sample) setSampleExpert(sample as unknown as Expert);
-      const seen = new Set<string>();
-      const experts = ((assignments as any[]) || [])
-        .map((a) => a.industry_experts as Expert | null)
-        .filter((e): e is Expert => !!e && !seen.has(e.id) && !!seen.add(e.id))
-        .filter((e) => !!e.photo_url)
-        .slice(0, 3);
-      if (experts.length) setFeatureExperts(experts);
     })();
   }, [citySlug]);
 
