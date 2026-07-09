@@ -13,7 +13,7 @@ const VENUE_MAP =
 
 const MNEventDetails = ({ onApply }: MNEventDetailsProps) => (
   <section className="relative py-16 md:py-24 overflow-hidden" style={{ backgroundColor: CREAM }}>
-    <div className="relative z-10 max-w-7xl mx-auto px-6">
+    <div className="relative z-10 w-full mx-auto px-8 lg:px-16">
       <div className="text-center mb-12">
         <p className="font-display font-semibold text-sm uppercase tracking-widest" style={{ color: CORAL }}>
           <EditableText

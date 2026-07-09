@@ -22,7 +22,7 @@ const photos = [p6, p10, p7, p15, p8, p13, p11, p1, p12, p14, p2, p9, p3, p4, p5
 
 const MNGallery = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: CREAM, color: FOREST }}>
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full mx-auto px-8 lg:px-16">
       <div className="text-center space-y-3 mb-12">
         <h2 className="font-normal" style={{ fontSize: 36, color: FOREST }}>
           <EditableText
