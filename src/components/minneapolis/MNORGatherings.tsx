@@ -47,7 +47,7 @@ const MNORGatherings = () => (
         <p style={{ fontSize: 17, color: CREAM, lineHeight: 1.55 }}>
           <EditableText
             settingKey="or_gatherings_body"
-            defaultText="OR Gatherings are Outdoor Retailer's new format for intentional, intimate conversations on the show floor, built to spark meaningful industry dialogue. Basecamp Outdoor is hosting two of them in Minneapolis: a happy hour open to everyone, and a women's brunch for women in (and trying to break into) the outdoor industry."
+              defaultText="OR Gatherings are Outdoor Retailer's new format for intentional, intimate conversations on the show floor, built to spark meaningful industry dialogue. Basecamp Outdoor is hosting one focused Thursday morning session in Minneapolis."
             as="span"
             multiline
           />
@@ -55,7 +55,7 @@ const MNORGatherings = () => (
         <p className="italic" style={{ fontSize: 14, color: SAGE }}>
           <EditableText
             settingKey="or_gatherings_note"
-            defaultText="No OR Summer Market badge required to attend either Gathering."
+              defaultText="Experts receive a free Outdoor Retailer badge for the show."
             as="span"
           />
         </p>

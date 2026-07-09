@@ -17,7 +17,7 @@ const SAGE = "#A8B5A0";
 const CORAL = "#E8836B";
 const APPLY = "https://basecampoutdoor.typeform.com/MNExperts";
 
-type SessionFilter = "all" | "aug20" | "aug21";
+type SessionFilter = "all" | "aug20";
 
 type Row = { expert: Expert; aug20: boolean; aug21: boolean };
 
@@ -56,9 +56,7 @@ const MNExpertGrid = () => {
     })();
   }, []);
 
-  const filtered = rows.filter((r) =>
-    filter === "all" ? true : filter === "aug20" ? r.aug20 : r.aug21
-  );
+  const filtered = rows.filter((r) => (filter === "all" ? true : r.aug20));
 
   const renderCard = (e: Expert) => {
     switch (cardStyle) {
@@ -80,8 +78,7 @@ const MNExpertGrid = () => {
 
   const tabs: { key: SessionFilter; label: string }[] = [
     { key: "all", label: "All" },
-    { key: "aug20", label: "Aug 20 · Happy Hour" },
-    { key: "aug21", label: "Aug 21 · Women's Brunch" },
+    { key: "aug20", label: "Aug 20 · 10:30 AM" },
   ];
 
   return (
@@ -98,7 +95,7 @@ const MNExpertGrid = () => {
           <p className="italic" style={{ fontSize: 16, color: SAGE }}>
             <EditableText
               settingKey="experts_sub"
-              defaultText="Industry experts you can meet at the Gatherings. Send a note ahead, or just walk up."
+              defaultText="Industry experts you can meet at the Gathering. Send a note ahead, or just walk up."
               as="span"
             />
           </p>
@@ -167,14 +164,6 @@ const MNExpertGrid = () => {
                         style={{ backgroundColor: CORAL, color: CREAM }}
                       >
                         Aug 20
-                      </span>
-                    )}
-                    {aug21 && (
-                      <span
-                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: CREAM, color: FOREST }}
-                      >
-                        Aug 21
                       </span>
                     )}
                   </div>
