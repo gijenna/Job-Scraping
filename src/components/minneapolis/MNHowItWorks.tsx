@@ -114,7 +114,8 @@ const MNHowItWorks = () => (
           </div>
         </div>
       </div>
-      </div>
+
+
 
       {/* Steps 2-4 side by side */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
