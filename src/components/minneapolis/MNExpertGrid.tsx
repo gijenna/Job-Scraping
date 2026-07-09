@@ -19,7 +19,7 @@ const APPLY = "https://basecampoutdoor.typeform.com/MNExperts";
 
 type SessionFilter = "all" | "aug20";
 
-type Row = { expert: Expert; aug20: boolean; aug21: boolean };
+type Row = { expert: Expert; aug20: boolean };
 
 const MNExpertGrid = () => {
   const { isAdmin } = useEditableTextContext();
@@ -49,7 +49,6 @@ const MNExpertGrid = () => {
         .map((d) => ({
           expert: d.industry_experts as Expert,
           aug20: !!d.attend_aug20_happyhour,
-          aug21: !!d.attend_aug21_brunch,
         }));
       setRows(mapped);
       setLoading(false);
@@ -148,7 +147,7 @@ const MNExpertGrid = () => {
           </div>
         ) : (
           <div className={gridClass}>
-            {filtered.map(({ expert, aug20, aug21 }) => {
+            {filtered.map(({ expert, aug20 }) => {
               const clickable = cardStyle !== "minimal";
               return (
                 <div

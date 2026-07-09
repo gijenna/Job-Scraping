@@ -124,7 +124,7 @@ const MNHowItWorks = () => (
           titleKey="how_step2_title"
           titleDefault="Plan your conversations."
           bodyKey="how_step2_body"
-          bodyDefault="Browse the expert cards and pick who you want to chat with. Each card tells you what they actually know, so your two hours land."
+          bodyDefault="Browse the expert cards and pick who you want to chat with. Each card tells you what they actually know, so your time lands."
         />
         <StepBlock
           n="3"
@@ -176,7 +176,7 @@ const MNHowItWorks = () => (
           <p style={{ fontSize: 16, color: CREAM, lineHeight: 1.55 }}>
             <EditableText
               settingKey="how_or_body"
-              defaultText="These are official OR Gatherings — Outdoor Retailer's new format for intentional, intimate conversations on the show floor. Basecamp Outdoor is hosting two of them in Minneapolis."
+              defaultText="These are official OR Gatherings, Outdoor Retailer's new format for intentional, intimate conversations on the show floor. Basecamp Outdoor is hosting one of them in Minneapolis."
               as="span"
               multiline
             />
