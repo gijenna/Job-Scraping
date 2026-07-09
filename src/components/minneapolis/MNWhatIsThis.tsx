@@ -123,19 +123,6 @@ const MNWhatIsThis = () => (
       ))}
     </div>
 
-    <div className="mx-auto mt-14" style={{ maxWidth: 1080 }}>
-      <blockquote
-        className="rounded-lg italic text-center px-8 py-10"
-        style={{ backgroundColor: FOREST, color: CREAM, fontSize: 24 }}
-      >
-        <EditableText
-          settingKey="what_pullquote"
-          defaultText={`"Most of these people don't reply to LinkedIn DMs. On Thursday morning, they're answering in person."`}
-          as="span"
-          multiline
-        />
-      </blockquote>
-    </div>
   </section>
 );
 

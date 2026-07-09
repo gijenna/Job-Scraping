@@ -132,17 +132,12 @@ const MNExpertGrid = () => {
           <p className="text-center opacity-60">Loading…</p>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <p style={{ fontSize: 18 }}>
-              {rows.length === 0 ? (
-                <>
-                  Expert lineup announced soon.{" "}
-                  <a href={APPLY} target="_blank" rel="noopener noreferrer" className="underline italic">
-                    Want to be one of them? Apply here →
-                  </a>
-                </>
-              ) : (
-                <>No experts confirmed for this session yet.</>
-              )}
+            <p className="uppercase tracking-widest font-semibold" style={{ fontSize: 14, color: CORAL, letterSpacing: "2px" }}>
+              <EditableText
+                settingKey="experts_coming_soon"
+                defaultText="Expert lineup coming soon"
+                as="span"
+              />
             </p>
           </div>
         ) : (
