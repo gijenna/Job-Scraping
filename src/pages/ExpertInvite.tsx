@@ -30,8 +30,6 @@ const EXPERT_PHOTOS = [
   "https://basecampoutdoorevents.com/__l5e/assets-v1/54a59ae4-e76d-401e-9ea4-dd70f7cbd927/AnthonyMarz_Basecamp-094-2.jpg",
   "https://basecampoutdoorevents.com/__l5e/assets-v1/b8a8a961-1567-4b57-9e36-aabb1f692ca4/AnthonyMarz_Basecamp-138.jpg",
 ];
-const MN_HERO_PHOTO = "https://basecampoutdoorevents.com/__l5e/assets-v1/1ecef782-9b49-4bda-be00-7d531df6eb44/AnthonyMarz_Basecamp-024.jpg";
-
 interface ExpertInviteProps {
   citySlug?: string;
 }
@@ -292,8 +290,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             <div className="relative z-10 flex-1 flex items-center">
               <div className="max-w-5xl mx-auto px-4 py-12 md:py-16 w-full">
                 {isMN(citySlug) ? (
-                  <div className="grid gap-10 md:grid-cols-[minmax(0,0.92fr)_minmax(340px,0.8fr)] md:items-center">
-                    <div className="max-w-xl text-left">
+                  <div className="max-w-2xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
@@ -327,14 +324,6 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                       >
                         <EditableText settingKey="mn_hero_secondary_cta" defaultText="Learn More" as="span" />
                       </Button>
-                    </div>
-                    </div>
-                    <div className="hidden md:block justify-self-end">
-                      <img
-                        src={MN_HERO_PHOTO}
-                        alt="Basecamp Outdoor attendees talking at Outdoor Retailer"
-                        className="h-[420px] w-[340px] object-cover rounded-lg border border-events-cream/12 shadow-2xl"
-                      />
                     </div>
                   </div>
                 ) : (
