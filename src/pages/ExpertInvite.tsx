@@ -290,7 +290,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             <div className="relative z-10 flex-1 flex items-center">
               <div className="max-w-7xl mx-auto px-6 py-12 md:py-16 w-full">
                 {isMN(citySlug) ? (
-                  <div className="max-w-2xl text-left">
+                  <div className="max-w-3xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
@@ -407,7 +407,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
           {isMN(citySlug) && (
             <section className="border-y border-events-cream/10 px-4 py-5" style={{ backgroundColor: MN_FOREST }}>
-              <div className="mx-auto flex max-w-5xl flex-col gap-2 text-center text-xs font-display font-semibold uppercase tracking-[0.18em] text-events-cream/58 md:flex-row md:items-center md:justify-center md:gap-6">
+              <div className="mx-auto flex max-w-7xl px-6 flex-col gap-2 text-center text-xs font-display font-semibold uppercase tracking-[0.18em] text-events-cream/58 md:flex-row md:items-center md:justify-center md:gap-6">
                 <span><EditableText settingKey="mn_event_detail_date" defaultText="Thursday · Aug 20, 2026" as="span" /></span>
                 <span className="hidden md:inline text-events-coral">•</span>
                 <span><EditableText settingKey="mn_event_detail_time" defaultText="10:30 AM to 12:30 PM CT" as="span" /></span>
@@ -483,7 +483,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
               {/* === HOW YOU'LL SHOW UP === */}
               <section className="py-14 md:py-20" style={{ backgroundColor: MN_FOREST }}>
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-6">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-xs uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_showup_eyebrow" defaultText="How You'll Show Up" as="span" />
@@ -539,7 +539,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </>
           ) : (
             <section id="learn-more" className="bg-events-teal py-16 md:py-24">
-              <div className="max-w-4xl mx-auto px-4">
+              <div className="max-w-7xl mx-auto px-6">
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                   What It Means To Be An Industry Expert
                 </h2>
@@ -610,7 +610,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   ) : null}
                   <div className="absolute inset-0 bg-events-cream/90" />
                 </div>
-                <div className="relative z-10 max-w-4xl mx-auto px-4">
+                <div className="relative z-10 max-w-7xl mx-auto px-6">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-sm uppercase tracking-widest">{eventData.tagline}</p>
                     <h2 className="font-display text-3xl md:text-5xl font-bold text-events-teal mt-3">
