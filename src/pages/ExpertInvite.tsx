@@ -109,7 +109,7 @@ const CITY_EVENT_DATA: Record<string, {
     attendanceNote: 'outdoor professionals & passive talent · intentionally intimate',
     venue: 'Minneapolis, MN — venue announced soon',
     venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
-    time: 'Thursday · Aug 20, 2026 · 3–5 PM CT (Session 1) & 6–8 PM CT (Session 2)',
+    time: 'Thursday · Aug 20, 2026 · 10:30 AM–12:30 PM CT',
     whoAttends: [
       'Outdoor industry professionals across the Midwest',
       'Active & passive talent open to mission-aligned opportunities',
@@ -117,10 +117,10 @@ const CITY_EVENT_DATA: Record<string, {
       'Recent grads and early-career candidates from MN, WI, IA & beyond',
     ],
     format: [
-      'Proudly Sober networking lounge — focused conversations, no bar noise',
-      'Two intimate sessions: afternoon & evening (attend one or both)',
+      'One intimate session — Thursday morning inside Outdoor Retailer',
+      'Proudly Sober lounge — focused conversations, no bar noise',
       'Industry expert "office hours" — walk-up or pre-arranged chats',
-      'Light bites & N/A drinks for all attendees',
+      'Free OR badge + access to the Popfly × Basecamp After Party Thursday night',
     ],
     companies: [],
   },
