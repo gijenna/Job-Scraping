@@ -182,9 +182,9 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
         )}
 
         {loading ? (
-          <p className="text-center opacity-60">Loading…</p>
+          <p className="text-center opacity-60"><EditableText settingKey="past_experts_loading" defaultText="Loading..." as="span" /></p>
         ) : visibleRows.length === 0 ? (
-          <p className="text-center opacity-60">No past experts to display yet.</p>
+          <p className="text-center opacity-60"><EditableText settingKey="past_experts_empty" defaultText="No past experts to display yet." as="span" /></p>
         ) : (
           <div className={gridClass}>
             {visibleRows.map(({ expert, cities }) => {
@@ -243,7 +243,7 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
               className="inline-block italic underline underline-offset-4"
               style={{ color: CREAM, fontSize: 14 }}
             >
-              See who's confirmed for Minneapolis →
+              <EditableText settingKey="past_experts_event_link" defaultText="See who's confirmed for Minneapolis →" as="span" />
             </Link>
           </div>
         )}

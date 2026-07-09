@@ -22,6 +22,9 @@ import heroPortland from "@/assets/hero-portland.jpg";
 import heroMN from "@/assets/mn26/AnthonyMarz_Basecamp-024.jpg.asset.json";
 import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
 import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
+import expertPhoto1 from "@/assets/mn26/AnthonyMarz_Basecamp-083.jpg.asset.json";
+import expertPhoto2 from "@/assets/mn26/AnthonyMarz_Basecamp-094.jpg.asset.json";
+import expertPhoto3 from "@/assets/mn26/AnthonyMarz_Basecamp-138.jpg.asset.json";
 
 const MN_FOREST = "#1A2520";
 const isMN = (slug: string) => slug === "minneapolis";
@@ -130,25 +133,9 @@ const CITY_EVENT_DATA: Record<string, {
   },
 };
 
-const ExpertExample = ({ expert, label }: { expert?: Expert; label: string }) => (
-  <div className="flex items-center gap-3 rounded-lg border border-events-cream/10 bg-events-cream/5 p-3 text-left">
-    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-events-cream/15">
-      {expert?.photo_url ? (
-        <img src={expert.photo_url} alt={expert.full_name} className="h-full w-full object-cover" />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center font-display text-lg font-bold text-events-cream/55">
-          {label}
-        </div>
-      )}
-    </div>
-    <div className="min-w-0">
-      <p className="truncate font-display text-sm font-bold text-events-cream">
-        {expert?.full_name || "Past Industry Expert"}
-      </p>
-      <p className="truncate text-xs text-events-cream/55">
-        {[expert?.job_title, expert?.current_company].filter(Boolean).join(" · ") || "Basecamp expert alum"}
-      </p>
-    </div>
+const ExpertExample = ({ src, alt }: { src: string; alt: string }) => (
+  <div className="overflow-hidden rounded-lg border border-events-cream/10 bg-events-cream/5">
+    <img src={src} alt={alt} className="aspect-[4/3] w-full object-cover" />
   </div>
 );
 
@@ -322,7 +309,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                     <h1 className="font-display text-4xl md:text-6xl font-bold text-events-cream leading-[1.05] mt-6">
                       <EditableText
                         settingKey="mn_hero_headline"
-                        defaultText="Mentor the next generation at scale. Thursday morning inside Outdoor Retailer."
+                        defaultText="Mentor the next generation at scale."
                         as="span"
                         multiline
                       />
@@ -330,7 +317,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                     <p className="text-events-cream/78 text-base md:text-lg mt-6 max-w-lg leading-relaxed">
                       <EditableText
                         settingKey="mn_hero_sub"
-                        defaultText="You have been hand selected for your industry wisdom. Our community wants to hear from you."
+                        defaultText="Thursday morning inside Outdoor Retailer. You have been hand selected for your industry wisdom. Our community wants to hear from you."
                         as="span"
                         multiline
                       />
@@ -461,7 +448,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
                   <div className="grid md:grid-cols-3 gap-5 mt-10">
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample expert={featureExperts[0] || sampleExpert || undefined} label="1" />
+                      <ExpertExample src={expertPhoto1.url} alt="Industry experts in conversation at a Basecamp Outdoor event" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature1_title" defaultText="Share Your Journey" as="span" />
                       </h4>
@@ -475,7 +462,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                       </p>
                     </div>
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample expert={featureExperts[1] || sampleExpert || undefined} label="2" />
+                      <ExpertExample src={expertPhoto2.url} alt="Outdoor industry leaders networking at Basecamp Outdoor" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature2_title" defaultText="Get Free Access" as="span" />
                       </h4>
@@ -489,7 +476,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                       </p>
                     </div>
                     <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
-                      <ExpertExample expert={featureExperts[2] || sampleExpert || undefined} label="3" />
+                      <ExpertExample src={expertPhoto3.url} alt="Basecamp Outdoor community members sharing industry advice" />
                       <h4 className="font-display text-events-cream font-bold mt-5">
                         <EditableText settingKey="mn_feature3_title" defaultText="Expert Status" as="span" />
                       </h4>
