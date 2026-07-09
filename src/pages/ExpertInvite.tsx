@@ -340,14 +340,14 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                         onClick={handleImIn}
                         className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-base px-8 py-6 rounded-xl"
                       >
-                        I'm In <ArrowRight className="w-4 h-4 ml-2" />
+                        <EditableText settingKey="mn_hero_primary_cta" defaultText="I'm In" as="span" /> <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                       <Button
                         onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
                         variant="outline"
                         className="border-white/25 text-white hover:bg-white/10 font-display text-base px-8 py-6 rounded-xl"
                       >
-                        Learn More
+                        <EditableText settingKey="mn_hero_secondary_cta" defaultText="Learn More" as="span" />
                       </Button>
                     </div>
                   </div>
@@ -445,7 +445,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           {/* === WHAT IT MEANS SECTION === */}
           {isMN(citySlug) ? (
             <>
-              <section id="learn-more" className="py-12 md:py-18" style={{ backgroundColor: MN_FOREST }}>
+              <section id="learn-more" className="py-12 md:py-16" style={{ backgroundColor: MN_FOREST }}>
                 <div className="max-w-5xl mx-auto px-4">
                   <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                     <EditableText settingKey="mn_meaning_headline" defaultText="What It Means To Be An Industry Expert" as="span" />
@@ -779,14 +779,14 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   onClick={handleImIn}
                   className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-xl px-10 py-7 rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105"
                 >
-                  I'm In! Let's Do This <ArrowRight className="w-5 h-5 ml-2" />
+                  {isMN(citySlug) ? <EditableText settingKey="mn_cta_primary_button" defaultText="I'm In! Let's Do This" as="span" /> : "I'm In! Let's Do This"} <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 <Button
                   onClick={() => setShowQuestions(true)}
                   variant="outline"
                   className="border-events-cream/20 text-events-cream hover:bg-events-card font-display px-8 py-6"
                 >
-                  <HelpCircle className="w-4 h-4 mr-2" /> I have questions
+                  <HelpCircle className="w-4 h-4 mr-2" /> {isMN(citySlug) ? <EditableText settingKey="mn_cta_question_button" defaultText="I have questions" as="span" /> : "I have questions"}
                 </Button>
               </div>
               <Link
@@ -815,7 +815,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                     onKeyDown={e => e.key === 'Enter' && handleNameLookup()}
                   />
                   <Button size="sm" onClick={handleNameLookup} className="bg-events-coral hover:bg-events-coral/90 text-events-cream">
-                    Go
+                    {isMN(citySlug) ? <EditableText settingKey="mn_returning_go" defaultText="Go" as="span" /> : "Go"}
                   </Button>
                 </div>
               )}
@@ -832,18 +832,21 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 onClick={() => setShowForm(false)}
                 className="text-events-cream/50 hover:text-events-cream text-sm font-display flex items-center gap-1 transition-colors"
               >
-                ← Back to event info
+                {isMN(citySlug) ? <EditableText settingKey="mn_form_back" defaultText="← Back to event info" as="span" /> : "← Back to event info"}
               </button>
             </div>
           </div>
           <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
             <div className="mb-8">
               <h2 className="font-display text-3xl font-bold text-events-cream">
-                Build your <span className="text-events-coral">Industry Expert</span> card
+                {isMN(citySlug) ? <EditableText settingKey="mn_form_headline" defaultText="Build your Industry Expert card" as="span" /> : <>Build your <span className="text-events-coral">Industry Expert</span> card</>}
               </h2>
               <p className="text-events-cream/50 mt-2">
-                The more details you add, the better your card looks. Fill out what you can now , 
-                <strong className="text-events-cream/70"> return anytime to edit your card</strong>.
+                {isMN(citySlug) ? (
+                  <EditableText settingKey="mn_form_sub" defaultText="The more details you add, the better your card looks. Fill out what you can now, then return anytime to edit your card." as="span" multiline />
+                ) : (
+                  <>The more details you add, the better your card looks. Fill out what you can now , <strong className="text-events-cream/70"> return anytime to edit your card</strong>.</>
+                )}
               </p>
             </div>
             <ExpertIntakeForm
