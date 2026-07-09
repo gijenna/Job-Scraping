@@ -290,7 +290,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             <div className="relative z-10 flex-1 flex items-center">
               <div className="max-w-7xl mx-auto px-6 py-12 md:py-16 w-full">
                 {isMN(citySlug) ? (
-                  <div className="max-w-2xl text-left">
+                  <div className="max-w-3xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
