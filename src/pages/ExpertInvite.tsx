@@ -139,6 +139,16 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const [lookupName, setLookupName] = useState("");
   const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
   const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
+  const [sampleExpert, setSampleExpert] = useState<Expert | null>(null);
+
+  useEffect(() => {
+    if (citySlug !== 'minneapolis') return;
+    (async () => {
+      const { data } = await supabase
+        .from('industry_experts').select('*').eq('slug', 'mike-chamberlain-torres').maybeSingle();
+      if (data) setSampleExpert(data as unknown as Expert);
+    })();
+  }, [citySlug]);
 
   useEffect(() => {
     loadData();
