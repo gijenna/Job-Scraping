@@ -539,7 +539,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </>
           ) : (
             <section id="learn-more" className="bg-events-teal py-16 md:py-24">
-              <div className="max-w-4xl mx-auto px-4">
+              <div className="max-w-7xl mx-auto px-6">
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
                   What It Means To Be An Industry Expert
                 </h2>
