@@ -275,84 +275,112 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
             <div className="relative z-10 flex-1 flex items-center">
               <div className="max-w-5xl mx-auto px-4 py-16 w-full">
-                <div className="grid md:grid-cols-[1fr_320px] gap-8 items-center">
-                  <div>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
+                {isMN(citySlug) ? (
+                  <div className="max-w-2xl mx-auto text-center">
+                    <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
+                      Basecamp Outdoor Lounge · OR Minneapolis
+                    </p>
+                    <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.05] mt-6">
                       {expert ? (
-                        <>
-                          Hey <span className="text-events-yellow">{firstName}</span>,
-                          <br />
-                          we'd love for you to be an{' '}
-                          <span className="text-events-coral">Industry Expert</span>
-                          <br />
-                          at{' '}
-                          {(() => {
-                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
-                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
-                          })()}.
-                        </>
+                        <>Hey <span className="text-events-yellow">{firstName}</span>, be an <span className="text-events-coral">Industry Expert</span>.</>
                       ) : (
-                        <>
-                          Become an{' '}
-                          <span className="text-events-coral">Industry Expert</span>
-                          <br />
-                          at{' '}
-                          {(() => {
-                            const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
-                            return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
-                          })()}.
-                        </>
+                        <>Be an <span className="text-events-coral">Industry Expert</span>.</>
                       )}
                     </h1>
-
-                    <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
-                      {expert ? (
-                        <>
-                          You'll share your story, answer questions from attendees, and help the next generation of outdoor industry professionals find their path. Your profile card will be published on our site before the event.
-                        </>
-                      ) : (
-                        <>
-                          Share your career story, mentor attendees, and help the next generation of outdoor professionals find their path. Your profile card will be featured on our website before the event.
-                        </>
-                      )}
+                    <p className="text-white/75 text-base md:text-lg mt-6 max-w-xl mx-auto leading-relaxed">
+                      Two hours. Thursday morning inside Outdoor Retailer. Mentor the next generation at scale, on the record, in the room.
                     </p>
-
-                    <div className="flex items-center gap-4 mt-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+                      <Button
+                        onClick={handleImIn}
+                        className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-base px-8 py-6 rounded-xl"
+                      >
+                        I'm In <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
                       <Button
                         onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="bg-white text-events-teal hover:bg-white/90 font-display font-bold text-base px-8 py-6 rounded-xl"
+                        variant="outline"
+                        className="border-white/25 text-white hover:bg-white/10 font-display text-base px-8 py-6 rounded-xl"
                       >
-                        Learn More <ArrowRight className="w-4 h-4 ml-2" />
+                        Learn More
                       </Button>
                     </div>
                   </div>
-
-                  {/* Right - Mini Card Preview */}
-                  <div className="hidden md:block">
-                    <div
-                      onClick={handleImIn}
-                      className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
-                    >
-                      <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20 overflow-hidden">
-                        {expert?.photo_url ? (
-                          <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="grid md:grid-cols-[1fr_320px] gap-8 items-center">
+                    <div>
+                      <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.1]">
+                        {expert ? (
+                          <>
+                            Hey <span className="text-events-yellow">{firstName}</span>,
+                            <br />
+                            we'd love for you to be an{' '}
+                            <span className="text-events-coral">Industry Expert</span>
+                            <br />
+                            at{' '}
+                            {(() => {
+                              const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                              return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                            })()}.
+                          </>
                         ) : (
-                          <span className="text-white/60 font-display text-2xl font-bold">?</span>
+                          <>
+                            Become an{' '}
+                            <span className="text-events-coral">Industry Expert</span>
+                            <br />
+                            at{' '}
+                            {(() => {
+                              const ev = CITY_EVENT_LINK[citySlug] ?? CITY_EVENT_LINK.portland;
+                              return <Link to={ev.path} className="underline decoration-white/30 underline-offset-4 hover:decoration-white/60 transition-colors">{ev.label}</Link>;
+                            })()}.
+                          </>
                         )}
-                      </div>
-                      <h3 className="font-display text-lg font-bold text-white text-center mt-4">
-                        {expert?.full_name || 'Your Name Here'}
-                      </h3>
-                      <p className="text-events-coral text-sm text-center font-medium">Industry Expert</p>
-                      {expert?.current_company && (
-                        <p className="text-white/40 text-xs text-center mt-0.5">{expert.current_company}</p>
-                      )}
-                      <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
-                        Click to build your card →
+                      </h1>
+
+                      <p className="text-white/70 text-lg mt-6 max-w-lg leading-relaxed">
+                        {expert ? (
+                          <>You'll share your story, answer questions from attendees, and help the next generation of outdoor industry professionals find their path. Your profile card will be published on our site before the event.</>
+                        ) : (
+                          <>Share your career story, mentor attendees, and help the next generation of outdoor professionals find their path. Your profile card will be featured on our website before the event.</>
+                        )}
                       </p>
+
+                      <div className="flex items-center gap-4 mt-8">
+                        <Button
+                          onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
+                          className="bg-white text-events-teal hover:bg-white/90 font-display font-bold text-base px-8 py-6 rounded-xl"
+                        >
+                          Learn More <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="hidden md:block">
+                      <div
+                        onClick={handleImIn}
+                        className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 shadow-2xl cursor-pointer hover:bg-white/15 hover:scale-[1.02] transition-all group"
+                      >
+                        <div className="w-24 h-24 rounded-full bg-events-teal mx-auto flex items-center justify-center border-2 border-white/20 overflow-hidden">
+                          {expert?.photo_url ? (
+                            <img src={expert.photo_url} alt={expert.full_name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-white/60 font-display text-2xl font-bold">?</span>
+                          )}
+                        </div>
+                        <h3 className="font-display text-lg font-bold text-white text-center mt-4">
+                          {expert?.full_name || 'Your Name Here'}
+                        </h3>
+                        <p className="text-events-coral text-sm text-center font-medium">Industry Expert</p>
+                        {expert?.current_company && (
+                          <p className="text-white/40 text-xs text-center mt-0.5">{expert.current_company}</p>
+                        )}
+                        <p className="text-white/30 text-xs text-center mt-2 group-hover:text-events-coral transition-colors">
+                          Click to build your card →
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
