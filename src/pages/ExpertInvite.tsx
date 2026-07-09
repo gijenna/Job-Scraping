@@ -483,7 +483,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
               {/* === HOW YOU'LL SHOW UP === */}
               <section className="py-14 md:py-20" style={{ backgroundColor: MN_FOREST }}>
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-6">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-xs uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_showup_eyebrow" defaultText="How You'll Show Up" as="span" />
