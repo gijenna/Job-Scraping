@@ -7,10 +7,12 @@ import LeafConfetti from "@/components/experts/LeafConfetti";
 import QuestionDialog from "@/components/experts/QuestionDialog";
 import ExpertCard from "@/components/experts/ExpertCard";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, Star, ChevronDown, Briefcase, BookOpen, Coffee, Ticket, Award } from "lucide-react";
+import { MapPin, Clock, CalendarDays, ArrowRight, HelpCircle, Sparkles, Users, MessageSquare, BookOpen, Coffee } from "lucide-react";
 import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 import SiteFooter from "@/components/SiteFooter";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
+import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
 import OrderedSections from "@/components/event/OrderedSections";
 import MNORGatherings from "@/components/minneapolis/MNORGatherings";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
@@ -23,6 +25,12 @@ import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.a
 
 const MN_FOREST = "#1A2520";
 const isMN = (slug: string) => slug === "minneapolis";
+const EXPERT_PHOTOS = [
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/9dbf7783-4552-4a9b-bf39-9029c76e3acb/AnthonyMarz_Basecamp-083-2.jpg",
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/54a59ae4-e76d-401e-9ea4-dd70f7cbd927/AnthonyMarz_Basecamp-094-2.jpg",
+  "https://basecampoutdoorevents.com/__l5e/assets-v1/b8a8a961-1567-4b57-9e36-aabb1f692ca4/AnthonyMarz_Basecamp-138.jpg",
+];
+const MN_HERO_PHOTO = "https://basecampoutdoorevents.com/__l5e/assets-v1/1ecef782-9b49-4bda-be00-7d531df6eb44/AnthonyMarz_Basecamp-024.jpg";
 
 interface ExpertInviteProps {
   citySlug?: string;
@@ -107,9 +115,9 @@ const CITY_EVENT_DATA: Record<string, {
     yearNote: 'New market, first Basecamp Outdoor Lounge in the Twin Cities',
     attendance: '150–250',
     attendanceNote: 'outdoor professionals & passive talent · intentionally intimate',
-    venue: 'Minneapolis, MN — venue announced soon',
-    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+MN',
-    time: 'Thursday · Aug 20, 2026 · 10:30 AM–12:30 PM CT',
+    venue: 'Minneapolis Convention Center',
+    venueMapUrl: 'https://www.google.com/maps/search/?api=1&query=Minneapolis+Convention+Center',
+    time: 'Thursday · Aug 20, 2026 · 10:30 AM to 12:30 PM CT',
     whoAttends: [
       'Outdoor industry professionals across the Midwest',
       'Active & passive talent open to mission-aligned opportunities',
@@ -117,14 +125,20 @@ const CITY_EVENT_DATA: Record<string, {
       'Recent grads and early-career candidates from MN, WI, IA & beyond',
     ],
     format: [
-      'One intimate session — Thursday morning inside Outdoor Retailer',
-      'Proudly Sober lounge — focused conversations, no bar noise',
-      'Industry expert "office hours" — walk-up or pre-arranged chats',
+      'One intimate session on Thursday morning inside Outdoor Retailer',
+      'Proudly Sober lounge with focused conversations and no bar noise',
+      'Industry expert office hours for walk-up or pre-arranged chats',
       'Free OR badge + access to the Popfly × Basecamp After Party Thursday night',
     ],
     companies: [],
   },
 };
+
+const ExpertExample = ({ src, alt }: { src: string; alt: string }) => (
+  <div className="overflow-hidden rounded-lg border border-events-cream/10 bg-events-cream/5">
+    <img src={src} alt={alt} className="aspect-[4/3] w-full object-cover" />
+  </div>
+);
 
 const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const { name } = useParams();
@@ -144,9 +158,12 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   useEffect(() => {
     if (citySlug !== 'minneapolis') return;
     (async () => {
-      const { data } = await supabase
-        .from('industry_experts').select('*').eq('slug', 'mike-chamberlain-torres').maybeSingle();
-      if (data) setSampleExpert(data as unknown as Expert);
+      const { data: sample } = await supabase
+        .from('industry_experts')
+        .select('*')
+        .eq('slug', 'mike-chamberlain-torres')
+        .maybeSingle();
+      if (sample) setSampleExpert(sample as unknown as Expert);
     })();
   }, [citySlug]);
 
@@ -232,8 +249,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
   const eventTitle = city?.event_title || 'GATHER';
   const heroMedia = CITY_HEROES[citySlug];
   const firstName = expert?.full_name?.split(' ')[0] || '';
-
-  return (
+  const content = (
     <div className="min-h-screen" style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
       {!isMN(citySlug) && <div className="absolute inset-0 -z-10 bg-events-teal" />}
       <LeafConfetti active={showConfetti} />
@@ -241,7 +257,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
       {!showForm ? (
         <>
           {/* === HERO SECTION === */}
-          <section className="relative min-h-screen flex flex-col">
+          <section className={`relative flex flex-col overflow-hidden ${isMN(citySlug) ? "min-h-[74vh]" : "min-h-screen"}`} style={isMN(citySlug) ? { backgroundColor: MN_FOREST } : undefined}>
             <div className="absolute inset-0 z-0">
               {heroMedia?.video ? (
                 <video
@@ -250,10 +266,10 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   src={heroMedia.video}
                 />
               ) : heroMedia?.image ? (
-                <img src={heroMedia.image} alt="" className="w-full h-full object-cover" />
+                <img src={heroMedia.image} alt="" className={`w-full h-full object-cover ${isMN(citySlug) ? "md:object-[65%_center]" : ""}`} />
               ) : null}
               {isMN(citySlug) ? (
-                <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, ${MN_FOREST}cc, ${MN_FOREST}99, ${MN_FOREST})` }} />
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to right, ${MN_FOREST} 0%, ${MN_FOREST} 44%, ${MN_FOREST}d9 56%, ${MN_FOREST}33 100%)` }} />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-b from-events-teal/80 via-events-teal/60 to-events-teal" />
               )}
@@ -274,36 +290,51 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 flex-1 flex items-center">
-              <div className="max-w-5xl mx-auto px-4 py-16 w-full">
+              <div className="max-w-5xl mx-auto px-4 py-12 md:py-16 w-full">
                 {isMN(citySlug) ? (
-                  <div className="max-w-2xl mx-auto text-center">
+                  <div className="grid gap-10 md:grid-cols-[minmax(0,0.92fr)_minmax(340px,0.8fr)] md:items-center">
+                    <div className="max-w-xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
-                      Basecamp Outdoor Lounge · OR Minneapolis
+                      <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-white leading-[1.05] mt-6">
-                      {expert ? (
-                        <>Hey <span className="text-events-yellow">{firstName}</span>, be an <span className="text-events-coral">Industry Expert</span>.</>
-                      ) : (
-                        <>Be an <span className="text-events-coral">Industry Expert</span>.</>
-                      )}
+                    <h1 className="font-display text-4xl md:text-6xl font-bold text-events-cream leading-[1.05] mt-6">
+                      <EditableText
+                        settingKey="mn_hero_headline"
+                        defaultText="Mentor the next generation at scale."
+                        as="span"
+                        multiline
+                      />
                     </h1>
-                    <p className="text-white/75 text-base md:text-lg mt-6 max-w-xl mx-auto leading-relaxed">
-                      Two hours. Thursday morning inside Outdoor Retailer. Mentor the next generation at scale, on the record, in the room.
+                    <p className="text-events-cream/78 text-base md:text-lg mt-6 max-w-lg leading-relaxed">
+                      <EditableText
+                        settingKey="mn_hero_sub"
+                        defaultText="Thursday morning inside Outdoor Retailer. You have been hand selected for your industry wisdom. Our community wants to hear from you."
+                        as="span"
+                        multiline
+                      />
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+                    <div className="flex flex-col sm:flex-row items-start gap-3 mt-8">
                       <Button
                         onClick={handleImIn}
                         className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-base px-8 py-6 rounded-xl"
                       >
-                        I'm In <ArrowRight className="w-4 h-4 ml-2" />
+                        <EditableText settingKey="mn_hero_primary_cta" defaultText="I'm In" as="span" /> <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                       <Button
                         onClick={() => document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })}
                         variant="outline"
                         className="border-white/25 text-white hover:bg-white/10 font-display text-base px-8 py-6 rounded-xl"
                       >
-                        Learn More
+                        <EditableText settingKey="mn_hero_secondary_cta" defaultText="Learn More" as="span" />
                       </Button>
+                    </div>
+                    </div>
+                    <div className="hidden md:block justify-self-end">
+                      <img
+                        src={MN_HERO_PHOTO}
+                        alt="Basecamp Outdoor attendees talking at Outdoor Retailer"
+                        className="h-[420px] w-[340px] object-cover rounded-lg border border-events-cream/12 shadow-2xl"
+                      />
                     </div>
                   </div>
                 ) : (
@@ -383,50 +414,78 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 )}
               </div>
             </div>
-
-            <div className="relative z-10 text-center pb-8">
-              <ChevronDown className="w-6 h-6 text-white/30 mx-auto animate-bounce" />
-            </div>
           </section>
+
+          {isMN(citySlug) && (
+            <section className="border-y border-events-cream/10 px-4 py-5" style={{ backgroundColor: MN_FOREST }}>
+              <div className="mx-auto flex max-w-5xl flex-col gap-2 text-center text-xs font-display font-semibold uppercase tracking-[0.18em] text-events-cream/58 md:flex-row md:items-center md:justify-center md:gap-6">
+                <span><EditableText settingKey="mn_event_detail_date" defaultText="Thursday · Aug 20, 2026" as="span" /></span>
+                <span className="hidden md:inline text-events-coral">•</span>
+                <span><EditableText settingKey="mn_event_detail_time" defaultText="10:30 AM to 12:30 PM CT" as="span" /></span>
+                <span className="hidden md:inline text-events-coral">•</span>
+                <span><EditableText settingKey="mn_event_detail_location" defaultText="Minneapolis Convention Center · Inside Outdoor Retailer" as="span" /></span>
+              </div>
+            </section>
+          )}
 
           {/* === WHAT IT MEANS SECTION === */}
           {isMN(citySlug) ? (
             <>
-              <section id="learn-more" className="py-16 md:py-24" style={{ backgroundColor: MN_FOREST }}>
-                <div className="max-w-4xl mx-auto px-4">
+              <section id="learn-more" className="py-12 md:py-16" style={{ backgroundColor: MN_FOREST }}>
+                <div className="max-w-5xl mx-auto px-4">
                   <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream text-center">
-                    What It Means To Be An Industry Expert
+                    <EditableText settingKey="mn_meaning_headline" defaultText="What It Means To Be An Industry Expert" as="span" />
                   </h2>
-                  <p className="text-events-cream/70 text-lg md:text-xl text-center mt-6 max-w-2xl mx-auto leading-relaxed">
-                    You show up for two hours and hold the door open for the next generation of outdoor talent.
+                  <p className="text-events-cream/72 text-lg md:text-xl text-center mt-5 max-w-3xl mx-auto leading-relaxed">
+                    <EditableText
+                      settingKey="mn_meaning_sub"
+                      defaultText="Being an Industry Expert means you were hand selected for hard-won industry wisdom and invited to help the next wave make better moves."
+                      as="span"
+                      multiline
+                    />
                   </p>
 
-                  <div className="grid md:grid-cols-3 gap-6 mt-12">
-                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                      <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
-                        <Briefcase className="w-6 h-6 text-events-coral" />
-                      </div>
-                      <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
-                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
-                        The messy, honest version of how you got here — the pivots, the lucky breaks, the hard lessons someone else needs to hear.
+                  <div className="grid md:grid-cols-3 gap-5 mt-10">
+                    <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
+                      <ExpertExample src={EXPERT_PHOTOS[0]} alt="Industry experts in conversation at a Basecamp Outdoor event" />
+                      <h4 className="font-display text-events-cream font-bold mt-5">
+                        <EditableText settingKey="mn_feature1_title" defaultText="Share Your Journey" as="span" />
+                      </h4>
+                      <p className="text-events-cream/62 text-sm mt-2 leading-relaxed">
+                        <EditableText
+                          settingKey="mn_feature1_body"
+                          defaultText="Tell the useful version. Pivots, breaks, lessons, and the moments someone else needs before their next move."
+                          as="span"
+                          multiline
+                        />
                       </p>
                     </div>
-                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                      <div className="w-12 h-12 rounded-full bg-events-yellow/20 flex items-center justify-center mx-auto">
-                        <Ticket className="w-6 h-6 text-events-yellow" />
-                      </div>
-                      <h4 className="font-display text-events-cream font-bold mt-4">Get Free Access</h4>
-                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
-                        A free OR badge (a real one) plus a spot at the Popfly × Basecamp After Party Thursday night. On us.
+                    <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
+                      <ExpertExample src={EXPERT_PHOTOS[1]} alt="Outdoor industry leaders networking at Basecamp Outdoor" />
+                      <h4 className="font-display text-events-cream font-bold mt-5">
+                        <EditableText settingKey="mn_feature2_title" defaultText="Get Free Access" as="span" />
+                      </h4>
+                      <p className="text-events-cream/62 text-sm mt-2 leading-relaxed">
+                        <EditableText
+                          settingKey="mn_feature2_body"
+                          defaultText="Your expert slot includes a free Outdoor Retailer badge and access to the Popfly × Basecamp After Party Thursday night."
+                          as="span"
+                          multiline
+                        />
                       </p>
                     </div>
-                    <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
-                      <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
-                        <Award className="w-6 h-6 text-events-coral" />
-                      </div>
-                      <h4 className="font-display text-events-cream font-bold mt-4">Expert Status</h4>
-                      <p className="text-events-cream/60 text-sm mt-2 leading-relaxed">
-                        Selected, vetted, and published as an official Basecamp Industry Expert — a career milestone you can put on your resume, LinkedIn, or portfolio.
+                    <div className="rounded-xl border border-events-cream/10 bg-events-cream/[0.04] p-5">
+                      <ExpertExample src={EXPERT_PHOTOS[2]} alt="Basecamp Outdoor community members sharing industry advice" />
+                      <h4 className="font-display text-events-cream font-bold mt-5">
+                        <EditableText settingKey="mn_feature3_title" defaultText="Expert Status" as="span" />
+                      </h4>
+                      <p className="text-events-cream/62 text-sm mt-2 leading-relaxed">
+                        <EditableText
+                          settingKey="mn_feature3_body"
+                          defaultText="You become one of the visible people in the room. Coveted, useful, and easy to point to as you build whatever comes next."
+                          as="span"
+                          multiline
+                        />
                       </p>
                     </div>
                   </div>
@@ -434,14 +493,14 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
               </section>
 
               {/* === HOW YOU'LL SHOW UP === */}
-              <section className="py-16 md:py-24" style={{ backgroundColor: MN_FOREST }}>
+              <section className="py-14 md:py-20" style={{ backgroundColor: MN_FOREST }}>
                 <div className="max-w-6xl mx-auto px-4">
                   <div className="text-center mb-12">
                     <p className="text-events-coral font-display font-semibold text-xs uppercase tracking-[0.25em]">
-                      How You'll Show Up
+                      <EditableText settingKey="mn_showup_eyebrow" defaultText="How You'll Show Up" as="span" />
                     </p>
                     <h2 className="font-display text-3xl md:text-4xl font-bold text-events-cream mt-3">
-                      This is your card. It goes live before the event.
+                      <EditableText settingKey="mn_showup_headline" defaultText="This is your card. It goes live on the event page." as="span" multiline />
                     </h2>
                   </div>
 
@@ -458,26 +517,30 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
                     <div className="space-y-5 text-events-cream">
                       <h3 className="font-display text-2xl font-bold">
-                        A pre-event spotlight, filled in by you.
+                        <EditableText settingKey="mn_showup_title" defaultText="A pre-event spotlight, filled in by you." as="span" />
                       </h3>
                       <p className="text-events-cream/75 leading-relaxed">
-                        You write it. You edit it anytime. Attendees read it before they walk in — so when they find you at the lounge, they already have a real question ready.
+                        <EditableText
+                          settingKey="mn_showup_body"
+                          defaultText="Your card is published on the event page before the Gathering. Attendees use it to see who will be in the room, choose who to meet, and show up with better questions."
+                          as="span"
+                          multiline
+                        />
                       </p>
                       <ul className="space-y-3 text-events-cream/80 text-sm">
-                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Your story, your voice — not a bio a recruiter wrote.</span></li>
-                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Update it whenever the job, the ask, or the mood changes.</span></li>
-                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span>Attendees show up prepared. You get better conversations.</span></li>
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span><EditableText settingKey="mn_showup_bullet1" defaultText="Your story, your voice, not a bio a recruiter wrote." as="span" /></span></li>
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span><EditableText settingKey="mn_showup_bullet2" defaultText="Update it whenever the job, the ask, or the mood changes." as="span" /></span></li>
+                        <li className="flex gap-3"><span className="text-events-coral font-bold">›</span><span><EditableText settingKey="mn_showup_bullet3" defaultText="Attendees show up prepared. You get better conversations." as="span" /></span></li>
                       </ul>
                       <p className="text-events-cream/60 text-sm italic pt-2">
-                        Hint: this card also becomes your profile if you join our larger{' '}
-                        <a
-                          href="https://www.wearetheoutdoorindustry.com/career-collective-"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <EditableText settingKey="mn_showup_hint_prefix" defaultText="Hint: this card also becomes your profile if you join our larger" as="span" />{' '}
+                        <EditableLink
+                          textKey="mn_showup_program_text"
+                          urlKey="mn_showup_program_url"
+                          defaultText="Industry Expert program"
+                          defaultUrl="https://www.wearetheoutdoorindustry.com/career-collective-"
                           className="text-events-yellow underline underline-offset-4 hover:text-events-yellow/80"
-                        >
-                          Industry Expert program
-                        </a>
+                        />
                         .
                       </p>
                     </div>
@@ -504,7 +567,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 <div className="grid md:grid-cols-3 gap-6 mt-12">
                   <div className="bg-events-card/60 rounded-xl border border-events-cream/10 p-6 text-center">
                     <div className="w-12 h-12 rounded-full bg-events-coral/20 flex items-center justify-center mx-auto">
-                      <Briefcase className="w-6 h-6 text-events-coral" />
+                      <BookOpen className="w-6 h-6 text-events-coral" />
                     </div>
                     <h4 className="font-display text-events-cream font-bold mt-4">Share Your Journey</h4>
                     <p className="text-events-cream/50 text-sm mt-2">
@@ -535,15 +598,13 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
           )}
 
           {citySlug === 'minneapolis' && (
-            <EditableTextProvider pageSlug="mnexperts">
-              <OrderedSections
-                sections={[
-                  { key: 'or_gatherings', content: <MNORGatherings /> },
-                  { key: 'event_details', content: <MNEventDetails /> },
-                  { key: 'past_experts', content: <MNPastExperts eventSlug="mnexperts" showLinkToEvent /> },
-                ]}
-              />
-            </EditableTextProvider>
+            <OrderedSections
+              sections={[
+                { key: 'or_gatherings', content: <MNORGatherings /> },
+                { key: 'event_details', content: <MNEventDetails /> },
+                { key: 'past_experts', content: <MNPastExperts eventSlug="mnexperts" showLinkToEvent /> },
+              ]}
+            />
           )}
 
 
@@ -687,10 +748,12 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
               <h2 className="font-display text-3xl md:text-5xl font-bold text-events-cream leading-tight">
-                So... are you in?
+                {isMN(citySlug) ? <EditableText settingKey="mn_cta_headline" defaultText="So, are you in?" as="span" /> : "So... are you in?"}
               </h2>
               <p className="text-events-cream/60 text-lg mt-4 max-w-xl mx-auto">
-                {expert ? (
+                {isMN(citySlug) ? (
+                  <EditableText settingKey="mn_cta_sub" defaultText="We would love for you to share your expertise with the Basecamp Minneapolis community." as="span" multiline />
+                ) : expert ? (
                   <>{firstName}, we'd love for you to share your expertise with the Basecamp {cityName} community.</>
                 ) : (
                   <>We'd love for you to share your expertise with the Basecamp {cityName} community.</>
@@ -702,21 +765,21 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   onClick={handleImIn}
                   className="bg-events-coral hover:bg-events-coral/90 text-white font-display font-bold text-xl px-10 py-7 rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105"
                 >
-                  I'm In! Let's Do This <ArrowRight className="w-5 h-5 ml-2" />
+                  {isMN(citySlug) ? <EditableText settingKey="mn_cta_primary_button" defaultText="I'm In! Let's Do This" as="span" /> : "I'm In! Let's Do This"} <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 <Button
                   onClick={() => setShowQuestions(true)}
                   variant="outline"
                   className="border-events-cream/20 text-events-cream hover:bg-events-card font-display px-8 py-6"
                 >
-                  <HelpCircle className="w-4 h-4 mr-2" /> I have questions
+                  <HelpCircle className="w-4 h-4 mr-2" /> {isMN(citySlug) ? <EditableText settingKey="mn_cta_question_button" defaultText="I have questions" as="span" /> : "I have questions"}
                 </Button>
               </div>
               <Link
                 to={CITY_EVENT_LINK[citySlug]?.path ?? '/PNW26'}
                 className="text-events-cream/50 hover:text-events-cream/80 text-sm mt-6 inline-block transition-colors underline underline-offset-2"
               >
-                Just want to register and attend for free? We'd love to see you
+                {isMN(citySlug) ? <EditableText settingKey="mn_cta_attend_link" defaultText="Just want to register and attend for free? We'd love to see you" as="span" /> : "Just want to register and attend for free? We'd love to see you"}
               </Link>
 
               {!expert && !returning && (
@@ -724,7 +787,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                   onClick={() => setReturning(true)}
                   className="text-events-cream/30 hover:text-events-cream/60 text-xs mt-8 block mx-auto transition-colors"
                 >
-                  Been here before? Click to look up your card
+                  {isMN(citySlug) ? <EditableText settingKey="mn_returning_prompt" defaultText="Been here before? Click to look up your card" as="span" /> : "Been here before? Click to look up your card"}
                 </button>
               )}
 
@@ -738,7 +801,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                     onKeyDown={e => e.key === 'Enter' && handleNameLookup()}
                   />
                   <Button size="sm" onClick={handleNameLookup} className="bg-events-coral hover:bg-events-coral/90 text-events-cream">
-                    Go
+                    {isMN(citySlug) ? <EditableText settingKey="mn_returning_go" defaultText="Go" as="span" /> : "Go"}
                   </Button>
                 </div>
               )}
@@ -755,18 +818,21 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                 onClick={() => setShowForm(false)}
                 className="text-events-cream/50 hover:text-events-cream text-sm font-display flex items-center gap-1 transition-colors"
               >
-                ← Back to event info
+                {isMN(citySlug) ? <EditableText settingKey="mn_form_back" defaultText="← Back to event info" as="span" /> : "← Back to event info"}
               </button>
             </div>
           </div>
           <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
             <div className="mb-8">
               <h2 className="font-display text-3xl font-bold text-events-cream">
-                Build your <span className="text-events-coral">Industry Expert</span> card
+                {isMN(citySlug) ? <EditableText settingKey="mn_form_headline" defaultText="Build your Industry Expert card" as="span" /> : <>Build your <span className="text-events-coral">Industry Expert</span> card</>}
               </h2>
               <p className="text-events-cream/50 mt-2">
-                The more details you add, the better your card looks. Fill out what you can now , 
-                <strong className="text-events-cream/70"> return anytime to edit your card</strong>.
+                {isMN(citySlug) ? (
+                  <EditableText settingKey="mn_form_sub" defaultText="The more details you add, the better your card looks. Fill out what you can now, then return anytime to edit your card." as="span" multiline />
+                ) : (
+                  <>The more details you add, the better your card looks. Fill out what you can now , <strong className="text-events-cream/70"> return anytime to edit your card</strong>.</>
+                )}
               </p>
             </div>
             <ExpertIntakeForm
@@ -799,6 +865,12 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
       <SiteFooter />
     </div>
   );
+
+  if (isMN(citySlug)) {
+    return <EditableTextProvider pageSlug="mnexperts">{content}</EditableTextProvider>;
+  }
+
+  return content;
 };
 
 export default ExpertInvite;
