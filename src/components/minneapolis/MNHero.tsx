@@ -61,7 +61,7 @@ const MNHero = () => {
         <p className="uppercase" style={{ fontSize: 14, letterSpacing: "1.4px", color: CREAM }}>
           <EditableText
             settingKey="hero_date_line"
-            defaultText="AUG 20 + 21 · MINNEAPOLIS CONVENTION CENTER · INSIDE OUTDOOR RETAILER"
+            defaultText="THU AUG 20 · 10:30 AM–12:30 PM · MINNEAPOLIS CONVENTION CENTER · INSIDE OUTDOOR RETAILER"
             as="span"
           />
         </p>
@@ -70,7 +70,7 @@ const MNHero = () => {
           <EditableLink
             textKey="hero_register_text"
             urlKey="hero_register_url"
-            defaultText="Register free · no badge needed"
+            defaultText="Register Free · No OR Badge Needed"
             defaultUrl={REGISTER}
             className="inline-block rounded-full font-bold transition hover:opacity-90"
             style={{ backgroundColor: CORAL, color: CREAM, fontSize: 18, padding: "18px 40px" }}
