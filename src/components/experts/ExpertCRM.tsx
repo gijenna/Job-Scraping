@@ -26,10 +26,22 @@ const statusColors: Record<string, string> = {
   confirmed: 'bg-green-500/20 text-green-300 border-green-500/30',
 };
 
+const usePersistedState = (key: string, initial: string) => {
+  const [val, setVal] = useState<string>(() => {
+    if (typeof window === 'undefined') return initial;
+    return localStorage.getItem(key) ?? initial;
+  });
+  const set = (v: string) => {
+    setVal(v);
+    try { localStorage.setItem(key, v); } catch {}
+  };
+  return [val, set] as const;
+};
+
 const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) => {
-  const [filterCity, setFilterCity] = useState<string>("all");
-  const [filterType, setFilterType] = useState<string>("all");
-  const [filterSaved, setFilterSaved] = useState<string>("active");
+  const [filterCity, setFilterCity] = usePersistedState("adminExperts.filterCity", "all");
+  const [filterType, setFilterType] = usePersistedState("adminExperts.filterType", "all");
+  const [filterSaved, setFilterSaved] = usePersistedState("adminExperts.filterSaved", "active");
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");

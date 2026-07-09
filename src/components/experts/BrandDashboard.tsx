@@ -27,7 +27,14 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
   const { toast } = useToast();
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
-  const [showSaved, setShowSaved] = useState(false);
+  const [showSaved, setShowSaved] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('adminExperts.brandShowSaved') === '1';
+  });
+  const setShowSavedPersist = (v: boolean) => {
+    setShowSaved(v);
+    try { localStorage.setItem('adminExperts.brandShowSaved', v ? '1' : '0'); } catch {}
+  };
 
   // Find brand entries: only brand SHELL records (admin-created), not individual people
   // Brand shells have a slug derived from the company/brand name
@@ -138,7 +145,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           <Button
             size="sm"
             variant={!showSaved ? "secondary" : "ghost"}
-            onClick={() => setShowSaved(false)}
+            onClick={() => setShowSavedPersist(false)}
             className="h-7 text-xs"
           >
             Active ({activeCount})
@@ -146,7 +153,7 @@ const BrandDashboard = ({ experts, assignments, cities, onRefresh }: BrandDashbo
           <Button
             size="sm"
             variant={showSaved ? "secondary" : "ghost"}
-            onClick={() => setShowSaved(true)}
+            onClick={() => setShowSavedPersist(true)}
             className="h-7 text-xs"
           >
             <Bookmark className="w-3 h-3 mr-1" /> Saved ({savedCount})

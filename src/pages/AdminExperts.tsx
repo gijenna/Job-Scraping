@@ -14,7 +14,7 @@ import ImpersonatePanel from "@/components/connect/ImpersonatePanel";
 import BrandAliasMatcher from "@/components/experts/BrandAliasMatcher";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd } from "lucide-react";
+import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, ArrowUpDown } from "lucide-react";
 
 const AdminExperts = () => {
   const navigate = useNavigate();
@@ -25,6 +25,17 @@ const AdminExperts = () => {
   const [assignments, setAssignments] = useState<ExpertCityAssignment[]>([]);
   const [questions, setQuestions] = useState<ExpertQuestion[]>([]);
   const [previewMode, setPreviewMode] = useState<'carousel' | 'grid'>('carousel');
+  const [peopleFirst, setPeopleFirst] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('adminExperts.peopleFirst') === '1';
+  });
+  const togglePeopleFirst = () => {
+    setPeopleFirst((p) => {
+      const next = !p;
+      try { localStorage.setItem('adminExperts.peopleFirst', next ? '1' : '0'); } catch {}
+      return next;
+    });
+  };
 
 
 
@@ -126,19 +137,51 @@ const AdminExperts = () => {
               <div className="space-y-10">
                 <ImpersonatePanel />
                 <BrandAliasMatcher experts={experts} assignments={assignments} cities={cities} />
-                <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
-                <div>
-                  <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
-                    <span className="text-events-coral">People</span> CRM
-                    <span className="text-events-cream/40 text-sm font-normal">
-                      ({experts.filter(e => {
-                        const assigns = assignments.filter(a => a.expert_id === e.id);
-                        return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
-                      }).length})
-                    </span>
-                  </h3>
-                  <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                <div className="flex justify-end">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={togglePeopleFirst}
+                    className="text-events-cream/60 hover:text-events-cream"
+                    title="Swap section order"
+                  >
+                    <ArrowUpDown className="w-4 h-4 mr-1" />
+                    {peopleFirst ? "People on top" : "Brands on top"} — click to swap
+                  </Button>
                 </div>
+                {peopleFirst ? (
+                  <>
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
+                        <span className="text-events-coral">People</span> CRM
+                        <span className="text-events-cream/40 text-sm font-normal">
+                          ({experts.filter(e => {
+                            const assigns = assignments.filter(a => a.expert_id === e.id);
+                            return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
+                          }).length})
+                        </span>
+                      </h3>
+                      <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                    </div>
+                    <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                  </>
+                ) : (
+                  <>
+                    <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
+                        <span className="text-events-coral">People</span> CRM
+                        <span className="text-events-cream/40 text-sm font-normal">
+                          ({experts.filter(e => {
+                            const assigns = assignments.filter(a => a.expert_id === e.id);
+                            return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
+                          }).length})
+                        </span>
+                      </h3>
+                      <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </TabsContent>
