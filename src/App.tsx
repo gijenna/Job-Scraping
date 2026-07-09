@@ -86,6 +86,7 @@ const App = () => (
         <Routes>
           {/* Pinned to top for quick access — order matches Jenna's preferred menu order */}
           <Route path="/" element={<Events />} />
+          <Route path="/minneapolis" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26-brands" element={<MN26Brands />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
