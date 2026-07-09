@@ -13,7 +13,7 @@ const CREAM = "#F2E7D5";
 const CORAL = "#E8836B";
 const SAGE = "#A8B5A0";
 const REGISTER = "https://basecampoutdoor.typeform.com/ORgatherings";
-const APPLY = "https://basecampoutdoor.typeform.com/MNExperts";
+const APPLY = "/MNexperts";
 
 const heroImages = [hero1.url, hero2.url, hero3.url, hero4.url, hero5.url];
 

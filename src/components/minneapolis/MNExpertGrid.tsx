@@ -15,7 +15,7 @@ const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 const SAGE = "#A8B5A0";
 const CORAL = "#E8836B";
-const APPLY = "https://basecampoutdoor.typeform.com/MNExperts";
+const APPLY = "/MNexperts";
 
 type SessionFilter = "all" | "aug20";
 
