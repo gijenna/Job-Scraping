@@ -56,7 +56,7 @@ const MNWhatIsThis = () => (
         <p style={{ fontSize: 18, color: FOREST }}>
           <EditableText
             settingKey="what_sub"
-            defaultText="Three reasons people walk in: break into the industry, check out the OR show, or just avoid the FOMO."
+            defaultText="A free, one-room Gathering for outdoor people who want better conversations, warmer introductions, and a real way into the industry."
             as="span"
             multiline
           />
@@ -73,7 +73,7 @@ const MNWhatIsThis = () => (
     </div>
 
     <div className="mx-auto mt-14 text-center" style={{ maxWidth: 720 }}>
-      <p className="font-bold" style={{ fontSize: 26, color: FOREST }}>
+      <p className="font-normal" style={{ fontSize: 36, color: FOREST }}>
         <EditableText
           settingKey="what_made_for"
           defaultText="Made for three kinds of people."
@@ -86,7 +86,7 @@ const MNWhatIsThis = () => (
       {cards.map((c, i) => (
         <div
           key={i}
-          className="relative overflow-hidden rounded-lg p-8 space-y-4 min-h-[280px] flex flex-col justify-end"
+          className="relative overflow-hidden rounded-lg p-8 h-[340px] md:h-[360px] flex flex-col justify-end"
         >
           <img
             src={c.bg}
@@ -95,11 +95,11 @@ const MNWhatIsThis = () => (
           />
           <div
             className="absolute inset-0"
-            style={{ background: `linear-gradient(180deg, rgba(26,37,32,0.35) 0%, rgba(26,37,32,0.92) 100%)` }}
+            style={{ background: `linear-gradient(180deg, rgba(26,37,32,0.76) 0%, rgba(26,37,32,0.82) 42%, rgba(26,37,32,0.96) 100%)` }}
           />
-          <div className="relative z-10 space-y-4" style={{ color: CREAM }}>
+          <div className="relative z-10 grid grid-rows-[auto_auto_1fr] gap-4 min-h-[210px]" style={{ color: CREAM }}>
             <span
-              className="inline-flex items-center justify-center uppercase rounded-full font-semibold"
+              className="inline-flex items-center justify-center uppercase rounded-full font-semibold self-start"
               style={{
                 backgroundColor: CORAL,
                 color: CREAM,
@@ -112,10 +112,10 @@ const MNWhatIsThis = () => (
               <EditableText settingKey={c.labelKey} defaultText={c.labelDefault} as="span" />
             </span>
 
-            <h3 className="font-bold" style={{ fontSize: 22, color: CREAM }}>
+            <h3 className="font-bold min-h-[58px] flex items-start" style={{ fontSize: 22, color: CREAM, lineHeight: 1.2 }}>
               <EditableText settingKey={c.headKey} defaultText={c.headDefault} as="span" />
             </h3>
-            <p style={{ fontSize: 15, color: CREAM, opacity: 0.95 }}>
+            <p className="self-start" style={{ fontSize: 15, color: CREAM, opacity: 0.95, lineHeight: 1.5 }}>
               <EditableText settingKey={c.bodyKey} defaultText={c.bodyDefault} as="span" multiline />
             </p>
           </div>
@@ -130,7 +130,7 @@ const MNWhatIsThis = () => (
       >
         <EditableText
           settingKey="what_pullquote"
-          defaultText={`"Most of these people don't reply to LinkedIn DMs. For two days in August, they're answering in person."`}
+          defaultText={`"Most of these people don't reply to LinkedIn DMs. On Thursday morning, they're answering in person."`}
           as="span"
           multiline
         />

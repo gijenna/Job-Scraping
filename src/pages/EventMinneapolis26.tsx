@@ -17,7 +17,9 @@ import OrderedSections, { SectionDef } from "@/components/event/OrderedSections"
 
 const EventMinneapolis26 = () => {
   const { logos: tickerLogos } = useEventLogos("minneapolis26-ticker");
-  const tickerBrands = tickerLogos.map((l) => ({
+  const { logos: denverTickerLogos } = useEventLogos("denver26");
+  const activeTickerLogos = tickerLogos.length > 0 ? tickerLogos : denverTickerLogos;
+  const tickerBrands = activeTickerLogos.map((l) => ({
     name: l.name,
     domain: l.domain || "",
     url: l.url || undefined,

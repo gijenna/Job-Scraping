@@ -98,7 +98,7 @@ const MNHowItWorks = () => (
             <p style={{ fontSize: 14, color: CREAM, opacity: 0.9 }}>
               <EditableText
                 settingKey="how_happy_body"
-                defaultText="Coffee, snacks, and the most intentional networking you'll do all year."
+                defaultText="The most intentional networking you'll do all year, built around warm introductions and real conversations."
                 as="span"
                 multiline
               />
