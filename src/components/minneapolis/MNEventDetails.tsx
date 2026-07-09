@@ -1,7 +1,9 @@
 import EditableText from "@/components/EditableText";
-import EditableLink from "@/components/EditableLink";
 import { MapPin, Users, Sparkles } from "lucide-react";
-import bgPhoto from "@/assets/mn26/AnthonyMarz_Basecamp-046.jpg.asset.json";
+
+interface MNEventDetailsProps {
+  onApply?: () => void;
+}
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
