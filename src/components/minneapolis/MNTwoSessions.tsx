@@ -9,7 +9,7 @@ const REGISTER = "https://basecampoutdoor.typeform.com/ORgatherings";
 
 const MNTwoSessions = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: FOREST, color: CREAM }}>
-    <div className="w-full mx-auto px-8 lg:px-16">
+    <div className="max-w-6xl mx-auto px-6">
       <div className="text-center space-y-3 mb-12">
         <h2 className="font-normal" style={{ fontSize: 36, color: CREAM }}>
           <EditableText settingKey="sessions_headline" defaultText="The one open window." as="span" />
