@@ -42,7 +42,7 @@ const MNHero = () => {
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(26,37,32,0.72)" }} />
       </div>
 
-      <div className="relative z-10 w-full max-w-[1400px] text-center px-4">
+      <div className="relative z-10 w-full max-w-6xl mx-auto text-center px-6">
         <img
           src={lockup.url}
           alt="Basecamp Outdoor @ Minneapolis · OR Gatherings"

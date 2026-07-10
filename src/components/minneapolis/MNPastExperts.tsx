@@ -141,7 +141,7 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
 
   return (
     <section className="px-6 py-20 md:py-24" style={{ backgroundColor: FOREST, color: CREAM }}>
-      <div className="w-full mx-auto px-8 lg:px-16">
+      <div className="max-w-6xl mx-auto px-6">
         <div className="text-center space-y-3 mb-8">
           <p
             className="uppercase font-semibold"
