@@ -274,7 +274,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 border-b border-white/10">
-              <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                     <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
@@ -288,7 +288,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 flex-1 flex items-center">
-              <div className="max-w-6xl mx-auto px-6 py-12 md:py-16 w-full">
+              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-12 md:py-16">
                 {isMN(citySlug) ? (
                   <div className="max-w-3xl text-left">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
