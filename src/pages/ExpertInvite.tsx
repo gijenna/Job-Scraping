@@ -290,11 +290,11 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             <div className="relative z-10 flex-1 flex items-center">
               <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-12 md:py-16">
                 {isMN(citySlug) ? (
-                  <div className="max-w-3xl text-left">
-                    <p className="text-events-coral font-display font-semibold text-xs md:text-sm uppercase tracking-[0.25em]">
+                  <div className="max-w-[min(56vw,980px)] text-left max-lg:max-w-3xl">
+                    <p className="text-events-coral font-display font-semibold text-xs md:text-sm xl:text-base uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-events-cream leading-[1.05] mt-6">
+                    <h1 className="font-display font-bold text-events-cream leading-[1.05] mt-6" style={{ fontSize: "clamp(3.75rem, 5vw, 6rem)" }}>
                       <EditableText
                         settingKey="mn_hero_headline"
                         defaultText="Mentor the next generation at scale."
@@ -302,7 +302,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
                         multiline
                       />
                     </h1>
-                    <p className="text-events-cream/78 text-base md:text-lg mt-6 max-w-lg leading-relaxed">
+                    <p className="text-events-cream/78 text-base md:text-lg xl:text-xl mt-6 max-w-2xl leading-relaxed">
                       <EditableText
                         settingKey="mn_hero_sub"
                         defaultText="Thursday morning inside Outdoor Retailer. You have been hand selected for your industry wisdom. Our community wants to hear from you."
