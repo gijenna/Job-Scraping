@@ -274,7 +274,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 border-b border-white/10">
-              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-4 flex items-center justify-between">
+              <div className={`${isMN(citySlug) ? "mx-auto w-full max-w-7xl px-6 md:px-8" : "w-full px-6 md:px-8 lg:px-12 xl:px-16"} py-4 flex items-center justify-between`}>
                 <div className="flex items-center gap-4">
                   <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                     <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
@@ -288,9 +288,9 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 flex-1 flex items-center">
-              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-12 md:py-16">
+              <div className={`${isMN(citySlug) ? "mx-auto w-full max-w-7xl px-6 md:px-8" : "w-full px-6 md:px-8 lg:px-12 xl:px-16"} py-12 md:py-16`}>
                 {isMN(citySlug) ? (
-                  <div className="max-w-[min(56vw,980px)] text-left max-lg:max-w-3xl">
+                  <div className="max-w-[min(66vw,980px)] text-left max-lg:max-w-3xl">
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm xl:text-base uppercase tracking-[0.25em]">
                       <EditableText settingKey="mn_hero_eyebrow" defaultText="Basecamp Outdoor Lounge · OR Minneapolis" as="span" />
                     </p>
