@@ -24,9 +24,8 @@ import mnCtaBg from "@/assets/mn26/AnthonyMarz_Basecamp-211.jpg.asset.json";
 import orGatheringsHorizontal from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
 
 const MN_FOREST = "#1A2520";
-const MN_HERO_CONTAINER_STYLE = { maxWidth: "1280px" };
-const MN_HERO_COPY_STYLE = { maxWidth: "min(66vw, 980px)" };
-const MN_HERO_HEADLINE_STYLE = { fontSize: "clamp(3.75rem, 5vw, 6rem)" };
+const MN_HERO_COPY_STYLE = { maxWidth: "min(72vw, 1100px)" };
+const MN_HERO_HEADLINE_STYLE = { fontSize: "clamp(3.75rem, 5.4vw, 6.75rem)" };
 const isMN = (slug: string) => slug === "minneapolis";
 const EXPERT_PHOTOS = [
   "https://basecampoutdoorevents.com/__l5e/assets-v1/9dbf7783-4552-4a9b-bf39-9029c76e3acb/AnthonyMarz_Basecamp-083-2.jpg",
@@ -277,10 +276,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 border-b border-white/10">
-              <div
-                className={`${isMN(citySlug) ? "mx-auto w-full px-6 md:px-8" : "w-full px-6 md:px-8 lg:px-12 xl:px-16"} py-4 flex items-center justify-between`}
-                style={isMN(citySlug) ? MN_HERO_CONTAINER_STYLE : undefined}
-              >
+              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <a href="https://www.wearetheoutdoorindustry.com" target="_blank" rel="noopener noreferrer">
                     <img src={basecampLogo} alt="Basecamp Outdoor" className="h-10" />
@@ -294,10 +290,7 @@ const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
             </div>
 
             <div className="relative z-10 flex-1 flex items-center">
-              <div
-                className={`${isMN(citySlug) ? "mx-auto w-full px-6 md:px-8" : "w-full px-6 md:px-8 lg:px-12 xl:px-16"} py-12 md:py-16`}
-                style={isMN(citySlug) ? MN_HERO_CONTAINER_STYLE : undefined}
-              >
+              <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 py-12 md:py-16">
                 {isMN(citySlug) ? (
                   <div className="text-left max-lg:max-w-3xl" style={MN_HERO_COPY_STYLE}>
                     <p className="text-events-coral font-display font-semibold text-xs md:text-sm xl:text-base uppercase tracking-[0.25em]">
