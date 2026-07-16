@@ -352,8 +352,8 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           await supabase
             .from('expert_city_assignments')
             .update({
-              attend_aug20_happyhour: sessionPrefs.aug20,
-              attend_aug21_brunch: sessionPrefs.aug21,
+              attend_aug20_happyhour: true,
+              attend_aug21_brunch: false,
             } as any)
             .eq('expert_id', finalExpertId)
             .eq('city_slug', 'minneapolis');
@@ -562,35 +562,12 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           </div>
 
           {myAssignments.some(a => a.city_slug === 'minneapolis') && (
-            <div className="space-y-3 pt-2 border-t border-events-cream/10">
-              <div>
-                <Label className="text-events-cream">Minneapolis · Which Gathering(s) will you attend? *</Label>
-                <p className="text-events-cream/40 text-xs">You can pick one or both.</p>
+            <div className="space-y-2 pt-2 border-t border-events-cream/10">
+              <Label className="text-events-cream">Minneapolis · Session</Label>
+              <div className="p-3 rounded-lg bg-events-card/40 border border-events-cream/10">
+                <p className="text-events-cream font-semibold text-sm">Thursday · Aug 20 · 10:30 AM–12:30 PM</p>
+                <p className="text-events-cream/50 text-xs">Basecamp Outdoor Lounge at OR Gatherings.</p>
               </div>
-              <label className="flex items-start gap-3 p-3 rounded-lg bg-events-card/40 border border-events-cream/10 cursor-pointer hover:border-events-coral/40 transition-colors">
-                <input
-                  type="checkbox"
-                  checked={sessionPrefs.aug20}
-                  onChange={e => setSessionPrefs(p => ({ ...p, aug20: e.target.checked }))}
-                  className="mt-1 accent-events-coral w-4 h-4"
-                />
-                <div className="flex-1">
-                  <p className="text-events-cream font-semibold text-sm">Aug 20 · Happy Hour (3–5 PM CT)</p>
-                  <p className="text-events-cream/50 text-xs">Open to everyone in the outdoor industry.</p>
-                </div>
-              </label>
-              <label className="flex items-start gap-3 p-3 rounded-lg bg-events-card/40 border border-events-cream/10 cursor-pointer hover:border-events-coral/40 transition-colors">
-                <input
-                  type="checkbox"
-                  checked={sessionPrefs.aug21}
-                  onChange={e => setSessionPrefs(p => ({ ...p, aug21: e.target.checked }))}
-                  className="mt-1 accent-events-coral w-4 h-4"
-                />
-                <div className="flex-1">
-                  <p className="text-events-cream font-semibold text-sm">Aug 21 · Women's Brunch (10 AM–12 PM CT)</p>
-                  <p className="text-events-cream/50 text-xs">For women in (or trying to break into) the outdoor industry.</p>
-                </div>
-              </label>
             </div>
           )}
         </div>
