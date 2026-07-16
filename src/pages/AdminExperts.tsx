@@ -14,7 +14,7 @@ import ImpersonatePanel from "@/components/connect/ImpersonatePanel";
 import BrandAliasMatcher from "@/components/experts/BrandAliasMatcher";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, ArrowUpDown } from "lucide-react";
+import { ArrowLeft, LayoutGrid, GalleryHorizontalEnd, ChevronUp, ChevronDown } from "lucide-react";
 
 const AdminExperts = () => {
   const navigate = useNavigate();
