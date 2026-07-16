@@ -151,53 +151,66 @@ const AdminExperts = () => {
               <p className="text-events-cream/40 text-center py-12">Loading...</p>
             ) : (
               <div className="space-y-10">
-                <ImpersonatePanel />
-                <BrandAliasMatcher experts={experts} assignments={assignments} cities={cities} />
-                <div className="flex justify-end">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={togglePeopleFirst}
-                    className="text-events-cream/60 hover:text-events-cream"
-                    title="Swap section order"
-                  >
-                    <ArrowUpDown className="w-4 h-4 mr-1" />
-                    {peopleFirst ? "People on top" : "Brands on top"} — click to swap
-                  </Button>
-                </div>
-                {peopleFirst ? (
-                  <>
-                    <div>
-                      <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
-                        <span className="text-events-coral">People</span> CRM
-                        <span className="text-events-cream/40 text-sm font-normal">
-                          ({experts.filter(e => {
-                            const assigns = assignments.filter(a => a.expert_id === e.id);
-                            return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
-                          }).length})
-                        </span>
-                      </h3>
-                      <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                {sectionOrder.map((key, idx) => {
+                  const isFirst = idx === 0;
+                  const isLast = idx === sectionOrder.length - 1;
+                  const controls = (
+                    <div className="flex items-center gap-1 mb-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => moveSection(key, 'up')}
+                        disabled={isFirst}
+                        className="h-7 px-2 text-events-cream/60 hover:text-events-cream disabled:opacity-30"
+                        title="Move section up"
+                      >
+                        <ChevronUp className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => moveSection(key, 'down')}
+                        disabled={isLast}
+                        className="h-7 px-2 text-events-cream/60 hover:text-events-cream disabled:opacity-30"
+                        title="Move section down"
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                      <span className="text-events-cream/30 text-xs ml-1">reorder</span>
                     </div>
-                    <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
-                  </>
-                ) : (
-                  <>
-                    <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
-                    <div>
-                      <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
-                        <span className="text-events-coral">People</span> CRM
-                        <span className="text-events-cream/40 text-sm font-normal">
-                          ({experts.filter(e => {
-                            const assigns = assignments.filter(a => a.expert_id === e.id);
-                            return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
-                          }).length})
-                        </span>
-                      </h3>
-                      <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                  );
+
+                  let body: React.ReactNode = null;
+                  if (key === 'people') {
+                    body = (
+                      <div>
+                        <h3 className="font-display text-lg font-bold text-events-cream mb-4 flex items-center gap-2">
+                          <span className="text-events-coral">People</span> CRM
+                          <span className="text-events-cream/40 text-sm font-normal">
+                            ({experts.filter(e => {
+                              const assigns = assignments.filter(a => a.expert_id === e.id);
+                              return assigns.some(a => a.expert_type === 'industry_expert') || e.status === 'confirmed';
+                            }).length})
+                          </span>
+                        </h3>
+                        <ExpertCRM experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />
+                      </div>
+                    );
+                  } else if (key === 'brands') {
+                    body = <BrandDashboard experts={experts} assignments={assignments} cities={cities} onRefresh={fetchAll} />;
+                  } else if (key === 'impersonate') {
+                    body = <ImpersonatePanel />;
+                  } else if (key === 'aliases') {
+                    body = <BrandAliasMatcher experts={experts} assignments={assignments} cities={cities} />;
+                  }
+
+                  return (
+                    <div key={key}>
+                      {controls}
+                      {body}
                     </div>
-                  </>
-                )}
+                  );
+                })}
               </div>
             )}
           </TabsContent>
