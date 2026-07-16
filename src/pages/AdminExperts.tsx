@@ -25,14 +25,30 @@ const AdminExperts = () => {
   const [assignments, setAssignments] = useState<ExpertCityAssignment[]>([]);
   const [questions, setQuestions] = useState<ExpertQuestion[]>([]);
   const [previewMode, setPreviewMode] = useState<'carousel' | 'grid'>('carousel');
-  const [peopleFirst, setPeopleFirst] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('adminExperts.peopleFirst') === '1';
+
+  const DEFAULT_SECTION_ORDER = ['people', 'brands', 'impersonate', 'aliases'];
+  const SECTION_ORDER_KEY = 'adminExperts.sectionOrder.v2';
+  const [sectionOrder, setSectionOrder] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return DEFAULT_SECTION_ORDER;
+    try {
+      const raw = localStorage.getItem(SECTION_ORDER_KEY);
+      if (!raw) return DEFAULT_SECTION_ORDER;
+      const parsed = JSON.parse(raw) as string[];
+      const valid = parsed.filter((k) => DEFAULT_SECTION_ORDER.includes(k));
+      const missing = DEFAULT_SECTION_ORDER.filter((k) => !valid.includes(k));
+      return [...valid, ...missing];
+    } catch {
+      return DEFAULT_SECTION_ORDER;
+    }
   });
-  const togglePeopleFirst = () => {
-    setPeopleFirst((p) => {
-      const next = !p;
-      try { localStorage.setItem('adminExperts.peopleFirst', next ? '1' : '0'); } catch {}
+  const moveSection = (key: string, dir: 'up' | 'down') => {
+    setSectionOrder((prev) => {
+      const idx = prev.indexOf(key);
+      const newIdx = dir === 'up' ? idx - 1 : idx + 1;
+      if (idx === -1 || newIdx < 0 || newIdx >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
+      try { localStorage.setItem(SECTION_ORDER_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
   };
