@@ -352,8 +352,8 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
           await supabase
             .from('expert_city_assignments')
             .update({
-              attend_aug20_happyhour: sessionPrefs.aug20,
-              attend_aug21_brunch: sessionPrefs.aug21,
+              attend_aug20_happyhour: true,
+              attend_aug21_brunch: false,
             } as any)
             .eq('expert_id', finalExpertId)
             .eq('city_slug', 'minneapolis');
