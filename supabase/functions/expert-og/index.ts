@@ -13,7 +13,7 @@ const CRAWLER_UA =
 const EVENT_PAGE: Record<string, string> = {
   portland: "/PNW26",
   denver: "/OutsideDays26",
-  minneapolis: "/events",
+  minneapolis: "/minneapolis26",
 };
 
 const EVENT_LABEL: Record<string, string> = {
@@ -501,7 +501,7 @@ Deno.serve(async (req) => {
   const { data: expert } = await supabase
     .from("industry_experts")
     .select(
-      "id, full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug, company_domains"
+      "id, full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug, company_domains, updated_at"
     )
     .eq("slug", slug)
     .single();
@@ -574,6 +574,15 @@ Deno.serve(async (req) => {
     if (m.page_og_description) pageOgDescription = m.page_og_description;
   }
 
+  // Minneapolis: override with rendered expert card + spec copy.
+  if (city === "minneapolis") {
+    const epoch = expert.updated_at ? Math.floor(new Date(expert.updated_at).getTime() / 1000) : Date.now();
+    const shareOriginMn = url.origin.replace("http://", "https://");
+    pageOgImage = `${shareOriginMn}/functions/v1/expert-card-image/${encodeURIComponent(slug)}/minneapolis?format=og&v=${epoch}`;
+    pageOgTitle = `${expert.full_name} · Industry Expert at the Basecamp Outdoor Lounge`;
+    pageOgDescription = "OR Gatherings × Basecamp Outdoor Lounge. Thursday, Aug 20, 10:30am–12:30pm at OR Minneapolis. Free entry. No badge needed. Just show up.";
+  }
+
   const shareOrigin = url.origin.replace("http://", "https://");
   const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(
     slug
@@ -630,6 +639,8 @@ Deno.serve(async (req) => {
   <meta property="og:title" content="${esc(pageOgTitle)}" />
   <meta property="og:description" content="${esc(pageOgDescription)}" />
   <meta property="og:image" content="${esc(pageOgImage)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:url" content="${esc(redirectUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(pageOgTitle)}" />
