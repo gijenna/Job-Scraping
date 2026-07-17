@@ -1,4 +1,4 @@
-import { Linkedin, Twitter, Copy, Share2, Check } from "lucide-react";
+import { Linkedin, Twitter, Copy, Share2, Check, Download, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
