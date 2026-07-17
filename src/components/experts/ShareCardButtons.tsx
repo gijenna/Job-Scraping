@@ -106,6 +106,37 @@ const ShareCardButtons = ({ expertSlug, expertName, citySlug, eventTitle, compac
           {copied ? "Copied!" : "Copy Link"}
         </Button>
       </div>
+
+      {citySlug === "minneapolis" && (
+        <div className="pt-3 border-t border-events-cream/10 space-y-2">
+          <p className="text-events-cream/60 text-xs uppercase tracking-wider flex items-center gap-1.5">
+            <ImageIcon className="w-3.5 h-3.5" />
+            Download images for social
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { fmt: "og", label: "Post (1200×630)" },
+              { fmt: "ig_portrait", label: "IG Post (1080×1350)" },
+              { fmt: "ig_story", label: "IG Story (1080×1920)" },
+            ].map(({ fmt, label }) => {
+              const url = `https://${projectId}.supabase.co/functions/v1/expert-card-image/${encodeURIComponent(expertSlug)}/minneapolis?format=${fmt}&download=1`;
+              return (
+                <Button
+                  key={fmt}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="border-events-cream/20 text-events-cream/80 hover:text-events-cream hover:bg-events-card gap-1.5"
+                  onClick={() => window.open(url, "_blank")}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  {label}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
