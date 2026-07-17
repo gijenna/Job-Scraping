@@ -165,7 +165,7 @@ serve(async (req) => {
       : (sheetIdMap[citySlug] || Deno.env.get('GOOGLE_SPREADSHEET_ID'));
     const sheetTabName = isBrandRep
       ? 'Brand Reps '
-      : (isDenverIndustryExpert ? 'Industry Experts' : 'Sheet1');
+      : (isDenverIndustryExpert ? 'Industry Experts' : (citySlug === 'minneapolis' ? 'Experts' : 'Sheet1'));
     if (serviceAccountKeyStr && spreadsheetId) {
       try {
         let serviceAccount: any;
