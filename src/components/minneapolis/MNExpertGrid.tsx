@@ -55,6 +55,22 @@ const MNExpertGrid = () => {
     })();
   }, []);
 
+  // Deep-link support: ?map_expert=slug opens that expert's card and scrolls into view.
+  useEffect(() => {
+    if (loading || rows.length === 0) return;
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("map_expert");
+    if (!slug) return;
+    const match = rows.find((r) => r.expert.slug === slug);
+    if (match) {
+      setFocused(match.expert);
+      document.getElementById("experts")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const url = new URL(window.location.href);
+      url.searchParams.delete("map_expert");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [loading, rows]);
+
   const filtered = rows.filter((r) => (filter === "all" ? true : r.aug20));
 
   const renderCard = (e: Expert) => {
