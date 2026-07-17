@@ -25,6 +25,7 @@ import { template as candidateNoteReceivedPreEvent } from './candidate-note-rece
 import { template as candidateNoteReceivedPostEvent } from './candidate-note-received-post-event.tsx'
 import { template as connectQuickSignupCompleteProfile } from './connect-quick-signup-complete-profile.tsx'
 import { template as feedbackFromUser } from './feedback-from-user.tsx'
+import { template as mnExpertPublished } from './mn-expert-published.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'afterparty-matches': afterpartyMatches,
