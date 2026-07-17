@@ -362,15 +362,54 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                                   <Share2 className="w-3 h-3" />
                                   {cities.find(c => c.slug === a.city_slug)?.name || a.city_slug}
                                 </Button>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={downloadOgCard}
-                                  className="text-events-cream/60 hover:text-events-yellow h-6 w-6 p-0"
-                                  title="Download card image"
-                                >
-                                  <Download className="w-3 h-3" />
-                                </Button>
+                                {a.city_slug === 'minneapolis' ? (
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="text-events-cream/60 hover:text-events-yellow h-6 w-6 p-0"
+                                        title="Download card images"
+                                      >
+                                        <Download className="w-3 h-3" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="bg-events-card border-events-cream/20 text-events-cream">
+                                      <DropdownMenuLabel className="text-events-cream/60 text-xs uppercase tracking-wider">
+                                        {expert.full_name}
+                                      </DropdownMenuLabel>
+                                      <DropdownMenuSeparator className="bg-events-cream/10" />
+                                      {[
+                                        { fmt: "og", label: "Post (1200×630)" },
+                                        { fmt: "ig_portrait", label: "IG Post (1080×1350)" },
+                                        { fmt: "ig_story", label: "IG Story (1080×1920)" },
+                                      ].map(({ fmt, label }) => {
+                                        const pid = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+                                        const dlUrl = `https://${pid}.supabase.co/functions/v1/expert-card-image/${encodeURIComponent(expert.slug)}/minneapolis?format=${fmt}&download=1`;
+                                        return (
+                                          <DropdownMenuItem
+                                            key={fmt}
+                                            className="focus:bg-events-cream/10 focus:text-events-cream cursor-pointer gap-2"
+                                            onSelect={() => window.open(dlUrl, "_blank")}
+                                          >
+                                            <ImageIcon className="w-3.5 h-3.5" />
+                                            {label}
+                                          </DropdownMenuItem>
+                                        );
+                                      })}
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={downloadOgCard}
+                                    className="text-events-cream/60 hover:text-events-yellow h-6 w-6 p-0"
+                                    title="Download card image"
+                                  >
+                                    <Download className="w-3 h-3" />
+                                  </Button>
+                                )}
                               </div>
                             );
                           })}
