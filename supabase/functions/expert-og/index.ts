@@ -501,7 +501,7 @@ Deno.serve(async (req) => {
   const { data: expert } = await supabase
     .from("industry_experts")
     .select(
-      "id, full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug, company_domains"
+      "id, full_name, job_title, current_company, photo_url, field_of_work, ask_me_about, previous_companies, years_in_industry, slug, company_domains, updated_at"
     )
     .eq("slug", slug)
     .single();
