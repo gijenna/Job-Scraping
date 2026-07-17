@@ -13,7 +13,7 @@ const CRAWLER_UA =
 const EVENT_PAGE: Record<string, string> = {
   portland: "/PNW26",
   denver: "/OutsideDays26",
-  minneapolis: "/events",
+  minneapolis: "/minneapolis26",
 };
 
 const EVENT_LABEL: Record<string, string> = {
