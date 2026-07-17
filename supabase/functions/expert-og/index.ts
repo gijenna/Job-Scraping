@@ -639,6 +639,8 @@ Deno.serve(async (req) => {
   <meta property="og:title" content="${esc(pageOgTitle)}" />
   <meta property="og:description" content="${esc(pageOgDescription)}" />
   <meta property="og:image" content="${esc(pageOgImage)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:url" content="${esc(redirectUrl)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(pageOgTitle)}" />
