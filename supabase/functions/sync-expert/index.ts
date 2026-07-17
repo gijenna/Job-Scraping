@@ -156,6 +156,7 @@ serve(async (req) => {
     const sheetIdMap: Record<string, string | undefined> = {
       denver: Deno.env.get('GOOGLE_SPREADSHEET_ID_DENVER'),
       portland: Deno.env.get('GOOGLE_SPREADSHEET_ID_PORTLAND'),
+      minneapolis: Deno.env.get('GOOGLE_SPREADSHEET_ID_MINNEAPOLIS'),
     };
     // Denver industry experts go to the same workbook as brand reps, in the "Industry Experts" tab
     const isDenverIndustryExpert = !isBrandRep && citySlug === 'denver';
