@@ -44,4 +44,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'candidate-note-received-post-event': candidateNoteReceivedPostEvent,
   'connect-quick-signup-complete-profile': connectQuickSignupCompleteProfile,
   'feedback-from-user': feedbackFromUser,
+  'mn-expert-published': mnExpertPublished,
 }
