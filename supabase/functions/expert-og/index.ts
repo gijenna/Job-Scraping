@@ -574,6 +574,15 @@ Deno.serve(async (req) => {
     if (m.page_og_description) pageOgDescription = m.page_og_description;
   }
 
+  // Minneapolis: override with rendered expert card + spec copy.
+  if (city === "minneapolis") {
+    const epoch = expert.updated_at ? Math.floor(new Date(expert.updated_at).getTime() / 1000) : Date.now();
+    const shareOriginMn = url.origin.replace("http://", "https://");
+    pageOgImage = `${shareOriginMn}/functions/v1/expert-card-image/${encodeURIComponent(slug)}/minneapolis?format=og&v=${epoch}`;
+    pageOgTitle = `${expert.full_name} · Industry Expert at the Basecamp Outdoor Lounge`;
+    pageOgDescription = "OR Gatherings × Basecamp Outdoor Lounge. Thursday, Aug 20, 10:30am–12:30pm at OR Minneapolis. Free entry. No badge needed. Just show up.";
+  }
+
   const shareOrigin = url.origin.replace("http://", "https://");
   const shareUrl = `${shareOrigin}/functions/v1/expert-og/${encodeURIComponent(
     slug
