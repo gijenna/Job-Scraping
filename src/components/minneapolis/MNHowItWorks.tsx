@@ -1,6 +1,6 @@
 import EditableText from "@/components/EditableText";
 import EditableLink from "@/components/EditableLink";
-import orLogo from "@/assets/mn26/or-gatherings-horizontal.png.asset.json";
+import orLogo from "@/assets/mn26/or-gatherings-square.png.asset.json";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
