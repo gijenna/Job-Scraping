@@ -80,7 +80,21 @@ serve(async (req) => {
     if (dbErr || !dbExpert) {
       return new Response(JSON.stringify({ error: 'expert not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
-    const expert = dbExpert;
+    const expert: any = dbExpert;
+    // city_slug lives on expert_city_assignments; hydrate the first published assignment.
+    if (!expert.city_slug) {
+      const { data: assign } = await sbAdmin
+        .from('expert_city_assignments')
+        .select('city_slug, expert_type')
+        .eq('expert_id', expertId)
+        .order('published', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (assign) {
+        expert.city_slug = assign.city_slug;
+        if (!expert.expert_type) expert.expert_type = assign.expert_type;
+      }
+    }
     const results: Record<string, any> = {};
 
     // --- Folk CRM sync ---
