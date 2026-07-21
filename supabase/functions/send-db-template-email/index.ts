@@ -97,6 +97,16 @@ function bodyToText(body: string, vars: Record<string, string>): string {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  // Auth: only accept calls from server-to-server code that holds the service role key.
+  const auth = req.headers.get("authorization") || "";
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  if (!serviceKey || !auth.includes(serviceKey)) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   let body: any;
   try { body = await req.json(); } catch {
     return new Response(JSON.stringify({ error: "invalid json" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });

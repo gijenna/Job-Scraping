@@ -354,8 +354,13 @@ Deno.serve(async (req) => {
         } catch { return null; }
       };
       const signedPhotos = await Promise.all(list.map((c: any) => reSignPhoto(c.photo_url)));
+      // Strip DEI/demographic fields — brand reps must never see them.
+      const stripDei = (c: any) => {
+        const { dei_gender, dei_lgbtq, dei_disability, dei_veteran, dei_race_ethnicity, ...rest } = c;
+        return rest;
+      };
       const result = list.map((c: any, i: number) => ({
-        ...c,
+        ...stripDei(c),
         photo_url: signedPhotos[i],
         engagement: engagement[c.id] || null,
         starred_brand: starred.has(c.id),
@@ -378,8 +383,9 @@ Deno.serve(async (req) => {
     if (body.action === "candidate") {
       const { id } = body;
       if (!id) return jsonFor(req, { error: "id required" }, { status: 400 });
-      const { data: cand, error } = await sb.from("candidates").select("*").eq("id", id).maybeSingle();
-      if (error || !cand) return jsonFor(req, { error: "Not found" }, { status: 404 });
+      const { data: candFull, error } = await sb.from("candidates").select("*").eq("id", id).maybeSingle();
+      if (error || !candFull) return jsonFor(req, { error: "Not found" }, { status: 404 });
+      const { dei_gender, dei_lgbtq, dei_disability, dei_veteran, dei_race_ethnicity, ...cand } = candFull as any;
 
       let conns: any[] = [];
       if (brand) {

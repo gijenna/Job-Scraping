@@ -252,6 +252,18 @@ Deno.serve(async (req) => {
     })
   }
 
+  // Admin-only: recomputing/exposing full matches requires @wearetheoutdoorindustry.com.
+  const authHeader = req.headers.get('Authorization')
+  if (!authHeader) {
+    return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+  }
+  const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } })
+  const { data: userData } = await userClient.auth.getUser()
+  const email = userData?.user?.email?.toLowerCase() || ''
+  if (!email.endsWith('@wearetheoutdoorindustry.com')) {
+    return new Response(JSON.stringify({ error: 'forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+  }
+
   let body: { attendees?: Attendee[]; topN?: number; meId?: string } = {}
   try { body = await req.json() } catch { /* empty body OK */ }
 

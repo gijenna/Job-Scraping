@@ -51,7 +51,11 @@ const EventLogoTicker = ({
                     const target = e.currentTarget;
                     const parent = target.parentElement;
                     if (parent) {
-                      parent.innerHTML = `<span class="font-display font-semibold text-sm md:text-base whitespace-nowrap" style="color: #9A8B76">${brand.name}</span>`;
+                      const span = document.createElement('span');
+                      span.className = 'font-display font-semibold text-sm md:text-base whitespace-nowrap';
+                      span.style.color = '#9A8B76';
+                      span.textContent = brand.name;
+                      parent.replaceChildren(span);
                     }
                   }}
                 />

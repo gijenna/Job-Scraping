@@ -87,6 +87,27 @@ Deno.serve(async (req) => {
     )
   }
 
+  // Authorization: only a whitelist of user-facing templates can be triggered by anon
+  // callers. Admin/blast templates require the service role key. This blocks abuse
+  // (spam/phishing via arbitrary template + recipient) while preserving public flows
+  // like RSVP confirmations and interest alerts.
+  const PUBLIC_TEMPLATES = new Set<string>([
+    'brand-activation-alert',
+    'brand-activation-confirmation',
+    'afterparty-rsvp-confirmation',
+    'afterparty-interest-alert',
+    'connect-quick-signup-complete-profile',
+  ])
+  if (!PUBLIC_TEMPLATES.has(templateName)) {
+    const auth = req.headers.get('authorization') || ''
+    if (!supabaseServiceKey || !auth.includes(supabaseServiceKey)) {
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: template requires service role' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
+  }
+
   // 1. Look up template from registry (early — needed to resolve recipient)
   const template = TEMPLATES[templateName]
 

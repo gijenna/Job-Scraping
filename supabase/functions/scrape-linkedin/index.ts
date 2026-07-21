@@ -3,12 +3,26 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Admin-only: LinkedIn scraping burns paid Firecrawl credits.
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ success: false, error: 'unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
+    const { data: userData } = await userClient.auth.getUser();
+    const email = userData?.user?.email?.toLowerCase() || '';
+    if (!email.endsWith('@wearetheoutdoorindustry.com')) {
+      return new Response(JSON.stringify({ success: false, error: 'forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const { url } = await req.json();
 
     if (!url) {
