@@ -76,6 +76,7 @@ Deno.serve(async (req) => {
       const hasPhone = !!(existing.phone && String(existing.phone).trim() !== "") ||
                        !!(existing.phone_last_four && String(existing.phone_last_four).trim() !== "");
       if (hasPhone) return jsonFor(req, { error: "phone already set" }, { status: 403 });
+      const cleaned = phone.replace(/[^0-9+]/g, "");
       const digits = cleaned.replace(/[^0-9]/g, "");
       if (digits.length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
       const { data: rep, error } = await sb
