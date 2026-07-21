@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { X, GripVertical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Expert } from "@/lib/expert-types";
 import ExpertCard from "@/components/experts/ExpertCard";
@@ -10,6 +10,16 @@ import EditableText from "@/components/EditableText";
 import CardStylePicker from "@/components/event/CardStylePicker";
 import { useEventSettings } from "@/hooks/useEventSettings";
 import { useEditableTextContext } from "@/components/EditableTextProvider";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
@@ -19,7 +29,39 @@ const APPLY = "/MNexperts";
 
 type SessionFilter = "all" | "aug20";
 
-type Row = { expert: Expert; aug20: boolean };
+type Row = { assignmentId: string; expert: Expert; aug20: boolean };
+
+const SortableWrapper = ({
+  id,
+  isAdmin,
+  children,
+}: {
+  id: string;
+  isAdmin: boolean;
+  children: React.ReactNode;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className="relative">
+      {isAdmin && (
+        <button
+          {...attributes}
+          {...listeners}
+          className="absolute -top-1 -left-1 z-20 w-6 h-6 rounded bg-events-coral/80 text-white flex items-center justify-center cursor-grab active:cursor-grabbing"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <GripVertical className="w-3.5 h-3.5" />
+        </button>
+      )}
+      {children}
+    </div>
+  );
+};
 
 const MNExpertGrid = () => {
   const { isAdmin } = useEditableTextContext();
@@ -29,6 +71,7 @@ const MNExpertGrid = () => {
   const [filter, setFilter] = useState<SessionFilter>("all");
   const [cardStyle, setCardStyle] = useState("polaroid");
   const [focused, setFocused] = useState<Expert | null>(null);
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   useEffect(() => {
     const v = settings["card_style_mn_experts"];
@@ -40,13 +83,15 @@ const MNExpertGrid = () => {
       const { data } = await supabase
         .from("expert_city_assignments")
         .select(
-          "expert_id, expert_type, attend_aug20_happyhour, attend_aug21_brunch, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, created_by, created_at, updated_at)"
+          "id, expert_id, expert_type, display_order, attend_aug20_happyhour, attend_aug21_brunch, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, created_by, created_at, updated_at)"
         )
         .eq("city_slug", "minneapolis")
-        .eq("published", true);
+        .eq("published", true)
+        .order("display_order", { ascending: true });
       const mapped: Row[] = ((data as any[]) || [])
         .filter((d) => d.expert_type !== "brand_rep" && d.industry_experts)
         .map((d) => ({
+          assignmentId: d.id,
           expert: d.industry_experts as Expert,
           aug20: !!d.attend_aug20_happyhour,
         }));
@@ -72,6 +117,27 @@ const MNExpertGrid = () => {
   }, [loading, rows]);
 
   const filtered = rows.filter((r) => (filter === "all" ? true : r.aug20));
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    // Reorder against the full rows array (not the filtered view) so persistence is consistent.
+    const oldIndex = rows.findIndex((r) => r.expert.id === active.id);
+    const newIndex = rows.findIndex((r) => r.expert.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+    const next = [...rows];
+    const [moved] = next.splice(oldIndex, 1);
+    next.splice(newIndex, 0, moved);
+    setRows(next);
+    await Promise.all(
+      next.map((r, i) =>
+        supabase
+          .from("expert_city_assignments")
+          .update({ display_order: i } as any)
+          .eq("id", r.assignmentId)
+      )
+    );
+  };
 
   const renderCard = (e: Expert) => {
     switch (cardStyle) {
@@ -157,30 +223,35 @@ const MNExpertGrid = () => {
             </p>
           </div>
         ) : (
-          <div className={gridClass}>
-            {filtered.map(({ expert, aug20 }) => {
-              const clickable = cardStyle !== "minimal";
-              return (
-                <div
-                  key={expert.id}
-                  className={`relative ${clickable ? "cursor-pointer transition-transform hover:scale-[1.02]" : ""}`}
-                  onClick={clickable ? () => setFocused(expert) : undefined}
-                >
-                  {renderCard(expert)}
-                  <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
-                    {aug20 && (
-                      <span
-                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: CORAL, color: CREAM }}
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={filtered.map((r) => r.expert.id)} strategy={rectSortingStrategy}>
+              <div className={gridClass}>
+                {filtered.map(({ expert, aug20 }) => {
+                  const clickable = cardStyle !== "minimal";
+                  return (
+                    <SortableWrapper key={expert.id} id={expert.id} isAdmin={isAdmin}>
+                      <div
+                        className={clickable ? "cursor-pointer transition-transform hover:scale-[1.02]" : ""}
+                        onClick={clickable ? () => setFocused(expert) : undefined}
                       >
-                        Aug 20
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                        {renderCard(expert)}
+                        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 pointer-events-none">
+                          {aug20 && (
+                            <span
+                              className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
+                              style={{ backgroundColor: CORAL, color: CREAM }}
+                            >
+                              Aug 20
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </SortableWrapper>
+                  );
+                })}
+              </div>
+            </SortableContext>
+          </DndContext>
         )}
 
         {focused && createPortal(
