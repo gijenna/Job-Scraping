@@ -203,6 +203,12 @@ async function clearAllExceptHeader(token: string): Promise<void> {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  // Server-to-server only: require service role bearer.
+  const auth = req.headers.get("authorization") || "";
+  const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  if (!svc || !auth.includes(svc)) {
+    return new Response(JSON.stringify({ error: "forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
   const result: any = {};
   try {
     const body = await req.json().catch(() => ({}));

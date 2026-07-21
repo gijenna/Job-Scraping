@@ -67,7 +67,19 @@ serve(async (req) => {
   }
 
   try {
-    const expert = await req.json();
+    const requestBody = await req.json();
+    const expertId = requestBody?.id;
+    if (!expertId || typeof expertId !== 'string') {
+      return new Response(JSON.stringify({ error: 'id required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    // Re-fetch from DB rather than trusting client payload, so this endpoint cannot be
+    // abused to push arbitrary data to Folk/Sheets.
+    const sbAdmin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+    const { data: dbExpert, error: dbErr } = await sbAdmin.from('industry_experts').select('*').eq('id', expertId).maybeSingle();
+    if (dbErr || !dbExpert) {
+      return new Response(JSON.stringify({ error: 'expert not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const expert = dbExpert;
     const results: Record<string, any> = {};
 
     // --- Folk CRM sync ---
