@@ -65,7 +65,17 @@ Deno.serve(async (req) => {
     if (action === "add_phone") {
       const { rep_id, phone } = body;
       if (!rep_id || !phone) return jsonFor(req, { error: "rep_id and phone required" }, { status: 400 });
-      const cleaned = phone.replace(/[^0-9+]/g, "");
+      // Only allow phone update when the rep has no phone on file yet (first-time onboarding).
+      // A rep with a phone already set must go through the standard login flow, not overwrite via this endpoint.
+      const { data: existing, error: exErr } = await sb
+        .from("industry_experts")
+        .select("id, phone, phone_last_four")
+        .eq("id", rep_id)
+        .maybeSingle();
+      if (exErr || !existing) return jsonFor(req, { error: "rep not found" }, { status: 404 });
+      const hasPhone = !!(existing.phone && String(existing.phone).trim() !== "") ||
+                       !!(existing.phone_last_four && String(existing.phone_last_four).trim() !== "");
+      if (hasPhone) return jsonFor(req, { error: "phone already set" }, { status: 403 });
       const digits = cleaned.replace(/[^0-9]/g, "");
       if (digits.length < 10) return jsonFor(req, { error: "Phone number too short" }, { status: 400 });
       const { data: rep, error } = await sb
