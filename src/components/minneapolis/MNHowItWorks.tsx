@@ -154,15 +154,15 @@ const MNHowItWorks = () => (
 
       {/* Presented with OR */}
       <div
-        className="rounded-lg p-6 md:p-10 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-10 items-center"
+        className="rounded-lg p-6 md:p-10 flex flex-col items-center text-center gap-6"
         style={{ backgroundColor: FOREST, color: CREAM }}
       >
         <img
           src={orLogo.url}
           alt="OR Gatherings × Basecamp Outdoor lockup"
-          className="h-20 md:h-24 w-auto mx-auto md:mx-0"
+          className="h-40 md:h-56 w-auto object-contain"
         />
-        <div className="space-y-3 text-center md:text-left">
+        <div className="space-y-3 max-w-2xl">
           <p
             className="uppercase font-semibold"
             style={{ fontSize: 11, letterSpacing: "1.6px", color: CORAL }}
