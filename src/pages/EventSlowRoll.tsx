@@ -19,25 +19,26 @@ import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
 // North Commons leads. Rest rotate behind it.
 const HERO_PHOTOS = [northCommons.url, mpfH1.url, mpfH4.url, mpfH2.url, mpfH3.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
-// Neon palette — Slow Roll after dark. Bright lights on midnight streets.
+// Brand neon palette — Coral + Yellow + ALSO purple, with a touch of cyan for water.
+// Warm near-black base so photos and neon both breathe.
 const C = {
-  midnight: "#0a0a1f",       // deep base
-  midnight2: "#131235",      // panel base
-  ink: "#0a0a1f",
-  paper: "#faf7f2",          // cream for light sections
+  midnight: "#0f0a08",       // warm near-black base
+  midnight2: "#1a120f",      // panel base
+  ink: "#0f0a08",
+  paper: "#faf7f2",
   paperLine: "#e2ddd2",
-  muted: "#8a8fb0",
+  muted: "#8a8578",
   mutedDark: "#5b5f57",
-  // Neons
-  magenta: "#ff2d95",
-  cyan: "#00e6ff",
-  yellow: "#f5d90a",
-  lime: "#b6ff3d",
-  // Legacy roles mapped to neon
-  primary: "#ff2d95",        // was rust
-  primaryGlow: "0 0 24px rgba(255,45,149,0.55)",
-  cyanGlow: "0 0 24px rgba(0,230,255,0.5)",
-  yellowGlow: "0 0 22px rgba(245,217,10,0.55)",
+  // Brand neons
+  magenta: "#ED7660",        // Basecamp coral — primary neon
+  cyan: "#38d6e6",           // touch of cyan for water references
+  yellow: "#E1B624",         // Basecamp yellow — secondary neon
+  lime: "#a855f7",           // ALSO purple — tertiary neon
+  // Legacy roles
+  primary: "#ED7660",
+  primaryGlow: "0 0 22px rgba(237,118,96,0.55)",
+  cyanGlow: "0 0 20px rgba(56,214,230,0.45)",
+  yellowGlow: "0 0 22px rgba(225,182,36,0.55)",
 };
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
