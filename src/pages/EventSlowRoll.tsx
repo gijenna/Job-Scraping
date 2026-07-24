@@ -306,15 +306,15 @@ const Guide = () => (
         <EditableText settingKey="sr_guide_headline" defaultText="Anthony Taylor." as="span" />
       </h2>
       <div
-        className="rounded-[12px] overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,320px)_1fr] gap-0"
+        className="rounded-[12px] overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,360px)_1fr] gap-0"
         style={{ background: "#fff", border: `1px solid ${C.line}` }}
       >
-        {/* Press photo — credit: Trust for Public Land. Permission pending, swap for cleared photo once confirmed. */}
+        {/* Press photo — credit: Minnesota Spokesman-Recorder. Permission pending, swap for cleared photo once confirmed. */}
         <img
-          src="https://e7jecw7o93n.exactdn.com/wp-content/uploads/2024/02/tx_renaissancepark_05012022_049_fallback.jpg"
-          alt="Anthony Taylor"
+          src="https://i0.wp.com/spokesman-recorder.com/wp-content/uploads/2021/10/slow-roll-bike-ride-Anthony-Taylor.jpg"
+          alt="Anthony Taylor leading a past Slow Roll ride in Minneapolis"
           className="w-full h-full object-cover"
-          style={{ minHeight: 320 }}
+          style={{ minHeight: 360 }}
         />
         <div className="p-6 md:p-8">
           <h3 className="font-bold mb-2" style={{ fontSize: 26, color: C.forest }}>
@@ -352,22 +352,10 @@ const Guide = () => (
               />
             </p>
           </div>
+          <p className="mt-4" style={{ fontSize: 11, color: C.muted }}>
+            Photo: Minnesota Spokesman-Recorder
+          </p>
         </div>
-      </div>
-      {/* Press photo — credit: Minnesota Spokesman-Recorder. Permission pending, swap for cleared photo once confirmed. */}
-      <div className="mt-6 rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-        <img
-          src="https://i0.wp.com/spokesman-recorder.com/wp-content/uploads/2021/10/slow-roll-bike-ride-Anthony-Taylor.jpg"
-          alt="Anthony Taylor leading a past Slow Roll ride in Minneapolis"
-          className="w-full h-auto block"
-        />
-        <p className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
-          <EditableText
-            settingKey="sr_guide_caption"
-            defaultText="Anthony leading a past Slow Roll. Photo credit: Minnesota Spokesman-Recorder."
-            as="span"
-          />
-        </p>
       </div>
     </div>
   </section>
