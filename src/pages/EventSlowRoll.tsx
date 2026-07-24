@@ -648,10 +648,7 @@ const Watch = () => (
 );
 
 const FooterCTA = () => (
-  <section style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-32">
-    <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `${C.midnight}e8` }} />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.06, backgroundImage: `linear-gradient(${C.magenta} 1px, transparent 1px), linear-gradient(90deg, ${C.magenta} 1px, transparent 1px)`, backgroundSize: "60px 60px", maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)" }} />
+  <section style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-32">
     <div className="max-w-3xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_footer_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
