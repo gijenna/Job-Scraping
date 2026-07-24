@@ -375,7 +375,19 @@ const ComparisonTable = () => (
         >
           <div style={{ color: TEAL }} className="px-6 py-4 text-sm font-light">
             <T k={`${r.k}.label`} d={r.label} />
+            {r.k === "row.slowroll" && (
+              <a
+                href="https://basecampoutdoorevents.com/slow-roll"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: CORAL }}
+                className="ml-2 text-xs underline hover:opacity-80"
+              >
+                See the ride →
+              </a>
+            )}
           </div>
+
           <div
             style={{ color: `${TEAL}bb`, background: i % 2 ? `${SAGE}10` : `${SAGE}18` }}
             className={`px-6 py-4 text-center text-sm ${cellClass(r.a)}`}
