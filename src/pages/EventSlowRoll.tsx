@@ -231,21 +231,22 @@ const BikePathSpine = () => {
           <path id="sr-spine-path" d={D} />
         </defs>
         {/* soft glow underlay */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="2.2" strokeOpacity="0.14" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(3px)` }} />
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="4.8" strokeOpacity="0.16" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(5px)` }} />
+        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="3.6" strokeOpacity="0.82" fill="none" vectorEffect="non-scaling-stroke" />
         {/* dashed animated bike lane */}
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="1.4"
+          strokeWidth="2.4"
           strokeDasharray="6 6"
           fill="none"
           vectorEffect="non-scaling-stroke"
-          opacity="0.85"
-          style={{ animation: "sr-dash 2.4s linear infinite" }}
+          opacity="1"
+          style={{ animation: "sr-dash 2.4s linear infinite", filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 8px ${C.yellow}88)` }}
         />
 
         {/* Landmarks — every ~120 units, on the opposite side of the path */}
-        <g opacity="0.9">
+        <g opacity="1">
           <g><Tree x={70} y={40} /> <Tree x={78} y={54} s={1.2} /> <Tree x={62} y={30} s={0.8} /></g>
           <Building x={28} y={170} />
           <Lake x={72} y={295} />
@@ -269,10 +270,10 @@ const BikePathSpine = () => {
 
 
 const Hero = () => (
-  <section style={{ position: "relative", background: C.midnight, color: "#fff" }} className="px-6 py-24 md:py-32 overflow-hidden">
+  <section style={{ position: "relative", background: "transparent", color: "#fff" }} className="px-6 py-24 md:py-32 overflow-hidden">
     <div aria-hidden style={{
       position: "absolute", inset: 0,
-      background: `radial-gradient(ellipse at 50% 25%, rgba(237,118,96,0.14), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(225,182,36,0.10), transparent 55%), ${C.midnight}`,
+      background: `radial-gradient(ellipse at 50% 25%, rgba(237,118,96,0.12), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(225,182,36,0.08), transparent 55%)`,
     }} />
     <NeonBlobs />
 
@@ -358,9 +359,10 @@ const Marquee = () => {
 };
 
 const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
-  <section id={id} style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
+  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
     <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.02, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}ee, ${C.midnight2}e8 42%, ${C.midnight}ee)`, opacity: 0.82 }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
     <div className="relative z-10">{children}</div>
   </section>
 );
@@ -643,9 +645,10 @@ const Watch = () => (
 );
 
 const FooterCTA = () => (
-  <section style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-32">
+  <section style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-32">
     <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.08, backgroundImage: `linear-gradient(${C.magenta} 1px, transparent 1px), linear-gradient(90deg, ${C.magenta} 1px, transparent 1px)`, backgroundSize: "60px 60px", maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)" }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, background: `${C.midnight}e8` }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.06, backgroundImage: `linear-gradient(${C.magenta} 1px, transparent 1px), linear-gradient(90deg, ${C.magenta} 1px, transparent 1px)`, backgroundSize: "60px 60px", maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)" }} />
     <div className="max-w-3xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_footer_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
@@ -677,7 +680,7 @@ const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
-    <main style={{ ...font, background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }}>
+    <main style={{ ...font, background: `linear-gradient(180deg, ${C.midnight}, ${C.midnight2} 45%, ${C.midnight})`, color: "#fff", position: "relative", overflow: "hidden" }}>
       <BikePathSpine />
       <div style={{ position: "relative", zIndex: 2 }}>
         <OrderedSections
