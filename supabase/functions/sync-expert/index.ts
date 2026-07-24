@@ -251,20 +251,54 @@ serve(async (req) => {
           expert.ask_me_about || '',
         ];
 
-        const appendRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ values: [row] }),
-          }
+        const valuesRes = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A:C')}?majorDimension=ROWS`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
+        if (!valuesRes.ok) {
+          const errorBody = await valuesRes.text();
+          throw new Error(`Google Sheets read failed [${valuesRes.status}]: ${errorBody}`);
+        }
+        const valuesData = await valuesRes.json();
+        const rows = Array.isArray(valuesData.values) ? valuesData.values : [];
+        const expertEmail = String(expert.email || '').trim().toLowerCase();
+        const expertName = String(expert.full_name || '').trim().toLowerCase();
+        const existingIndex = rows.findIndex((sheetRow: unknown[]) => {
+          const rowEmail = String(sheetRow?.[2] || '').trim().toLowerCase();
+          const rowName = String(sheetRow?.[1] || '').trim().toLowerCase();
+          return (expertEmail && rowEmail === expertEmail) || (!expertEmail && expertName && rowName === expertName);
+        });
 
-        const appendData = await appendRes.json();
-        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
+        if (existingIndex >= 1) {
+          const rowNumber = existingIndex + 1;
+          const updateRes = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + `!A${rowNumber}:N${rowNumber}`)}?valueInputOption=USER_ENTERED`,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ values: [row] }),
+            }
+          );
+          const updateData = await updateRes.json();
+          results.sheets = { status: updateRes.status, action: 'updated', row: rowNumber, spreadsheetId, city: citySlug, tab: sheetTabName, data: updateData };
+        } else {
+          const appendRes = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ values: [row] }),
+            }
+          );
+          const appendData = await appendRes.json();
+          results.sheets = { status: appendRes.status, action: 'appended', spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
+        }
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
