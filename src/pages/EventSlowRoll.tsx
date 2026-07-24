@@ -219,7 +219,7 @@ const BikePathSpine = () => {
   );
 
   return (
-    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 4 }}>
+    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
       <svg
         width="100%"
         height="100%"
@@ -231,13 +231,13 @@ const BikePathSpine = () => {
           <path id="sr-spine-path" d={D} />
         </defs>
         {/* soft glow underlay */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="5.6" strokeOpacity="0.22" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(6px)` }} />
-        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="3.6" strokeOpacity="0.82" fill="none" vectorEffect="non-scaling-stroke" />
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="7" strokeOpacity="0.26" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(7px)` }} />
+        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="4.2" strokeOpacity="0.9" fill="none" vectorEffect="non-scaling-stroke" />
         {/* dashed animated bike lane */}
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="2.4"
+          strokeWidth="2.8"
           strokeDasharray="6 6"
           fill="none"
           vectorEffect="non-scaling-stroke"
@@ -364,7 +364,7 @@ const Marquee = () => {
 const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
   <section id={id} style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
     <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}ee, ${C.midnight2}e8 42%, ${C.midnight}ee)`, opacity: 0.82 }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}d8, ${C.midnight2}d0 42%, ${C.midnight}d8)`, opacity: 0.68 }} />
     <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
     <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
