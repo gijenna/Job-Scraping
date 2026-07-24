@@ -288,9 +288,6 @@ const Hero = () => (
       <div className="mb-4 md:mb-5">
         <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
       </div>
-      <p className="uppercase font-bold mb-3 md:mb-4" style={{ letterSpacing: "0.3em", fontSize: 12, color: "#fff", opacity: 0.85 }}>
-        <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
-      </p>
 
       {/* Headline: SLOW ROLL (white) × Basecamp Match dark-mode lockup */}
       <div className="mb-3 md:mb-4 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 flex-wrap">
