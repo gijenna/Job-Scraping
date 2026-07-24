@@ -557,10 +557,8 @@ const Partners = () => (
       <h2 className="mb-12 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_partners_headline" defaultText="Made possible by." as="span" />
       </h2>
-      {/* Bike pack rolls through the "Made possible by" area too */}
-      <div className="mb-10">
-        <BikePack height={54} bikeSize={36} cycle={13} count={6} seed={4} />
-      </div>
+
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <PartnerCard accent={C.magenta}
           nameKey="sr_p1_name" nameDefault="Slow Roll MSP / Cultural Wellness Center"
