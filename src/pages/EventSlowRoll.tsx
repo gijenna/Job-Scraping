@@ -387,9 +387,9 @@ const WhatItIs = () => (
         <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
           <img src={northCommons.url} alt="Slow Roll North Commons ride in Minneapolis" className="w-full h-72 md:h-80 object-cover block" />
           <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo via{" "}
-            <a href="https://www.facebook.com/SlowRollTC/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
-              Slow Roll TC
+            Photo: Tom Evers /{" "}
+            <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
+              Minneapolis Parks Foundation
             </a>
           </figcaption>
         </figure>
