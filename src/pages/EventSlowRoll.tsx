@@ -205,24 +205,17 @@ const Hero = () => {
             position: "absolute", inset: 0,
             backgroundImage: `url(${url})`,
             backgroundSize: "cover", backgroundPosition: "center",
-            opacity: i === idx ? 0.35 : 0,
-            transition: "opacity 1.4s ease-in-out",
+            opacity: i === idx ? 0.75 : 0,
+            transition: "opacity 1.6s ease-in-out",
           }}
         />
       ))}
-      {/* color wash + vignette on top of photo */}
+      {/* warm dark wash — keeps photo visible while text stays legible */}
       <div aria-hidden style={{
         position: "absolute", inset: 0,
-        background: `linear-gradient(135deg, rgba(10,10,31,0.7) 0%, rgba(19,18,53,0.55) 45%, rgba(10,10,31,0.85) 100%)`,
+        background: `linear-gradient(180deg, rgba(15,10,8,0.55) 0%, rgba(15,10,8,0.35) 45%, rgba(15,10,8,0.85) 100%)`,
       }} />
       <NeonBlobs />
-      {/* scan line grid */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0, opacity: 0.12,
-        backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
-        backgroundSize: "60px 60px",
-        maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)",
-      }} />
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
         <div className="mb-8">
