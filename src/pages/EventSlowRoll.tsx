@@ -1,6 +1,7 @@
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
+import OrderedSections from "@/components/event/OrderedSections";
 
 // Brand palette (page-scoped, matches spec exactly)
 const C = {
@@ -628,14 +629,18 @@ const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <main style={{ ...font, background: C.cream, color: C.ink }}>
-      <Hero />
-      <WhatItIs />
-      <Theme />
-      <Guide />
-      <Partners />
-      <Details />
-      <Watch />
-      <FooterCTA />
+      <OrderedSections
+        sections={[
+          { key: "hero", content: <Hero /> },
+          { key: "what", content: <WhatItIs /> },
+          { key: "theme", content: <Theme /> },
+          { key: "guide", content: <Guide /> },
+          { key: "partners", content: <Partners /> },
+          { key: "details", content: <Details /> },
+          { key: "watch", content: <Watch /> },
+          { key: "footer", content: <FooterCTA /> },
+        ]}
+      />
     </main>
   </EditableTextProvider>
 );
