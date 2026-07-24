@@ -75,25 +75,36 @@ serve(async (req) => {
     }
     // Re-fetch from DB rather than trusting client payload, so this endpoint cannot be
     // abused to push arbitrary data to Folk/Sheets.
-    const sbAdmin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!supabaseUrl || !serviceRoleKey) {
+      return new Response(JSON.stringify({ error: 'sync environment missing' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const sbAdmin = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
     const { data: dbExpert, error: dbErr } = await sbAdmin.from('industry_experts').select('*').eq('id', expertId).maybeSingle();
     if (dbErr || !dbExpert) {
       return new Response(JSON.stringify({ error: 'expert not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const expert: any = dbExpert;
-    // city_slug lives on expert_city_assignments; hydrate the first published assignment.
-    if (!expert.city_slug) {
-      const { data: assign } = await sbAdmin
-        .from('expert_city_assignments')
-        .select('city_slug, expert_type')
-        .eq('expert_id', expertId)
-        .order('published', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (assign) {
-        expert.city_slug = assign.city_slug;
-        if (!expert.expert_type) expert.expert_type = assign.expert_type;
-      }
+    // city_slug lives on expert_city_assignments. Prefer the requested city only
+    // after confirming this expert actually has that assignment.
+    const requestedCitySlug = typeof requestBody?.city_slug === 'string'
+      ? requestBody.city_slug.toLowerCase().trim()
+      : '';
+    const { data: assignments } = await sbAdmin
+      .from('expert_city_assignments')
+      .select('city_slug, expert_type, published, created_at')
+      .eq('expert_id', expertId)
+      .order('published', { ascending: false })
+      .order('created_at', { ascending: false });
+    const safeAssignments = Array.isArray(assignments) ? assignments : [];
+    const requestedAssignment = requestedCitySlug
+      ? safeAssignments.find((assign: any) => String(assign.city_slug).toLowerCase() === requestedCitySlug)
+      : null;
+    const assign = requestedAssignment || safeAssignments[0];
+    if (assign) {
+      expert.city_slug = assign.city_slug;
+      expert.expert_type = assign.expert_type;
     }
     const results: Record<string, any> = {};
 
