@@ -3,8 +3,6 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
-import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
-import cwBikeLights from "@/assets/slowroll/light-up-the-night.png.asset.json";
 import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
@@ -16,8 +14,6 @@ import mpfH5 from "@/assets/slowroll/mpf-h5.png.asset.json";
 import mpfH6 from "@/assets/slowroll/mpf-h6.png.asset.json";
 import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
 
-// North Commons leads. Rest rotate behind it.
-const HERO_PHOTOS = [northCommons.url, mpfH1.url, mpfH4.url, mpfH2.url, mpfH3.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
 // Brand neon palette — Coral + Yellow + ALSO purple, with a touch of cyan for water.
 // Warm near-black base so photos and neon both breathe.
