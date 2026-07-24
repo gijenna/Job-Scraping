@@ -4,7 +4,7 @@ import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
 import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
-import cwBikeLights from "@/assets/slowroll/cwbikelights.jpg.asset.json";
+import cwBikeLights from "@/assets/slowroll/light-up-the-night.png.asset.json";
 import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
