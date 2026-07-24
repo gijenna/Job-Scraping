@@ -137,8 +137,11 @@ serve(async (req) => {
             { headers: { 'Authorization': `Bearer ${folkApiKey}` } }
           );
           const searchData = await searchRes.json();
-          if (searchData.data?.length > 0) {
-            folkPersonId = searchData.data[0].id;
+          const searchItems = Array.isArray(searchData.data?.items)
+            ? searchData.data.items
+            : (Array.isArray(searchData.data) ? searchData.data : []);
+          if (searchItems.length > 0) {
+            folkPersonId = searchItems[0].id;
           }
         }
 
@@ -284,6 +287,9 @@ serve(async (req) => {
             }
           );
           const updateData = await updateRes.json();
+          if (!updateRes.ok) {
+            throw new Error(`Google Sheets update failed [${updateRes.status}]: ${JSON.stringify(updateData)}`);
+          }
           results.sheets = { status: updateRes.status, action: 'updated', row: rowNumber, spreadsheetId, city: citySlug, tab: sheetTabName, data: updateData };
         } else {
           const appendRes = await fetch(
@@ -298,12 +304,22 @@ serve(async (req) => {
             }
           );
           const appendData = await appendRes.json();
+          if (!appendRes.ok) {
+            throw new Error(`Google Sheets append failed [${appendRes.status}]: ${JSON.stringify(appendData)}`);
+          }
           results.sheets = { status: appendRes.status, action: 'appended', spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
         }
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
       }
+    }
+
+    if (spreadsheetId && serviceAccountKeyStr && (!results.sheets || results.sheets.error || results.sheets.status >= 400)) {
+      return new Response(JSON.stringify({ success: false, error: 'Google Sheets sync failed', results }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     return new Response(JSON.stringify({ success: true, results }), {
