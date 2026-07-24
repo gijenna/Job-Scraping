@@ -307,18 +307,22 @@ const Tiers = () => (
   </section>
 );
 
-const ROW_KEYS: Array<{ k: string; label: string; a: string; b: string }> = [
-  { k: "row.expert", label: "Your expert in the lineup", a: "1 expert", b: "Your whole team" },
-  { k: "row.badges", label: "Team badges (OR show + after-party access, $1,200 ea)", a: "—", b: "✓" },
-  { k: "row.logo", label: "Logo on the event page", a: "✓", b: "✓" },
-  { k: "row.newsletter", label: "Newsletter", a: "Mention", b: "Feature ($2,000 value)" },
-  { k: "row.list", label: "Post-event attendee list (opt-ins, 90%+)", a: "✓", b: "✓" },
-  { k: "row.social", label: "Social post", a: "—", b: "✓" },
-  { k: "row.presence", label: "Present in the Lounge", a: "OR Gatherings event", b: "All show (Thu+Fri)" },
-  { k: "row.hightop", label: "Branded high-top (brand provided)", a: "—", b: "✓" },
-  { k: "row.activation", label: "Your own activation (craft bar, e-bike, etc.)", a: "—", b: "✓" },
-  { k: "row.slot", label: "Peak expert time slot", a: "—", b: "✓" },
-  { k: "row.giveaway", label: "Option to participate in after-party giveaway", a: "—", b: "✓ ($500 add-on)" },
+const ROW_KEYS: Array<{ k: string; label: string; a: string; b: string; c: string }> = [
+  { k: "row.expert", label: "Your expert in the lineup", a: "1 expert", b: "Your whole team", c: "Your whole team" },
+  { k: "row.badges", label: "Team badges (OR show + after-party access, $1,200 ea)", a: "—", b: "✓", c: "✓" },
+  { k: "row.logo", label: "Logo on the event page", a: "✓", b: "✓", c: "✓" },
+  { k: "row.newsletter", label: "Newsletter", a: "Mention", b: "Feature ($2,000 value)", c: "Feature ($2,000 value)" },
+  { k: "row.list", label: "Post-event attendee list (opt-ins, 90%+)", a: "✓", b: "✓", c: "✓" },
+  { k: "row.social", label: "Social post", a: "—", b: "✓", c: "✓" },
+  { k: "row.presence", label: "Present in the Lounge", a: "OR Gatherings event", b: "All show (Thu+Fri)", c: "All show (Thu+Fri)" },
+  { k: "row.hightop", label: "Branded high-top (brand provided)", a: "—", b: "✓", c: "✓" },
+  { k: "row.activation", label: "Your own activation (craft bar, e-bike, etc.)", a: "—", b: "✓", c: "✓" },
+  { k: "row.slot", label: "Peak expert time slot", a: "—", b: "✓", c: "✓" },
+  { k: "row.giveaway", label: "Option to participate in after-party giveaway", a: "—", b: "✓ ($500 add-on)", c: "✓" },
+  { k: "row.slowroll", label: "Slow Roll community bike ride access", a: "Digital shoutout only", b: "✓ physical slots", c: "✓ physical slots" },
+  { k: "row.fund100", label: "Funds free show access for 100 community members", a: "—", b: "—", c: "✓" },
+  { k: "row.topbilling", label: "Top billing: presented by [Your Brand]", a: "—", b: "—", c: "✓" },
+  { k: "row.renewal", label: "First right of renewal next year", a: "—", b: "—", c: "✓" },
 ];
 
 const cellClass = (v: string) => {
