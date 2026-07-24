@@ -39,6 +39,7 @@ const C = {
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
 const SLOWROLL_FB_URL = "https://www.facebook.com/SlowRollTC/";
+const publicAssetUrl = (url: string) => url.startsWith("/__l5e/") ? `https://basecampoutdoorevents.com${url}` : url;
 
 const font = { fontFamily: "'Inter', system-ui, sans-serif" };
 const displayFont = { fontFamily: "'Unbounded', 'Inter', system-ui, sans-serif" };
@@ -323,7 +324,7 @@ const Hero = () => (
           ×
         </span>
         <img
-          src={basecampMatchDark.url}
+          src={publicAssetUrl(basecampMatchDark.url)}
           alt="Basecamp Match"
           style={{ height: "clamp(70px, 11vw, 130px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
         />
@@ -413,7 +414,7 @@ const WhatItIs = () => (
   </DarkPanel>
 );
 
-const CAROUSEL_PHOTOS = [northCommons.url, mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url];
+const CAROUSEL_PHOTOS = [northCommons.url, mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url].map(publicAssetUrl);
 const CarouselFrame = ({ photos, accent, offset = 0 }: { photos: string[]; accent: string; offset?: number }) => {
   const [idx, setIdx] = useState(offset % photos.length);
   useEffect(() => {
@@ -573,7 +574,7 @@ const Partners = () => (
         <PartnerCard accent={C.magenta}
           nameKey="sr_p1_name" nameDefault="Slow Roll MSP / Cultural Wellness Center"
           descKey="sr_p1_desc" descDefault="The ride organizer, led by Anthony Taylor."
-          logoUrl={slowRollLogo.url} logoAlt="Slow Roll Twin Cities" href={SLOWROLL_FB_URL} />
+          logoUrl={publicAssetUrl(slowRollLogo.url)} logoAlt="Slow Roll Twin Cities" href={SLOWROLL_FB_URL} />
         <PartnerCard accent={C.yellow}
           nameKey="sr_p2_name" nameDefault="ALSO"
           descKey="sr_p2_desc" descDefault="E-bikes provided for the ride. Several loaners available on-site for anyone who doesn't bring their own."
@@ -581,7 +582,7 @@ const Partners = () => (
         <PartnerCard accent={C.yellow}
           nameKey="sr_p3_name" nameDefault="Basecamp Jobs"
           descKey="sr_p3_desc" descDefault="Where the outdoor industry finds its people. Powering the connections behind the ride."
-          logoUrl={basecampMatchLogo.url} logoAlt="Basecamp Jobs" href="https://basecampjobs.com" />
+          logoUrl={publicAssetUrl(basecampMatchLogo.url)} logoAlt="Basecamp Jobs" href="https://basecampjobs.com" />
       </div>
     </div>
   </DarkPanel>
