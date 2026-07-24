@@ -683,8 +683,8 @@ const EventSlowRoll = () => (
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
     <main style={{ ...font, background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }}>
-      <BikePathSpine />
       <div style={{ position: "relative", zIndex: 2 }}>
+
         <OrderedSections
           sections={[
             { key: "hero", content: <><Hero /><BikePathDivider /></> },
