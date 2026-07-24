@@ -338,7 +338,7 @@ const ComparisonTable = () => (
       style={{ background: "#fff", border: `1px solid ${TEAL}22`, borderRadius: 16, ...font }}
       className="hidden md:block overflow-hidden"
     >
-      <div className="grid grid-cols-[1.5fr_1fr_1fr]">
+      <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div style={{ color: TEAL }} className="px-6 py-5 text-xs uppercase tracking-[0.2em] font-semibold">
           <T k="table.head" d="What's included" />
         </div>
@@ -358,12 +358,20 @@ const ComparisonTable = () => (
             <T k="tier.b.price" d="$5,000" />
           </div>
         </div>
+        <div style={{ color: TEAL, background: `${GOLD}25` }} className="px-6 py-5 text-center">
+          <div style={{ color: GOLD }} className="text-xs uppercase tracking-[0.2em] font-semibold">
+            <T k="tier.c.name" d="Title Partner" />
+          </div>
+          <div style={{ fontWeight: 700 }} className="text-2xl mt-1">
+            <T k="tier.c.price" d="$20,000" />
+          </div>
+        </div>
       </div>
       {ROW_KEYS.map((r, i) => (
         <div
           key={r.k}
           style={{ borderTop: `1px solid ${TEAL}15` }}
-          className="grid grid-cols-[1.5fr_1fr_1fr]"
+          className="grid grid-cols-[1.5fr_1fr_1fr_1fr]"
         >
           <div style={{ color: TEAL }} className="px-6 py-4 text-sm font-light">
             <T k={`${r.k}.label`} d={r.label} />
@@ -379,6 +387,12 @@ const ComparisonTable = () => (
             className={`px-6 py-4 text-center text-sm ${cellClass(r.b)}`}
           >
             <T k={`${r.k}.b`} d={r.b} />
+          </div>
+          <div
+            style={{ color: TEAL, background: i % 2 ? `${GOLD}15` : `${GOLD}25` }}
+            className={`px-6 py-4 text-center text-sm ${cellClass(r.c)}`}
+          >
+            <T k={`${r.k}.c`} d={r.c} />
           </div>
         </div>
       ))}
