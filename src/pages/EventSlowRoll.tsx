@@ -2,6 +2,11 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
+import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
+import ridePhoto2 from "@/assets/slowroll/ride-2.jpg.asset.json";
+import ridePhoto3 from "@/assets/slowroll/ride-3.jpg.asset.json";
+import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
+import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
 
 // Brand palette (page-scoped, matches spec exactly)
 const C = {
@@ -15,6 +20,7 @@ const C = {
 };
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
+const SLOWROLL_FB_URL = "https://www.facebook.com/SlowRollTC/";
 
 const font = { fontFamily: "'Inter', system-ui, sans-serif" };
 
@@ -68,14 +74,24 @@ const CTAButton = ({
 );
 
 const Hero = () => (
-  <section style={{ background: C.forest, color: "#fff" }} className="px-6 py-20 md:py-28">
-    <div className="max-w-4xl mx-auto text-center">
+  <section
+    style={{
+      position: "relative",
+      background: C.forest,
+      color: "#fff",
+      backgroundImage: `linear-gradient(rgba(30,51,42,0.72), rgba(30,51,42,0.82)), url(${heroPhoto.url})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    className="px-6 py-20 md:py-28"
+  >
+    <div className="max-w-4xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
       </div>
       <p
         className="uppercase font-medium mb-5"
-        style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.7)" }}
+        style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.75)" }}
       >
         <EditableText
           settingKey="sr_hero_eyebrow"
@@ -89,14 +105,14 @@ const Hero = () => (
       >
         <EditableText settingKey="sr_hero_headline" defaultText="Slow Roll x Basecamp." as="span" />
       </h1>
-      <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.85)" }}>
+      <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.9)" }}>
         <EditableText
           settingKey="sr_hero_subline"
           defaultText="Minneapolis · Wednesday, August 19, 2026 · Evening"
           as="span"
         />
       </p>
-      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: C.rust }}>
+      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: "#f2a274" }}>
         <EditableText
           settingKey="sr_hero_capline"
           defaultText="Only 100 riders. Bring your bike or borrow one."
@@ -105,7 +121,7 @@ const Hero = () => (
       </p>
       <p
         className="max-w-2xl mx-auto mb-10"
-        style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}
+        style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.88)" }}
       >
         <EditableText
           settingKey="sr_hero_pitch"
@@ -115,51 +131,62 @@ const Hero = () => (
         />
       </p>
       <CTAButton settingKey="sr_hero_cta" defaultText="Register — only 100 spots" size="lg" />
+      <p className="mt-6" style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>
+        Photo: Devon Young Cupery via Streets.mn
+      </p>
     </div>
   </section>
 );
 
 const WhatItIs = () => (
   <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
-    <div className="max-w-3xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
-        <EditableText settingKey="sr_what_eyebrow" defaultText="What it is" as="span" />
-      </p>
-      <h2 className="font-bold mb-6" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
-        <EditableText
-          settingKey="sr_what_headline"
-          defaultText="A Critical Mass-style ride, at a humane pace."
-          as="span"
-        />
-      </h2>
-      <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: C.ink }}>
-        <p>
-          <EditableText
-            settingKey="sr_what_p1"
-            defaultText="Ninety minutes on two wheels. Riders don't know the exact route ahead of time, only the theme, so the pace stays comfortable for everyone from first-time riders to seasoned cyclists."
-            as="span"
-            multiline
-          />
+    <div className="max-w-5xl mx-auto">
+      <div className="max-w-3xl mb-10">
+        <p
+          className="uppercase font-semibold mb-4"
+          style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
+        >
+          <EditableText settingKey="sr_what_eyebrow" defaultText="What it is" as="span" />
         </p>
-        <p>
+        <h2 className="font-bold mb-6" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
           <EditableText
-            settingKey="sr_what_p2"
-            defaultText="Volunteers hold intersections so the group moves as one. The ride stops along the way for short talks tied to the theme, and ends with a DJ and a free community meal."
+            settingKey="sr_what_headline"
+            defaultText="A Critical Mass-style ride, at a humane pace."
             as="span"
-            multiline
           />
-        </p>
-        <p style={{ color: C.muted, fontSize: 15 }}>
-          <EditableText
-            settingKey="sr_what_context"
-            defaultText="A note on timing: this ride happens to fall during Black Bike Week in Minneapolis. Nice context, not the headline."
-            as="span"
-            multiline
-          />
-        </p>
+        </h2>
+        <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: C.ink }}>
+          <p>
+            <EditableText
+              settingKey="sr_what_p1"
+              defaultText="Ninety minutes on two wheels. Riders don't know the exact route ahead of time, only the theme, so the pace stays comfortable for everyone from first-time riders to seasoned cyclists."
+              as="span"
+              multiline
+            />
+          </p>
+          <p>
+            <EditableText
+              settingKey="sr_what_p2"
+              defaultText="Volunteers hold intersections so the group moves as one. The ride stops along the way for short talks tied to the theme, and ends with a DJ and a free community meal."
+              as="span"
+              multiline
+            />
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
+          <img src={ridePhoto2.url} alt="Slow Roll MSP riders on a past community ride" className="w-full h-64 md:h-72 object-cover block" />
+          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+            Photo: Devon Young Cupery via Streets.mn
+          </figcaption>
+        </figure>
+        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
+          <img src={ridePhoto3.url} alt="Riders gathered on a past Slow Roll MSP tour" className="w-full h-64 md:h-72 object-cover block" />
+          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+            Photo via Streets.mn
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -279,15 +306,15 @@ const Guide = () => (
         <EditableText settingKey="sr_guide_headline" defaultText="Anthony Taylor." as="span" />
       </h2>
       <div
-        className="rounded-[12px] overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,320px)_1fr] gap-0"
+        className="rounded-[12px] overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,360px)_1fr] gap-0"
         style={{ background: "#fff", border: `1px solid ${C.line}` }}
       >
-        {/* Press photo — credit: Trust for Public Land. Permission pending, swap for cleared photo once confirmed. */}
+        {/* Press photo — credit: Minnesota Spokesman-Recorder. Permission pending, swap for cleared photo once confirmed. */}
         <img
-          src="https://e7jecw7o93n.exactdn.com/wp-content/uploads/2024/02/tx_renaissancepark_05012022_049_fallback.jpg"
-          alt="Anthony Taylor"
+          src="https://i0.wp.com/spokesman-recorder.com/wp-content/uploads/2021/10/slow-roll-bike-ride-Anthony-Taylor.jpg"
+          alt="Anthony Taylor leading a past Slow Roll ride in Minneapolis"
           className="w-full h-full object-cover"
-          style={{ minHeight: 320 }}
+          style={{ minHeight: 360 }}
         />
         <div className="p-6 md:p-8">
           <h3 className="font-bold mb-2" style={{ fontSize: 26, color: C.forest }}>
@@ -325,22 +352,10 @@ const Guide = () => (
               />
             </p>
           </div>
+          <p className="mt-4" style={{ fontSize: 11, color: C.muted }}>
+            Photo: Minnesota Spokesman-Recorder
+          </p>
         </div>
-      </div>
-      {/* Press photo — credit: Minnesota Spokesman-Recorder. Permission pending, swap for cleared photo once confirmed. */}
-      <div className="mt-6 rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-        <img
-          src="https://i0.wp.com/spokesman-recorder.com/wp-content/uploads/2021/10/slow-roll-bike-ride-Anthony-Taylor.jpg"
-          alt="Anthony Taylor leading a past Slow Roll ride in Minneapolis"
-          className="w-full h-auto block"
-        />
-        <p className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
-          <EditableText
-            settingKey="sr_guide_caption"
-            defaultText="Anthony leading a past Slow Roll. Photo credit: Minnesota Spokesman-Recorder."
-            as="span"
-          />
-        </p>
       </div>
     </div>
   </section>
@@ -353,6 +368,7 @@ const PartnerCard = ({
   descDefault,
   logoUrl,
   logoAlt,
+  href,
 }: {
   nameKey: string;
   nameDefault: string;
@@ -360,34 +376,44 @@ const PartnerCard = ({
   descDefault: string;
   logoUrl?: string;
   logoAlt: string;
-}) => (
-  <div
-    className="rounded-[12px] p-6 md:p-7 flex flex-col"
-    style={{ background: "#fff", border: `1px solid ${C.line}` }}
-  >
+  href?: string;
+}) => {
+  const inner = (
     <div
-      className="mb-5 flex items-center justify-center rounded-md"
-      style={{ height: 90, background: C.cream, border: `1px solid ${C.line}` }}
+      className="rounded-[12px] p-6 md:p-7 flex flex-col h-full"
+      style={{ background: "#fff", border: `1px solid ${C.line}` }}
     >
-      {logoUrl ? (
-        <img src={logoUrl} alt={logoAlt} className="max-h-14 max-w-[70%] object-contain" />
-      ) : (
-        <span
-          className="uppercase font-medium"
-          style={{ letterSpacing: "0.16em", fontSize: 11, color: C.muted }}
-        >
-          Logo pending
-        </span>
-      )}
+      <div
+        className="mb-5 flex items-center justify-center rounded-md"
+        style={{ height: 110, background: C.cream, border: `1px solid ${C.line}` }}
+      >
+        {logoUrl ? (
+          <img src={logoUrl} alt={logoAlt} className="max-h-20 max-w-[75%] object-contain" />
+        ) : (
+          <span
+            className="uppercase font-medium"
+            style={{ letterSpacing: "0.16em", fontSize: 11, color: C.muted }}
+          >
+            Logo pending
+          </span>
+        )}
+      </div>
+      <h3 className="font-semibold mb-2" style={{ fontSize: 18, color: C.forest }}>
+        <EditableText settingKey={nameKey} defaultText={nameDefault} as="span" />
+      </h3>
+      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.muted }}>
+        <EditableText settingKey={descKey} defaultText={descDefault} as="span" multiline />
+      </p>
     </div>
-    <h3 className="font-semibold mb-2" style={{ fontSize: 18, color: C.forest }}>
-      <EditableText settingKey={nameKey} defaultText={nameDefault} as="span" />
-    </h3>
-    <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.muted }}>
-      <EditableText settingKey={descKey} defaultText={descDefault} as="span" multiline />
-    </p>
-  </div>
-);
+  );
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
+      {inner}
+    </a>
+  ) : (
+    inner
+  );
+};
 
 const alsoLogo = "/__l5e/assets-v1/b06c9430-a522-4188-bdd1-333d9b3b5005/also-logo.webp";
 
@@ -416,7 +442,9 @@ const Partners = () => (
           nameDefault="Slow Roll MSP / Cultural Wellness Center"
           descKey="sr_p1_desc"
           descDefault="The ride organizer, led by Anthony Taylor."
-          logoAlt="Slow Roll MSP"
+          logoUrl={slowRollLogo.url}
+          logoAlt="Slow Roll Twin Cities"
+          href={SLOWROLL_FB_URL}
         />
         <PartnerCard
           nameKey="sr_p2_name"
@@ -425,13 +453,16 @@ const Partners = () => (
           descDefault="E-bikes provided for the ride. Several loaners available on-site for anyone who doesn't bring their own."
           logoUrl={alsoLogo}
           logoAlt="ALSO"
+          href="https://ridealso.com"
         />
         <PartnerCard
           nameKey="sr_p3_name"
-          nameDefault="QBP"
+          nameDefault="Basecamp Jobs"
           descKey="sr_p3_desc"
-          descDefault="Pending. May provide additional loaner bikes."
-          logoAlt="QBP"
+          descDefault="Where the outdoor industry finds its people. Powering the connections behind the ride."
+          logoUrl={basecampJobsLogo.url}
+          logoAlt="Basecamp Jobs"
+          href="https://basecampjobs.com"
         />
       </div>
     </div>
