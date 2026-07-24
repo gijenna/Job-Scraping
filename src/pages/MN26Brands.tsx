@@ -267,10 +267,10 @@ const Tiers = () => (
   <section style={{ background: CREAM, ...font }} className="px-6 pt-6 pb-14 md:pt-8 md:pb-20">
     <div className="max-w-6xl mx-auto">
       <h2 style={{ color: TEAL, fontWeight: 300 }} className="text-3xl md:text-5xl">
-        <T k="tiers.title.a" d="Two ways to " as="span" />
+        <T k="tiers.title.a" d="Three ways to " as="span" />
         <T k="tiers.title.b" d="partner." as="span" style={{ fontWeight: 600 }} />
       </h2>
-      <div className="mt-8 grid md:grid-cols-2 gap-6 items-stretch">
+      <div className="mt-8 grid md:grid-cols-3 gap-6 items-stretch">
         <TierCard
           nameKey="tier.a.name"
           nameDefault="Bring Your Expert"
@@ -286,6 +286,14 @@ const Tiers = () => (
           priceDefault="$5,000"
           copyKey="tier.b.copy"
           copyDefault="Own the room the whole industry wants into. Recruiting, reputation, and reach without a booth."
+        />
+        <TierCard
+          nameKey="tier.c.name"
+          nameDefault="Title Partner"
+          priceKey="tier.c.price"
+          priceDefault="$20,000"
+          copyKey="tier.c.copy"
+          copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
           highlight
         />
       </div>
@@ -293,24 +301,28 @@ const Tiers = () => (
       <ComparisonTable />
 
       <p style={{ color: CORAL, ...font }} className="mt-6 text-center italic text-sm md:text-base font-light max-w-3xl mx-auto">
-        <T k="tiers.footnote" d="At $5,000 the team badges alone can exceed the price. $1,200 each, so three people is $3,600 in access before the $2,000 newsletter feature or the all-show presence." />
+        <T k="tiers.footnote" d="At $5,000 the team badges alone can exceed the price. $1,200 each, so three people is $3,600 in access before the $2,000 newsletter feature or the all-show presence. Title Partner scales the whole thing up from there." />
       </p>
     </div>
   </section>
 );
 
-const ROW_KEYS: Array<{ k: string; label: string; a: string; b: string }> = [
-  { k: "row.expert", label: "Your expert in the lineup", a: "1 expert", b: "Your whole team" },
-  { k: "row.badges", label: "Team badges (OR show + after-party access, $1,200 ea)", a: "—", b: "✓" },
-  { k: "row.logo", label: "Logo on the event page", a: "✓", b: "✓" },
-  { k: "row.newsletter", label: "Newsletter", a: "Mention", b: "Feature ($2,000 value)" },
-  { k: "row.list", label: "Post-event attendee list (opt-ins, 90%+)", a: "✓", b: "✓" },
-  { k: "row.social", label: "Social post", a: "—", b: "✓" },
-  { k: "row.presence", label: "Present in the Lounge", a: "OR Gatherings event", b: "All show (Thu+Fri)" },
-  { k: "row.hightop", label: "Branded high-top (brand provided)", a: "—", b: "✓" },
-  { k: "row.activation", label: "Your own activation (craft bar, e-bike, etc.)", a: "—", b: "✓" },
-  { k: "row.slot", label: "Peak expert time slot", a: "—", b: "✓" },
-  { k: "row.giveaway", label: "Option to participate in after-party giveaway", a: "—", b: "✓ ($500 add-on)" },
+const ROW_KEYS: Array<{ k: string; label: string; a: string; b: string; c: string }> = [
+  { k: "row.expert", label: "Your expert in the lineup", a: "1 expert", b: "Your whole team", c: "Your whole team" },
+  { k: "row.badges", label: "Team badges (OR show + after-party access, $1,200 ea)", a: "—", b: "✓", c: "✓" },
+  { k: "row.logo", label: "Logo on the event page", a: "✓", b: "✓", c: "✓" },
+  { k: "row.newsletter", label: "Newsletter", a: "Mention", b: "Feature ($2,000 value)", c: "Feature ($2,000 value)" },
+  { k: "row.list", label: "Post-event attendee list (opt-ins, 90%+)", a: "✓", b: "✓", c: "✓" },
+  { k: "row.social", label: "Social post", a: "—", b: "✓", c: "✓" },
+  { k: "row.presence", label: "Present in the Lounge", a: "OR Gatherings event", b: "All show (Thu+Fri)", c: "All show (Thu+Fri)" },
+  { k: "row.hightop", label: "Branded high-top (brand provided)", a: "—", b: "✓", c: "✓" },
+  { k: "row.activation", label: "Your own activation (craft bar, e-bike, etc.)", a: "—", b: "✓", c: "✓" },
+  { k: "row.slot", label: "Peak expert time slot", a: "—", b: "✓", c: "✓" },
+  { k: "row.giveaway", label: "Option to participate in after-party giveaway", a: "—", b: "✓ ($500 add-on)", c: "✓" },
+  { k: "row.slowroll", label: "Slow Roll community bike ride access", a: "Digital shoutout only", b: "✓ physical slots", c: "✓ physical slots" },
+  { k: "row.fund100", label: "Funds free show access for 100 community members", a: "—", b: "—", c: "✓" },
+  { k: "row.topbilling", label: "Top billing: presented by [Your Brand]", a: "—", b: "—", c: "✓" },
+  { k: "row.renewal", label: "First right of renewal next year", a: "—", b: "—", c: "✓" },
 ];
 
 const cellClass = (v: string) => {
@@ -326,7 +338,7 @@ const ComparisonTable = () => (
       style={{ background: "#fff", border: `1px solid ${TEAL}22`, borderRadius: 16, ...font }}
       className="hidden md:block overflow-hidden"
     >
-      <div className="grid grid-cols-[1.5fr_1fr_1fr]">
+      <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div style={{ color: TEAL }} className="px-6 py-5 text-xs uppercase tracking-[0.2em] font-semibold">
           <T k="table.head" d="What's included" />
         </div>
@@ -346,12 +358,20 @@ const ComparisonTable = () => (
             <T k="tier.b.price" d="$5,000" />
           </div>
         </div>
+        <div style={{ color: TEAL, background: `${GOLD}25` }} className="px-6 py-5 text-center">
+          <div style={{ color: GOLD }} className="text-xs uppercase tracking-[0.2em] font-semibold">
+            <T k="tier.c.name" d="Title Partner" />
+          </div>
+          <div style={{ fontWeight: 700 }} className="text-2xl mt-1">
+            <T k="tier.c.price" d="$20,000" />
+          </div>
+        </div>
       </div>
       {ROW_KEYS.map((r, i) => (
         <div
           key={r.k}
           style={{ borderTop: `1px solid ${TEAL}15` }}
-          className="grid grid-cols-[1.5fr_1fr_1fr]"
+          className="grid grid-cols-[1.5fr_1fr_1fr_1fr]"
         >
           <div style={{ color: TEAL }} className="px-6 py-4 text-sm font-light">
             <T k={`${r.k}.label`} d={r.label} />
@@ -368,6 +388,12 @@ const ComparisonTable = () => (
           >
             <T k={`${r.k}.b`} d={r.b} />
           </div>
+          <div
+            style={{ color: TEAL, background: i % 2 ? `${GOLD}15` : `${GOLD}25` }}
+            className={`px-6 py-4 text-center text-sm ${cellClass(r.c)}`}
+          >
+            <T k={`${r.k}.c`} d={r.c} />
+          </div>
         </div>
       ))}
     </div>
@@ -377,6 +403,7 @@ const ComparisonTable = () => (
       {[
         { title: "Bring Your Expert", price: "$1,500", nameKey: "tier.a.name", priceKey: "tier.a.price", col: "a" as const, bg: `${SAGE}18`, accent: SAGE },
         { title: "Lounge Partner", price: "$5,000", nameKey: "tier.b.name", priceKey: "tier.b.price", col: "b" as const, bg: `${CORAL}18`, accent: CORAL },
+        { title: "Title Partner", price: "$20,000", nameKey: "tier.c.name", priceKey: "tier.c.price", col: "c" as const, bg: `${GOLD}25`, accent: GOLD },
       ].map((tier) => (
         <div
           key={tier.title}
