@@ -74,14 +74,24 @@ const CTAButton = ({
 );
 
 const Hero = () => (
-  <section style={{ background: C.forest, color: "#fff" }} className="px-6 py-20 md:py-28">
-    <div className="max-w-4xl mx-auto text-center">
+  <section
+    style={{
+      position: "relative",
+      background: C.forest,
+      color: "#fff",
+      backgroundImage: `linear-gradient(rgba(30,51,42,0.72), rgba(30,51,42,0.82)), url(${heroPhoto.url})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    className="px-6 py-20 md:py-28"
+  >
+    <div className="max-w-4xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
       </div>
       <p
         className="uppercase font-medium mb-5"
-        style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.7)" }}
+        style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.75)" }}
       >
         <EditableText
           settingKey="sr_hero_eyebrow"
@@ -95,14 +105,14 @@ const Hero = () => (
       >
         <EditableText settingKey="sr_hero_headline" defaultText="Slow Roll x Basecamp." as="span" />
       </h1>
-      <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.85)" }}>
+      <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.9)" }}>
         <EditableText
           settingKey="sr_hero_subline"
           defaultText="Minneapolis · Wednesday, August 19, 2026 · Evening"
           as="span"
         />
       </p>
-      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: C.rust }}>
+      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: "#f2a274" }}>
         <EditableText
           settingKey="sr_hero_capline"
           defaultText="Only 100 riders. Bring your bike or borrow one."
@@ -111,7 +121,7 @@ const Hero = () => (
       </p>
       <p
         className="max-w-2xl mx-auto mb-10"
-        style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}
+        style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.88)" }}
       >
         <EditableText
           settingKey="sr_hero_pitch"
@@ -121,6 +131,9 @@ const Hero = () => (
         />
       </p>
       <CTAButton settingKey="sr_hero_cta" defaultText="Register — only 100 spots" size="lg" />
+      <p className="mt-6" style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>
+        Photo: Devon Young Cupery via Streets.mn
+      </p>
     </div>
   </section>
 );
