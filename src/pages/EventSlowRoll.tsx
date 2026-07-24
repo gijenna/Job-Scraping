@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
@@ -7,6 +8,15 @@ import ridePhoto2 from "@/assets/slowroll/ride-2.jpg.asset.json";
 import ridePhoto3 from "@/assets/slowroll/ride-3.jpg.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
+import mpfH1 from "@/assets/slowroll/mpf-h1.jpg.asset.json";
+import mpfH2 from "@/assets/slowroll/mpf-h2.png.asset.json";
+import mpfH3 from "@/assets/slowroll/mpf-h3.png.asset.json";
+import mpfH4 from "@/assets/slowroll/mpf-h4.jpg.asset.json";
+import mpfH5 from "@/assets/slowroll/mpf-h5.png.asset.json";
+import mpfH6 from "@/assets/slowroll/mpf-h6.png.asset.json";
+import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
+
+const HERO_PHOTOS = [mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
 // Brand palette (page-scoped, matches spec exactly)
 const C = {
