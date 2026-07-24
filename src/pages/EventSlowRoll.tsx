@@ -6,6 +6,7 @@ import OrderedSections from "@/components/event/OrderedSections";
 import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
 import ridePhoto2 from "@/assets/slowroll/ride-2.jpg.asset.json";
 import ridePhoto3 from "@/assets/slowroll/ride-3.jpg.asset.json";
+import sfbikeLights from "@/assets/slowroll/sfbike-lights.jpg.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
 import mpfH1 from "@/assets/slowroll/mpf-h1.jpg.asset.json";
