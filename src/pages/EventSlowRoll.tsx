@@ -155,9 +155,9 @@ const BikePathSpine = () => {
     "M 0 66 " +
     "C 19 66, 41 66, 62 66 " +
     "C 84 66, 94 86, 94 128 " +
-    "C 94 178, 94 238, 94 330 " +
-    "C 94 374, 78 397, 56 412 " +
-    "C 31 429, 8 446, 8 486 " +
+    "C 94 178, 94 270, 94 418 " +
+    "C 94 452, 62 474, 32 489 " +
+    "C 17 497, 8 513, 8 540 " +
     "C 8 523, 27 544, 52 555 " +
     "C 73 565, 93 586, 93 630 " +
     "C 93 684, 93 748, 93 812 " +
@@ -205,12 +205,12 @@ const BikePathSpine = () => {
   const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
     <g style={{ filter: `drop-shadow(0 0 5px ${color}) drop-shadow(0 0 9px ${C.yellow})` }}>
       {/* compact, thick bike facing +X */}
-      <g transform="translate(-2.8 -1) scale(0.78)">
+      <g transform="translate(-2.4 -0.9) scale(0.62)">
         <ellipse cx="6.3" cy="1.4" rx="3.5" ry="0.8" fill={C.yellow} opacity="0.5" />
-        <circle cx="-2.4" cy="1.4" r="1.35" stroke={color} strokeWidth="1.9" fill="none" vectorEffect="non-scaling-stroke" />
-        <circle cx="2.8" cy="1.4" r="1.35" stroke={color} strokeWidth="1.9" fill="none" vectorEffect="non-scaling-stroke" />
-        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.4 L 2.8 1.4 M -0.6 -1.4 L 1.6 -1.4 L -0.1 1.4" stroke={color} strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        <path d="M 1.6 -1.4 L 2.6 -2.2" stroke={color} strokeWidth="1.7" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <circle cx="-2.4" cy="1.4" r="1.35" stroke={color} strokeWidth="2.25" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="2.8" cy="1.4" r="1.35" stroke={color} strokeWidth="2.25" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.4 L 2.8 1.4 M -0.6 -1.4 L 1.6 -1.4 L -0.1 1.4" stroke={color} strokeWidth="2.25" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M 1.6 -1.4 L 2.6 -2.2" stroke={color} strokeWidth="2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         <circle cx="4.6" cy="1.4" r="0.8" fill={C.yellow} opacity="1" />
         <circle cx="-4" cy="1.4" r="0.55" fill={C.magenta} opacity="0.95" />
       </g>
@@ -234,12 +234,12 @@ const BikePathSpine = () => {
           <path id="sr-spine-path" d={D} />
         </defs>
         {/* soft static bike lane */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="4" strokeOpacity="0.18" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(5px)` }} />
-        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="2.7" strokeOpacity="0.85" fill="none" vectorEffect="non-scaling-stroke" />
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="3.2" strokeOpacity="0.16" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(4px)` }} />
+        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="2.2" strokeOpacity="0.85" fill="none" vectorEffect="non-scaling-stroke" />
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="1.45"
+          strokeWidth="1.15"
           strokeDasharray="4 7"
           fill="none"
           vectorEffect="non-scaling-stroke"
@@ -250,8 +250,8 @@ const BikePathSpine = () => {
         {/* Landmarks live in open gutters and section breaks, not over text or photos. */}
         <g opacity="0.95">
           <g><Tree x={13} y={151} /> <Tree x={20} y={160} s={1.15} /> <Tree x={28} y={150} s={0.85} /></g>
-          <Building x={82} y={392} />
-          <Lake x={17} y={524} />
+          <Building x={82} y={390} />
+          <Lake x={17} y={582} />
           <g><Tree x={84} y={604} /> <Tree x={91} y={617} s={1.2} /></g>
           <Picnic x={17} y={842} />
           <Building x={84} y={876} />
