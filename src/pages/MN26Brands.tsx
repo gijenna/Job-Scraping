@@ -287,15 +287,27 @@ const Tiers = () => (
           copyKey="tier.b.copy"
           copyDefault="Own the room the whole industry wants into. Recruiting, reputation, and reach without a booth."
         />
-        <TierCard
-          nameKey="tier.c.name"
-          nameDefault="Title Partner"
-          priceKey="tier.c.price"
-          priceDefault="$20,000"
-          copyKey="tier.c.copy"
-          copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
-          highlight
-        />
+        <div className="flex flex-col">
+          <TierCard
+            nameKey="tier.c.name"
+            nameDefault="Title Partner"
+            priceKey="tier.c.price"
+            priceDefault="$20,000"
+            copyKey="tier.c.copy"
+            copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
+            highlight
+          />
+          <a
+            href="https://basecampoutdoorevents.com/slow-roll"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: CORAL, ...font }}
+            className="mt-3 text-xs uppercase tracking-[0.2em] font-semibold text-center underline hover:opacity-80"
+          >
+            See the Slow Roll ride →
+          </a>
+        </div>
+
       </div>
 
       <ComparisonTable />
@@ -375,7 +387,19 @@ const ComparisonTable = () => (
         >
           <div style={{ color: TEAL }} className="px-6 py-4 text-sm font-light">
             <T k={`${r.k}.label`} d={r.label} />
+            {r.k === "row.slowroll" && (
+              <a
+                href="https://basecampoutdoorevents.com/slow-roll"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: CORAL }}
+                className="ml-2 text-xs underline hover:opacity-80"
+              >
+                See the ride →
+              </a>
+            )}
           </div>
+
           <div
             style={{ color: `${TEAL}bb`, background: i % 2 ? `${SAGE}10` : `${SAGE}18` }}
             className={`px-6 py-4 text-center text-sm ${cellClass(r.a)}`}
@@ -625,6 +649,49 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
   );
 };
 
+const NewsletterEmbed = () => (
+  <section style={{ background: TEAL, ...font }} className="px-6 py-20 md:py-28">
+    <div className="max-w-5xl mx-auto">
+      <p style={{ color: GOLD }} className="text-xs tracking-[0.3em] uppercase font-medium">
+        <T k="embed.eyebrow" d="See it live" />
+      </p>
+      <h2 style={{ color: CREAM, fontWeight: 300 }} className="mt-3 text-3xl md:text-5xl">
+        <T k="embed.title.a" d="See how you'll " as="span" />
+        <T k="embed.title.b" d="show up." as="span" style={{ fontWeight: 600 }} />
+      </h2>
+      <p style={{ color: `${CREAM}99` }} className="mt-4 max-w-2xl text-base font-light">
+        <T k="embed.sub" d="A recent example from the Basecamp newsletter, live below." />
+      </p>
+
+      <div
+        style={{ background: CREAM, borderRadius: 16, border: `1px solid ${CREAM}33` }}
+        className="mt-8 overflow-hidden shadow-2xl"
+      >
+        <iframe
+          src="https://www.partnerwithbasecamp.com/minneapolis"
+          title="Partner with Basecamp — Minneapolis"
+          className="w-full"
+          style={{ height: "1400px", border: 0, display: "block" }}
+          loading="lazy"
+        />
+      </div>
+
+      <p style={{ color: `${CREAM}88` }} className="mt-4 text-xs text-center">
+        <a
+          href="https://www.partnerwithbasecamp.com/minneapolis"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: GOLD }}
+          className="underline hover:opacity-80"
+        >
+          Open in a new tab →
+        </a>
+      </p>
+    </div>
+  </section>
+);
+
+
 const WhyWorthIt = () => (
   <section style={{ background: CREAM, ...font }} className="px-6 py-20 md:py-28">
     <div className="max-w-4xl mx-auto">
@@ -697,9 +764,12 @@ const MN26Brands = () => {
       <div style={{ background: TEAL, ...font }} className="min-h-screen">
         <Hero />
         <Tiers />
-        <Mockups personalization={personalization} />
+        {/* Mockups section hidden — swap back in if we want the personalized 4-square preview */}
+        {false && <Mockups personalization={personalization} />}
+        <NewsletterEmbed />
         <WhyWorthIt />
         <FinalCTA />
+
       </div>
     </EditableTextProvider>
   );
