@@ -89,7 +89,6 @@ const NeonStyles = () => (
       100% { transform: translateX(110%); }
     }
     @keyframes sr-headlight { 0%,100% { opacity:.6 } 50% { opacity:1 } }
-    @keyframes sr-dash { to { stroke-dashoffset: -60; } }
     .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
   `}</style>
 );
@@ -147,25 +146,28 @@ const BikePack = ({ height = 60, bikeSize = 42, cycle = 11, count = 6, seed = 0 
 };
 
 /* ============ WEAVING PAGE SPINE ============
-   One unbroken dashed yellow bike-lane weaving down the full page.
-   Uses preserveAspectRatio="none" so it fills main's true height.
-   Landmarks (trees, lake, building, picnic) sit alongside the path.
-   A small pack of bikes rides along the path via animateMotion. */
+   One unbroken static bike-lane weaving down the full page.
+   Bikes move in small packs, while landmarks sit in open gutters between sections. */
 const BikePathSpine = () => {
-  // Weaves L<->R eight times down the page (viewBox 0..100 x 0..1000).
-  // Bikes face RIGHT — path is drawn left->right at each waypoint via
-  // alternating handles so animateMotion rotates them along the road.
+  // Starts from the left side of the hero, runs horizontally between the
+  // headline and logo area, then slips into gutters and section breaks.
   const D =
-    "M 90 0 " +
-    "C 88 60, 12 80, 12 130 " +
-    "S 88 200, 88 250 " +
-    "S 12 320, 12 370 " +
-    "S 88 440, 88 490 " +
-    "S 12 560, 12 610 " +
-    "S 88 680, 88 730 " +
-    "S 12 800, 12 850 " +
-    "S 88 920, 88 970 " +
-    "L 88 1000";
+    "M 0 54 " +
+    "C 14 54, 31 54, 45 54 " +
+    "S 71 54, 83 60 " +
+    "C 96 67, 94 91, 84 109 " +
+    "C 75 126, 88 142, 94 166 " +
+    "C 103 206, 78 231, 54 244 " +
+    "C 25 260, 8 282, 8 321 " +
+    "C 8 360, 31 379, 50 389 " +
+    "C 70 400, 91 419, 91 456 " +
+    "C 91 494, 70 512, 49 524 " +
+    "C 28 537, 9 557, 9 596 " +
+    "C 9 637, 35 653, 57 660 " +
+    "C 82 668, 93 690, 88 725 " +
+    "C 82 768, 23 766, 14 810 " +
+    "C 5 854, 82 866, 88 912 " +
+    "C 94 955, 44 965, 30 1000";
 
   const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
     <g transform={`translate(${x} ${y}) scale(${s})`} style={{ filter: `drop-shadow(0 0 3px ${C.yellow})` }}>
@@ -205,18 +207,23 @@ const BikePathSpine = () => {
 
   // A single bike drawn in the SVG so it can ride the path via animateMotion.
   const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
-    <g style={{ filter: `drop-shadow(0 0 4px ${color}) drop-shadow(0 0 10px ${C.yellow})` }}>
-      {/* wheels + frame — drawn centered around (0,0), facing +X */}
-      <g transform="translate(-4 -1.5) scale(1.75)">
-        <circle cx="-3" cy="1.5" r="1.6" stroke={color} strokeWidth="0.8" fill="none" vectorEffect="non-scaling-stroke" />
-        <circle cx="3"  cy="1.5" r="1.6" stroke={color} strokeWidth="0.8" fill="none" vectorEffect="non-scaling-stroke" />
-        <path d="M -3 1.5 L 0 1.5 L 1.5 -2 L 3 1.5 M -0.5 -2 L 2 -2 L 0 1.5" stroke={color} strokeWidth="0.8" fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        {/* headlight beam ahead */}
-        <circle cx="4.6" cy="1.5" r="1" fill={C.yellow} opacity="1" />
+    <g style={{ filter: `drop-shadow(0 0 5px ${color}) drop-shadow(0 0 9px ${C.yellow})` }}>
+      {/* compact, thick bike facing +X */}
+      <g transform="translate(-2.8 -1) scale(0.78)">
+        <ellipse cx="6.3" cy="1.4" rx="3.5" ry="0.8" fill={C.yellow} opacity="0.5" />
+        <circle cx="-2.4" cy="1.4" r="1.35" stroke={color} strokeWidth="1.9" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="2.8" cy="1.4" r="1.35" stroke={color} strokeWidth="1.9" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.4 L 2.8 1.4 M -0.6 -1.4 L 1.6 -1.4 L -0.1 1.4" stroke={color} strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M 1.6 -1.4 L 2.6 -2.2" stroke={color} strokeWidth="1.7" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <circle cx="4.6" cy="1.4" r="0.8" fill={C.yellow} opacity="1" />
+        <circle cx="-4" cy="1.4" r="0.55" fill={C.magenta} opacity="0.95" />
       </g>
       <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={D} />
     </g>
   );
+
+  const packStarts = [0, -5, -10, -15, -20, -25, -30, -35];
+  const packColors = ["#ffffff", "#ffffff", C.purple, "#ffffff", C.yellow, "#ffffff", C.magenta];
 
   return (
     <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
@@ -230,42 +237,44 @@ const BikePathSpine = () => {
         <defs>
           <path id="sr-spine-path" d={D} />
         </defs>
-        {/* soft glow underlay */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="7" strokeOpacity="0.26" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(7px)` }} />
-        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="4.2" strokeOpacity="0.9" fill="none" vectorEffect="non-scaling-stroke" />
-        {/* dashed animated bike lane */}
+        {/* soft static bike lane */}
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="4" strokeOpacity="0.18" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(5px)` }} />
+        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="2.7" strokeOpacity="0.85" fill="none" vectorEffect="non-scaling-stroke" />
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="2.8"
-          strokeDasharray="6 6"
+          strokeWidth="1.45"
+          strokeDasharray="4 7"
           fill="none"
           vectorEffect="non-scaling-stroke"
-          opacity="1"
-          style={{ animation: "sr-dash 2.4s linear infinite", filter: `drop-shadow(0 0 5px ${C.yellow}) drop-shadow(0 0 14px ${C.yellow})` }}
+          opacity="0.92"
+          style={{ filter: `drop-shadow(0 0 4px ${C.yellow}) drop-shadow(0 0 9px ${C.yellow}88)` }}
         />
 
-        {/* Landmarks — every ~120 units, on the opposite side of the path */}
-        <g opacity="1">
-          <g><Tree x={70} y={40} /> <Tree x={78} y={54} s={1.2} /> <Tree x={62} y={30} s={0.8} /></g>
-          <Building x={28} y={170} />
-          <Lake x={72} y={295} />
-          <g><Tree x={26} y={410} /> <Tree x={34} y={422} s={1.2} /></g>
-          <Picnic x={70} y={540} />
-          <Building x={26} y={670} />
-          <Lake x={72} y={790} />
-          <g><Tree x={26} y={905} /> <Tree x={34} y={918} s={1.1} /> <Tree x={18} y={920} s={0.9} /></g>
+        {/* Landmarks live in open gutters and section breaks, not over text or photos. */}
+        <g opacity="0.95">
+          <g><Tree x={13} y={151} /> <Tree x={20} y={160} s={1.15} /> <Tree x={28} y={150} s={0.85} /></g>
+          <Building x={86} y={345} />
+          <Lake x={16} y={487} />
+          <g><Tree x={84} y={579} /> <Tree x={91} y={591} s={1.2} /></g>
+          <Picnic x={17} y={734} />
+          <Building x={84} y={842} />
+          <Lake x={18} y={948} />
         </g>
 
-        {/* Bike pack riding the path — spaced starts so they cluster then string out */}
-        <SpineBike color="#ffffff" dur={56} begin={0} />
-        <SpineBike color={C.yellow} dur={56} begin={-1.2} />
-        <SpineBike color={C.purple} dur={56} begin={-2.4} />
-        <SpineBike color="#ffffff" dur={56} begin={-3.4} />
-        <SpineBike color={C.magenta} dur={56} begin={-4.5} />
-        <SpineBike color="#ffffff" dur={56} begin={-18} />
-        <SpineBike color={C.purple} dur={56} begin={-19.3} />
-        <SpineBike color={C.yellow} dur={56} begin={-20.6} />
+        {/* Bike packs: 4 to 8 bikes launch roughly every 5 seconds. */}
+        {packStarts.map((start, packIndex) => (
+          <g key={start}>
+            {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
+              <SpineBike
+                key={`${start}-${bikeIndex}`}
+                color={color}
+                dur={40}
+                begin={start + bikeIndex * 0.18}
+              />
+            ))}
+          </g>
+        ))}
       </svg>
     </div>
   );
@@ -364,7 +373,7 @@ const Marquee = () => {
 const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
   <section id={id} style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
     <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}d8, ${C.midnight2}d0 42%, ${C.midnight}d8)`, opacity: 0.68 }} />
+    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}d8, ${C.midnight2}d0 42%, ${C.midnight}d8)`, opacity: 0.56 }} />
     <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
     <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
