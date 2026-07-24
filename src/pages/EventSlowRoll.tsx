@@ -205,21 +205,21 @@ const BikePathSpine = () => {
 
   // A single bike drawn in the SVG so it can ride the path via animateMotion.
   const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
-    <g style={{ filter: `drop-shadow(0 0 2px ${color}) drop-shadow(0 0 4px ${C.yellow}66)` }}>
+    <g style={{ filter: `drop-shadow(0 0 4px ${color}) drop-shadow(0 0 10px ${C.yellow})` }}>
       {/* wheels + frame — drawn centered around (0,0), facing +X */}
-      <g transform="translate(-4 -1.5)">
-        <circle cx="-3" cy="1.5" r="1.6" stroke={color} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
-        <circle cx="3"  cy="1.5" r="1.6" stroke={color} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
-        <path d="M -3 1.5 L 0 1.5 L 1.5 -2 L 3 1.5 M -0.5 -2 L 2 -2 L 0 1.5" stroke={color} strokeWidth="0.5" fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <g transform="translate(-4 -1.5) scale(1.75)">
+        <circle cx="-3" cy="1.5" r="1.6" stroke={color} strokeWidth="0.8" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="3"  cy="1.5" r="1.6" stroke={color} strokeWidth="0.8" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -3 1.5 L 0 1.5 L 1.5 -2 L 3 1.5 M -0.5 -2 L 2 -2 L 0 1.5" stroke={color} strokeWidth="0.8" fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {/* headlight beam ahead */}
-        <circle cx="4.6" cy="1.5" r="0.6" fill={C.yellow} opacity="0.9" />
+        <circle cx="4.6" cy="1.5" r="1" fill={C.yellow} opacity="1" />
       </g>
       <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={D} />
     </g>
   );
 
   return (
-    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 4 }}>
       <svg
         width="100%"
         height="100%"
@@ -231,7 +231,7 @@ const BikePathSpine = () => {
           <path id="sr-spine-path" d={D} />
         </defs>
         {/* soft glow underlay */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="4.8" strokeOpacity="0.16" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(5px)` }} />
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="5.6" strokeOpacity="0.22" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(6px)` }} />
         <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="3.6" strokeOpacity="0.82" fill="none" vectorEffect="non-scaling-stroke" />
         {/* dashed animated bike lane */}
         <use
@@ -242,7 +242,7 @@ const BikePathSpine = () => {
           fill="none"
           vectorEffect="non-scaling-stroke"
           opacity="1"
-          style={{ animation: "sr-dash 2.4s linear infinite", filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 8px ${C.yellow}88)` }}
+          style={{ animation: "sr-dash 2.4s linear infinite", filter: `drop-shadow(0 0 5px ${C.yellow}) drop-shadow(0 0 14px ${C.yellow})` }}
         />
 
         {/* Landmarks — every ~120 units, on the opposite side of the path */}
@@ -258,11 +258,14 @@ const BikePathSpine = () => {
         </g>
 
         {/* Bike pack riding the path — spaced starts so they cluster then string out */}
-        <SpineBike color="#ffffff" dur={90} begin={0} />
-        <SpineBike color={C.yellow} dur={90} begin={-1.6} />
-        <SpineBike color={C.purple} dur={90} begin={-3.2} />
-        <SpineBike color="#ffffff" dur={90} begin={-4.6} />
-        <SpineBike color={C.magenta} dur={90} begin={-6.0} />
+        <SpineBike color="#ffffff" dur={56} begin={0} />
+        <SpineBike color={C.yellow} dur={56} begin={-1.2} />
+        <SpineBike color={C.purple} dur={56} begin={-2.4} />
+        <SpineBike color="#ffffff" dur={56} begin={-3.4} />
+        <SpineBike color={C.magenta} dur={56} begin={-4.5} />
+        <SpineBike color="#ffffff" dur={56} begin={-18} />
+        <SpineBike color={C.purple} dur={56} begin={-19.3} />
+        <SpineBike color={C.yellow} dur={56} begin={-20.6} />
       </svg>
     </div>
   );
@@ -363,7 +366,7 @@ const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string })
     <NeonBlobs />
     <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}ee, ${C.midnight2}e8 42%, ${C.midnight}ee)`, opacity: 0.82 }} />
     <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
-    <div className="relative z-10">{children}</div>
+    <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
 );
 
@@ -687,7 +690,6 @@ const EventSlowRoll = () => (
           sections={[
             { key: "hero", content: <Hero /> },
             { key: "what", content: <WhatItIs /> },
-            { key: "theme", content: <Theme /> },
             { key: "guide", content: <Guide /> },
             { key: "partners", content: <Partners /> },
             { key: "details", content: <Details /> },
