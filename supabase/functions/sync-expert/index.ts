@@ -75,25 +75,36 @@ serve(async (req) => {
     }
     // Re-fetch from DB rather than trusting client payload, so this endpoint cannot be
     // abused to push arbitrary data to Folk/Sheets.
-    const sbAdmin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!supabaseUrl || !serviceRoleKey) {
+      return new Response(JSON.stringify({ error: 'sync environment missing' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const sbAdmin = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
     const { data: dbExpert, error: dbErr } = await sbAdmin.from('industry_experts').select('*').eq('id', expertId).maybeSingle();
     if (dbErr || !dbExpert) {
       return new Response(JSON.stringify({ error: 'expert not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const expert: any = dbExpert;
-    // city_slug lives on expert_city_assignments; hydrate the first published assignment.
-    if (!expert.city_slug) {
-      const { data: assign } = await sbAdmin
-        .from('expert_city_assignments')
-        .select('city_slug, expert_type')
-        .eq('expert_id', expertId)
-        .order('published', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (assign) {
-        expert.city_slug = assign.city_slug;
-        if (!expert.expert_type) expert.expert_type = assign.expert_type;
-      }
+    // city_slug lives on expert_city_assignments. Prefer the requested city only
+    // after confirming this expert actually has that assignment.
+    const requestedCitySlug = typeof requestBody?.city_slug === 'string'
+      ? requestBody.city_slug.toLowerCase().trim()
+      : '';
+    const { data: assignments } = await sbAdmin
+      .from('expert_city_assignments')
+      .select('city_slug, expert_type, published, created_at')
+      .eq('expert_id', expertId)
+      .order('published', { ascending: false })
+      .order('created_at', { ascending: false });
+    const safeAssignments = Array.isArray(assignments) ? assignments : [];
+    const requestedAssignment = requestedCitySlug
+      ? safeAssignments.find((assign: any) => String(assign.city_slug).toLowerCase() === requestedCitySlug)
+      : null;
+    const assign = requestedAssignment || safeAssignments[0];
+    if (assign) {
+      expert.city_slug = assign.city_slug;
+      expert.expert_type = assign.expert_type;
     }
     const results: Record<string, any> = {};
 
@@ -126,8 +137,11 @@ serve(async (req) => {
             { headers: { 'Authorization': `Bearer ${folkApiKey}` } }
           );
           const searchData = await searchRes.json();
-          if (searchData.data?.length > 0) {
-            folkPersonId = searchData.data[0].id;
+          const searchItems = Array.isArray(searchData.data?.items)
+            ? searchData.data.items
+            : (Array.isArray(searchData.data) ? searchData.data : []);
+          if (searchItems.length > 0) {
+            folkPersonId = searchItems[0].id;
           }
         }
 
@@ -239,25 +253,73 @@ serve(async (req) => {
           expert.years_in_city || '',
           expert.ask_me_about || '',
         ];
+        const sheetRangeName = `'${sheetTabName.replace(/'/g, "''")}'`;
 
-        const appendRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ values: [row] }),
-          }
+        const valuesRes = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A:C?majorDimension=ROWS`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
+        if (!valuesRes.ok) {
+          const errorBody = await valuesRes.text();
+          throw new Error(`Google Sheets read failed [${valuesRes.status}]: ${errorBody}`);
+        }
+        const valuesData = await valuesRes.json();
+        const rows = Array.isArray(valuesData.values) ? valuesData.values : [];
+        const expertEmail = String(expert.email || '').trim().toLowerCase();
+        const expertName = String(expert.full_name || '').trim().toLowerCase();
+        const existingIndex = rows.findIndex((sheetRow: unknown[]) => {
+          const rowEmail = String(sheetRow?.[2] || '').trim().toLowerCase();
+          const rowName = String(sheetRow?.[1] || '').trim().toLowerCase();
+          return (expertEmail && rowEmail === expertEmail) || (!expertEmail && expertName && rowName === expertName);
+        });
 
-        const appendData = await appendRes.json();
-        results.sheets = { status: appendRes.status, spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
+        if (existingIndex >= 1) {
+          const rowNumber = existingIndex + 1;
+          const updateRes = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A${rowNumber}:N${rowNumber}?valueInputOption=USER_ENTERED`,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ values: [row] }),
+            }
+          );
+          const updateData = await updateRes.json();
+          if (!updateRes.ok) {
+            throw new Error(`Google Sheets update failed [${updateRes.status}]: ${JSON.stringify(updateData)}`);
+          }
+          results.sheets = { status: updateRes.status, action: 'updated', row: rowNumber, spreadsheetId, city: citySlug, tab: sheetTabName, data: updateData };
+        } else {
+          const appendRes = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A1:append?valueInputOption=USER_ENTERED`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ values: [row] }),
+            }
+          );
+          const appendData = await appendRes.json();
+          if (!appendRes.ok) {
+            throw new Error(`Google Sheets append failed [${appendRes.status}]: ${JSON.stringify(appendData)}`);
+          }
+          results.sheets = { status: appendRes.status, action: 'appended', spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
+        }
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
         results.sheets = { error: sheetsErr.message };
       }
+    }
+
+    if (spreadsheetId && serviceAccountKeyStr && (!results.sheets || results.sheets.error || results.sheets.status >= 400)) {
+      return new Response(JSON.stringify({ success: false, error: 'Google Sheets sync failed', results }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     return new Response(JSON.stringify({ success: true, results }), {

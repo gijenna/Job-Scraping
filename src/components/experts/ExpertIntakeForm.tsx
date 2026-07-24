@@ -365,30 +365,24 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
         const { data: savedExpert } = await supabase
           .from('industry_experts').select('*').eq('id', finalExpertId).single();
 
-        // Sync to Folk CRM + Google Sheets.
-        // Use fetch with keepalive so the request completes even if the page
-        // navigates away after we show the success modal. Previously this used
-        // supabase.functions.invoke() as fire-and-forget, but invoke() awaits
-        // getSession() before firing, so the request was being cancelled on
-        // unmount and nobody was reaching the sheet.
+        // Sync to Folk CRM + Google Sheets before closing the edit flow.
+        // A fire-and-forget request was too easy for the browser to cancel.
         try {
-          const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-expert`;
-          fetch(url, {
-            method: 'POST',
-            keepalive: true,
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            },
-            body: JSON.stringify({
-              ...savedExpert,
+          const { error: syncError } = await supabase.functions.invoke('sync-expert', {
+            body: {
+              id: finalExpertId,
               city_slug: citySlug,
               expert_type: expertType,
-            }),
-          }).catch((syncErr) => console.error('CRM sync error (non-blocking):', syncErr));
+            },
+          });
+          if (syncError) throw syncError;
         } catch (syncErr) {
           console.error('CRM sync error (non-blocking):', syncErr);
+          toast({
+            title: "Profile saved, sheet sync failed",
+            description: "The card is saved. Please try the sync again from admin or tell Jenna.",
+            variant: "destructive",
+          });
         }
 
         toast({ title: "Profile saved!", description: "Your industry expert card is ready." });
