@@ -368,6 +368,7 @@ const PartnerCard = ({
   descDefault,
   logoUrl,
   logoAlt,
+  href,
 }: {
   nameKey: string;
   nameDefault: string;
@@ -375,34 +376,44 @@ const PartnerCard = ({
   descDefault: string;
   logoUrl?: string;
   logoAlt: string;
-}) => (
-  <div
-    className="rounded-[12px] p-6 md:p-7 flex flex-col"
-    style={{ background: "#fff", border: `1px solid ${C.line}` }}
-  >
+  href?: string;
+}) => {
+  const inner = (
     <div
-      className="mb-5 flex items-center justify-center rounded-md"
-      style={{ height: 90, background: C.cream, border: `1px solid ${C.line}` }}
+      className="rounded-[12px] p-6 md:p-7 flex flex-col h-full"
+      style={{ background: "#fff", border: `1px solid ${C.line}` }}
     >
-      {logoUrl ? (
-        <img src={logoUrl} alt={logoAlt} className="max-h-14 max-w-[70%] object-contain" />
-      ) : (
-        <span
-          className="uppercase font-medium"
-          style={{ letterSpacing: "0.16em", fontSize: 11, color: C.muted }}
-        >
-          Logo pending
-        </span>
-      )}
+      <div
+        className="mb-5 flex items-center justify-center rounded-md"
+        style={{ height: 110, background: C.cream, border: `1px solid ${C.line}` }}
+      >
+        {logoUrl ? (
+          <img src={logoUrl} alt={logoAlt} className="max-h-20 max-w-[75%] object-contain" />
+        ) : (
+          <span
+            className="uppercase font-medium"
+            style={{ letterSpacing: "0.16em", fontSize: 11, color: C.muted }}
+          >
+            Logo pending
+          </span>
+        )}
+      </div>
+      <h3 className="font-semibold mb-2" style={{ fontSize: 18, color: C.forest }}>
+        <EditableText settingKey={nameKey} defaultText={nameDefault} as="span" />
+      </h3>
+      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.muted }}>
+        <EditableText settingKey={descKey} defaultText={descDefault} as="span" multiline />
+      </p>
     </div>
-    <h3 className="font-semibold mb-2" style={{ fontSize: 18, color: C.forest }}>
-      <EditableText settingKey={nameKey} defaultText={nameDefault} as="span" />
-    </h3>
-    <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.muted }}>
-      <EditableText settingKey={descKey} defaultText={descDefault} as="span" multiline />
-    </p>
-  </div>
-);
+  );
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
+      {inner}
+    </a>
+  ) : (
+    inner
+  );
+};
 
 const alsoLogo = "/__l5e/assets-v1/b06c9430-a522-4188-bdd1-333d9b3b5005/also-logo.webp";
 
@@ -431,7 +442,9 @@ const Partners = () => (
           nameDefault="Slow Roll MSP / Cultural Wellness Center"
           descKey="sr_p1_desc"
           descDefault="The ride organizer, led by Anthony Taylor."
-          logoAlt="Slow Roll MSP"
+          logoUrl={slowRollLogo.url}
+          logoAlt="Slow Roll Twin Cities"
+          href={SLOWROLL_FB_URL}
         />
         <PartnerCard
           nameKey="sr_p2_name"
@@ -440,13 +453,16 @@ const Partners = () => (
           descDefault="E-bikes provided for the ride. Several loaners available on-site for anyone who doesn't bring their own."
           logoUrl={alsoLogo}
           logoAlt="ALSO"
+          href="https://ridealso.com"
         />
         <PartnerCard
           nameKey="sr_p3_name"
-          nameDefault="QBP"
+          nameDefault="Basecamp Jobs"
           descKey="sr_p3_desc"
-          descDefault="Pending. May provide additional loaner bikes."
-          logoAlt="QBP"
+          descDefault="Where the outdoor industry finds its people. Powering the connections behind the ride."
+          logoUrl={basecampJobsLogo.url}
+          logoAlt="Basecamp Jobs"
+          href="https://basecampjobs.com"
         />
       </div>
     </div>
