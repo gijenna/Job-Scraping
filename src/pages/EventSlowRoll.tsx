@@ -383,8 +383,7 @@ const PhotoCarousels = () => (
   </div>
 );
 
-const _ThemeCardBoundary = () => (
-  <>
+
 
     </div>
   </DarkPanel>
