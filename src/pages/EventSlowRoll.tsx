@@ -223,9 +223,43 @@ const BikePathSpine = () => {
   const packStarts = [0, -7, -14, -21, -28, -35, -42];
   const packColors = ["#ffffff", "#ffffff", C.purple, "#ffffff", C.yellow, "#ffffff", C.magenta];
 
+  // Mobile path: narrower viewBox (100 wide), opener sits high in the hero
+  // gutter (between the Basecamp Match logo and the "Wednesday..." line),
+  // then snakes down through the page.
+  const DMobile =
+    "M 0 62 " +
+    "C 22 62, 55 62, 74 62 " +
+    "C 92 62, 94 78, 94 108 " +
+    "C 94 160, 94 220, 94 280 " +
+    "C 94 310, 60 322, 26 332 " +
+    "C 10 338, 6 352, 6 376 " +
+    "C 6 402, 34 414, 66 424 " +
+    "C 86 432, 94 446, 94 470 " +
+    "C 94 500, 94 560, 94 620 " +
+    "C 94 648, 70 662, 40 672 " +
+    "C 18 680, 6 692, 6 716 " +
+    "C 6 748, 60 760, 30 780";
+
+  const MobileBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
+    <g style={{ filter: `drop-shadow(0 0 3px ${color}) drop-shadow(0 0 6px ${C.yellow})` }}>
+      <g transform="translate(-2.2 -0.9) scale(0.55)">
+        <ellipse cx="6.3" cy="1.4" rx="3.2" ry="0.7" fill={C.yellow} opacity="0.55" />
+        <circle cx="-2.4" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="2.8" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.6 L 2.8 1.4 M -0.6 -1.6 L 1.6 -1.6 L -0.1 1.4" stroke={color} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M 1.6 -1.6 L 2.7 -2.5" stroke={color} strokeWidth="2.3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <circle cx="4.8" cy="1.4" r="0.9" fill={C.yellow} opacity="1" />
+        <circle cx="-4.1" cy="1.4" r="0.6" fill={C.magenta} opacity="0.95" />
+      </g>
+      <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={DMobile} />
+    </g>
+  );
+
   return (
     <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+      {/* Desktop / tablet spine (unchanged) */}
       <svg
+        className="hidden md:block"
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
@@ -271,9 +305,46 @@ const BikePathSpine = () => {
           </g>
         ))}
       </svg>
+
+      {/* Mobile spine: narrower viewBox, opener above the "Wednesday..." line */}
+      <svg
+        className="block md:hidden"
+        width="100%"
+        height="100%"
+        preserveAspectRatio="xMidYMin slice"
+        viewBox="0 0 100 800"
+        style={{ position: "absolute", inset: 0 }}
+      >
+        <defs>
+          <path id="sr-spine-path-mobile" d={DMobile} />
+        </defs>
+        <use
+          href="#sr-spine-path-mobile"
+          stroke={C.yellow}
+          strokeWidth="0.85"
+          strokeDasharray="3 6"
+          fill="none"
+          vectorEffect="non-scaling-stroke"
+          opacity="0.85"
+          style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
+        />
+        {packStarts.map((start, packIndex) => (
+          <g key={`m-${start}`}>
+            {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
+              <MobileBike
+                key={`m-${start}-${bikeIndex}`}
+                color={color}
+                dur={70}
+                begin={start + bikeIndex * 0.3}
+              />
+            ))}
+          </g>
+        ))}
+      </svg>
     </div>
   );
 };
+
 
 
 const Hero = () => (
