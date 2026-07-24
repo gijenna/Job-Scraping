@@ -21,6 +21,7 @@ import EventOutsideDays26 from "./pages/EventOutsideDays26";
 import EventOutsideDaysCOS from "./pages/EventOutsideDaysCOS";
 import EventMinneapolis26 from "./pages/EventMinneapolis26";
 import MN26Brands from "./pages/MN26Brands";
+import EventSlowRoll from "./pages/EventSlowRoll";
 import Connect from "./pages/outsidedays/Connect";
 import ConnectFull from "./pages/outsidedays/ConnectFull";
 import ConnectProfile from "./pages/outsidedays/ConnectProfile";
@@ -89,6 +90,8 @@ const App = () => (
           <Route path="/minneapolis" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26-brands" element={<MN26Brands />} />
+          <Route path="/slow-roll" element={<EventSlowRoll />} />
+          <Route path="/slowroll" element={<EventSlowRoll />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
           <Route
             path="/afterparty"
