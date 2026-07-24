@@ -250,9 +250,10 @@ serve(async (req) => {
           expert.years_in_city || '',
           expert.ask_me_about || '',
         ];
+        const sheetRangeName = `'${sheetTabName.replace(/'/g, "''")}'`;
 
         const valuesRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A:C')}?majorDimension=ROWS`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A:C?majorDimension=ROWS`,
           { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
         if (!valuesRes.ok) {
@@ -272,7 +273,7 @@ serve(async (req) => {
         if (existingIndex >= 1) {
           const rowNumber = existingIndex + 1;
           const updateRes = await fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + `!A${rowNumber}:N${rowNumber}`)}?valueInputOption=USER_ENTERED`,
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A${rowNumber}:N${rowNumber}?valueInputOption=USER_ENTERED`,
             {
               method: 'PUT',
               headers: {
@@ -286,7 +287,7 @@ serve(async (req) => {
           results.sheets = { status: updateRes.status, action: 'updated', row: rowNumber, spreadsheetId, city: citySlug, tab: sheetTabName, data: updateData };
         } else {
           const appendRes = await fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetTabName + '!A1')}:append?valueInputOption=USER_ENTERED`,
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A1:append?valueInputOption=USER_ENTERED`,
             {
               method: 'POST',
               headers: {
