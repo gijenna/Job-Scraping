@@ -663,18 +663,78 @@ const NewsletterEmbed = () => (
         <T k="embed.sub" d="A recent example from the Basecamp newsletter, live below." />
       </p>
 
-      <div
-        style={{ background: CREAM, borderRadius: 16, border: `1px solid ${CREAM}33` }}
-        className="mt-8 overflow-hidden shadow-2xl"
-      >
-        <iframe
-          src="https://www.partnerwithbasecamp.com/minneapolis"
-          title="Partner with Basecamp — Minneapolis"
-          className="w-full"
-          style={{ height: "1400px", border: 0, display: "block" }}
-          loading="lazy"
-        />
+      <div className="relative mt-8">
+        <div
+          style={{ background: CREAM, borderRadius: 16, border: `1px solid ${CREAM}33` }}
+          className="overflow-hidden shadow-2xl"
+        >
+          <iframe
+            src="https://www.partnerwithbasecamp.com/minneapolis"
+            title="Partner with Basecamp — Minneapolis"
+            className="w-full"
+            style={{ height: "1400px", border: 0, display: "block" }}
+            loading="lazy"
+          />
+        </div>
+
+        {/* Post-it annotations */}
+        <div
+          style={{
+            background: GOLD,
+            color: TEAL,
+            transform: "rotate(-4deg)",
+            boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
+            ...font,
+          }}
+          className="hidden lg:block absolute -left-24 top-16 w-52 p-4 rounded-sm z-10"
+        >
+          <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
+            <T k="embed.postit.a.tag" d="$1,500 level" />
+          </div>
+          <p className="mt-1 text-sm leading-snug font-medium">
+            <T k="embed.postit.a.body" d="Gets a hyperlink and shout out here." />
+          </p>
+        </div>
+
+        <div
+          style={{
+            background: CORAL,
+            color: "#fff",
+            transform: "rotate(3deg)",
+            boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
+            ...font,
+          }}
+          className="hidden lg:block absolute -right-24 top-[55%] w-52 p-4 rounded-sm z-10"
+        >
+          <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
+            <T k="embed.postit.b.tag" d="$5,000+ level" />
+          </div>
+          <p className="mt-1 text-sm leading-snug font-medium">
+            <T k="embed.postit.b.body" d="Gets full custom feature (like QBP here)." />
+          </p>
+        </div>
+
+        {/* Mobile fallback: stacked callouts under the iframe */}
+        <div className="lg:hidden mt-4 grid grid-cols-1 gap-3">
+          <div style={{ background: GOLD, color: TEAL, ...font }} className="p-3 rounded-sm">
+            <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
+              <T k="embed.postit.a.tag.m" d="$1,500 level" />
+            </div>
+            <p className="mt-1 text-sm font-medium">
+              <T k="embed.postit.a.body.m" d="Gets a hyperlink and shout out at the top." />
+            </p>
+          </div>
+          <div style={{ background: CORAL, color: "#fff", ...font }} className="p-3 rounded-sm">
+            <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
+              <T k="embed.postit.b.tag.m" d="$5,000+ level" />
+            </div>
+            <p className="mt-1 text-sm font-medium">
+              <T k="embed.postit.b.body.m" d="Gets full custom feature (like QBP)." />
+            </p>
+          </div>
+        </div>
       </div>
+
 
       <p style={{ color: `${CREAM}88` }} className="mt-4 text-xs text-center">
         <a
