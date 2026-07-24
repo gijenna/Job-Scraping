@@ -695,19 +695,22 @@ const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
-    <main style={{ ...font, background: C.midnight, color: "#fff" }}>
-      <OrderedSections
-        sections={[
-          { key: "hero", content: <><Hero /><Marquee /></> },
-          { key: "what", content: <WhatItIs /> },
-          { key: "theme", content: <Theme /> },
-          { key: "guide", content: <Guide /> },
-          { key: "partners", content: <Partners /> },
-          { key: "details", content: <Details /> },
-          { key: "watch", content: <Watch /> },
-          { key: "footer", content: <FooterCTA /> },
-        ]}
-      />
+    <main style={{ ...font, background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }}>
+      <BikePathSpine />
+      <div style={{ position: "relative", zIndex: 2 }}>
+        <OrderedSections
+          sections={[
+            { key: "hero", content: <><Hero /><BikePathDivider /></> },
+            { key: "what", content: <WhatItIs /> },
+            { key: "theme", content: <Theme /> },
+            { key: "guide", content: <Guide /> },
+            { key: "partners", content: <Partners /> },
+            { key: "details", content: <Details /> },
+            { key: "watch", content: <Watch /> },
+            { key: "footer", content: <FooterCTA /> },
+          ]}
+        />
+      </div>
     </main>
   </EditableTextProvider>
 );
