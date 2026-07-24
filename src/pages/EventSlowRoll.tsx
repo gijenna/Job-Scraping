@@ -682,7 +682,7 @@ const EventSlowRoll = () => (
       <div style={{ position: "relative", zIndex: 2 }}>
         <OrderedSections
           sections={[
-            { key: "hero", content: <><Hero /><BikePackDivider /></> },
+            { key: "hero", content: <Hero /> },
             { key: "what", content: <WhatItIs /> },
             { key: "theme", content: <Theme /> },
             { key: "guide", content: <Guide /> },
