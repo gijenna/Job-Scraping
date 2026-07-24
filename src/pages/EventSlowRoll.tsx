@@ -319,7 +319,7 @@ const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string })
   <section id={id} style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
     <NeonBlobs />
     <div aria-hidden style={{
-      position: "absolute", inset: 0, opacity: 0.06,
+      position: "absolute", inset: 0, opacity: 0.025,
       backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
       backgroundSize: "80px 80px",
     }} />
