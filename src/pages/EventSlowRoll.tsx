@@ -623,10 +623,8 @@ const Watch = () => (
       <h2 className="mb-8 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_watch_headline" defaultText="Hear it from Anthony." as="span" />
       </h2>
-      {/* Bike pack rolls through the Watch section as well */}
-      <div className="mb-8">
-        <BikePack height={54} bikeSize={34} cycle={14} count={5} seed={7} />
-      </div>
+
+
       <div className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "16 / 9", border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
         <iframe
           src="https://www.youtube.com/embed/4sTkjejTZPA"
