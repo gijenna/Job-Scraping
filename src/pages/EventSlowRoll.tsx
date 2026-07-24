@@ -19,25 +19,26 @@ import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
 // North Commons leads. Rest rotate behind it.
 const HERO_PHOTOS = [northCommons.url, mpfH1.url, mpfH4.url, mpfH2.url, mpfH3.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
-// Neon palette — Slow Roll after dark. Bright lights on midnight streets.
+// Brand neon palette — Coral + Yellow + ALSO purple, with a touch of cyan for water.
+// Warm near-black base so photos and neon both breathe.
 const C = {
-  midnight: "#0a0a1f",       // deep base
-  midnight2: "#131235",      // panel base
-  ink: "#0a0a1f",
-  paper: "#faf7f2",          // cream for light sections
+  midnight: "#0f0a08",       // warm near-black base
+  midnight2: "#1a120f",      // panel base
+  ink: "#0f0a08",
+  paper: "#faf7f2",
   paperLine: "#e2ddd2",
-  muted: "#8a8fb0",
+  muted: "#8a8578",
   mutedDark: "#5b5f57",
-  // Neons
-  magenta: "#ff2d95",
-  cyan: "#00e6ff",
-  yellow: "#f5d90a",
-  lime: "#b6ff3d",
-  // Legacy roles mapped to neon
-  primary: "#ff2d95",        // was rust
-  primaryGlow: "0 0 24px rgba(255,45,149,0.55)",
-  cyanGlow: "0 0 24px rgba(0,230,255,0.5)",
-  yellowGlow: "0 0 22px rgba(245,217,10,0.55)",
+  // Brand neons
+  magenta: "#ED7660",        // Basecamp coral — primary neon
+  cyan: "#38d6e6",           // touch of cyan for water references
+  yellow: "#E1B624",         // Basecamp yellow — secondary neon
+  lime: "#a855f7",           // ALSO purple — tertiary neon
+  // Legacy roles
+  primary: "#ED7660",
+  primaryGlow: "0 0 22px rgba(237,118,96,0.55)",
+  cyanGlow: "0 0 20px rgba(56,214,230,0.45)",
+  yellowGlow: "0 0 22px rgba(225,182,36,0.55)",
 };
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
@@ -98,16 +99,17 @@ const CTAButton = ({
   </a>
 );
 
-/* Global keyframes for glow, marquee, blobs */
+/* Global keyframes for glow, path, blobs */
 const NeonStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
-    @keyframes sr-pulse { 0%,100% { opacity:.85; filter:brightness(1) } 50% { opacity:1; filter:brightness(1.25) } }
-    @keyframes sr-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+    @keyframes sr-pulse { 0%,100% { opacity:.85; filter:brightness(1) } 50% { opacity:1; filter:brightness(1.15) } }
     @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
-    @keyframes sr-flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity:1 } 20%,24%,55% { opacity:.55 } }
-    .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 32px currentColor; }
-    .sr-neon-soft { text-shadow: 0 0 18px rgba(255,45,149,0.6), 0 0 40px rgba(0,230,255,0.35); }
+    @keyframes sr-dash { to { stroke-dashoffset: -240; } }
+    @keyframes sr-bike-roll { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
+    @keyframes sr-bike-divider { 0% { transform: translateX(-40px); } 100% { transform: translateX(calc(100vw + 40px)); } }
+    .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
+    .sr-path-dash { stroke-dasharray: 14 12; animation: sr-dash 6s linear infinite; }
   `}</style>
 );
 
@@ -115,23 +117,73 @@ const NeonBlobs = () => (
   <>
     <div aria-hidden style={{
       position: "absolute", width: 520, height: 520, borderRadius: "50%",
-      background: `radial-gradient(circle, ${C.magenta}55 0%, transparent 65%)`,
-      filter: "blur(40px)", top: -160, left: -120, animation: "sr-drift 14s ease-in-out infinite",
+      background: `radial-gradient(circle, ${C.magenta}33 0%, transparent 65%)`,
+      filter: "blur(50px)", top: -160, left: -120, animation: "sr-drift 18s ease-in-out infinite",
       pointerEvents: "none",
     }} />
     <div aria-hidden style={{
-      position: "absolute", width: 560, height: 560, borderRadius: "50%",
-      background: `radial-gradient(circle, ${C.cyan}44 0%, transparent 65%)`,
-      filter: "blur(50px)", bottom: -200, right: -140, animation: "sr-drift 18s ease-in-out infinite reverse",
-      pointerEvents: "none",
-    }} />
-    <div aria-hidden style={{
-      position: "absolute", width: 380, height: 380, borderRadius: "50%",
-      background: `radial-gradient(circle, ${C.yellow}33 0%, transparent 65%)`,
-      filter: "blur(40px)", top: "35%", right: "20%", animation: "sr-drift 22s ease-in-out infinite",
+      position: "absolute", width: 480, height: 480, borderRadius: "50%",
+      background: `radial-gradient(circle, ${C.lime}2a 0%, transparent 65%)`,
+      filter: "blur(60px)", bottom: -200, right: -140, animation: "sr-drift 22s ease-in-out infinite reverse",
       pointerEvents: "none",
     }} />
   </>
+);
+
+/* Small SVG bike icon */
+const BikeIcon = ({ size = 28, color = C.yellow }: { size?: number; color?: string }) => (
+  <svg width={size} height={size * 0.62} viewBox="0 0 64 40" fill="none" style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
+    <circle cx="12" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+    <circle cx="52" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+    <path d="M12 30 L28 30 L38 12 L48 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+    <path d="M22 12 L32 12 L28 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+    <circle cx="38" cy="12" r="2" fill={color} />
+  </svg>
+);
+
+/* Horizontal bike-path divider — replaces the ticker. A dashed road with a bike rolling across. */
+const BikePathDivider = () => (
+  <div style={{ background: C.midnight, position: "relative", overflow: "hidden", padding: "22px 0" }}>
+    <svg width="100%" height="28" preserveAspectRatio="none" style={{ display: "block" }}>
+      <path
+        d="M0 14 Q 200 2 400 14 T 800 14 T 1200 14 T 1600 14 T 2000 14"
+        stroke={C.yellow}
+        strokeWidth="2"
+        fill="none"
+        className="sr-path-dash"
+        style={{ filter: `drop-shadow(0 0 6px ${C.yellow})` }}
+      />
+    </svg>
+    <div style={{ position: "absolute", top: "50%", left: 0, transform: "translateY(-50%)", animation: "sr-bike-divider 14s linear infinite", pointerEvents: "none" }}>
+      <BikeIcon size={34} color={C.magenta} />
+    </div>
+  </div>
+);
+
+/* Full-page vertical bike-path spine — winds down the right side, bike rolls along it */
+const BikePathSpine = () => (
+  <div aria-hidden style={{
+    position: "absolute", top: 0, right: 0, bottom: 0, width: 180,
+    pointerEvents: "none", zIndex: 1, overflow: "hidden",
+  }}>
+    <svg width="180" height="100%" viewBox="0 0 180 4000" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
+      <path
+        id="sr-spine"
+        d="M140 0 Q 40 250 140 500 Q 240 750 100 1000 Q 20 1250 130 1500 Q 240 1750 90 2000 Q 30 2250 150 2500 Q 230 2750 100 3000 Q 30 3250 140 3500 Q 220 3750 120 4000"
+        stroke={C.magenta}
+        strokeWidth="2.5"
+        fill="none"
+        className="sr-path-dash"
+        style={{ filter: `drop-shadow(0 0 8px ${C.magenta})` }}
+      />
+      {/* Little bikes parked along the way */}
+      {[300, 900, 1500, 2100, 2700, 3300, 3800].map((y, i) => (
+        <g key={y} transform={`translate(${i % 2 === 0 ? 40 : 110}, ${y})`}>
+          <circle cx="0" cy="0" r="3" fill={i % 2 === 0 ? C.yellow : C.lime} style={{ filter: `drop-shadow(0 0 6px ${i % 2 === 0 ? C.yellow : C.lime})` }} />
+        </g>
+      ))}
+    </svg>
+  </div>
 );
 
 const Hero = () => {
@@ -153,24 +205,17 @@ const Hero = () => {
             position: "absolute", inset: 0,
             backgroundImage: `url(${url})`,
             backgroundSize: "cover", backgroundPosition: "center",
-            opacity: i === idx ? 0.35 : 0,
-            transition: "opacity 1.4s ease-in-out",
+            opacity: i === idx ? 0.75 : 0,
+            transition: "opacity 1.6s ease-in-out",
           }}
         />
       ))}
-      {/* color wash + vignette on top of photo */}
+      {/* warm dark wash — keeps photo visible while text stays legible */}
       <div aria-hidden style={{
         position: "absolute", inset: 0,
-        background: `linear-gradient(135deg, rgba(10,10,31,0.7) 0%, rgba(19,18,53,0.55) 45%, rgba(10,10,31,0.85) 100%)`,
+        background: `linear-gradient(180deg, rgba(15,10,8,0.55) 0%, rgba(15,10,8,0.35) 45%, rgba(15,10,8,0.85) 100%)`,
       }} />
       <NeonBlobs />
-      {/* scan line grid */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0, opacity: 0.12,
-        backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
-        backgroundSize: "60px 60px",
-        maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)",
-      }} />
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
         <div className="mb-8">
@@ -274,7 +319,7 @@ const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string })
   <section id={id} style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
     <NeonBlobs />
     <div aria-hidden style={{
-      position: "absolute", inset: 0, opacity: 0.06,
+      position: "absolute", inset: 0, opacity: 0.025,
       backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
       backgroundSize: "80px 80px",
     }} />
@@ -340,11 +385,11 @@ const WhatItIs = () => (
           </figcaption>
         </figure>
         <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
-          <img src={heroPhoto.url} alt="Slow Roll MSP rider on a past community ride" className="w-full h-72 md:h-80 object-cover block" />
+          <img src={northCommons.url} alt="Slow Roll North Commons ride in Minneapolis" className="w-full h-72 md:h-80 object-cover block" />
           <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo via{" "}
-            <a href="https://www.facebook.com/SlowRollTC/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
-              Slow Roll TC
+            Photo: Tom Evers /{" "}
+            <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
+              Minneapolis Parks Foundation
             </a>
           </figcaption>
         </figure>
@@ -650,19 +695,22 @@ const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
-    <main style={{ ...font, background: C.midnight, color: "#fff" }}>
-      <OrderedSections
-        sections={[
-          { key: "hero", content: <><Hero /><Marquee /></> },
-          { key: "what", content: <WhatItIs /> },
-          { key: "theme", content: <Theme /> },
-          { key: "guide", content: <Guide /> },
-          { key: "partners", content: <Partners /> },
-          { key: "details", content: <Details /> },
-          { key: "watch", content: <Watch /> },
-          { key: "footer", content: <FooterCTA /> },
-        ]}
-      />
+    <main style={{ ...font, background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }}>
+      <BikePathSpine />
+      <div style={{ position: "relative", zIndex: 2 }}>
+        <OrderedSections
+          sections={[
+            { key: "hero", content: <><Hero /><BikePathDivider /></> },
+            { key: "what", content: <WhatItIs /> },
+            { key: "theme", content: <Theme /> },
+            { key: "guide", content: <Guide /> },
+            { key: "partners", content: <Partners /> },
+            { key: "details", content: <Details /> },
+            { key: "watch", content: <Watch /> },
+            { key: "footer", content: <FooterCTA /> },
+          ]}
+        />
+      </div>
     </main>
   </EditableTextProvider>
 );
