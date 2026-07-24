@@ -140,45 +140,53 @@ const Hero = () => (
 
 const WhatItIs = () => (
   <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
-    <div className="max-w-3xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
-        <EditableText settingKey="sr_what_eyebrow" defaultText="What it is" as="span" />
-      </p>
-      <h2 className="font-bold mb-6" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
-        <EditableText
-          settingKey="sr_what_headline"
-          defaultText="A Critical Mass-style ride, at a humane pace."
-          as="span"
-        />
-      </h2>
-      <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: C.ink }}>
-        <p>
-          <EditableText
-            settingKey="sr_what_p1"
-            defaultText="Ninety minutes on two wheels. Riders don't know the exact route ahead of time, only the theme, so the pace stays comfortable for everyone from first-time riders to seasoned cyclists."
-            as="span"
-            multiline
-          />
+    <div className="max-w-5xl mx-auto">
+      <div className="max-w-3xl mb-10">
+        <p
+          className="uppercase font-semibold mb-4"
+          style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
+        >
+          <EditableText settingKey="sr_what_eyebrow" defaultText="What it is" as="span" />
         </p>
-        <p>
+        <h2 className="font-bold mb-6" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
           <EditableText
-            settingKey="sr_what_p2"
-            defaultText="Volunteers hold intersections so the group moves as one. The ride stops along the way for short talks tied to the theme, and ends with a DJ and a free community meal."
+            settingKey="sr_what_headline"
+            defaultText="A Critical Mass-style ride, at a humane pace."
             as="span"
-            multiline
           />
-        </p>
-        <p style={{ color: C.muted, fontSize: 15 }}>
-          <EditableText
-            settingKey="sr_what_context"
-            defaultText="A note on timing: this ride happens to fall during Black Bike Week in Minneapolis. Nice context, not the headline."
-            as="span"
-            multiline
-          />
-        </p>
+        </h2>
+        <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: C.ink }}>
+          <p>
+            <EditableText
+              settingKey="sr_what_p1"
+              defaultText="Ninety minutes on two wheels. Riders don't know the exact route ahead of time, only the theme, so the pace stays comfortable for everyone from first-time riders to seasoned cyclists."
+              as="span"
+              multiline
+            />
+          </p>
+          <p>
+            <EditableText
+              settingKey="sr_what_p2"
+              defaultText="Volunteers hold intersections so the group moves as one. The ride stops along the way for short talks tied to the theme, and ends with a DJ and a free community meal."
+              as="span"
+              multiline
+            />
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
+          <img src={ridePhoto2.url} alt="Slow Roll MSP riders on a past community ride" className="w-full h-64 md:h-72 object-cover block" />
+          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+            Photo: Devon Young Cupery via Streets.mn
+          </figcaption>
+        </figure>
+        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
+          <img src={ridePhoto3.url} alt="Riders gathered on a past Slow Roll MSP tour" className="w-full h-64 md:h-72 object-cover block" />
+          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+            Photo via Streets.mn
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
