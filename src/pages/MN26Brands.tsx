@@ -287,15 +287,27 @@ const Tiers = () => (
           copyKey="tier.b.copy"
           copyDefault="Own the room the whole industry wants into. Recruiting, reputation, and reach without a booth."
         />
-        <TierCard
-          nameKey="tier.c.name"
-          nameDefault="Title Partner"
-          priceKey="tier.c.price"
-          priceDefault="$20,000"
-          copyKey="tier.c.copy"
-          copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
-          highlight
-        />
+        <div className="flex flex-col">
+          <TierCard
+            nameKey="tier.c.name"
+            nameDefault="Title Partner"
+            priceKey="tier.c.price"
+            priceDefault="$20,000"
+            copyKey="tier.c.copy"
+            copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
+            highlight
+          />
+          <a
+            href="https://basecampoutdoorevents.com/slow-roll"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: CORAL, ...font }}
+            className="mt-3 text-xs uppercase tracking-[0.2em] font-semibold text-center underline hover:opacity-80"
+          >
+            See the Slow Roll ride →
+          </a>
+        </div>
+
       </div>
 
       <ComparisonTable />
