@@ -4,9 +4,8 @@ import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
 import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
-import ridePhoto2 from "@/assets/slowroll/ride-2.jpg.asset.json";
-import ridePhoto3 from "@/assets/slowroll/ride-3.jpg.asset.json";
-import sfbikeLights from "@/assets/slowroll/sfbike-lights.jpg.asset.json";
+import cwBikeLights from "@/assets/slowroll/cwbikelights.jpg.asset.json";
+import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
 import mpfH1 from "@/assets/slowroll/mpf-h1.jpg.asset.json";
@@ -17,23 +16,35 @@ import mpfH5 from "@/assets/slowroll/mpf-h5.png.asset.json";
 import mpfH6 from "@/assets/slowroll/mpf-h6.png.asset.json";
 import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
 
-const HERO_PHOTOS = [mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url];
+// North Commons leads. Rest rotate behind it.
+const HERO_PHOTOS = [northCommons.url, mpfH1.url, mpfH4.url, mpfH2.url, mpfH3.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
-// Brand palette (page-scoped, matches spec exactly)
+// Neon palette — Slow Roll after dark. Bright lights on midnight streets.
 const C = {
-  forest: "#2f4a3c",
-  forestDark: "#1e332a",
-  rust: "#c1602f",
-  cream: "#faf7f2",
-  ink: "#22261f",
-  muted: "#5b5f57",
-  line: "#e2ddd2",
+  midnight: "#0a0a1f",       // deep base
+  midnight2: "#131235",      // panel base
+  ink: "#0a0a1f",
+  paper: "#faf7f2",          // cream for light sections
+  paperLine: "#e2ddd2",
+  muted: "#8a8fb0",
+  mutedDark: "#5b5f57",
+  // Neons
+  magenta: "#ff2d95",
+  cyan: "#00e6ff",
+  yellow: "#f5d90a",
+  lime: "#b6ff3d",
+  // Legacy roles mapped to neon
+  primary: "#ff2d95",        // was rust
+  primaryGlow: "0 0 24px rgba(255,45,149,0.55)",
+  cyanGlow: "0 0 24px rgba(0,230,255,0.5)",
+  yellowGlow: "0 0 22px rgba(245,217,10,0.55)",
 };
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
 const SLOWROLL_FB_URL = "https://www.facebook.com/SlowRollTC/";
 
 const font = { fontFamily: "'Inter', system-ui, sans-serif" };
+const displayFont = { fontFamily: "'Unbounded', 'Inter', system-ui, sans-serif" };
 
 const Badge = ({
   settingKey,
@@ -45,14 +56,15 @@ const Badge = ({
   variant?: "solid" | "outline";
 }) => (
   <span
-    className="inline-block uppercase font-semibold rounded-full"
+    className="inline-block uppercase font-bold rounded-full"
     style={{
       fontSize: 11,
-      letterSpacing: "0.16em",
-      padding: "6px 14px",
-      background: variant === "solid" ? C.rust : "transparent",
-      color: variant === "solid" ? "#fff" : C.rust,
-      border: variant === "outline" ? `1px solid ${C.rust}` : "none",
+      letterSpacing: "0.2em",
+      padding: "7px 16px",
+      background: variant === "solid" ? C.magenta : "transparent",
+      color: variant === "solid" ? "#fff" : C.magenta,
+      border: variant === "outline" ? `1.5px solid ${C.magenta}` : "none",
+      boxShadow: variant === "solid" ? C.primaryGlow : "none",
     }}
   >
     <EditableText settingKey={settingKey} defaultText={defaultText} as="span" />
@@ -72,16 +84,54 @@ const CTAButton = ({
     href={REGISTER_URL}
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block rounded-lg font-semibold transition-opacity hover:opacity-90"
+    className="inline-block rounded-full font-bold transition-transform hover:scale-[1.03]"
     style={{
-      background: C.rust,
-      color: "#fff",
-      padding: size === "lg" ? "16px 28px" : "12px 22px",
+      background: `linear-gradient(90deg, ${C.magenta}, ${C.yellow})`,
+      color: C.ink,
+      padding: size === "lg" ? "18px 34px" : "13px 24px",
       fontSize: size === "lg" ? 17 : 15,
+      letterSpacing: "0.02em",
+      boxShadow: `0 0 0 2px rgba(255,255,255,0.06), 0 10px 40px rgba(255,45,149,0.45), 0 0 60px rgba(245,217,10,0.25)`,
     }}
   >
     <EditableText settingKey={settingKey} defaultText={defaultText} as="span" />
   </a>
+);
+
+/* Global keyframes for glow, marquee, blobs */
+const NeonStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
+    @keyframes sr-pulse { 0%,100% { opacity:.85; filter:brightness(1) } 50% { opacity:1; filter:brightness(1.25) } }
+    @keyframes sr-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+    @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
+    @keyframes sr-flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity:1 } 20%,24%,55% { opacity:.55 } }
+    .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 32px currentColor; }
+    .sr-neon-soft { text-shadow: 0 0 18px rgba(255,45,149,0.6), 0 0 40px rgba(0,230,255,0.35); }
+  `}</style>
+);
+
+const NeonBlobs = () => (
+  <>
+    <div aria-hidden style={{
+      position: "absolute", width: 520, height: 520, borderRadius: "50%",
+      background: `radial-gradient(circle, ${C.magenta}55 0%, transparent 65%)`,
+      filter: "blur(40px)", top: -160, left: -120, animation: "sr-drift 14s ease-in-out infinite",
+      pointerEvents: "none",
+    }} />
+    <div aria-hidden style={{
+      position: "absolute", width: 560, height: 560, borderRadius: "50%",
+      background: `radial-gradient(circle, ${C.cyan}44 0%, transparent 65%)`,
+      filter: "blur(50px)", bottom: -200, right: -140, animation: "sr-drift 18s ease-in-out infinite reverse",
+      pointerEvents: "none",
+    }} />
+    <div aria-hidden style={{
+      position: "absolute", width: 380, height: 380, borderRadius: "50%",
+      background: `radial-gradient(circle, ${C.yellow}33 0%, transparent 65%)`,
+      filter: "blur(40px)", top: "35%", right: "20%", animation: "sr-drift 22s ease-in-out infinite",
+      pointerEvents: "none",
+    }} />
+  </>
 );
 
 const Hero = () => {
@@ -92,61 +142,83 @@ const Hero = () => {
   }, []);
   return (
     <section
-      style={{ position: "relative", background: C.forestDark, color: "#fff" }}
-      className="px-6 py-20 md:py-28 overflow-hidden"
+      style={{ position: "relative", background: C.midnight, color: "#fff" }}
+      className="px-6 py-24 md:py-32 overflow-hidden"
     >
       {HERO_PHOTOS.map((url, i) => (
         <div
           key={url}
           aria-hidden
           style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `linear-gradient(rgba(30,51,42,0.72), rgba(30,51,42,0.82)), url(${url})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: i === idx ? 1 : 0,
-            transition: "opacity 1.2s ease-in-out",
+            position: "absolute", inset: 0,
+            backgroundImage: `url(${url})`,
+            backgroundSize: "cover", backgroundPosition: "center",
+            opacity: i === idx ? 0.35 : 0,
+            transition: "opacity 1.4s ease-in-out",
           }}
         />
       ))}
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <div className="mb-6">
+      {/* color wash + vignette on top of photo */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0,
+        background: `linear-gradient(135deg, rgba(10,10,31,0.7) 0%, rgba(19,18,53,0.55) 45%, rgba(10,10,31,0.85) 100%)`,
+      }} />
+      <NeonBlobs />
+      {/* scan line grid */}
+      <div aria-hidden style={{
+        position: "absolute", inset: 0, opacity: 0.12,
+        backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
+        backgroundSize: "60px 60px",
+        maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)",
+      }} />
+
+      <div className="max-w-5xl mx-auto text-center relative z-10">
+        <div className="mb-8">
           <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
         </div>
         <p
-          className="uppercase font-medium mb-5"
-          style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.75)" }}
+          className="uppercase font-bold mb-6"
+          style={{ letterSpacing: "0.3em", fontSize: 12, color: C.cyan, textShadow: `0 0 14px ${C.cyan}` }}
         >
-          <EditableText
-            settingKey="sr_hero_eyebrow"
-            defaultText="Basecamp Outdoor x Slow Roll"
-            as="span"
-          />
+          <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
         </p>
         <h1
-          className="font-bold leading-[1.05] mb-6"
-          style={{ fontSize: "clamp(40px, 7vw, 76px)", color: "#fff" }}
+          className="leading-[0.95] mb-8"
+          style={{
+            ...displayFont,
+            fontSize: "clamp(52px, 10vw, 128px)",
+            fontWeight: 900,
+            color: "#fff",
+            letterSpacing: "-0.02em",
+            textShadow: `0 0 30px rgba(255,45,149,0.55), 0 0 80px rgba(0,230,255,0.35)`,
+          }}
         >
-          <EditableText settingKey="sr_hero_headline" defaultText="Slow Roll x Basecamp." as="span" />
+          <EditableText settingKey="sr_hero_headline_a" defaultText="SLOW " as="span" />
+          <span style={{ color: C.yellow, textShadow: `0 0 24px ${C.yellow}, 0 0 60px ${C.yellow}` }}>
+            <EditableText settingKey="sr_hero_headline_b" defaultText="ROLL" as="span" />
+          </span>
+          <br />
+          <span style={{ ...displayFont, fontSize: "0.5em", fontWeight: 700, color: C.magenta, textShadow: `0 0 22px ${C.magenta}` }}>
+            <EditableText settingKey="sr_hero_headline_c" defaultText="× BASECAMP" as="span" />
+          </span>
         </h1>
-        <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.9)" }}>
+        <p className="mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
           <EditableText
             settingKey="sr_hero_subline"
-            defaultText="Minneapolis · Wednesday, August 19, 2026 · Evening"
+            defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK"
             as="span"
           />
         </p>
-        <p className="mb-8 font-semibold" style={{ fontSize: 17, color: "#f2a274" }}>
+        <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.06em", textShadow: `0 0 12px ${C.lime}` }}>
           <EditableText
             settingKey="sr_hero_capline"
-            defaultText="Only 100 riders. Bring your bike or borrow one."
+            defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE"
             as="span"
           />
         </p>
         <p
           className="max-w-2xl mx-auto mb-10"
-          style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.88)" }}
+          style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}
         >
           <EditableText
             settingKey="sr_hero_pitch"
@@ -155,16 +227,16 @@ const Hero = () => {
             multiline
           />
         </p>
-        <CTAButton settingKey="sr_hero_cta" defaultText="Register — only 100 spots" size="lg" />
-        <p className="mt-6" style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>
-          Photos: Tom Evers / Minneapolis Parks Foundation ·{" "}
+        <CTAButton settingKey="sr_hero_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
+        <p className="mt-8" style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
+          Lead photo: Tom Evers /{" "}
           <a
             href="https://mplsparksfoundation.org/slow-roll-joy/"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "rgba(255,255,255,0.75)", textDecoration: "underline" }}
+            style={{ color: C.cyan, textDecoration: "underline" }}
           >
-            mplsparksfoundation.org
+            Minneapolis Parks Foundation
           </a>
         </p>
       </div>
@@ -172,66 +244,73 @@ const Hero = () => {
   );
 };
 
-const BikeBackdrop = ({ tone = "cream" }: { tone?: "cream" | "white" }) => {
-  const base = tone === "cream" ? C.cream : "#fff";
-  const stripe = tone === "cream" ? "#f1e9d8" : "#f6efe0";
+/* Marquee ticker — joy, community, art, lights */
+const Marquee = () => {
+  const items = [
+    "SLOW ROLL", "COMMUNITY", "LIGHTS ON", "MINNEAPOLIS", "RIDE JOY", "PUBLIC WATER",
+    "DJ + MEAL", "BRING A BIKE", "AFTER DARK", "NO RACE", "MOVING STORIES", "ALL WELCOME",
+  ];
+  const row = [...items, ...items];
   return (
-    <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `repeating-linear-gradient(135deg, ${base} 0 24px, ${stripe} 24px 25px)`,
-          opacity: 0.55,
-        }}
-      />
-      <svg
-        viewBox="0 0 200 60"
-        style={{ position: "absolute", right: -20, top: 20, width: 340, opacity: 0.09, color: C.forest }}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      >
-        <circle cx="40" cy="42" r="14" />
-        <circle cx="160" cy="42" r="14" />
-        <path d="M40 42 L90 42 L120 20 L150 42 M120 20 L110 42 M90 42 L110 42" strokeLinecap="round" />
-        <circle cx="40" cy="42" r="2" fill="currentColor" stroke="none" />
-        <circle cx="160" cy="42" r="2" fill="currentColor" stroke="none" />
-      </svg>
-      <svg
-        viewBox="0 0 200 60"
-        style={{ position: "absolute", left: -30, bottom: 30, width: 260, opacity: 0.07, color: C.rust }}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      >
-        <circle cx="40" cy="42" r="14" />
-        <circle cx="160" cy="42" r="14" />
-        <path d="M40 42 L90 42 L120 20 L150 42 M120 20 L110 42 M90 42 L110 42" strokeLinecap="round" />
-      </svg>
+    <div style={{ background: C.midnight2, borderTop: `1px solid ${C.magenta}`, borderBottom: `1px solid ${C.cyan}`, overflow: "hidden", position: "relative" }}>
+      <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(90deg, ${C.midnight2} 0%, transparent 8%, transparent 92%, ${C.midnight2} 100%)`, zIndex: 2, pointerEvents: "none" }} />
+      <div style={{ display: "flex", whiteSpace: "nowrap", animation: "sr-marquee 40s linear infinite", padding: "18px 0" }}>
+        {row.map((t, i) => (
+          <span key={i} style={{
+            ...displayFont, fontWeight: 800, fontSize: 22, letterSpacing: "0.08em",
+            color: i % 3 === 0 ? C.yellow : i % 3 === 1 ? C.cyan : C.magenta,
+            padding: "0 28px", textShadow: `0 0 14px currentColor`,
+          }}>
+            {t} <span style={{ color: "rgba(255,255,255,0.35)", marginLeft: 20 }}>✦</span>
+          </span>
+        ))}
+      </div>
     </div>
   );
 };
 
+/* Dark section frame with neon halo, replaces cream backgrounds for a wow feel */
+const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
+  <section id={id} style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
+    <NeonBlobs />
+    <div aria-hidden style={{
+      position: "absolute", inset: 0, opacity: 0.06,
+      backgroundImage: `linear-gradient(${C.cyan} 1px, transparent 1px), linear-gradient(90deg, ${C.cyan} 1px, transparent 1px)`,
+      backgroundSize: "80px 80px",
+    }} />
+    <div className="relative z-10">{children}</div>
+  </section>
+);
+
+const NeonCard = ({ children, accent = C.magenta }: { children: React.ReactNode; accent?: string }) => (
+  <div
+    className="rounded-2xl p-6 md:p-7 h-full"
+    style={{
+      background: "rgba(19,18,53,0.7)",
+      border: `1px solid ${accent}55`,
+      boxShadow: `0 0 0 1px ${accent}22 inset, 0 10px 40px rgba(0,0,0,0.4), 0 0 30px ${accent}22`,
+      backdropFilter: "blur(6px)",
+    }}
+  >
+    {children}
+  </div>
+);
+
 const WhatItIs = () => (
-  <section style={{ background: C.cream, color: C.ink, position: "relative" }} className="px-6 py-20 md:py-28 overflow-hidden">
-    <BikeBackdrop tone="cream" />
-    <div className="max-w-5xl mx-auto relative z-10">
-      <div className="max-w-3xl mb-10">
-        <p
-          className="uppercase font-semibold mb-4"
-          style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-        >
+  <DarkPanel>
+    <div className="max-w-5xl mx-auto">
+      <div className="max-w-3xl mb-12">
+        <p className="uppercase font-bold mb-4" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.cyan, textShadow: `0 0 10px ${C.cyan}` }}>
           <EditableText settingKey="sr_what_eyebrow" defaultText="What it is" as="span" />
         </p>
-        <h2 className="font-bold mb-6" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
+        <h2 className="mb-6" style={{ ...displayFont, fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
           <EditableText
             settingKey="sr_what_headline"
             defaultText="A Critical Mass-style ride, at a humane pace."
             as="span"
           />
         </h2>
-        <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: C.ink }}>
+        <div className="space-y-5" style={{ fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.85)" }}>
           <p>
             <EditableText
               settingKey="sr_what_p1"
@@ -250,82 +329,66 @@ const WhatItIs = () => (
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-          <img src={sfbikeLights.url} alt="Cyclists lit up on a community night ride" className="w-full h-64 md:h-72 object-cover block" />
-          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.cyan}55`, boxShadow: `0 0 40px ${C.cyan}33` }}>
+          <img src={cwBikeLights.url} alt="Cyclists lit up on a community night ride" className="w-full h-72 md:h-80 object-cover block" />
+          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
             Photo:{" "}
-            <a href="https://sfbike.org/news/light-up-the-night-is-back-2/" target="_blank" rel="noopener noreferrer" style={{ color: C.rust, textDecoration: "underline" }}>
+            <a href="https://sfbike.org/news/light-up-the-night-is-back-2/" target="_blank" rel="noopener noreferrer" style={{ color: C.cyan, textDecoration: "underline" }}>
               San Francisco Bicycle Coalition
             </a>
           </figcaption>
         </figure>
-        <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-          <img src={heroPhoto.url} alt="Slow Roll MSP rider on a past community ride" className="w-full h-64 md:h-72 object-cover block" />
-          <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
+        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
+          <img src={heroPhoto.url} alt="Slow Roll MSP rider on a past community ride" className="w-full h-72 md:h-80 object-cover block" />
+          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
             Photo via{" "}
-            <a href="https://www.facebook.com/SlowRollTC/" target="_blank" rel="noopener noreferrer" style={{ color: C.rust, textDecoration: "underline" }}>
+            <a href="https://www.facebook.com/SlowRollTC/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
               Slow Roll TC
             </a>
           </figcaption>
         </figure>
       </div>
     </div>
-  </section>
+  </DarkPanel>
 );
 
 const ThemeCard = ({
-  labelKey,
-  labelDefault,
-  headKey,
-  headDefault,
-  bodyKey,
-  bodyDefault,
+  labelKey, labelDefault, headKey, headDefault, bodyKey, bodyDefault, accent,
 }: {
-  labelKey: string;
-  labelDefault: string;
-  headKey: string;
-  headDefault: string;
-  bodyKey: string;
-  bodyDefault: string;
+  labelKey: string; labelDefault: string;
+  headKey: string; headDefault: string;
+  bodyKey: string; bodyDefault: string;
+  accent: string;
 }) => (
-  <div
-    className="rounded-[12px] p-6 md:p-7"
-    style={{ background: "#fff", border: `1px solid ${C.line}` }}
-  >
-    <p
-      className="uppercase font-semibold mb-3"
-      style={{ letterSpacing: "0.16em", fontSize: 11, color: C.rust }}
-    >
+  <NeonCard accent={accent}>
+    <p className="uppercase font-bold mb-3" style={{ letterSpacing: "0.18em", fontSize: 11, color: accent, textShadow: `0 0 10px ${accent}` }}>
       <EditableText settingKey={labelKey} defaultText={labelDefault} as="span" />
     </p>
-    <h3 className="font-semibold mb-3" style={{ fontSize: 21, color: C.forest, lineHeight: 1.25 }}>
+    <h3 className="mb-3" style={{ ...displayFont, fontSize: 22, fontWeight: 700, color: "#fff", lineHeight: 1.2 }}>
       <EditableText settingKey={headKey} defaultText={headDefault} as="span" />
     </h3>
-    <p style={{ fontSize: 15.5, lineHeight: 1.65, color: C.ink }}>
+    <p style={{ fontSize: 15.5, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}>
       <EditableText settingKey={bodyKey} defaultText={bodyDefault} as="span" multiline />
     </p>
-  </div>
+  </NeonCard>
 );
 
 const Theme = () => (
-  <section style={{ background: "#fff", color: C.ink }} className="px-6 py-20 md:py-28">
+  <DarkPanel>
     <div className="max-w-5xl mx-auto">
       <div className="max-w-3xl mb-12">
-        <p
-          className="uppercase font-semibold mb-4"
-          style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-        >
+        <p className="uppercase font-bold mb-4" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.yellow, textShadow: `0 0 10px ${C.yellow}` }}>
           <EditableText settingKey="sr_theme_eyebrow" defaultText="The theme" as="span" />
         </p>
-        <h2 className="font-bold mb-5" style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}>
+        <h2 className="mb-5" style={{ ...displayFont, fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
           <EditableText
             settingKey="sr_theme_headline"
             defaultText="The story of Minneapolis, told from a bike."
             as="span"
           />
         </h2>
-        <p style={{ fontSize: 17, lineHeight: 1.7, color: C.muted }}>
+        <p style={{ fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.8)" }}>
           <EditableText
             settingKey="sr_theme_intro"
             defaultText="Here's what's here, and here's the story behind it. Light stops and heavier ones, woven together. Not a lecture, just the full texture of the city."
@@ -335,63 +398,48 @@ const Theme = () => (
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <ThemeCard
-          labelKey="sr_theme_c1_label"
-          labelDefault="PUBLIC WATER"
-          headKey="sr_theme_c1_head"
-          headDefault="A lakefront that belongs to everyone."
+        <ThemeCard accent={C.cyan}
+          labelKey="sr_theme_c1_label" labelDefault="PUBLIC WATER"
+          headKey="sr_theme_c1_head" headDefault="A lakefront that belongs to everyone."
           bodyKey="sr_theme_c1_body"
           bodyDefault="Minnesota's history of public waterway access is rare in this country. The entire Minneapolis lakefront is public land, and that fact is worth knowing before you ride past it."
         />
-        <ThemeCard
-          labelKey="sr_theme_c2_label"
-          labelDefault="POOLS & POLICY"
-          headKey="sr_theme_c2_head"
-          headDefault="Segregated pools, and who swims today."
+        <ThemeCard accent={C.magenta}
+          labelKey="sr_theme_c2_label" labelDefault="POOLS & POLICY"
+          headKey="sr_theme_c2_head" headDefault="Segregated pools, and who swims today."
           bodyKey="sr_theme_c2_body"
           bodyDefault="Minneapolis has a real history of segregated public pools, and that policy history still echoes in who learns to swim and who feels welcome at the water. We tell it straight, not as trivia."
         />
-        <ThemeCard
-          labelKey="sr_theme_c3_label"
-          labelDefault="RECLAIMED LAND"
-          headKey="sr_theme_c3_head"
-          headDefault="A waterway uncovered, a neighborhood rebuilt."
+        <ThemeCard accent={C.lime}
+          labelKey="sr_theme_c3_label" labelDefault="RECLAIMED LAND"
+          headKey="sr_theme_c3_head" headDefault="A waterway uncovered, a neighborhood rebuilt."
           bodyKey="sr_theme_c3_body"
           bodyDefault="An affordable-housing community here was built over a formerly covered urban waterway. When it was redeveloped, the waterway was uncovered, replanted with prairie grass, and the housing went back in around it. Proof that reclamation is possible."
         />
-        <ThemeCard
-          labelKey="sr_theme_c4_label"
-          labelDefault="MUSIC & TRAILS"
-          headKey="sr_theme_c4_head"
-          headDefault="Prince, First Avenue, and rails turned into trails."
+        <ThemeCard accent={C.yellow}
+          labelKey="sr_theme_c4_label" labelDefault="MUSIC & TRAILS"
+          headKey="sr_theme_c4_head" headDefault="Prince, First Avenue, and rails turned into trails."
           bodyKey="sr_theme_c4_body"
           bodyDefault="Minneapolis music history runs deep: Prince, Lake Minnetonka, First Avenue. The city's rails-to-trails success is another quiet win. The ride isn't all heavy. This is the lighter thread."
         />
       </div>
     </div>
-  </section>
+  </DarkPanel>
 );
 
 const Guide = () => (
-  <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
+  <DarkPanel>
     <div className="max-w-5xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4 text-center"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
+      <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.magenta, textShadow: `0 0 10px ${C.magenta}` }}>
         <EditableText settingKey="sr_guide_eyebrow" defaultText="Meet your guide" as="span" />
       </p>
-      <h2
-        className="font-bold mb-12 text-center"
-        style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}
-      >
+      <h2 className="mb-12 text-center" style={{ ...displayFont, fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_guide_headline" defaultText="Anthony Taylor." as="span" />
       </h2>
       <div
-        className="rounded-[12px] overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,360px)_1fr] gap-0"
-        style={{ background: "#fff", border: `1px solid ${C.line}` }}
+        className="rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-[minmax(0,360px)_1fr] gap-0"
+        style={{ background: "rgba(19,18,53,0.7)", border: `1px solid ${C.yellow}55`, boxShadow: `0 0 60px ${C.yellow}22` }}
       >
-        {/* Press photo — credit: Minnesota Spokesman-Recorder. Permission pending, swap for cleared photo once confirmed. */}
         <img
           src="https://i0.wp.com/spokesman-recorder.com/wp-content/uploads/2021/10/slow-roll-bike-ride-Anthony-Taylor.jpg"
           alt="Anthony Taylor leading a past Slow Roll ride in Minneapolis"
@@ -399,278 +447,149 @@ const Guide = () => (
           style={{ minHeight: 360 }}
         />
         <div className="p-6 md:p-8">
-          <h3 className="font-bold mb-2" style={{ fontSize: 26, color: C.forest }}>
-            <EditableText
-              settingKey="sr_guide_name"
-              defaultText="Anthony Taylor"
-              as="span"
-            />
+          <h3 className="mb-2" style={{ ...displayFont, fontSize: 28, fontWeight: 800, color: C.yellow, textShadow: `0 0 14px ${C.yellow}` }}>
+            <EditableText settingKey="sr_guide_name" defaultText="Anthony Taylor" as="span" />
           </h3>
-          <p
-            className="uppercase font-medium mb-5"
-            style={{ letterSpacing: "0.14em", fontSize: 12, color: C.muted }}
-          >
-            <EditableText
-              settingKey="sr_guide_title"
-              defaultText="Ride Leader · Advocate · Minneapolis"
-              as="span"
-            />
+          <p className="uppercase font-medium mb-5" style={{ letterSpacing: "0.16em", fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
+            <EditableText settingKey="sr_guide_title" defaultText="Ride Leader · Advocate · Minneapolis" as="span" />
           </p>
-          <div className="space-y-4" style={{ fontSize: 16, lineHeight: 1.7, color: C.ink }}>
+          <div className="space-y-4" style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,0.88)" }}>
             <p>
               <EditableText
                 settingKey="sr_guide_p1"
                 defaultText="Anthony Taylor leads this ride. Founder of Slow Roll Twin Cities with the Cultural Wellness Center, co-founder of the Major Taylor Bicycling Club of Minnesota, and a nationally recognized advocate for equity in the outdoors and mobility justice."
-                as="span"
-                multiline
+                as="span" multiline
               />
             </p>
             <p>
               <EditableText
                 settingKey="sr_guide_p2"
                 defaultText="He's led Slow Rolls through Minneapolis for years. This isn't a one-off. It's his life's work, and we're honored he's showing us the city."
-                as="span"
-                multiline
+                as="span" multiline
               />
             </p>
           </div>
-          <p className="mt-4" style={{ fontSize: 11, color: C.muted }}>
+          <p className="mt-4" style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
             Photo: Minnesota Spokesman-Recorder
           </p>
         </div>
       </div>
     </div>
-  </section>
+  </DarkPanel>
 );
 
 const PartnerCard = ({
-  nameKey,
-  nameDefault,
-  descKey,
-  descDefault,
-  logoUrl,
-  logoAlt,
-  href,
+  nameKey, nameDefault, descKey, descDefault, logoUrl, logoAlt, href, accent,
 }: {
-  nameKey: string;
-  nameDefault: string;
-  descKey: string;
-  descDefault: string;
-  logoUrl?: string;
-  logoAlt: string;
-  href?: string;
+  nameKey: string; nameDefault: string;
+  descKey: string; descDefault: string;
+  logoUrl?: string; logoAlt: string; href?: string; accent: string;
 }) => {
   const inner = (
-    <div
-      className="rounded-[12px] p-6 md:p-7 flex flex-col h-full"
-      style={{ background: "#fff", border: `1px solid ${C.line}` }}
-    >
-      <div
-        className="mb-5 flex items-center justify-center rounded-md"
-        style={{ height: 110, background: C.cream, border: `1px solid ${C.line}` }}
-      >
+    <NeonCard accent={accent}>
+      <div className="mb-5 flex items-center justify-center rounded-xl" style={{ height: 110, background: "#fff", border: `1px solid ${accent}55` }}>
         {logoUrl ? (
           <img src={logoUrl} alt={logoAlt} className="max-h-20 max-w-[75%] object-contain" />
         ) : (
-          <span
-            className="uppercase font-medium"
-            style={{ letterSpacing: "0.16em", fontSize: 11, color: C.muted }}
-          >
-            Logo pending
-          </span>
+          <span className="uppercase font-medium" style={{ letterSpacing: "0.16em", fontSize: 11, color: C.mutedDark }}>Logo pending</span>
         )}
       </div>
-      <h3 className="font-semibold mb-2" style={{ fontSize: 18, color: C.forest }}>
+      <h3 className="mb-2" style={{ ...displayFont, fontSize: 18, fontWeight: 700, color: "#fff" }}>
         <EditableText settingKey={nameKey} defaultText={nameDefault} as="span" />
       </h3>
-      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.muted }}>
+      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: "rgba(255,255,255,0.75)" }}>
         <EditableText settingKey={descKey} defaultText={descDefault} as="span" multiline />
       </p>
-    </div>
+    </NeonCard>
   );
   return href ? (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:-translate-y-1">
       {inner}
     </a>
-  ) : (
-    inner
-  );
+  ) : inner;
 };
 
 const alsoLogo = "/__l5e/assets-v1/b06c9430-a522-4188-bdd1-333d9b3b5005/also-logo.webp";
 
 const Partners = () => (
-  <section style={{ background: "#fff", color: C.ink }} className="px-6 py-20 md:py-28">
+  <DarkPanel>
     <div className="max-w-5xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4 text-center"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
+      <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.lime, textShadow: `0 0 10px ${C.lime}` }}>
         <EditableText settingKey="sr_partners_eyebrow" defaultText="Partners" as="span" />
       </p>
-      <h2
-        className="font-bold mb-12 text-center"
-        style={{ fontSize: "clamp(28px, 4vw, 40px)", color: C.forest }}
-      >
-        <EditableText
-          settingKey="sr_partners_headline"
-          defaultText="Made possible by."
-          as="span"
-        />
+      <h2 className="mb-12 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
+        <EditableText settingKey="sr_partners_headline" defaultText="Made possible by." as="span" />
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <PartnerCard
-          nameKey="sr_p1_name"
-          nameDefault="Slow Roll MSP / Cultural Wellness Center"
-          descKey="sr_p1_desc"
-          descDefault="The ride organizer, led by Anthony Taylor."
-          logoUrl={slowRollLogo.url}
-          logoAlt="Slow Roll Twin Cities"
-          href={SLOWROLL_FB_URL}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <PartnerCard accent={C.magenta}
+          nameKey="sr_p1_name" nameDefault="Slow Roll MSP / Cultural Wellness Center"
+          descKey="sr_p1_desc" descDefault="The ride organizer, led by Anthony Taylor."
+          logoUrl={slowRollLogo.url} logoAlt="Slow Roll Twin Cities" href={SLOWROLL_FB_URL}
         />
-        <PartnerCard
-          nameKey="sr_p2_name"
-          nameDefault="ALSO"
-          descKey="sr_p2_desc"
-          descDefault="E-bikes provided for the ride. Several loaners available on-site for anyone who doesn't bring their own."
-          logoUrl={alsoLogo}
-          logoAlt="ALSO"
-          href="https://ridealso.com"
+        <PartnerCard accent={C.cyan}
+          nameKey="sr_p2_name" nameDefault="ALSO"
+          descKey="sr_p2_desc" descDefault="E-bikes provided for the ride. Several loaners available on-site for anyone who doesn't bring their own."
+          logoUrl={alsoLogo} logoAlt="ALSO" href="https://ridealso.com"
         />
-        <PartnerCard
-          nameKey="sr_p3_name"
-          nameDefault="Basecamp Jobs"
-          descKey="sr_p3_desc"
-          descDefault="Where the outdoor industry finds its people. Powering the connections behind the ride."
-          logoUrl={basecampJobsLogo.url}
-          logoAlt="Basecamp Jobs"
-          href="https://basecampjobs.com"
+        <PartnerCard accent={C.yellow}
+          nameKey="sr_p3_name" nameDefault="Basecamp Jobs"
+          descKey="sr_p3_desc" descDefault="Where the outdoor industry finds its people. Powering the connections behind the ride."
+          logoUrl={basecampJobsLogo.url} logoAlt="Basecamp Jobs" href="https://basecampjobs.com"
         />
       </div>
     </div>
-  </section>
+  </DarkPanel>
 );
 
-const DetailRow = ({
-  labelKey,
-  labelDefault,
-  valueKey,
-  valueDefault,
-}: {
-  labelKey: string;
-  labelDefault: string;
-  valueKey: string;
-  valueDefault: string;
+const DetailRow = ({ labelKey, labelDefault, valueKey, valueDefault }: {
+  labelKey: string; labelDefault: string; valueKey: string; valueDefault: string;
 }) => (
-  <div
-    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-4"
-    style={{ borderBottom: `1px solid ${C.line}` }}
-  >
-    <div
-      className="uppercase font-semibold"
-      style={{
-        letterSpacing: "0.14em",
-        fontSize: 11,
-        color: C.muted,
-        minWidth: 150,
-      }}
-    >
+  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-4" style={{ borderBottom: `1px solid rgba(255,255,255,0.1)` }}>
+    <div className="uppercase font-bold" style={{ letterSpacing: "0.16em", fontSize: 11, color: C.cyan, minWidth: 150, textShadow: `0 0 8px ${C.cyan}` }}>
       <EditableText settingKey={labelKey} defaultText={labelDefault} as="span" />
     </div>
-    <div style={{ fontSize: 16, color: C.ink, lineHeight: 1.55 }}>
+    <div style={{ fontSize: 16, color: "#fff", lineHeight: 1.55 }}>
       <EditableText settingKey={valueKey} defaultText={valueDefault} as="span" multiline />
     </div>
   </div>
 );
 
 const Details = () => (
-  <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
+  <DarkPanel>
     <div className="max-w-3xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
+      <p className="uppercase font-bold mb-4" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.magenta, textShadow: `0 0 10px ${C.magenta}` }}>
         <EditableText settingKey="sr_details_eyebrow" defaultText="The details" as="span" />
       </p>
-      <h2
-        className="font-bold mb-10"
-        style={{ fontSize: "clamp(30px, 4.5vw, 44px)", color: C.forest }}
-      >
+      <h2 className="mb-10" style={{ ...displayFont, fontSize: "clamp(32px, 5vw, 56px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_details_headline" defaultText="Everything you need." as="span" />
       </h2>
-      <div
-        className="rounded-[12px] p-6 md:p-8"
-        style={{ background: "#fff", border: `1px solid ${C.line}` }}
-      >
-        <div style={{ borderTop: `1px solid ${C.line}` }}>
-          <DetailRow
-            labelKey="sr_det_date_l"
-            labelDefault="Date"
-            valueKey="sr_det_date_v"
-            valueDefault="Wednesday, August 19, 2026"
-          />
-          <DetailRow
-            labelKey="sr_det_time_l"
-            labelDefault="Time"
-            valueKey="sr_det_time_v"
-            valueDefault="Evening. Exact start TBD."
-          />
-          <DetailRow
-            labelKey="sr_det_start_l"
-            labelDefault="Start"
-            valueKey="sr_det_start_v"
-            valueDefault="Near the Minneapolis Convention Center. Exact spot TBD."
-          />
-          <DetailRow
-            labelKey="sr_det_cap_l"
-            labelDefault="Capacity"
-            valueKey="sr_det_cap_v"
-            valueDefault="Capped at 100 riders."
-          />
-          <DetailRow
-            labelKey="sr_det_bring_l"
-            labelDefault="What to bring"
-            valueKey="sr_det_bring_v"
-            valueDefault="Your own bike, or borrow one of the ALSO e-bikes provided on-site. No bike required to join."
-          />
-          <DetailRow
-            labelKey="sr_det_cost_l"
-            labelDefault="Cost"
-            valueKey="sr_det_cost_v"
-            valueDefault="Free and open to the public."
-          />
+      <div className="rounded-2xl p-6 md:p-8" style={{ background: "rgba(19,18,53,0.7)", border: `1px solid ${C.cyan}55`, boxShadow: `0 0 40px ${C.cyan}22` }}>
+        <div style={{ borderTop: `1px solid rgba(255,255,255,0.1)` }}>
+          <DetailRow labelKey="sr_det_date_l" labelDefault="Date" valueKey="sr_det_date_v" valueDefault="Wednesday, August 19, 2026" />
+          <DetailRow labelKey="sr_det_time_l" labelDefault="Time" valueKey="sr_det_time_v" valueDefault="Evening. Exact start TBD." />
+          <DetailRow labelKey="sr_det_start_l" labelDefault="Start" valueKey="sr_det_start_v" valueDefault="Near the Minneapolis Convention Center. Exact spot TBD." />
+          <DetailRow labelKey="sr_det_cap_l" labelDefault="Capacity" valueKey="sr_det_cap_v" valueDefault="Capped at 100 riders." />
+          <DetailRow labelKey="sr_det_bring_l" labelDefault="What to bring" valueKey="sr_det_bring_v" valueDefault="Your own bike, or borrow one of the ALSO e-bikes provided on-site. No bike required to join." />
+          <DetailRow labelKey="sr_det_cost_l" labelDefault="Cost" valueKey="sr_det_cost_v" valueDefault="Free and open to the public." />
         </div>
         <div className="mt-8">
-          <CTAButton settingKey="sr_details_cta" defaultText="Register — only 100 spots" size="lg" />
+          <CTAButton settingKey="sr_details_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
         </div>
       </div>
     </div>
-  </section>
+  </DarkPanel>
 );
 
 const Watch = () => (
-  <section style={{ background: "#fff", color: C.ink }} className="px-6 py-20 md:py-28">
+  <DarkPanel>
     <div className="max-w-3xl mx-auto">
-      <p
-        className="uppercase font-semibold mb-4 text-center"
-        style={{ letterSpacing: "0.18em", fontSize: 12, color: C.rust }}
-      >
+      <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.yellow, textShadow: `0 0 10px ${C.yellow}` }}>
         <EditableText settingKey="sr_watch_eyebrow" defaultText="Watch" as="span" />
       </p>
-      <h2
-        className="font-bold mb-8 text-center"
-        style={{ fontSize: "clamp(28px, 4vw, 40px)", color: C.forest }}
-      >
-        <EditableText
-          settingKey="sr_watch_headline"
-          defaultText="Hear it from Anthony."
-          as="span"
-        />
+      <h2 className="mb-8 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
+        <EditableText settingKey="sr_watch_headline" defaultText="Hear it from Anthony." as="span" />
       </h2>
-      <div
-        className="w-full rounded-[12px] overflow-hidden"
-        style={{ aspectRatio: "16 / 9", border: `1px solid ${C.line}` }}
-      >
+      <div className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "16 / 9", border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
         <iframe
           src="https://www.youtube.com/embed/4sTkjejTZPA"
           title="Bridging the gap: How Anthony Taylor is making outdoor recreation welcoming for all"
@@ -680,7 +599,7 @@ const Watch = () => (
           style={{ border: 0 }}
         />
       </div>
-      <p className="mt-4 text-center" style={{ fontSize: 13, color: C.muted }}>
+      <p className="mt-4 text-center" style={{ fontSize: 13, color: "rgba(255,255,255,0.65)" }}>
         <EditableText
           settingKey="sr_watch_caption"
           defaultText="MPR News · Bridging the gap: How Anthony Taylor is making outdoor recreation welcoming for all (1:42)."
@@ -688,48 +607,37 @@ const Watch = () => (
         />
       </p>
     </div>
-  </section>
+  </DarkPanel>
 );
 
 const FooterCTA = () => (
-  <section style={{ background: C.forestDark, color: "#fff" }} className="px-6 py-20 md:py-28">
-    <div className="max-w-3xl mx-auto text-center">
+  <section style={{ background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-32">
+    <NeonBlobs />
+    <div aria-hidden style={{
+      position: "absolute", inset: 0, opacity: 0.1,
+      backgroundImage: `linear-gradient(${C.magenta} 1px, transparent 1px), linear-gradient(90deg, ${C.magenta} 1px, transparent 1px)`,
+      backgroundSize: "60px 60px",
+      maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)",
+    }} />
+    <div className="max-w-3xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_footer_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
       </div>
-      <h2
-        className="font-bold mb-5"
-        style={{ fontSize: "clamp(34px, 5.5vw, 56px)", color: "#fff", lineHeight: 1.05 }}
-      >
-        <EditableText settingKey="sr_footer_headline" defaultText="Come ride with us." as="span" />
+      <h2 className="mb-5" style={{ ...displayFont, fontSize: "clamp(40px, 7vw, 84px)", fontWeight: 900, color: "#fff", lineHeight: 0.95, letterSpacing: "-0.02em", textShadow: `0 0 30px ${C.magenta}, 0 0 80px ${C.cyan}` }}>
+        <EditableText settingKey="sr_footer_headline" defaultText="COME RIDE WITH US." as="span" />
       </h2>
-      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: C.rust }}>
-        <EditableText
-          settingKey="sr_footer_capline"
-          defaultText="Only 100 spots. Bring your bike or borrow one."
-          as="span"
-        />
+      <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.08em", textShadow: `0 0 12px ${C.lime}` }}>
+        <EditableText settingKey="sr_footer_capline" defaultText="ONLY 100 SPOTS · BRING A BIKE OR BORROW ONE" as="span" />
       </p>
       <div className="mb-10">
-        <CTAButton settingKey="sr_footer_cta" defaultText="Register — only 100 spots" size="lg" />
+        <CTAButton settingKey="sr_footer_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
       </div>
-      <div
-        className="pt-8 space-y-2"
-        style={{ borderTop: `1px solid rgba(255,255,255,0.12)`, color: "rgba(255,255,255,0.7)", fontSize: 14 }}
-      >
+      <div className="pt-8 space-y-2" style={{ borderTop: `1px solid rgba(255,255,255,0.12)`, color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
         <p>
-          <EditableText
-            settingKey="sr_footer_presented"
-            defaultText="Presented by Basecamp Outdoor and Slow Roll MSP."
-            as="span"
-          />
+          <EditableText settingKey="sr_footer_presented" defaultText="Presented by Basecamp Outdoor and Slow Roll MSP." as="span" />
         </p>
         <p>
-          <a
-            href="mailto:jenna@wearetheoutdoorindustry.com"
-            className="underline hover:text-white transition-colors"
-            style={{ color: "rgba(255,255,255,0.85)" }}
-          >
+          <a href="mailto:jenna@wearetheoutdoorindustry.com" className="underline hover:text-white transition-colors" style={{ color: C.cyan }}>
             jenna@wearetheoutdoorindustry.com
           </a>
         </p>
@@ -741,10 +649,11 @@ const FooterCTA = () => (
 const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
-    <main style={{ ...font, background: C.cream, color: C.ink }}>
+    <NeonStyles />
+    <main style={{ ...font, background: C.midnight, color: "#fff" }}>
       <OrderedSections
         sections={[
-          { key: "hero", content: <Hero /> },
+          { key: "hero", content: <><Hero /><Marquee /></> },
           { key: "what", content: <WhatItIs /> },
           { key: "theme", content: <Theme /> },
           { key: "guide", content: <Guide /> },
