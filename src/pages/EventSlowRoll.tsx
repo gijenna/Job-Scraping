@@ -343,26 +343,49 @@ const WhatItIs = () => (
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.cyan}55`, boxShadow: `0 0 40px ${C.cyan}33` }}>
-          <img src={cwBikeLights.url} alt="Cyclists lit up on a community night ride" className="w-full h-72 md:h-80 object-cover block" />
-          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo:{" "}
-            <a href="https://sfbike.org/news/light-up-the-night-is-back-2/" target="_blank" rel="noopener noreferrer" style={{ color: C.cyan, textDecoration: "underline" }}>
-              San Francisco Bicycle Coalition
-            </a>
-          </figcaption>
-        </figure>
-        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
-          <img src={northCommons.url} alt="Slow Roll North Commons ride in Minneapolis" className="w-full h-72 md:h-80 object-cover block" />
-          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo: Tom Evers /{" "}
-            <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
-              Minneapolis Parks Foundation
-            </a>
-          </figcaption>
-        </figure>
-      </div>
+      <PhotoCarousels />
+    </div>
+  </DarkPanel>
+);
+
+/* Two side-by-side carousels of MPF Minneapolis photos, fading independently */
+const CAROUSEL_PHOTOS = [northCommons.url, mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url];
+const CarouselFrame = ({ photos, accent, offset = 0 }: { photos: string[]; accent: string; offset?: number }) => {
+  const [idx, setIdx] = useState(offset % photos.length);
+  useEffect(() => {
+    const id = setInterval(() => setIdx((i) => (i + 1) % photos.length), 5000);
+    return () => clearInterval(id);
+  }, [photos.length]);
+  return (
+    <figure className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${accent}55`, boxShadow: `0 0 40px ${accent}33`, height: "20rem" }}>
+      {photos.map((url, i) => (
+        <img
+          key={url}
+          src={url}
+          alt="Slow Roll Minneapolis ride"
+          className="absolute inset-0 w-full h-full object-cover block"
+          style={{ opacity: i === idx ? 1 : 0, transition: "opacity 1.4s ease-in-out" }}
+        />
+      ))}
+      <figcaption className="absolute left-0 right-0 bottom-0 px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", background: "linear-gradient(180deg, transparent, rgba(15,10,8,0.85))" }}>
+        Photo: Tom Evers /{" "}
+        <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: accent, textDecoration: "underline" }}>
+          Minneapolis Parks Foundation
+        </a>
+      </figcaption>
+    </figure>
+  );
+};
+const PhotoCarousels = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <CarouselFrame photos={CAROUSEL_PHOTOS} accent={C.cyan} offset={0} />
+    <CarouselFrame photos={CAROUSEL_PHOTOS} accent={C.magenta} offset={3} />
+  </div>
+);
+
+const _ThemeCardBoundary = () => (
+  <>
+
     </div>
   </DarkPanel>
 );
