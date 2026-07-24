@@ -83,70 +83,93 @@ const CTAButton = ({
   </a>
 );
 
-const Hero = () => (
-  <section
-    style={{
-      position: "relative",
-      background: C.forest,
-      color: "#fff",
-      backgroundImage: `linear-gradient(rgba(30,51,42,0.72), rgba(30,51,42,0.82)), url(${heroPhoto.url})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}
-    className="px-6 py-20 md:py-28"
-  >
-    <div className="max-w-4xl mx-auto text-center relative z-10">
-      <div className="mb-6">
-        <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
+const Hero = () => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setIdx((i) => (i + 1) % HERO_PHOTOS.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <section
+      style={{ position: "relative", background: C.forestDark, color: "#fff" }}
+      className="px-6 py-20 md:py-28 overflow-hidden"
+    >
+      {HERO_PHOTOS.map((url, i) => (
+        <div
+          key={url}
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `linear-gradient(rgba(30,51,42,0.72), rgba(30,51,42,0.82)), url(${url})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: i === idx ? 1 : 0,
+            transition: "opacity 1.2s ease-in-out",
+          }}
+        />
+      ))}
+      <div className="max-w-4xl mx-auto text-center relative z-10">
+        <div className="mb-6">
+          <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
+        </div>
+        <p
+          className="uppercase font-medium mb-5"
+          style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.75)" }}
+        >
+          <EditableText
+            settingKey="sr_hero_eyebrow"
+            defaultText="Basecamp Outdoor x Slow Roll"
+            as="span"
+          />
+        </p>
+        <h1
+          className="font-bold leading-[1.05] mb-6"
+          style={{ fontSize: "clamp(40px, 7vw, 76px)", color: "#fff" }}
+        >
+          <EditableText settingKey="sr_hero_headline" defaultText="Slow Roll x Basecamp." as="span" />
+        </h1>
+        <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.9)" }}>
+          <EditableText
+            settingKey="sr_hero_subline"
+            defaultText="Minneapolis · Wednesday, August 19, 2026 · Evening"
+            as="span"
+          />
+        </p>
+        <p className="mb-8 font-semibold" style={{ fontSize: 17, color: "#f2a274" }}>
+          <EditableText
+            settingKey="sr_hero_capline"
+            defaultText="Only 100 riders. Bring your bike or borrow one."
+            as="span"
+          />
+        </p>
+        <p
+          className="max-w-2xl mx-auto mb-10"
+          style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.88)" }}
+        >
+          <EditableText
+            settingKey="sr_hero_pitch"
+            defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
+            as="span"
+            multiline
+          />
+        </p>
+        <CTAButton settingKey="sr_hero_cta" defaultText="Register — only 100 spots" size="lg" />
+        <p className="mt-6" style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>
+          Photos: Tom Evers / Minneapolis Parks Foundation ·{" "}
+          <a
+            href="https://mplsparksfoundation.org/slow-roll-joy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "rgba(255,255,255,0.75)", textDecoration: "underline" }}
+          >
+            mplsparksfoundation.org
+          </a>
+        </p>
       </div>
-      <p
-        className="uppercase font-medium mb-5"
-        style={{ letterSpacing: "0.22em", fontSize: 12, color: "rgba(255,255,255,0.75)" }}
-      >
-        <EditableText
-          settingKey="sr_hero_eyebrow"
-          defaultText="Basecamp Outdoor x Slow Roll"
-          as="span"
-        />
-      </p>
-      <h1
-        className="font-bold leading-[1.05] mb-6"
-        style={{ fontSize: "clamp(40px, 7vw, 76px)", color: "#fff" }}
-      >
-        <EditableText settingKey="sr_hero_headline" defaultText="Slow Roll x Basecamp." as="span" />
-      </h1>
-      <p className="mb-3" style={{ fontSize: 19, color: "rgba(255,255,255,0.9)" }}>
-        <EditableText
-          settingKey="sr_hero_subline"
-          defaultText="Minneapolis · Wednesday, August 19, 2026 · Evening"
-          as="span"
-        />
-      </p>
-      <p className="mb-8 font-semibold" style={{ fontSize: 17, color: "#f2a274" }}>
-        <EditableText
-          settingKey="sr_hero_capline"
-          defaultText="Only 100 riders. Bring your bike or borrow one."
-          as="span"
-        />
-      </p>
-      <p
-        className="max-w-2xl mx-auto mb-10"
-        style={{ fontSize: 16.5, lineHeight: 1.65, color: "rgba(255,255,255,0.88)" }}
-      >
-        <EditableText
-          settingKey="sr_hero_pitch"
-          defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
-          as="span"
-          multiline
-        />
-      </p>
-      <CTAButton settingKey="sr_hero_cta" defaultText="Register — only 100 spots" size="lg" />
-      <p className="mt-6" style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>
-        Photo: Devon Young Cupery via Streets.mn
-      </p>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const WhatItIs = () => (
   <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
