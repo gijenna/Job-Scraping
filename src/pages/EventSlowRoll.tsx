@@ -99,15 +99,16 @@ const CTAButton = ({
   </a>
 );
 
-/* Global keyframes for glow, path, blobs */
+/* Global keyframes for glow, path, blobs, bike ticker */
 const NeonStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
     @keyframes sr-pulse { 0%,100% { opacity:.85; filter:brightness(1) } 50% { opacity:1; filter:brightness(1.15) } }
     @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
     @keyframes sr-dash { to { stroke-dashoffset: -240; } }
-    @keyframes sr-bike-roll { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
-    @keyframes sr-bike-divider { 0% { transform: translateX(-40px); } 100% { transform: translateX(calc(100vw + 40px)); } }
+    @keyframes sr-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes sr-bike-lane { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes sr-headlight { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
     .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
     .sr-path-dash { stroke-dasharray: 14 12; animation: sr-dash 6s linear infinite; }
   `}</style>
@@ -130,59 +131,50 @@ const NeonBlobs = () => (
   </>
 );
 
-/* Small SVG bike icon */
-const BikeIcon = ({ size = 28, color = C.yellow }: { size?: number; color?: string }) => (
-  <svg width={size} height={size * 0.62} viewBox="0 0 64 40" fill="none" style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
-    <circle cx="12" cy="30" r="8" stroke={color} strokeWidth="2.2" />
-    <circle cx="52" cy="30" r="8" stroke={color} strokeWidth="2.2" />
-    <path d="M12 30 L28 30 L38 12 L48 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
-    <path d="M22 12 L32 12 L28 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
-    <circle cx="38" cy="12" r="2" fill={color} />
+/* Bike with a glowing headlight + taillight — used in the endless ticker */
+const LitBike = ({ size = 40, color, light = "#E1B624" }: { size?: number; color: string; light?: string }) => (
+  <svg width={size} height={size * 0.62} viewBox="0 0 64 40" fill="none" style={{ display: "block", overflow: "visible" }}>
+    <ellipse cx="60" cy="22" rx="10" ry="3" fill={light} opacity="0.55" style={{ filter: `blur(4px)` }} />
+    <circle cx="52" cy="22" r="2.4" fill={light} style={{ filter: `drop-shadow(0 0 6px ${light})`, animation: "sr-headlight 1.6s ease-in-out infinite" }} />
+    <circle cx="12" cy="22" r="1.8" fill={C.magenta} style={{ filter: `drop-shadow(0 0 5px ${C.magenta})` }} />
+    <g style={{ filter: `drop-shadow(0 0 5px ${color})` }}>
+      <circle cx="12" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+      <circle cx="52" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+      <path d="M12 30 L28 30 L38 12 L48 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+      <path d="M22 12 L32 12 L28 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+      <circle cx="38" cy="12" r="2" fill={color} />
+    </g>
   </svg>
 );
 
-/* Horizontal bike-path divider — replaces the ticker. A dashed road with a bike rolling across. */
-const BikePathDivider = () => (
-  <div style={{ background: C.midnight, position: "relative", overflow: "hidden", padding: "22px 0" }}>
-    <svg width="100%" height="28" preserveAspectRatio="none" style={{ display: "block" }}>
-      <path
-        d="M0 14 Q 200 2 400 14 T 800 14 T 1200 14 T 1600 14 T 2000 14"
-        stroke={C.yellow}
-        strokeWidth="2"
-        fill="none"
-        className="sr-path-dash"
-        style={{ filter: `drop-shadow(0 0 6px ${C.yellow})` }}
-      />
-    </svg>
-    <div style={{ position: "absolute", top: "50%", left: 0, transform: "translateY(-50%)", animation: "sr-bike-divider 14s linear infinite", pointerEvents: "none" }}>
-      <BikeIcon size={34} color={C.magenta} />
+/* Endless dense pack of lit bikes rolling across. Focal point in hero + section divider. */
+const BikeTicker = ({ height = 56, bikeSize = 40, speed = 22 }: { height?: number; bikeSize?: number; speed?: number }) => {
+  const colors = [C.yellow, C.magenta, C.lime, C.cyan, C.yellow, C.magenta, C.lime, C.yellow, C.magenta, C.cyan, C.yellow, C.lime];
+  const pack = [...colors, ...colors];
+  return (
+    <div style={{ position: "relative", height, overflow: "hidden", width: "100%" }}>
+      <div aria-hidden style={{
+        position: "absolute", left: 0, right: 0, bottom: Math.round(height * 0.28), height: 1,
+        background: `linear-gradient(90deg, transparent, ${C.yellow}, ${C.magenta}, ${C.lime}, transparent)`,
+        opacity: 0.55, filter: `drop-shadow(0 0 6px ${C.yellow})`,
+      }} />
+      <div style={{
+        display: "flex", alignItems: "flex-end", height: "100%", width: "max-content",
+        animation: `sr-bike-lane ${speed}s linear infinite`,
+      }}>
+        {pack.map((col, i) => (
+          <div key={i} style={{ padding: "0 14px", display: "flex", alignItems: "flex-end", height: "100%" }}>
+            <LitBike size={bikeSize} color={col} light={i % 3 === 0 ? C.cyan : C.yellow} />
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-/* Full-page vertical bike-path spine — winds down the right side, bike rolls along it */
-const BikePathSpine = () => (
-  <div aria-hidden style={{
-    position: "absolute", top: 0, right: 0, bottom: 0, width: 180,
-    pointerEvents: "none", zIndex: 1, overflow: "hidden",
-  }}>
-    <svg width="180" height="100%" viewBox="0 0 180 4000" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
-      <path
-        id="sr-spine"
-        d="M140 0 Q 40 250 140 500 Q 240 750 100 1000 Q 20 1250 130 1500 Q 240 1750 90 2000 Q 30 2250 150 2500 Q 230 2750 100 3000 Q 30 3250 140 3500 Q 220 3750 120 4000"
-        stroke={C.magenta}
-        strokeWidth="2.5"
-        fill="none"
-        className="sr-path-dash"
-        style={{ filter: `drop-shadow(0 0 8px ${C.magenta})` }}
-      />
-      {/* Little bikes parked along the way */}
-      {[300, 900, 1500, 2100, 2700, 3300, 3800].map((y, i) => (
-        <g key={y} transform={`translate(${i % 2 === 0 ? 40 : 110}, ${y})`}>
-          <circle cx="0" cy="0" r="3" fill={i % 2 === 0 ? C.yellow : C.lime} style={{ filter: `drop-shadow(0 0 6px ${i % 2 === 0 ? C.yellow : C.lime})` }} />
-        </g>
-      ))}
-    </svg>
+const BikePathDivider = () => (
+  <div style={{ background: C.midnight, borderTop: `1px solid rgba(255,255,255,0.06)`, borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+    <BikeTicker height={52} bikeSize={34} speed={26} />
   </div>
 );
 
