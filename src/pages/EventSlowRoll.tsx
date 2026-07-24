@@ -152,13 +152,13 @@ const BikePack = ({ height = 60, bikeSize = 42, cycle = 11, count = 6, seed = 0 
 const BikePathSpine = () => {
   // viewBox 200x1000 keeps roughly page aspect on desktop, so bikes don't get
   // stretched horizontally when preserveAspectRatio="none" scales the SVG.
-  // The horizontal opener now runs in the hero gutter *between* the Basecamp
-  // Match logo and the date line (Hero has extra top margin on the subline).
+  // The horizontal opener runs in the open hero gutter below the Basecamp
+  // Match logo and above the date line.
   const D =
-    "M 0 72 " +
-    "C 40 72, 96 72, 140 72 " +
-    "C 176 72, 188 96, 188 150 " +
-    "C 188 220, 188 310, 188 418 " +
+    "M 0 98 " +
+    "C 40 98, 96 98, 140 98 " +
+    "C 176 98, 188 118, 188 164 " +
+    "C 188 232, 188 318, 188 418 " +
     "C 188 452, 128 474, 68 489 " +
     "C 34 497, 18 513, 18 540 " +
     "C 18 574, 54 594, 108 605 " +
@@ -329,7 +329,7 @@ const Hero = () => (
       </div>
 
 
-      <p className="mt-40 md:mt-48 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+      <p className="mt-48 md:mt-56 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
       <p className="mb-8 font-bold" style={{ fontSize: 16, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
