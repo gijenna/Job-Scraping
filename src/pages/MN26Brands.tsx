@@ -403,6 +403,7 @@ const ComparisonTable = () => (
       {[
         { title: "Bring Your Expert", price: "$1,500", nameKey: "tier.a.name", priceKey: "tier.a.price", col: "a" as const, bg: `${SAGE}18`, accent: SAGE },
         { title: "Lounge Partner", price: "$5,000", nameKey: "tier.b.name", priceKey: "tier.b.price", col: "b" as const, bg: `${CORAL}18`, accent: CORAL },
+        { title: "Title Partner", price: "$20,000", nameKey: "tier.c.name", priceKey: "tier.c.price", col: "c" as const, bg: `${GOLD}25`, accent: GOLD },
       ].map((tier) => (
         <div
           key={tier.title}
