@@ -267,10 +267,10 @@ const Tiers = () => (
   <section style={{ background: CREAM, ...font }} className="px-6 pt-6 pb-14 md:pt-8 md:pb-20">
     <div className="max-w-6xl mx-auto">
       <h2 style={{ color: TEAL, fontWeight: 300 }} className="text-3xl md:text-5xl">
-        <T k="tiers.title.a" d="Two ways to " as="span" />
+        <T k="tiers.title.a" d="Three ways to " as="span" />
         <T k="tiers.title.b" d="partner." as="span" style={{ fontWeight: 600 }} />
       </h2>
-      <div className="mt-8 grid md:grid-cols-2 gap-6 items-stretch">
+      <div className="mt-8 grid md:grid-cols-3 gap-6 items-stretch">
         <TierCard
           nameKey="tier.a.name"
           nameDefault="Bring Your Expert"
@@ -286,6 +286,14 @@ const Tiers = () => (
           priceDefault="$5,000"
           copyKey="tier.b.copy"
           copyDefault="Own the room the whole industry wants into. Recruiting, reputation, and reach without a booth."
+        />
+        <TierCard
+          nameKey="tier.c.name"
+          nameDefault="Title Partner"
+          priceKey="tier.c.price"
+          priceDefault="$20,000"
+          copyKey="tier.c.copy"
+          copyDefault="Own the whole activation: the Lounge, the Slow Roll ride, and top billing. Fund free show access for 100 people who couldn't otherwise attend, and be known for it."
           highlight
         />
       </div>
@@ -293,7 +301,7 @@ const Tiers = () => (
       <ComparisonTable />
 
       <p style={{ color: CORAL, ...font }} className="mt-6 text-center italic text-sm md:text-base font-light max-w-3xl mx-auto">
-        <T k="tiers.footnote" d="At $5,000 the team badges alone can exceed the price. $1,200 each, so three people is $3,600 in access before the $2,000 newsletter feature or the all-show presence." />
+        <T k="tiers.footnote" d="At $5,000 the team badges alone can exceed the price. $1,200 each, so three people is $3,600 in access before the $2,000 newsletter feature or the all-show presence. Title Partner scales the whole thing up from there." />
       </p>
     </div>
   </section>
