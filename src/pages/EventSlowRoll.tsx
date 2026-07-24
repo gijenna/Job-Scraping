@@ -6,6 +6,8 @@ import OrderedSections from "@/components/event/OrderedSections";
 import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampMatchLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
+import basecampMatchDark from "@/assets/slowroll/basecamp-match-darkmode.png.asset.json";
+
 import mpfH1 from "@/assets/slowroll/mpf-h1.jpg.asset.json";
 import mpfH2 from "@/assets/slowroll/mpf-h2.png.asset.json";
 import mpfH3 from "@/assets/slowroll/mpf-h3.png.asset.json";
