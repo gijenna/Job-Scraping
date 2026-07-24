@@ -625,6 +625,49 @@ const Mockups = ({ personalization }: { personalization: ReturnType<typeof usePe
   );
 };
 
+const NewsletterEmbed = () => (
+  <section style={{ background: TEAL, ...font }} className="px-6 py-20 md:py-28">
+    <div className="max-w-5xl mx-auto">
+      <p style={{ color: GOLD }} className="text-xs tracking-[0.3em] uppercase font-medium">
+        <T k="embed.eyebrow" d="See it live" />
+      </p>
+      <h2 style={{ color: CREAM, fontWeight: 300 }} className="mt-3 text-3xl md:text-5xl">
+        <T k="embed.title.a" d="See how you'll " as="span" />
+        <T k="embed.title.b" d="show up." as="span" style={{ fontWeight: 600 }} />
+      </h2>
+      <p style={{ color: `${CREAM}99` }} className="mt-4 max-w-2xl text-base font-light">
+        <T k="embed.sub" d="A recent example from the Basecamp newsletter, live below." />
+      </p>
+
+      <div
+        style={{ background: CREAM, borderRadius: 16, border: `1px solid ${CREAM}33` }}
+        className="mt-8 overflow-hidden shadow-2xl"
+      >
+        <iframe
+          src="https://www.partnerwithbasecamp.com/minneapolis"
+          title="Partner with Basecamp — Minneapolis"
+          className="w-full"
+          style={{ height: "1400px", border: 0, display: "block" }}
+          loading="lazy"
+        />
+      </div>
+
+      <p style={{ color: `${CREAM}88` }} className="mt-4 text-xs text-center">
+        <a
+          href="https://www.partnerwithbasecamp.com/minneapolis"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: GOLD }}
+          className="underline hover:opacity-80"
+        >
+          Open in a new tab →
+        </a>
+      </p>
+    </div>
+  </section>
+);
+
+
 const WhyWorthIt = () => (
   <section style={{ background: CREAM, ...font }} className="px-6 py-20 md:py-28">
     <div className="max-w-4xl mx-auto">
