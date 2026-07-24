@@ -3,8 +3,6 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
-import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
-import cwBikeLights from "@/assets/slowroll/light-up-the-night.png.asset.json";
 import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
@@ -16,8 +14,6 @@ import mpfH5 from "@/assets/slowroll/mpf-h5.png.asset.json";
 import mpfH6 from "@/assets/slowroll/mpf-h6.png.asset.json";
 import mpfH7 from "@/assets/slowroll/mpf-h7.png.asset.json";
 
-// North Commons leads. Rest rotate behind it.
-const HERO_PHOTOS = [northCommons.url, mpfH1.url, mpfH4.url, mpfH2.url, mpfH3.url, mpfH5.url, mpfH6.url, mpfH7.url];
 
 // Brand neon palette — Coral + Yellow + ALSO purple, with a touch of cyan for water.
 // Warm near-black base so photos and neon both breathe.
@@ -99,15 +95,16 @@ const CTAButton = ({
   </a>
 );
 
-/* Global keyframes for glow, path, blobs */
+/* Global keyframes for glow, path, blobs, bike ticker */
 const NeonStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
     @keyframes sr-pulse { 0%,100% { opacity:.85; filter:brightness(1) } 50% { opacity:1; filter:brightness(1.15) } }
     @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
     @keyframes sr-dash { to { stroke-dashoffset: -240; } }
-    @keyframes sr-bike-roll { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
-    @keyframes sr-bike-divider { 0% { transform: translateX(-40px); } 100% { transform: translateX(calc(100vw + 40px)); } }
+    @keyframes sr-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes sr-bike-lane { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @keyframes sr-headlight { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
     .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
     .sr-path-dash { stroke-dasharray: 14 12; animation: sr-dash 6s linear infinite; }
   `}</style>
@@ -130,164 +127,132 @@ const NeonBlobs = () => (
   </>
 );
 
-/* Small SVG bike icon */
-const BikeIcon = ({ size = 28, color = C.yellow }: { size?: number; color?: string }) => (
-  <svg width={size} height={size * 0.62} viewBox="0 0 64 40" fill="none" style={{ filter: `drop-shadow(0 0 6px ${color})` }}>
-    <circle cx="12" cy="30" r="8" stroke={color} strokeWidth="2.2" />
-    <circle cx="52" cy="30" r="8" stroke={color} strokeWidth="2.2" />
-    <path d="M12 30 L28 30 L38 12 L48 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
-    <path d="M22 12 L32 12 L28 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
-    <circle cx="38" cy="12" r="2" fill={color} />
+/* Bike with a glowing headlight + taillight — used in the endless ticker */
+const LitBike = ({ size = 40, color, light = "#E1B624" }: { size?: number; color: string; light?: string }) => (
+  <svg width={size} height={size * 0.62} viewBox="0 0 64 40" fill="none" style={{ display: "block", overflow: "visible" }}>
+    <ellipse cx="60" cy="22" rx="10" ry="3" fill={light} opacity="0.55" style={{ filter: `blur(4px)` }} />
+    <circle cx="52" cy="22" r="2.4" fill={light} style={{ filter: `drop-shadow(0 0 6px ${light})`, animation: "sr-headlight 1.6s ease-in-out infinite" }} />
+    <circle cx="12" cy="22" r="1.8" fill={C.magenta} style={{ filter: `drop-shadow(0 0 5px ${C.magenta})` }} />
+    <g style={{ filter: `drop-shadow(0 0 5px ${color})` }}>
+      <circle cx="12" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+      <circle cx="52" cy="30" r="8" stroke={color} strokeWidth="2.2" />
+      <path d="M12 30 L28 30 L38 12 L48 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+      <path d="M22 12 L32 12 L28 30" stroke={color} strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+      <circle cx="38" cy="12" r="2" fill={color} />
+    </g>
   </svg>
 );
 
-/* Horizontal bike-path divider — replaces the ticker. A dashed road with a bike rolling across. */
-const BikePathDivider = () => (
-  <div style={{ background: C.midnight, position: "relative", overflow: "hidden", padding: "22px 0" }}>
-    <svg width="100%" height="28" preserveAspectRatio="none" style={{ display: "block" }}>
-      <path
-        d="M0 14 Q 200 2 400 14 T 800 14 T 1200 14 T 1600 14 T 2000 14"
-        stroke={C.yellow}
-        strokeWidth="2"
-        fill="none"
-        className="sr-path-dash"
-        style={{ filter: `drop-shadow(0 0 6px ${C.yellow})` }}
-      />
-    </svg>
-    <div style={{ position: "absolute", top: "50%", left: 0, transform: "translateY(-50%)", animation: "sr-bike-divider 14s linear infinite", pointerEvents: "none" }}>
-      <BikeIcon size={34} color={C.magenta} />
-    </div>
-  </div>
-);
-
-/* Full-page vertical bike-path spine — winds down the right side, bike rolls along it */
-const BikePathSpine = () => (
-  <div aria-hidden style={{
-    position: "absolute", top: 0, right: 0, bottom: 0, width: 180,
-    pointerEvents: "none", zIndex: 1, overflow: "hidden",
-  }}>
-    <svg width="180" height="100%" viewBox="0 0 180 4000" preserveAspectRatio="none" style={{ position: "absolute", inset: 0 }}>
-      <path
-        id="sr-spine"
-        d="M140 0 Q 40 250 140 500 Q 240 750 100 1000 Q 20 1250 130 1500 Q 240 1750 90 2000 Q 30 2250 150 2500 Q 230 2750 100 3000 Q 30 3250 140 3500 Q 220 3750 120 4000"
-        stroke={C.magenta}
-        strokeWidth="2.5"
-        fill="none"
-        className="sr-path-dash"
-        style={{ filter: `drop-shadow(0 0 8px ${C.magenta})` }}
-      />
-      {/* Little bikes parked along the way */}
-      {[300, 900, 1500, 2100, 2700, 3300, 3800].map((y, i) => (
-        <g key={y} transform={`translate(${i % 2 === 0 ? 40 : 110}, ${y})`}>
-          <circle cx="0" cy="0" r="3" fill={i % 2 === 0 ? C.yellow : C.lime} style={{ filter: `drop-shadow(0 0 6px ${i % 2 === 0 ? C.yellow : C.lime})` }} />
-        </g>
-      ))}
-    </svg>
-  </div>
-);
-
-const Hero = () => {
-  const [idx, setIdx] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setIdx((i) => (i + 1) % HERO_PHOTOS.length), 5000);
-    return () => clearInterval(id);
-  }, []);
+/* Endless dense pack of lit bikes rolling across. Focal point in hero + section divider. */
+const BikeTicker = ({ height = 56, bikeSize = 40, speed = 22 }: { height?: number; bikeSize?: number; speed?: number }) => {
+  const colors = [C.yellow, C.magenta, C.lime, C.cyan, C.yellow, C.magenta, C.lime, C.yellow, C.magenta, C.cyan, C.yellow, C.lime];
+  const pack = [...colors, ...colors];
   return (
-    <section
-      style={{ position: "relative", background: C.midnight, color: "#fff" }}
-      className="px-6 py-24 md:py-32 overflow-hidden"
-    >
-      {HERO_PHOTOS.map((url, i) => (
-        <div
-          key={url}
-          aria-hidden
-          style={{
-            position: "absolute", inset: 0,
-            backgroundImage: `url(${url})`,
-            backgroundSize: "cover", backgroundPosition: "center",
-            opacity: i === idx ? 0.75 : 0,
-            transition: "opacity 1.6s ease-in-out",
-          }}
-        />
-      ))}
-      {/* warm dark wash — keeps photo visible while text stays legible */}
+    <div style={{ position: "relative", height, overflow: "hidden", width: "100%" }}>
       <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        background: `linear-gradient(180deg, rgba(15,10,8,0.55) 0%, rgba(15,10,8,0.35) 45%, rgba(15,10,8,0.85) 100%)`,
+        position: "absolute", left: 0, right: 0, bottom: Math.round(height * 0.28), height: 1,
+        background: `linear-gradient(90deg, transparent, ${C.yellow}, ${C.magenta}, ${C.lime}, transparent)`,
+        opacity: 0.55, filter: `drop-shadow(0 0 6px ${C.yellow})`,
       }} />
-      <NeonBlobs />
+      <div style={{
+        display: "flex", alignItems: "flex-end", height: "100%", width: "max-content",
+        animation: `sr-bike-lane ${speed}s linear infinite`,
+      }}>
+        {pack.map((col, i) => (
+          <div key={i} style={{ padding: "0 14px", display: "flex", alignItems: "flex-end", height: "100%" }}>
+            <LitBike size={bikeSize} color={col} light={i % 3 === 0 ? C.cyan : C.yellow} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-      <div className="max-w-5xl mx-auto text-center relative z-10">
-        <div className="mb-8">
-          <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
-        </div>
-        <p
-          className="uppercase font-bold mb-6"
-          style={{ letterSpacing: "0.3em", fontSize: 12, color: C.cyan, textShadow: `0 0 14px ${C.cyan}` }}
-        >
-          <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
-        </p>
-        <h1
-          className="leading-[0.95] mb-8"
-          style={{
-            ...displayFont,
-            fontSize: "clamp(52px, 10vw, 128px)",
-            fontWeight: 900,
-            color: "#fff",
-            letterSpacing: "-0.02em",
-            textShadow: `0 0 30px rgba(255,45,149,0.55), 0 0 80px rgba(0,230,255,0.35)`,
-          }}
-        >
+const BikePathDivider = () => (
+  <div style={{ background: C.midnight, borderTop: `1px solid rgba(255,255,255,0.06)`, borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+    <BikeTicker height={52} bikeSize={34} speed={26} />
+  </div>
+);
+
+const Hero = () => (
+  <section
+    style={{ position: "relative", background: C.midnight, color: "#fff" }}
+    className="px-6 py-24 md:py-32 overflow-hidden"
+  >
+    {/* solid warm near-black, no photos — bike ticker is the focal point */}
+    <div aria-hidden style={{
+      position: "absolute", inset: 0,
+      background: `radial-gradient(ellipse at 50% 20%, rgba(237,118,96,0.14), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(168,85,247,0.12), transparent 55%), ${C.midnight}`,
+    }} />
+    <NeonBlobs />
+
+    <div className="max-w-5xl mx-auto text-center relative z-10">
+      <div className="mb-8">
+        <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
+      </div>
+      <p
+        className="uppercase font-bold mb-6"
+        style={{ letterSpacing: "0.3em", fontSize: 12, color: C.cyan, textShadow: `0 0 14px ${C.cyan}` }}
+      >
+        <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
+      </p>
+
+      {/* Headline split with the endless bike ticker rolling between SLOW ROLL and × BASECAMP */}
+      <div
+        style={{
+          ...displayFont,
+          fontSize: "clamp(52px, 10vw, 128px)",
+          fontWeight: 900,
+          color: "#fff",
+          letterSpacing: "-0.02em",
+          lineHeight: 0.95,
+          textShadow: `0 0 30px rgba(237,118,96,0.55), 0 0 80px rgba(225,182,36,0.25)`,
+        }}
+        className="mb-6"
+      >
+        <div>
           <EditableText settingKey="sr_hero_headline_a" defaultText="SLOW " as="span" />
           <span style={{ color: C.yellow, textShadow: `0 0 24px ${C.yellow}, 0 0 60px ${C.yellow}` }}>
             <EditableText settingKey="sr_hero_headline_b" defaultText="ROLL" as="span" />
           </span>
-          <br />
-          <span style={{ ...displayFont, fontSize: "0.5em", fontWeight: 700, color: C.magenta, textShadow: `0 0 22px ${C.magenta}` }}>
-            <EditableText settingKey="sr_hero_headline_c" defaultText="× BASECAMP" as="span" />
-          </span>
-        </h1>
-        <p className="mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
-          <EditableText
-            settingKey="sr_hero_subline"
-            defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK"
-            as="span"
-          />
-        </p>
-        <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.06em", textShadow: `0 0 12px ${C.lime}` }}>
-          <EditableText
-            settingKey="sr_hero_capline"
-            defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE"
-            as="span"
-          />
-        </p>
-        <p
-          className="max-w-2xl mx-auto mb-10"
-          style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}
-        >
-          <EditableText
-            settingKey="sr_hero_pitch"
-            defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
-            as="span"
-            multiline
-          />
-        </p>
-        <CTAButton settingKey="sr_hero_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
-        <p className="mt-8" style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
-          Lead photo: Tom Evers /{" "}
-          <a
-            href="https://mplsparksfoundation.org/slow-roll-joy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: C.cyan, textDecoration: "underline" }}
-          >
-            Minneapolis Parks Foundation
-          </a>
-        </p>
+        </div>
+        <div style={{ margin: "18px 0" }}>
+          <BikeTicker height={64} bikeSize={44} speed={18} />
+        </div>
+        <div style={{ ...displayFont, fontSize: "0.5em", fontWeight: 700, color: C.magenta, textShadow: `0 0 22px ${C.magenta}` }}>
+          <EditableText settingKey="sr_hero_headline_c" defaultText="× BASECAMP" as="span" />
+        </div>
       </div>
-    </section>
-  );
-};
+
+      <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+        <EditableText
+          settingKey="sr_hero_subline"
+          defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK"
+          as="span"
+        />
+      </p>
+      <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.06em", textShadow: `0 0 12px ${C.lime}` }}>
+        <EditableText
+          settingKey="sr_hero_capline"
+          defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE"
+          as="span"
+        />
+      </p>
+      <p
+        className="max-w-2xl mx-auto mb-10"
+        style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}
+      >
+        <EditableText
+          settingKey="sr_hero_pitch"
+          defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
+          as="span"
+          multiline
+        />
+      </p>
+      <CTAButton settingKey="sr_hero_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
+    </div>
+  </section>
+);
 
 /* Marquee ticker — joy, community, art, lights */
 const Marquee = () => {
@@ -374,29 +339,47 @@ const WhatItIs = () => (
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.cyan}55`, boxShadow: `0 0 40px ${C.cyan}33` }}>
-          <img src={cwBikeLights.url} alt="Cyclists lit up on a community night ride" className="w-full h-72 md:h-80 object-cover block" />
-          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo:{" "}
-            <a href="https://sfbike.org/news/light-up-the-night-is-back-2/" target="_blank" rel="noopener noreferrer" style={{ color: C.cyan, textDecoration: "underline" }}>
-              San Francisco Bicycle Coalition
-            </a>
-          </figcaption>
-        </figure>
-        <figure className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
-          <img src={northCommons.url} alt="Slow Roll North Commons ride in Minneapolis" className="w-full h-72 md:h-80 object-cover block" />
-          <figcaption className="px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", background: C.midnight2 }}>
-            Photo: Tom Evers /{" "}
-            <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: C.magenta, textDecoration: "underline" }}>
-              Minneapolis Parks Foundation
-            </a>
-          </figcaption>
-        </figure>
-      </div>
+      <PhotoCarousels />
     </div>
   </DarkPanel>
 );
+
+/* Two side-by-side carousels of MPF Minneapolis photos, fading independently */
+const CAROUSEL_PHOTOS = [northCommons.url, mpfH1.url, mpfH2.url, mpfH3.url, mpfH4.url, mpfH5.url, mpfH6.url, mpfH7.url];
+const CarouselFrame = ({ photos, accent, offset = 0 }: { photos: string[]; accent: string; offset?: number }) => {
+  const [idx, setIdx] = useState(offset % photos.length);
+  useEffect(() => {
+    const id = setInterval(() => setIdx((i) => (i + 1) % photos.length), 5000);
+    return () => clearInterval(id);
+  }, [photos.length]);
+  return (
+    <figure className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${accent}55`, boxShadow: `0 0 40px ${accent}33`, height: "20rem" }}>
+      {photos.map((url, i) => (
+        <img
+          key={url}
+          src={url}
+          alt="Slow Roll Minneapolis ride"
+          className="absolute inset-0 w-full h-full object-cover block"
+          style={{ opacity: i === idx ? 1 : 0, transition: "opacity 1.4s ease-in-out" }}
+        />
+      ))}
+      <figcaption className="absolute left-0 right-0 bottom-0 px-4 py-3" style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", background: "linear-gradient(180deg, transparent, rgba(15,10,8,0.85))" }}>
+        Photo: Tom Evers /{" "}
+        <a href="https://mplsparksfoundation.org/slow-roll-joy/" target="_blank" rel="noopener noreferrer" style={{ color: accent, textDecoration: "underline" }}>
+          Minneapolis Parks Foundation
+        </a>
+      </figcaption>
+    </figure>
+  );
+};
+const PhotoCarousels = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <CarouselFrame photos={CAROUSEL_PHOTOS} accent={C.cyan} offset={0} />
+    <CarouselFrame photos={CAROUSEL_PHOTOS} accent={C.magenta} offset={3} />
+  </div>
+);
+
+
 
 const ThemeCard = ({
   labelKey, labelDefault, headKey, headDefault, bodyKey, bodyDefault, accent,
@@ -696,8 +679,8 @@ const EventSlowRoll = () => (
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
     <main style={{ ...font, background: C.midnight, color: "#fff", position: "relative", overflow: "hidden" }}>
-      <BikePathSpine />
       <div style={{ position: "relative", zIndex: 2 }}>
+
         <OrderedSections
           sections={[
             { key: "hero", content: <><Hero /><BikePathDivider /></> },
