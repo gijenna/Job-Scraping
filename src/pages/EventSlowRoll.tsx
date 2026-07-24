@@ -155,9 +155,9 @@ const BikePathSpine = () => {
   // The horizontal opener now runs in the hero gutter *between* the Basecamp
   // Match logo and the date line (Hero has extra top margin on the subline).
   const D =
-    "M 0 108 " +
-    "C 40 108, 96 108, 140 108 " +
-    "C 176 108, 188 128, 188 172 " +
+    "M 0 72 " +
+    "C 40 72, 96 72, 140 72 " +
+    "C 176 72, 188 96, 188 150 " +
     "C 188 220, 188 310, 188 418 " +
     "C 188 452, 128 474, 68 489 " +
     "C 34 497, 18 513, 18 540 " +
@@ -167,6 +167,7 @@ const BikePathSpine = () => {
     "C 186 847, 152 868, 108 881 " +
     "C 66 893, 28 909, 28 940 " +
     "C 28 979, 116 989, 62 1000";
+
 
   const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
     <g transform={`translate(${x} ${y}) scale(${s})`} style={{ filter: `drop-shadow(0 0 3px ${C.yellow})` }}>
@@ -328,7 +329,7 @@ const Hero = () => (
       </div>
 
 
-      <p className="mt-24 md:mt-28 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+      <p className="mt-40 md:mt-48 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
       <p className="mb-8 font-bold" style={{ fontSize: 16, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
