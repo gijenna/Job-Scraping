@@ -178,108 +178,85 @@ const BikePathDivider = () => (
   </div>
 );
 
-const Hero = () => {
-  const [idx, setIdx] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setIdx((i) => (i + 1) % HERO_PHOTOS.length), 5000);
-    return () => clearInterval(id);
-  }, []);
-  return (
-    <section
-      style={{ position: "relative", background: C.midnight, color: "#fff" }}
-      className="px-6 py-24 md:py-32 overflow-hidden"
-    >
-      {HERO_PHOTOS.map((url, i) => (
-        <div
-          key={url}
-          aria-hidden
-          style={{
-            position: "absolute", inset: 0,
-            backgroundImage: `url(${url})`,
-            backgroundSize: "cover", backgroundPosition: "center",
-            opacity: i === idx ? 0.75 : 0,
-            transition: "opacity 1.6s ease-in-out",
-          }}
-        />
-      ))}
-      {/* warm dark wash — keeps photo visible while text stays legible */}
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        background: `linear-gradient(180deg, rgba(15,10,8,0.55) 0%, rgba(15,10,8,0.35) 45%, rgba(15,10,8,0.85) 100%)`,
-      }} />
-      <NeonBlobs />
+const Hero = () => (
+  <section
+    style={{ position: "relative", background: C.midnight, color: "#fff" }}
+    className="px-6 py-24 md:py-32 overflow-hidden"
+  >
+    {/* solid warm near-black, no photos — bike ticker is the focal point */}
+    <div aria-hidden style={{
+      position: "absolute", inset: 0,
+      background: `radial-gradient(ellipse at 50% 20%, rgba(237,118,96,0.14), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(168,85,247,0.12), transparent 55%), ${C.midnight}`,
+    }} />
+    <NeonBlobs />
 
-      <div className="max-w-5xl mx-auto text-center relative z-10">
-        <div className="mb-8">
-          <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
-        </div>
-        <p
-          className="uppercase font-bold mb-6"
-          style={{ letterSpacing: "0.3em", fontSize: 12, color: C.cyan, textShadow: `0 0 14px ${C.cyan}` }}
-        >
-          <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
-        </p>
-        <h1
-          className="leading-[0.95] mb-8"
-          style={{
-            ...displayFont,
-            fontSize: "clamp(52px, 10vw, 128px)",
-            fontWeight: 900,
-            color: "#fff",
-            letterSpacing: "-0.02em",
-            textShadow: `0 0 30px rgba(255,45,149,0.55), 0 0 80px rgba(0,230,255,0.35)`,
-          }}
-        >
+    <div className="max-w-5xl mx-auto text-center relative z-10">
+      <div className="mb-8">
+        <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
+      </div>
+      <p
+        className="uppercase font-bold mb-6"
+        style={{ letterSpacing: "0.3em", fontSize: 12, color: C.cyan, textShadow: `0 0 14px ${C.cyan}` }}
+      >
+        <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
+      </p>
+
+      {/* Headline split with the endless bike ticker rolling between SLOW ROLL and × BASECAMP */}
+      <div
+        style={{
+          ...displayFont,
+          fontSize: "clamp(52px, 10vw, 128px)",
+          fontWeight: 900,
+          color: "#fff",
+          letterSpacing: "-0.02em",
+          lineHeight: 0.95,
+          textShadow: `0 0 30px rgba(237,118,96,0.55), 0 0 80px rgba(225,182,36,0.25)`,
+        }}
+        className="mb-6"
+      >
+        <div>
           <EditableText settingKey="sr_hero_headline_a" defaultText="SLOW " as="span" />
           <span style={{ color: C.yellow, textShadow: `0 0 24px ${C.yellow}, 0 0 60px ${C.yellow}` }}>
             <EditableText settingKey="sr_hero_headline_b" defaultText="ROLL" as="span" />
           </span>
-          <br />
-          <span style={{ ...displayFont, fontSize: "0.5em", fontWeight: 700, color: C.magenta, textShadow: `0 0 22px ${C.magenta}` }}>
-            <EditableText settingKey="sr_hero_headline_c" defaultText="× BASECAMP" as="span" />
-          </span>
-        </h1>
-        <p className="mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
-          <EditableText
-            settingKey="sr_hero_subline"
-            defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK"
-            as="span"
-          />
-        </p>
-        <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.06em", textShadow: `0 0 12px ${C.lime}` }}>
-          <EditableText
-            settingKey="sr_hero_capline"
-            defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE"
-            as="span"
-          />
-        </p>
-        <p
-          className="max-w-2xl mx-auto mb-10"
-          style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}
-        >
-          <EditableText
-            settingKey="sr_hero_pitch"
-            defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
-            as="span"
-            multiline
-          />
-        </p>
-        <CTAButton settingKey="sr_hero_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
-        <p className="mt-8" style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>
-          Lead photo: Tom Evers /{" "}
-          <a
-            href="https://mplsparksfoundation.org/slow-roll-joy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: C.cyan, textDecoration: "underline" }}
-          >
-            Minneapolis Parks Foundation
-          </a>
-        </p>
+        </div>
+        <div style={{ margin: "18px 0" }}>
+          <BikeTicker height={64} bikeSize={44} speed={18} />
+        </div>
+        <div style={{ ...displayFont, fontSize: "0.5em", fontWeight: 700, color: C.magenta, textShadow: `0 0 22px ${C.magenta}` }}>
+          <EditableText settingKey="sr_hero_headline_c" defaultText="× BASECAMP" as="span" />
+        </div>
       </div>
-    </section>
-  );
-};
+
+      <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+        <EditableText
+          settingKey="sr_hero_subline"
+          defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK"
+          as="span"
+        />
+      </p>
+      <p className="mb-8 font-bold" style={{ fontSize: 16, color: C.lime, letterSpacing: "0.06em", textShadow: `0 0 12px ${C.lime}` }}>
+        <EditableText
+          settingKey="sr_hero_capline"
+          defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE"
+          as="span"
+        />
+      </p>
+      <p
+        className="max-w-2xl mx-auto mb-10"
+        style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}
+      >
+        <EditableText
+          settingKey="sr_hero_pitch"
+          defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
+          as="span"
+          multiline
+        />
+      </p>
+      <CTAButton settingKey="sr_hero_cta" defaultText="REGISTER — 100 SPOTS" size="lg" />
+    </div>
+  </section>
+);
 
 /* Marquee ticker — joy, community, art, lights */
 const Marquee = () => {
