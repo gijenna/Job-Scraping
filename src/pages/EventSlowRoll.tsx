@@ -284,23 +284,42 @@ const Hero = () => (
         <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
       </p>
 
-      {/* Headline: SLOW ROLL in white, bike pack rolls between, then Basecamp Match logo */}
-      <div style={{ ...displayFont, fontSize: "clamp(52px, 10vw, 128px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 0.95 }} className="mb-6">
-        <div style={{ textShadow: "0 0 24px rgba(255,255,255,0.35), 0 0 60px rgba(237,118,96,0.25)" }}>
+      {/* Headline: SLOW ROLL (white) × Basecamp Match dark-mode lockup */}
+      <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 flex-wrap">
+        <div
+          style={{
+            ...displayFont,
+            fontSize: "clamp(52px, 9vw, 120px)",
+            fontWeight: 900,
+            color: "#fff",
+            letterSpacing: "-0.02em",
+            lineHeight: 0.95,
+            textShadow: "0 0 24px rgba(255,255,255,0.35), 0 0 60px rgba(237,118,96,0.25)",
+          }}
+        >
           <EditableText settingKey="sr_hero_headline_a" defaultText="SLOW " as="span" />
           <EditableText settingKey="sr_hero_headline_b" defaultText="ROLL" as="span" />
         </div>
-        <div style={{ margin: "22px 0" }}>
-          <BikePack height={72} bikeSize={48} cycle={10} count={6} seed={0} />
-        </div>
-        <div className="flex items-center justify-center">
-          <img
-            src={basecampMatchLogo.url}
-            alt="Basecamp Match"
-            style={{ height: "clamp(64px, 10vw, 128px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(237,118,96,0.45))" }}
-          />
-        </div>
+        <span
+          aria-hidden
+          style={{
+            ...displayFont,
+            fontSize: "clamp(48px, 8vw, 96px)",
+            fontWeight: 800,
+            color: C.magenta,
+            lineHeight: 1,
+            textShadow: `0 0 18px ${C.magenta}, 0 0 40px ${C.magenta}77`,
+          }}
+        >
+          ×
+        </span>
+        <img
+          src={basecampMatchDark.url}
+          alt="Basecamp Match"
+          style={{ height: "clamp(70px, 11vw, 130px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
+        />
       </div>
+
 
       <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
