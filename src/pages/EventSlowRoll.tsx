@@ -6,6 +6,8 @@ import OrderedSections from "@/components/event/OrderedSections";
 import northCommons from "@/assets/slowroll/north-commons.png.asset.json";
 import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
 import basecampMatchLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
+import basecampMatchDark from "@/assets/slowroll/basecamp-match-darkmode.png.asset.json";
+
 import mpfH1 from "@/assets/slowroll/mpf-h1.jpg.asset.json";
 import mpfH2 from "@/assets/slowroll/mpf-h2.png.asset.json";
 import mpfH3 from "@/assets/slowroll/mpf-h3.png.asset.json";
@@ -81,16 +83,17 @@ const NeonStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
     @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
-    @keyframes sr-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    @keyframes sr-pack { 
-      0%   { transform: translateX(110%); }
-      35%  { transform: translateX(-110%); }
-      100% { transform: translateX(-110%); }
+    @keyframes sr-pack {
+      0%   { transform: translateX(-110%); }
+      55%  { transform: translateX(110%); }
+      100% { transform: translateX(110%); }
     }
     @keyframes sr-headlight { 0%,100% { opacity:.6 } 50% { opacity:1 } }
+    @keyframes sr-dash { to { stroke-dashoffset: -60; } }
     .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
   `}</style>
 );
+
 
 const NeonBlobs = () => (
   <>
@@ -143,105 +146,127 @@ const BikePack = ({ height = 60, bikeSize = 42, cycle = 11, count = 6, seed = 0 
   );
 };
 
-const BikePackDivider = () => (
-  <div style={{ background: C.midnight, borderTop: "1px solid rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-    <BikePack height={54} bikeSize={34} cycle={12} count={7} seed={2} />
-  </div>
-);
+/* ============ WEAVING PAGE SPINE ============
+   One unbroken dashed yellow bike-lane weaving down the full page.
+   Uses preserveAspectRatio="none" so it fills main's true height.
+   Landmarks (trees, lake, building, picnic) sit alongside the path.
+   A small pack of bikes rides along the path via animateMotion. */
+const BikePathSpine = () => {
+  // Weaves L<->R eight times down the page (viewBox 0..100 x 0..1000).
+  // Bikes face RIGHT — path is drawn left->right at each waypoint via
+  // alternating handles so animateMotion rotates them along the road.
+  const D =
+    "M 90 0 " +
+    "C 88 60, 12 80, 12 130 " +
+    "S 88 200, 88 250 " +
+    "S 12 320, 12 370 " +
+    "S 88 440, 88 490 " +
+    "S 12 560, 12 610 " +
+    "S 88 680, 88 730 " +
+    "S 12 800, 12 850 " +
+    "S 88 920, 88 970 " +
+    "L 88 1000";
 
-/* ============ SCENERY DECOS for the winding page spine ============ */
-const SkylineDeco = () => (
-  <svg width="220" height="90" viewBox="0 0 220 90" fill="none" style={{ filter: `drop-shadow(0 0 8px ${C.yellow}77)` }}>
-    <g stroke={C.yellow} strokeWidth="1.3" fill="none">
-      <rect x="4" y="40" width="16" height="46" />
-      <rect x="24" y="28" width="14" height="58" />
-      <rect x="42" y="16" width="18" height="70" />
-      <rect x="64" y="34" width="14" height="52" />
-      <rect x="82" y="20" width="18" height="66" />
-      <rect x="104" y="36" width="14" height="50" />
-      <rect x="122" y="6" width="20" height="80" />
-      <rect x="146" y="26" width="14" height="60" />
-      <rect x="164" y="38" width="16" height="48" />
-      <rect x="184" y="30" width="14" height="56" />
+  const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
+    <g transform={`translate(${x} ${y}) scale(${s})`} style={{ filter: `drop-shadow(0 0 3px ${C.yellow})` }}>
+      <path d="M -6 8 L 0 -10 L 6 8 Z M -4 2 L 0 -6 L 4 2" stroke={C.yellow} strokeWidth="0.6" fill="none" vectorEffect="non-scaling-stroke" />
+      <line x1="0" y1="8" x2="0" y2="12" stroke={C.yellow} strokeWidth="0.6" vectorEffect="non-scaling-stroke" />
     </g>
-    <g fill={C.yellow} opacity="0.7">
-      {[12, 30, 50, 70, 90, 110, 132, 152, 172, 190].map((x, i) => (
-        <rect key={i} x={x} y={12 + (i * 4) % 20} width="2" height="2" />
-      ))}
+  );
+  const Building = ({ x, y }: { x: number; y: number }) => (
+    <g transform={`translate(${x} ${y})`} style={{ filter: `drop-shadow(0 0 4px ${C.yellow})` }}>
+      <rect x="-10" y="-24" width="7" height="24" stroke={C.yellow} strokeWidth="0.6" fill="none" vectorEffect="non-scaling-stroke" />
+      <rect x="-2" y="-32" width="8" height="32" stroke={C.yellow} strokeWidth="0.6" fill="none" vectorEffect="non-scaling-stroke" />
+      <rect x="7" y="-18" width="6" height="18" stroke={C.yellow} strokeWidth="0.6" fill="none" vectorEffect="non-scaling-stroke" />
+      {[-8, -5, 2, 5, 9].map((cx, i) => [-20, -14, -8].map((cy, j) => (
+        <rect key={`${i}-${j}`} x={cx} y={cy} width="1.2" height="1.2" fill={C.yellow} opacity="0.85" />
+      )))}
     </g>
-  </svg>
-);
+  );
+  const Lake = ({ x, y }: { x: number; y: number }) => (
+    <g transform={`translate(${x} ${y})`} style={{ filter: `drop-shadow(0 0 3px ${C.magenta})` }}>
+      <ellipse cx="0" cy="0" rx="18" ry="5" stroke={C.magenta} strokeWidth="0.6" fill="none" vectorEffect="non-scaling-stroke" />
+      <path d="M -12 -2 Q -8 -3 -4 -2 T 4 -2 T 12 -2" stroke={C.magenta} strokeWidth="0.4" fill="none" vectorEffect="non-scaling-stroke" opacity="0.7" />
+      <path d="M -8 -4 Q -4 -5 0 -4 T 8 -4" stroke={C.magenta} strokeWidth="0.4" fill="none" vectorEffect="non-scaling-stroke" opacity="0.5" />
+    </g>
+  );
+  const Picnic = ({ x, y }: { x: number; y: number }) => (
+    <g transform={`translate(${x} ${y})`} style={{ filter: `drop-shadow(0 0 3px ${C.magenta})` }}>
+      {/* checkered blanket */}
+      <rect x="-8" y="-4" width="16" height="8" stroke={C.magenta} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
+      <line x1="-4" y1="-4" x2="-4" y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
+      <line x1="0"  y1="-4" x2="0"  y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
+      <line x1="4"  y1="-4" x2="4"  y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
+      {/* basket */}
+      <rect x="-2" y="-7" width="4" height="3" stroke={C.yellow} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
+    </g>
+  );
 
-const LakeDeco = () => (
-  <svg width="240" height="70" viewBox="0 0 240 70" fill="none" style={{ filter: `drop-shadow(0 0 6px ${C.yellow}55)` }}>
-    <ellipse cx="120" cy="52" rx="110" ry="12" stroke={C.yellow} strokeWidth="1.3" fill="none" />
-    <path d="M 30 40 Q 45 36 60 40 T 90 40 T 120 40 T 150 40 T 180 40 T 210 40" stroke={C.yellow} strokeWidth="0.9" fill="none" opacity="0.75" />
-    <path d="M 50 26 Q 65 22 80 26 T 110 26 T 140 26 T 170 26 T 195 26" stroke={C.yellow} strokeWidth="0.8" fill="none" opacity="0.55" />
-    <path d="M 70 14 Q 85 10 100 14 T 130 14 T 160 14" stroke={C.yellow} strokeWidth="0.7" fill="none" opacity="0.4" />
-  </svg>
-);
-
-const TreesDeco = () => (
-  <svg width="220" height="110" viewBox="0 0 220 110" fill="none" style={{ filter: `drop-shadow(0 0 6px ${C.yellow}66)` }}>
-    {[20, 55, 90, 130, 170, 200].map((x, i) => (
-      <g key={i} stroke={C.yellow} strokeWidth="1.2" fill="none">
-        <path d={`M ${x - 16} 74 L ${x} 20 L ${x + 16} 74 Z`} />
-        <path d={`M ${x - 12} 56 L ${x} 32 L ${x + 12} 56`} />
-        <path d={`M ${x - 8} 42 L ${x} 22 L ${x + 8} 42`} />
-        <line x1={x} y1="74" x2={x} y2="94" />
+  // A single bike drawn in the SVG so it can ride the path via animateMotion.
+  const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
+    <g style={{ filter: `drop-shadow(0 0 2px ${color}) drop-shadow(0 0 4px ${C.yellow}66)` }}>
+      {/* wheels + frame — drawn centered around (0,0), facing +X */}
+      <g transform="translate(-4 -1.5)">
+        <circle cx="-3" cy="1.5" r="1.6" stroke={color} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="3"  cy="1.5" r="1.6" stroke={color} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -3 1.5 L 0 1.5 L 1.5 -2 L 3 1.5 M -0.5 -2 L 2 -2 L 0 1.5" stroke={color} strokeWidth="0.5" fill="none" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        {/* headlight beam ahead */}
+        <circle cx="4.6" cy="1.5" r="0.6" fill={C.yellow} opacity="0.9" />
       </g>
-    ))}
-  </svg>
-);
+      <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={D} />
+    </g>
+  );
 
-const BridgeDeco = () => (
-  <svg width="260" height="110" viewBox="0 0 260 110" fill="none" style={{ filter: `drop-shadow(0 0 6px ${C.magenta}77)` }}>
-    <path d="M 10 82 Q 130 10 250 82" stroke={C.magenta} strokeWidth="1.6" fill="none" />
-    <path d="M 10 88 L 250 88" stroke={C.magenta} strokeWidth="1.2" />
-    <line x1="10" y1="82" x2="10" y2="102" stroke={C.magenta} strokeWidth="1.2" />
-    <line x1="250" y1="82" x2="250" y2="102" stroke={C.magenta} strokeWidth="1.2" />
-    {[40, 70, 100, 130, 160, 190, 220].map((x, i) => {
-      const t = (x - 130) / 120;
-      const y = 82 - (1 - t * t) * 70;
-      return <line key={i} x1={x} y1={y} x2={x} y2="88" stroke={C.magenta} strokeWidth="0.7" opacity="0.65" />;
-    })}
-  </svg>
-);
-
-/* Continuous winding SVG spine (dashed yellow bike-lane feel), plus scenery
-   anchored at section-fraction offsets, plus a small pack of bikes cruising the path. */
-const BikePathSpine = () => (
-  <>
-    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
+  return (
+    <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
       <svg
         width="100%"
         height="100%"
         preserveAspectRatio="none"
-        viewBox="0 0 100 100"
-        style={{ position: "absolute", inset: 0, opacity: 0.45 }}
+        viewBox="0 0 100 1000"
+        style={{ position: "absolute", inset: 0 }}
       >
         <defs>
-          <path id="sr-spine-path" d="M 90 0 C 88 8, 12 14, 12 22 S 88 32, 88 42 S 12 52, 12 62 S 88 72, 88 82 S 12 92, 12 100" />
+          <path id="sr-spine-path" d={D} />
         </defs>
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="0.35" strokeDasharray="0.9 1.2" fill="none" />
+        {/* soft glow underlay */}
+        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="2.2" strokeOpacity="0.14" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(3px)` }} />
+        {/* dashed animated bike lane */}
+        <use
+          href="#sr-spine-path"
+          stroke={C.yellow}
+          strokeWidth="1.4"
+          strokeDasharray="6 6"
+          fill="none"
+          vectorEffect="non-scaling-stroke"
+          opacity="0.85"
+          style={{ animation: "sr-dash 2.4s linear infinite" }}
+        />
+
+        {/* Landmarks — every ~120 units, on the opposite side of the path */}
+        <g opacity="0.9">
+          <g><Tree x={70} y={40} /> <Tree x={78} y={54} s={1.2} /> <Tree x={62} y={30} s={0.8} /></g>
+          <Building x={28} y={170} />
+          <Lake x={72} y={295} />
+          <g><Tree x={26} y={410} /> <Tree x={34} y={422} s={1.2} /></g>
+          <Picnic x={70} y={540} />
+          <Building x={26} y={670} />
+          <Lake x={72} y={790} />
+          <g><Tree x={26} y={905} /> <Tree x={34} y={918} s={1.1} /> <Tree x={18} y={920} s={0.9} /></g>
+        </g>
+
+        {/* Bike pack riding the path — spaced starts so they cluster then string out */}
+        <SpineBike color="#ffffff" dur={90} begin={0} />
+        <SpineBike color={C.yellow} dur={90} begin={-1.6} />
+        <SpineBike color={C.purple} dur={90} begin={-3.2} />
+        <SpineBike color="#ffffff" dur={90} begin={-4.6} />
+        <SpineBike color={C.magenta} dur={90} begin={-6.0} />
       </svg>
     </div>
+  );
+};
 
-    {/* Scenery pinned at section-fraction offsets (no distortion, plain HTML) */}
-    <div aria-hidden style={{ position: "absolute", top: "14%", right: "4%", pointerEvents: "none", zIndex: 1, opacity: 0.4 }}>
-      <SkylineDeco />
-    </div>
-    <div aria-hidden style={{ position: "absolute", top: "34%", left: "4%", pointerEvents: "none", zIndex: 1, opacity: 0.4 }}>
-      <LakeDeco />
-    </div>
-    <div aria-hidden style={{ position: "absolute", top: "56%", right: "4%", pointerEvents: "none", zIndex: 1, opacity: 0.45 }}>
-      <TreesDeco />
-    </div>
-    <div aria-hidden style={{ position: "absolute", top: "77%", left: "4%", pointerEvents: "none", zIndex: 1, opacity: 0.45 }}>
-      <BridgeDeco />
-    </div>
-  </>
-);
 
 const Hero = () => (
   <section style={{ position: "relative", background: C.midnight, color: "#fff" }} className="px-6 py-24 md:py-32 overflow-hidden">
@@ -259,23 +284,42 @@ const Hero = () => (
         <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
       </p>
 
-      {/* Headline: SLOW ROLL in white, bike pack rolls between, then Basecamp Match logo */}
-      <div style={{ ...displayFont, fontSize: "clamp(52px, 10vw, 128px)", fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", lineHeight: 0.95 }} className="mb-6">
-        <div style={{ textShadow: "0 0 24px rgba(255,255,255,0.35), 0 0 60px rgba(237,118,96,0.25)" }}>
+      {/* Headline: SLOW ROLL (white) × Basecamp Match dark-mode lockup */}
+      <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 flex-wrap">
+        <div
+          style={{
+            ...displayFont,
+            fontSize: "clamp(52px, 9vw, 120px)",
+            fontWeight: 900,
+            color: "#fff",
+            letterSpacing: "-0.02em",
+            lineHeight: 0.95,
+            textShadow: "0 0 24px rgba(255,255,255,0.35), 0 0 60px rgba(237,118,96,0.25)",
+          }}
+        >
           <EditableText settingKey="sr_hero_headline_a" defaultText="SLOW " as="span" />
           <EditableText settingKey="sr_hero_headline_b" defaultText="ROLL" as="span" />
         </div>
-        <div style={{ margin: "22px 0" }}>
-          <BikePack height={72} bikeSize={48} cycle={10} count={6} seed={0} />
-        </div>
-        <div className="flex items-center justify-center">
-          <img
-            src={basecampMatchLogo.url}
-            alt="Basecamp Match"
-            style={{ height: "clamp(64px, 10vw, 128px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(237,118,96,0.45))" }}
-          />
-        </div>
+        <span
+          aria-hidden
+          style={{
+            ...displayFont,
+            fontSize: "clamp(48px, 8vw, 96px)",
+            fontWeight: 800,
+            color: C.magenta,
+            lineHeight: 1,
+            textShadow: `0 0 18px ${C.magenta}, 0 0 40px ${C.magenta}77`,
+          }}
+        >
+          ×
+        </span>
+        <img
+          src={basecampMatchDark.url}
+          alt="Basecamp Match"
+          style={{ height: "clamp(70px, 11vw, 130px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
+        />
       </div>
+
 
       <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
@@ -513,10 +557,8 @@ const Partners = () => (
       <h2 className="mb-12 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_partners_headline" defaultText="Made possible by." as="span" />
       </h2>
-      {/* Bike pack rolls through the "Made possible by" area too */}
-      <div className="mb-10">
-        <BikePack height={54} bikeSize={36} cycle={13} count={6} seed={4} />
-      </div>
+
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <PartnerCard accent={C.magenta}
           nameKey="sr_p1_name" nameDefault="Slow Roll MSP / Cultural Wellness Center"
@@ -581,10 +623,8 @@ const Watch = () => (
       <h2 className="mb-8 text-center" style={{ ...displayFont, fontSize: "clamp(30px, 4.5vw, 48px)", fontWeight: 800, color: "#fff", lineHeight: 1.05 }}>
         <EditableText settingKey="sr_watch_headline" defaultText="Hear it from Anthony." as="span" />
       </h2>
-      {/* Bike pack rolls through the Watch section as well */}
-      <div className="mb-8">
-        <BikePack height={54} bikeSize={34} cycle={14} count={5} seed={7} />
-      </div>
+
+
       <div className="w-full rounded-2xl overflow-hidden" style={{ aspectRatio: "16 / 9", border: `1px solid ${C.magenta}55`, boxShadow: `0 0 40px ${C.magenta}33` }}>
         <iframe
           src="https://www.youtube.com/embed/4sTkjejTZPA"
@@ -642,7 +682,7 @@ const EventSlowRoll = () => (
       <div style={{ position: "relative", zIndex: 2 }}>
         <OrderedSections
           sections={[
-            { key: "hero", content: <><Hero /><BikePackDivider /></> },
+            { key: "hero", content: <Hero /> },
             { key: "what", content: <WhatItIs /> },
             { key: "theme", content: <Theme /> },
             { key: "guide", content: <Guide /> },
