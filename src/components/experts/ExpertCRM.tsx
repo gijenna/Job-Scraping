@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil, Bookmark, BookmarkCheck, Download, Image as ImageIcon } from "lucide-react";
+import { Eye, EyeOff, Trash2, ExternalLink, Copy, Share2, Pencil, Bookmark, BookmarkCheck, Download, Image as ImageIcon, Loader2 } from "lucide-react";
 import { PUBLISHED_BASE_URL } from "@/lib/utils";
 import { supabase as supabaseClient } from "@/integrations/supabase/client";
 import ExpertCard from "./ExpertCard";
@@ -46,6 +46,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
   const [previewExpert, setPreviewExpert] = useState<Expert | null>(null);
   const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
   const [editCitySlug, setEditCitySlug] = useState<string>("");
+  const [syncingAssignmentId, setSyncingAssignmentId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const getExpertAssignments = (expertId: string) =>
@@ -70,15 +71,42 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
     return cityMatch && typeMatch && savedMatch;
   });
 
-  const togglePublish = async (assignmentId: string, currentlyPublished: boolean) => {
+  const syncExpertToSheet = async (expert: Expert, assignment: ExpertCityAssignment, showSuccess = true) => {
+    setSyncingAssignmentId(assignment.id);
+    try {
+      const { error } = await supabase.functions.invoke('sync-expert', {
+        body: {
+          id: expert.id,
+          city_slug: assignment.city_slug,
+          expert_type: assignment.expert_type || 'industry_expert',
+        },
+      });
+      if (error) throw error;
+      if (showSuccess) toast({ title: "Sheet synced", description: `${expert.full_name} is updated.` });
+      return true;
+    } catch (err: any) {
+      toast({ title: "Sheet sync failed", description: err.message || "Try again in a minute.", variant: "destructive" });
+      return false;
+    } finally {
+      setSyncingAssignmentId(null);
+    }
+  };
+
+  const togglePublish = async (expert: Expert, assignment: ExpertCityAssignment) => {
+    const currentlyPublished = assignment.published;
     const { error } = await supabase
       .from('expert_city_assignments')
       .update({ published: !currentlyPublished })
-      .eq('id', assignmentId);
+      .eq('id', assignment.id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: currentlyPublished ? "Unpublished" : "Published!" });
+      if (currentlyPublished) {
+        toast({ title: "Unpublished" });
+      } else {
+        toast({ title: "Published" });
+        await syncExpertToSheet(expert, assignment, false);
+      }
       onRefresh();
     }
   };
@@ -443,16 +471,27 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
                           <Pencil className="w-3 h-3" />
                         </Button>
                         {expertAssigns.map((a) => (
-                          <Button
-                            key={a.id}
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => togglePublish(a.id, a.published)}
-                            className="text-events-cream/60 hover:text-events-cream h-7 px-2"
-                            title={a.published ? 'Unpublish' : 'Publish'}
-                          >
-                            {a.published ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                          </Button>
+                          <div key={a.id} className="flex items-center gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => syncExpertToSheet(expert, a)}
+                              disabled={syncingAssignmentId === a.id}
+                              className="text-events-cream/60 hover:text-events-yellow h-7 px-2 disabled:opacity-50"
+                              title="Sync sheet"
+                            >
+                              {syncingAssignmentId === a.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => togglePublish(expert, a)}
+                              className="text-events-cream/60 hover:text-events-cream h-7 px-2"
+                              title={a.published ? 'Unpublish' : 'Publish'}
+                            >
+                              {a.published ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                            </Button>
+                          </div>
                         ))}
                         <Button
                           size="sm"
@@ -511,7 +550,7 @@ const ExpertCRM = ({ experts, assignments, cities, onRefresh }: ExpertCRMProps) 
               existingData={editingExpert}
               citySlug={editCitySlug}
               cityName={cities.find(c => c.slug === editCitySlug)?.name || editCitySlug}
-              expertType={assignments.find(a => a.expert_id === editingExpert.id)?.expert_type || 'industry_expert'}
+              expertType={assignments.find(a => a.expert_id === editingExpert.id && a.city_slug === editCitySlug)?.expert_type || 'industry_expert'}
               onComplete={() => {
                 setEditingExpert(null);
                 onRefresh();
