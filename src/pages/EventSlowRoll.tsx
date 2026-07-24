@@ -81,16 +81,17 @@ const NeonStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&display=swap');
     @keyframes sr-drift { 0% { transform: translate(0,0) scale(1) } 50% { transform: translate(20px,-15px) scale(1.05) } 100% { transform: translate(0,0) scale(1) } }
-    @keyframes sr-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    @keyframes sr-pack { 
-      0%   { transform: translateX(110%); }
-      35%  { transform: translateX(-110%); }
-      100% { transform: translateX(-110%); }
+    @keyframes sr-pack {
+      0%   { transform: translateX(-110%); }
+      55%  { transform: translateX(110%); }
+      100% { transform: translateX(110%); }
     }
     @keyframes sr-headlight { 0%,100% { opacity:.6 } 50% { opacity:1 } }
+    @keyframes sr-dash { to { stroke-dashoffset: -60; } }
     .sr-neon-text { text-shadow: 0 0 12px currentColor, 0 0 28px currentColor; }
   `}</style>
 );
+
 
 const NeonBlobs = () => (
   <>
