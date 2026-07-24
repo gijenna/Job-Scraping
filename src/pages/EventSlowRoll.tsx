@@ -228,7 +228,7 @@ const BikePathSpine = () => {
       <svg
         width="100%"
         height="100%"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMid slice"
         viewBox="0 0 200 1000"
         style={{ position: "absolute", inset: 0 }}
       >
