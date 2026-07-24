@@ -150,21 +150,23 @@ const BikePack = ({ height = 60, bikeSize = 42, cycle = 11, count = 6, seed = 0 
    One unbroken static bike-lane weaving down the full page.
    Bikes move in small packs, while landmarks sit in open gutters between sections. */
 const BikePathSpine = () => {
-  // Starts from the left side of the hero, runs horizontally between the
-  // headline and logo area, then slips into gutters and section breaks.
+  // viewBox 200x1000 keeps roughly page aspect on desktop, so bikes don't get
+  // stretched horizontally when preserveAspectRatio="none" scales the SVG.
+  // The horizontal opener now runs in the hero gutter *between* the Basecamp
+  // Match logo and the date line (Hero has extra top margin on the subline).
   const D =
-    "M 0 66 " +
-    "C 19 66, 41 66, 62 66 " +
-    "C 84 66, 94 86, 94 128 " +
-    "C 94 178, 94 270, 94 418 " +
-    "C 94 452, 62 474, 32 489 " +
-    "C 17 497, 8 513, 8 540 " +
-    "C 8 574, 27 594, 52 605 " +
-    "C 73 616, 93 633, 93 674 " +
-    "C 93 684, 93 748, 93 812 " +
-    "C 93 847, 75 868, 53 881 " +
-    "C 32 893, 13 909, 13 940 " +
-    "C 13 979, 57 989, 31 1000";
+    "M 0 108 " +
+    "C 40 108, 96 108, 140 108 " +
+    "C 176 108, 188 128, 188 172 " +
+    "C 188 220, 188 310, 188 418 " +
+    "C 188 452, 128 474, 68 489 " +
+    "C 34 497, 18 513, 18 540 " +
+    "C 18 574, 54 594, 108 605 " +
+    "C 148 616, 186 633, 186 674 " +
+    "C 186 684, 186 748, 186 812 " +
+    "C 186 847, 152 868, 108 881 " +
+    "C 66 893, 28 909, 28 940 " +
+    "C 28 979, 116 989, 62 1000";
 
   const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
     <g transform={`translate(${x} ${y}) scale(${s})`} style={{ filter: `drop-shadow(0 0 3px ${C.yellow})` }}>
@@ -191,35 +193,33 @@ const BikePathSpine = () => {
   );
   const Picnic = ({ x, y }: { x: number; y: number }) => (
     <g transform={`translate(${x} ${y})`} style={{ filter: `drop-shadow(0 0 3px ${C.magenta})` }}>
-      {/* checkered blanket */}
       <rect x="-8" y="-4" width="16" height="8" stroke={C.magenta} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
       <line x1="-8" y1="0" x2="8" y2="0" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
       <line x1="-4" y1="-4" x2="-4" y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
       <line x1="0"  y1="-4" x2="0"  y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
       <line x1="4"  y1="-4" x2="4"  y2="4" stroke={C.magenta} strokeWidth="0.3" vectorEffect="non-scaling-stroke" opacity="0.7" />
-      {/* basket */}
       <rect x="-2" y="-7" width="4" height="3" stroke={C.yellow} strokeWidth="0.5" fill="none" vectorEffect="non-scaling-stroke" />
     </g>
   );
 
-  // A single bike drawn in the SVG so it can ride the path via animateMotion.
+  // Bike drawn thicker/bigger in local coords; viewBox aspect keeps it proportional.
   const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
-    <g style={{ filter: `drop-shadow(0 0 5px ${color}) drop-shadow(0 0 9px ${C.yellow})` }}>
-      {/* compact, thick bike facing +X */}
-      <g transform="translate(-2.4 -0.9) scale(0.62)">
-        <ellipse cx="6.3" cy="1.4" rx="3.5" ry="0.8" fill={C.yellow} opacity="0.5" />
-        <circle cx="-2.4" cy="1.4" r="1.35" stroke={color} strokeWidth="2.25" fill="none" vectorEffect="non-scaling-stroke" />
-        <circle cx="2.8" cy="1.4" r="1.35" stroke={color} strokeWidth="2.25" fill="none" vectorEffect="non-scaling-stroke" />
-        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.4 L 2.8 1.4 M -0.6 -1.4 L 1.6 -1.4 L -0.1 1.4" stroke={color} strokeWidth="2.25" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        <path d="M 1.6 -1.4 L 2.6 -2.2" stroke={color} strokeWidth="2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        <circle cx="4.6" cy="1.4" r="0.8" fill={C.yellow} opacity="1" />
-        <circle cx="-4" cy="1.4" r="0.55" fill={C.magenta} opacity="0.95" />
+    <g style={{ filter: `drop-shadow(0 0 4px ${color}) drop-shadow(0 0 8px ${C.yellow})` }}>
+      <g transform="translate(-3 -1.2) scale(0.85)">
+        <ellipse cx="6.3" cy="1.4" rx="3.2" ry="0.7" fill={C.yellow} opacity="0.55" />
+        <circle cx="-2.4" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
+        <circle cx="2.8" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
+        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.6 L 2.8 1.4 M -0.6 -1.6 L 1.6 -1.6 L -0.1 1.4" stroke={color} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M 1.6 -1.6 L 2.7 -2.5" stroke={color} strokeWidth="2.3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <circle cx="4.8" cy="1.4" r="0.9" fill={C.yellow} opacity="1" />
+        <circle cx="-4.1" cy="1.4" r="0.6" fill={C.magenta} opacity="0.95" />
       </g>
       <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={D} />
     </g>
   );
 
-  const packStarts = [0, -5, -10, -15, -20, -25, -30, -35];
+  // Slower travel (80s per loop), packs of 4-7 launching every ~7s.
+  const packStarts = [0, -7, -14, -21, -28, -35, -42];
   const packColors = ["#ffffff", "#ffffff", C.purple, "#ffffff", C.yellow, "#ffffff", C.magenta];
 
   return (
@@ -228,46 +228,43 @@ const BikePathSpine = () => {
         width="100%"
         height="100%"
         preserveAspectRatio="none"
-        viewBox="0 0 100 1000"
+        viewBox="0 0 200 1000"
         style={{ position: "absolute", inset: 0 }}
       >
         <defs>
           <path id="sr-spine-path" d={D} />
         </defs>
-        {/* soft static bike lane */}
-        <use href="#sr-spine-path" stroke={C.yellow} strokeWidth="3.2" strokeOpacity="0.16" fill="none" vectorEffect="non-scaling-stroke" style={{ filter: `blur(4px)` }} />
-        <use href="#sr-spine-path" stroke={C.midnight} strokeWidth="2.2" strokeOpacity="0.85" fill="none" vectorEffect="non-scaling-stroke" />
+        {/* single thin dashed lane, consistent width via non-scaling-stroke */}
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="1.15"
+          strokeWidth="0.85"
           strokeDasharray="4 7"
           fill="none"
           vectorEffect="non-scaling-stroke"
-          opacity="0.92"
-          style={{ filter: `drop-shadow(0 0 4px ${C.yellow}) drop-shadow(0 0 9px ${C.yellow}88)` }}
+          opacity="0.85"
+          style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
         />
 
-        {/* Landmarks live in open gutters and section breaks, not over text or photos. */}
+        {/* Landmarks in open gutters (X coords doubled to match new viewBox). */}
         <g opacity="0.95">
-          <g><Tree x={13} y={151} /> <Tree x={20} y={160} s={1.15} /> <Tree x={28} y={150} s={0.85} /></g>
-          <Building x={82} y={390} />
-          <Lake x={17} y={582} />
-          <g><Tree x={84} y={604} /> <Tree x={91} y={617} s={1.2} /></g>
-          <Picnic x={17} y={842} />
-          <Building x={84} y={876} />
-          <Lake x={17} y={962} />
+          <g><Tree x={26} y={200} /> <Tree x={40} y={210} s={1.15} /> <Tree x={56} y={200} s={0.85} /></g>
+          <Building x={168} y={378} />
+          <Lake x={34} y={582} />
+          <g><Tree x={172} y={604} /> <Tree x={186} y={617} s={1.2} /></g>
+          <Picnic x={34} y={842} />
+          <Building x={172} y={876} />
+          <Lake x={34} y={962} />
         </g>
 
-        {/* Bike packs: 4 to 8 bikes launch roughly every 5 seconds. */}
         {packStarts.map((start, packIndex) => (
           <g key={start}>
             {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
               <SpineBike
                 key={`${start}-${bikeIndex}`}
                 color={color}
-                dur={40}
-                begin={start + bikeIndex * 0.18}
+                dur={80}
+                begin={start + bikeIndex * 0.25}
               />
             ))}
           </g>
@@ -331,7 +328,7 @@ const Hero = () => (
       </div>
 
 
-      <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+      <p className="mt-24 md:mt-28 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
       <p className="mb-8 font-bold" style={{ fontSize: 16, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
@@ -368,10 +365,7 @@ const Marquee = () => {
 };
 
 const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
-  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
-    <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}d8, ${C.midnight2}d0 42%, ${C.midnight}d8)`, opacity: 0.56 }} />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
+  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-28">
     <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
 );
@@ -654,10 +648,7 @@ const Watch = () => (
 );
 
 const FooterCTA = () => (
-  <section style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-32">
-    <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `${C.midnight}e8` }} />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.06, backgroundImage: `linear-gradient(${C.magenta} 1px, transparent 1px), linear-gradient(90deg, ${C.magenta} 1px, transparent 1px)`, backgroundSize: "60px 60px", maskImage: "radial-gradient(circle at 50% 50%, black 30%, transparent 75%)" }} />
+  <section style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-32">
     <div className="max-w-3xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_footer_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
