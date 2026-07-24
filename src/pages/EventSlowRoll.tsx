@@ -228,7 +228,7 @@ const BikePathSpine = () => {
       <svg
         width="100%"
         height="100%"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMid slice"
         viewBox="0 0 200 1000"
         style={{ position: "absolute", inset: 0 }}
       >
@@ -277,7 +277,7 @@ const BikePathSpine = () => {
 
 
 const Hero = () => (
-  <section style={{ position: "relative", background: "transparent", color: "#fff" }} className="px-6 py-24 md:py-32 overflow-hidden">
+  <section style={{ position: "relative", background: "transparent", color: "#fff" }} className="px-6 py-10 md:py-14 overflow-hidden">
     <div aria-hidden style={{
       position: "absolute", inset: 0,
       background: `radial-gradient(ellipse at 50% 25%, rgba(237,118,96,0.12), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(225,182,36,0.08), transparent 55%)`,
@@ -285,19 +285,19 @@ const Hero = () => (
     <NeonBlobs />
 
     <div className="max-w-5xl mx-auto text-center relative z-10">
-      <div className="mb-8">
+      <div className="mb-4 md:mb-5">
         <Badge settingKey="sr_hero_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
       </div>
-      <p className="uppercase font-bold mb-6" style={{ letterSpacing: "0.3em", fontSize: 12, color: "#fff", opacity: 0.85 }}>
+      <p className="uppercase font-bold mb-3 md:mb-4" style={{ letterSpacing: "0.3em", fontSize: 12, color: "#fff", opacity: 0.85 }}>
         <EditableText settingKey="sr_hero_eyebrow" defaultText="Basecamp Outdoor × Slow Roll" as="span" />
       </p>
 
       {/* Headline: SLOW ROLL (white) × Basecamp Match dark-mode lockup */}
-      <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 flex-wrap">
+      <div className="mb-3 md:mb-4 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 flex-wrap">
         <div
           style={{
             ...displayFont,
-            fontSize: "clamp(52px, 9vw, 120px)",
+            fontSize: "clamp(44px, 7.5vw, 96px)",
             fontWeight: 900,
             color: "#fff",
             letterSpacing: "-0.02em",
@@ -312,7 +312,7 @@ const Hero = () => (
           aria-hidden
           style={{
             ...displayFont,
-            fontSize: "clamp(48px, 8vw, 96px)",
+            fontSize: "clamp(40px, 6.5vw, 80px)",
             fontWeight: 800,
             color: C.magenta,
             lineHeight: 1,
@@ -324,18 +324,18 @@ const Hero = () => (
         <img
           src={publicAssetUrl(basecampMatchDark.url)}
           alt="Basecamp Match"
-          style={{ height: "clamp(70px, 11vw, 130px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
+          style={{ height: "clamp(56px, 8.5vw, 104px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
         />
       </div>
 
 
-      <p className="mt-48 md:mt-56 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+      <p className="mt-16 md:mt-20 mb-2" style={{ fontSize: 18, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
-      <p className="mb-8 font-bold" style={{ fontSize: 16, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
+      <p className="mb-4 font-bold" style={{ fontSize: 15, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
         <EditableText settingKey="sr_hero_capline" defaultText="ONLY 100 RIDERS · BRING A BIKE OR BORROW ONE" as="span" />
       </p>
-      <p className="max-w-2xl mx-auto mb-10" style={{ fontSize: 17, lineHeight: 1.65, color: "rgba(255,255,255,0.9)" }}>
+      <p className="max-w-2xl mx-auto mb-6" style={{ fontSize: 16, lineHeight: 1.55, color: "rgba(255,255,255,0.9)" }}>
         <EditableText
           settingKey="sr_hero_pitch"
           defaultText="A curated 90-minute community bike ride through Minneapolis. Not a race. A moving experience with stops for stories about the city's history of public land access, equity, and outdoor culture, ending in a DJ set and a community meal. Open to everyone. No OR badge required."
@@ -347,6 +347,7 @@ const Hero = () => (
     </div>
   </section>
 );
+
 
 const Marquee = () => {
   const items = ["SLOW ROLL", "COMMUNITY", "LIGHTS ON", "MINNEAPOLIS", "RIDE JOY", "PUBLIC WATER", "DJ + MEAL", "BRING A BIKE", "AFTER DARK", "NO RACE", "MOVING STORIES", "ALL WELCOME"];
