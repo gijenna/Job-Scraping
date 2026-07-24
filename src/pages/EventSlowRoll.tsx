@@ -328,7 +328,7 @@ const Hero = () => (
       </div>
 
 
-      <p className="mt-8 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
+      <p className="mt-24 md:mt-28 mb-3" style={{ fontSize: 19, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
       <p className="mb-8 font-bold" style={{ fontSize: 16, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
