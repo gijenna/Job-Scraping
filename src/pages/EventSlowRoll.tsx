@@ -172,9 +172,51 @@ const Hero = () => {
   );
 };
 
+const BikeBackdrop = ({ tone = "cream" }: { tone?: "cream" | "white" }) => {
+  const base = tone === "cream" ? C.cream : "#fff";
+  const stripe = tone === "cream" ? "#f1e9d8" : "#f6efe0";
+  return (
+    <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `repeating-linear-gradient(135deg, ${base} 0 24px, ${stripe} 24px 25px)`,
+          opacity: 0.55,
+        }}
+      />
+      <svg
+        viewBox="0 0 200 60"
+        style={{ position: "absolute", right: -20, top: 20, width: 340, opacity: 0.09, color: C.forest }}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      >
+        <circle cx="40" cy="42" r="14" />
+        <circle cx="160" cy="42" r="14" />
+        <path d="M40 42 L90 42 L120 20 L150 42 M120 20 L110 42 M90 42 L110 42" strokeLinecap="round" />
+        <circle cx="40" cy="42" r="2" fill="currentColor" stroke="none" />
+        <circle cx="160" cy="42" r="2" fill="currentColor" stroke="none" />
+      </svg>
+      <svg
+        viewBox="0 0 200 60"
+        style={{ position: "absolute", left: -30, bottom: 30, width: 260, opacity: 0.07, color: C.rust }}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      >
+        <circle cx="40" cy="42" r="14" />
+        <circle cx="160" cy="42" r="14" />
+        <path d="M40 42 L90 42 L120 20 L150 42 M120 20 L110 42 M90 42 L110 42" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+};
+
 const WhatItIs = () => (
-  <section style={{ background: C.cream, color: C.ink }} className="px-6 py-20 md:py-28">
-    <div className="max-w-5xl mx-auto">
+  <section style={{ background: C.cream, color: C.ink, position: "relative" }} className="px-6 py-20 md:py-28 overflow-hidden">
+    <BikeBackdrop tone="cream" />
+    <div className="max-w-5xl mx-auto relative z-10">
       <div className="max-w-3xl mb-10">
         <p
           className="uppercase font-semibold mb-4"
@@ -210,15 +252,21 @@ const WhatItIs = () => (
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-          <img src={ridePhoto2.url} alt="Slow Roll MSP riders on a past community ride" className="w-full h-64 md:h-72 object-cover block" />
+          <img src={sfbikeLights.url} alt="Cyclists lit up on a community night ride" className="w-full h-64 md:h-72 object-cover block" />
           <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
-            Photo: Devon Young Cupery via Streets.mn
+            Photo:{" "}
+            <a href="https://sfbike.org/news/light-up-the-night-is-back-2/" target="_blank" rel="noopener noreferrer" style={{ color: C.rust, textDecoration: "underline" }}>
+              San Francisco Bicycle Coalition
+            </a>
           </figcaption>
         </figure>
         <figure className="rounded-[12px] overflow-hidden" style={{ border: `1px solid ${C.line}` }}>
-          <img src={ridePhoto3.url} alt="Riders gathered on a past Slow Roll MSP tour" className="w-full h-64 md:h-72 object-cover block" />
+          <img src={heroPhoto.url} alt="Slow Roll MSP rider on a past community ride" className="w-full h-64 md:h-72 object-cover block" />
           <figcaption className="px-4 py-2" style={{ fontSize: 12, color: C.muted, background: "#fff" }}>
-            Photo via Streets.mn
+            Photo via{" "}
+            <a href="https://www.facebook.com/SlowRollTC/" target="_blank" rel="noopener noreferrer" style={{ color: C.rust, textDecoration: "underline" }}>
+              Slow Roll TC
+            </a>
           </figcaption>
         </figure>
       </div>
