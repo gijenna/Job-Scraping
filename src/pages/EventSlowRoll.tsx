@@ -385,10 +385,6 @@ const PhotoCarousels = () => (
 
 
 
-    </div>
-  </DarkPanel>
-);
-
 const ThemeCard = ({
   labelKey, labelDefault, headKey, headDefault, bodyKey, bodyDefault, accent,
 }: {
