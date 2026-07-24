@@ -1,6 +1,7 @@
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
+import OrderedSections from "@/components/event/OrderedSections";
 
 // Brand palette (page-scoped, matches spec exactly)
 const C = {
