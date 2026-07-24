@@ -365,10 +365,7 @@ const Marquee = () => {
 };
 
 const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
-  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative", overflow: "hidden" }} className="px-6 py-24 md:py-28">
-    <NeonBlobs />
-    <div aria-hidden style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${C.midnight}d8, ${C.midnight2}d0 42%, ${C.midnight}d8)`, opacity: 0.56 }} />
-    <div aria-hidden style={{ position: "absolute", inset: 0, opacity: 0.018, backgroundImage: `linear-gradient(${C.yellow} 1px, transparent 1px), linear-gradient(90deg, ${C.yellow} 1px, transparent 1px)`, backgroundSize: "80px 80px" }} />
+  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-28">
     <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
 );
