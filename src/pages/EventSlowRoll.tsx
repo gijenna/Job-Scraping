@@ -2,6 +2,11 @@ import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
+import heroPhoto from "@/assets/slowroll/hero.jpg.asset.json";
+import ridePhoto2 from "@/assets/slowroll/ride-2.jpg.asset.json";
+import ridePhoto3 from "@/assets/slowroll/ride-3.jpg.asset.json";
+import slowRollLogo from "@/assets/slowroll/logo.jpg.asset.json";
+import basecampJobsLogo from "@/assets/mn26/sponsors/basecamp-match-logo.png.asset.json";
 
 // Brand palette (page-scoped, matches spec exactly)
 const C = {
@@ -15,6 +20,7 @@ const C = {
 };
 
 const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
+const SLOWROLL_FB_URL = "https://www.facebook.com/SlowRollTC/";
 
 const font = { fontFamily: "'Inter', system-ui, sans-serif" };
 
