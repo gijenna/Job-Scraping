@@ -740,9 +740,12 @@ const MN26Brands = () => {
       <div style={{ background: TEAL, ...font }} className="min-h-screen">
         <Hero />
         <Tiers />
-        <Mockups personalization={personalization} />
+        {/* Mockups section hidden — swap back in if we want the personalized 4-square preview */}
+        {false && <Mockups personalization={personalization} />}
+        <NewsletterEmbed />
         <WhyWorthIt />
         <FinalCTA />
+
       </div>
     </EditableTextProvider>
   );
