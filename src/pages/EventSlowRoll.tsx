@@ -152,22 +152,20 @@ const BikePathSpine = () => {
   // Starts from the left side of the hero, runs horizontally between the
   // headline and logo area, then slips into gutters and section breaks.
   const D =
-    "M 0 54 " +
-    "C 14 54, 31 54, 45 54 " +
-    "S 71 54, 83 60 " +
-    "C 96 67, 94 91, 84 109 " +
-    "C 75 126, 88 142, 94 166 " +
-    "C 103 206, 78 231, 54 244 " +
-    "C 25 260, 8 282, 8 321 " +
-    "C 8 360, 31 379, 50 389 " +
-    "C 70 400, 91 419, 91 456 " +
-    "C 91 494, 70 512, 49 524 " +
-    "C 28 537, 9 557, 9 596 " +
-    "C 9 637, 35 653, 57 660 " +
-    "C 82 668, 93 690, 88 725 " +
-    "C 82 768, 23 766, 14 810 " +
-    "C 5 854, 82 866, 88 912 " +
-    "C 94 955, 44 965, 30 1000";
+    "M 0 59 " +
+    "C 18 59, 38 59, 55 59 " +
+    "C 74 59, 87 68, 92 88 " +
+    "C 98 113, 95 149, 92 185 " +
+    "C 89 224, 94 273, 93 318 " +
+    "C 92 354, 75 374, 58 386 " +
+    "C 37 401, 12 421, 12 461 " +
+    "C 12 506, 37 530, 62 542 " +
+    "C 82 552, 93 575, 93 620 " +
+    "C 93 663, 92 706, 92 742 " +
+    "C 92 779, 63 800, 35 817 " +
+    "C 17 829, 11 857, 15 883 " +
+    "C 21 920, 85 919, 91 952 " +
+    "C 96 978, 55 990, 31 1000";
 
   const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
     <g transform={`translate(${x} ${y}) scale(${s})`} style={{ filter: `drop-shadow(0 0 3px ${C.yellow})` }}>
@@ -254,12 +252,12 @@ const BikePathSpine = () => {
         {/* Landmarks live in open gutters and section breaks, not over text or photos. */}
         <g opacity="0.95">
           <g><Tree x={13} y={151} /> <Tree x={20} y={160} s={1.15} /> <Tree x={28} y={150} s={0.85} /></g>
-          <Building x={86} y={345} />
-          <Lake x={16} y={487} />
-          <g><Tree x={84} y={579} /> <Tree x={91} y={591} s={1.2} /></g>
-          <Picnic x={17} y={734} />
-          <Building x={84} y={842} />
-          <Lake x={18} y={948} />
+          <Building x={82} y={367} />
+          <Lake x={17} y={515} />
+          <g><Tree x={84} y={565} /> <Tree x={91} y={578} s={1.2} /></g>
+          <Picnic x={17} y={770} />
+          <Building x={84} y={850} />
+          <Lake x={17} y={948} />
         </g>
 
         {/* Bike packs: 4 to 8 bikes launch roughly every 5 seconds. */}
