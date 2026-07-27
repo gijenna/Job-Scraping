@@ -40,7 +40,9 @@ const Email = ({
   igStoryUrl,
 }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
-  const profile = profileUrl || `https://basecampoutdoorevents.com/minneapolis26?map_expert=${encodeURIComponent(expertSlug)}`;
+  // Use expert-og as the share URL: crawlers (iMessage, LinkedIn, Slack) get
+  // the unique per-expert card; humans get 302'd to /minneapolis26?map_expert=...
+  const profile = profileUrl || `https://${PROJECT}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expertSlug)}/minneapolis`;
   const og = ogCardUrl || cardUrl(expertSlug, "og");
   const igp = igPortraitUrl || cardUrl(expertSlug, "ig_portrait");
   const igs = igStoryUrl || cardUrl(expertSlug, "ig_story");
