@@ -150,23 +150,123 @@ const BikePack = ({ height = 60, bikeSize = 42, cycle = 11, count = 6, seed = 0 
    One unbroken static bike-lane weaving down the full page.
    Bikes move in small packs, while landmarks sit in open gutters between sections. */
 const BikePathSpine = () => {
-  // viewBox 200x1000 keeps roughly page aspect on desktop, so bikes don't get
-  // stretched horizontally when preserveAspectRatio="none" scales the SVG.
-  // The horizontal opener runs in the open hero gutter below the Basecamp
-  // Match logo and above the date line.
-  const D =
-    "M 0 98 " +
-    "C 40 98, 96 98, 140 98 " +
-    "C 176 98, 188 118, 188 164 " +
-    "C 188 232, 188 318, 188 418 " +
-    "C 188 452, 128 474, 68 489 " +
-    "C 34 497, 18 513, 18 540 " +
-    "C 18 574, 54 594, 108 605 " +
-    "C 148 616, 186 633, 186 674 " +
-    "C 186 684, 186 748, 186 812 " +
-    "C 186 847, 152 868, 108 881 " +
-    "C 66 893, 28 909, 28 940 " +
-    "C 28 979, 116 989, 62 1000";
+  type SpineDims = {
+    w: number;
+    h: number;
+    logoTop: number;
+    logoBottom: number;
+    dateTop: number;
+    whatTop: number;
+    whatBottom: number;
+    guideTop: number;
+    watchTop: number;
+    footerTop: number;
+  };
+
+  const [pageDims, setPageDims] = useState<SpineDims>({
+    w: 400,
+    h: 4200,
+    logoTop: 184,
+    logoBottom: 240,
+    dateTop: 304,
+    whatTop: 740,
+    whatBottom: 1900,
+    guideTop: 2000,
+    watchTop: 4700,
+    footerTop: 5600,
+  });
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const measure = () => {
+      const main = document.querySelector<HTMLElement>("[data-sr-page]");
+      const mainRect = main?.getBoundingClientRect();
+      const mainTop = mainRect?.top ?? 0;
+      const pageHeight = Math.max(
+        main?.scrollHeight ?? 0,
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+
+      const topOf = (selector: string, fallback: number) => {
+        const el = document.querySelector<HTMLElement>(selector);
+        if (!el) return fallback;
+        return Math.round(el.getBoundingClientRect().top - mainTop);
+      };
+
+      const bottomOf = (selector: string, fallback: number) => {
+        const el = document.querySelector<HTMLElement>(selector);
+        if (!el) return fallback;
+        return Math.round(el.getBoundingClientRect().bottom - mainTop);
+      };
+
+      setPageDims((prev) => {
+        const next = {
+          w: Math.round(mainRect?.width ?? window.innerWidth),
+          h: Math.round(pageHeight),
+          logoTop: topOf("[data-sr-logo]", prev.logoTop),
+          logoBottom: bottomOf("[data-sr-logo]", prev.logoBottom),
+          dateTop: topOf("[data-sr-date]", prev.dateTop),
+          whatTop: topOf("[data-sr-section='what']", prev.whatTop),
+          whatBottom: bottomOf("[data-sr-section='what']", prev.whatBottom),
+          guideTop: topOf("[data-sr-section='guide']", prev.guideTop),
+          watchTop: topOf("[data-sr-section='watch']", prev.watchTop),
+          footerTop: topOf("[data-sr-section='footer']", prev.footerTop),
+        };
+
+        const changed = Object.keys(next).some((key) => next[key as keyof SpineDims] !== prev[key as keyof SpineDims]);
+        return changed ? next : prev;
+      });
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
+    window.addEventListener("resize", measure);
+    const t1 = window.setTimeout(measure, 350);
+    const t2 = window.setTimeout(measure, 1200);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, []);
+
+  const isMobile = pageDims.w < 768;
+  const right = isMobile ? pageDims.w - 14 : Math.min(pageDims.w - 90, pageDims.w * 0.94);
+  const left = isMobile ? 14 : Math.max(40, pageDims.w * 0.08);
+  const heroLaneY = isMobile
+    ? Math.round((pageDims.logoBottom + pageDims.dateTop) / 2)
+    : Math.round(pageDims.logoTop + (pageDims.logoBottom - pageDims.logoTop) * 0.35);
+  const sectionStops = [
+    pageDims.whatTop,
+    pageDims.whatBottom,
+    pageDims.guideTop,
+    pageDims.watchTop,
+    pageDims.footerTop,
+  ].filter((value) => value > heroLaneY + 180).sort((a, b) => a - b);
+  const firstStop = sectionStops[0] ?? pageDims.whatTop;
+  const secondStop = sectionStops[1] ?? firstStop + 800;
+  const thirdStop = sectionStops[2] ?? secondStop + 800;
+  const fourthStop = sectionStops[3] ?? thirdStop + 800;
+
+  const D = isMobile
+    ? `M -28 ${heroLaneY} ` +
+      `C ${pageDims.w * 0.2} ${heroLaneY}, ${pageDims.w * 0.66} ${heroLaneY}, ${right} ${heroLaneY} ` +
+      `C ${pageDims.w + 18} ${heroLaneY + 64}, ${right} ${firstStop - 130}, ${right} ${firstStop + 80} ` +
+      `C ${right} ${secondStop - 80}, ${right - 28} ${secondStop + 20}, ${right - 12} ${secondStop + 170} ` +
+      `C ${right + 8} ${thirdStop - 80}, ${right - 26} ${thirdStop + 60}, ${right - 10} ${thirdStop + 210} ` +
+      `C ${right + 4} ${fourthStop - 90}, ${right - 18} ${fourthStop + 20}, ${right} ${fourthStop + 180} ` +
+      `L ${right} ${pageDims.h + 80}`
+    : `M -60 ${heroLaneY} ` +
+      `C ${pageDims.w * 0.2} ${heroLaneY}, ${pageDims.w * 0.48} ${heroLaneY}, ${pageDims.w * 0.7} ${heroLaneY} ` +
+      `C ${pageDims.w * 0.9} ${heroLaneY}, ${right} ${heroLaneY + 120}, ${right} ${firstStop - 80} ` +
+      `C ${right} ${firstStop + 160}, ${right - 24} ${secondStop + 80}, ${right} ${thirdStop - 80} ` +
+      `C ${right + 14} ${thirdStop + 120}, ${right - 20} ${fourthStop + 80}, ${right} ${pageDims.footerTop - 80} ` +
+      `L ${right} ${pageDims.h + 80}`;
 
 
   const Tree = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
@@ -203,10 +303,11 @@ const BikePathSpine = () => {
     </g>
   );
 
-  // Bike drawn thicker/bigger in local coords; viewBox aspect keeps it proportional.
+  // Bike drawn in local coords, then scaled in pixels so published and preview match.
+  const bikeScale = isMobile ? 4.6 : 5.8;
   const SpineBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
     <g style={{ filter: `drop-shadow(0 0 4px ${color}) drop-shadow(0 0 8px ${C.yellow})` }}>
-      <g transform="translate(-3 -1.2) scale(0.85)">
+      <g transform={`translate(${-3 * bikeScale} ${-1.2 * bikeScale}) scale(${bikeScale})`}>
         <ellipse cx="6.3" cy="1.4" rx="3.2" ry="0.7" fill={C.yellow} opacity="0.55" />
         <circle cx="-2.4" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
         <circle cx="2.8" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
@@ -223,83 +324,13 @@ const BikePathSpine = () => {
   const packStarts = [0, -7, -14, -21, -28, -35, -42];
   const packColors = ["#ffffff", "#ffffff", C.purple, "#ffffff", C.yellow, "#ffffff", C.magenta];
 
-  /* ---------- MOBILE SPINE ----------
-     Measure the real page dimensions and build a viewBox whose aspect matches
-     the page, so with preserveAspectRatio="xMidYMid meet" the path + bikes are
-     never distorted and never cropped. Path is anchored proportionally so it
-     always starts below the hero content (below the Basecamp Match logo &
-     date/subline) and weaves through the What / Watch sections. */
-  const [pageDims, setPageDims] = useState({ w: 400, h: 4000 });
-  useLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    const measure = () => {
-      setPageDims({
-        w: window.innerWidth,
-        h: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
-      });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(document.body);
-    window.addEventListener("resize", measure);
-    // Re-measure after fonts / images settle
-    const t1 = window.setTimeout(measure, 400);
-    const t2 = window.setTimeout(measure, 1500);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, []);
-
-  // viewBox: 100 wide by mobileVBH tall — aspect equals the actual page,
-  // so slice/meet cause no distortion of the bikes.
-  const mobileVBH = Math.max(400, Math.round((pageDims.h / Math.max(pageDims.w, 1)) * 100));
-
-  // Anchor start ~18% down the page → sits well below hero content on mobile.
-  const startY = Math.round(mobileVBH * 0.18);
-  const seg = Math.max(80, Math.round((mobileVBH - startY - 40) / 6));
-  const DMobile =
-    `M -4 ${startY} ` +
-    // Horizontal opener that hugs the right gutter under the logo
-    `C 22 ${startY}, 60 ${startY}, 90 ${startY} ` +
-    `C 96 ${startY}, 96 ${startY + Math.round(seg * 0.35)}, 96 ${startY + seg} ` +
-    // Weave 1 — swing to left gutter
-    `C 96 ${startY + seg + Math.round(seg * 0.55)}, 12 ${startY + seg + Math.round(seg * 0.8)}, 6 ${startY + seg * 2} ` +
-    // Weave 2 — back to right gutter (through the What section)
-    `C 6 ${startY + seg * 2 + Math.round(seg * 0.55)}, 96 ${startY + seg * 2 + Math.round(seg * 0.8)}, 96 ${startY + seg * 3} ` +
-    // Weave 3 — left gutter
-    `C 96 ${startY + seg * 3 + Math.round(seg * 0.55)}, 6 ${startY + seg * 3 + Math.round(seg * 0.8)}, 6 ${startY + seg * 4} ` +
-    // Weave 4 — right gutter (through the Watch section)
-    `C 6 ${startY + seg * 4 + Math.round(seg * 0.55)}, 96 ${startY + seg * 4 + Math.round(seg * 0.8)}, 96 ${startY + seg * 5} ` +
-    // Final glide down through footer gutter
-    `L 90 ${mobileVBH - 20}`;
-
-  const MobileBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
-    <g style={{ filter: `drop-shadow(0 0 3px ${color}) drop-shadow(0 0 6px ${C.yellow})` }}>
-      <g transform="translate(-3 -1.2) scale(0.9)">
-        <ellipse cx="6.3" cy="1.4" rx="3.2" ry="0.7" fill={C.yellow} opacity="0.55" />
-        <circle cx="-2.4" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
-        <circle cx="2.8" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
-        <path d="M -2.4 1.4 L -0.1 1.4 L 1.1 -1.6 L 2.8 1.4 M -0.6 -1.6 L 1.6 -1.6 L -0.1 1.4" stroke={color} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        <path d="M 1.6 -1.6 L 2.7 -2.5" stroke={color} strokeWidth="2.3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-        <circle cx="4.8" cy="1.4" r="0.9" fill={C.yellow} opacity="1" />
-        <circle cx="-4.1" cy="1.4" r="0.6" fill={C.magenta} opacity="0.95" />
-      </g>
-      <animateMotion dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" rotate="auto" path={DMobile} />
-    </g>
-  );
-
   return (
     <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
-      {/* Desktop / tablet spine (unchanged) */}
       <svg
-        className="hidden md:block"
         width="100%"
         height="100%"
-        preserveAspectRatio="xMidYMid slice"
-        viewBox="0 0 200 1000"
+        preserveAspectRatio="none"
+        viewBox={`0 0 ${pageDims.w} ${pageDims.h}`}
         style={{ position: "absolute", inset: 0 }}
       >
         <defs>
@@ -308,67 +339,27 @@ const BikePathSpine = () => {
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
-          strokeWidth="0.85"
-          strokeDasharray="4 7"
+          strokeWidth={isMobile ? 2 : 2.2}
+          strokeDasharray={isMobile ? "12 20" : "18 28"}
           fill="none"
           vectorEffect="non-scaling-stroke"
           opacity="0.85"
           style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
         />
         <g opacity="0.95">
-          <g><Tree x={26} y={200} /> <Tree x={40} y={210} s={1.15} /> <Tree x={56} y={200} s={0.85} /></g>
-          <Building x={168} y={378} />
-          <Lake x={34} y={582} />
-          <g><Tree x={172} y={604} /> <Tree x={186} y={617} s={1.2} /></g>
-          <Picnic x={34} y={842} />
-          <Building x={172} y={876} />
-          <Lake x={34} y={962} />
+          <g><Tree x={left} y={firstStop - 110} s={isMobile ? 2.8 : 4.5} /> <Tree x={left + (isMobile ? 22 : 42)} y={firstStop - 96} s={isMobile ? 3.2 : 5} /></g>
+          <Building x={right - (isMobile ? 18 : 35)} y={secondStop + 190} />
+          <Lake x={left + (isMobile ? 14 : 28)} y={thirdStop + 90} />
+          <Picnic x={right - (isMobile ? 20 : 40)} y={fourthStop - 120} />
         </g>
         {packStarts.map((start, packIndex) => (
           <g key={start}>
-            {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
+            {packColors.slice(0, isMobile ? 3 + (packIndex % 3) : 4 + (packIndex % 4)).map((color, bikeIndex) => (
               <SpineBike
                 key={`${start}-${bikeIndex}`}
                 color={color}
-                dur={80}
-                begin={start + bikeIndex * 0.25}
-              />
-            ))}
-          </g>
-        ))}
-      </svg>
-
-      {/* Mobile spine: aspect-matched viewBox, opener below hero content,
-          weaves through What & Watch sections */}
-      <svg
-        className="block md:hidden"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMidYMid meet"
-        viewBox={`0 0 100 ${mobileVBH}`}
-        style={{ position: "absolute", inset: 0 }}
-      >
-        <defs>
-          <path id="sr-spine-path-mobile" d={DMobile} />
-        </defs>
-        <use
-          href="#sr-spine-path-mobile"
-          stroke={C.yellow}
-          strokeWidth="0.85"
-          strokeDasharray="3 6"
-          fill="none"
-          vectorEffect="non-scaling-stroke"
-          opacity="0.9"
-          style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
-        />
-        {packStarts.map((start, packIndex) => (
-          <g key={`m-${start}`}>
-            {packColors.slice(0, 3 + (packIndex % 3)).map((color, bikeIndex) => (
-              <MobileBike
-                key={`m-${start}-${bikeIndex}`}
-                color={color}
-                dur={90}
-                begin={start + bikeIndex * 0.35}
+                dur={isMobile ? 90 : 80}
+                begin={start + bikeIndex * (isMobile ? 0.35 : 0.25)}
               />
             ))}
           </g>
@@ -381,7 +372,7 @@ const BikePathSpine = () => {
 
 
 const Hero = () => (
-  <section style={{ position: "relative", background: "transparent", color: "#fff" }} className="px-6 py-10 md:py-14 overflow-hidden">
+  <section data-sr-section="hero" style={{ position: "relative", background: "transparent", color: "#fff" }} className="px-6 py-10 md:py-14 overflow-hidden">
     <div aria-hidden style={{
       position: "absolute", inset: 0,
       background: `radial-gradient(ellipse at 50% 25%, rgba(237,118,96,0.12), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(225,182,36,0.08), transparent 55%)`,
@@ -423,6 +414,7 @@ const Hero = () => (
           ×
         </span>
         <img
+          data-sr-logo
           src={publicAssetUrl(basecampMatchDark.url)}
           alt="Basecamp Match"
           style={{ height: "clamp(56px, 8.5vw, 104px)", width: "auto", filter: "drop-shadow(0 0 16px rgba(225,182,36,0.35))" }}
@@ -430,7 +422,7 @@ const Hero = () => (
       </div>
 
 
-      <p className="mt-16 md:mt-20 mb-2" style={{ fontSize: 18, color: "#fff", fontWeight: 500 }}>
+      <p data-sr-date className="mt-16 md:mt-20 mb-2" style={{ fontSize: 18, color: "#fff", fontWeight: 500 }}>
         <EditableText settingKey="sr_hero_subline" defaultText="MINNEAPOLIS · WED AUG 19, 2026 · AFTER DARK" as="span" />
       </p>
       <p className="mb-4 font-bold" style={{ fontSize: 15, color: "#fff", letterSpacing: "0.06em", opacity: 0.95, textShadow: `0 0 10px ${C.yellow}66` }}>
@@ -467,8 +459,8 @@ const Marquee = () => {
   );
 };
 
-const DarkPanel = ({ children, id }: { children: React.ReactNode; id?: string }) => (
-  <section id={id} style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-28">
+const DarkPanel = ({ children, id, sectionKey }: { children: React.ReactNode; id?: string; sectionKey?: string }) => (
+  <section id={id} data-sr-section={sectionKey} style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-28">
     <div className="relative" style={{ zIndex: 6 }}>{children}</div>
   </section>
 );
@@ -488,7 +480,7 @@ const NeonCard = ({ children, accent = C.magenta }: { children: React.ReactNode;
 );
 
 const WhatItIs = () => (
-  <DarkPanel>
+  <DarkPanel sectionKey="what">
     <div className="max-w-5xl mx-auto">
       <div className="max-w-3xl mb-12">
         <p className="uppercase font-bold mb-4" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.yellow, textShadow: `0 0 10px ${C.yellow}` }}>
@@ -594,7 +586,7 @@ const Theme = () => (
 );
 
 const Guide = () => (
-  <DarkPanel>
+  <DarkPanel sectionKey="guide">
     <div className="max-w-5xl mx-auto">
       <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.magenta, textShadow: `0 0 10px ${C.magenta}` }}>
         <EditableText settingKey="sr_guide_eyebrow" defaultText="Meet your guide" as="span" />
@@ -657,7 +649,7 @@ const PartnerCard = ({ nameKey, nameDefault, descKey, descDefault, logoUrl, logo
 const alsoLogo = "/__l5e/assets-v1/b06c9430-a522-4188-bdd1-333d9b3b5005/also-logo.webp";
 
 const Partners = () => (
-  <DarkPanel>
+  <DarkPanel sectionKey="partners">
     <div className="max-w-5xl mx-auto">
       <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.magenta, textShadow: `0 0 10px ${C.magenta}` }}>
         <EditableText settingKey="sr_partners_eyebrow" defaultText="Partners" as="span" />
@@ -697,7 +689,7 @@ const DetailRow = ({ labelKey, labelDefault, valueKey, valueDefault }: { labelKe
 );
 
 const Details = () => (
-  <DarkPanel>
+  <DarkPanel sectionKey="details">
     <div className="max-w-3xl mx-auto">
       <p className="uppercase font-bold mb-4" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.magenta, textShadow: `0 0 10px ${C.magenta}` }}>
         <EditableText settingKey="sr_details_eyebrow" defaultText="The details" as="span" />
@@ -723,7 +715,7 @@ const Details = () => (
 );
 
 const Watch = () => (
-  <DarkPanel>
+  <DarkPanel sectionKey="watch">
     <div className="max-w-3xl mx-auto">
       <p className="uppercase font-bold mb-4 text-center" style={{ letterSpacing: "0.22em", fontSize: 12, color: C.yellow, textShadow: `0 0 10px ${C.yellow}` }}>
         <EditableText settingKey="sr_watch_eyebrow" defaultText="Watch" as="span" />
@@ -751,7 +743,7 @@ const Watch = () => (
 );
 
 const FooterCTA = () => (
-  <section style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-32">
+  <section data-sr-section="footer" style={{ background: "transparent", color: "#fff", position: "relative" }} className="px-6 py-24 md:py-32">
     <div className="max-w-3xl mx-auto text-center relative z-10">
       <div className="mb-6">
         <Badge settingKey="sr_footer_pill" defaultText="OFFICIAL OUTDOOR RETAILER EVENT" />
@@ -783,7 +775,7 @@ const EventSlowRoll = () => (
   <EditableTextProvider pageSlug="slow-roll">
     <PageMetaApplier title="Slow Roll x Basecamp · Minneapolis · Aug 19, 2026" />
     <NeonStyles />
-    <main style={{ ...font, background: `linear-gradient(180deg, ${C.midnight}, ${C.midnight2} 45%, ${C.midnight})`, color: "#fff", position: "relative", overflow: "hidden" }}>
+    <main data-sr-page style={{ ...font, background: `linear-gradient(180deg, ${C.midnight}, ${C.midnight2} 45%, ${C.midnight})`, color: "#fff", position: "relative", overflow: "hidden" }}>
       <BikePathSpine />
       <div style={{ position: "relative", zIndex: 2 }}>
         <OrderedSections
