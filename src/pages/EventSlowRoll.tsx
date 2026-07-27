@@ -241,26 +241,31 @@ const BikePathSpine = () => {
   const heroLaneY = isMobile
     ? Math.round((pageDims.logoBottom + pageDims.dateTop) / 2)
     : Math.round(pageDims.logoTop + (pageDims.logoBottom - pageDims.logoTop) * 0.35);
-  const whatCrossY = Math.max(pageDims.whatTop + 220, pageDims.whatBottom - 120);
-  const watchLeadY = Math.max(pageDims.guideTop + 220, pageDims.watchTop - 180);
+  const sectionStops = [
+    pageDims.whatTop,
+    pageDims.whatBottom,
+    pageDims.guideTop,
+    pageDims.watchTop,
+    pageDims.footerTop,
+  ].filter((value) => value > heroLaneY + 180).sort((a, b) => a - b);
+  const firstStop = sectionStops[0] ?? pageDims.whatTop;
+  const secondStop = sectionStops[1] ?? firstStop + 800;
+  const thirdStop = sectionStops[2] ?? secondStop + 800;
+  const fourthStop = sectionStops[3] ?? thirdStop + 800;
 
   const D = isMobile
     ? `M -28 ${heroLaneY} ` +
       `C ${pageDims.w * 0.2} ${heroLaneY}, ${pageDims.w * 0.66} ${heroLaneY}, ${right} ${heroLaneY} ` +
-      `C ${pageDims.w + 18} ${heroLaneY + 64}, ${right} ${pageDims.whatTop - 80}, ${right} ${pageDims.whatTop + 72} ` +
-      `C ${right} ${whatCrossY - 70}, ${left} ${whatCrossY - 52}, ${left} ${whatCrossY + 48} ` +
-      `C ${left} ${watchLeadY - 80}, ${right} ${watchLeadY - 44}, ${right} ${watchLeadY + 76} ` +
-      `C ${right} ${pageDims.watchTop + 140}, ${left} ${pageDims.watchTop + 170}, ${left} ${pageDims.watchTop + 300} ` +
-      `C ${left} ${pageDims.footerTop - 280}, ${right} ${pageDims.footerTop - 210}, ${right} ${pageDims.footerTop - 70} ` +
+      `C ${pageDims.w + 18} ${heroLaneY + 64}, ${right} ${firstStop - 130}, ${right} ${firstStop + 80} ` +
+      `C ${right} ${secondStop - 80}, ${right - 28} ${secondStop + 20}, ${right - 12} ${secondStop + 170} ` +
+      `C ${right + 8} ${thirdStop - 80}, ${right - 26} ${thirdStop + 60}, ${right - 10} ${thirdStop + 210} ` +
+      `C ${right + 4} ${fourthStop - 90}, ${right - 18} ${fourthStop + 20}, ${right} ${fourthStop + 180} ` +
       `L ${right} ${pageDims.h + 80}`
     : `M -60 ${heroLaneY} ` +
       `C ${pageDims.w * 0.2} ${heroLaneY}, ${pageDims.w * 0.48} ${heroLaneY}, ${pageDims.w * 0.7} ${heroLaneY} ` +
-      `C ${pageDims.w * 0.9} ${heroLaneY}, ${right} ${heroLaneY + 120}, ${right} ${pageDims.whatTop - 60} ` +
-      `C ${right} ${pageDims.whatTop + 100}, ${right} ${pageDims.whatTop + 330}, ${right} ${pageDims.whatBottom - 20} ` +
-      `C ${right} ${pageDims.whatBottom + 80}, ${pageDims.w * 0.45} ${pageDims.whatBottom + 110}, ${left} ${pageDims.whatBottom + 130} ` +
-      `C ${left * 0.55} ${pageDims.whatBottom + 160}, ${left * 0.7} ${pageDims.guideTop + 240}, ${left} ${pageDims.guideTop + 360} ` +
-      `C ${left} ${pageDims.watchTop - 260}, ${right} ${pageDims.watchTop - 230}, ${right} ${pageDims.watchTop - 80} ` +
-      `C ${right} ${pageDims.watchTop + 130}, ${right} ${pageDims.footerTop - 220}, ${right} ${pageDims.footerTop - 80} ` +
+      `C ${pageDims.w * 0.9} ${heroLaneY}, ${right} ${heroLaneY + 120}, ${right} ${firstStop - 80} ` +
+      `C ${right} ${firstStop + 160}, ${right - 24} ${secondStop + 80}, ${right} ${thirdStop - 80} ` +
+      `C ${right + 14} ${thirdStop + 120}, ${right - 20} ${fourthStop + 80}, ${right} ${pageDims.footerTop - 80} ` +
       `L ${right} ${pageDims.h + 80}`;
 
 
@@ -341,11 +346,11 @@ const BikePathSpine = () => {
           opacity="0.85"
           style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
         />
-        <g opacity="0.95" transform={`scale(${isMobile ? 0.8 : 1})`}>
-          <g><Tree x={left} y={pageDims.whatTop - 90} s={5.5} /> <Tree x={left + 42} y={pageDims.whatTop - 78} s={6.1} /></g>
-          <Building x={right - 35} y={pageDims.whatTop + 250} />
-          <Lake x={left + 18} y={pageDims.whatBottom + 70} />
-          <Picnic x={right - 40} y={pageDims.watchTop - 120} />
+        <g opacity="0.95">
+          <g><Tree x={left} y={firstStop - 110} s={isMobile ? 2.8 : 4.5} /> <Tree x={left + (isMobile ? 22 : 42)} y={firstStop - 96} s={isMobile ? 3.2 : 5} /></g>
+          <Building x={right - (isMobile ? 18 : 35)} y={secondStop + 190} />
+          <Lake x={left + (isMobile ? 14 : 28)} y={thirdStop + 90} />
+          <Picnic x={right - (isMobile ? 20 : 40)} y={fourthStop - 120} />
         </g>
         {packStarts.map((start, packIndex) => (
           <g key={start}>
