@@ -109,7 +109,7 @@ const Email = ({
 
 export const template = {
   component: Email,
-  subject: "You're official — your Minneapolis expert card is live",
+  subject: "You're official. Your Minneapolis expert card is live",
   displayName: "MN Expert - published confirmation",
   previewData: {
     recipientName: "Jenna",
