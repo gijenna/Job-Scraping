@@ -50,7 +50,7 @@ const Email = ({
       <Preview>You're official. Here's your card + share image for Minneapolis.</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>You're official, {first} 🎉</Heading>
+          <Heading style={h1}>You're official, {first}</Heading>
           <Text style={text}>
             Your Industry Expert card is live for Basecamp Outdoor Lounge @ OR Minneapolis, Thursday Aug 20, 10:30 AM to 12:30 PM.
           </Text>
