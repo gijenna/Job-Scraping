@@ -34,6 +34,7 @@ const EXPERT_PHOTOS = [
 ];
 interface ExpertInviteProps {
   citySlug?: string;
+  autoEdit?: boolean;
 }
 
 const CITY_HEROES: Record<string, { image?: string; video?: string }> = {
