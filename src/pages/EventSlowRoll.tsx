@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
@@ -223,26 +223,62 @@ const BikePathSpine = () => {
   const packStarts = [0, -7, -14, -21, -28, -35, -42];
   const packColors = ["#ffffff", "#ffffff", C.purple, "#ffffff", C.yellow, "#ffffff", C.magenta];
 
-  // Mobile path: narrower viewBox (100 wide), opener sits high in the hero
-  // gutter (between the Basecamp Match logo and the "Wednesday..." line),
-  // then snakes down through the page.
+  /* ---------- MOBILE SPINE ----------
+     Measure the real page dimensions and build a viewBox whose aspect matches
+     the page, so with preserveAspectRatio="xMidYMid meet" the path + bikes are
+     never distorted and never cropped. Path is anchored proportionally so it
+     always starts below the hero content (below the Basecamp Match logo &
+     date/subline) and weaves through the What / Watch sections. */
+  const [pageDims, setPageDims] = useState({ w: 400, h: 4000 });
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const measure = () => {
+      setPageDims({
+        w: window.innerWidth,
+        h: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
+      });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
+    window.addEventListener("resize", measure);
+    // Re-measure after fonts / images settle
+    const t1 = window.setTimeout(measure, 400);
+    const t2 = window.setTimeout(measure, 1500);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, []);
+
+  // viewBox: 100 wide by mobileVBH tall — aspect equals the actual page,
+  // so slice/meet cause no distortion of the bikes.
+  const mobileVBH = Math.max(400, Math.round((pageDims.h / Math.max(pageDims.w, 1)) * 100));
+
+  // Anchor start ~18% down the page → sits well below hero content on mobile.
+  const startY = Math.round(mobileVBH * 0.18);
+  const seg = Math.max(80, Math.round((mobileVBH - startY - 40) / 6));
   const DMobile =
-    "M 0 62 " +
-    "C 22 62, 55 62, 74 62 " +
-    "C 92 62, 94 78, 94 108 " +
-    "C 94 160, 94 220, 94 280 " +
-    "C 94 310, 60 322, 26 332 " +
-    "C 10 338, 6 352, 6 376 " +
-    "C 6 402, 34 414, 66 424 " +
-    "C 86 432, 94 446, 94 470 " +
-    "C 94 500, 94 560, 94 620 " +
-    "C 94 648, 70 662, 40 672 " +
-    "C 18 680, 6 692, 6 716 " +
-    "C 6 748, 60 760, 30 780";
+    `M -4 ${startY} ` +
+    // Horizontal opener that hugs the right gutter under the logo
+    `C 22 ${startY}, 60 ${startY}, 90 ${startY} ` +
+    `C 96 ${startY}, 96 ${startY + Math.round(seg * 0.35)}, 96 ${startY + seg} ` +
+    // Weave 1 — swing to left gutter
+    `C 96 ${startY + seg + Math.round(seg * 0.55)}, 12 ${startY + seg + Math.round(seg * 0.8)}, 6 ${startY + seg * 2} ` +
+    // Weave 2 — back to right gutter (through the What section)
+    `C 6 ${startY + seg * 2 + Math.round(seg * 0.55)}, 96 ${startY + seg * 2 + Math.round(seg * 0.8)}, 96 ${startY + seg * 3} ` +
+    // Weave 3 — left gutter
+    `C 96 ${startY + seg * 3 + Math.round(seg * 0.55)}, 6 ${startY + seg * 3 + Math.round(seg * 0.8)}, 6 ${startY + seg * 4} ` +
+    // Weave 4 — right gutter (through the Watch section)
+    `C 6 ${startY + seg * 4 + Math.round(seg * 0.55)}, 96 ${startY + seg * 4 + Math.round(seg * 0.8)}, 96 ${startY + seg * 5} ` +
+    // Final glide down through footer gutter
+    `L 90 ${mobileVBH - 20}`;
 
   const MobileBike = ({ color, dur, begin }: { color: string; dur: number; begin: number }) => (
     <g style={{ filter: `drop-shadow(0 0 3px ${color}) drop-shadow(0 0 6px ${C.yellow})` }}>
-      <g transform="translate(-2.2 -0.9) scale(0.55)">
+      <g transform="translate(-3 -1.2) scale(0.9)">
         <ellipse cx="6.3" cy="1.4" rx="3.2" ry="0.7" fill={C.yellow} opacity="0.55" />
         <circle cx="-2.4" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
         <circle cx="2.8" cy="1.4" r="1.55" stroke={color} strokeWidth="2.6" fill="none" vectorEffect="non-scaling-stroke" />
@@ -269,7 +305,6 @@ const BikePathSpine = () => {
         <defs>
           <path id="sr-spine-path" d={D} />
         </defs>
-        {/* single thin dashed lane, consistent width via non-scaling-stroke */}
         <use
           href="#sr-spine-path"
           stroke={C.yellow}
@@ -280,8 +315,6 @@ const BikePathSpine = () => {
           opacity="0.85"
           style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
         />
-
-        {/* Landmarks in open gutters (X coords doubled to match new viewBox). */}
         <g opacity="0.95">
           <g><Tree x={26} y={200} /> <Tree x={40} y={210} s={1.15} /> <Tree x={56} y={200} s={0.85} /></g>
           <Building x={168} y={378} />
@@ -291,7 +324,6 @@ const BikePathSpine = () => {
           <Building x={172} y={876} />
           <Lake x={34} y={962} />
         </g>
-
         {packStarts.map((start, packIndex) => (
           <g key={start}>
             {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
@@ -306,13 +338,14 @@ const BikePathSpine = () => {
         ))}
       </svg>
 
-      {/* Mobile spine: narrower viewBox, opener above the "Wednesday..." line */}
+      {/* Mobile spine: aspect-matched viewBox, opener below hero content,
+          weaves through What & Watch sections */}
       <svg
         className="block md:hidden"
         width="100%"
         height="100%"
-        preserveAspectRatio="xMidYMin slice"
-        viewBox="0 0 100 800"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox={`0 0 100 ${mobileVBH}`}
         style={{ position: "absolute", inset: 0 }}
       >
         <defs>
@@ -325,17 +358,17 @@ const BikePathSpine = () => {
           strokeDasharray="3 6"
           fill="none"
           vectorEffect="non-scaling-stroke"
-          opacity="0.85"
+          opacity="0.9"
           style={{ filter: `drop-shadow(0 0 3px ${C.yellow}) drop-shadow(0 0 7px ${C.yellow}77)` }}
         />
         {packStarts.map((start, packIndex) => (
           <g key={`m-${start}`}>
-            {packColors.slice(0, 4 + (packIndex % 4)).map((color, bikeIndex) => (
+            {packColors.slice(0, 3 + (packIndex % 3)).map((color, bikeIndex) => (
               <MobileBike
                 key={`m-${start}-${bikeIndex}`}
                 color={color}
-                dur={70}
-                begin={start + bikeIndex * 0.3}
+                dur={90}
+                begin={start + bikeIndex * 0.35}
               />
             ))}
           </g>
