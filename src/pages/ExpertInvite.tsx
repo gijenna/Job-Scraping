@@ -141,12 +141,12 @@ const ExpertExample = ({ src, alt }: { src: string; alt: string }) => (
   </div>
 );
 
-const ExpertInvite = ({ citySlug = "denver" }: ExpertInviteProps) => {
+const ExpertInvite = ({ citySlug = "denver", autoEdit = false }: ExpertInviteProps) => {
   const { name } = useParams();
   const [city, setCity] = useState<ExpertCity | null>(null);
   const [expert, setExpert] = useState<Expert | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(autoEdit);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [faqs, setFaqs] = useState<ExpertQuestion[]>([]);
