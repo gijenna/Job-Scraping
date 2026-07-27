@@ -248,18 +248,18 @@ function buildOg(expert: Expert, photoDataUrl: string, lockup: string | null) {
   },
     // Coral banner (drawn before card so card overlaps it)
     h("div", { style: {
-      position: "absolute", left: 0, top: 593, width: w, height: 78,
+      position: "absolute", left: 0, top: 540, width: w, height: 90,
       background: "#E8836B", display: "flex",
     }}),
     // Banner CTA — centered in the clear area right of the tilted card
     h("div", { style: {
-      position: "absolute", top: 620, left: 500, width: 700, height: 40,
+      position: "absolute", top: 555, left: 480, width: 720, height: 60,
       display: "flex", alignItems: "center", justifyContent: "center",
-      color: "#1A2520", fontSize: 28, fontWeight: 700,
-    }}, "Free. No badge needed. No gatekeepers."),
-    // Lockup
-    lockup ? h("img", { src: lockup, width: 343, height: 67, style: {
-      position: "absolute", top: 39, left: 825, objectFit: "contain",
+      color: "#1A2520", fontSize: 30, fontWeight: 700,
+    }}, "Aug. 20. Free. OR badge provided with registration."),
+    // Lockup (top right)
+    lockup ? h("img", { src: lockup, width: 380, height: 74, style: {
+      position: "absolute", top: 32, left: 790, objectFit: "contain",
     }}) : h("div", { style: {
       position: "absolute", top: 39, left: 825, width: 343, height: 67,
       color: "#F2E7D5", fontSize: 28, fontWeight: 700, display: "flex",
