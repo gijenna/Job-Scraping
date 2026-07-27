@@ -334,8 +334,8 @@ function buildVertical(expert: Expert, photoDataUrl: string, lockup: string | nu
     h("div", { style: {
       position: "absolute", left: 0, top: bannerY, width: w, height: 100,
       background: "#E8836B", display: "flex", alignItems: "center", justifyContent: "center",
-      color: "#1A2520", fontSize: isStory ? 32 : 32, fontWeight: 700,
-    }}, "Free. No badge needed. No gatekeepers."),
+      color: "#1A2520", fontSize: isStory ? 30 : 30, fontWeight: 700,
+    }}, "Aug. 20. Free. OR badge provided with registration."),
   );
 }
 
