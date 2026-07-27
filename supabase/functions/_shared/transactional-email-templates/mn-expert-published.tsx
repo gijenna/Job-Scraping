@@ -11,8 +11,6 @@ import {
   Link,
   Preview,
   Section,
-  Row,
-  Column,
   Text,
   Hr,
 } from "npm:@react-email/components@0.0.22";
@@ -23,11 +21,12 @@ interface Props {
   expertSlug?: string;
   profileUrl?: string;
   ogCardUrl?: string;
-  igPortraitUrl?: string;
-  igStoryUrl?: string;
+  editUrl?: string;
 }
 
 const PROJECT = "qpnzjcbdtybwazceggmv";
+const SITE = "https://basecampoutdoorevents.com";
+
 const cardUrl = (slug: string, format: string) =>
   `https://${PROJECT}.supabase.co/functions/v1/expert-card-image/${encodeURIComponent(slug)}/minneapolis?format=${format}&download=1`;
 
@@ -36,64 +35,55 @@ const Email = ({
   expertSlug = "your-name",
   profileUrl,
   ogCardUrl,
-  igPortraitUrl,
-  igStoryUrl,
+  editUrl,
 }: Props) => {
   const first = (recipientName || "there").split(/\s+/)[0];
-  // Use expert-og as the share URL: crawlers (iMessage, LinkedIn, Slack) get
-  // the unique per-expert card; humans get 302'd to /minneapolis26?map_expert=...
-  const profile = profileUrl || `https://${PROJECT}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expertSlug)}/minneapolis`;
+  const profile =
+    profileUrl ||
+    `https://${PROJECT}.supabase.co/functions/v1/expert-og/${encodeURIComponent(expertSlug)}/minneapolis`;
   const og = ogCardUrl || cardUrl(expertSlug, "og");
-  const igp = igPortraitUrl || cardUrl(expertSlug, "ig_portrait");
-  const igs = igStoryUrl || cardUrl(expertSlug, "ig_story");
+  const edit = editUrl || `${SITE}/MNexperts/edit/${encodeURIComponent(expertSlug)}`;
 
   return (
     <Html lang="en" dir="ltr">
       <Head />
-      <Preview>You're official. Here's your card + share images for Minneapolis.</Preview>
+      <Preview>You're official. Here's your card + share image for Minneapolis.</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>You're official, {first} 🎉</Heading>
           <Text style={text}>
-            Your Industry Expert card is live for Basecamp Outdoor Lounge · OR Minneapolis, Thursday Aug 20, 10:30 AM to 12:30 PM. The community can find you, and brands can see who's in the room.
+            Your Industry Expert card is live for Basecamp Outdoor Lounge @ OR Minneapolis, Thursday Aug 20, 10:30 AM to 12:30 PM.
+          </Text>
+          <Text style={text}>
+            <Link href={edit} style={inlineLink}>Edit it here anytime.</Link>
           </Text>
 
           <Section style={ctaBox}>
-            <Button href={profile} style={ctaBtn}>See your card in the room</Button>
+            <Button href={profile} style={ctaBtn}>See how good your card looks live!</Button>
           </Section>
 
-          <Hr style={hr} />
+          <Text style={smallText}>
+            Or copy your share link:
+          </Text>
+          <Section style={copyBox}>
+            <Link href={profile} style={copyLink}>{profile}</Link>
+          </Section>
 
-          <Heading style={h2}>Share images, ready to post</Heading>
           <Text style={text}>
-            Three formats, sized right for each spot. Tap to download, then post wherever your people hang out.
+            We'd love you to let folks know you're coming via the link above (which goes right to your card!), or here's a share image, ready to post:
           </Text>
 
-          <Section>
-            <Row>
-              <Column style={colThird} align="center">
-                <Link href={og}>
-                  <Img src={og} alt="LinkedIn / Post card" style={cardImg} />
-                </Link>
-                <Text style={cardLabel}>LinkedIn / X Post</Text>
-                <Link href={og} style={dlLink}>Download</Link>
-              </Column>
-              <Column style={colThird} align="center">
-                <Link href={igp}>
-                  <Img src={igp} alt="Instagram Post" style={cardImg} />
-                </Link>
-                <Text style={cardLabel}>Instagram Post</Text>
-                <Link href={igp} style={dlLink}>Download</Link>
-              </Column>
-              <Column style={colThird} align="center">
-                <Link href={igs}>
-                  <Img src={igs} alt="Instagram Story" style={cardImg} />
-                </Link>
-                <Text style={cardLabel}>Instagram Story</Text>
-                <Link href={igs} style={dlLink}>Download</Link>
-              </Column>
-            </Row>
+          <Section style={{ textAlign: "center" as const, margin: "16px 0" }}>
+            <Link href={og}>
+              <Img src={og} alt="LinkedIn / Post card" style={cardImg} />
+            </Link>
+            <Text style={cardLabel}>LinkedIn / X Post</Text>
+            <Link href={og} style={dlLink}>Download</Link>
           </Section>
+
+          <Text style={italicNote}>
+            (We only have 100 slots, so someone in your network might be super grateful you tipped them off to the opportunity.)
+          </Text>
 
           <Hr style={hr} />
 
@@ -107,7 +97,7 @@ const Email = ({
           </Text>
 
           <Text style={text}>
-            Need to tweak your card, add a company, or fix a typo? Just reply to this email and I'll take care of it.
+            Have any questions at all? Just reply to this email and I'll take care of it.
           </Text>
 
           <Text style={signoff}>{'<3'} Jenna &amp; the Basecamp crew</Text>
@@ -119,7 +109,7 @@ const Email = ({
 
 export const template = {
   component: Email,
-  subject: "You're official — your Minneapolis expert card + share images",
+  subject: "You're official — your Minneapolis expert card is live",
   displayName: "MN Expert - published confirmation",
   previewData: {
     recipientName: "Jenna",
@@ -132,6 +122,8 @@ const container = { padding: "24px 28px", maxWidth: "600px" };
 const h1 = { fontSize: "26px", fontWeight: 700, color: "#19363B", margin: "0 0 12px" };
 const h2 = { fontSize: "18px", fontWeight: 600, color: "#19363B", margin: "18px 0 8px" };
 const text = { fontSize: "15px", lineHeight: "22px", color: "#19363B", margin: "0 0 12px" };
+const smallText = { fontSize: "13px", lineHeight: "18px", color: "#19363B", margin: "12px 0 6px" };
+const italicNote = { fontSize: "14px", lineHeight: "20px", color: "#19363B", fontStyle: "italic" as const, margin: "8px 0 0" };
 const hr = { borderColor: "#F5E6D3", margin: "22px 0" };
 const inlineLink = { color: "#ED7660", textDecoration: "underline" };
 const ctaBox = { textAlign: "center" as const, margin: "16px 0 8px" };
@@ -145,10 +137,17 @@ const ctaBtn = {
   textDecoration: "none",
   display: "inline-block",
 };
-const colThird = { width: "33%", verticalAlign: "top", padding: "0 6px" };
+const copyBox = {
+  backgroundColor: "#F5E6D3",
+  padding: "10px 12px",
+  borderRadius: "6px",
+  margin: "0 0 14px",
+  wordBreak: "break-all" as const,
+};
+const copyLink = { fontSize: "13px", color: "#19363B", textDecoration: "none", fontFamily: "monospace" };
 const cardImg = {
   width: "100%",
-  maxWidth: "170px",
+  maxWidth: "480px",
   height: "auto",
   borderRadius: "8px",
   border: "1px solid #F5E6D3",
