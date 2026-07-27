@@ -28,7 +28,7 @@ const PROJECT = "qpnzjcbdtybwazceggmv";
 const SITE = "https://basecampoutdoorevents.com";
 
 const cardUrl = (slug: string, format: string) =>
-  `https://${PROJECT}.supabase.co/functions/v1/expert-card-image/${encodeURIComponent(slug)}/minneapolis?format=${format}&download=1`;
+  `https://${PROJECT}.supabase.co/functions/v1/expert-card-image/${encodeURIComponent(slug)}/minneapolis?format=${format}&download=1&v=${Date.now()}`;
 
 const Email = ({
   recipientName = "there",
