@@ -253,9 +253,9 @@ function buildOg(expert: Expert, photoDataUrl: string, lockup: string | null) {
     }}),
     // Banner CTA — centered in the clear area right of the tilted card
     h("div", { style: {
-      position: "absolute", top: 555, left: 480, width: 720, height: 60,
+      position: "absolute", top: 555, left: 460, width: 740, height: 60,
       display: "flex", alignItems: "center", justifyContent: "center",
-      color: "#1A2520", fontSize: 30, fontWeight: 700,
+      color: "#1A2520", fontSize: 24, fontWeight: 700, whiteSpace: "nowrap",
     }}, "Aug. 20. Free. OR badge provided with registration."),
     // Lockup (top right)
     lockup ? h("img", { src: lockup, width: 380, height: 74, style: {
