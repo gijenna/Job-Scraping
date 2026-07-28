@@ -55,7 +55,8 @@ const Email = ({
             Your Industry Expert card is live for Basecamp Outdoor Lounge @ OR Minneapolis, Thursday Aug 20, 10:30 AM to 12:30 PM.
           </Text>
           <Text style={text}>
-            <Link href={edit} style={inlineLink}>Edit it here anytime.</Link>
+            <Link href={edit} style={inlineLink}>Edit it here anytime.</Link>{" "}
+            Just enter your full name on that page and wait a second for your card to pop up, then you can edit anything.
           </Text>
 
           <Section style={ctaBox}>

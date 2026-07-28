@@ -815,6 +815,16 @@ const ExpertInvite = ({ citySlug = "denver", autoEdit = false }: ExpertInvitePro
             </div>
           </div>
           <div className="max-w-6xl mx-auto px-6 py-8 md:py-12">
+            {autoEdit && isMN(citySlug) && !formExpertId && (
+              <div className="mb-6 rounded-lg border border-events-coral/40 bg-events-coral/10 px-4 py-3 text-events-cream/90 text-sm">
+                <EditableText
+                  settingKey="mn_edit_instructions"
+                  defaultText="Editing your card? Just type your full name below and wait a second. Your card will pop up and you can change anything."
+                  as="span"
+                  multiline
+                />
+              </div>
+            )}
             <div className="mb-8">
               <h2 className="font-display text-3xl font-bold text-events-cream">
                 {isMN(citySlug) ? <EditableText settingKey="mn_form_headline" defaultText="Build your Industry Expert card" as="span" /> : <>Build your <span className="text-events-coral">Industry Expert</span> card</>}
