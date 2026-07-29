@@ -709,14 +709,6 @@ const NewsletterEmbed = () => (
               <T k="embed.postit.a.body.m" d="Gets a hyperlink and shout out at the top." />
             </p>
           </div>
-          <div style={{ background: CORAL, color: "#fff", ...font }} className="p-3 rounded-sm">
-            <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
-              <T k="embed.postit.b.tag.m" d="$5,000+ level" />
-            </div>
-            <p className="mt-1 text-sm font-medium">
-              <T k="embed.postit.b.body.m" d="Gets full custom feature (like QBP)." />
-            </p>
-          </div>
         </div>
       </div>
 
