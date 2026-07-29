@@ -696,23 +696,8 @@ const NewsletterEmbed = () => (
           </p>
         </div>
 
-        <div
-          style={{
-            background: CORAL,
-            color: "#fff",
-            transform: "rotate(3deg)",
-            boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
-            ...font,
-          }}
-          className="hidden lg:block absolute -right-24 top-[55%] w-52 p-4 rounded-sm z-10"
-        >
-          <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
-            <T k="embed.postit.b.tag" d="$5,000+ level" />
-          </div>
-          <p className="mt-1 text-sm leading-snug font-medium">
-            <T k="embed.postit.b.body" d="Gets full custom feature (like QBP here)." />
-          </p>
-        </div>
+
+
 
         {/* Mobile fallback: stacked callouts under the iframe */}
         <div className="lg:hidden mt-4 grid grid-cols-1 gap-3">
@@ -722,14 +707,6 @@ const NewsletterEmbed = () => (
             </div>
             <p className="mt-1 text-sm font-medium">
               <T k="embed.postit.a.body.m" d="Gets a hyperlink and shout out at the top." />
-            </p>
-          </div>
-          <div style={{ background: CORAL, color: "#fff", ...font }} className="p-3 rounded-sm">
-            <div className="text-[10px] uppercase tracking-[0.2em] font-bold">
-              <T k="embed.postit.b.tag.m" d="$5,000+ level" />
-            </div>
-            <p className="mt-1 text-sm font-medium">
-              <T k="embed.postit.b.body.m" d="Gets full custom feature (like QBP)." />
             </p>
           </div>
         </div>
