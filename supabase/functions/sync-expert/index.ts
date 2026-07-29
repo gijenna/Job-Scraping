@@ -256,7 +256,7 @@ serve(async (req) => {
         const sheetRangeName = `'${sheetTabName.replace(/'/g, "''")}'`;
 
         const valuesRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A:C?majorDimension=ROWS`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A:N?majorDimension=ROWS`,
           { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
         if (!valuesRes.ok) {
@@ -265,6 +265,8 @@ serve(async (req) => {
         }
         const valuesData = await valuesRes.json();
         const rows = Array.isArray(valuesData.values) ? valuesData.values : [];
+        const isBlankRow = (sheetRow: unknown[]) =>
+          !sheetRow || sheetRow.every((cell) => String(cell || '').trim() === '');
         const expertEmail = String(expert.email || '').trim().toLowerCase();
         const expertName = String(expert.full_name || '').trim().toLowerCase();
         const existingIndex = rows.findIndex((sheetRow: unknown[]) => {
@@ -272,8 +274,10 @@ serve(async (req) => {
           const rowName = String(sheetRow?.[1] || '').trim().toLowerCase();
           return (expertEmail && rowEmail === expertEmail) || (!expertEmail && expertName && rowName === expertName);
         });
+        const firstEmptyIndex = rows.findIndex((sheetRow: unknown[], index: number) => index >= 1 && isBlankRow(sheetRow));
+        const existingIsInVisibleTable = existingIndex >= 1 && (firstEmptyIndex === -1 || existingIndex < firstEmptyIndex);
 
-        if (existingIndex >= 1) {
+        if (existingIsInVisibleTable) {
           const rowNumber = existingIndex + 1;
           const updateRes = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A${rowNumber}:N${rowNumber}?valueInputOption=USER_ENTERED`,
@@ -292,10 +296,14 @@ serve(async (req) => {
           }
           results.sheets = { status: updateRes.status, action: 'updated', row: rowNumber, spreadsheetId, city: citySlug, tab: sheetTabName, data: updateData };
         } else {
+          const targetRowNumber = firstEmptyIndex >= 1 ? firstEmptyIndex + 1 : null;
+          const writeUrl = targetRowNumber
+            ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A${targetRowNumber}:N${targetRowNumber}?valueInputOption=USER_ENTERED`
+            : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A1:append?valueInputOption=USER_ENTERED`;
           const appendRes = await fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A1:append?valueInputOption=USER_ENTERED`,
+            writeUrl,
             {
-              method: 'POST',
+              method: targetRowNumber ? 'PUT' : 'POST',
               headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
@@ -307,7 +315,30 @@ serve(async (req) => {
           if (!appendRes.ok) {
             throw new Error(`Google Sheets append failed [${appendRes.status}]: ${JSON.stringify(appendData)}`);
           }
-          results.sheets = { status: appendRes.status, action: 'appended', spreadsheetId, city: citySlug, tab: sheetTabName, data: appendData };
+          const staleRowNumber = existingIndex >= 1 ? existingIndex + 1 : null;
+          if (staleRowNumber && targetRowNumber && staleRowNumber !== targetRowNumber) {
+            await fetch(
+              `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetRangeName}!A${staleRowNumber}:N${staleRowNumber}:clear`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+              }
+            );
+          }
+          results.sheets = {
+            status: appendRes.status,
+            action: targetRowNumber ? 'inserted_into_first_empty_row' : 'appended',
+            row: targetRowNumber || appendData.updates?.updatedRange || null,
+            staleRowCleared: staleRowNumber && targetRowNumber && staleRowNumber !== targetRowNumber ? staleRowNumber : null,
+            spreadsheetId,
+            city: citySlug,
+            tab: sheetTabName,
+            data: appendData,
+          };
         }
       } catch (sheetsErr: any) {
         console.error('Google Sheets sync error:', sheetsErr);
