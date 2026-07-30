@@ -91,6 +91,8 @@ const App = () => (
           <Route path="/minneapolis" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26" element={<EventMinneapolis26 />} />
           <Route path="/minneapolis26-brands" element={<MN26Brands />} />
+          <Route path="/mentor-network" element={<MentorNetwork />} />
+          <Route path="/mentornetwork" element={<MentorNetwork />} />
           <Route path="/slow-roll" element={<EventSlowRoll />} />
           <Route path="/slowroll" element={<EventSlowRoll />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />
