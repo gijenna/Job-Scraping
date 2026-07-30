@@ -27,6 +27,7 @@ type PastRow = { expert: Expert; cities: string[] };
 const CITY_LABEL: Record<string, string> = {
   denver: "Denver",
   portland: "Portland",
+  minneapolis: "Minneapolis",
 };
 
 const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }: MNPastExpertsProps) => {
@@ -55,7 +56,7 @@ const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }:
           .select(
             "city_slug, expert_id, expert_type, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, created_by, created_at, updated_at)"
           )
-          .in("city_slug", ["denver", "portland"])
+          .in("city_slug", ["denver", "portland", "minneapolis"])
           .eq("published", true),
         supabase.from("mn_past_expert_hidden" as any).select("expert_id"),
       ]);
