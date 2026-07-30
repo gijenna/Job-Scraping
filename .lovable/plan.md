@@ -60,6 +60,8 @@ Each gets standard id/created_at, row level security enabled, explicit grants, p
 - New files only: one page component, a small set of section components under a new `src/components/mentor-network/` folder, and the three form components.
 - Route added to `src/App.tsx` (the only existing file touched).
 - Sponsor and mentor CTAs open a dialog form; student capture is inline.
+- Sample Minneapolis expert cards are read only. They are rendered from existing published expert data with no writes and no changes to the existing card components, styled to sit inside this page's palette.
+- The Ron Griswell CTA destination is stored as an admin-editable setting on this page slug.
 
 ## Out of scope
 
