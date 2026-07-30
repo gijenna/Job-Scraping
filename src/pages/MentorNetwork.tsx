@@ -182,7 +182,12 @@ const Partnership = () => (
           >
             <div className="h-14 flex items-center mb-5">
               {p.logo ? (
-                <img src={p.logo} alt={p.name} className="max-h-14 w-auto object-contain" />
+                <span
+                  className="inline-flex items-center rounded-lg px-3 py-2"
+                  style={{ background: p.key === "hbcus" ? C.forest : "transparent" }}
+                >
+                  <img src={p.logo} alt={p.name} className="max-h-10 w-auto object-contain" />
+                </span>
               ) : (
                 <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
                   {p.name}
