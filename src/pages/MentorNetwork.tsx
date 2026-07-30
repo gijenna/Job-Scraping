@@ -449,7 +449,10 @@ const SupportedBy = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-28 items-center justify-center rounded-2xl px-6 transition-transform hover:scale-[1.02]"
-              style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
+              style={{
+                background: l.name === "HBCUs Outside" ? C.forest : "#ffffff",
+                border: "1px solid rgba(18,36,28,0.10)",
+              }}
             >
               <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
             </a>
