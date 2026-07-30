@@ -1,0 +1,549 @@
+import { useState } from "react";
+import { EditableTextProvider, useEditableTextContext } from "@/components/EditableTextProvider";
+import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
+import PageMetaApplier from "@/components/event/PageMetaApplier";
+import OrderedSections from "@/components/event/OrderedSections";
+import AdminLogoManager from "@/components/event/AdminLogoManager";
+import { useEventLogos } from "@/hooks/useEventLogos";
+import SiteFooter from "@/components/SiteFooter";
+import MentorExpertStrip from "@/components/mentor-network/MentorExpertStrip";
+import {
+  SponsorInquiryDialog,
+  MentorApplyDialog,
+  StudentWaitlistForm,
+} from "@/components/mentor-network/MentorForms";
+import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
+import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
+import basecampLogo from "@/assets/Basecamp_Logo_MAIN_1.png";
+import heroPhoto from "@/assets/event-group-photo.jpg";
+
+const PAGE_SLUG = "mentor-network";
+
+const C = {
+  forest: "#12241c",
+  forestDeep: "#0c1913",
+  moss: "#2d5a3d",
+  clay: "#c4654a",
+  gold: "#e8c07a",
+  cream: "#f5efe3",
+  creamDim: "rgba(245,239,227,0.72)",
+};
+
+const display: React.CSSProperties = {
+  fontFamily: "'Archivo Black', 'Hind', system-ui, sans-serif",
+  letterSpacing: "-0.02em",
+  lineHeight: 1.02,
+};
+const body: React.CSSProperties = { fontFamily: "'Hind', system-ui, sans-serif" };
+
+const Fonts = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@300;400;500;600;700&display=swap');
+    .mn-rise { animation: mn-rise .7s cubic-bezier(.2,.7,.3,1) both; }
+    @keyframes mn-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  `}</style>
+);
+
+const Eyebrow = ({ settingKey, defaultText, tone = C.gold }: { settingKey: string; defaultText: string; tone?: string }) => (
+  <p
+    className="text-[10px] sm:text-[11px] font-bold uppercase"
+    style={{ ...body, letterSpacing: "0.24em", color: tone }}
+  >
+    <EditableText settingKey={settingKey} defaultText={defaultText} as="span" />
+  </p>
+);
+
+const Rule = ({ color = C.gold }: { color?: string }) => (
+  <div style={{ height: 3, width: 64, background: color, borderRadius: 2 }} />
+);
+
+/* ================================ HERO ================================ */
+
+const Hero = ({ onMentor }: { onMentor: () => void }) => (
+  <section className="relative overflow-hidden" style={{ background: C.forestDeep }}>
+    <div className="absolute inset-0">
+      <img src={heroPhoto} alt="Outdoor industry professionals talking together outside" className="h-full w-full object-cover" />
+      <div
+        className="absolute inset-0"
+        style={{ background: `linear-gradient(100deg, ${C.forestDeep}f5 0%, ${C.forestDeep}e0 46%, ${C.forest}90 100%)` }}
+      />
+    </div>
+
+    <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
+      <div className="max-w-3xl mn-rise">
+        <img src={hbcusOutsideLogo} alt="HBCUs Outside" className="h-16 sm:h-20 w-auto mb-8" />
+        <Eyebrow
+          settingKey="hero_eyebrow"
+          defaultText="HBCUS OUTSIDE x SIERRA CLUB x NORTH CAROLINA OUTWARD BOUND SCHOOL x BASECAMP"
+        />
+        <div className="mt-5 mb-6">
+          <Rule />
+        </div>
+        <h1 className="text-[34px] sm:text-[54px] lg:text-[64px]" style={{ ...display, color: C.cream }}>
+          <EditableText
+            settingKey="hero_headline"
+            defaultText="One hour a month can change where someone's career goes."
+            as="span"
+          />
+        </h1>
+        <p className="mt-6 text-base sm:text-xl max-w-2xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
+          <EditableText
+            settingKey="hero_subhead"
+            defaultText="Basecamp is building the mentor network behind the HBCUs Outside partnership, pairing outdoor industry experts with HBCU students heading into the field."
+            as="span"
+            multiline
+          />
+        </p>
+
+        <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
+          <EditableLink
+            textKey="hero_cta_primary_text"
+            urlKey="hero_cta_primary_url"
+            defaultText="Talk to Ron Griswell"
+            defaultUrl="mailto:ron@hbcusoutside.com"
+            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+            style={{ background: C.clay, color: "#fff", boxShadow: "0 14px 40px rgba(196,101,74,0.35)" }}
+          />
+          <button
+            onClick={onMentor}
+            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-colors"
+            style={{ border: `2px solid ${C.gold}`, color: C.gold, ...body }}
+          >
+            <EditableText settingKey="hero_cta_secondary" defaultText="Become a mentor" as="span" />
+          </button>
+          <a
+            href="#students"
+            className="text-sm font-semibold underline underline-offset-4"
+            style={{ ...body, color: C.creamDim }}
+          >
+            <EditableText settingKey="hero_cta_tertiary" defaultText="I'm a student" as="span" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ============================ THE PARTNERSHIP ============================ */
+
+const PARTNERS = [
+  {
+    key: "sierra",
+    name: "Sierra Club",
+    logo: sierraClubLogo,
+    defaultBody:
+      "Certification, insurance, and advocacy. Students finish as officially recognized Sierra Club leaders.",
+  },
+  {
+    key: "ncobs",
+    name: "North Carolina Outward Bound School",
+    logo: null,
+    defaultBody:
+      "Experiential education in teamwork, resilience, and leadership, part of the national Outward Bound network.",
+  },
+  {
+    key: "hbcus",
+    name: "HBCUs Outside",
+    logo: hbcusOutsideLogo,
+    defaultBody:
+      "Belonging and cross-campus community, built in quality nature, carried back to campus.",
+  },
+  {
+    key: "basecamp",
+    name: "Basecamp",
+    logo: basecampLogo,
+    defaultBody:
+      "The mentor network. A year of real conversations with people already working in the outdoor industry.",
+  },
+];
+
+const Partnership = () => (
+  <section style={{ background: C.cream }} className="py-20 sm:py-28">
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="partnership_eyebrow" defaultText="THE PARTNERSHIP" tone={C.clay} />
+      <h2 className="mt-4 text-[28px] sm:text-[40px] max-w-3xl" style={{ ...display, color: C.forest }}>
+        <EditableText
+          settingKey="partnership_intro"
+          defaultText="This mentor network is one piece of a bigger partnership. Here's the rest of it."
+          as="span"
+        />
+      </h2>
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {PARTNERS.map((p, i) => (
+          <article
+            key={p.key}
+            className="flex flex-col rounded-2xl p-6"
+            style={{
+              background: i % 2 === 0 ? "#ffffff" : "rgba(45,90,61,0.07)",
+              border: "1px solid rgba(18,36,28,0.10)",
+            }}
+          >
+            <div className="h-14 flex items-center mb-5">
+              {p.logo ? (
+                <span
+                  className="inline-flex items-center rounded-lg px-3 py-2"
+                  style={{ background: p.key === "hbcus" ? C.forest : "transparent" }}
+                >
+                  <img src={p.logo} alt={p.name} className="max-h-10 w-auto object-contain" />
+                </span>
+              ) : (
+                <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
+                  {p.name}
+                </span>
+              )}
+            </div>
+            <h3 className="text-[17px] mb-3" style={{ ...display, color: C.forest }}>
+              <EditableText settingKey={`partner_${p.key}_name`} defaultText={p.name} as="span" />
+            </h3>
+            <p className="text-[15px]" style={{ ...body, color: "rgba(18,36,28,0.75)", lineHeight: 1.6 }}>
+              <EditableText settingKey={`partner_${p.key}_body`} defaultText={p.defaultBody} as="span" multiline />
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-10 rounded-2xl p-6 sm:p-8" style={{ background: C.forest }}>
+        <p className="text-[15px] sm:text-base" style={{ ...body, color: C.creamDim, lineHeight: 1.65 }}>
+          <EditableText
+            settingKey="partnership_facts"
+            defaultText="The training runs October 1 to 4, 2026 at Cedar Rock, North Carolina, across seven HBCU campuses including Tennessee State University, North Carolina A&T, and the four universities of the Atlanta University Consortium. 3 to 5 student leaders per campus return home certified."
+            as="span"
+            multiline
+          />
+        </p>
+      </div>
+    </div>
+  </section>
+);
+
+/* ========================= WHAT BASECAMP IS BUILDING ========================= */
+
+const BasecampSection = ({ onSponsor, onMentor }: { onSponsor: () => void; onMentor: () => void }) => (
+  <section style={{ background: C.forest }} className="py-20 sm:py-28">
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-start">
+        <div>
+          <Eyebrow settingKey="building_eyebrow" defaultText="WHAT BASECAMP IS BUILDING" />
+          <h2 className="mt-4 text-[30px] sm:text-[46px]" style={{ ...display, color: C.cream }}>
+            <EditableText
+              settingKey="building_headline"
+              defaultText="The part that doesn't end when October does."
+              as="span"
+            />
+          </h2>
+          <p className="mt-6 text-base sm:text-lg" style={{ ...body, color: C.creamDim, lineHeight: 1.65 }}>
+            <EditableText
+              settingKey="building_body"
+              defaultText="Certification is four days. A career is longer than that. Basecamp is recruiting 20 outdoor industry mentors, each giving 1 to 2 hours a month for 10 months to a matched HBCU student. This runs on the same Industry Expert Program already connecting experts with our community at events across the country, applied here as a real, season-long commitment to one student."
+              as="span"
+              multiline
+            />
+          </p>
+
+          <div className="mt-9 flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={onSponsor}
+              className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+              style={{ background: C.gold, color: C.forest, ...body }}
+            >
+              <EditableText settingKey="building_cta_sponsor" defaultText="Sponsor a mentor" as="span" />
+            </button>
+            <button
+              onClick={onMentor}
+              className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+              style={{ background: C.clay, color: "#fff", ...body }}
+            >
+              <EditableText settingKey="building_cta_mentor" defaultText="Become a mentor" as="span" />
+            </button>
+          </div>
+        </div>
+
+        <div className="rounded-2xl p-7" style={{ background: "rgba(245,239,227,0.06)", border: `1px solid rgba(232,192,122,0.28)` }}>
+          <p className="text-[11px] font-bold uppercase mb-6" style={{ ...body, letterSpacing: "0.2em", color: C.gold }}>
+            <EditableText
+              settingKey="building_cards_label"
+              defaultText="What a mentor profile looks like"
+              as="span"
+            />
+          </p>
+          <MentorExpertStrip limit={8} />
+          <p className="mt-6 text-sm" style={{ ...body, color: C.creamDim }}>
+            <EditableText
+              settingKey="building_cards_caption"
+              defaultText="Real industry experts from our Minneapolis lineup. Mentors get a profile like this."
+              as="span"
+              multiline
+            />
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ============================== HOW IT WORKS ============================== */
+
+const STEPS = [
+  { key: "step1", text: "Mentors sign up and build a profile.", soon: true },
+  { key: "step2", text: "Students take a short quiz.", soon: true },
+  { key: "step3", text: "We match them.", soon: false },
+  { key: "step4", text: "They meet 1 to 2 hours a month for 10 months.", soon: false },
+];
+
+const HowItWorks = () => (
+  <section style={{ background: C.cream }} className="py-20 sm:py-28">
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <Eyebrow
+        settingKey="how_kicker"
+        defaultText="WHAT THIS LOOKS LIKE ONCE IT'S FULLY LIVE"
+        tone={C.clay}
+      />
+      <h2 className="mt-4 text-[28px] sm:text-[40px]" style={{ ...display, color: C.forest }}>
+        <EditableText settingKey="how_headline" defaultText="How it works" as="span" />
+      </h2>
+
+      <ol className="mt-12 grid gap-px sm:grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden" style={{ background: "rgba(18,36,28,0.12)" }}>
+        {STEPS.map((s, i) => (
+          <li key={s.key} className="p-7" style={{ background: C.cream }}>
+            <span className="text-[38px] block mb-3" style={{ ...display, color: C.gold }}>
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <p className="text-[17px] font-semibold" style={{ ...body, color: C.forest, lineHeight: 1.45 }}>
+              <EditableText settingKey={`how_${s.key}`} defaultText={s.text} as="span" multiline />
+            </p>
+            {s.soon && (
+              <span
+                className="mt-4 inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                style={{ background: "rgba(196,101,74,0.14)", color: C.clay, ...body }}
+              >
+                Coming soon
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+);
+
+/* ================================ BRANDS ================================ */
+
+const ForBrands = ({ onSponsor }: { onSponsor: () => void }) => (
+  <section style={{ background: C.moss }} className="py-20 sm:py-28">
+    <div className="max-w-5xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="brands_eyebrow" defaultText="FOR BRANDS" />
+      <h2 className="mt-4 text-[30px] sm:text-[46px]" style={{ ...display, color: C.cream }}>
+        <EditableText
+          settingKey="brands_headline"
+          defaultText="A booth gets your logo walked past. This gets you known as the brand that opened a door."
+          as="span"
+        />
+      </h2>
+      <p className="mt-6 text-base sm:text-lg max-w-3xl" style={{ ...body, color: "rgba(245,239,227,0.85)", lineHeight: 1.65 }}>
+        <EditableText
+          settingKey="brands_body"
+          defaultText="Provide a mentor from your team, or sponsor the program directly. Either way, you're not starting from zero. These mentors are already giving their time for free because they believe in this. You get to build off that goodwill, and be the name a student remembers when they land their first real job in this industry."
+          as="span"
+          multiline
+        />
+      </p>
+      <button
+        onClick={onSponsor}
+        className="mt-9 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+        style={{ background: C.gold, color: C.forest, ...body }}
+      >
+        <EditableText settingKey="brands_cta" defaultText="Talk to us about sponsoring" as="span" />
+      </button>
+    </div>
+  </section>
+);
+
+/* ================================ MENTORS ================================ */
+
+const ForMentors = ({ onMentor }: { onMentor: () => void }) => (
+  <section style={{ background: C.cream }} className="py-20 sm:py-28">
+    <div className="max-w-5xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="mentors_eyebrow" defaultText="FOR MENTORS" tone={C.clay} />
+      <h2 className="mt-4 text-[30px] sm:text-[46px]" style={{ ...display, color: C.forest }}>
+        <EditableText settingKey="mentors_headline" defaultText="Give an hour. Change a trajectory." as="span" />
+      </h2>
+      <p className="mt-6 text-base sm:text-lg max-w-3xl" style={{ ...body, color: "rgba(18,36,28,0.78)", lineHeight: 1.65 }}>
+        <EditableText
+          settingKey="mentors_body"
+          defaultText="We're looking for 20 people already working in the outdoor industry who can give 1 to 2 hours a month for 10 months to one HBCU student. No curriculum to write, no big time ask, just real conversations and real access for someone who might not otherwise have it."
+          as="span"
+          multiline
+        />
+      </p>
+      <button
+        onClick={onMentor}
+        className="mt-9 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+        style={{ background: C.clay, color: "#fff", ...body }}
+      >
+        <EditableText settingKey="mentors_cta" defaultText="Apply to mentor" as="span" />
+      </button>
+    </div>
+  </section>
+);
+
+/* ================================ STUDENTS ================================ */
+
+const ForStudents = () => (
+  <section id="students" style={{ background: C.forestDeep }} className="py-16 sm:py-20">
+    <div className="max-w-4xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="students_eyebrow" defaultText="FOR STUDENTS" />
+      <h2 className="mt-4 text-[24px] sm:text-[32px]" style={{ ...display, color: C.cream }}>
+        <EditableText settingKey="students_headline" defaultText="Coming to your campus" as="span" />
+      </h2>
+      <p className="mt-5 text-[15px] sm:text-base max-w-2xl" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
+        <EditableText
+          settingKey="students_body"
+          defaultText="If you're a student at one of the seven partner campuses, this is where you'll get matched with a mentor working in the outdoor industry, someone you'll talk to for an hour or two a month, all year. The matching quiz isn't live yet."
+          as="span"
+          multiline
+        />
+      </p>
+      <div className="mt-8">
+        <StudentWaitlistForm />
+      </div>
+    </div>
+  </section>
+);
+
+/* =============================== SUPPORTED BY =============================== */
+
+const CORE_LOGOS = [
+  { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
+  { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
+  { name: "Basecamp", src: basecampLogo, url: "https://basecampoutdoorevents.com" },
+];
+
+const SupportedBy = () => {
+  const { isAdmin } = useEditableTextContext();
+  const { logos } = useEventLogos(PAGE_SLUG);
+
+  return (
+    <section style={{ background: C.cream }} className="py-20 sm:py-24">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-[26px] sm:text-[34px]" style={{ ...display, color: C.forest }}>
+              <EditableText settingKey="supported_headline" defaultText="Supported by" as="span" />
+            </h2>
+            <div className="mt-4">
+              <Rule color={C.clay} />
+            </div>
+          </div>
+          {isAdmin && (
+            <AdminLogoManager lists={[{ eventSlug: PAGE_SLUG, label: "Mentor network supporters" }]} />
+          )}
+        </div>
+
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
+          {CORE_LOGOS.map((l) => (
+            <a
+              key={l.name}
+              href={l.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-28 items-center justify-center rounded-2xl px-6 transition-transform hover:scale-[1.02]"
+              style={{
+                background: l.name === "HBCUs Outside" ? C.forest : "#ffffff",
+                border: "1px solid rgba(18,36,28,0.10)",
+              }}
+            >
+              <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
+            </a>
+          ))}
+          <div
+            className="flex h-28 flex-col items-center justify-center rounded-2xl px-6 text-center"
+            style={{ background: "rgba(45,90,61,0.07)", border: "1px dashed rgba(18,36,28,0.25)" }}
+          >
+            <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
+              North Carolina Outward Bound School
+            </span>
+          </div>
+
+          {logos.map((logo) => (
+            <a
+              key={logo.id}
+              href={logo.url || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-28 items-center justify-center rounded-2xl px-6"
+              style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
+            >
+              {logo.logo_url ? (
+                <img src={logo.logo_url} alt={logo.name} className="max-h-16 max-w-full w-auto object-contain" />
+              ) : (
+                <span className="text-sm font-semibold" style={{ ...body, color: C.forest }}>{logo.name}</span>
+              )}
+            </a>
+          ))}
+
+          {[0, 1].map((i) => (
+            <div
+              key={`placeholder-${i}`}
+              className="flex h-28 items-center justify-center rounded-2xl"
+              style={{ background: "transparent", border: "1px dashed rgba(18,36,28,0.22)" }}
+            >
+              <span className="text-[12px] font-bold uppercase tracking-[0.18em]" style={{ ...body, color: "rgba(18,36,28,0.45)" }}>
+                Your logo here
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ================================= PAGE ================================= */
+
+const MentorNetworkContent = () => {
+  const [sponsorOpen, setSponsorOpen] = useState(false);
+  const [mentorOpen, setMentorOpen] = useState(false);
+
+  return (
+    <div style={{ background: C.cream }}>
+      <Fonts />
+      <PageMetaApplier title="Basecamp Industry Expert Mentor Network" />
+
+      <OrderedSections
+        sections={[
+          { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
+          { key: "partnership", content: <Partnership /> },
+          {
+            key: "basecamp-building",
+            content: (
+              <BasecampSection
+                onSponsor={() => setSponsorOpen(true)}
+                onMentor={() => setMentorOpen(true)}
+              />
+            ),
+          },
+          { key: "how-it-works", content: <HowItWorks /> },
+          { key: "for-brands", content: <ForBrands onSponsor={() => setSponsorOpen(true)} /> },
+          { key: "for-mentors", content: <ForMentors onMentor={() => setMentorOpen(true)} /> },
+          { key: "for-students", content: <ForStudents /> },
+          { key: "supported-by", content: <SupportedBy /> },
+        ]}
+      />
+
+      <SiteFooter />
+
+      <SponsorInquiryDialog open={sponsorOpen} onOpenChange={setSponsorOpen} />
+      <MentorApplyDialog open={mentorOpen} onOpenChange={setMentorOpen} />
+    </div>
+  );
+};
+
+const MentorNetwork = () => (
+  <EditableTextProvider pageSlug={PAGE_SLUG}>
+    <MentorNetworkContent />
+  </EditableTextProvider>
+);
+
+export default MentorNetwork;
