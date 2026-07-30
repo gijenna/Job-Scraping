@@ -27,6 +27,7 @@ type PastRow = { expert: Expert; cities: string[] };
 const CITY_LABEL: Record<string, string> = {
   denver: "Denver",
   portland: "Portland",
+  minneapolis: "Minneapolis",
 };
 
 const MNPastExperts = ({ eventSlug = "minneapolis26", showLinkToEvent = false }: MNPastExpertsProps) => {
