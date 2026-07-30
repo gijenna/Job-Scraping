@@ -24,11 +24,18 @@ Copy is exactly as specified. No em dashes anywhere.
 
 ## Design
 
-Uses the established Basecamp palette and type already in the app (dark teal, coral, yellow, cream, Unbounded for display, Josefin Sans for everything else). Editorial layout: strong left-aligned hero with a rule-and-eyebrow treatment, asymmetric partner cards, numbered steps as a horizontal rail on desktop that stacks on mobile, and a clearly distinct visual weight ladder across the brand, mentor, and student sections. No gradient blobs, no generic stock hero. Fully responsive.
+HBCUs Outside leads visually. This page gets its own scoped design system, defined as tokens in CSS and used only on this route, so no existing page changes.
+
+- Palette: deep forest #12241c as the base, moss #2d5a3d for fields and cards, clay #c4654a as the primary action color, warm gold #e8c07a for accents and rules, plus a cream paper tone for light bands.
+- Type: Archivo Black for headlines, Hind for body. Big, confident, tight tracking on display type.
+- Layout: magazine structure. Oversized hero headline set against a full-bleed image with a hard rule and eyebrow, then editorial grids: pull quotes, numbered rails, asymmetric partner cards, generous margins, alternating dark and cream bands so each section reads as its own spread.
+- Motion is restrained: fade and rise on scroll, no floating blobs, no gradient washes.
+- Fully responsive, mobile stacks to a single column with the same rhythm.
 
 ## Logos
 
-Fetch official logos for HBCUs Outside, Sierra Club, and North Carolina Outward Bound School from their own sites, store them as project assets, and render each undistorted with no recoloring. Basecamp is added as a fourth in the same treatment. If a clean version of any logo cannot be retrieved, that one is flagged to you rather than faked.
+Fetch official logos for HBCUs Outside (hbcusoutside.com), Sierra Club, and North Carolina Outward Bound School from their own sites, store them as project assets, and render each undistorted with no recoloring. HBCUs Outside gets top billing in the hero lockup. Basecamp is added as a fourth partner in the same treatment. If a clean version of any logo cannot be retrieved, that one is flagged to you rather than faked.
+
 
 ## Admin controls
 
