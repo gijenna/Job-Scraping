@@ -10,14 +10,15 @@ A new standalone sales page for the HBCUs Outside x Sierra Club x NC Outward Bou
 
 ## Sections (all hideable and reorderable)
 
-1. Hero: eyebrow, headline, subhead, three ranked CTAs (primary "Sponsor a mentor", secondary "Become a mentor", plain text link "I'm a student"), each scrolling to its section.
-2. The Partnership: intro line, three partner cards (Sierra Club, NC Outward Bound School, HBCUs Outside), then the pilot fact line about Oct 1 to 4, 2026 at Cedar Rock.
-3. What Basecamp Is Building: headline, body, and the smaller "recruiting more than 20 on purpose" line.
+1. Hero: eyebrow, headline, subhead, and a ranked CTA set. Primary is "Talk to Ron Griswell", which opens the contact path (the destination is one admin-editable setting, either a mailto or a booking link, changeable without a rebuild). Secondary is "Become a mentor", tertiary plain text link is "I'm a student".
+2. The Partnership: intro line, four partner cards. Sierra Club, NC Outward Bound School, HBCUs Outside, and Basecamp presented as a core partner, not a supporter, with its role stated as the mentor network. Then the pilot fact line about Oct 1 to 4, 2026 at Cedar Rock.
+3. What Basecamp Is Building: headline and body. The "recruiting more than 20 on purpose" line is cut. This section carries the two main audience CTAs, "Sponsor a mentor" and "Become a mentor", and shows real industry expert cards from the Minneapolis lineup as read-only visuals so people can see what a mentor profile looks like.
 4. How It Works: kicker "What this looks like once it's fully live", four numbered steps, with steps 1 and 2 visibly tagged as coming soon and no live form attached.
-5. For Brands: heaviest section after the hero. Headline, body, "Talk to us about sponsoring" button opening a sponsor inquiry form (name, company, email, message).
+5. For Brands: headline, body, "Talk to us about sponsoring" button opening a sponsor inquiry form (name, company, email, message).
 6. For Mentors: headline, body, "Apply to mentor" button opening an interest form (name, email, company, current role, LinkedIn optional).
 7. For Students: lightest weight. Headline, body, single email capture "Get notified when the quiz opens".
-8. Supported By: logo row for the four confirmed partners, followed by "Your logo here" placeholder tiles, powered by the existing admin logo tool.
+8. Supported By: logo row for the four core partners, followed by "Your logo here" placeholder tiles, powered by the existing admin logo tool.
+
 9. Footer: the existing site footer pattern.
 
 Copy is exactly as specified. No em dashes anywhere.
