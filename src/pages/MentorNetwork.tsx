@@ -13,8 +13,16 @@ import {
   MentorApplyDialog,
   StudentWaitlistForm,
 } from "@/components/mentor-network/MentorForms";
+import PartnershipConstellation, {
+  ConstellationStyles,
+  ConstellationHeading,
+} from "@/components/mentor-network/PartnershipConstellation";
 import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
+import sierraClubCream from "@/assets/mentor-network/sierra-club-cream.png";
+import ncobsCream from "@/assets/mentor-network/ncobs-cream.png";
+import ncobsLogo from "@/assets/mentor-network/ncobs.png";
+import basecampCream from "@/assets/mentor-network/basecamp-cream.png";
 import basecampLogo from "@/assets/Basecamp_Logo_MAIN_1.png";
 import heroPhoto from "@/assets/event-group-photo.jpg";
 
@@ -131,14 +139,20 @@ const PARTNERS = [
   {
     key: "sierra",
     name: "Sierra Club",
-    logo: sierraClubLogo,
+    logo: sierraClubCream,
+    x: 18,
+    y: 32,
+    scale: 1.05,
     defaultBody:
       "Certification, insurance, and advocacy. Students finish as officially recognized Sierra Club leaders.",
   },
   {
     key: "ncobs",
     name: "North Carolina Outward Bound School",
-    logo: null,
+    logo: ncobsCream,
+    x: 41,
+    y: 63,
+    scale: 1.15,
     defaultBody:
       "Experiential education in teamwork, resilience, and leadership, part of the national Outward Bound network.",
   },
@@ -146,65 +160,69 @@ const PARTNERS = [
     key: "hbcus",
     name: "HBCUs Outside",
     logo: hbcusOutsideLogo,
+    x: 66,
+    y: 26,
+    scale: 1.05,
     defaultBody:
       "Belonging and cross-campus community, built in quality nature, carried back to campus.",
   },
   {
     key: "basecamp",
     name: "Basecamp",
-    logo: basecampLogo,
+    logo: basecampCream,
+    x: 82,
+    y: 64,
+    scale: 1.1,
     defaultBody:
       "The mentor network. A year of real conversations with people already working in the outdoor industry.",
   },
 ];
 
-const Partnership = () => (
-  <section style={{ background: C.cream }} className="py-20 sm:py-28">
-    <div className="max-w-6xl mx-auto px-5 sm:px-8">
-      <Eyebrow settingKey="partnership_eyebrow" defaultText="THE PARTNERSHIP" tone={C.clay} />
-      <h2 className="mt-4 text-[28px] sm:text-[40px] max-w-3xl" style={{ ...display, color: C.forest }}>
-        <EditableText
-          settingKey="partnership_intro"
-          defaultText="This mentor network is one piece of a bigger partnership. Here's the rest of it."
-          as="span"
-        />
-      </h2>
+const CONSTELLATION_EDGES: [string, string][] = [
+  ["sierra", "ncobs"],
+  ["ncobs", "hbcus"],
+  ["hbcus", "basecamp"],
+  ["sierra", "hbcus"],
+];
 
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {PARTNERS.map((p, i) => (
+const Partnership = () => (
+  <section style={{ background: C.forestDeep }} className="py-20 sm:py-28">
+    <ConstellationStyles />
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <ConstellationHeading
+        eyebrowKey="partnership_eyebrow"
+        headlineKey="partnership_intro"
+        headlineDefault="This mentor network is one piece of a bigger partnership. Here's the rest of it."
+        subheadKey="partnership_subhead"
+        subheadDefault="Seven HBCU campuses are building certified student leaders through this partnership, now extending into a full year of mentorship."
+      />
+
+      <div className="mt-12">
+        <PartnershipConstellation stars={PARTNERS} edges={CONSTELLATION_EDGES} />
+      </div>
+
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {PARTNERS.map((p) => (
           <article
             key={p.key}
             className="flex flex-col rounded-2xl p-6"
             style={{
-              background: i % 2 === 0 ? "#ffffff" : "rgba(45,90,61,0.07)",
-              border: "1px solid rgba(18,36,28,0.10)",
+              background: "rgba(245,239,227,0.05)",
+              border: "1px solid rgba(232,192,122,0.22)",
             }}
           >
-            <div className="h-14 flex items-center mb-5">
-              {p.logo ? (
-                <span
-                  className="inline-flex items-center rounded-lg px-3 py-2"
-                  style={{ background: p.key === "hbcus" ? C.forest : "transparent" }}
-                >
-                  <img src={p.logo} alt={p.name} className="max-h-10 w-auto object-contain" />
-                </span>
-              ) : (
-                <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
-                  {p.name}
-                </span>
-              )}
-            </div>
-            <h3 className="text-[17px] mb-3" style={{ ...display, color: C.forest }}>
+            <span className="mb-4 block h-[5px] w-[5px] rounded-full" style={{ background: C.gold, boxShadow: "0 0 10px 3px rgba(232,192,122,0.5)" }} />
+            <h3 className="text-[17px] mb-3" style={{ ...display, color: C.cream }}>
               <EditableText settingKey={`partner_${p.key}_name`} defaultText={p.name} as="span" />
             </h3>
-            <p className="text-[15px]" style={{ ...body, color: "rgba(18,36,28,0.75)", lineHeight: 1.6 }}>
+            <p className="text-[15px]" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
               <EditableText settingKey={`partner_${p.key}_body`} defaultText={p.defaultBody} as="span" multiline />
             </p>
           </article>
         ))}
       </div>
 
-      <div className="mt-10 rounded-2xl p-6 sm:p-8" style={{ background: C.forest }}>
+      <div className="mt-10 rounded-2xl p-6 sm:p-8" style={{ background: "rgba(45,90,61,0.28)", border: "1px solid rgba(245,239,227,0.10)" }}>
         <p className="text-[15px] sm:text-base" style={{ ...body, color: C.creamDim, lineHeight: 1.65 }}>
           <EditableText
             settingKey="partnership_facts"
@@ -217,6 +235,7 @@ const Partnership = () => (
     </div>
   </section>
 );
+
 
 /* ========================= WHAT BASECAMP IS BUILDING ========================= */
 
@@ -417,6 +436,7 @@ const ForStudents = () => (
 const CORE_LOGOS = [
   { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
   { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
+  { name: "North Carolina Outward Bound School", src: ncobsLogo, url: "https://www.ncobs.org/" },
   { name: "Basecamp", src: basecampLogo, url: "https://basecampoutdoorevents.com" },
 ];
 
@@ -457,14 +477,8 @@ const SupportedBy = () => {
               <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
             </a>
           ))}
-          <div
-            className="flex h-28 flex-col items-center justify-center rounded-2xl px-6 text-center"
-            style={{ background: "rgba(45,90,61,0.07)", border: "1px dashed rgba(18,36,28,0.25)" }}
-          >
-            <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
-              North Carolina Outward Bound School
-            </span>
-          </div>
+
+
 
           {logos.map((logo) => (
             <a
