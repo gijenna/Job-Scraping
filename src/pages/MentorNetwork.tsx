@@ -868,6 +868,10 @@ const MentorNetworkContent = () => {
           { key: "for-brands", content: <ForBrands onSponsor={() => setSponsorOpen(true)} /> },
           { key: "for-mentors", content: <ForMentors onMentor={() => setMentorOpen(true)} /> },
           { key: "for-students", content: <ForStudents /> },
+          {
+            key: "be-part-of-this-bottom",
+            content: <BePartOfThis idSuffix="bottom" variant="light" onMentor={() => setMentorOpen(true)} />,
+          },
           { key: "supported-by", content: <SupportedBy /> },
         ]}
       />
