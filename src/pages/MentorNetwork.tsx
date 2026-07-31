@@ -477,14 +477,8 @@ const SupportedBy = () => {
               <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
             </a>
           ))}
-          <div
-            className="flex h-28 flex-col items-center justify-center rounded-2xl px-6 text-center"
-            style={{ background: "rgba(45,90,61,0.07)", border: "1px dashed rgba(18,36,28,0.25)" }}
-          >
-            <span className="text-[13px] font-bold uppercase tracking-[0.16em]" style={{ ...body, color: C.moss }}>
-              North Carolina Outward Bound School
-            </span>
-          </div>
+
+
 
           {logos.map((logo) => (
             <a
