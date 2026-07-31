@@ -281,14 +281,15 @@ const Partnership = () => (
 /* ============================ BE PART OF THIS ============================ */
 
 const BePartOfThis = ({
-  onMentor,
+  onBrand,
   variant = "dark",
   idSuffix,
 }: {
-  onMentor: () => void;
+  onBrand: () => void;
   variant?: "dark" | "light";
   idSuffix: string;
 }) => {
+
   const light = variant === "light";
   return (
     <section style={{ background: light ? C.cream : C.forest }} className="py-16 sm:py-20">
