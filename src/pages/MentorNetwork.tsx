@@ -189,7 +189,7 @@ const STARS: ConstellationStar[] = [
   { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 13, y: 13 },
   { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 87, y: 12, scale: 1.1 },
   { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 10, y: 49, scale: 0.9 },
-  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 90, y: 49 },
+  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 86, y: 49, scale: 0.95 },
   { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
   { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
 ];
