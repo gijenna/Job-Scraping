@@ -156,7 +156,82 @@ export const SponsorInquiryDialog = ({
 };
 
 
-/* ---------------------------- mentor applicant ---------------------------- */
+/* ---------------------------- two pathways ---------------------------- */
+
+export const PathwayDialog = ({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) => {
+  const [mode, setMode] = useState<"choose" | "sponsor">("choose");
+
+  const close = (v: boolean) => {
+    onOpenChange(v);
+    if (!v) setMode("choose");
+  };
+
+  if (mode === "sponsor") {
+    return <SponsorInquiryDialog open={open} onOpenChange={close} />;
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={close}>
+      <DialogContent className="sm:max-w-lg" style={{ background: C.cream }}>
+        <DialogHeader>
+          <DialogTitle style={{ color: C.forest }}>
+            Help us build a braided river of talent
+          </DialogTitle>
+        </DialogHeader>
+        <p className="text-sm" style={{ color: "rgba(18,36,28,0.72)" }}>
+          Two ways in. Pick the one that fits your organization.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <a
+            href="/mentor-experts"
+            className="flex flex-col rounded-xl p-5 transition-transform hover:scale-[1.02]"
+            style={{ background: "#fff", border: "1px solid rgba(18,36,28,0.14)" }}
+          >
+            <span className="text-[15px] font-bold" style={{ color: C.forest }}>
+              Contribute a mentor
+            </span>
+            <span className="mt-2 text-[13px]" style={{ color: "rgba(18,36,28,0.7)", lineHeight: 1.5 }}>
+              Put someone from your team on the roster. At least one hour a month, matched with one HBCU student.
+            </span>
+            <span
+              className="mt-4 inline-block rounded-full px-4 py-2 text-center text-[11px] font-bold uppercase tracking-[0.14em]"
+              style={{ background: C.clay, color: "#fff" }}
+            >
+              Build a mentor card
+            </span>
+          </a>
+          <button
+            type="button"
+            onClick={() => setMode("sponsor")}
+            className="flex flex-col rounded-xl p-5 text-left transition-transform hover:scale-[1.02]"
+            style={{ background: "#fff", border: "1px solid rgba(18,36,28,0.14)" }}
+          >
+            <span className="text-[15px] font-bold" style={{ color: C.forest }}>
+              Sponsor the program
+            </span>
+            <span className="mt-2 text-[13px]" style={{ color: "rgba(18,36,28,0.7)", lineHeight: 1.5 }}>
+              Fund the year of mentorship that keeps these students connected to the industry.
+            </span>
+            <span
+              className="mt-4 inline-block rounded-full px-4 py-2 text-center text-[11px] font-bold uppercase tracking-[0.14em]"
+              style={{ background: C.moss, color: "#fff" }}
+            >
+              See the brand options
+            </span>
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+
 
 export const MentorApplyDialog = ({
   open,
