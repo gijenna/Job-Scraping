@@ -86,7 +86,6 @@ export const SponsorInquiryDialog = ({
   const [form, setForm] = useState({ full_name: "", company: "", email: "", message: "" });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,47 +104,57 @@ export const SponsorInquiryDialog = ({
       setError("Something went wrong. Please try again.");
       return;
     }
-    setDone(true);
+    onOpenChange(false);
+    window.location.href = "/sponsor-a-mentor";
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" style={{ background: C.cream }}>
         <DialogHeader>
-          <DialogTitle style={{ color: C.forest }}>Talk to us about sponsoring</DialogTitle>
+          <DialogTitle style={{ color: C.forest }}>
+            Help us build a braided river of talent
+          </DialogTitle>
         </DialogHeader>
-        {done ? (
-          <Done message="Thanks. We'll be in touch within a few days." />
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
-            <div>
-              <span className={label} style={{ color: C.moss }}>Name</span>
-              <input className={field} style={fieldStyle} value={form.full_name} maxLength={100}
-                onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
-            </div>
-            <div>
-              <span className={label} style={{ color: C.moss }}>Company</span>
-              <input className={field} style={fieldStyle} value={form.company} maxLength={120}
-                onChange={(e) => setForm({ ...form, company: e.target.value })} />
-            </div>
-            <div>
-              <span className={label} style={{ color: C.moss }}>Email</span>
-              <input type="email" className={field} style={fieldStyle} value={form.email} maxLength={255}
-                onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            </div>
-            <div>
-              <span className={label} style={{ color: C.moss }}>Message</span>
-              <textarea rows={4} className={field} style={fieldStyle} value={form.message} maxLength={1000}
-                onChange={(e) => setForm({ ...form, message: e.target.value })} />
-            </div>
-            {error && <p className="text-xs font-semibold" style={{ color: C.clay }}>{error}</p>}
-            <Btn disabled={busy}>{busy ? "Sending" : "Send"}</Btn>
-          </form>
-        )}
+        <p className="text-sm" style={{ color: "rgba(18,36,28,0.72)" }}>
+          Tell us who you are. You'll land on the full brand breakdown as soon as you submit.
+        </p>
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <span className={label} style={{ color: C.moss }}>Name</span>
+            <input className={field} style={fieldStyle} value={form.full_name} maxLength={100}
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+          </div>
+          <div>
+            <span className={label} style={{ color: C.moss }}>Company</span>
+            <input className={field} style={fieldStyle} value={form.company} maxLength={120}
+              onChange={(e) => setForm({ ...form, company: e.target.value })} />
+          </div>
+          <div>
+            <span className={label} style={{ color: C.moss }}>Email</span>
+            <input type="email" className={field} style={fieldStyle} value={form.email} maxLength={255}
+              onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          </div>
+          <div>
+            <span className={label} style={{ color: C.moss }}>Message (optional)</span>
+            <textarea rows={3} className={field} style={fieldStyle} value={form.message} maxLength={1000}
+              onChange={(e) => setForm({ ...form, message: e.target.value })} />
+          </div>
+          {error && <p className="text-xs font-semibold" style={{ color: C.clay }}>{error}</p>}
+          <Btn disabled={busy}>{busy ? "Sending" : "Submit and see the details"}</Btn>
+          <a
+            href="/sponsor-a-mentor"
+            className="block text-center text-xs font-semibold underline underline-offset-4"
+            style={{ color: C.moss }}
+          >
+            Take me to more info before I submit my email
+          </a>
+        </form>
       </DialogContent>
     </Dialog>
   );
 };
+
 
 /* ---------------------------- mentor applicant ---------------------------- */
 
@@ -266,7 +275,7 @@ export const StudentWaitlistForm = () => {
   if (done) {
     return (
       <p className="text-sm font-semibold" style={{ color: C.gold }}>
-        You're on the list. We'll email you when the quiz opens.
+        Gotchu.
       </p>
     );
   }

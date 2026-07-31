@@ -78,7 +78,7 @@ const Rule = ({ color = C.gold }: { color?: string }) => (
 
 /* ================================ HERO ================================ */
 
-const Hero = ({ onMentor }: { onMentor: () => void }) => (
+const Hero = ({ onBrand }: { onBrand: () => void }) => (
   <section className="relative overflow-hidden" style={{ background: C.forestDeep }}>
     <div className="absolute inset-0">
       <img src={heroPhoto} alt="Outdoor industry professionals talking together outside" className="h-full w-full object-cover" />
@@ -114,30 +114,36 @@ const Hero = ({ onMentor }: { onMentor: () => void }) => (
           />
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
-          <EditableLink
-            textKey="hero_cta_primary_text"
-            urlKey="hero_cta_primary_url"
-            defaultText="Talk to Ron Griswell"
-            defaultUrl="mailto:ron@hbcusoutside.com"
-            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
-            style={{ background: C.clay, color: "#fff", boxShadow: "0 14px 40px rgba(196,101,74,0.35)" }}
-          />
+        <div className="mt-10 flex flex-col gap-5">
           <button
-            onClick={onMentor}
-            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-colors"
-            style={{ border: `2px solid ${C.gold}`, color: C.gold, ...body }}
+            onClick={onBrand}
+            className="inline-flex w-full items-center justify-center rounded-full px-8 py-5 text-center text-[15px] sm:text-lg font-bold uppercase tracking-[0.1em] transition-transform hover:scale-[1.02] sm:w-auto sm:self-start"
+            style={{ ...body, background: C.clay, color: "#fff", boxShadow: "0 14px 40px rgba(196,101,74,0.35)" }}
           >
-            <EditableText settingKey="hero_cta_secondary" defaultText="Become a mentor" as="span" />
+            <EditableText
+              settingKey="hero_cta_primary_text"
+              defaultText="Help us build a braided river of talent"
+              as="span"
+            />
           </button>
-          <a
-            href="#students"
-            className="text-sm font-semibold underline underline-offset-4"
-            style={{ ...body, color: C.creamDim }}
-          >
-            <EditableText settingKey="hero_cta_tertiary" defaultText="I'm a student" as="span" />
-          </a>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href="/mentor-experts"
+              className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] transition-colors"
+              style={{ border: `2px solid ${C.gold}`, color: C.gold, ...body }}
+            >
+              <EditableText settingKey="hero_cta_secondary" defaultText="Become a mentor" as="span" />
+            </a>
+            <a
+              href="#students"
+              className="text-xs font-semibold uppercase tracking-[0.14em] underline underline-offset-4"
+              style={{ ...body, color: C.creamDim }}
+            >
+              <EditableText settingKey="hero_cta_tertiary" defaultText="I'm a student" as="span" />
+            </a>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -275,14 +281,15 @@ const Partnership = () => (
 /* ============================ BE PART OF THIS ============================ */
 
 const BePartOfThis = ({
-  onMentor,
+  onBrand,
   variant = "dark",
   idSuffix,
 }: {
-  onMentor: () => void;
+  onBrand: () => void;
   variant?: "dark" | "light";
   idSuffix: string;
 }) => {
+
   const light = variant === "light";
   return (
     <section style={{ background: light ? C.cream : C.forest }} className="py-16 sm:py-20">
@@ -327,15 +334,19 @@ const BePartOfThis = ({
               />
             </p>
             <div className="mt-7">
-              <EditableLink
-                textKey={`bepart_${idSuffix}_shape_cta_text`}
-                urlKey={`bepart_${idSuffix}_shape_cta_url`}
-                defaultText="Talk to Ron Griswell"
-                defaultUrl="mailto:ron@hbcusoutside.com"
+              <button
+                onClick={onBrand}
                 className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
                 style={{ background: C.clay, color: "#fff", ...body }}
-              />
+              >
+                <EditableText
+                  settingKey={`bepart_${idSuffix}_shape_cta_text`}
+                  defaultText="Sponsor the program"
+                  as="span"
+                />
+              </button>
             </div>
+
           </div>
 
           <div
@@ -364,8 +375,8 @@ const BePartOfThis = ({
               />
             </p>
             <div className="mt-7">
-              <button
-                onClick={onMentor}
+              <a
+                href="/mentor-experts"
                 className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
                 style={{ background: C.gold, color: C.forest, ...body }}
               >
@@ -374,8 +385,9 @@ const BePartOfThis = ({
                   defaultText="Contribute a mentor"
                   as="span"
                 />
-              </button>
+              </a>
             </div>
+
           </div>
         </div>
       </div>
@@ -429,7 +441,22 @@ const WhyThisMatters = () => (
 
       <div className="mt-14 grid gap-px sm:grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden" style={{ background: "rgba(232,192,122,0.20)" }}>
         {TENETS.map((t, i) => (
-          <article key={t.key} className="p-7 sm:p-8" style={{ background: C.forest }}>
+          <article
+            key={t.key}
+            className="relative isolate overflow-hidden p-7 sm:p-8"
+            style={{ background: C.forest }}
+          >
+            <img
+              src={TENET_PHOTOS[i % TENET_PHOTOS.length]}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 -z-20 h-full w-full object-cover"
+            />
+            <div
+              className="absolute inset-0 -z-10"
+              style={{ background: `linear-gradient(180deg, ${C.forest}e8 0%, ${C.forest}f2 55%, ${C.forestDeep}fa 100%)` }}
+            />
             <span className="block text-[42px] leading-none" style={{ ...display, color: C.gold }}>
               {String(i + 1).padStart(2, "0")}
             </span>
@@ -443,22 +470,6 @@ const WhyThisMatters = () => (
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {TENET_PHOTOS.map((src, i) => (
-          <div
-            key={src}
-            className={`overflow-hidden rounded-2xl ${i > 1 ? "hidden sm:block" : ""}`}
-            style={{ border: "1px solid rgba(232,192,122,0.18)" }}
-          >
-            <img
-              src={src}
-              alt="Basecamp community members connecting outdoors"
-              loading="lazy"
-              className="h-40 sm:h-52 w-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
     </div>
   </section>
 );
@@ -489,11 +500,12 @@ const PILOT_ROWS = [
 ];
 
 const PILOT_ROLES = [
-  { key: "sierra", name: "Sierra Club", body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
-  { key: "ncobs", name: "North Carolina Outward Bound School", body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
-  { key: "hbcus", name: "HBCUs Outside", body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
-  { key: "basecamp", name: "Basecamp Outdoor", body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
+  { key: "ncobs", name: "North Carolina Outward Bound School", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
+  { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo, body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
+  { key: "basecamp", name: "Basecamp Outdoor", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
 ];
+
 
 const PilotInMotion = () => (
   <section style={{ background: C.cream }} className="py-20 sm:py-28">
@@ -530,9 +542,13 @@ const PilotInMotion = () => (
             className="rounded-2xl p-6"
             style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
           >
-            <h3 className="text-[16px]" style={{ ...display, color: C.forest }}>
-              <EditableText settingKey={`pilotrole_${p.key}_name`} defaultText={p.name} as="span" />
-            </h3>
+            <div className="flex items-center gap-3">
+              <img src={p.logo} alt={p.name} loading="lazy" className="h-10 w-10 shrink-0 object-contain" />
+              <h3 className="text-[16px]" style={{ ...display, color: C.forest }}>
+                <EditableText settingKey={`pilotrole_${p.key}_name`} defaultText={p.name} as="span" />
+              </h3>
+            </div>
+
             <p className="mt-3 text-[15px]" style={{ ...body, color: "rgba(18,36,28,0.72)", lineHeight: 1.6 }}>
               <EditableText settingKey={`pilotrole_${p.key}_body`} defaultText={p.body} as="span" multiline />
             </p>
@@ -547,7 +563,7 @@ const PilotInMotion = () => (
 
 /* ========================= WHAT BASECAMP IS BUILDING ========================= */
 
-const BasecampSection = ({ onSponsor, onMentor }: { onSponsor: () => void; onMentor: () => void }) => (
+const BasecampSection = ({ onSponsor }: { onSponsor: () => void; onMentor?: () => void }) => (
   <section style={{ background: C.forest }} className="py-20 sm:py-28">
     <div className="max-w-6xl mx-auto px-5 sm:px-8">
       <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-start">
@@ -577,13 +593,13 @@ const BasecampSection = ({ onSponsor, onMentor }: { onSponsor: () => void; onMen
             >
               <EditableText settingKey="building_cta_sponsor" defaultText="Sponsor a mentor" as="span" />
             </button>
-            <button
-              onClick={onMentor}
-              className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+            <a
+              href="/mentor-experts"
+              className="inline-flex items-center justify-center rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
               style={{ background: C.clay, color: "#fff", ...body }}
             >
               <EditableText settingKey="building_cta_mentor" defaultText="Become a mentor" as="span" />
-            </button>
+            </a>
           </div>
         </div>
 
@@ -689,7 +705,7 @@ const ForBrands = ({ onSponsor }: { onSponsor: () => void }) => (
 
 /* ================================ MENTORS ================================ */
 
-const ForMentors = ({ onMentor }: { onMentor: () => void }) => (
+const ForMentors = ({ onMentor }: { onMentor?: () => void }) => (
   <section style={{ background: C.cream }} className="py-20 sm:py-28">
     <div className="max-w-5xl mx-auto px-5 sm:px-8">
       <Eyebrow settingKey="mentors_eyebrow" defaultText="FOR MENTORS" tone={C.clay} />
@@ -704,13 +720,13 @@ const ForMentors = ({ onMentor }: { onMentor: () => void }) => (
           multiline
         />
       </p>
-      <button
-        onClick={onMentor}
-        className="mt-9 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+      <a
+        href="/mentor-experts"
+        className="mt-9 inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
         style={{ background: C.clay, color: "#fff", ...body }}
       >
         <EditableText settingKey="mentors_cta" defaultText="Apply to mentor" as="span" />
-      </button>
+      </a>
     </div>
   </section>
 );
@@ -847,12 +863,12 @@ const MentorNetworkContent = () => {
 
       <OrderedSections
         sections={[
-          { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
+          { key: "hero", content: <Hero onBrand={() => setSponsorOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
           { key: "why-this-matters", content: <WhyThisMatters /> },
           {
             key: "be-part-of-this-top",
-            content: <BePartOfThis idSuffix="top" variant="dark" onMentor={() => setMentorOpen(true)} />,
+            content: <BePartOfThis idSuffix="top" variant="dark" onBrand={() => setSponsorOpen(true)} />,
           },
           { key: "pilot-in-motion", content: <PilotInMotion /> },
           {
@@ -870,8 +886,9 @@ const MentorNetworkContent = () => {
           { key: "for-students", content: <ForStudents /> },
           {
             key: "be-part-of-this-bottom",
-            content: <BePartOfThis idSuffix="bottom" variant="light" onMentor={() => setMentorOpen(true)} />,
+            content: <BePartOfThis idSuffix="bottom" variant="light" onBrand={() => setSponsorOpen(true)} />,
           },
+
           { key: "supported-by", content: <SupportedBy /> },
         ]}
       />
