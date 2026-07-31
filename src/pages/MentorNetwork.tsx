@@ -142,54 +142,76 @@ const Hero = ({ onMentor }: { onMentor: () => void }) => (
 
 /* ============================ THE PARTNERSHIP ============================ */
 
-const PARTNERS = [
+const STARS: ConstellationStar[] = [
+  {
+    key: "outcome",
+    name: "The Outcome",
+    logo: null,
+    tier: "north",
+    x: 50,
+    y: 8,
+  },
   {
     key: "sierra",
     name: "Sierra Club",
     logo: sierraClubCream,
-    x: 18,
-    y: 32,
+    tier: "partner",
+    role: "Certification",
+    x: 24,
+    y: 38,
     scale: 1.05,
-    defaultBody:
-      "Certification, insurance, and advocacy. Students finish as officially recognized Sierra Club leaders.",
-  },
-  {
-    key: "ncobs",
-    name: "North Carolina Outward Bound School",
-    logo: ncobsCream,
-    x: 41,
-    y: 63,
-    scale: 1.15,
-    defaultBody:
-      "Experiential education in teamwork, resilience, and leadership, part of the national Outward Bound network.",
   },
   {
     key: "hbcus",
     name: "HBCUs Outside",
     logo: hbcusOutsideLogo,
-    x: 66,
-    y: 26,
-    scale: 1.05,
-    defaultBody:
-      "Belonging and cross-campus community, built in quality nature, carried back to campus.",
+    tier: "partner",
+    role: "Belonging",
+    x: 74,
+    y: 38,
+    scale: 1,
+  },
+  {
+    key: "ncobs",
+    name: "North Carolina Outward Bound School",
+    logo: ncobsCream,
+    tier: "partner",
+    role: "Experiential Training",
+    x: 36,
+    y: 62,
+    scale: 1.15,
   },
   {
     key: "basecamp",
-    name: "Basecamp",
-    logo: basecampCream,
-    x: 82,
-    y: 64,
-    scale: 1.1,
-    defaultBody:
-      "The mentor network. A year of real conversations with people already working in the outdoor industry.",
+    name: "Basecamp Outdoor",
+    logo: basecampOutdoorLogo,
+    tier: "partner",
+    role: "Mentorship",
+    x: 66,
+    y: 63,
+    scale: 1.05,
   },
+  { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 9, y: 20 },
+  { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 91, y: 19 },
+  { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 7, y: 62, scale: 0.9 },
+  { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 22, y: 88 },
+  { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 55, y: 90 },
+  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 88, y: 78 },
 ];
 
-const CONSTELLATION_EDGES: [string, string][] = [
-  ["sierra", "ncobs"],
-  ["ncobs", "hbcus"],
-  ["hbcus", "basecamp"],
+const CONSTELLATION_EDGES: Edge[] = [
   ["sierra", "hbcus"],
+  ["sierra", "ncobs"],
+  ["ncobs", "basecamp"],
+  ["basecamp", "hbcus"],
+  ["sierra", "outcome"],
+  ["hbcus", "outcome"],
+  ["tsu", "sierra"],
+  ["spelman", "sierra"],
+  ["morehouse", "ncobs"],
+  ["cau", "basecamp"],
+  ["msm", "hbcus"],
+  ["ncat", "hbcus"],
 ];
 
 const Partnership = () => (
@@ -205,35 +227,25 @@ const Partnership = () => (
       />
 
       <div className="mt-12">
-        <PartnershipConstellation stars={PARTNERS} edges={CONSTELLATION_EDGES} />
+        <PartnershipConstellation
+          stars={STARS}
+          edges={CONSTELLATION_EDGES}
+          northStarLabelKey="constellation_north_label"
+          northStarLabelDefault="The Outcome"
+        />
       </div>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {PARTNERS.map((p) => (
-          <article
-            key={p.key}
-            className="flex flex-col rounded-2xl p-6"
-            style={{
-              background: "rgba(245,239,227,0.05)",
-              border: "1px solid rgba(232,192,122,0.22)",
-            }}
-          >
-            <span className="mb-4 block h-[5px] w-[5px] rounded-full" style={{ background: C.gold, boxShadow: "0 0 10px 3px rgba(232,192,122,0.5)" }} />
-            <h3 className="text-[17px] mb-3" style={{ ...display, color: C.cream }}>
-              <EditableText settingKey={`partner_${p.key}_name`} defaultText={p.name} as="span" />
-            </h3>
-            <p className="text-[15px]" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
-              <EditableText settingKey={`partner_${p.key}_body`} defaultText={p.defaultBody} as="span" multiline />
-            </p>
-          </article>
-        ))}
-      </div>
-
-      <div className="mt-10 rounded-2xl p-6 sm:p-8" style={{ background: "rgba(45,90,61,0.28)", border: "1px solid rgba(245,239,227,0.10)" }}>
-        <p className="text-[15px] sm:text-base" style={{ ...body, color: C.creamDim, lineHeight: 1.65 }}>
+      <div
+        className="mt-10 rounded-2xl p-7 sm:p-10"
+        style={{ background: "rgba(232,192,122,0.08)", border: "1px solid rgba(232,192,122,0.28)" }}
+      >
+        <p className="text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.24em", color: C.gold }}>
+          <EditableText settingKey="outcome_label" defaultText="THE OUTCOME" as="span" />
+        </p>
+        <p className="mt-5 text-lg sm:text-2xl" style={{ ...body, color: C.cream, lineHeight: 1.5, fontWeight: 500 }}>
           <EditableText
-            settingKey="partnership_facts"
-            defaultText="The training runs October 1 to 4, 2026 at Cedar Rock, North Carolina, across seven HBCU campuses including Tennessee State University, North Carolina A&T, and the four universities of the Atlanta University Consortium. 3 to 5 student leaders per campus return home certified."
+            settingKey="outcome_body"
+            defaultText="Certified leaders equipped to return to campus, lead belonging-centered experiences, train the next generation of leaders, and stay connected through a full academic year, positioning them to succeed as students and advance in their careers."
             as="span"
             multiline
           />
@@ -242,6 +254,142 @@ const Partnership = () => (
     </div>
   </section>
 );
+
+/* ============================ WHY THIS MATTERS ============================ */
+
+const TENETS = [
+  {
+    key: "representation",
+    name: "Representation",
+    body: "A pathway of leaders drawn directly from the communities you're trying to reach.",
+  },
+  {
+    key: "pathways",
+    name: "Pathways",
+    body: "Turning participants into certified instructors, and over time, into employees.",
+  },
+  {
+    key: "access",
+    name: "Access",
+    body: "Activating underprogrammed locations with communities that fuel long-term partnership.",
+  },
+  {
+    key: "wellbeing",
+    name: "Wellbeing",
+    body: "A measurable sense of belonging, treated as a student success metric in its own right.",
+  },
+];
+
+const WhyThisMatters = () => (
+  <section style={{ background: C.forest }} className="py-20 sm:py-28">
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="tenets_eyebrow" defaultText="WHY THIS MATTERS" />
+      <h2 className="mt-4 max-w-3xl text-[28px] sm:text-[42px]" style={{ ...display, color: C.cream }}>
+        <EditableText
+          settingKey="tenets_headline"
+          defaultText="Four things this program is built to do."
+          as="span"
+        />
+      </h2>
+
+      <div className="mt-14 grid gap-px sm:grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden" style={{ background: "rgba(232,192,122,0.20)" }}>
+        {TENETS.map((t, i) => (
+          <article key={t.key} className="p-7 sm:p-8" style={{ background: C.forest }}>
+            <span className="block text-[42px] leading-none" style={{ ...display, color: C.gold }}>
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 className="mt-5 text-[20px] sm:text-[24px]" style={{ ...display, color: C.cream }}>
+              <EditableText settingKey={`tenet_${t.key}_name`} defaultText={t.name} as="span" />
+            </h3>
+            <p className="mt-4 text-[15px]" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
+              <EditableText settingKey={`tenet_${t.key}_body`} defaultText={t.body} as="span" multiline />
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ============================ THE PILOT IN MOTION ============================ */
+
+const PILOT_ROWS = [
+  {
+    key: "when",
+    label: "Dates and location",
+    body: "October 1 to 4, 2026 at Cedar Rock, North Carolina.",
+  },
+  {
+    key: "campuses",
+    label: "Target campuses",
+    body: "Seven, including Tennessee State University, North Carolina A&T, and the four universities of the Atlanta University Consortium.",
+  },
+  {
+    key: "leaders",
+    label: "Student leaders",
+    body: "3 to 5 per campus, already leading on their campuses, returning home certified.",
+  },
+  {
+    key: "after",
+    label: "Beyond October",
+    body: "Certified leaders run their own Sierra Club outings, continue NCOBS virtual modules, build mental health literacy with a wellbeing partner, and stay connected year-round through HBCUs Outside.",
+  },
+];
+
+const PILOT_ROLES = [
+  { key: "sierra", name: "Sierra Club", body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
+  { key: "ncobs", name: "North Carolina Outward Bound School", body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
+  { key: "hbcus", name: "HBCUs Outside", body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
+];
+
+const PilotInMotion = () => (
+  <section style={{ background: C.cream }} className="py-20 sm:py-28">
+    <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <Eyebrow settingKey="pilot_eyebrow" defaultText="THE PILOT IN MOTION" tone={C.clay} />
+      <h2 className="mt-4 max-w-3xl text-[28px] sm:text-[42px]" style={{ ...display, color: C.forest }}>
+        <EditableText settingKey="pilot_headline" defaultText="What is already scheduled." as="span" />
+      </h2>
+
+      <div className="mt-12 rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(18,36,28,0.14)" }}>
+        {PILOT_ROWS.map((r, i) => (
+          <div
+            key={r.key}
+            className="grid gap-2 sm:grid-cols-[220px_1fr] px-6 sm:px-8 py-6"
+            style={{
+              borderTop: i === 0 ? "none" : "1px solid rgba(18,36,28,0.12)",
+              background: i % 2 === 0 ? "rgba(45,90,61,0.05)" : "transparent",
+            }}
+          >
+            <p className="text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.18em", color: C.clay }}>
+              <EditableText settingKey={`pilot_${r.key}_label`} defaultText={r.label} as="span" />
+            </p>
+            <p className="text-[15px] sm:text-base" style={{ ...body, color: "rgba(18,36,28,0.82)", lineHeight: 1.6 }}>
+              <EditableText settingKey={`pilot_${r.key}_body`} defaultText={r.body} as="span" multiline />
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-10 grid gap-6 sm:grid-cols-3">
+        {PILOT_ROLES.map((p) => (
+          <article
+            key={p.key}
+            className="rounded-2xl p-6"
+            style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
+          >
+            <h3 className="text-[16px]" style={{ ...display, color: C.forest }}>
+              <EditableText settingKey={`pilotrole_${p.key}_name`} defaultText={p.name} as="span" />
+            </h3>
+            <p className="mt-3 text-[15px]" style={{ ...body, color: "rgba(18,36,28,0.72)", lineHeight: 1.6 }}>
+              <EditableText settingKey={`pilotrole_${p.key}_body`} defaultText={p.body} as="span" multiline />
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 
 
 /* ========================= WHAT BASECAMP IS BUILDING ========================= */
