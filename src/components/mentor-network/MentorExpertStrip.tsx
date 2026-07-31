@@ -12,32 +12,29 @@ const HIDDEN_KEY = "mentor_strip_hidden";
  * Nothing here writes to industry_experts or expert_city_assignments.
  * Hiding is stored as a page setting only.
  */
-const MentorExpertStrip = ({ limit = 24 }: { limit?: number }) => {
+const MentorExpertStrip = ({ limit = 200 }: { limit?: number }) => {
   const { settings, setSetting, isAdmin } = useEditableTextContext();
   const [experts, setExperts] = useState<Expert[]>([]);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase
-        .from("expert_city_assignments")
-        .select(
-          "expert_type, display_order, industry_experts(id, full_name, photo_url, current_company, job_title, linkedin_url, slug, field_of_work, ask_me_about, years_in_industry, years_in_city, niche_interests, previous_companies, favorite_media, email, company_domains, status, created_by, created_at, updated_at)"
-        )
-        .eq("published", true);
+        .from("industry_experts")
+        .select("*")
+        .not("photo_url", "is", null)
+        .order("full_name", { ascending: true });
 
       const seen = new Set<string>();
       const rows: Expert[] = [];
-      ((data as any[]) || [])
-        .filter((r) => r.expert_type !== "brand_rep" && r.industry_experts)
-        .forEach((r) => {
-          const e = r.industry_experts as Expert;
-          if (!e.photo_url || seen.has(e.id)) return;
-          seen.add(e.id);
-          rows.push(e);
-        });
+      ((data as any[]) || []).forEach((e: Expert) => {
+        if (!e.photo_url || seen.has(e.id)) return;
+        seen.add(e.id);
+        rows.push(e);
+      });
       setExperts(rows.slice(0, limit));
     })();
   }, [limit]);
+
 
   const hidden = useMemo<string[]>(() => {
     try {
