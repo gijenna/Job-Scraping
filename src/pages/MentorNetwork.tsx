@@ -435,6 +435,23 @@ const WhyThisMatters = () => (
           </article>
         ))}
       </div>
+
+      <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {TENET_PHOTOS.map((src, i) => (
+          <div
+            key={src}
+            className={`overflow-hidden rounded-2xl ${i > 1 ? "hidden sm:block" : ""}`}
+            style={{ border: "1px solid rgba(232,192,122,0.18)" }}
+          >
+            <img
+              src={src}
+              alt="Basecamp community members connecting outdoors"
+              loading="lazy"
+              className="h-40 sm:h-52 w-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 );
