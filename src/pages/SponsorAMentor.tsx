@@ -10,7 +10,7 @@ import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
 import ncobsLogo from "@/assets/mentor-network/ncobs.png";
 import basecampGreen from "@/assets/mentor-network/basecamp-green.png";
-import heroAsset from "@/assets/mentor-network/hero.jpg.asset.json";
+import heroAsset from "@/assets/mn26/Copy_of_AnthonyMarz_Basecamp-183.jpg.asset.json";
 
 const PAGE_SLUG = "sponsor-a-mentor";
 
