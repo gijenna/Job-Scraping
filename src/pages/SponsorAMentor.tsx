@@ -10,6 +10,7 @@ import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
 import ncobsLogo from "@/assets/mentor-network/ncobs.png";
 import basecampGreen from "@/assets/mentor-network/basecamp-green.png";
+import heroAsset from "@/assets/mentor-network/hero.jpg.asset.json";
 
 const PAGE_SLUG = "sponsor-a-mentor";
 
@@ -56,10 +57,23 @@ const scrollToOffer = () => {
 /* --------------------------------- 1. hero -------------------------------- */
 
 const Hero = () => (
-  <section className="px-6 py-20 sm:py-28" style={{ background: C.forestDeep }}>
-    <div className="mx-auto max-w-4xl">
+  <section className="relative overflow-hidden px-6 py-24 sm:py-32" style={{ background: C.forestDeep }}>
+    <img
+      src={heroAsset.url}
+      alt="Outdoor industry professional smiling in conversation with a recruiter"
+      className="absolute inset-0 h-full w-full object-cover"
+      style={{ transform: "scaleX(-1)" }}
+    />
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          "linear-gradient(90deg, rgba(12,25,19,0.95) 0%, rgba(12,25,19,0.88) 45%, rgba(12,25,19,0.35) 100%)",
+      }}
+    />
+    <div className="relative mx-auto max-w-4xl">
       <Eyebrow k="hero_eyebrow" d="FOR BRANDS" />
-      <h1 className="mt-5 text-[30px] sm:text-[46px]" style={{ ...display, color: C.cream }}>
+      <h1 className="mt-5 max-w-3xl text-[30px] sm:text-[46px]" style={{ ...display, color: C.cream }}>
         <T
           k="hero_headline"
           d="The brands that actually diversify this industry aren't the ones with the best statement. They're the ones with a mentor on the roster."
