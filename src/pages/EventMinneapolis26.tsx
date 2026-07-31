@@ -6,6 +6,8 @@ import MNExpertGrid from "@/components/minneapolis/MNExpertGrid";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
 import MNGallery from "@/components/minneapolis/MNGallery";
 import MNSponsors from "@/components/minneapolis/MNSponsors";
+import MNBrandCTA from "@/components/minneapolis/MNBrandCTA";
+import MNSlowRollCTA from "@/components/minneapolis/MNSlowRollCTA";
 import MNFinalCTA from "@/components/minneapolis/MNFinalCTA";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
