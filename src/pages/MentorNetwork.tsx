@@ -859,12 +859,12 @@ const MentorNetworkContent = () => {
 
       <OrderedSections
         sections={[
-          { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
+          { key: "hero", content: <Hero onBrand={() => setSponsorOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
           { key: "why-this-matters", content: <WhyThisMatters /> },
           {
             key: "be-part-of-this-top",
-            content: <BePartOfThis idSuffix="top" variant="dark" onMentor={() => setMentorOpen(true)} />,
+            content: <BePartOfThis idSuffix="top" variant="dark" onBrand={() => setSponsorOpen(true)} />,
           },
           { key: "pilot-in-motion", content: <PilotInMotion /> },
           {
@@ -882,8 +882,9 @@ const MentorNetworkContent = () => {
           { key: "for-students", content: <ForStudents /> },
           {
             key: "be-part-of-this-bottom",
-            content: <BePartOfThis idSuffix="bottom" variant="light" onMentor={() => setMentorOpen(true)} />,
+            content: <BePartOfThis idSuffix="bottom" variant="light" onBrand={() => setSponsorOpen(true)} />,
           },
+
           { key: "supported-by", content: <SupportedBy /> },
         ]}
       />
