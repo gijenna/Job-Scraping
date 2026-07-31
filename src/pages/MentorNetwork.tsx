@@ -500,11 +500,12 @@ const PILOT_ROWS = [
 ];
 
 const PILOT_ROLES = [
-  { key: "sierra", name: "Sierra Club", body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
-  { key: "ncobs", name: "North Carolina Outward Bound School", body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
-  { key: "hbcus", name: "HBCUs Outside", body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
-  { key: "basecamp", name: "Basecamp Outdoor", body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
+  { key: "ncobs", name: "North Carolina Outward Bound School", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
+  { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo, body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
+  { key: "basecamp", name: "Basecamp Outdoor", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
 ];
+
 
 const PilotInMotion = () => (
   <section style={{ background: C.cream }} className="py-20 sm:py-28">
