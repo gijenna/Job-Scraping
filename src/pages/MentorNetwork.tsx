@@ -594,8 +594,14 @@ const CORE_LOGOS = [
   { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
   { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
   { name: "North Carolina Outward Bound School", src: ncobsLogo, url: "https://www.ncobs.org/" },
-  { name: "Basecamp", src: basecampLogo, url: "https://basecampoutdoorevents.com" },
+  { name: "Basecamp Outdoor", src: basecampGreen, url: "https://basecampoutdoorevents.com" },
 ];
+
+const TierLabel = ({ settingKey, defaultText }: { settingKey: string; defaultText: string }) => (
+  <p className="text-[11px] font-bold uppercase mb-5" style={{ ...body, letterSpacing: "0.22em", color: C.clay }}>
+    <EditableText settingKey={settingKey} defaultText={defaultText} as="span" />
+  </p>
+);
 
 const SupportedBy = () => {
   const { isAdmin } = useEditableTextContext();
@@ -618,53 +624,59 @@ const SupportedBy = () => {
           )}
         </div>
 
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
-          {CORE_LOGOS.map((l) => (
-            <a
-              key={l.name}
-              href={l.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-28 items-center justify-center rounded-2xl px-6 transition-transform hover:scale-[1.02]"
-              style={{
-                background: l.name === "HBCUs Outside" ? C.forest : "#ffffff",
-                border: "1px solid rgba(18,36,28,0.10)",
-              }}
-            >
-              <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
-            </a>
-          ))}
+        <div className="mt-12">
+          <TierLabel settingKey="supported_tier_partners" defaultText="PROGRAM PARTNERS" />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {CORE_LOGOS.map((l) => (
+              <a
+                key={l.name}
+                href={l.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-32 items-center justify-center rounded-2xl px-6 transition-transform hover:scale-[1.02]"
+                style={{
+                  background: l.name === "HBCUs Outside" ? C.forest : "#ffffff",
+                  border: "1px solid rgba(18,36,28,0.10)",
+                }}
+              >
+                <img src={l.src} alt={l.name} className="max-h-16 max-w-full w-auto object-contain" />
+              </a>
+            ))}
+          </div>
+        </div>
 
+        <div className="mt-14">
+          <TierLabel settingKey="supported_tier_supporters" defaultText="SUPPORTERS BRINGING IN MENTORS" />
+          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6 gap-4">
+            {logos.map((logo) => (
+              <a
+                key={logo.id}
+                href={logo.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-20 items-center justify-center rounded-xl px-4"
+                style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
+              >
+                {logo.logo_url ? (
+                  <img src={logo.logo_url} alt={logo.name} className="max-h-10 max-w-full w-auto object-contain" />
+                ) : (
+                  <span className="text-[13px] font-semibold text-center" style={{ ...body, color: C.forest }}>{logo.name}</span>
+                )}
+              </a>
+            ))}
 
-
-          {logos.map((logo) => (
-            <a
-              key={logo.id}
-              href={logo.url || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-28 items-center justify-center rounded-2xl px-6"
-              style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
-            >
-              {logo.logo_url ? (
-                <img src={logo.logo_url} alt={logo.name} className="max-h-16 max-w-full w-auto object-contain" />
-              ) : (
-                <span className="text-sm font-semibold" style={{ ...body, color: C.forest }}>{logo.name}</span>
-              )}
-            </a>
-          ))}
-
-          {[0, 1].map((i) => (
-            <div
-              key={`placeholder-${i}`}
-              className="flex h-28 items-center justify-center rounded-2xl"
-              style={{ background: "transparent", border: "1px dashed rgba(18,36,28,0.22)" }}
-            >
-              <span className="text-[12px] font-bold uppercase tracking-[0.18em]" style={{ ...body, color: "rgba(18,36,28,0.45)" }}>
-                Your logo here
-              </span>
-            </div>
-          ))}
+            {[0, 1].map((i) => (
+              <div
+                key={`placeholder-${i}`}
+                className="flex h-20 items-center justify-center rounded-xl"
+                style={{ background: "transparent", border: "1px dashed rgba(18,36,28,0.22)" }}
+              >
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-center" style={{ ...body, color: "rgba(18,36,28,0.45)" }}>
+                  Your logo here
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
