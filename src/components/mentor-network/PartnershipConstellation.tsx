@@ -157,8 +157,8 @@ const PartnershipConstellation = ({
                 <span
                   className="absolute rounded-full mn-glow"
                   style={{
-                    width: s.tier === "north" ? 240 : s.tier === "partner" ? 190 : 110,
-                    height: s.tier === "north" ? 240 : s.tier === "partner" ? 190 : 110,
+                    width: s.tier === "north" ? 240 : s.tier === "partner" ? 250 : 110,
+                    height: s.tier === "north" ? 240 : s.tier === "partner" ? 250 : 110,
                     top: "50%",
                     transform: "translateY(-50%)",
                     background: `radial-gradient(circle, rgba(232,192,122,${
