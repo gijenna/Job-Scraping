@@ -614,7 +614,7 @@ const BasecampSection = ({ onSponsor }: { onSponsor: () => void; onMentor?: () =
               as="span"
             />
           </p>
-          <MentorExpertStrip limit={8} />
+          <MentorExpertStrip />
           <p className="mt-6 text-sm" style={{ ...body, color: C.creamDim }}>
             <EditableText
               settingKey="building_cards_caption"
@@ -857,16 +857,18 @@ const SupportedBy = () => {
 
 const MentorNetworkContent = () => {
   const [sponsorOpen, setSponsorOpen] = useState(false);
+  const [pathwayOpen, setPathwayOpen] = useState(false);
   const [mentorOpen, setMentorOpen] = useState(false);
 
   return (
     <div style={{ background: C.cream }}>
       <Fonts />
-      <PageMetaApplier title="Basecamp Industry Expert Mentor Network" />
+      <PageMetaApplier title="HBCU Mentor Network | Basecamp Outdoor" />
+      <MentorNav />
 
       <OrderedSections
         sections={[
-          { key: "hero", content: <Hero onBrand={() => setSponsorOpen(true)} /> },
+          { key: "hero", content: <Hero onBrand={() => setPathwayOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
           { key: "why-this-matters", content: <WhyThisMatters /> },
           {
@@ -898,6 +900,7 @@ const MentorNetworkContent = () => {
 
       <SiteFooter />
 
+      <PathwayDialog open={pathwayOpen} onOpenChange={setPathwayOpen} />
       <SponsorInquiryDialog open={sponsorOpen} onOpenChange={setSponsorOpen} />
       <MentorApplyDialog open={mentorOpen} onOpenChange={setMentorOpen} />
     </div>
