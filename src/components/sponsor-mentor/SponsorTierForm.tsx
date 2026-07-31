@@ -14,8 +14,8 @@ const C = {
 
 const TIERS = [
   "Mentor Partner, $1,000",
-  "Megaphone Partner, $5,000",
-  "Not sure yet",
+  "Full Send Partner, $5,000",
+  "I need a 3rd option",
 ];
 
 const schema = z.object({
@@ -173,7 +173,7 @@ const SponsorTierForm = () => {
         className="w-full rounded-full px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] transition-transform hover:scale-[1.01] disabled:opacity-60"
         style={{ background: C.clay, color: "#fff" }}
       >
-        {busy ? "Sending" : "Send it"}
+        {busy ? "Sending" : "Chat with Jenna"}
       </button>
     </form>
   );
