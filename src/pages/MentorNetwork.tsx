@@ -13,8 +13,15 @@ import {
   MentorApplyDialog,
   StudentWaitlistForm,
 } from "@/components/mentor-network/MentorForms";
+import PartnershipConstellation, {
+  ConstellationStyles,
+  ConstellationHeading,
+} from "@/components/mentor-network/PartnershipConstellation";
 import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
+import sierraClubCream from "@/assets/mentor-network/sierra-club-cream.png";
+import ncobsCream from "@/assets/mentor-network/ncobs-cream.png";
+import basecampCream from "@/assets/mentor-network/basecamp-cream.png";
 import basecampLogo from "@/assets/Basecamp_Logo_MAIN_1.png";
 import heroPhoto from "@/assets/event-group-photo.jpg";
 
