@@ -375,8 +375,8 @@ const BePartOfThis = ({
               />
             </p>
             <div className="mt-7">
-              <button
-                onClick={onMentor}
+              <a
+                href="/mentor-experts"
                 className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
                 style={{ background: C.gold, color: C.forest, ...body }}
               >
@@ -385,8 +385,9 @@ const BePartOfThis = ({
                   defaultText="Contribute a mentor"
                   as="span"
                 />
-              </button>
+              </a>
             </div>
+
           </div>
         </div>
       </div>
