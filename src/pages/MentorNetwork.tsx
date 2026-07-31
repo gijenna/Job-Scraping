@@ -850,6 +850,10 @@ const MentorNetworkContent = () => {
           { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
           { key: "why-this-matters", content: <WhyThisMatters /> },
+          {
+            key: "be-part-of-this-top",
+            content: <BePartOfThis idSuffix="top" variant="dark" onMentor={() => setMentorOpen(true)} />,
+          },
           { key: "pilot-in-motion", content: <PilotInMotion /> },
           {
             key: "basecamp-building",
