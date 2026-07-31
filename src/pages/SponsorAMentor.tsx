@@ -3,6 +3,7 @@ import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
 import SiteFooter from "@/components/SiteFooter";
+import MentorNav from "@/components/mentor-network/MentorNav";
 import SponsorExpertRow from "@/components/sponsor-mentor/SponsorExpertRow";
 import SponsorTierForm from "@/components/sponsor-mentor/SponsorTierForm";
 import NewsletterProof from "@/components/sponsor-mentor/NewsletterProof";
@@ -360,7 +361,8 @@ const FormSection = () => (
 
 const SponsorAMentorInner = () => (
   <div style={{ background: C.forest }}>
-    <PageMetaApplier title="Sponsor a Mentor | Basecamp Outdoor" />
+    <PageMetaApplier title="Sponsor a Mentor | HBCU Mentor Network" />
+    <MentorNav backHref="/mentor-network" backLabel="Back to HBCU Mentor Network" />
     <OrderedSections
       sections={[
         { key: "hero", content: <Hero /> },
