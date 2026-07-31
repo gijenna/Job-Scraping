@@ -25,6 +25,7 @@ import sierraClubCream from "@/assets/mentor-network/sierra-club-cream.png";
 import ncobsCream from "@/assets/mentor-network/ncobs-cream.png";
 import ncobsLogo from "@/assets/mentor-network/ncobs.png";
 import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
+import basecampGreen from "@/assets/mentor-network/basecamp-green.png";
 import tennesseeStateLogo from "@/assets/mentor-network/campuses/tennessee-state.png";
 import ncatLogo from "@/assets/mentor-network/campuses/nc-at.png";
 import spelmanLogo from "@/assets/mentor-network/campuses/spelman.png";
