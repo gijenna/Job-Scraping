@@ -114,30 +114,36 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
           />
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4">
-          <EditableLink
-            textKey="hero_cta_primary_text"
-            urlKey="hero_cta_primary_url"
-            defaultText="Talk to Ron Griswell"
-            defaultUrl="mailto:ron@hbcusoutside.com"
-            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
-            style={{ background: C.clay, color: "#fff", boxShadow: "0 14px 40px rgba(196,101,74,0.35)" }}
-          />
+        <div className="mt-10 flex flex-col gap-5">
           <button
-            onClick={onMentor}
-            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-colors"
-            style={{ border: `2px solid ${C.gold}`, color: C.gold, ...body }}
+            onClick={onBrand}
+            className="inline-flex w-full items-center justify-center rounded-full px-8 py-5 text-center text-[15px] sm:text-lg font-bold uppercase tracking-[0.1em] transition-transform hover:scale-[1.02] sm:w-auto sm:self-start"
+            style={{ ...body, background: C.clay, color: "#fff", boxShadow: "0 14px 40px rgba(196,101,74,0.35)" }}
           >
-            <EditableText settingKey="hero_cta_secondary" defaultText="Become a mentor" as="span" />
+            <EditableText
+              settingKey="hero_cta_primary_text"
+              defaultText="Help us build a braided river of talent"
+              as="span"
+            />
           </button>
-          <a
-            href="#students"
-            className="text-sm font-semibold underline underline-offset-4"
-            style={{ ...body, color: C.creamDim }}
-          >
-            <EditableText settingKey="hero_cta_tertiary" defaultText="I'm a student" as="span" />
-          </a>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href="/mentor-experts"
+              className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] transition-colors"
+              style={{ border: `2px solid ${C.gold}`, color: C.gold, ...body }}
+            >
+              <EditableText settingKey="hero_cta_secondary" defaultText="Become a mentor" as="span" />
+            </a>
+            <a
+              href="#students"
+              className="text-xs font-semibold uppercase tracking-[0.14em] underline underline-offset-4"
+              style={{ ...body, color: C.creamDim }}
+            >
+              <EditableText settingKey="hero_cta_tertiary" defaultText="I'm a student" as="span" />
+            </a>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
