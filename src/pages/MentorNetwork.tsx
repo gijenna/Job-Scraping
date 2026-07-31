@@ -563,7 +563,7 @@ const PilotInMotion = () => (
 
 /* ========================= WHAT BASECAMP IS BUILDING ========================= */
 
-const BasecampSection = ({ onSponsor, onMentor }: { onSponsor: () => void; onMentor: () => void }) => (
+const BasecampSection = ({ onSponsor }: { onSponsor: () => void; onMentor?: () => void }) => (
   <section style={{ background: C.forest }} className="py-20 sm:py-28">
     <div className="max-w-6xl mx-auto px-5 sm:px-8">
       <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-start">
@@ -593,13 +593,13 @@ const BasecampSection = ({ onSponsor, onMentor }: { onSponsor: () => void; onMen
             >
               <EditableText settingKey="building_cta_sponsor" defaultText="Sponsor a mentor" as="span" />
             </button>
-            <button
-              onClick={onMentor}
-              className="rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+            <a
+              href="/mentor-experts"
+              className="inline-flex items-center justify-center rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
               style={{ background: C.clay, color: "#fff", ...body }}
             >
               <EditableText settingKey="building_cta_mentor" defaultText="Become a mentor" as="span" />
-            </button>
+            </a>
           </div>
         </div>
 
@@ -705,7 +705,7 @@ const ForBrands = ({ onSponsor }: { onSponsor: () => void }) => (
 
 /* ================================ MENTORS ================================ */
 
-const ForMentors = ({ onMentor }: { onMentor: () => void }) => (
+const ForMentors = ({ onMentor }: { onMentor?: () => void }) => (
   <section style={{ background: C.cream }} className="py-20 sm:py-28">
     <div className="max-w-5xl mx-auto px-5 sm:px-8">
       <Eyebrow settingKey="mentors_eyebrow" defaultText="FOR MENTORS" tone={C.clay} />
@@ -720,13 +720,13 @@ const ForMentors = ({ onMentor }: { onMentor: () => void }) => (
           multiline
         />
       </p>
-      <button
-        onClick={onMentor}
-        className="mt-9 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+      <a
+        href="/mentor-experts"
+        className="mt-9 inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
         style={{ background: C.clay, color: "#fff", ...body }}
       >
         <EditableText settingKey="mentors_cta" defaultText="Apply to mentor" as="span" />
-      </button>
+      </a>
     </div>
   </section>
 );
