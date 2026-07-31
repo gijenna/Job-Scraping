@@ -78,7 +78,7 @@ const Rule = ({ color = C.gold }: { color?: string }) => (
 
 /* ================================ HERO ================================ */
 
-const Hero = ({ onMentor }: { onMentor: () => void }) => (
+const Hero = ({ onBrand }: { onBrand: () => void }) => (
   <section className="relative overflow-hidden" style={{ background: C.forestDeep }}>
     <div className="absolute inset-0">
       <img src={heroPhoto} alt="Outdoor industry professionals talking together outside" className="h-full w-full object-cover" />
