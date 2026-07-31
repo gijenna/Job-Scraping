@@ -16,6 +16,8 @@ import {
 import PartnershipConstellation, {
   ConstellationStyles,
   ConstellationHeading,
+  type ConstellationStar,
+  type Edge,
 } from "@/components/mentor-network/PartnershipConstellation";
 import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
