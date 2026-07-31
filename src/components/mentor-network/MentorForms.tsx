@@ -275,7 +275,7 @@ export const StudentWaitlistForm = () => {
   if (done) {
     return (
       <p className="text-sm font-semibold" style={{ color: C.gold }}>
-        You're on the list. We'll email you when the quiz opens.
+        Gotchu. We'll email you when the quiz opens.
       </p>
     );
   }
