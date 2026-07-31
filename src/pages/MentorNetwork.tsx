@@ -492,6 +492,7 @@ const PILOT_ROLES = [
   { key: "sierra", name: "Sierra Club", body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
   { key: "ncobs", name: "North Carolina Outward Bound School", body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
   { key: "hbcus", name: "HBCUs Outside", body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
+  { key: "basecamp", name: "Basecamp Outdoor", body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
 ];
 
 const PilotInMotion = () => (
