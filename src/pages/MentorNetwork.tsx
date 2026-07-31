@@ -22,9 +22,16 @@ import sierraClubLogo from "@/assets/mentor-network/sierra-club.png";
 import sierraClubCream from "@/assets/mentor-network/sierra-club-cream.png";
 import ncobsCream from "@/assets/mentor-network/ncobs-cream.png";
 import ncobsLogo from "@/assets/mentor-network/ncobs.png";
-import basecampCream from "@/assets/mentor-network/basecamp-cream.png";
-import basecampLogo from "@/assets/Basecamp_Logo_MAIN_1.png";
-import heroPhoto from "@/assets/event-group-photo.jpg";
+import basecampOutdoorLogo from "@/assets/basecamp-outdoor-logo.png";
+import tennesseeStateLogo from "@/assets/mentor-network/campuses/tennessee-state.png";
+import ncatLogo from "@/assets/mentor-network/campuses/nc-at.png";
+import spelmanLogo from "@/assets/mentor-network/campuses/spelman.png";
+import morehouseLogo from "@/assets/mentor-network/campuses/morehouse.png";
+import clarkAtlantaLogo from "@/assets/mentor-network/campuses/clark-atlanta.png";
+import morehouseMedicineLogo from "@/assets/mentor-network/campuses/morehouse-medicine.png";
+import heroAsset from "@/assets/mentor-network/hero.jpg.asset.json";
+
+const heroPhoto = heroAsset.url;
 
 const PAGE_SLUG = "mentor-network";
 
