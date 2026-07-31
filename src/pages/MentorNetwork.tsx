@@ -140,9 +140,9 @@ const PARTNERS = [
     key: "sierra",
     name: "Sierra Club",
     logo: sierraClubCream,
-    x: 16,
-    y: 30,
-    scale: 0.85,
+    x: 18,
+    y: 32,
+    scale: 1.05,
     defaultBody:
       "Certification, insurance, and advocacy. Students finish as officially recognized Sierra Club leaders.",
   },
