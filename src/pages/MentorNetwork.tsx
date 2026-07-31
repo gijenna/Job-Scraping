@@ -186,12 +186,12 @@ const STARS: ConstellationStar[] = [
     y: 66,
     scale: 1.1,
   },
-  { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 9, y: 12 },
-  { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 91, y: 11, scale: 1.15 },
-  { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 6, y: 48, scale: 0.9 },
-  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 94, y: 48 },
-  { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 16, y: 89 },
-  { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 84, y: 89 },
+  { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 13, y: 13 },
+  { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 87, y: 12, scale: 1.1 },
+  { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 10, y: 49, scale: 0.9 },
+  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 90, y: 49 },
+  { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
+  { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
 ];
 
 const CONSTELLATION_EDGES: Edge[] = [
