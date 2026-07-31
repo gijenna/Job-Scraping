@@ -39,8 +39,8 @@ export type Edge = [string, string];
 
 const TIER_SIZE: Record<StarTier, { h: number; w: number; label: number; dot: number }> = {
   north: { h: 0, w: 240, label: 13, dot: 9 },
-  partner: { h: 84, w: 210, label: 10, dot: 7 },
-  campus: { h: 46, w: 132, label: 9, dot: 4 },
+  partner: { h: 124, w: 290, label: 11, dot: 8 },
+  campus: { h: 48, w: 138, label: 9, dot: 4 },
 };
 
 const StarField = () => {
