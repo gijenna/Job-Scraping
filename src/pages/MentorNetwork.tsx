@@ -435,6 +435,7 @@ const ForStudents = () => (
 const CORE_LOGOS = [
   { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
   { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
+  { name: "North Carolina Outward Bound School", src: ncobsLogo, url: "https://www.ncobs.org/" },
   { name: "Basecamp", src: basecampLogo, url: "https://basecampoutdoorevents.com" },
 ];
 
