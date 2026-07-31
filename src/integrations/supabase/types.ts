@@ -1515,6 +1515,7 @@ export type Database = {
           id: string
           message: string | null
           status: string
+          tier: string | null
           updated_at: string
         }
         Insert: {
@@ -1525,6 +1526,7 @@ export type Database = {
           id?: string
           message?: string | null
           status?: string
+          tier?: string | null
           updated_at?: string
         }
         Update: {
@@ -1535,6 +1537,7 @@ export type Database = {
           id?: string
           message?: string | null
           status?: string
+          tier?: string | null
           updated_at?: string
         }
         Relationships: []
