@@ -8,11 +8,14 @@ import AdminLogoManager from "@/components/event/AdminLogoManager";
 import { useEventLogos } from "@/hooks/useEventLogos";
 import SiteFooter from "@/components/SiteFooter";
 import MentorExpertStrip from "@/components/mentor-network/MentorExpertStrip";
+import MentorNav from "@/components/mentor-network/MentorNav";
 import {
   SponsorInquiryDialog,
   MentorApplyDialog,
+  PathwayDialog,
   StudentWaitlistForm,
 } from "@/components/mentor-network/MentorForms";
+
 import PartnershipConstellation, {
   ConstellationStyles,
   ConstellationHeading,
