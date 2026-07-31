@@ -228,6 +228,14 @@ export const PathwayDialog = ({
             </span>
           </button>
         </div>
+        <a
+          href="/mentor-experts"
+          className="block text-center text-xs font-semibold underline underline-offset-4"
+          style={{ color: C.moss }}
+        >
+          I'm mentoring as an individual, take me to the card builder
+        </a>
+
       </DialogContent>
     </Dialog>
   );
