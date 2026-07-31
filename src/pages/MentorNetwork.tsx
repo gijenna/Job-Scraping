@@ -546,7 +546,13 @@ const PilotInMotion = () => (
             style={{ background: "#ffffff", border: "1px solid rgba(18,36,28,0.10)" }}
           >
             <div className="flex items-center gap-3">
-              <img src={p.logo} alt={p.name} loading="lazy" className="h-10 w-10 shrink-0 object-contain" />
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
+                style={{ background: p.key === "hbcus" ? C.forest : "transparent" }}
+              >
+                <img src={p.logo} alt={p.name} loading="lazy" className="h-9 w-9 object-contain" />
+              </span>
+
               <h3 className="text-[16px]" style={{ ...display, color: C.forest }}>
                 <EditableText settingKey={`pilotrole_${p.key}_name`} defaultText={p.name} as="span" />
               </h3>
