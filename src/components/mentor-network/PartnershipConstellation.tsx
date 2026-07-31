@@ -18,19 +18,30 @@ const display: React.CSSProperties = {
   lineHeight: 1.02,
 };
 
+export type StarTier = "north" | "partner" | "campus";
+
 export type ConstellationStar = {
   key: string;
   name: string;
   logo: string | null;
+  tier: StarTier;
   /** percentage coordinates inside the sky box */
   x: number;
   y: number;
   /** relative logo scale */
   scale?: number;
+  /** one line role label under the logo */
+  role?: string;
 };
 
 /** Connector lines, referenced by star key. Add a pair to extend the shape. */
-type Edge = [string, string];
+export type Edge = [string, string];
+
+const TIER_SIZE: Record<StarTier, { h: number; w: number; label: number; dot: number }> = {
+  north: { h: 0, w: 240, label: 13, dot: 9 },
+  partner: { h: 84, w: 210, label: 10, dot: 7 },
+  campus: { h: 46, w: 132, label: 9, dot: 4 },
+};
 
 const StarField = () => {
   const dots = useMemo(() => {
@@ -40,7 +51,7 @@ const StarField = () => {
       seed = (seed * 1103515245 + 12345) % 2147483648;
       return seed / 2147483648;
     };
-    return Array.from({ length: 90 }, () => ({
+    return Array.from({ length: 110 }, () => ({
       x: rand() * 100,
       y: rand() * 100,
       r: 0.4 + rand() * 1.1,
@@ -70,9 +81,13 @@ const StarField = () => {
 const PartnershipConstellation = ({
   stars,
   edges,
+  northStarLabelKey,
+  northStarLabelDefault,
 }: {
   stars: ConstellationStar[];
   edges: Edge[];
+  northStarLabelKey?: string;
+  northStarLabelDefault?: string;
 }) => {
   const byKey = useMemo(() => Object.fromEntries(stars.map((s) => [s.key, s])), [stars]);
 
@@ -80,7 +95,7 @@ const PartnershipConstellation = ({
     <div
       className="relative overflow-hidden rounded-3xl"
       style={{
-        background: `radial-gradient(120% 90% at 22% 8%, ${C.forest} 0%, ${C.forestDeep} 45%, ${C.night} 100%)`,
+        background: `radial-gradient(120% 90% at 50% 2%, #1a3327 0%, ${C.forestDeep} 42%, ${C.night} 100%)`,
         border: "1px solid rgba(232,192,122,0.22)",
       }}
     >
@@ -93,71 +108,143 @@ const PartnershipConstellation = ({
         preserveAspectRatio="none"
         aria-hidden
       >
-        {edges.map(([a, b], i) => {
-          const sa = byKey[a];
-          const sb = byKey[b];
-          if (!sa || !sb) return null;
-          return (
-            <line
-              key={i}
-              x1={sa.x}
-              y1={sa.y}
-              x2={sb.x}
-              y2={sb.y}
-              stroke={C.gold}
-              strokeWidth={0.14}
-              strokeLinecap="round"
-              opacity={0.42}
-              vectorEffect="non-scaling-stroke"
-            />
-          );
-        })}
+        <defs>
+          <filter id="mn-line-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="0.8" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g filter="url(#mn-line-glow)">
+          {edges.map(([a, b], i) => {
+            const sa = byKey[a];
+            const sb = byKey[b];
+            if (!sa || !sb) return null;
+            const toNorth = sa.tier === "north" || sb.tier === "north";
+            const isCampus = sa.tier === "campus" || sb.tier === "campus";
+            return (
+              <line
+                key={i}
+                x1={sa.x}
+                y1={sa.y}
+                x2={sb.x}
+                y2={sb.y}
+                stroke={C.gold}
+                strokeWidth={toNorth ? 1.9 : isCampus ? 1 : 1.5}
+                strokeLinecap="round"
+                opacity={toNorth ? 0.95 : isCampus ? 0.55 : 0.8}
+                vectorEffect="non-scaling-stroke"
+              />
+            );
+          })}
+        </g>
       </svg>
 
       {/* stars */}
-      <div className="relative aspect-[16/10] sm:aspect-[16/8] w-full">
-        {stars.map((s, i) => (
-          <div
-            key={s.key}
-            className="absolute -translate-x-1/2 -translate-y-1/2 mn-float"
-            style={{ left: `${s.x}%`, top: `${s.y}%`, animationDelay: `${i * 0.9}s` }}
-          >
-            <div className="relative flex flex-col items-center">
-              <span
-                className="absolute rounded-full mn-glow"
-                style={{
-                  width: 130,
-                  height: 130,
-                  background: `radial-gradient(circle, rgba(232,192,122,0.20) 0%, rgba(232,192,122,0) 68%)`,
-                  animationDelay: `${i * 1.3}s`,
-                }}
-              />
-              {s.logo ? (
-                <img
-                  src={s.logo}
-                  alt={s.name}
-                  className="relative object-contain"
+      <div className="relative aspect-[4/5] sm:aspect-[16/11] w-full mn-sky">
+        {stars.map((s, i) => {
+          const t = TIER_SIZE[s.tier];
+          const scale = s.scale ?? 1;
+          return (
+            <div
+              key={s.key}
+              className="absolute -translate-x-1/2 -translate-y-1/2 mn-float"
+              style={{ left: `${s.x}%`, top: `${s.y}%`, animationDelay: `${i * 0.7}s` }}
+            >
+              <div className="relative flex flex-col items-center">
+                <span
+                  className="absolute rounded-full mn-glow"
                   style={{
-                    height: `${(s.scale ?? 1) * 56}px`,
-                    maxWidth: `${(s.scale ?? 1) * 150}px`,
-                    filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.55))",
+                    width: s.tier === "north" ? 240 : s.tier === "partner" ? 190 : 110,
+                    height: s.tier === "north" ? 240 : s.tier === "partner" ? 190 : 110,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: `radial-gradient(circle, rgba(232,192,122,${
+                      s.tier === "north" ? 0.34 : s.tier === "partner" ? 0.22 : 0.16
+                    }) 0%, rgba(232,192,122,0) 68%)`,
+                    animationDelay: `${i * 1.1}s`,
                   }}
                 />
-              ) : (
-                <span
-                  className="relative text-center text-[11px] font-bold uppercase leading-tight"
-                  style={{ ...body, color: C.cream, letterSpacing: "0.14em", maxWidth: 150 }}
-                >
-                  {s.name}
-                </span>
-              )}
-              <span
-                className="relative mt-3 block h-[5px] w-[5px] rounded-full"
-                style={{ background: C.gold, boxShadow: `0 0 10px 3px rgba(232,192,122,0.55)` }}
-              />
+
+                {s.tier === "north" ? (
+                  <span className="relative flex flex-col items-center">
+                    <svg width="56" height="56" viewBox="0 0 24 24" aria-hidden className="mn-spark">
+                      <path
+                        d="M12 0 L13.6 9.2 L24 12 L13.6 14.8 L12 24 L10.4 14.8 L0 12 L10.4 9.2 Z"
+                        fill={C.gold}
+                      />
+                    </svg>
+                    <span
+                      className="mt-2 text-center text-[11px] sm:text-[13px] font-bold uppercase"
+                      style={{ ...body, color: C.gold, letterSpacing: "0.26em", whiteSpace: "nowrap" }}
+                    >
+                      {northStarLabelKey ? (
+                        <EditableText
+                          settingKey={northStarLabelKey}
+                          defaultText={northStarLabelDefault || "The Outcome"}
+                          as="span"
+                        />
+                      ) : (
+                        s.name
+                      )}
+                    </span>
+                  </span>
+                ) : s.logo ? (
+                  <img
+                    src={s.logo}
+                    alt={s.name}
+                    className="relative object-contain"
+                    style={{
+                      height: `clamp(${Math.round(t.h * scale * 0.42)}px, ${
+                        (t.h * scale) / 12
+                      }vw, ${Math.round(t.h * scale)}px)`,
+                      maxWidth: `clamp(${Math.round(t.w * scale * 0.45)}px, ${
+                        (t.w * scale) / 12
+                      }vw, ${Math.round(t.w * scale)}px)`,
+                      filter: "drop-shadow(0 2px 14px rgba(0,0,0,0.6))",
+                    }}
+                  />
+                ) : (
+                  <span
+                    className="relative text-center text-[11px] font-bold uppercase leading-tight"
+                    style={{ ...body, color: C.cream, letterSpacing: "0.14em", maxWidth: 150 }}
+                  >
+                    {s.name}
+                  </span>
+                )}
+
+                {s.tier !== "north" && s.role && (
+                  <span
+                    className="relative mt-2 text-center font-bold uppercase"
+                    style={{
+                      ...body,
+                      color: s.tier === "partner" ? C.gold : "rgba(245,239,227,0.55)",
+                      fontSize: s.tier === "partner" ? "clamp(8px,0.85vw,11px)" : "clamp(7px,0.7vw,9px)",
+                      letterSpacing: "0.2em",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {s.role}
+                  </span>
+                )}
+
+                {s.tier !== "north" && (
+                  <span
+                    className="relative mt-2 block rounded-full"
+                    style={{
+                      width: s.tier === "partner" ? 6 : 4,
+                      height: s.tier === "partner" ? 6 : 4,
+                      background: C.gold,
+                      boxShadow: `0 0 10px 3px rgba(232,192,122,${s.tier === "partner" ? 0.6 : 0.4})`,
+                    }}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -170,12 +257,14 @@ export const ConstellationStyles = () => (
     @keyframes mn-drift-slow { 0%,100% { transform: translate3d(0,0,0) } 50% { transform: translate3d(.7%, -.6%, 0) } }
     @keyframes mn-float { 0%,100% { transform: translate(-50%,-50%) } 50% { transform: translate(-50%, calc(-50% - 7px)) } }
     @keyframes mn-glow { 0%,100% { opacity: .55 } 50% { opacity: 1 } }
+    @keyframes mn-spark { 0%,100% { transform: scale(1) rotate(0deg) } 50% { transform: scale(1.12) rotate(8deg) } }
     .mn-drift { animation: mn-drift 34s ease-in-out infinite; }
     .mn-drift-slow { animation: mn-drift-slow 46s ease-in-out infinite; }
     .mn-float { animation: mn-float 9s ease-in-out infinite; }
     .mn-glow { animation: mn-glow 5.5s ease-in-out infinite; }
+    .mn-spark { animation: mn-spark 6s ease-in-out infinite; }
     @media (prefers-reduced-motion: reduce) {
-      .mn-drift, .mn-drift-slow, .mn-float, .mn-glow { animation: none !important; }
+      .mn-drift, .mn-drift-slow, .mn-float, .mn-glow, .mn-spark { animation: none !important; }
       .mn-float { transform: translate(-50%,-50%); }
     }
   `}</style>
