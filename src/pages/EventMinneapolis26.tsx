@@ -6,6 +6,8 @@ import MNExpertGrid from "@/components/minneapolis/MNExpertGrid";
 import MNPastExperts from "@/components/minneapolis/MNPastExperts";
 import MNGallery from "@/components/minneapolis/MNGallery";
 import MNSponsors from "@/components/minneapolis/MNSponsors";
+import MNBrandCTA from "@/components/minneapolis/MNBrandCTA";
+import MNSlowRollCTA from "@/components/minneapolis/MNSlowRollCTA";
 import MNFinalCTA from "@/components/minneapolis/MNFinalCTA";
 import EventLogoTicker from "@/components/event/EventLogoTicker";
 import AdminLogoManager from "@/components/event/AdminLogoManager";
@@ -39,6 +41,8 @@ const EventMinneapolis26 = () => {
       { key: "mn_past_experts", content: <MNPastExperts eventSlug="minneapolis26" /> },
       { key: "mn_gallery", content: <MNGallery /> },
       { key: "mn_sponsors", content: <MNSponsors /> },
+      { key: "mn_slowroll_cta", content: <MNSlowRollCTA /> },
+      { key: "mn_brand_cta", content: <MNBrandCTA /> },
       { key: "mn_final_cta", content: <MNFinalCTA /> },
     ],
     [tickerBrands]
