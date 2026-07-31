@@ -97,6 +97,7 @@ const App = () => (
           <Route path="/mentornetwork" element={<MentorNetwork />} />
           <Route path="/sponsor-a-mentor" element={<SponsorAMentor />} />
           <Route path="/mentor-experts" element={<MentorExperts />} />
+          <Route path="/mentor-experts/edit" element={<MentorExperts editMode />} />
           <Route path="/slow-roll" element={<EventSlowRoll />} />
           <Route path="/slowroll" element={<EventSlowRoll />} />
           <Route path="/OutsideDays26" element={<EventOutsideDays26 />} />

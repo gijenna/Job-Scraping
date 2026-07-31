@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditableTextProvider } from "@/components/EditableTextProvider";
 import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
@@ -265,7 +265,14 @@ const FormSection = ({ editMode }: { editMode?: boolean }) => {
 
 /* --------------------------------- page --------------------------------- */
 
-const MentorExpertsInner = ({ editMode }: { editMode?: boolean }) => (
+const MentorExpertsInner = ({ editMode }: { editMode?: boolean }) => {
+  useEffect(() => {
+    if (!editMode) return;
+    const t = setTimeout(scrollToForm, 400);
+    return () => clearTimeout(t);
+  }, [editMode]);
+
+  return (
   <div style={{ background: C.forest }}>
     <Fonts />
     <PageMetaApplier title="Become a Mentor | HBCU Mentor Network" />
@@ -281,7 +288,8 @@ const MentorExpertsInner = ({ editMode }: { editMode?: boolean }) => (
       ]}
     />
   </div>
-);
+  );
+};
 
 const MentorExperts = ({ editMode = false }: { editMode?: boolean }) => (
   <EditableTextProvider pageSlug={PAGE_SLUG}>
