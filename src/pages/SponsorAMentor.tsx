@@ -293,10 +293,10 @@ const TheOffer = () => (
 
 /* ---------------------------- 6. standing with ---------------------------- */
 
-const PARTNERS = [
+const PARTNERS: { key: string; name: string; logo: string; darkTile?: boolean }[] = [
   { key: "sierra", name: "Sierra Club", logo: sierraClubLogo },
   { key: "ncobs", name: "North Carolina Outward Bound School", logo: ncobsLogo },
-  { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo },
+  { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo, darkTile: true },
   { key: "basecamp", name: "Basecamp Outdoor", logo: basecampGreen },
 ];
 
@@ -306,7 +306,11 @@ const StandingWith = () => (
       <Eyebrow k="partners_eyebrow" d="AN ESTABLISHED PARTNERSHIP" color={C.clay} />
       <div className="mt-10 grid grid-cols-2 items-center gap-8 sm:grid-cols-4">
         {PARTNERS.map((p) => (
-          <div key={p.key} className="flex h-20 items-center justify-center">
+          <div
+            key={p.key}
+            className="flex h-20 items-center justify-center rounded-xl px-3"
+            style={p.darkTile ? { background: C.forest } : undefined}
+          >
             <img
               src={p.logo}
               alt={p.name}
