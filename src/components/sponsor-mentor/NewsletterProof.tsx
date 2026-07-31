@@ -1,10 +1,6 @@
 import EditableText from "@/components/EditableText";
-import basecampLogo from "@/assets/basecamp-outdoor-logo.png";
 
 const TEAL = "#19363B";
-const CORAL = "#ED7660";
-const GOLD = "#E1B624";
-const CREAM = "#E6E1CE";
 
 const font = { fontFamily: "'Josefin Sans', sans-serif" } as const;
 
@@ -12,14 +8,6 @@ const T = ({ k, d, multiline }: { k: string; d: string; multiline?: boolean }) =
   <EditableText settingKey={k} defaultText={d} as="span" multiline={multiline} />
 );
 
-const LogoChip = ({ size }: { size: number }) => (
-  <div
-    style={{ width: size, height: size, background: "#fff", border: `1px solid ${TEAL}22`, borderRadius: 8 }}
-    className="flex shrink-0 items-center justify-center overflow-hidden"
-  >
-    <img src={basecampLogo} alt="Your brand" className="max-h-[80%] max-w-[80%] object-contain" />
-  </div>
-);
 
 /**
  * Reuses the Minneapolis brand page newsletter mockup pattern, reworded for the
