@@ -170,8 +170,8 @@ const PARTNERS = [
     key: "basecamp",
     name: "Basecamp",
     logo: basecampCream,
-    x: 87,
-    y: 66,
+    x: 82,
+    y: 64,
     scale: 1.1,
     defaultBody:
       "The mentor network. A year of real conversations with people already working in the outdoor industry.",
