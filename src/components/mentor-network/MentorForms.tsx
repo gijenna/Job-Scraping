@@ -188,9 +188,10 @@ export const PathwayDialog = ({
           Two ways in. Pick the one that fits your organization.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
-          <a
-            href="/mentor-experts"
-            className="flex flex-col rounded-xl p-5 transition-transform hover:scale-[1.02]"
+          <button
+            type="button"
+            onClick={() => setMode("sponsor")}
+            className="flex flex-col rounded-xl p-5 text-left transition-transform hover:scale-[1.02]"
             style={{ background: "#fff", border: "1px solid rgba(18,36,28,0.14)" }}
           >
             <span className="text-[15px] font-bold" style={{ color: C.forest }}>
@@ -203,9 +204,10 @@ export const PathwayDialog = ({
               className="mt-4 inline-block rounded-full px-4 py-2 text-center text-[11px] font-bold uppercase tracking-[0.14em]"
               style={{ background: C.clay, color: "#fff" }}
             >
-              Build a mentor card
+              Add your brand info
             </span>
-          </a>
+          </button>
+
           <button
             type="button"
             onClick={() => setMode("sponsor")}
