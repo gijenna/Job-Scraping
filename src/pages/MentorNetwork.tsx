@@ -408,6 +408,13 @@ const TENETS = [
   },
 ];
 
+const TENET_PHOTOS = [
+  "/__l5e/assets-v1/e02f0d3b-521f-4e5a-89e4-f8557d6652f4/AnthonyMarz_Basecamp-019.jpg",
+  "/__l5e/assets-v1/a03ec4ff-b58e-4048-8ccc-0f2dee800d39/AnthonyMarz_Basecamp-046.jpg",
+  "/__l5e/assets-v1/54a59ae4-e76d-401e-9ea4-dd70f7cbd927/AnthonyMarz_Basecamp-094-2.jpg",
+  "/__l5e/assets-v1/f81467b8-5d3e-4887-8583-10b3dac9b7c7/AnthonyMarz_Basecamp-139.jpg",
+];
+
 const WhyThisMatters = () => (
   <section style={{ background: C.forest }} className="py-20 sm:py-28">
     <div className="max-w-6xl mx-auto px-5 sm:px-8">
