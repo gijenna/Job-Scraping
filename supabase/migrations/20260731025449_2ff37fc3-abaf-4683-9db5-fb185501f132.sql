@@ -1,0 +1,1 @@
+ALTER TABLE public.hbcu_mentor_sponsor_inquiries ADD COLUMN IF NOT EXISTS tier text;
