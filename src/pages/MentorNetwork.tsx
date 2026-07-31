@@ -699,6 +699,8 @@ const MentorNetworkContent = () => {
         sections={[
           { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
+          { key: "why-this-matters", content: <WhyThisMatters /> },
+          { key: "pilot-in-motion", content: <PilotInMotion /> },
           {
             key: "basecamp-building",
             content: (
