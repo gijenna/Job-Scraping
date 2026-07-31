@@ -147,22 +147,14 @@ const Hero = ({ onMentor }: { onMentor: () => void }) => (
 
 const STARS: ConstellationStar[] = [
   {
-    key: "outcome",
-    name: "The Outcome",
-    logo: null,
-    tier: "north",
-    x: 50,
-    y: 8,
-  },
-  {
     key: "sierra",
     name: "Sierra Club",
     logo: sierraClubCream,
     tier: "partner",
     role: "Certification",
-    x: 24,
-    y: 38,
-    scale: 1.05,
+    x: 31,
+    y: 33,
+    scale: 1.1,
   },
   {
     key: "hbcus",
@@ -170,9 +162,9 @@ const STARS: ConstellationStar[] = [
     logo: hbcusOutsideLogo,
     tier: "partner",
     role: "Belonging",
-    x: 74,
-    y: 38,
-    scale: 1,
+    x: 69,
+    y: 33,
+    scale: 1.05,
   },
   {
     key: "ncobs",
@@ -180,9 +172,9 @@ const STARS: ConstellationStar[] = [
     logo: ncobsCream,
     tier: "partner",
     role: "Experiential Training",
-    x: 36,
-    y: 62,
-    scale: 1.15,
+    x: 31,
+    y: 66,
+    scale: 1.2,
   },
   {
     key: "basecamp",
@@ -190,16 +182,16 @@ const STARS: ConstellationStar[] = [
     logo: basecampOutdoorLogo,
     tier: "partner",
     role: "Mentorship",
-    x: 66,
-    y: 63,
-    scale: 1.05,
+    x: 69,
+    y: 66,
+    scale: 1.1,
   },
-  { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 11, y: 20 },
-  { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 85, y: 18, scale: 1.2 },
-  { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 7, y: 62, scale: 0.9 },
-  { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 22, y: 88 },
-  { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 55, y: 90 },
-  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 88, y: 78 },
+  { key: "tsu", name: "Tennessee State University", logo: tennesseeStateLogo, tier: "campus", x: 13, y: 13 },
+  { key: "ncat", name: "North Carolina A&T State University", logo: ncatLogo, tier: "campus", x: 83, y: 12, scale: 1.0 },
+  { key: "spelman", name: "Spelman College", logo: spelmanLogo, tier: "campus", x: 10, y: 49, scale: 0.9 },
+  { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 86, y: 49, scale: 0.95 },
+  { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
+  { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
 ];
 
 const CONSTELLATION_EDGES: Edge[] = [
@@ -207,15 +199,21 @@ const CONSTELLATION_EDGES: Edge[] = [
   ["sierra", "ncobs"],
   ["ncobs", "basecamp"],
   ["basecamp", "hbcus"],
-  ["sierra", "outcome"],
-  ["hbcus", "outcome"],
+  ["sierra", "basecamp"],
+  ["hbcus", "ncobs"],
   ["tsu", "sierra"],
   ["spelman", "sierra"],
+  ["ncat", "hbcus"],
+  ["msm", "hbcus"],
   ["morehouse", "ncobs"],
   ["cau", "basecamp"],
-  ["msm", "hbcus"],
-  ["ncat", "hbcus"],
 ];
+
+const OutcomeStar = () => (
+  <svg width="46" height="46" viewBox="0 0 24 24" aria-hidden className="mn-spark">
+    <path d="M12 0 L13.6 9.2 L24 12 L13.6 14.8 L12 24 L10.4 14.8 L0 12 L10.4 9.2 Z" fill={C.gold} />
+  </svg>
+);
 
 const Partnership = () => (
   <section style={{ background: C.forestDeep }} className="py-20 sm:py-28">
@@ -230,22 +228,38 @@ const Partnership = () => (
       />
 
       <div className="mt-12">
-        <PartnershipConstellation
-          stars={STARS}
-          edges={CONSTELLATION_EDGES}
-          northStarLabelKey="constellation_north_label"
-          northStarLabelDefault="The Outcome"
+        <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} />
+      </div>
+
+      {/* line running down from the constellation into the outcome */}
+      <div className="flex justify-center" aria-hidden>
+        <div
+          style={{
+            width: 2,
+            height: 64,
+            background: `linear-gradient(180deg, rgba(232,192,122,0) 0%, ${C.gold} 55%, ${C.gold} 100%)`,
+            boxShadow: "0 0 12px rgba(232,192,122,0.6)",
+          }}
         />
       </div>
 
       <div
-        className="mt-10 rounded-2xl p-7 sm:p-10"
-        style={{ background: "rgba(232,192,122,0.08)", border: "1px solid rgba(232,192,122,0.28)" }}
+        className="relative rounded-2xl px-7 pt-14 pb-9 sm:px-10 sm:pt-16 sm:pb-11 text-center"
+        style={{ background: "rgba(232,192,122,0.08)", border: "1px solid rgba(232,192,122,0.32)" }}
       >
-        <p className="text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.24em", color: C.gold }}>
+        <span
+          className="absolute left-1/2 -translate-x-1/2 -top-6 flex h-12 w-12 items-center justify-center rounded-full"
+          style={{ background: C.forestDeep, boxShadow: "0 0 26px 8px rgba(232,192,122,0.28)" }}
+        >
+          <OutcomeStar />
+        </span>
+        <p className="text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.26em", color: C.gold }}>
           <EditableText settingKey="outcome_label" defaultText="THE OUTCOME" as="span" />
         </p>
-        <p className="mt-5 text-lg sm:text-2xl" style={{ ...body, color: C.cream, lineHeight: 1.5, fontWeight: 500 }}>
+        <p
+          className="mt-5 mx-auto max-w-4xl text-lg sm:text-2xl"
+          style={{ ...body, color: C.cream, lineHeight: 1.5, fontWeight: 500 }}
+        >
           <EditableText
             settingKey="outcome_body"
             defaultText="Certified leaders equipped to return to campus, lead belonging-centered experiences, train the next generation of leaders, and stay connected through a full academic year, positioning them to succeed as students and advance in their careers."
@@ -257,6 +271,117 @@ const Partnership = () => (
     </div>
   </section>
 );
+
+/* ============================ BE PART OF THIS ============================ */
+
+const BePartOfThis = ({
+  onMentor,
+  variant = "dark",
+  idSuffix,
+}: {
+  onMentor: () => void;
+  variant?: "dark" | "light";
+  idSuffix: string;
+}) => {
+  const light = variant === "light";
+  return (
+    <section style={{ background: light ? C.cream : C.forest }} className="py-16 sm:py-20">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <Eyebrow
+          settingKey={`bepart_${idSuffix}_eyebrow`}
+          defaultText="BE PART OF THIS"
+          tone={light ? C.clay : C.gold}
+        />
+        <h2 className="mt-4 text-[26px] sm:text-[38px] max-w-3xl" style={{ ...display, color: light ? C.forest : C.cream }}>
+          <EditableText
+            settingKey={`bepart_${idSuffix}_headline`}
+            defaultText="There are two ways in."
+            as="span"
+          />
+        </h2>
+
+        <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          <div
+            className="rounded-2xl p-7 flex flex-col"
+            style={{
+              background: light ? "#ffffff" : "rgba(245,239,227,0.06)",
+              border: light ? "1px solid rgba(18,36,28,0.10)" : "1px solid rgba(232,192,122,0.28)",
+            }}
+          >
+            <h3 className="text-[19px] sm:text-[22px]" style={{ ...display, color: light ? C.forest : C.cream }}>
+              <EditableText
+                settingKey={`bepart_${idSuffix}_shape_title`}
+                defaultText="Shape or support the program"
+                as="span"
+              />
+            </h3>
+            <p
+              className="mt-4 text-[15px] flex-1"
+              style={{ ...body, color: light ? "rgba(18,36,28,0.72)" : C.creamDim, lineHeight: 1.6 }}
+            >
+              <EditableText
+                settingKey={`bepart_${idSuffix}_shape_body`}
+                defaultText="Fund the pilot, help design it, or bring your organization in as a program partner. Start a conversation with Ron Griswell."
+                as="span"
+                multiline
+              />
+            </p>
+            <div className="mt-7">
+              <EditableLink
+                textKey={`bepart_${idSuffix}_shape_cta_text`}
+                urlKey={`bepart_${idSuffix}_shape_cta_url`}
+                defaultText="Talk to Ron Griswell"
+                defaultUrl="mailto:ron@hbcusoutside.com"
+                className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+                style={{ background: C.clay, color: "#fff", ...body }}
+              />
+            </div>
+          </div>
+
+          <div
+            className="rounded-2xl p-7 flex flex-col"
+            style={{
+              background: light ? "#ffffff" : "rgba(245,239,227,0.06)",
+              border: light ? "1px solid rgba(18,36,28,0.10)" : "1px solid rgba(232,192,122,0.28)",
+            }}
+          >
+            <h3 className="text-[19px] sm:text-[22px]" style={{ ...display, color: light ? C.forest : C.cream }}>
+              <EditableText
+                settingKey={`bepart_${idSuffix}_mentor_title`}
+                defaultText="Contribute a mentor from your organization"
+                as="span"
+              />
+            </h3>
+            <p
+              className="mt-4 text-[15px] flex-1"
+              style={{ ...body, color: light ? "rgba(18,36,28,0.72)" : C.creamDim, lineHeight: 1.6 }}
+            >
+              <EditableText
+                settingKey={`bepart_${idSuffix}_mentor_body`}
+                defaultText="Put forward someone on your team to mentor one student for 1 to 2 hours a month across the academic year."
+                as="span"
+                multiline
+              />
+            </p>
+            <div className="mt-7">
+              <button
+                onClick={onMentor}
+                className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
+                style={{ background: C.gold, color: C.forest, ...body }}
+              >
+                <EditableText
+                  settingKey={`bepart_${idSuffix}_mentor_cta`}
+                  defaultText="Contribute a mentor"
+                  as="span"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 /* ============================ WHY THIS MATTERS ============================ */
 
@@ -281,6 +406,13 @@ const TENETS = [
     name: "Wellbeing",
     body: "A measurable sense of belonging, treated as a student success metric in its own right.",
   },
+];
+
+const TENET_PHOTOS = [
+  "/__l5e/assets-v1/e02f0d3b-521f-4e5a-89e4-f8557d6652f4/AnthonyMarz_Basecamp-019.jpg",
+  "/__l5e/assets-v1/a03ec4ff-b58e-4048-8ccc-0f2dee800d39/AnthonyMarz_Basecamp-046.jpg",
+  "/__l5e/assets-v1/54a59ae4-e76d-401e-9ea4-dd70f7cbd927/AnthonyMarz_Basecamp-094-2.jpg",
+  "/__l5e/assets-v1/f81467b8-5d3e-4887-8583-10b3dac9b7c7/AnthonyMarz_Basecamp-139.jpg",
 ];
 
 const WhyThisMatters = () => (
@@ -308,6 +440,23 @@ const WhyThisMatters = () => (
               <EditableText settingKey={`tenet_${t.key}_body`} defaultText={t.body} as="span" multiline />
             </p>
           </article>
+        ))}
+      </div>
+
+      <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {TENET_PHOTOS.map((src, i) => (
+          <div
+            key={src}
+            className={`overflow-hidden rounded-2xl ${i > 1 ? "hidden sm:block" : ""}`}
+            style={{ border: "1px solid rgba(232,192,122,0.18)" }}
+          >
+            <img
+              src={src}
+              alt="Basecamp community members connecting outdoors"
+              loading="lazy"
+              className="h-40 sm:h-52 w-full object-cover"
+            />
+          </div>
         ))}
       </div>
     </div>
@@ -343,6 +492,7 @@ const PILOT_ROLES = [
   { key: "sierra", name: "Sierra Club", body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
   { key: "ncobs", name: "North Carolina Outward Bound School", body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
   { key: "hbcus", name: "HBCUs Outside", body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
+  { key: "basecamp", name: "Basecamp Outdoor", body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
 ];
 
 const PilotInMotion = () => (
@@ -373,7 +523,7 @@ const PilotInMotion = () => (
         ))}
       </div>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {PILOT_ROLES.map((p) => (
           <article
             key={p.key}
@@ -700,6 +850,10 @@ const MentorNetworkContent = () => {
           { key: "hero", content: <Hero onMentor={() => setMentorOpen(true)} /> },
           { key: "partnership", content: <Partnership /> },
           { key: "why-this-matters", content: <WhyThisMatters /> },
+          {
+            key: "be-part-of-this-top",
+            content: <BePartOfThis idSuffix="top" variant="dark" onMentor={() => setMentorOpen(true)} />,
+          },
           { key: "pilot-in-motion", content: <PilotInMotion /> },
           {
             key: "basecamp-building",
@@ -714,6 +868,10 @@ const MentorNetworkContent = () => {
           { key: "for-brands", content: <ForBrands onSponsor={() => setSponsorOpen(true)} /> },
           { key: "for-mentors", content: <ForMentors onMentor={() => setMentorOpen(true)} /> },
           { key: "for-students", content: <ForStudents /> },
+          {
+            key: "be-part-of-this-bottom",
+            content: <BePartOfThis idSuffix="bottom" variant="light" onMentor={() => setMentorOpen(true)} />,
+          },
           { key: "supported-by", content: <SupportedBy /> },
         ]}
       />
