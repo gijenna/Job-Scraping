@@ -441,7 +441,22 @@ const WhyThisMatters = () => (
 
       <div className="mt-14 grid gap-px sm:grid-cols-2 lg:grid-cols-4 rounded-2xl overflow-hidden" style={{ background: "rgba(232,192,122,0.20)" }}>
         {TENETS.map((t, i) => (
-          <article key={t.key} className="p-7 sm:p-8" style={{ background: C.forest }}>
+          <article
+            key={t.key}
+            className="relative isolate overflow-hidden p-7 sm:p-8"
+            style={{ background: C.forest }}
+          >
+            <img
+              src={TENET_PHOTOS[i % TENET_PHOTOS.length]}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 -z-20 h-full w-full object-cover"
+            />
+            <div
+              className="absolute inset-0 -z-10"
+              style={{ background: `linear-gradient(180deg, ${C.forest}e8 0%, ${C.forest}f2 55%, ${C.forestDeep}fa 100%)` }}
+            />
             <span className="block text-[42px] leading-none" style={{ ...display, color: C.gold }}>
               {String(i + 1).padStart(2, "0")}
             </span>
@@ -455,22 +470,6 @@ const WhyThisMatters = () => (
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {TENET_PHOTOS.map((src, i) => (
-          <div
-            key={src}
-            className={`overflow-hidden rounded-2xl ${i > 1 ? "hidden sm:block" : ""}`}
-            style={{ border: "1px solid rgba(232,192,122,0.18)" }}
-          >
-            <img
-              src={src}
-              alt="Basecamp community members connecting outdoors"
-              loading="lazy"
-              className="h-40 sm:h-52 w-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
     </div>
   </section>
 );
