@@ -4,14 +4,16 @@ import EditableText from "@/components/EditableText";
 import PageMetaApplier from "@/components/event/PageMetaApplier";
 import OrderedSections from "@/components/event/OrderedSections";
 import SiteFooter from "@/components/SiteFooter";
+import MentorNav from "@/components/mentor-network/MentorNav";
 import MentorExpertStrip from "@/components/mentor-network/MentorExpertStrip";
 import ExpertIntakeForm from "@/components/experts/ExpertIntakeForm";
+import type { Expert } from "@/lib/expert-types";
 import hbcusOutsideLogo from "@/assets/mentor-network/hbcus-outside.png";
 import heroAsset from "@/assets/mentor-network/hero.jpg.asset.json";
 
 const PAGE_SLUG = "mentor-experts";
 const CITY_SLUG = "mentor-network";
-const CITY_NAME = "Mentor Network";
+const CITY_NAME = "HBCU Mentor Network";
 
 const C = {
   forest: "#12241c",
@@ -61,14 +63,14 @@ const Hero = () => (
     <div className="relative mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
       <div className="max-w-3xl">
         <img src={hbcusOutsideLogo} alt="HBCUs Outside" className="mb-8 h-14 w-auto sm:h-16" />
-        <Eyebrow k="hero_eyebrow" d="BASECAMP INDUSTRY EXPERT · MENTOR NETWORK" />
+        <Eyebrow k="hero_eyebrow" d="BASECAMP INDUSTRY EXPERT · HBCU MENTOR NETWORK" />
         <h1 className="mt-5 text-[34px] sm:text-[52px]" style={{ ...display, color: C.cream }}>
           <T k="hero_headline" d="Be the person a student calls when it counts." multiline />
         </h1>
         <p className="mt-6 max-w-2xl text-base sm:text-lg" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
           <T
             k="hero_subhead"
-            d="An Industry Expert gives 1 to 2 hours a month for 10 months to one HBCU student heading into the outdoor industry. Build your card below and you're on the roster."
+            d="An Industry Expert gives at least one hour a month for 10 months to one HBCU student heading into the outdoor industry. Build your card below and you're on the roster."
             multiline
           />
         </p>
@@ -78,7 +80,7 @@ const Hero = () => (
           className="mt-9 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
           style={{ ...body, background: C.clay, color: "#fff" }}
         >
-          <T k="hero_cta" d="I'm in, build my card" />
+          <T k="hero_cta" d="Build my mentor card" />
         </button>
       </div>
     </div>
@@ -91,7 +93,7 @@ const PERKS = [
   {
     key: "match",
     title: "One student, one year",
-    body: "You get matched with one HBCU student, then meet 1 to 2 hours a month across the academic year. No curriculum to write.",
+    body: "You get matched with one HBCU student, then meet at least one hour a month across the academic year. No curriculum to write.",
   },
   {
     key: "card",
@@ -132,11 +134,73 @@ const WhatItMeans = () => (
   </section>
 );
 
+/* --------------------------------- faq --------------------------------- */
+
+const FAQS = [
+  {
+    key: "time",
+    q: "How much time is this really?",
+    a: "At least one hour a month for 10 months. You and your student set the times together, based on your schedule and theirs.",
+  },
+  {
+    key: "scheduling",
+    q: "Do I have to chase down scheduling?",
+    a: "No. We provide the scheduling software if you want it, so your student can book time straight into your calendar.",
+  },
+  {
+    key: "matching",
+    q: "How do I get matched?",
+    a: "Students choose their mentor. They read your card and pick based on your background, your field, and the parts of your story that overlap with theirs.",
+  },
+  {
+    key: "training",
+    q: "Is there training?",
+    a: "Yes. A 90 minute training is required to join the program if you're selected. It's one session and we schedule it around the group.",
+  },
+  {
+    key: "cost",
+    q: "Does it cost anything?",
+    a: "No. Mentoring is volunteer. Your company can also sponsor the program separately if they want their name on it.",
+  },
+  {
+    key: "edit",
+    q: "Can I change my card later?",
+    a: "Anytime. Come back to this page, type your full name in the form, wait a second for your card to load, then edit what you want.",
+  },
+];
+
+const FAQ = () => (
+  <section className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: C.forestDeep }}>
+    <div className="mx-auto max-w-5xl">
+      <Eyebrow k="faq_eyebrow" d="QUESTIONS PEOPLE ACTUALLY ASK" />
+      <h2 className="mt-4 text-[26px] sm:text-[38px]" style={{ ...display, color: C.cream }}>
+        <T k="faq_headline" d="How the mentorship actually runs." />
+      </h2>
+      <div className="mt-10 grid gap-5 md:grid-cols-2">
+        {FAQS.map((f) => (
+          <div
+            key={f.key}
+            className="rounded-2xl p-6"
+            style={{ background: "rgba(245,239,227,0.06)", border: "1px solid rgba(232,192,122,0.22)" }}
+          >
+            <h3 className="text-[16px] font-bold" style={{ ...body, color: C.gold }}>
+              <T k={`faq_${f.key}_q`} d={f.q} />
+            </h3>
+            <p className="mt-2 text-[15px]" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
+              <T k={`faq_${f.key}_a`} d={f.a} multiline />
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 /* ------------------------------- the room ------------------------------- */
 
 const TheRoom = () => (
-  <section className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: C.forestDeep }}>
-    <div className="mx-auto max-w-5xl text-center">
+  <section className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: C.forest }}>
+    <div className="mx-auto max-w-6xl text-center">
       <Eyebrow k="room_eyebrow" d="THE ROOM YOU'RE JOINING" />
       <h2 className="mt-4 text-[26px] sm:text-[38px]" style={{ ...display, color: C.cream }}>
         <T k="room_headline" d="Real experts. Real companies." />
@@ -150,33 +214,49 @@ const TheRoom = () => (
 
 /* --------------------------------- form --------------------------------- */
 
-const FormSection = () => {
-  const [done, setDone] = useState(false);
+const FormSection = ({ editMode }: { editMode?: boolean }) => {
+  const [formExpertId, setFormExpertId] = useState<string | undefined>(undefined);
+  const [formExistingData, setFormExistingData] = useState<Partial<Expert> | undefined>(undefined);
+
   return (
-    <section id="mentor-card-form" className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: C.cream }}>
-      <div className="mx-auto max-w-4xl">
-        <h2 className="text-[26px] sm:text-[38px]" style={{ ...display, color: C.forest }}>
+    <section id="mentor-card-form" className="px-5 py-20 sm:px-8 sm:py-24" style={{ background: C.forestDeep }}>
+      <div className="mx-auto max-w-6xl">
+        <h2 className="text-[26px] sm:text-[38px]" style={{ ...display, color: C.cream }}>
           <T k="form_headline" d="Build your Industry Expert card" />
         </h2>
-        <p className="mt-4 max-w-2xl text-[15px]" style={{ ...body, color: "rgba(18,36,28,0.72)", lineHeight: 1.6 }}>
+        <p className="mt-4 max-w-2xl text-[15px]" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
           <T
             k="form_subhead"
-            d="Takes about five minutes. Enter your full name and give it a second, if you already have a card it will pop up so you can edit it."
+            d="Takes about five minutes. Your card fills in beside you as you type. Already have a card? Enter your full name, wait a second, and it will pop up so you can edit it."
             multiline
           />
         </p>
+
+        <div
+          className="mt-6 rounded-xl px-4 py-3 text-sm"
+          style={{ ...body, background: "rgba(196,101,74,0.14)", border: "1px solid rgba(196,101,74,0.45)", color: C.cream }}
+        >
+          <T
+            k="form_edit_banner"
+            d="Editing your card? Just type your full name below and wait a second. Your card will load and you can change anything."
+            multiline
+          />
+        </div>
+
         <div className="mt-10">
-          {done ? (
-            <p className="text-base font-semibold" style={{ ...body, color: C.moss }}>
-              <T k="form_done" d="Got it. You're on the mentor roster. We'll be in touch as matching opens." />
-            </p>
-          ) : (
-            <ExpertIntakeForm
-              citySlug={CITY_SLUG}
-              cityName={CITY_NAME}
-              onComplete={() => setDone(true)}
-            />
-          )}
+          <ExpertIntakeForm
+            expertId={formExpertId}
+            existingData={formExistingData}
+            citySlug={CITY_SLUG}
+            cityName={CITY_NAME}
+            expertType="industry_expert"
+            onComplete={(savedExpert) => {
+              if (savedExpert) {
+                setFormExpertId(savedExpert.id);
+                setFormExistingData((prev) => ({ ...prev, ...savedExpert }));
+              }
+            }}
+          />
         </div>
       </div>
     </section>
@@ -185,25 +265,27 @@ const FormSection = () => {
 
 /* --------------------------------- page --------------------------------- */
 
-const MentorExpertsInner = () => (
+const MentorExpertsInner = ({ editMode }: { editMode?: boolean }) => (
   <div style={{ background: C.forest }}>
     <Fonts />
-    <PageMetaApplier title="Become a Mentor | Basecamp Industry Expert Mentor Network" />
+    <PageMetaApplier title="Become a Mentor | HBCU Mentor Network" />
+    <MentorNav backHref="/mentor-network" backLabel="HBCU Mentor Network" />
     <OrderedSections
       sections={[
         { key: "hero", content: <Hero /> },
         { key: "what-it-means", content: <WhatItMeans /> },
+        { key: "faq", content: <FAQ /> },
         { key: "the-room", content: <TheRoom /> },
-        { key: "form", content: <FormSection /> },
+        { key: "form", content: <FormSection editMode={editMode} /> },
         { key: "footer", content: <SiteFooter /> },
       ]}
     />
   </div>
 );
 
-const MentorExperts = () => (
+const MentorExperts = ({ editMode = false }: { editMode?: boolean }) => (
   <EditableTextProvider pageSlug={PAGE_SLUG}>
-    <MentorExpertsInner />
+    <MentorExpertsInner editMode={editMode} />
   </EditableTextProvider>
 );
 
