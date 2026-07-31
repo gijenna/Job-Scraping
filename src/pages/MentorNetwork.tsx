@@ -334,15 +334,19 @@ const BePartOfThis = ({
               />
             </p>
             <div className="mt-7">
-              <EditableLink
-                textKey={`bepart_${idSuffix}_shape_cta_text`}
-                urlKey={`bepart_${idSuffix}_shape_cta_url`}
-                defaultText="Talk to Ron Griswell"
-                defaultUrl="mailto:ron@hbcusoutside.com"
+              <button
+                onClick={onBrand}
                 className="inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition-transform hover:scale-[1.03]"
                 style={{ background: C.clay, color: "#fff", ...body }}
-              />
+              >
+                <EditableText
+                  settingKey={`bepart_${idSuffix}_shape_cta_text`}
+                  defaultText="Sponsor the program"
+                  as="span"
+                />
+              </button>
             </div>
+
           </div>
 
           <div
