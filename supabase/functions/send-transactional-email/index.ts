@@ -101,14 +101,33 @@ Deno.serve(async (req) => {
   if (!PUBLIC_TEMPLATES.has(templateName)) {
     const auth = req.headers.get('authorization') || ''
     const apiKey = req.headers.get('apikey') || ''
-    const hasServiceIdentity = apiKey === supabaseServiceKey || auth === `Bearer ${supabaseServiceKey}`
-    if (!supabaseServiceKey || !hasServiceIdentity) {
+    const presented = apiKey || auth.replace(/^Bearer\s+/i, '')
+    let hasServiceIdentity =
+      !!supabaseServiceKey &&
+      (apiKey === supabaseServiceKey || auth === `Bearer ${supabaseServiceKey}`)
+
+    // Fall back to verifying the presented key against the Auth admin API. This
+    // lets other valid service-role credentials (e.g. the key stored for the
+    // email queue) authenticate even when it differs from this function's env var.
+    if (!hasServiceIdentity && presented) {
+      try {
+        const probe = await fetch(`${supabaseUrl}/auth/v1/admin/users?page=1&per_page=1`, {
+          headers: { apikey: presented, Authorization: `Bearer ${presented}` },
+        })
+        hasServiceIdentity = probe.ok
+      } catch (e) {
+        console.error('Service key probe failed', e)
+      }
+    }
+
+    if (!hasServiceIdentity) {
       return new Response(
         JSON.stringify({ error: 'Forbidden: template requires service role' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       )
     }
   }
+
 
   // 1. Look up template from registry (early — needed to resolve recipient)
   const template = TEMPLATES[templateName]
