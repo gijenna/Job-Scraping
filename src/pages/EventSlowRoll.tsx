@@ -700,8 +700,8 @@ const Details = () => (
       <div className="rounded-2xl p-6 md:p-8" style={{ background: "rgba(20,15,12,0.72)", border: `1px solid ${C.yellow}55`, boxShadow: `0 0 40px ${C.yellow}22` }}>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
           <DetailRow labelKey="sr_det_date_l" labelDefault="Date" valueKey="sr_det_date_v" valueDefault="Wednesday, August 19, 2026" />
-          <DetailRow labelKey="sr_det_time_l" labelDefault="Time" valueKey="sr_det_time_v" valueDefault="Evening. Exact start TBD." />
-          <DetailRow labelKey="sr_det_start_l" labelDefault="Start" valueKey="sr_det_start_v" valueDefault="Near the Minneapolis Convention Center. Exact spot TBD." />
+          <DetailRow labelKey="sr_det_time_l" labelDefault="Time" valueKey="sr_det_time_v" valueDefault="6:00 PM" />
+          <DetailRow labelKey="sr_det_start_l" labelDefault="Start" valueKey="sr_det_start_v" valueDefault="Location TBD" />
           <DetailRow labelKey="sr_det_cap_l" labelDefault="Capacity" valueKey="sr_det_cap_v" valueDefault="Capped at 100 riders." />
           <DetailRow labelKey="sr_det_bring_l" labelDefault="What to bring" valueKey="sr_det_bring_v" valueDefault="Your own bike, or borrow one of the ALSO e-bikes provided on-site. No bike required to join." />
           <DetailRow labelKey="sr_det_cost_l" labelDefault="Cost" valueKey="sr_det_cost_v" valueDefault="Free and open to the public." />
