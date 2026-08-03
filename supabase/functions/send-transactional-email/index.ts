@@ -25,9 +25,9 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Authentication is enforced in-function so both legacy JWT service keys and
+// newer opaque service keys work. Opaque keys belong in `apikey`, not in a
+// Bearer authorization header.
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -100,7 +100,9 @@ Deno.serve(async (req) => {
   ])
   if (!PUBLIC_TEMPLATES.has(templateName)) {
     const auth = req.headers.get('authorization') || ''
-    if (!supabaseServiceKey || !auth.includes(supabaseServiceKey)) {
+    const apiKey = req.headers.get('apikey') || ''
+    const hasServiceIdentity = apiKey === supabaseServiceKey || auth === `Bearer ${supabaseServiceKey}`
+    if (!supabaseServiceKey || !hasServiceIdentity) {
       return new Response(
         JSON.stringify({ error: 'Forbidden: template requires service role' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
