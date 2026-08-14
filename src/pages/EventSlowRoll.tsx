@@ -37,7 +37,7 @@ const C = {
   yellowGlow: "0 0 22px rgba(225,182,36,0.55)",
 };
 
-const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
+const REGISTER_URL = "https://www.eventbrite.com/e/slow-roll-with-outdoor-retailers-mpls-the-miracle-and-mandate-tickets-1997857282914?utm-campaign=social&utm-content=attendeeshare&utm-medium=discovery&utm-term=listing&utm-source=wsa&aff=ebdsshwebmobile";
 const SLOWROLL_FB_URL = "https://www.facebook.com/SlowRollTC/";
 const publicAssetUrl = (url: string) => url.startsWith("/__l5e/") ? `https://basecampoutdoorevents.com${url}` : url;
 

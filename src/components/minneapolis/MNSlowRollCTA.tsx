@@ -7,7 +7,7 @@ const FOREST = "#1A2520";
 const CREAM = "#F2E7D5";
 const CORAL = "#E8836B";
 
-const REGISTER_URL = "https://basecampoutdoor.typeform.com/to/yumTbpY7";
+const REGISTER_URL = "https://www.eventbrite.com/e/slow-roll-with-outdoor-retailers-mpls-the-miracle-and-mandate-tickets-1997857282914?utm-campaign=social&utm-content=attendeeshare&utm-medium=discovery&utm-term=listing&utm-source=wsa&aff=ebdsshwebmobile";
 
 const MNSlowRollCTA = () => (
   <section className="px-6 py-20 md:py-28" style={{ backgroundColor: CREAM, color: FOREST }}>
