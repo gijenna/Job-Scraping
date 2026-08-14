@@ -687,6 +687,22 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
                 </Badge>
               ))}
             </div>
+            {form.niche_interests.filter((n: string) => !NICHE_OPTIONS.includes(n as any)).length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {form.niche_interests
+                  .filter((n: string) => !NICHE_OPTIONS.includes(n as any))
+                  .map((n: string) => (
+                    <Badge
+                      key={n}
+                      className="cursor-pointer text-xs bg-events-coral text-events-cream border-events-coral"
+                      onClick={() => toggleNiche(n)}
+                      title="Click to remove"
+                    >
+                      {n} ×
+                    </Badge>
+                  ))}
+              </div>
+            )}
             <div className="flex gap-2">
               <Input
                 value={customNiche}
@@ -698,6 +714,7 @@ const ExpertIntakeForm = ({ expertId, existingData, citySlug, cityName, expertTy
               <Button type="button" size="sm" onClick={addCustomNiche} variant="outline"
                 className="border-events-cream/20 text-events-cream hover:bg-events-coral/20">Add</Button>
             </div>
+
           </div>
         </div>
 
