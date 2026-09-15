@@ -93,10 +93,10 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
 
     <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
       <div className="max-w-3xl mn-rise">
-        <img src={hbcusOutsideLogo} alt="HBCUs Outside" className="h-16 sm:h-20 w-auto mb-8" />
+        <img src={hbcusOutsideLogo} alt="HBCUs Outside Leadership Academy" className="h-28 sm:h-40 lg:h-48 w-auto mb-7" />
         <Eyebrow
           settingKey="hero_eyebrow"
-          defaultText="HBCUS OUTSIDE x SIERRA CLUB x NORTH CAROLINA OUTWARD BOUND SCHOOL x BASECAMP"
+          defaultText="WITH BASECAMP OUTDOORS x SIERRA CLUB x OUTWARD BOUND"
         />
         <div className="mt-5 mb-6">
           <Rule />
@@ -104,7 +104,7 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
         <h1 className="text-[34px] sm:text-[54px] lg:text-[64px]" style={{ ...display, color: C.cream }}>
           <EditableText
             settingKey="hero_headline"
-            defaultText="One hour a month can change where someone's career goes."
+            defaultText="Seven campuses. 20 future leaders. Mentored by the best the outdoor industry has to offer."
             as="span"
           />
         </h1>
@@ -331,7 +331,7 @@ const BePartOfThis = ({
             >
               <EditableText
                 settingKey={`bepart_${idSuffix}_shape_body`}
-                defaultText="Fund the pilot, help design it, or bring your organization in as a program partner. Start a conversation with Ron Griswell."
+                defaultText="Fund the pilot, help design it, or bring your organization in as a program partner. Start a conversation with Ron Griswell, founder of HBCUs Outside."
                 as="span"
                 multiline
               />
@@ -498,15 +498,15 @@ const PILOT_ROWS = [
   {
     key: "after",
     label: "Beyond October",
-    body: "Certified leaders run their own Sierra Club outings, continue NCOBS virtual modules, build mental health literacy with a wellbeing partner, and stay connected year-round through HBCUs Outside.",
+    body: "HBCUs Outside leaders run their own outings with Sierra Club certifications, continue virtual modules from the North Carolina Outward Bound School, and grow with the help of outdoor industry mentors and career connections from Basecamp Outdoors.",
   },
 ];
 
 const PILOT_ROLES = [
-  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
-  { key: "ncobs", name: "North Carolina Outward Bound School", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
   { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo, body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
-  { key: "basecamp", name: "Basecamp Outdoor", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "basecamp", name: "Basecamp Outdoors", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
+  { key: "ncobs", name: "Outward Bound", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
 ];
 
 
@@ -769,8 +769,8 @@ const ForStudents = () => (
 const CORE_LOGOS = [
   { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
   { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
-  { name: "North Carolina Outward Bound School", src: ncobsLogo, url: "https://www.ncobs.org/" },
-  { name: "Basecamp Outdoor", src: basecampGreen, url: "https://basecampoutdoorevents.com" },
+  { name: "Outward Bound", src: ncobsLogo, url: "https://www.ncobs.org/" },
+  { name: "Basecamp Outdoors", src: basecampGreen, url: "https://basecampoutdoorevents.com" },
 ];
 
 const TierLabel = ({ settingKey, defaultText }: { settingKey: string; defaultText: string }) => (
