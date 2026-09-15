@@ -331,7 +331,7 @@ const BePartOfThis = ({
             >
               <EditableText
                 settingKey={`bepart_${idSuffix}_shape_body`}
-                defaultText="Fund the pilot, help design it, or bring your organization in as a program partner. Start a conversation with Ron Griswell."
+                defaultText="Fund the pilot, help design it, or bring your organization in as a program partner. Start a conversation with Ron Griswell, founder of HBCUs Outside."
                 as="span"
                 multiline
               />
