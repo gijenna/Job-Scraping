@@ -93,10 +93,10 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
 
     <div className="relative max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 lg:py-36">
       <div className="max-w-3xl mn-rise">
-        <img src={hbcusOutsideLogo} alt="HBCUs Outside" className="h-16 sm:h-20 w-auto mb-8" />
+        <img src={hbcusOutsideLogo} alt="HBCUs Outside Leadership Academy" className="h-28 sm:h-40 lg:h-48 w-auto mb-7" />
         <Eyebrow
           settingKey="hero_eyebrow"
-          defaultText="HBCUS OUTSIDE x SIERRA CLUB x NORTH CAROLINA OUTWARD BOUND SCHOOL x BASECAMP"
+          defaultText="WITH BASECAMP OUTDOORS x SIERRA CLUB x OUTWARD BOUND"
         />
         <div className="mt-5 mb-6">
           <Rule />
@@ -104,7 +104,7 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
         <h1 className="text-[34px] sm:text-[54px] lg:text-[64px]" style={{ ...display, color: C.cream }}>
           <EditableText
             settingKey="hero_headline"
-            defaultText="One hour a month can change where someone's career goes."
+            defaultText="Seven campuses. 20 future leaders. Mentored by the best the outdoor industry has to offer."
             as="span"
           />
         </h1>
