@@ -120,9 +120,6 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
             multiline
           />
         </p>
-        <p className="mt-3 text-base sm:text-xl max-w-2xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
-          <EditableText settingKey="hero_stat_line" defaultText="20 future leaders." as="span" />
-        </p>
 
 
         <div className="mt-10 flex flex-col gap-5">
