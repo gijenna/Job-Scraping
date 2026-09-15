@@ -250,7 +250,7 @@ const Partnership = () => (
       />
 
       <div className="mt-12">
-        <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} />
+        <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} guides={CONSTELLATION_GUIDES} />
       </div>
 
       {/* line running down from the constellation into the outcome */}
