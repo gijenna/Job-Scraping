@@ -206,7 +206,7 @@ const STARS: ConstellationStar[] = [
   { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 86, y: 49, scale: 0.95 },
   { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
   { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
-  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 96 },
+  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 91 },
 ];
 
 const CONSTELLATION_EDGES: Edge[] = [
@@ -239,26 +239,22 @@ const Partnership = () => (
       <ConstellationHeading
         eyebrowKey="partnership_eyebrow"
         headlineKey="partnership_intro"
-        headlineDefault="This mentor network is one piece of a bigger partnership. Here's the rest of it."
+        headlineDefault={"Seven campuses.\n20 future leaders."}
         subheadKey="partnership_subhead"
         subheadDefault="Seven HBCU campuses are building certified student leaders through this partnership, now extending into a full year of mentorship."
       />
-
-      <p className="mt-3 text-center text-base sm:text-xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
-        <EditableText settingKey="partnership_stat_line" defaultText="20 future leaders." as="span" />
-      </p>
 
       <div className="mt-12">
         <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} />
       </div>
 
       {/* line running down from the constellation into the outcome */}
-      <div className="relative z-0 flex justify-center" aria-hidden>
+      <div className="relative z-10 -mb-6 flex justify-center" aria-hidden>
         <div
           style={{
             width: 2,
-            height: 64,
-            background: `linear-gradient(180deg, rgba(232,192,122,0) 0%, ${C.gold} 55%, ${C.gold} 100%)`,
+            height: 88,
+            background: C.gold,
             boxShadow: "0 0 12px rgba(232,192,122,0.6)",
           }}
         />
