@@ -78,14 +78,18 @@ const StarField = () => {
   );
 };
 
+export type Guide = { x1: number; y1: number; x2: number; y2: number; width?: number; opacity?: number };
+
 const PartnershipConstellation = ({
   stars,
   edges,
+  guides = [],
   northStarLabelKey,
   northStarLabelDefault,
 }: {
   stars: ConstellationStar[];
   edges: Edge[];
+  guides?: Guide[];
   northStarLabelKey?: string;
   northStarLabelDefault?: string;
 }) => {
@@ -139,6 +143,20 @@ const PartnershipConstellation = ({
               />
             );
           })}
+          {guides.map((g, i) => (
+            <line
+              key={`g${i}`}
+              x1={g.x1}
+              y1={g.y1}
+              x2={g.x2}
+              y2={g.y2}
+              stroke={C.gold}
+              strokeWidth={g.width ?? 1}
+              strokeLinecap="round"
+              opacity={g.opacity ?? 0.55}
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
         </g>
       </svg>
 

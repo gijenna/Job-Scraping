@@ -206,7 +206,7 @@ const STARS: ConstellationStar[] = [
   { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 86, y: 49, scale: 0.95 },
   { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
   { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
-  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 91 },
+  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 9 },
 ];
 
 const CONSTELLATION_EDGES: Edge[] = [
@@ -222,7 +222,12 @@ const CONSTELLATION_EDGES: Edge[] = [
   ["msm", "hbcus"],
   ["morehouse", "ncobs"],
   ["cau", "basecamp"],
-  ["howard", "basecamp"],
+];
+
+/** Straight spine: Howard down through the centre of the X and out the bottom to the outcome star. */
+const CONSTELLATION_GUIDES = [
+  { x1: 50, y1: 14, x2: 50, y2: 49.5, width: 1, opacity: 0.55 },
+  { x1: 50, y1: 49.5, x2: 50, y2: 100, width: 2.2, opacity: 0.95 },
 ];
 
 
@@ -245,7 +250,7 @@ const Partnership = () => (
       />
 
       <div className="mt-12">
-        <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} />
+        <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} guides={CONSTELLATION_GUIDES} />
       </div>
 
       {/* line running down from the constellation into the outcome */}
