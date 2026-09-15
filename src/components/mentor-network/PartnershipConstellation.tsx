@@ -78,14 +78,18 @@ const StarField = () => {
   );
 };
 
+export type Guide = { x1: number; y1: number; x2: number; y2: number; width?: number; opacity?: number };
+
 const PartnershipConstellation = ({
   stars,
   edges,
+  guides = [],
   northStarLabelKey,
   northStarLabelDefault,
 }: {
   stars: ConstellationStar[];
   edges: Edge[];
+  guides?: Guide[];
   northStarLabelKey?: string;
   northStarLabelDefault?: string;
 }) => {
