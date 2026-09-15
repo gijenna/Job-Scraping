@@ -102,20 +102,28 @@ const Hero = ({ onBrand }: { onBrand: () => void }) => (
           <Rule />
         </div>
         <h1 className="text-[34px] sm:text-[54px] lg:text-[64px]" style={{ ...display, color: C.cream }}>
-          <EditableText
-            settingKey="hero_headline"
-            defaultText="Seven campuses. 20 future leaders. Mentored by the best the outdoor industry has to offer."
-            as="span"
-          />
+          <span className="block">
+            <EditableText settingKey="hero_headline_line1" defaultText="Trained." as="span" />
+          </span>
+          <span className="block">
+            <EditableText settingKey="hero_headline_line2" defaultText="Certified." as="span" />
+          </span>
+          <span className="block">
+            <EditableText settingKey="hero_headline_line3" defaultText="Mentored." as="span" />
+          </span>
         </h1>
         <p className="mt-6 text-base sm:text-xl max-w-2xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
           <EditableText
             settingKey="hero_subhead"
-            defaultText="Basecamp is building the mentor network behind the HBCUs Outside partnership, pairing outdoor industry experts with HBCU students heading into the field."
+            defaultText="A real path for HBCU students into the outdoor industry."
             as="span"
             multiline
           />
         </p>
+        <p className="mt-3 text-base sm:text-xl max-w-2xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
+          <EditableText settingKey="hero_stat_line" defaultText="20 future leaders." as="span" />
+        </p>
+
 
         <div className="mt-10 flex flex-col gap-5">
           <button
