@@ -244,12 +244,16 @@ const Partnership = () => (
         subheadDefault="Seven HBCU campuses are building certified student leaders through this partnership, now extending into a full year of mentorship."
       />
 
+      <p className="mt-3 text-center text-base sm:text-xl" style={{ ...body, color: C.creamDim, lineHeight: 1.55 }}>
+        <EditableText settingKey="partnership_stat_line" defaultText="20 future leaders." as="span" />
+      </p>
+
       <div className="mt-12">
         <PartnershipConstellation stars={STARS} edges={CONSTELLATION_EDGES} />
       </div>
 
       {/* line running down from the constellation into the outcome */}
-      <div className="flex justify-center" aria-hidden>
+      <div className="relative z-0 flex justify-center" aria-hidden>
         <div
           style={{
             width: 2,
@@ -265,11 +269,12 @@ const Partnership = () => (
         style={{ background: "rgba(232,192,122,0.08)", border: "1px solid rgba(232,192,122,0.32)" }}
       >
         <span
-          className="absolute left-1/2 -translate-x-1/2 -top-6 flex h-12 w-12 items-center justify-center rounded-full"
+          className="absolute left-1/2 z-20 -translate-x-1/2 -top-6 flex h-12 w-12 items-center justify-center rounded-full"
           style={{ background: C.forestDeep, boxShadow: "0 0 26px 8px rgba(232,192,122,0.28)" }}
         >
           <OutcomeStar />
         </span>
+
         <p className="text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.26em", color: C.gold }}>
           <EditableText settingKey="outcome_label" defaultText="THE OUTCOME" as="span" />
         </p>
