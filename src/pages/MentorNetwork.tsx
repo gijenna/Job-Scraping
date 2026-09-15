@@ -206,7 +206,7 @@ const STARS: ConstellationStar[] = [
   { key: "msm", name: "Morehouse School of Medicine", logo: morehouseMedicineLogo, tier: "campus", x: 86, y: 49, scale: 0.95 },
   { key: "morehouse", name: "Morehouse College", logo: morehouseLogo, tier: "campus", x: 18, y: 88 },
   { key: "cau", name: "Clark Atlanta University", logo: clarkAtlantaLogo, tier: "campus", x: 82, y: 88 },
-  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 91 },
+  { key: "howard", name: "Howard University", logo: null, tier: "campus", x: 50, y: 9 },
 ];
 
 const CONSTELLATION_EDGES: Edge[] = [
