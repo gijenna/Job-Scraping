@@ -769,8 +769,8 @@ const ForStudents = () => (
 const CORE_LOGOS = [
   { name: "HBCUs Outside", src: hbcusOutsideLogo, url: "https://www.hbcusoutside.com/" },
   { name: "Sierra Club", src: sierraClubLogo, url: "https://www.sierraclub.org/" },
-  { name: "North Carolina Outward Bound School", src: ncobsLogo, url: "https://www.ncobs.org/" },
-  { name: "Basecamp Outdoor", src: basecampGreen, url: "https://basecampoutdoorevents.com" },
+  { name: "Outward Bound", src: ncobsLogo, url: "https://www.ncobs.org/" },
+  { name: "Basecamp Outdoors", src: basecampGreen, url: "https://basecampoutdoorevents.com" },
 ];
 
 const TierLabel = ({ settingKey, defaultText }: { settingKey: string; defaultText: string }) => (
