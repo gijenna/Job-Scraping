@@ -287,8 +287,8 @@ export const ConstellationHeading = ({
     <p className="text-[10px] sm:text-[11px] font-bold uppercase" style={{ ...body, letterSpacing: "0.24em", color: C.gold }}>
       <EditableText settingKey={eyebrowKey} defaultText="THE PARTNERSHIP" as="span" />
     </p>
-    <h2 className="mt-4 text-[28px] sm:text-[40px]" style={{ ...display, color: C.cream }}>
-      <EditableText settingKey={headlineKey} defaultText={headlineDefault} as="span" />
+    <h2 className="mt-4 whitespace-pre-line text-[28px] sm:text-[40px]" style={{ ...display, color: C.cream }}>
+      <EditableText settingKey={headlineKey} defaultText={headlineDefault} as="span" multiline />
     </h2>
     <p className="mt-5 text-base sm:text-lg" style={{ ...body, color: C.creamDim, lineHeight: 1.6 }}>
       <EditableText settingKey={subheadKey} defaultText={subheadDefault} as="span" multiline />
