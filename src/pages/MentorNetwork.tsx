@@ -222,7 +222,12 @@ const CONSTELLATION_EDGES: Edge[] = [
   ["msm", "hbcus"],
   ["morehouse", "ncobs"],
   ["cau", "basecamp"],
-  ["howard", "basecamp"],
+];
+
+/** Straight spine: Howard down through the centre of the X and out the bottom to the outcome star. */
+const CONSTELLATION_GUIDES = [
+  { x1: 50, y1: 14, x2: 50, y2: 49.5, width: 1, opacity: 0.55 },
+  { x1: 50, y1: 49.5, x2: 50, y2: 100, width: 2.2, opacity: 0.95 },
 ];
 
 
