@@ -498,15 +498,15 @@ const PILOT_ROWS = [
   {
     key: "after",
     label: "Beyond October",
-    body: "Certified leaders run their own Sierra Club outings, continue NCOBS virtual modules, build mental health literacy with a wellbeing partner, and stay connected year-round through HBCUs Outside.",
+    body: "HBCUs Outside leaders run their own outings with Sierra Club certifications, continue virtual modules from the North Carolina Outward Bound School, and grow with the help of outdoor industry mentors and career connections from Basecamp Outdoors.",
   },
 ];
 
 const PILOT_ROLES = [
-  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
-  { key: "ncobs", name: "North Carolina Outward Bound School", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
   { key: "hbcus", name: "HBCUs Outside", logo: hbcusOutsideLogo, body: "Belonging and cross-campus community, built in quality nature and carried back to campus." },
-  { key: "basecamp", name: "Basecamp Outdoor", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "basecamp", name: "Basecamp Outdoors", logo: basecampGreen, body: "Mentorship and industry access. Certified leaders get matched with outdoor industry mentors for a full academic year." },
+  { key: "sierra", name: "Sierra Club", logo: sierraClubLogo, body: "Certification, insurance, and advocacy. Students finish as officially recognized outings leaders." },
+  { key: "ncobs", name: "Outward Bound", logo: ncobsLogo, body: "Experiential education in teamwork, resilience, and leadership, inside the national Outward Bound network." },
 ];
 
 
